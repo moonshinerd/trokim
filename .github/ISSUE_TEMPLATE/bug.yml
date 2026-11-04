@@ -1,0 +1,59 @@
+name: Bug / Defeito
+description: Relato de comportamento incorreto, erro de cálculo, falha no RAG ou quebra no app móvel.
+title: "[Bug] "
+labels: ["bug"]
+body:
+  - type: textarea
+    id: descricao
+    attributes:
+      label: O que aconteceu
+      description: Descreva de forma clara e objetiva o comportamento anômalo observado.
+    validations:
+      required: true
+  - type: textarea
+    id: esperado
+    attributes:
+      label: Comportamento Esperado
+      description: O que deveria ter acontecido segundo as regras de negócio e requisitos do Trokim.
+    validations:
+      required: true
+  - type: textarea
+    id: passos
+    attributes:
+      label: Passos para Reproduzir
+      placeholder: |
+        1. Fazer upload do arquivo sintético '...'
+        2. Chamar o endpoint /v1/chat/ask com a mensagem '...'
+        3. Observar a resposta retornada
+    validations:
+      required: true
+  - type: dropdown
+    id: area
+    attributes:
+      label: Área Afetada
+      options:
+        - Mobile (Flutter)
+        - API / Backend (FastAPI)
+        - Cálculos Determinísticos
+        - RAG / Base Regulada
+        - Parser (OFX/PDF)
+        - Infra / CI / Deploy
+    validations:
+      required: true
+  - type: dropdown
+    id: severidade
+    attributes:
+      label: Severidade
+      options:
+        - Crítica (Quebra o cálculo financeiro, vaza dados ou crasha o app)
+        - Alta (Impede um fluxo principal do MVP)
+        - Média (Comportamento incorreto em cenário específico)
+        - Baixa (Visual, formatação de texto ou log)
+    validations:
+      required: true
+  - type: textarea
+    id: logs
+    attributes:
+      label: Logs e Rastreamento de Erro
+      description: Cole traceback do Python, logs do Flutter ou terminal.
+      render: shell

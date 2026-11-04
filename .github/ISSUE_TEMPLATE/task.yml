@@ -1,0 +1,73 @@
+name: Tarefa
+description: Item de trabalho acionável, desenvolvido por uma dupla e vinculado a um épico ou requisito.
+title: "[Tarefa] "
+labels: ["tarefa"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Diretrizes do Trokim:
+        1. Atribua os responsáveis (dupla de desenvolvimento);
+        2. Selecione a área e a prioridade correspondente;
+        3. Indique os Requisitos (RF/RNF) e Guiding Questions (GQ) atendidos para manter a rastreabilidade.
+  - type: input
+    id: epico
+    attributes:
+      label: Épico Relacionado
+      placeholder: "#1"
+    validations:
+      required: false
+  - type: input
+    id: requisitos
+    attributes:
+      label: Requisitos e GQs Atendidos
+      placeholder: "Ex.: RF01, RF03, GQ04"
+    validations:
+      required: true
+  - type: textarea
+    id: contexto
+    attributes:
+      label: Contexto e Motivação
+      description: Explique por que este item é necessário e qual dor resolve.
+    validations:
+      required: true
+  - type: textarea
+    id: objetivo
+    attributes:
+      label: O que fazer
+      description: Escopo técnico e passos esperados da implementação.
+    validations:
+      required: true
+  - type: dropdown
+    id: area
+    attributes:
+      label: Área
+      options:
+        - Mobile (Flutter)
+        - API / Backend (FastAPI)
+        - Cálculos Determinísticos
+        - RAG / Base Regulada
+        - Parser (OFX/PDF)
+        - Pesquisa / Dados Sintéticos
+        - Documentação / Zensical
+        - Infra / CI / Deploy
+    validations:
+      required: true
+  - type: dropdown
+    id: prioridade
+    attributes:
+      label: Prioridade
+      options:
+        - P0 (Bloqueante do ciclo)
+        - P1 (Alta prioridade)
+        - P2 (Média prioridade)
+        - P3 (Baixa prioridade / melhoria)
+    validations:
+      required: true
+  - type: textarea
+    id: criterio
+    attributes:
+      label: Critério de Aceite (Definition of Done)
+      description: O que precisa estar funcionando e testado para considerar a tarefa concluída.
+    validations:
+      required: true
