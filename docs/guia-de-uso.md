@@ -33,14 +33,14 @@ A API estará disponível em:
 
 ---
 
-## 3. Execução da Documentação Local (MkDocs)
+## 3. Execução da Documentação Local (Zensical)
 
-Para visualizar e editar a documentação viva em tempo real:
+O Trokim utiliza o **Zensical**, sucessor mantido e de alta performance do Material for MkDocs. Para visualizar e editar a documentação viva em tempo real:
 
 ```bash
 make docs-serve
 ```
-Acesse no navegador: `http://127.0.0.1:8001`.
+Acesse no navegador: `http://127.0.0.1:8000`.
 
 ---
 

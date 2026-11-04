@@ -47,9 +47,9 @@ jobs:
           uv run python ../research/rag_benchmark/eval_rag.py
 
   docs:
-    name: docs (mkdocs build strict)
+    name: docs (zensical build strict)
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
       - uses: astral-sh/setup-uv@v6
-      - run: uvx --with mkdocs-material mkdocs build --strict
+      - run: uvx zensical build --strict

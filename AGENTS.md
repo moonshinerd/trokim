@@ -107,6 +107,6 @@ make setup        # Configura ambiente virtual uv e dependências
 make test         # Executa bateria de testes na api e research
 make lint         # Executa ruff para checagem estática
 make format       # Aplica auto-formatação
-make docs-serve   # Inicia servidor local de documentação MkDocs (:8001)
+make docs-serve   # Inicia servidor local de documentação Zensical
 make api-run      # Inicia backend FastAPI (:8000)
 ```

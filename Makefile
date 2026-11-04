@@ -40,10 +40,10 @@ test:
 	fi
 
 docs-serve:
-	uvx --with mkdocs-material mkdocs serve -a 127.0.0.1:8001
+	uvx zensical serve
 
 docs-build:
-	uvx --with mkdocs-material mkdocs build --strict
+	uvx zensical build --strict
 
 api-run:
 	cd api && uv run uvicorn app.main:app --reload --host 127.0.0.1 --port 8000
