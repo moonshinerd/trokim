@@ -1,0 +1,22 @@
+version: '3.8'
+
+services:
+  api:
+    build:
+      context: ..
+      dockerfile: deploy/Dockerfile
+    container_name: trokim-api
+    restart: unless-stopped
+    ports:
+      - "8000:8000"
+    environment:
+      - ENVIRONMENT=production
+      - DEBUG=false
+      - PORT=8000
+      - HOST=0.0.0.0
+      - DATABASE_URL=sqlite+aiosqlite:////srv/data/trokim.db
+    volumes:
+      - trokim-data:/srv/data
+
+volumes:
+  trokim-data:

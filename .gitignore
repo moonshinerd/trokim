@@ -1,0 +1,67 @@
+# Ambientes e Segredos
+.env
+api/.env
+*.env.local
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+dist/
+downloads/
+eggs/
+.eggs/
+api/lib/
+api/lib64/
+*.egg-info/
+.installed.cfg
+*.egg
+.pytest_cache/
+.ruff_cache/
+.venv/
+api/.venv/
+
+# Flutter (preservar sempre mobile/lib)
+!mobile/lib/
+!mobile/lib/**
+
+# SQLite & Bancos Locais
+*.db
+*.sqlite
+*.sqlite3
+api/trokim.db
+api/test_trokim.db
+
+# MkDocs
+site/
+
+# Flutter / Dart
+mobile/.dart_tool/
+mobile/.flutter-plugins
+mobile/.flutter-plugins-dependencies
+mobile/.packages
+mobile/.pub-cache/
+mobile/.pub/
+mobile/build/
+mobile/android/.gradle/
+mobile/android/local.properties
+mobile/ios/.generated/
+mobile/ios/Flutter/App.framework
+mobile/ios/Flutter/Flutter.framework
+mobile/ios/Flutter/Generated.xcconfig
+mobile/ios/Pods/
+
+# IDEs e Sistema Operacional
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+.idea/
+.vscode/
+*.swp

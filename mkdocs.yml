@@ -1,0 +1,84 @@
+site_name: Trokim
+site_description: Assistente financeiro pessoal de código aberto com privacidade local-first e RAG (Challenge 2 - Qualidade de Vida)
+repo_url: https://github.com/moonshinerd/trokim
+edit_uri: edit/main/docs/
+docs_dir: docs
+
+theme:
+  name: material
+  custom_dir: overrides
+  language: pt-BR
+  features:
+    - navigation.tabs
+    - navigation.tabs.sticky
+    - navigation.sections
+    - navigation.expand
+    - navigation.top
+    - search.suggest
+    - search.highlight
+    - search.share
+    - content.code.copy
+  palette:
+    - scheme: default
+      primary: custom
+      accent: custom
+      toggle:
+        icon: material/weather-night
+        name: Alternar para modo escuro
+    - scheme: slate
+      primary: custom
+      accent: custom
+      toggle:
+        icon: material/weather-sunny
+        name: Alternar para modo claro
+
+extra_css:
+  - stylesheets/extra.css
+
+markdown_extensions:
+  - admonition
+  - tables
+  - attr_list
+  - md_in_html
+  - toc:
+      permalink: true
+  - pymdownx.details
+  - pymdownx.superfences:
+      custom_fences:
+        - name: mermaid
+          class: mermaid
+          format: !!python/name:pymdownx.superfences.fence_code_format
+  - pymdownx.tabbed:
+      alternate_style: true
+  - pymdownx.emoji:
+      emoji_index: !!python/name:material.extensions.emoji.twemoji
+      emoji_generator: !!python/name:material.extensions.emoji.to_svg
+  - pymdownx.highlight:
+      anchor_linenums: true
+      line_spans: __span
+      pygments_lang_class: true
+  - pymdownx.inlinehilite
+
+nav:
+  - Início: index.md
+  - Planejamento: planejamento.md
+  - Guia de Uso: guia-de-uso.md
+  - Pesquisa:
+      - Perguntas Norteadoras: pesquisa/guiding-questions.md
+      - Matrizes de Risco e Mitigação: pesquisa/matrizes.md
+  - Requisitos: requisitos.md
+  - Processo: processo/cbl.md
+  - Atas: atas/index.md
+  - Arquitetura:
+      - Visão Geral: arquitetura/index.md
+      - Mapa do Sistema: arquitetura/mapa-do-sistema.md
+  - Base RAG (Semana 2):
+      - Mecanismo e Fontes: rag/index.md
+  - Glossário: glossario.md
+  - Decisões (ADRs):
+      - Índice: adr/index.md
+      - "0001 – Flutter para Android": adr/0001-flutter-android.md
+      - "0002 – FastAPI e SQLite Local": adr/0002-fastapi-sqlite-local.md
+      - "0003 – Fontes Oficiais no RAG": adr/0003-rag-fontes-oficiais.md
+      - "0004 – Cálculos Determinísticos": adr/0004-calculos-deterministicos.md
+      - "0005 – Importação Local de OFX e PDF": adr/0005-importacao-local-ofx-pdf.md

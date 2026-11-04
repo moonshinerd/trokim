@@ -1,0 +1,116 @@
+/* ==========================================================================
+   Trokim - Design System & Visual Polish
+   Palette:
+     - #0D47A1 (Azul Profundo - Primária)
+     - #00B4D8 (Azul Turquesa - Destaque / Accent)
+     - #10B981 (Verde Esmeralda - Sucesso / Concluído)
+     - #64748B (Ardósia / Neutro)
+   ========================================================================== */
+
+:root,
+[data-md-color-scheme="default"] {
+  --md-primary-fg-color:              #0D47A1;
+  --md-primary-fg-color--light:       #1976D2;
+  --md-primary-fg-color--dark:        #0A3478;
+  --md-primary-bg-color:              #FFFFFF;
+  --md-accent-fg-color:               #0284C7;
+  --md-typeset-a-color:               #0284C7;
+
+  --md-mermaid-edge-color:            #64748B;
+  --md-mermaid-label-bg-color:        #FFFFFF;
+  --md-mermaid-label-fg-color:        #1E293B;
+}
+
+[data-md-color-scheme="slate"] {
+  --md-primary-fg-color:              #1E293B;
+  --md-primary-fg-color--light:       #334155;
+  --md-primary-fg-color--dark:        #0F172A;
+  --md-accent-fg-color:               #38BDF8;
+  --md-typeset-a-color:               #38BDF8;
+
+  --md-mermaid-edge-color:            #94A3B8;
+  --md-mermaid-label-bg-color:        #1E293B;
+  --md-mermaid-label-fg-color:        #F1F5F9;
+}
+
+/* --------------------------------------------------------------------------
+   Badges MoSCoW & Prioridade
+   -------------------------------------------------------------------------- */
+.badge-must,
+.badge-should,
+.badge-could,
+.badge-p0 {
+  padding: 3px 10px;
+  border-radius: 12px;
+  font-weight: 600;
+  font-size: 0.80em;
+  display: inline-block;
+  line-height: 1.3;
+  letter-spacing: 0.02em;
+}
+
+/* Light Mode Badges */
+.badge-must {
+  background-color: #D1FAE5;
+  color: #065F46;
+  border: 1px solid #A7F3D0;
+}
+
+.badge-should {
+  background-color: #E0F2FE;
+  color: #0369A1;
+  border: 1px solid #BAE6FD;
+}
+
+.badge-could {
+  background-color: #F1F5F9;
+  color: #475569;
+  border: 1px solid #E2E8F0;
+}
+
+.badge-p0 {
+  background-color: #FEE2E2;
+  color: #991B1B;
+  border: 1px solid #FCA5A5;
+}
+
+/* Dark Mode Badges */
+[data-md-color-scheme="slate"] .badge-must {
+  background-color: rgba(16, 185, 129, 0.16);
+  color: #6EE7B7;
+  border: 1px solid rgba(16, 185, 129, 0.4);
+}
+
+[data-md-color-scheme="slate"] .badge-should {
+  background-color: rgba(14, 165, 233, 0.16);
+  color: #7DD3FC;
+  border: 1px solid rgba(14, 165, 233, 0.4);
+}
+
+[data-md-color-scheme="slate"] .badge-could {
+  background-color: rgba(148, 163, 184, 0.2);
+  color: #CBD5E1;
+  border: 1px solid rgba(148, 163, 184, 0.35);
+}
+
+[data-md-color-scheme="slate"] .badge-p0 {
+  background-color: rgba(239, 68, 68, 0.18);
+  color: #FCA5A5;
+  border: 1px solid rgba(239, 68, 68, 0.4);
+}
+
+/* Tabelas */
+.md-typeset table:not([class]) {
+  font-size: 0.85rem;
+  border-collapse: collapse;
+  width: 100%;
+  display: table;
+}
+
+.md-typeset table:not([class]) th {
+  background-color: rgba(0, 0, 0, 0.04);
+}
+
+[data-md-color-scheme="slate"] .md-typeset table:not([class]) th {
+  background-color: rgba(255, 255, 255, 0.05);
+}
