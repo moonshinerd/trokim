@@ -1,0 +1,53 @@
+name: Épico
+description: Entregável macro do projeto (alinhado às 7 semanas do CBL), decomposto em tarefas.
+title: "[Épico] "
+labels: ["epic"]
+body:
+  - type: textarea
+    id: objetivo
+    attributes:
+      label: Objetivo Macro
+      description: Qual entregável de alto nível este épico representa no roadmap do Trokim.
+    validations:
+      required: true
+  - type: input
+    id: semana
+    attributes:
+      label: Semana do CBL
+      placeholder: "Ex.: Semana 2 (Base RAG) ou Semana 4 (Multiagentes)"
+    validations:
+      required: true
+  - type: input
+    id: requisitos
+    attributes:
+      label: Requisitos Cobertos
+      placeholder: "Ex.: RF01, RF02, RF05, RNF01"
+    validations:
+      required: true
+  - type: dropdown
+    id: area
+    attributes:
+      label: Área Primária
+      options:
+        - Mobile (Flutter)
+        - API / Backend (FastAPI)
+        - RAG e IA Generativa
+        - Multiagentes
+        - Multimodalidade
+        - Integração Completa
+        - Documentação e Governança
+    validations:
+      required: true
+  - type: textarea
+    id: escopo
+    attributes:
+      label: Escopo Macro (Tarefas Previstas)
+      description: Lista preliminar de subtarefas que compõem este épico.
+    validations:
+      required: true
+  - type: textarea
+    id: criterio
+    attributes:
+      label: Critério de Conclusão do Épico
+    validations:
+      required: true

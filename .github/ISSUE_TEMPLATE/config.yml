@@ -1,0 +1,8 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Planejamento e Roadmap do Trokim
+    url: https://github.com/moonshinerd/trokim/blob/main/docs/planejamento.md
+    about: Antes de abrir uma issue avulsa, confira se ela já não faz parte de um épico planejado.
+  - name: Matriz de Requisitos e Rastreabilidade
+    url: https://github.com/moonshinerd/trokim/blob/main/docs/requisitos.md
+    about: Consulte as Guiding Questions e os requisitos funcionais prioritários.
