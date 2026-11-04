@@ -4,6 +4,8 @@ O portfólio de pesquisa e engenharia de requisitos do **Trokim** foi construíd
 
 As **13 Perguntas Norteadoras (GQ01 a GQ13)** estruturam as hipóteses investigadas, as evidências bibliográficas e regulatórias levantadas e as decisões de arquitetura e mitigação de risco que fundamentam o MVP.
 
+> Para consultar o catálogo completo de fontes com autores, normas e links regulamentares, acesse a página de [Referências da Pesquisa](../referencias.md).
+
 ---
 
 ## GQ01 — Como a inteligência artificial atuará de forma prática para empoderar o usuário a "compreender melhor, decidir melhor e viver melhor" a sua rotina financeira?
@@ -11,9 +13,9 @@ As **13 Perguntas Norteadoras (GQ01 a GQ13)** estruturam as hipóteses investiga
 > **Hipótese:** O problema financeiro considerado pelo projeto é a dificuldade para acompanhar várias contas e cartões, saber quanto já havia sido gasto e antecipar a fatura. A hipótese inicial do grupo era que reunir essas informações e explicá-las com IA aumentaria a clareza sobre entradas, saídas e gastos recorrentes. O desconforto com a falta de clareza financeira motiva a proposta, mas não demonstra que o aplicativo reduzirá ansiedade ou melhorará a saúde. A pergunta de pesquisa é se transformar dados dispersos em um retrato verificável ajuda a compreender a situação, comparar escolhas e planejar com mais controle.
 
 ### Dados Encontrados e Fundamentação Científica
-- O Caderno de Educação Financeira do Banco Central apresenta o orçamento como instrumento de registro, organização e avaliação de receitas e despesas. A CVM, em Defina seus objetivos, relaciona o planejamento às prioridades de vida da família. Essas referências sustentam partir dos dados e das metas informadas pelo usuário, em vez de oferecer sugestões genéricas.
+- O [Caderno de Cidadania Financeira do Banco Central](https://www.bcb.gov.br/pre/pef/port/caderno_cidadania_financeira.pdf) apresenta o orçamento como instrumento de registro, organização e avaliação de receitas e despesas. A CVM, em Defina seus objetivos, relaciona o planejamento às prioridades de vida da família. Essas referências sustentam partir dos dados e das metas informadas pelo usuário, em vez de oferecer sugestões genéricas.
 
-- O CFPB define bem-estar financeiro por controle cotidiano, capacidade de enfrentar imprevistos, progresso em metas e liberdade de escolha. Seu relatório Chatbots in consumer finance também registra riscos de respostas inexatas e assistência insuficiente. Logo, conversar com uma IA ou reduzir gastos não comprova, por si só, melhora na qualidade de vida. A aplicação ao Pierre é uma hipótese de projeto, não um resultado demonstrado por essas publicações.
+- O CFPB define bem-estar financeiro por controle cotidiano, capacidade de enfrentar imprevistos, progresso em metas e liberdade de escolha. Seu relatório [Chatbots in Consumer Finance (CFPB)](https://www.consumerfinance.gov/data-research/research-reports/chatbots-in-consumer-finance/) também registra riscos de respostas inexatas e assistência insuficiente. Logo, conversar com uma IA ou reduzir gastos não comprova, por si só, melhora na qualidade de vida. A aplicação ao Pierre é uma hipótese de projeto, não um resultado demonstrado por essas publicações.
 
 ### Decisão de Engenharia no Trokim
 A conclusão desta pergunta norteadora estabelece que:
@@ -37,10 +39,10 @@ Esta decisão está formalizada no repositório através de: [ADR 0003](../adr/0
 
 ## GQ02 — Como delimitar o escopo da integração com o Open Finance para garantir a entrega das tecnologias exigidas pelo roadmap, como o primeiro mecanismo RAG na semana 2, o sistema multiagentes na semana 4 e os agentes multimodais na semana 5?
 
-> **Hipótese:** A proposta inicial considerava conectar contas bancárias e analisar transações com IA. Como alternativa de integração, foi avaliada a Pluggy, em comparação com o fluxo de importação manual. Também foi considerada a fricção de exigir cadastro e === PAGE 22 === autorização em serviço externo. A hipótese inicial era preservar a facilidade de reunir contas sem deixar que a obtenção dos dados consumisse o prazo do projeto. A alternativa de solução local reformula essa hipótese; ela não torna irrelevante a dificuldade de uso da importação manual.
+> **Hipótese:** A proposta inicial considerava conectar contas bancárias e analisar transações com IA. Como alternativa de integração, foi avaliada a [Pluggy Sandbox API](https://docs.pluggy.ai/), em comparação com o fluxo de importação manual. Também foi considerada a fricção de exigir cadastro e === PAGE 22 === autorização em serviço externo. A hipótese inicial era preservar a facilidade de reunir contas sem deixar que a obtenção dos dados consumisse o prazo do projeto. A alternativa de solução local reformula essa hipótese; ela não torna irrelevante a dificuldade de uso da importação manual.
 
 ### Dados Encontrados e Fundamentação Científica
-- A documentação da Pluggy confirma os mecanismos de integração, credenciais e autenticação. Na página oficial de preços, consultada em 28/10/2026, o plano Dados aparece a partir de R$
+- A documentação da [Pluggy Sandbox API](https://docs.pluggy.ai/) confirma os mecanismos de integração, credenciais e autenticação. Na página oficial de preços, consultada em 28/10/2026, o plano Dados aparece a partir de R$
 
 - A referência da API descreve conectores de sandbox que simulam instituições. Esse ambiente permite testar um fluxo, mas não demonstra acesso gratuito e permanente a contas reais. A alternativa deve ser descrita como prova técnica, com condições verificadas na documentação e no contrato, em vez de transformar o limite de contas citado na conversa em uma regra de produção.
 
@@ -54,7 +56,7 @@ Esta decisão está formalizada no repositório através de: [ADR 0005](../adr/0
 
 | Canal de Entrada | Vantagens Avaliadas | Decisão no MVP do Trokim |
 |---|---|---|
-| **Open Finance (Pluggy / Klavi)** | Sincronização bancária direta e automática | Postergado pós-MVP para evitar atrito de autorização e dependência externa |
+| **Open Finance ([Pluggy Sandbox API](https://docs.pluggy.ai/) / Klavi)** | Sincronização bancária direta e automática | Postergado pós-MVP para evitar atrito de autorização e dependência externa |
 | **Importação Manual OFX / PDF** | Privacidade total, dados sob controle do usuário, zero credencial externa | Padrão Adotado no MVP. Processamento documental local |
 | **Dados Sintéticos (Semana 1-2)** | Conformidade absoluta com LGPD e validação com gabarito conhecido | Padrão Adotado para todos os testes e demonstrações |
 
@@ -98,7 +100,7 @@ Esta decisão está formalizada no repositório através de: [ADR 0002](../adr/0
 > **Hipótese:** A proposta parte de que a solução precisa melhorar a experiência cotidiana, e não apenas demonstrar uma técnica de IA, e trouxe como problema concreto a dificuldade de entender gastos em várias contas. Para esta pergunta, a hipótese derivada é que uma demonstração bem-sucedida precisa combinar cálculos corretos com compreensão e uma decisão mais informada. As métricas e o protocolo abaixo são propostas desta análise; não devem ser apresentados como resultados ou critérios formalmente validados. O projeto prioriza tratar os dados para o usuário, em vez de concentrar o esforço no módulo de obtenção. Isso orienta medir a passagem do arquivo bruto para uma informação compreensível.
 
 ### Dados Encontrados e Fundamentação Científica
-- A documentação do scikit-learn oferece MAE para medir erro absoluto de previsões e F1 para combinar precisão e revocação na classificação. Já a Financial Well-Being Scale do CFPB mede uma dimensão percebida de bem-estar, distinta da exatidão técnica. Essas fontes justificam avaliar o funcionamento do sistema e a experiência do usuário separadamente.
+- A documentação do scikit-learn oferece MAE para medir erro absoluto de previsões e F1 para combinar precisão e revocação na classificação. Já a [Financial Well-Being Scale do CFPB](https://www.consumerfinance.gov/data-research/research-reports/financial-well-being-scale/) mede uma dimensão percebida de bem-estar, distinta da exatidão técnica. Essas fontes justificam avaliar o funcionamento do sistema e a experiência do usuário separadamente.
 
 - Para a qualidade dos dados, propõe-se medir a proporção de transações importadas corretamente, a taxa de duplicatas e a quantidade de divergências encaminhadas à revisão. Um conjunto de arquivos sintéticos terá datas, descrições e valores conhecidos para comparação. A conciliação usará valores em centavos e considerará saldo anterior, créditos, juros e ajustes quando existirem; a soma simples das compras não será imposta a todo tipo de extrato ou fatura.
 
@@ -127,7 +129,7 @@ Esta decisão está formalizada no repositório através de: [ADR 0004](../adr/0
 > **Hipótese:** A proposta associa o assistente à análise de gastos e à possibilidade de modelos preditivos, mas informações bancárias, sozinhas, não fornecem uma base educacional sobre como planejar. A hipótese inicial derivada é separar o conhecimento sobre finanças pessoais dos dados de cada usuário. O sistema precisará de referências identificáveis para explicar conceitos e de registros revisados para calcular valores. O corpus descrito a seguir é uma seleção de pesquisa para o MVP, não uma base já definida ou carregada pelo grupo. As propostas de ferramentas precisam ser confrontadas com suas documentações.
 
 ### Dados Encontrados e Fundamentação Científica
-- O Caderno de Educação Financeira do Banco Central reúne conteúdos sobre orçamento, crédito, consumo, poupança e prevenção de riscos. A CVM oferece materiais sobre organização financeira, objetivos e reserva para emergências. Esses conteúdos são candidatos ao corpus inicial por sua autoria institucional e relação direta com o escopo do MVP.
+- O [Caderno de Cidadania Financeira do Banco Central](https://www.bcb.gov.br/pre/pef/port/caderno_cidadania_financeira.pdf) reúne conteúdos sobre orçamento, crédito, consumo, poupança e prevenção de riscos. A CVM oferece materiais sobre organização financeira, objetivos e reserva para emergências. Esses conteúdos são candidatos ao corpus inicial por sua autoria institucional e relação direta com o escopo do MVP.
 
 - O artigo de Lewis e colaboradores sobre Retrieval-Augmented Generation descreve a combinação de geração com recuperação de documentos externos. Isso fundamenta a escolha de RAG como abordagem a testar, mas não demonstra que qualquer aplicação financeira ficará correta. O relatório do CFPB sobre chatbots registra riscos de inexatidão; por isso, citar uma página só será útil quando o trecho recuperado sustentar a resposta.
 
@@ -143,7 +145,7 @@ Esta decisão está formalizada no repositório através de: [ADR 0003](../adr/0
 |---|---|---|
 | **Banco Central do Brasil (BCB)** | Caderno de Cidadania Financeira | Diretrizes de orçamento familiar, reserva de emergência e dívidas |
 | **Comissão de Valores Mobiliários (CVM)** | Portal do Investidor (Metas e Prazos) | Planejamento financeiro de curto/médio/longo prazo e diversificação |
-| **CFPB (EUA)** | Financial Well-Being Scale & Chatbot Report | Pilares de qualidade de vida e salvaguardas contra alucinação de IA |
+| **CFPB (EUA)** | [Financial Well-Being Scale do CFPB](https://www.consumerfinance.gov/data-research/research-reports/financial-well-being-scale/) & Chatbot Report | Pilares de qualidade de vida e salvaguardas contra alucinação de IA |
 
 ### Rastreabilidade
 - **Requisitos Associados:** RF05, RF06, RF10
@@ -345,7 +347,7 @@ Esta decisão está formalizada no repositório através de: [ADR 0004](../adr/0
 | Pilar Orçamentário | Tratamento no Sistema | Evidência Bibliográfica |
 |---|---|---|
 | **Necessidades Básicas** | Protegidas de corte arbitrário no simulador | Caderno de Cidadania do BCB (Despesas Fixas Essenciais) |
-| **Lazer e Bem-Estar** | Reconhecido como componente essencial da saúde mental | Portal do Investidor da CVM e Escala do CFPB |
+| **Lazer e Bem-Estar** | Reconhecido como componente essencial da saúde mental | [Portal do Investidor da CVM](https://www.gov.br/investidor/pt-br/investir/antes-de-investir) e Escala do CFPB |
 | **Meta de Poupança** | Ajustada pelo usuário conforme a folga real do orçamento | Metas sustentáveis evitam desistência no médio prazo |
 
 ### Rastreabilidade
@@ -359,7 +361,7 @@ Esta decisão está formalizada no repositório através de: [ADR 0004](../adr/0
 > **Hipótese:** O problema de pesquisa combina desorganização das informações, incerteza sobre a fatura e desconforto com essa falta de clareza. A hipótese inicial é que consolidar e explicar os dados aumentará a percepção de controle. Isso precisa ser observado: uma interface considerada agradável não prova melhoria financeira. A avaliação proposta separará compreensão imediata, percepção relatada e mudanças que só podem aparecer ao longo do tempo.
 
 ### Dados Encontrados e Fundamentação Científica
-- O guia da Financial Well-Being Scale do CFPB apresenta um instrumento para medir segurança e liberdade de escolha percebidas. A CVM relaciona organização financeira a objetivos e bem-estar. Esses materiais sustentam combinar indicadores objetivos de tarefa e relato do usuário; o uso de um questionário adaptado pelo projeto exige identificação própria, sem alegar validação equivalente ao instrumento original. === PAGE 29 ===
+- O guia da [Financial Well-Being Scale do CFPB](https://www.consumerfinance.gov/data-research/research-reports/financial-well-being-scale/) apresenta um instrumento para medir segurança e liberdade de escolha percebidas. A CVM relaciona organização financeira a objetivos e bem-estar. Esses materiais sustentam combinar indicadores objetivos de tarefa e relato do usuário; o uso de um questionário adaptado pelo projeto exige identificação própria, sem alegar validação equivalente ao instrumento original. === PAGE 29 ===
 
 - Propõe-se um teste exploratório em que cada participante execute tarefas com o mesmo cenário antes e depois de receber apoio do Pierre. Serão registrados acertos, tempo, necessidade de ajuda e capacidade de justificar uma escolha. Perguntas curtas de compreensão e controle percebido complementarão o teste. A ordem das tarefas e a familiaridade prévia serão registradas para reconhecer possíveis efeitos de aprendizagem.
 
@@ -375,7 +377,7 @@ Esta decisão está formalizada no repositório através de: [ADR 0001](../adr/0
 |---|---|---|
 | **Taxa de Conclusão de Tarefas** | Importar extrato, consultar saldo e simular cenário com sucesso | Usabilidade e clareza da interface Flutter no Android |
 | **Tempo de Execução da Tarefa** | Cronometragem do fluxo antes e depois do apoio da IA | Redução de esforço e atrito cognitivo do usuário |
-| **Controle Percebido (CFPB Adaptado)** | Questionário breve com base na Financial Well-Being Scale | Indício exploratório de melhora na percepção de clareza |
+| **Controle Percebido (CFPB Adaptado)** | Questionário breve com base na [Financial Well-Being Scale do CFPB](https://www.consumerfinance.gov/data-research/research-reports/financial-well-being-scale/) | Indício exploratório de melhora na percepção de clareza |
 
 ### Rastreabilidade
 - **Requisitos Associados:** RF07, RNF01
