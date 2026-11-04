@@ -68,7 +68,9 @@ nav:
       - Matrizes de Risco e Mitigação: pesquisa/matrizes.md
   - Requisitos: requisitos.md
   - Processo: processo/cbl.md
-  - Atas: atas/index.md
+  - Atas:
+      - Índice: atas/index.md
+      - "Ata 01 – Alinhamento Inicial (26/10)": atas/ata01.md
   - Arquitetura:
       - Visão Geral: arquitetura/index.md
       - Mapa do Sistema: arquitetura/mapa-do-sistema.md
