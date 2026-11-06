@@ -65,3 +65,6 @@ Thumbs.db
 .idea/
 .vscode/
 *.swp
+
+# Relatórios locais e artefatos do CI
+/artifacts/research/

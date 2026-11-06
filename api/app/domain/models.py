@@ -55,6 +55,7 @@ class BudgetScenario(BaseModel):
 class EvidenceChunk(BaseModel):
     id: str
     source_name: str  # ex.: "Banco Central do Brasil", "CVM", "CFPB"
+    source_url: str | None = None
     document_title: str
     section: str
     content: str

@@ -13,3 +13,5 @@ Este repositório registra formally todas as decisões de arquitetura e tecnolog
 | [**0003**](0003-rag-fontes-oficiais.md) | Mecanismo RAG Fundamentado em Órgãos Oficiais (BCB, CVM, CFPB) | Aceita | 04/11/2026 | RF05, RF06, RF10, GQ05 |
 | [**0004**](0004-calculos-deterministicos.md) | Separação entre Cálculos Determinísticos e Síntese de Linguagem | Aceita | 04/11/2026 | RF03, RF04, RNF02, GQ04 |
 | [**0005**](0005-importacao-local-ofx-pdf.md) | Importação de Extratos Locais (OFX/PDF) em vez de Open Finance no MVP | Aceita | 04/11/2026 | RF01, RF02, RNF01, GQ02 |
+
+- [0006 — Curadoria rastreável e benchmark](0006-curadoria-benchmark.md)

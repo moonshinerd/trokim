@@ -1,4 +1,6 @@
-.PHONY: help setup lint format test docs-serve docs-build api-run mobile-run rag-eval synthetic-data
+.PHONY: help setup lint format test docs-serve docs-build api-run mobile-run rag-eval synthetic-data research-test
+
+RAG_REPORT ?= artifacts/research/current.json
 
 help:
 	@echo "Comandos disponíveis no repositório Trokim:"
@@ -31,13 +33,11 @@ format:
 	cd api && uv run ruff format . && uv run ruff check --fix .
 	cd api && uv run ruff format --config pyproject.toml ../research && uv run ruff check --fix --config pyproject.toml ../research
 
-test:
+test: research-test
 	cd api && uv run pytest
-	@if find research -name 'test_*.py' -o -name '*_test.py' | grep -q .; then \
-		cd api && uv run pytest ../research; \
-	else \
-		echo "Nenhum teste isolado em research/; testes cobertos pela API"; \
-	fi
+
+research-test: rag-eval
+	cd api && uv run pytest -c pyproject.toml ../research
 
 docs-serve:
 	uvx zensical serve
@@ -52,7 +52,7 @@ mobile-run:
 	cd mobile && flutter run
 
 rag-eval:
-	cd api && uv run python ../research/rag_benchmark/eval_rag.py
+	cd api && uv run python ../research/rag_benchmark/eval_rag.py --output "$(abspath $(RAG_REPORT))"
 
 synthetic-data:
 	cd api && uv run python ../research/synthetic_data/generate_datasets.py
