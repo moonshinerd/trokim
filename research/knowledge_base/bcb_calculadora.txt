@@ -1,0 +1,8 @@
+FONTE: Banco Central do Brasil (BCB)
+TITULO: Calculadora do Cidadão
+URL: https://www.bcb.gov.br/acessoinformacao/calculadoradocidadao
+CONSULTA: 2026-11-06
+TIPO: Resumo editorial em português; não é transcrição
+
+[SEÇÃO 1: Limitações]
+A Calculadora do Cidadão simula operações a partir dos dados fornecidos. Ela não verifica se os cálculos feitos pela instituição financeira estão corretos.

@@ -1,0 +1,8 @@
+FONTE: Autoridade Nacional de Proteção de Dados (ANPD)
+TITULO: Perguntas frequentes
+URL: https://www.gov.br/anpd/pt-br/acesso-a-informacao/perguntas-frequentes/perguntas-frequentes
+CONSULTA: 2026-11-06
+TIPO: Resumo editorial em português; não é transcrição
+
+[SEÇÃO 1: Prazo de tratamento]
+A LGPD não estabelece um prazo único para tratamento de dados pessoais. A duração depende das circunstâncias e da finalidade do tratamento. O término pode ocorrer quando a finalidade é alcançada ou os dados deixam de ser necessários. A eliminação admite exceções legais de conservação, como cumprimento de obrigação legal ou regulatória. Não se deve prometer exclusão irrestrita em qualquer circunstância.

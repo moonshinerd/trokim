@@ -77,6 +77,7 @@ nav:
       - Mapa do Sistema: arquitetura/mapa-do-sistema.md
   - Base RAG (Semana 2):
       - Mecanismo e Fontes: rag/index.md
+      - Catálogo de Fontes: rag/catalogo.md
   - Glossário: glossario.md
   - Decisões (ADRs):
       - Índice: adr/index.md
@@ -85,3 +86,4 @@ nav:
       - "0003 – Fontes Oficiais no RAG": adr/0003-rag-fontes-oficiais.md
       - "0004 – Cálculos Determinísticos": adr/0004-calculos-deterministicos.md
       - "0005 – Importação Local de OFX e PDF": adr/0005-importacao-local-ofx-pdf.md
+      - "0006 – Curadoria e Benchmark": adr/0006-curadoria-benchmark.md

@@ -24,7 +24,7 @@ jobs:
       - uses: astral-sh/setup-uv@v6
         with:
           python-version: "3.12"
-      - run: uv sync
+      - run: uv sync --frozen
       - name: ruff check
         run: uv run ruff check .
       - name: ruff format --check
@@ -40,11 +40,22 @@ jobs:
       - uses: astral-sh/setup-uv@v6
         with:
           python-version: "3.12"
-      - name: Instalar dependências da API para executar o benchmark
+      - name: Instalar dependências fixadas
+        run: cd api && uv sync --frozen
+      - name: Verificar lint e formatação de research
         run: |
           cd api
-          uv sync
-          uv run python ../research/rag_benchmark/eval_rag.py
+          uv run ruff check --config pyproject.toml ../research
+          uv run ruff format --check --config pyproject.toml ../research
+      - name: Validar curadoria, dados e benchmark
+        run: make research-test
+      - name: Preservar relatório por caso
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: research-benchmark
+          path: artifacts/research/current.json
+          if-no-files-found: warn
 
   docs:
     name: docs (zensical build strict)
