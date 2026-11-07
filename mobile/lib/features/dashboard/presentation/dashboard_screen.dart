@@ -22,10 +22,10 @@ class DashboardScreen extends StatelessWidget {
               style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 12),
-            _buildCategoryItem('Moradia', 'R$ 1.500,00', Icons.home, Colors.blue),
-            _buildCategoryItem('Alimentação', 'R$ 650,50', Icons.restaurant, Colors.orange),
-            _buildCategoryItem('Transporte', 'R$ 280,00', Icons.directions_car, Colors.green),
-            _buildCategoryItem('Lazer e Bem-Estar', 'R$ 210,00', Icons.sports_esports, Colors.purple),
+            _buildCategoryItem('Moradia', 'R\$ 1.500,00', Icons.home, Colors.blue),
+            _buildCategoryItem('Alimentação', 'R\$ 650,50', Icons.restaurant, Colors.orange),
+            _buildCategoryItem('Transporte', 'R\$ 280,00', Icons.directions_car, Colors.green),
+            _buildCategoryItem('Lazer e Bem-Estar', 'R\$ 210,00', Icons.sports_esports, Colors.purple),
           ],
         ),
       ),
@@ -44,7 +44,7 @@ class DashboardScreen extends StatelessWidget {
             ),
             const SizedBox(height: 8),
             const Text(
-              'R$ 2.849,50',
+              'R\$ 2.849,50',
               style: TextStyle(
                 fontSize: 32,
                 fontWeight: FontWeight.bold,
@@ -55,8 +55,8 @@ class DashboardScreen extends StatelessWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
-                _buildMetricColumn('Receitas', 'R$ 5.000,00', AppTheme.successGreen),
-                _buildMetricColumn('Despesas', 'R$ 2.150,50', AppTheme.dangerRed),
+                _buildMetricColumn('Receitas', 'R\$ 5.000,00', AppTheme.successGreen),
+                _buildMetricColumn('Despesas', 'R\$ 2.150,50', AppTheme.dangerRed),
                 _buildMetricColumn('Poupança', '56,99%', AppTheme.accentTeal),
               ],
             ),
@@ -88,7 +88,7 @@ class DashboardScreen extends StatelessWidget {
       margin: const EdgeInsets.only(bottom: 8),
       child: ListTile(
         leading: CircleAvatar(
-          backgroundColor: color.withOpacity(0.15),
+          backgroundColor: color.withValues(alpha: 0.15),
           child: Icon(icon, color: color),
         ),
         title: Text(title, style: const TextStyle(fontWeight: FontWeight.w600)),
