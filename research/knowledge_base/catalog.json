@@ -1,0 +1,380 @@
+[
+  {
+    "id": "bcb_orcamento",
+    "file": "bcb_orcamento.txt",
+    "source": "Banco Central do Brasil (BCB)",
+    "title": "Caderno de Educação Financeira",
+    "url": "https://www.bcb.gov.br/content/cidadaniafinanceira/documentos_cidadania/Cuidando_do_seu_dinheiro_Gestao_de_Financas_Pessoais/caderno_cidadania_financeira.pdf",
+    "locator": "Página PDF 25; passagem: 2.3 Como elaborar um orçamento",
+    "accessed": "2026-11-06",
+    "kind": "resumo editorial",
+    "chunk_sha256": "0a88c72df7145c38db82474d333cafdf853ec5f7147d8e898b6c488e83dbd8b6",
+    "verification": {
+      "method": "leitura do documento oficial",
+      "checked": "2026-11-06",
+      "original_sha256": "e42aa64c16d7e35ccaba4c73b28f604873e442fa1b093f13cfc2ec056db90cc3",
+      "resolved_url": "https://www.bcb.gov.br/content/cidadaniafinanceira/documentos_cidadania/Cuidando_do_seu_dinheiro_Gestao_de_Financas_Pessoais/caderno_cidadania_financeira.pdf",
+      "excerpt": "2.3 Como elaborar um orçamento COMO INICIAR O orçamento pessoal (ou familiar)",
+      "locator": "Página PDF 25; passagem: 2.3 Como elaborar um orçamento"
+    }
+  },
+  {
+    "id": "bcb_credito",
+    "file": "bcb_credito.txt",
+    "source": "Banco Central do Brasil (BCB)",
+    "title": "Uso do crédito",
+    "url": "https://www.bcb.gov.br/pre/pef/port/folder_serie_II_uso_credito.pdf",
+    "locator": "Página PDF 2; passagem: Instituições financeiras podem oferecer",
+    "accessed": "2026-11-06",
+    "kind": "resumo editorial",
+    "chunk_sha256": "44a94844cfdc5e2a991244f12d1a493a678bb3a070ed1dc5d4f18439199459e6",
+    "verification": {
+      "method": "leitura do documento oficial",
+      "checked": "2026-11-06",
+      "original_sha256": "a86e6d7435d9ff49022af589dbdb6a4ff4b6dd5d322b769fd1abdd070d9ca43e",
+      "resolved_url": "https://www.bcb.gov.br/pre/pef/port/folder_serie_II_uso_credito.pdf",
+      "excerpt": "Instituições financeiras podem oferecer a você empréstimos e financiamentos, como cheque especial,",
+      "locator": "Página PDF 2; passagem: Instituições financeiras podem oferecer"
+    }
+  },
+  {
+    "id": "bcb_dividas",
+    "file": "bcb_dividas.txt",
+    "source": "Banco Central do Brasil (BCB)",
+    "title": "Como lidar com dívidas",
+    "url": "https://www.bcb.gov.br/pre/pef/port/folder_serie_ii_como_lidar_dividas.pdf",
+    "locator": "Página PDF 2; passagem: renegocie as dívidas",
+    "accessed": "2026-11-06",
+    "kind": "resumo editorial",
+    "chunk_sha256": "78acf08df97a701d2b63257e11b9feade2890d6fd57f05fecb92f865a0bff35f",
+    "verification": {
+      "method": "leitura do documento oficial",
+      "checked": "2026-11-06",
+      "original_sha256": "2c691d920be34cab24ddf0082108f47819ee4d292dcb203a80f2aa23d5557d5c",
+      "resolved_url": "https://www.bcb.gov.br/pre/pef/port/folder_serie_ii_como_lidar_dividas.pdf",
+      "excerpt": "renegocie as dívidas com os credores, busque melhores condições, prazos e juros;",
+      "locator": "Página PDF 2; passagem: renegocie as dívidas"
+    }
+  },
+  {
+    "id": "bcb_custos",
+    "file": "bcb_custos.txt",
+    "source": "Banco Central do Brasil (BCB)",
+    "title": "Cartilha para migrantes e refugiados",
+    "url": "https://aprendervalor.bcb.gov.br/content/cidadaniafinanceira/documentos_cidadania/Cartilha_Migrantes_Refugiados/cartilha_BC_PORTUGUES.pdf",
+    "locator": "Página PDF 40; passagem: não pergunte apenas",
+    "accessed": "2026-11-06",
+    "kind": "resumo editorial",
+    "chunk_sha256": "edb10219c4664cd344e8c346743de2b71a3f45301dd4df8fcde87d97ec3427b0",
+    "verification": {
+      "method": "leitura do documento oficial",
+      "checked": "2026-11-06",
+      "original_sha256": "f4a800719a325a47fe779024071c41d1a66720f569e10ee1f740570bdce9a5da",
+      "resolved_url": "https://aprendervalor.bcb.gov.br/content/cidadaniafinanceira/documentos_cidadania/Cartilha_Migrantes_Refugiados/cartilha_BC_PORTUGUES.pdf",
+      "excerpt": "não pergunte apenas pelo valor da taxa de juros, mas sim pelo",
+      "locator": "Página PDF 40; passagem: não pergunte apenas"
+    }
+  },
+  {
+    "id": "bcb_calculadora",
+    "file": "bcb_calculadora.txt",
+    "source": "Banco Central do Brasil (BCB)",
+    "title": "Calculadora do Cidadão",
+    "url": "https://www.bcb.gov.br/acessoinformacao/calculadoradocidadao",
+    "locator": "Limitações",
+    "accessed": "2026-11-06",
+    "kind": "resumo editorial",
+    "chunk_sha256": "e7f67b9a7152ef101829b33d6a719eed2aa35eb24b56e562db8cebfaa5797482",
+    "verification": {
+      "method": "índice de busca da página oficial (HTML direto depende de JavaScript)",
+      "checked": "2026-11-06",
+      "excerpt": "A Calculadora do Cidadão não verifica se os cálculos feitos pelas instituições financeiras",
+      "locator": "Seção Fique atento; página oficial indexada"
+    }
+  },
+  {
+    "id": "cvm_objetivos",
+    "file": "cvm_objetivos.txt",
+    "source": "Comissão de Valores Mobiliários (CVM)",
+    "title": "Defina seus objetivos",
+    "url": "https://www.gov.br/investidor/pt-br/investir/antes-de-investir/defina-seus-objetivos",
+    "locator": "Defina seus objetivos; passagem: Os sonhos",
+    "accessed": "2026-11-06",
+    "kind": "resumo editorial",
+    "chunk_sha256": "b559dc2dd0fd58a1476df2c22a2d1747ccbe544ec6dab21cb6fcaa3fe5fda89e",
+    "verification": {
+      "method": "leitura do documento oficial",
+      "checked": "2026-11-06",
+      "original_sha256": "7f8f7b4362e2d0ea038635bebfb8b6e17f92cd31a42091f88271c9be1b9b01a1",
+      "resolved_url": "https://www.gov.br/investidor/pt-br/investir/antes-de-investir/defina-seus-objetivos",
+      "excerpt": "Os sonhos e objetivos de vida de uma família devem ser o",
+      "locator": "Defina seus objetivos; passagem: Os sonhos"
+    }
+  },
+  {
+    "id": "cvm_emergencia",
+    "file": "cvm_emergencia.txt",
+    "source": "Comissão de Valores Mobiliários (CVM)",
+    "title": "Emergências e aposentadoria",
+    "url": "https://www.gov.br/investidor/pt-br/investir/antes-de-investir/defina-seus-objetivos/emergencias-e-aposentadoria",
+    "locator": "Emergências e aposentadoria; passagem: Como a reserva",
+    "accessed": "2026-11-06",
+    "kind": "resumo editorial",
+    "chunk_sha256": "d2c2e7b627daedc01b06f1f4f93539a62451cf7fa7ca93374dae4bf794944fee",
+    "verification": {
+      "method": "leitura do documento oficial",
+      "checked": "2026-11-06",
+      "original_sha256": "16342252e3ec8b39dc10326a4d3499056f498e202546ab9620b751120875519f",
+      "resolved_url": "https://www.gov.br/investidor/pt-br/investir/antes-de-investir/defina-seus-objetivos/emergencias-e-aposentadoria",
+      "excerpt": "Como a reserva para emergência é um objetivo que não tem prazo",
+      "locator": "Emergências e aposentadoria; passagem: Como a reserva"
+    }
+  },
+  {
+    "id": "cvm_perfil",
+    "file": "cvm_perfil.txt",
+    "source": "Comissão de Valores Mobiliários (CVM)",
+    "title": "Respeite o seu perfil de investidor",
+    "url": "https://www.gov.br/investidor/pt-br/investir/antes-de-investir/respeite-o-seu-perfil-de-investidor",
+    "locator": "Respeite o seu perfil de investidor; passagem: duas dimensões",
+    "accessed": "2026-11-06",
+    "kind": "resumo editorial",
+    "chunk_sha256": "1b7a42f8c68a4446ce921e4b005784d39fe5a95e8429c4d8bccabcd6cf463c63",
+    "verification": {
+      "method": "leitura do documento oficial",
+      "checked": "2026-11-06",
+      "original_sha256": "94ca7855c76fccad355259f194ef688420985566e5ae2d92273db3d0a00dbfe1",
+      "resolved_url": "https://www.gov.br/investidor/pt-br/investir/antes-de-investir/respeite-o-seu-perfil-de-investidor",
+      "excerpt": "duas dimensões complementares: uma objetiva, relacionada à capacidade de cada pessoa ou",
+      "locator": "Respeite o seu perfil de investidor; passagem: duas dimensões"
+    }
+  },
+  {
+    "id": "cvm_risco",
+    "file": "cvm_risco.txt",
+    "source": "Comissão de Valores Mobiliários (CVM)",
+    "title": "Risco e relação risco x retorno",
+    "url": "https://www.gov.br/investidor/pt-br/investir/antes-de-investir/entenda-as-caracteristicas-dos-investimentos/risco-e-a-relacao-risco-x-retorno",
+    "locator": "Risco e relação risco x retorno; passagem: Rentabilidade passada",
+    "accessed": "2026-11-06",
+    "kind": "resumo editorial",
+    "chunk_sha256": "690e1561236d2aa0a0b296ecb5a0a7da98904034bdf4115a28b02708cf11e1fd",
+    "verification": {
+      "method": "leitura do documento oficial",
+      "checked": "2026-11-06",
+      "original_sha256": "7d1d757f1f57a0af8a6d0c76f746baa14e0e1cf8e680ea5db00b9226def920d8",
+      "resolved_url": "https://www.gov.br/investidor/pt-br/investir/antes-de-investir/entenda-as-caracteristicas-dos-investimentos/risco-e-a-relacao-risco-x-retorno",
+      "excerpt": "Rentabilidade passada não é garantia de rentabilidade futura Links de compartilhamento em",
+      "locator": "Risco e relação risco x retorno; passagem: Rentabilidade passada"
+    }
+  },
+  {
+    "id": "cvm_liquidez",
+    "file": "cvm_liquidez.txt",
+    "source": "Comissão de Valores Mobiliários (CVM)",
+    "title": "Liquidez",
+    "url": "https://www.gov.br/investidor/pt-br/investir/antes-de-investir/entenda-as-caracteristicas-dos-investimentos/liquidez",
+    "locator": "Liquidez; passagem: Um título",
+    "accessed": "2026-11-06",
+    "kind": "resumo editorial",
+    "chunk_sha256": "fbec54dfc8c351c887d386d62e32e1cae160499d3afb7a716d7c8588db1d702e",
+    "verification": {
+      "method": "leitura do documento oficial",
+      "checked": "2026-11-06",
+      "original_sha256": "1581464c941410c3959307e13a09a9450e372cb62fa11542d93f2d83593f9d7f",
+      "resolved_url": "https://www.gov.br/investidor/pt-br/investir/antes-de-investir/entenda-as-caracteristicas-dos-investimentos/liquidez",
+      "excerpt": "Um título de renda fixa pré-fixado, por exemplo, ainda que ofereça liquidez",
+      "locator": "Liquidez; passagem: Um título"
+    }
+  },
+  {
+    "id": "cvm_diversificacao",
+    "file": "cvm_diversificacao.txt",
+    "source": "Comissão de Valores Mobiliários (CVM)",
+    "title": "Evitando problemas",
+    "url": "https://www.gov.br/investidor/pt-br/investir/cuidados-ao-investir/evitando-problemas",
+    "locator": "Evitando problemas; passagem: especialmente com diversificação",
+    "accessed": "2026-11-06",
+    "kind": "resumo editorial",
+    "chunk_sha256": "6961221faa67625454f4247ff418677e9645f8d78f589fbb984501f0cc25a048",
+    "verification": {
+      "method": "leitura do documento oficial",
+      "checked": "2026-11-06",
+      "original_sha256": "f2ed5dc389458c49a5df889c81d5867b7ad563bf83992bc9cf94c7b9c58b23f0",
+      "resolved_url": "https://www.gov.br/investidor/pt-br/investir/cuidados-ao-investir/evitando-problemas",
+      "excerpt": "especialmente com diversificação, mas não é possível eliminá-los totalmente. A decisão envolve",
+      "locator": "Evitando problemas; passagem: especialmente com diversificação"
+    }
+  },
+  {
+    "id": "cvm_escolha",
+    "file": "cvm_escolha.txt",
+    "source": "Comissão de Valores Mobiliários (CVM)",
+    "title": "Qual o melhor investimento?",
+    "url": "https://www.gov.br/investidor/pt-br/investir/antes-de-investir/defina-seus-objetivos/qual-o-melhor-investimento",
+    "locator": "Qual o melhor investimento?; passagem: não há",
+    "accessed": "2026-11-06",
+    "kind": "resumo editorial",
+    "chunk_sha256": "edb3ed7be743a272ac98b9597bc65f2ed245b94b61887f1abf09b943be627cf7",
+    "verification": {
+      "method": "leitura do documento oficial",
+      "checked": "2026-11-06",
+      "original_sha256": "70928823761f2ba610de1ba2ac2b5d9bf05295f79064b6ec947b747a5933c270",
+      "resolved_url": "https://www.gov.br/investidor/pt-br/investir/antes-de-investir/defina-seus-objetivos/qual-o-melhor-investimento",
+      "excerpt": "não há o melhor investimento. O que existe é o investimento mais",
+      "locator": "Qual o melhor investimento?; passagem: não há"
+    }
+  },
+  {
+    "id": "cfpb_escala",
+    "file": "cfpb_escala.txt",
+    "source": "Consumer Financial Protection Bureau (CFPB)",
+    "title": "Financial well-being resources",
+    "url": "https://www.consumerfinance.gov/consumer-tools/educator-tool/financial-well-being-resources/",
+    "locator": "Financial well-being resources; passagem: Have control",
+    "accessed": "2026-11-06",
+    "kind": "resumo editorial",
+    "chunk_sha256": "d7eb2ceb58b3da1669a56708c6fdd78f909055a5b886a3241050d4f2e41aad3a",
+    "verification": {
+      "method": "leitura do documento oficial",
+      "checked": "2026-11-06",
+      "original_sha256": "48c139367cfe4126aabba6f625473eab5a96b37dce948ceb99e6ac99b52425c3",
+      "resolved_url": "https://www.consumerfinance.gov/consumer-tools/educator-tool/financial-well-being-resources/",
+      "excerpt": "Have control over day-to-day, month-to-month finances Have the capacity to absorb a",
+      "locator": "Financial well-being resources; passagem: Have control"
+    }
+  },
+  {
+    "id": "cfpb_manual",
+    "file": "cfpb_manual.txt",
+    "source": "Consumer Financial Protection Bureau (CFPB)",
+    "title": "Measuring financial well-being",
+    "url": "https://files.consumerfinance.gov/f/201512_cfpb_financial-well-being-user-guide-scale.pdf",
+    "locator": "Página PDF 8; passagem: 10-item",
+    "accessed": "2026-11-06",
+    "kind": "resumo editorial",
+    "chunk_sha256": "65a9a7f2f9d547deb4f478af3c323cd3e2472e9ad0a072c7bc64eb771059b758",
+    "verification": {
+      "method": "leitura do documento oficial",
+      "checked": "2026-11-06",
+      "original_sha256": "93e1da18add86d94813caae7c4c0ead3c81d04da590a7e8ad8953825f796cbce",
+      "resolved_url": "https://files.consumerfinance.gov/f/201512_cfpb_financial-well-being-user-guide-scale.pdf",
+      "excerpt": "10-item5 scale and conducted extensive testing and validation of the scale to",
+      "locator": "Página PDF 8; passagem: 10-item"
+    }
+  },
+  {
+    "id": "cfpb_chatbots",
+    "file": "cfpb_chatbots.txt",
+    "source": "Consumer Financial Protection Bureau (CFPB)",
+    "title": "Chatbots in consumer finance",
+    "url": "https://www.consumerfinance.gov/data-research/research-reports/chatbots-in-consumer-finance/chatbots-in-consumer-finance/",
+    "locator": "Chatbots in consumer finance; passagem: Chatbots can also",
+    "accessed": "2026-11-06",
+    "kind": "resumo editorial",
+    "chunk_sha256": "89faafe37b14f7402660f746c9d49ea16034f9acb8e38f7a1023c33fefbdca76",
+    "verification": {
+      "method": "leitura do documento oficial",
+      "checked": "2026-11-06",
+      "original_sha256": "c1166cc7f17025b592eaa82ab7ad0b2be9cbc58f61ae1191bcd56845bcdddb26",
+      "resolved_url": "https://www.consumerfinance.gov/data-research/research-reports/chatbots-in-consumer-finance/chatbots-in-consumer-finance/",
+      "excerpt": "Chatbots can also raise certain privacy and security risks. 3 When chatbots",
+      "locator": "Chatbots in consumer finance; passagem: Chatbots can also"
+    }
+  },
+  {
+    "id": "cfpb_programas",
+    "file": "cfpb_programas.txt",
+    "source": "Consumer Financial Protection Bureau (CFPB)",
+    "title": "Case studies in using the financial well-being scale",
+    "url": "https://www.consumerfinance.gov/consumer-tools/educator-tool/financial-well-being-resources/integrate-scale-into-your-program/",
+    "locator": "Case studies in using the financial well-being scale; passagem: quarterly intervals",
+    "accessed": "2026-11-06",
+    "kind": "resumo editorial",
+    "chunk_sha256": "1fbe3b1b10116db66215b71739ee599d37ff68fcad318af939fd4497f90d8cc1",
+    "verification": {
+      "method": "leitura do documento oficial",
+      "checked": "2026-11-06",
+      "original_sha256": "e0b457781e8ee3603acf10bbdab03f2c4be16be0c21293e5cd9a9f9ddbf645d8",
+      "resolved_url": "https://www.consumerfinance.gov/consumer-tools/educator-tool/financial-well-being-resources/integrate-scale-into-your-program/",
+      "excerpt": "quarterly intervals with returning clients. Coaches start by asking clients the scale",
+      "locator": "Case studies in using the financial well-being scale; passagem: quarterly intervals"
+    }
+  },
+  {
+    "id": "cfpb_bemestar",
+    "file": "cfpb_bemestar.txt",
+    "source": "Consumer Financial Protection Bureau (CFPB)",
+    "title": "Financial well-being in America 2017–2020",
+    "url": "https://www.consumerfinance.gov/data-research/research-reports/data-spotlight-financial-well-being-in-america-2017-2020/",
+    "locator": "Financial well-being in America 2017–2020; passagem: Financial well-being is a state",
+    "accessed": "2026-11-06",
+    "kind": "resumo editorial",
+    "chunk_sha256": "e1fd6eb207931c7989fe3229410020e4b7fbf897d3852388a66c1b9c532b1b43",
+    "verification": {
+      "method": "leitura do documento oficial",
+      "checked": "2026-11-06",
+      "original_sha256": "6ad19cdd6ada873c84c252ca30ab94150c3fc4963fc21d1265d627b22c7a8c3f",
+      "resolved_url": "https://www.consumerfinance.gov/data-research/research-reports/data-spotlight-financial-well-being-in-america-2017-2020/",
+      "excerpt": "Financial well-being is a state of being wherein a person can fully",
+      "locator": "Financial well-being in America 2017–2020; passagem: Financial well-being is a state"
+    }
+  },
+  {
+    "id": "anpd_necessidade",
+    "file": "anpd_necessidade.txt",
+    "source": "Autoridade Nacional de Proteção de Dados (ANPD)",
+    "title": "Tratamento de dados pessoais pelo poder público",
+    "url": "https://www.gov.br/anpd/pt-br/centrais-de-conteudo/materiais-educativos-e-publicacoes/guia-poder-publico-anpd-versao-final.pdf/@@display-file/file",
+    "locator": "Página PDF 12; passagem: O princípio da necessidade",
+    "accessed": "2026-11-06",
+    "kind": "resumo editorial",
+    "chunk_sha256": "9fccb394d061e89419040ffd48882b4a06c1db4c638adfaa605ec6a7d252eb3a",
+    "verification": {
+      "method": "leitura do documento oficial",
+      "checked": "2026-11-06",
+      "original_sha256": "d64398e94a293df12562d2e8d5616f327c79cd55ce82554846a8ddd01cfa5082",
+      "resolved_url": "https://www.gov.br/anpd/pt-br/centrais-de-conteudo/materiais-educativos-e-publicacoes/guia-poder-publico-anpd-versao-final.pdf/@@display-file/file",
+      "excerpt": "o princípio da necessidade, não devem ser solicitados mais dados do que",
+      "locator": "Página PDF 12; passagem: O princípio da necessidade"
+    }
+  },
+  {
+    "id": "anpd_seguranca",
+    "file": "anpd_seguranca.txt",
+    "source": "Autoridade Nacional de Proteção de Dados (ANPD)",
+    "title": "Segurança da informação para agentes de pequeno porte",
+    "url": "https://www.gov.br/anpd/pt-br/centrais-de-conteudo/materiais-educativos-e-publicacoes/guia-vf.pdf/@@display-file/file",
+    "locator": "Página PDF 4; passagem: controle de acesso",
+    "accessed": "2026-11-06",
+    "kind": "resumo editorial",
+    "chunk_sha256": "3ec505fe9ded3e61f5e6064f6bd235fec4855eb99e19ac969b1c3926458cc2c6",
+    "verification": {
+      "method": "leitura do documento oficial",
+      "checked": "2026-11-06",
+      "original_sha256": "b720ea49fc3c99400b8156515dab17a82a63806b6c21da34f9fb868ac70e4f04",
+      "resolved_url": "https://www.gov.br/anpd/pt-br/centrais-de-conteudo/materiais-educativos-e-publicacoes/guia-vf.pdf/@@display-file/file",
+      "excerpt": "Controle de acesso................................ ................................ ................................ .............10 3.2.2 Segurança dos dados pessoais armazenados",
+      "locator": "Página PDF 4; passagem: controle de acesso"
+    }
+  },
+  {
+    "id": "anpd_retencao",
+    "file": "anpd_retencao.txt",
+    "source": "Autoridade Nacional de Proteção de Dados (ANPD)",
+    "title": "Perguntas frequentes",
+    "url": "https://www.gov.br/anpd/pt-br/acesso-a-informacao/perguntas-frequentes/perguntas-frequentes",
+    "locator": "Perguntas frequentes; passagem: A LGPD não especifica um prazo",
+    "accessed": "2026-11-06",
+    "kind": "resumo editorial",
+    "chunk_sha256": "0285eaca4320c63bec4370aab4399a993e45f06dbf40c34d3cfaea57b680c8a9",
+    "verification": {
+      "method": "leitura do documento oficial",
+      "checked": "2026-11-06",
+      "original_sha256": "7b258b092bc2363dee2fb61f303261a8093367b2ef0264b29700c6e225b4858d",
+      "resolved_url": "https://www.gov.br/anpd/pt-br/acesso-a-informacao/perguntas-frequentes/perguntas-frequentes",
+      "excerpt": "A LGPD não especifica um prazo durante o qual pode haver o",
+      "locator": "Perguntas frequentes; passagem: A LGPD não especifica um prazo"
+    }
+  }
+]

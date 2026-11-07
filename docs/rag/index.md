@@ -1,86 +1,68 @@
-# Base de Conhecimento e Mecanismo RAG (Semana 2)
+# Base de conhecimento e avaliação RAG
 
-Na **Semana 2** do projeto, o foco reside na estruturação da base de conhecimento, no pipeline de ingestão e na implementação do primeiro mecanismo de **Retrieval-Augmented Generation (RAG)** para educação financeira pessoal.
+A issue #4 entrega 20 documentos-fonte oficiais, 20 resumos temáticos, dados financeiros
+fictícios e um benchmark reproduzível. Veja o [catálogo de fontes](catalogo.md).
 
----
+## Estado implementado
 
-## 1. Fontes Oficiais Integradas (>= 20 Documentos-Fonte)
+O protótipo lê os arquivos TXT de `research/knowledge_base/`, preserva fonte, título,
+seção e URL e indexa título/seção/conteúdo. A resposta é uma extração do primeiro trecho,
+com citação e URL oficial. Não há chamada a LLM, embeddings densos nem persistência vetorial
+nesta etapa. A ingestão de originais e o banco vetorial pertencem à #8; síntese à #3.
 
-O Trokim não utiliza respostas abertas baseadas puramente no treinamento genérico de LLMs. Toda orientação sobre organização pessoal, reserva e planejamento é embasada em publicações de órgãos reguladores e de defesa do consumidor:
+## Chunking e representação
 
-1. **Banco Central do Brasil ([BCB](https://www.bcb.gov.br)):**
-   - *Caderno de Cidadania Financeira:* Princípios de orçamento doméstico, diagnóstico financeiro, planejamento e gestão de dívidas.
-2. **Comissão de Valores Mobiliários ([CVM](https://www.gov.br/investidor)):**
-   - *Portal do Investidor:* Guias de definição de objetivos de vida, prazos (curto, médio e longo prazo) e preservação do patrimônio familiar.
-3. **Consumer Financial Protection Bureau ([CFPB](https://www.consumerfinance.gov)):**
-   - *Financial Well-Being Scale:* Metodologia que avalia a segurança cotidiana, capacidade de absorver choques econômicos e sensação de controle.
-4. **Autoridade Nacional de Proteção de Dados ([ANPD](https://www.gov.br/anpd/pt-br)):**
-   - *Guias Orientativos de Privacidade:* Diretrizes de minimização, anonimização e conformidade estrita com a LGPD para dados financeiros.
+Cada resumo forma um chunk sem sobreposição. Não são aplicadas janelas fixas a textos
+curtos. Para originais longos, a #8 deverá experimentar 256/512 tokens e sobreposição
+de 10–20%, preservando localização, e comparar um modelo multilíngue com o baseline.
 
----
-
-## 2. Estratégias de Chunking e Embeddings
-
-Para garantir que a recuperação vetorial seja precisa e não dilua conceitos normativos, o Trokim adota a seguinte estratégia:
-
-### 2.1 Estratégia de Chunking
-* **Tipo:** Divisão semântica por seções e tópicos conceituais (*Semantic Boundary Chunking*).
-* **Tamanho de Janela:** Chunks entre **300 e 600 caracteres**, garantindo que cada trecho contenha um conceito completo (ex.: "O que é Reserva de Emergência", "Como calcular a taxa de juros do rotativo").
-* **Sobreposição (Overlap):** 50 a 80 caracteres entre blocos adjacentes para evitar perda de contexto nas bordas.
-* **Metadados Obrigatórios:** Cada chunk preserva:
-  - `source`: Nome da instituição reguladora (ex.: `Banco Central do Brasil`);
-  - `document`: Título da publicação (ex.: `Caderno de Cidadania Financeira`);
-  - `section`: Seção ou capítulo (ex.: `Capítulo 3 — Gestão de Dívidas`);
-  - `url`: Link oficial clicável para validação direta.
-
-### 2.2 Estratégia de Embeddings e Banco Vetorial
-* **Embeddings Textuais:** Matriz de representação com TF-IDF normalizado de n-gramas (1 a 3-grams) e suporte a modelos densos de embedding (ex.: `text-embedding-3-small` / sentence-transformers).
-* **Métrica de Similaridade:** Similaridade de Cosseno (*Cosine Similarity*) normalizada no intervalo $[0.0, 1.0]$.
-* **Banco Vetorial Local:** Armazenamento vetorial local-first indexado em memória e com persistência em disco, sem dependência de nuvem externa de terceiros para garantir privacidade.
-
----
-
-## 3. Diagrama do Pipeline de Ingestão e Recuperação
-
-O pipeline opera em dois ciclos desacoplados: a **ingestão/indexação** e a **recuperação com abstenção ativa**:
+O baseline combina TF-IDF de palavras (1–2 gramas) e caracteres (3–5), pesos 0,5/0,5,
+normalização de acentos e stopwords portuguesas. A busca usa cosseno, top-k=3 e limiar
+0,15. O índice é reconstruído em memória a partir dos documentos versionados.
 
 ```mermaid
 flowchart TD
-    subgraph Ingestao["Pipeline de Ingestão (Offline / Build)"]
-        D1["Documentos Regulatórios (BCB, CVM, CFPB, ANPD)"] --> SP["Text Splitter / Chunking Semântico"]
-        SP --> META["Enriquecimento com Metadados e URLs"]
-        META --> EMB["Modelo de Embeddings (Vetorização)"]
-        EMB --> VS[("Banco Vetorial Local (Vector Store)")]
-    end
-
-    subgraph Consulta["Pipeline de Recuperação em Tempo de Execução"]
-        Q["Pergunta do Usuário"] --> QE["Embeddings da Pergunta"]
-        QE --> RET["Busca por Similaridade de Cosseno"]
-        VS -.-> RET
-        RET --> GATE{"Score >= 0.15?"}
-        GATE -- Não --> ABS["Abstenção Ativa: 'Sem evidência oficial amparada'"]
-        GATE -- Sim --> CTX["Top-k Evidências com Metadados"]
-        CTX --> LLM["LLM com Guardrail Pedagógico"]
-        LLM --> RES["Resposta Estruturada + Cartão de Citação da Fonte"]
-        ABS --> RES
-    end
+    D[20 fontes oficiais verificadas] --> C[Resumos editoriais com metadados]
+    C --> I[TF-IDF em memória]
+    Q[Pergunta] --> P{Escopo educacional?}
+    P -- Não --> A[Abstenção]
+    P -- Sim --> B[Busca por similaridade]
+    I --> B
+    B --> S{Evidência acima do limiar?}
+    S -- Não --> A
+    S -- Sim --> R[Trecho da primeira evidência com título e URL]
 ```
 
----
+## Avaliação empírica
 
-## 4. Política de Abstenção Ativa
+`make test` executa benchmark, testes de research e API. `make research-test` executa
+apenas research. O job de research do CI faz instalação pelo lockfile, lint, testes e
+preserva o relatório JSON. A CLI reprova metas não atingidas e gabaritos inválidos.
 
-Um dos grandes diferenciais do projeto em relação a chatbots convencionais é a garantia de não inventar respostas:
+O gabarito contém 41 perguntas educacionais e 20 casos de abstenção. Recall@3 mede a
+fração das evidências relevantes recuperadas. Recuperação fundamentada exige primeira
+evidência relevante, extração sem conselhos adicionais, conceitos do gabarito, título e URL na resposta.
 
-> Se o usuário perguntar *"Qual criptomoeda comprar para ficar milionário amanhã?"* ou *"Como pedir dinheiro com agiota?"*, o mecanismo RAG detecta que as fontes regulatórias não amparam aconselhamento de compra individualizada ou práticas ilegais (`Score < 0.15`) e emite uma resposta formal de recusa, orientando para fontes oficiais de educação.
+| Configuração | Recall@3 | Recuperação | Abstenção |
+|---|---:|---:|---:|
+| Recuperador sem política de escopo | 95,12% | 97,56% | 75% |
+| Recuperador com política de escopo | 95,12% | 97,56% | 100% |
 
----
+As metas são recall/recuperação de pelo menos 90% e abstenção de 100%. A pergunta P12
+continua falhando e está registrada. Os snapshots por caso ficam em
+`research/rag_benchmark/results/`; resultados novos em `artifacts/research/`.
 
-## 5. Avaliação e Métricas em `research/rag_benchmark/`
+O conjunto foi usado no desenvolvimento e não é uma avaliação cega. O controle é o
+mesmo recuperador sem política, não uma LLM sem fontes; não há evidência para afirmar
+superioridade geral contra respostas abertas. Regras conservadoras de escopo reduzem
+respostas inadequadas nos casos testados e não garantem proteção contra todo ataque.
 
-O módulo `research/` contém um conjunto de perguntas-gabarito testadas contra a base:
+## Dados fictícios e proteção do consumidor
 
-- **Perguntas com resposta esperada (in-domain):** Avalia se o documento correto do BCB/CVM foi recuperado com similaridade suficiente.
-- **Perguntas adversariais/fora de escopo (out-of-domain):** Avalia se o sistema acionou a abstenção ativa sem alucinar.
-- **Métricas:** Taxa de revocação (*recall* >= 90%) e taxa de abstenção ativa correta (100%).
-- **Execução:** `make test` executa a suíte de testes e o benchmark de recuperação.
+`research/synthetic_data/` contém OFX e fatura PDF reproduzíveis, sem dados reais.
+Testes verificam extração, sinais, datas, IDs e conciliação de valores. Não há acesso a
+contas bancárias ou chaves de modelo nos testes. As orientações CFPB mantêm o contexto
+dos EUA; os princípios ANPD são apresentados com a finalidade e o alcance dos guias.
+
+A metodologia, limitações e instruções completas estão no `research/README.md` do
+repositório. A decisão técnica está na [ADR 0006](../adr/0006-curadoria-benchmark.md).

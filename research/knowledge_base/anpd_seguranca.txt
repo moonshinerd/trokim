@@ -1,0 +1,8 @@
+FONTE: Autoridade Nacional de Proteção de Dados (ANPD)
+TITULO: Segurança da informação para agentes de pequeno porte
+URL: https://www.gov.br/anpd/pt-br/centrais-de-conteudo/materiais-educativos-e-publicacoes/guia-vf.pdf/@@display-file/file
+CONSULTA: 2026-11-06
+TIPO: Resumo editorial em português; não é transcrição
+
+[SEÇÃO 1: Medidas de segurança]
+Proteção de dados pessoais requer medidas de segurança, incluindo controle de acesso e senhas adequadas. O guia se dirige a agentes de tratamento de pequeno porte. Restrinja permissões a quem precisa delas, evite compartilhamento de contas e adote autenticação adequada. Cópias de segurança, atualização de programas e treinamento de pessoas também ajudam a proteger as informações.

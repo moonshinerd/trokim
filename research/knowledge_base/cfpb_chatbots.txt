@@ -1,0 +1,8 @@
+FONTE: Consumer Financial Protection Bureau (CFPB)
+TITULO: Chatbots in consumer finance
+URL: https://www.consumerfinance.gov/data-research/research-reports/chatbots-in-consumer-finance/chatbots-in-consumer-finance/
+CONSULTA: 2026-11-06
+TIPO: Resumo editorial em português; não é transcrição
+
+[SEÇÃO 1: Riscos de chatbots]
+Chatbots financeiros podem fornecer informações incorretas, dificultar atendimento humano e gerar riscos de privacidade e segurança. O relatório trata do contexto dos Estados Unidos. Problemas complexos e contestações podem exigir intervenção humana. A ferramenta não deve impedir que o consumidor obtenha suporte adequado. O relatório não autoriza transferir conclusões jurídicas americanas para o Brasil.

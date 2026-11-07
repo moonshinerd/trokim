@@ -1,0 +1,8 @@
+FONTE: Autoridade Nacional de Proteção de Dados (ANPD)
+TITULO: Tratamento de dados pessoais pelo poder público
+URL: https://www.gov.br/anpd/pt-br/centrais-de-conteudo/materiais-educativos-e-publicacoes/guia-poder-publico-anpd-versao-final.pdf/@@display-file/file
+CONSULTA: 2026-11-06
+TIPO: Resumo editorial em português; não é transcrição
+
+[SEÇÃO 1: Princípio da necessidade]
+A minimização de dados limita o tratamento ao necessário para a finalidade: dados pertinentes, proporcionais e não excessivos. Este guia tem foco no poder público. Antes de coletar, verifique se a finalidade pode ser alcançada com menos dados ou sem identificar pessoas. O princípio não autoriza coletar extratos completos apenas porque estão disponíveis; é preciso justificar os dados necessários à finalidade.
