@@ -1,4 +1,4 @@
-.PHONY: help setup lint format test docs-serve docs-build api-run mobile-run rag-eval synthetic-data research-test
+.PHONY: help setup lint format test docs-serve docs-build api-run mobile-run rag-eval synthetic-data research-test ingest
 
 RAG_REPORT ?= artifacts/research/current.json
 
@@ -13,6 +13,7 @@ help:
 	@echo "  make api-run        - Inicia o servidor backend FastAPI (:8000)"
 	@echo "  make mobile-run     - Inicia o aplicativo Flutter no emulador/dispositivo Android"
 	@echo "  make rag-eval       - Executa benchmark e avaliação da base RAG (Semana 2)"
+	@echo "  make ingest         - Ingere a base de conhecimento no banco vetorial local"
 	@echo "  make synthetic-data - Gera extratos OFX e faturas sintéticas para testes LGPD"
 
 setup:
@@ -53,6 +54,9 @@ mobile-run:
 
 rag-eval:
 	cd api && uv run python ../research/rag_benchmark/eval_rag.py --output "$(abspath $(RAG_REPORT))"
+
+ingest:
+	cd api && uv run python -m app.services.ingestion_service
 
 synthetic-data:
 	cd api && uv run python ../research/synthetic_data/generate_datasets.py

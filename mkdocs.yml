@@ -87,3 +87,4 @@ nav:
       - "0004 – Cálculos Determinísticos": adr/0004-calculos-deterministicos.md
       - "0005 – Importação Local de OFX e PDF": adr/0005-importacao-local-ofx-pdf.md
       - "0006 – Curadoria e Benchmark": adr/0006-curadoria-benchmark.md
+      - "0007 – Banco Vetorial e Embeddings": adr/0007-banco-vetorial-embeddings.md

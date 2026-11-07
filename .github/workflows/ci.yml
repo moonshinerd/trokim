@@ -16,6 +16,8 @@ jobs:
   api:
     name: api (lint + testes)
     runs-on: ubuntu-latest
+    env:
+      FASTEMBED_CACHE_PATH: /home/runner/.cache/fastembed
     defaults:
       run:
         working-directory: api
@@ -24,6 +26,10 @@ jobs:
       - uses: astral-sh/setup-uv@v6
         with:
           python-version: "3.12"
+      - uses: actions/cache@v4
+        with:
+          path: ~/.cache/fastembed
+          key: fastembed-${{ runner.os }}-${{ hashFiles('api/uv.lock') }}
       - run: uv sync --frozen
       - name: ruff check
         run: uv run ruff check .
@@ -35,11 +41,17 @@ jobs:
   research:
     name: research (benchmark rag + lint)
     runs-on: ubuntu-latest
+    env:
+      FASTEMBED_CACHE_PATH: /home/runner/.cache/fastembed
     steps:
       - uses: actions/checkout@v4
       - uses: astral-sh/setup-uv@v6
         with:
           python-version: "3.12"
+      - uses: actions/cache@v4
+        with:
+          path: ~/.cache/fastembed
+          key: fastembed-${{ runner.os }}-${{ hashFiles('api/uv.lock') }}
       - name: Instalar dependências fixadas
         run: cd api && uv sync --frozen
       - name: Verificar lint e formatação de research

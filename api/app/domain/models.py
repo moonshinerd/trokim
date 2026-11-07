@@ -54,6 +54,7 @@ class BudgetScenario(BaseModel):
 
 class EvidenceChunk(BaseModel):
     id: str
+    document_id: str = ""  # nome do arquivo de origem, ex.: "bcb_orcamento.txt"
     source_name: str  # ex.: "Banco Central do Brasil", "CVM", "CFPB"
     source_url: str | None = None
     document_title: str

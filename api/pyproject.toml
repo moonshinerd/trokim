@@ -18,6 +18,8 @@ dependencies = [
     "litellm>=1.40",
     "httpx>=0.28.0",
     "python-multipart>=0.0.12",
+    "fastembed>=0.9.1",
+    "sqlite-vec>=0.1.9",
 ]
 
 [dependency-groups]

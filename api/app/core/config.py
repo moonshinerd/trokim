@@ -1,4 +1,9 @@
+from pathlib import Path
+
+from pydantic import Field
 from pydantic_settings import BaseSettings, SettingsConfigDict
+
+API_DIR = Path(__file__).resolve().parents[2]
 
 
 class Settings(BaseSettings):
@@ -15,6 +20,17 @@ class Settings(BaseSettings):
 
     RAG_SIMILARITY_THRESHOLD: float = 0.15
     RAG_TOP_K: int = 3
+    RAG_EMBEDDING_MODEL: str = "sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2"
+    RAG_VECTOR_DB_PATH: str = "data/vector_store.db"
+    RAG_CHUNK_MAX_CHARS: int = Field(default=500, gt=0)
+    RAG_CHUNK_OVERLAP_TOKENS: int = Field(default=50, ge=0)
+    RAG_HYBRID_ALPHA: float = Field(default=0.3, ge=0, le=1)
+
+    @property
+    def vector_db_path(self) -> Path:
+        """Caminho do banco vetorial; relativo é resolvido a partir de `api/`, não do cwd."""
+        path = Path(self.RAG_VECTOR_DB_PATH)
+        return path if path.is_absolute() else API_DIR / path
 
     model_config = SettingsConfigDict(
         env_file=".env",

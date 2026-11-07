@@ -6,14 +6,20 @@ from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics.pairwise import cosine_similarity
 from sklearn.pipeline import FeatureUnion
 
+from app.clients.fastembed_embeddings import get_default_embedder
+from app.clients.sqlite_vector_store import SQLiteVectorStore
 from app.core.config import settings
 from app.domain.models import EvidenceChunk
+from app.models.embedding_model import EmbeddingModel
+from app.models.vector_store import VectorStore
+from app.services.ingestion_service import compute_corpus_hash, ingest
 
 
 class RAGService:
     """Mecanismo RAG baseado estritamente em fontes oficiais (BCB, CVM, CFPB, ANPD).
 
     Implementa busca de evidências e política ativa de abstenção (ADR 0003).
+    A busca é híbrida: score = alpha * cosseno_denso + (1 - alpha) * cosseno_tfidf.
     """
 
     def __init__(
@@ -22,130 +28,97 @@ class RAGService:
         *,
         top_k: int | None = None,
         threshold: float | None = None,
+        alpha: float | None = None,
+        embedder: EmbeddingModel | None = None,
+        store: VectorStore | None = None,
     ):
         self.top_k = settings.RAG_TOP_K if top_k is None else top_k
         self.threshold = settings.RAG_SIMILARITY_THRESHOLD if threshold is None else threshold
+        self.alpha = settings.RAG_HYBRID_ALPHA if alpha is None else alpha
         if knowledge_base_dir:
             self.base_dir = Path(knowledge_base_dir)
         else:
             # Caminho padrão a partir de api/app/services
             self.base_dir = Path(__file__).resolve().parents[3] / "research" / "knowledge_base"
 
-        self.chunks: list[EvidenceChunk] = []
+        self.embedder = embedder or get_default_embedder()
+        self.store = store or SQLiteVectorStore(
+            settings.vector_db_path, dimension=self.embedder.dimension
+        )
+        if self.base_dir.exists() and self._needs_ingestion():
+            ingest(self.base_dir, self.store, self.embedder)
+
+        self.chunks: list[EvidenceChunk] = self.store.all()
         self.vectorizer: FeatureUnion | None = None
         self.tfidf_matrix = None
-        self._load_knowledge_base()
+        self._fit_lexical_index()
 
-    def _load_knowledge_base(self) -> None:
-        if not self.base_dir.exists():
+    def _needs_ingestion(self) -> bool:
+        return (
+            self.store.count() == 0
+            or self.store.get_meta("corpus_hash") != compute_corpus_hash(self.base_dir)
+            or self.store.get_meta("embedding_model") != self.embedder.name
+        )
+
+    def _fit_lexical_index(self) -> None:
+        if not self.chunks:
             return
 
-        chunks: list[EvidenceChunk] = []
-        for file_path in sorted(self.base_dir.glob("*.txt")):
-            content = file_path.read_text(encoding="utf-8")
-            file_chunks = self._parse_document(content, file_path.name)
-            chunks.extend(file_chunks)
-
-        self.chunks = chunks
-
-        if self.chunks:
-            corpus = [f"{c.document_title}. {c.section}. {c.content}" for c in self.chunks]
-            # Palavras preservam conceitos; caracteres toleram flexões em português.
-            self.vectorizer = FeatureUnion(
-                [
-                    (
-                        "words",
-                        TfidfVectorizer(
-                            lowercase=True,
-                            strip_accents="unicode",
-                            ngram_range=(1, 2),
-                            stop_words=[
-                                "a",
-                                "as",
-                                "o",
-                                "os",
-                                "de",
-                                "da",
-                                "das",
-                                "do",
-                                "dos",
-                                "e",
-                                "em",
-                                "um",
-                                "uma",
-                                "para",
-                                "por",
-                                "com",
-                                "que",
-                                "qual",
-                                "quais",
-                                "como",
-                                "no",
-                                "na",
-                                "nos",
-                                "nas",
-                                "ao",
-                                "aos",
-                                "se",
-                                "meu",
-                                "minha",
-                            ],
-                        ),
+        corpus = [f"{c.document_title}. {c.section}. {c.content}" for c in self.chunks]
+        # Palavras preservam conceitos; caracteres toleram flexões em português.
+        self.vectorizer = FeatureUnion(
+            [
+                (
+                    "words",
+                    TfidfVectorizer(
+                        lowercase=True,
+                        strip_accents="unicode",
+                        ngram_range=(1, 2),
+                        stop_words=[
+                            "a",
+                            "as",
+                            "o",
+                            "os",
+                            "de",
+                            "da",
+                            "das",
+                            "do",
+                            "dos",
+                            "e",
+                            "em",
+                            "um",
+                            "uma",
+                            "para",
+                            "por",
+                            "com",
+                            "que",
+                            "qual",
+                            "quais",
+                            "como",
+                            "no",
+                            "na",
+                            "nos",
+                            "nas",
+                            "ao",
+                            "aos",
+                            "se",
+                            "meu",
+                            "minha",
+                        ],
                     ),
-                    (
-                        "chars",
-                        TfidfVectorizer(
-                            analyzer="char_wb",
-                            ngram_range=(3, 5),
-                            strip_accents="unicode",
-                        ),
+                ),
+                (
+                    "chars",
+                    TfidfVectorizer(
+                        analyzer="char_wb",
+                        ngram_range=(3, 5),
+                        strip_accents="unicode",
                     ),
-                ],
-                transformer_weights={"words": 0.5, "chars": 0.5},
-            )
-            self.tfidf_matrix = self.vectorizer.fit_transform(corpus)
-
-    def _parse_document(self, text: str, filename: str) -> list[EvidenceChunk]:
-        chunks: list[EvidenceChunk] = []
-        source_name = "Órgão Regulador Oficial"
-        doc_title = filename
-
-        # Extrai metadados do cabeçalho se houver
-        source_match = re.search(r"FONTE:\s*(.+)", text)
-        if source_match:
-            source_name = source_match.group(1).strip()
-
-        title_match = re.search(r"TITULO:\s*(.+)", text)
-        if title_match:
-            doc_title = title_match.group(1).strip()
-
-        url_match = re.search(r"^URL:\s*(https://\S+)", text, re.MULTILINE)
-        source_url = url_match.group(1) if url_match else None
-
-        # Quebra por seções marcadas com [SEÇÃO ...]
-        sections = re.split(r"(\[SEÇÃO\s+\d+:.*?\])", text)
-        current_section = "Introdução"
-
-        for part in sections:
-            part = part.strip()
-            if not part:
-                continue
-            if part.startswith("[SEÇÃO"):
-                current_section = part.replace("[", "").replace("]", "").strip()
-            elif current_section != "Introdução":
-                chunk_id = f"{filename}_{len(chunks) + 1}"
-                chunks.append(
-                    EvidenceChunk(
-                        id=chunk_id,
-                        source_name=source_name,
-                        source_url=source_url,
-                        document_title=doc_title,
-                        section=current_section,
-                        content=part,
-                    )
-                )
-
-        return chunks
+                ),
+            ],
+            transformer_weights={"words": 0.5, "chars": 0.5},
+        )
+        self.tfidf_matrix = self.vectorizer.fit_transform(corpus)
 
     def retrieve_evidence(
         self,
@@ -160,21 +133,40 @@ class RAGService:
         k = top_k if top_k is not None else self.top_k
         thresh = threshold if threshold is not None else self.threshold
 
-        if k <= 0:
+        if k <= 0 or not query.strip():
             return []
 
         query_vec = self.vectorizer.transform([query])
-        similarities = cosine_similarity(query_vec, self.tfidf_matrix).flatten()
+        tfidf_sims = cosine_similarity(query_vec, self.tfidf_matrix).flatten()
 
-        ranked_indices = similarities.argsort()[::-1]
+        dense_hits = self.store.search(self.embedder.embed_query(query), self.store.count())
+        dense_sims = {chunk.id: similarity for chunk, similarity in dense_hits}
+
+        scored = [
+            (
+                idx,
+                self.alpha * dense_sims.get(chunk.id, 0.0)
+                + (1 - self.alpha) * float(tfidf_sims[idx]),
+            )
+            for idx, chunk in enumerate(self.chunks)
+        ]
+        scored.sort(key=lambda item: item[1], reverse=True)
+
         results: list[EvidenceChunk] = []
-
-        for idx in ranked_indices[:k]:
-            score = float(similarities[idx])
-            if score > 0 and score >= thresh:
-                chunk = self.chunks[idx].model_copy()
-                chunk.score = round(score, 4)
-                results.append(chunk)
+        seen_documents: set[str] = set()
+        for idx, score in scored:
+            if score <= 0 or score < thresh:
+                break
+            chunk = self.chunks[idx]
+            document_key = chunk.document_id or chunk.id
+            if document_key in seen_documents:
+                continue
+            seen_documents.add(document_key)
+            result = chunk.model_copy()
+            result.score = round(score, 4)
+            results.append(result)
+            if len(results) == k:
+                break
 
         return results
 

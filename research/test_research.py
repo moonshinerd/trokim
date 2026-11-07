@@ -62,8 +62,10 @@ def test_catalogo_rastreavel():
         else:
             assert doc["id"] == "bcb_calculadora"
             assert "índice de busca" in verification["method"]
-    assert len(RAGService().chunks) == len(catalog)
-    assert all(chunk.source_url for chunk in RAGService().chunks)
+    chunks = RAGService().chunks
+    assert {chunk.document_id for chunk in chunks} == {doc["file"] for doc in catalog}
+    assert len(chunks) >= len(catalog)
+    assert all(chunk.source_url for chunk in chunks)
 
 
 def test_massa_sintetica_e_reproducivel(tmp_path):
@@ -97,7 +99,7 @@ def test_benchmark_atinge_metas_e_gabarito_cobre_catalogo():
     report = benchmark.evaluate()
     assert report["passed"], [c["id"] for c in report["cases"] if not c["passed"]]
     assert report["counts"] == {"in_domain": 41, "abstention": 20}
-    expected = {c.id for c in RAGService().chunks}
+    expected = {c.document_id for c in RAGService().chunks}
     assert {ev for c in report["cases"] for ev in c["relevant"]} == expected
 
 

@@ -1,6 +1,6 @@
 # Pesquisa e avaliação RAG — issue #4
 
-Base curada com **20 documentos-fonte distintos e 20 chunks** de BCB, CVM, CFPB
+Base curada com **20 documentos-fonte distintos**, segmentados em janelas de evidência, de BCB, CVM, CFPB
 e ANPD. `knowledge_base/catalog.json` registra título, instituição, URL, localização,
 data de consulta, resumo editorial e SHA-256 do arquivo local. O campo `verification`
 registra um pequeno excerto de conferência e, para os 19 documentos lidos diretamente,
@@ -30,22 +30,23 @@ atribuições numéricas sem confirmação, como um tamanho universal da reserva
 
 ## Chunking e representação
 
-Cada arquivo contém um resumo temático autocontido; o parser extrai apenas o texto
-após `[SEÇÃO 1: ...]`. Não há janela fixa nem sobreposição no baseline: fragmentar
-resumos curtos prejudicaria a unidade conceitual. Título e seção entram na representação,
-enquanto instituição, URL e cabeçalhos ficam como metadados de citação.
+O parser extrai apenas o conteúdo de cada seção, preservando cabeçalho como metadados.
+Janelas de até 500 caracteres respeitam palavras e repetem frases finais da janela
+anterior até no máximo 50 palavras; token é aproximado por palavra separada por espaço.
+Título e seção entram na representação. IDs de chunks são `<arquivo>_<n>`;
+`document_id` identifica o arquivo original. O top-k não repete documentos.
 
-O índice esparso combina TF-IDF de palavras (1–2 gramas) e caracteres dentro de palavras
-(3–5 gramas), com pesos iguais e similaridade cosseno. Usa normalização de acentos,
-stopwords portuguesas de função, top-k=3 e limiar 0,15. Os caracteres ajudam com flexões
-como investimento/investimentos. O índice é reconstruído em memória; não há persistência
-vetorial nem embeddings neurais implementados nesta issue.
+A representação combina embeddings locais multilíngues normalizados de 384 dimensões
+(`sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2`, FastEmbed/ONNX) com
+TF-IDF de palavras (1–2 gramas) e caracteres (3–5 gramas), pesos lexicais iguais.
+O score é `alpha * cosseno_denso + (1 - alpha) * cosseno_tfidf`.
+Os vetores persistem em SQLite com tabela virtual `sqlite-vec/vec0`; o índice lexical
+é reconstruído em memória sobre os mesmos chunks. Hash do corpus, modelo e parâmetros
+de chunking invalidam a ingestão quando mudam. O cache do modelo é por processo.
 
-Para #8, a estratégia proposta é comparar recortes de originais de 256 e 512 tokens,
-sobreposição de 10–20% e embeddings multilíngues locais, registrando modelo, versão,
-dimensão, custo de memória e latência. Esses parâmetros são hipóteses de experimento,
-não funcionalidades atuais. Usar o gabarito versionado e novos casos reservados para
-avaliar o resultado sem otimização sobre as perguntas de teste.
+A calibração de cinco valores de alpha e a configuração final estão na
+[documentação RAG](../docs/rag/index.md). A resposta continua extrativa, sem síntese por LLM.
+O conjunto de calibração não substitui uma avaliação cega em casos reservados.
 
 ## Execução e CI
 
@@ -66,7 +67,11 @@ make lint
 
 O job `research` instala com `uv sync --frozen`, verifica lint/formatação, executa
 `make research-test` e publica o relatório JSON como artefato inclusive quando as metas
-falham. Os testes não usam rede, modelos externos ou dados reais.
+falham. A primeira execução do modelo baixa os pesos; as seguintes usam o cache
+`~/.cache/fastembed` (configurável por `FASTEMBED_CACHE_PATH`), preservado nos jobs
+`api` e `research`. Testes unitários de ingestão/armazenamento usam vetores falsos;
+o benchmark usa o modelo real. Não há dados reais nem chaves de provedor.
+`make ingest` permite construir o índice antes de iniciar a API.
 
 Para reproduzir os snapshots versionados:
 
@@ -86,10 +91,10 @@ versões e hashes do corpus, gabarito e serviço para identificar resultados des
 São **61 casos**: 41 dentro do domínio (conceitos, situações cotidianas e uma pergunta
 multifonte) e 20 de abstenção (incluindo sobreposição de termos financeiros, dados pessoais
 indisponíveis, instruções adversariais e recomendações individuais). Cada pergunta tem
-resposta de referência e grupos de conceitos aceitos. IDs relevantes são de chunks,
+resposta de referência e grupos de conceitos aceitos. IDs relevantes são de documentos,
 sem deduzir o acerto apenas pela instituição.
 
-- **Recall@3:** média da fração de chunks relevantes recuperados entre os três primeiros.
+- **Recall@3:** média da fração de documentos relevantes recuperados entre os três primeiros.
 - **Recuperação fundamentada:** proporção de perguntas no domínio cuja resposta cita como
   primeira evidência um chunk relevante, reproduz apenas o trecho do corpus com título e URL
   oficial, sem conselhos adicionais, e satisfaz os conceitos esperados. Só haver uma fonte correta em segundo lugar não basta.
@@ -99,13 +104,14 @@ A execução reprova se recall ou recuperação forem menores que 90%, ou absten
 100%. Gabaritos vazios, sem uma das classes, duplicados e com IDs desconhecidos reprovam.
 Testes negativos verificam que abster-se de tudo ou inventar uma resposta não passa.
 
-| Controle no mesmo corpus e gabarito | Recall@3 | Recuperação fundamentada | Abstenção |
+| Linha de base histórica, antes das issues #8/#3 | Recall@3 | Recuperação fundamentada | Abstenção |
 |---|---:|---:|---:|
 | TF-IDF sem política de escopo | 95,12% | 97,56% (40/41) | 75% (15/20) |
 | TF-IDF com política de escopo | 95,12% | 97,56% (40/41) | 100% (20/20) |
 
-A falha **P12** (escolha de investimento para viagem em dois anos) está preservada. O
-resultado comprova o ganho de 25 pontos percentuais da política de escopo neste conjunto.
+A linha de base falhava em **P12** (escolha de investimento para viagem em dois anos).
+O ganho histórico de 25 pontos percentuais corresponde à política naquele recuperador;
+os snapshots atuais refletem a configuração híbrida documentada, não a linha de base antiga.
 Não demonstra superioridade contra uma LLM sem RAG: o controle é uma ablação do mesmo
 recuperador. Uma comparação generativa exige definir modelo, prompts, execuções e rubrica
 independente. Essa conclusão mais ampla não é inferida dos critérios de recuperação da #4.
@@ -133,5 +139,5 @@ fatura de uma instituição financeira.
 
 RF05/RF06: base oficial, referências e avaliação da recuperação. RNF06: massa fictícia,
 minimização e testes sem dados financeiros reais. GQ05/GQ08/GQ11: fundamentação, limite
-explicável de resposta e critérios de privacidade. Banco vetorial, ingestão completa e
-síntese generativa continuam nas issues #8 e #3.
+explicável de resposta e critérios de privacidade. As issues #8 e #3 acrescentam banco
+vetorial, ingestão e contrato tipado do endpoint; síntese generativa permanece fora do escopo.

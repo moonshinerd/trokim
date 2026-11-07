@@ -1,17 +1,29 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "configuration": {
     "top_k": 3,
     "threshold": 0.15,
-    "representation": "tfidf(words=1:2,chars=3:5;weights=.5/.5)"
+    "representation": "híbrida: cosseno denso + tfidf(words=1:2,chars=3:5;weights=.5/.5)",
+    "embedding_model": "sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2",
+    "hybrid_alpha": 0.3,
+    "vector_store": "sqlite-vec (vec0)",
+    "chunk_max_chars": 500,
+    "chunk_overlap_tokens": 50
   },
   "provenance": {
-    "questions_sha256": "068d421d8db224a0b5af78432bf5f1a833f71bc4851a62ba18891e432da028e6",
-    "evaluator_sha256": "de3f09ee08537cf91cf83b12f113557c08d401652506612e650370a66f46d980",
+    "questions_sha256": "383b8a1560cd8ca76f6b361a709d95ef9538a49f03dffdf030fda851c00424f5",
+    "evaluator_sha256": "ddfbe7188363ab3f3f29f74bbadf8b376c1569526f4153ee3696e1bdb6e2073a",
     "corpus_sha256": "3deb71c8154b515b5c1072b98d6e58202b56a03a86b32c31cda279ad4a93721f",
-    "service_sha256": "3e39d62551cf820b86c88cb06cbfe50d2ac38dc022188a045db2c02e48d5bd66",
-    "python": "3.12.16",
+    "service_sha256": "2f4df74b81526ca1c6f45dd76aa3d7c00aba92ca3a157acc73d095065a137800",
+    "python": "3.12.13",
     "scikit_learn": "1.9.1",
+    "fastembed": "0.9.1",
+    "sqlite_vec": "0.1.9",
+    "embedding_model": "sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2",
+    "hybrid_alpha": 0.3,
+    "vector_store": "sqlite-vec (vec0)",
+    "chunk_max_chars": 500,
+    "chunk_overlap_tokens": 50,
     "policy": "RAGService"
   },
   "counts": {
@@ -19,8 +31,8 @@
     "abstention": 20
   },
   "metrics": {
-    "recall_at_3": 0.9512195121951219,
-    "grounded_accuracy": 0.975609756097561,
+    "recall_at_3": 0.9878048780487805,
+    "grounded_accuracy": 0.9512195121951219,
     "abstention_accuracy": 1.0
   },
   "passed": true,
@@ -29,7 +41,7 @@
       "id": "Q01",
       "query": "Como organizar receitas e despesas no orçamento?",
       "relevant": [
-        "bcb_orcamento.txt_1"
+        "bcb_orcamento.txt"
       ],
       "expected_answer": "Registrar receitas e despesas, acompanhar e avaliar o orçamento.",
       "concepts": [
@@ -42,20 +54,21 @@
       ],
       "category": "conceito",
       "retrieved": [
-        "bcb_orcamento.txt_1",
-        "bcb_dividas.txt_1"
+        "bcb_orcamento.txt",
+        "bcb_dividas.txt",
+        "cvm_objetivos.txt"
       ],
       "recall_at_3": 1.0,
       "concepts_ok": true,
       "answered": true,
-      "answer": "Com base nas diretrizes do Banco Central do Brasil (BCB) (SEÇÃO 1: Módulo 2: orçamento):\n\nO orçamento registra receitas e despesas para compreender hábitos de consumo e planejar as finanças pessoais. Despesas fixas se repetem com valores estáveis; despesas variáveis oscilam conforme o consumo. O registro permite identificar para onde vai o dinheiro e distinguir necessidades de desejos. A elaboração envolve planejamento, registro, agrupamento e avaliação. Anote também pequenos gastos; compare o previsto com o realizado e ajuste as escolhas. Quando receitas superam despesas, o superávit pode formar poupança para emergências e projetos. Envolva a família na definição das prioridades.\n\nFonte oficial citada: Caderno de Educação Financeira.\nURL: https://www.bcb.gov.br/content/cidadaniafinanceira/documentos_cidadania/Cuidando_do_seu_dinheiro_Gestao_de_Financas_Pessoais/caderno_cidadania_financeira.pdf",
+      "answer": "Com base nas diretrizes do Banco Central do Brasil (BCB) (SEÇÃO 1: Módulo 2: orçamento):\n\nO orçamento registra receitas e despesas para compreender hábitos de consumo e planejar as finanças pessoais. Despesas fixas se repetem com valores estáveis; despesas variáveis oscilam conforme o consumo. O registro permite identificar para onde vai o dinheiro e distinguir necessidades de desejos. A elaboração envolve planejamento, registro, agrupamento e avaliação. Anote também pequenos gastos; compare o previsto com o realizado e ajuste as escolhas.\n\nFonte oficial citada: Caderno de Educação Financeira.\nURL: https://www.bcb.gov.br/content/cidadaniafinanceira/documentos_cidadania/Cuidando_do_seu_dinheiro_Gestao_de_Financas_Pessoais/caderno_cidadania_financeira.pdf",
       "passed": true
     },
     {
       "id": "P01",
       "query": "Anoto até os pequenos gastos da casa? Como começo o orçamento familiar?",
       "relevant": [
-        "bcb_orcamento.txt_1"
+        "bcb_orcamento.txt"
       ],
       "expected_answer": "Registrar receitas e despesas, acompanhar e avaliar o orçamento.",
       "concepts": [
@@ -68,19 +81,21 @@
       ],
       "category": "cotidiano",
       "retrieved": [
-        "bcb_orcamento.txt_1"
+        "bcb_orcamento.txt",
+        "cvm_objetivos.txt",
+        "bcb_credito.txt"
       ],
       "recall_at_3": 1.0,
       "concepts_ok": true,
       "answered": true,
-      "answer": "Com base nas diretrizes do Banco Central do Brasil (BCB) (SEÇÃO 1: Módulo 2: orçamento):\n\nO orçamento registra receitas e despesas para compreender hábitos de consumo e planejar as finanças pessoais. Despesas fixas se repetem com valores estáveis; despesas variáveis oscilam conforme o consumo. O registro permite identificar para onde vai o dinheiro e distinguir necessidades de desejos. A elaboração envolve planejamento, registro, agrupamento e avaliação. Anote também pequenos gastos; compare o previsto com o realizado e ajuste as escolhas. Quando receitas superam despesas, o superávit pode formar poupança para emergências e projetos. Envolva a família na definição das prioridades.\n\nFonte oficial citada: Caderno de Educação Financeira.\nURL: https://www.bcb.gov.br/content/cidadaniafinanceira/documentos_cidadania/Cuidando_do_seu_dinheiro_Gestao_de_Financas_Pessoais/caderno_cidadania_financeira.pdf",
+      "answer": "Com base nas diretrizes do Banco Central do Brasil (BCB) (SEÇÃO 1: Módulo 2: orçamento):\n\nO orçamento registra receitas e despesas para compreender hábitos de consumo e planejar as finanças pessoais. Despesas fixas se repetem com valores estáveis; despesas variáveis oscilam conforme o consumo. O registro permite identificar para onde vai o dinheiro e distinguir necessidades de desejos. A elaboração envolve planejamento, registro, agrupamento e avaliação. Anote também pequenos gastos; compare o previsto com o realizado e ajuste as escolhas.\n\nFonte oficial citada: Caderno de Educação Financeira.\nURL: https://www.bcb.gov.br/content/cidadaniafinanceira/documentos_cidadania/Cuidando_do_seu_dinheiro_Gestao_de_Financas_Pessoais/caderno_cidadania_financeira.pdf",
       "passed": true
     },
     {
       "id": "Q02",
       "query": "Quais riscos do uso do crédito e cartão?",
       "relevant": [
-        "bcb_credito.txt_1"
+        "bcb_credito.txt"
       ],
       "expected_answer": "O crédito cobra juros e compromete a renda futura.",
       "concepts": [
@@ -93,8 +108,9 @@
       ],
       "category": "conceito",
       "retrieved": [
-        "bcb_credito.txt_1",
-        "bcb_custos.txt_1"
+        "bcb_credito.txt",
+        "bcb_custos.txt",
+        "cvm_diversificacao.txt"
       ],
       "recall_at_3": 1.0,
       "concepts_ok": true,
@@ -106,7 +122,7 @@
       "id": "P02",
       "query": "Uma parcela pequena de empréstimo significa que posso contratar sem avaliar a renda futura?",
       "relevant": [
-        "bcb_credito.txt_1"
+        "bcb_credito.txt"
       ],
       "expected_answer": "O crédito cobra juros e compromete a renda futura.",
       "concepts": [
@@ -119,7 +135,9 @@
       ],
       "category": "cotidiano",
       "retrieved": [
-        "bcb_credito.txt_1"
+        "bcb_credito.txt",
+        "bcb_custos.txt",
+        "cvm_emergencia.txt"
       ],
       "recall_at_3": 1.0,
       "concepts_ok": true,
@@ -131,7 +149,7 @@
       "id": "Q03",
       "query": "Como começar a organizar minhas dívidas?",
       "relevant": [
-        "bcb_dividas.txt_1"
+        "bcb_dividas.txt"
       ],
       "expected_answer": "Listar dívidas e negociar condições com os credores.",
       "concepts": [
@@ -144,7 +162,8 @@
       ],
       "category": "conceito",
       "retrieved": [
-        "bcb_dividas.txt_1"
+        "bcb_dividas.txt",
+        "bcb_credito.txt"
       ],
       "recall_at_3": 1.0,
       "concepts_ok": true,
@@ -156,7 +175,7 @@
       "id": "P03",
       "query": "Tenho dívidas atrasadas. Devo procurar os credores para renegociar?",
       "relevant": [
-        "bcb_dividas.txt_1"
+        "bcb_dividas.txt"
       ],
       "expected_answer": "Listar dívidas e negociar condições com os credores.",
       "concepts": [
@@ -169,7 +188,9 @@
       ],
       "category": "cotidiano",
       "retrieved": [
-        "bcb_dividas.txt_1"
+        "bcb_dividas.txt",
+        "bcb_credito.txt",
+        "bcb_custos.txt"
       ],
       "recall_at_3": 1.0,
       "concepts_ok": true,
@@ -181,7 +202,7 @@
       "id": "Q04",
       "query": "Devo comparar crédito só pela taxa de juros?",
       "relevant": [
-        "bcb_custos.txt_1"
+        "bcb_custos.txt"
       ],
       "expected_answer": "Comparar o custo total da operação, não apenas juros.",
       "concepts": [
@@ -194,8 +215,9 @@
       ],
       "category": "conceito",
       "retrieved": [
-        "bcb_custos.txt_1",
-        "bcb_credito.txt_1"
+        "bcb_custos.txt",
+        "bcb_credito.txt",
+        "bcb_dividas.txt"
       ],
       "recall_at_3": 1.0,
       "concepts_ok": true,
@@ -207,7 +229,7 @@
       "id": "P04",
       "query": "O cheque especial que aparece no extrato é dinheiro meu ou crédito com juros?",
       "relevant": [
-        "bcb_custos.txt_1"
+        "bcb_custos.txt"
       ],
       "expected_answer": "Cheque especial é crédito do banco, não renda extra.",
       "concepts": [
@@ -220,8 +242,9 @@
       ],
       "category": "cotidiano",
       "retrieved": [
-        "bcb_custos.txt_1",
-        "bcb_credito.txt_1"
+        "bcb_custos.txt",
+        "bcb_credito.txt",
+        "cvm_liquidez.txt"
       ],
       "recall_at_3": 1.0,
       "concepts_ok": true,
@@ -233,7 +256,7 @@
       "id": "Q05",
       "query": "A Calculadora do Cidadão verifica os cálculos do banco?",
       "relevant": [
-        "bcb_calculadora.txt_1"
+        "bcb_calculadora.txt"
       ],
       "expected_answer": "A Calculadora do Cidadão simula valores e não verifica os cálculos do banco.",
       "concepts": [
@@ -246,7 +269,8 @@
       ],
       "category": "conceito",
       "retrieved": [
-        "bcb_calculadora.txt_1"
+        "bcb_calculadora.txt",
+        "bcb_custos.txt"
       ],
       "recall_at_3": 1.0,
       "concepts_ok": true,
@@ -258,7 +282,7 @@
       "id": "P05",
       "query": "Posso usar a Calculadora do Cidadão como auditoria definitiva do financiamento?",
       "relevant": [
-        "bcb_calculadora.txt_1"
+        "bcb_calculadora.txt"
       ],
       "expected_answer": "A Calculadora do Cidadão simula valores e não verifica os cálculos do banco.",
       "concepts": [
@@ -271,7 +295,9 @@
       ],
       "category": "cotidiano",
       "retrieved": [
-        "bcb_calculadora.txt_1"
+        "bcb_calculadora.txt",
+        "cfpb_programas.txt",
+        "bcb_custos.txt"
       ],
       "recall_at_3": 1.0,
       "concepts_ok": true,
@@ -283,7 +309,7 @@
       "id": "Q06",
       "query": "Como definir metas financeiras e prazos?",
       "relevant": [
-        "cvm_objetivos.txt_1"
+        "cvm_objetivos.txt"
       ],
       "expected_answer": "Definir objetivos e o prazo em que o dinheiro será necessário.",
       "concepts": [
@@ -296,7 +322,9 @@
       ],
       "category": "conceito",
       "retrieved": [
-        "cvm_objetivos.txt_1"
+        "cvm_objetivos.txt",
+        "cfpb_escala.txt",
+        "bcb_orcamento.txt"
       ],
       "recall_at_3": 1.0,
       "concepts_ok": true,
@@ -308,7 +336,7 @@
       "id": "P06",
       "query": "Quero viajar e estudar. Como transformar esses objetivos em metas financeiras com prazos?",
       "relevant": [
-        "cvm_objetivos.txt_1"
+        "cvm_objetivos.txt"
       ],
       "expected_answer": "Definir objetivos e o prazo em que o dinheiro será necessário.",
       "concepts": [
@@ -321,7 +349,9 @@
       ],
       "category": "cotidiano",
       "retrieved": [
-        "cvm_objetivos.txt_1"
+        "cvm_objetivos.txt",
+        "cvm_escolha.txt",
+        "cvm_perfil.txt"
       ],
       "recall_at_3": 1.0,
       "concepts_ok": true,
@@ -333,7 +363,7 @@
       "id": "Q07",
       "query": "Onde manter uma reserva de emergência?",
       "relevant": [
-        "cvm_emergencia.txt_1"
+        "cvm_emergencia.txt"
       ],
       "expected_answer": "Priorizar baixo risco e liquidez, sem carência.",
       "concepts": [
@@ -349,7 +379,8 @@
       ],
       "category": "conceito",
       "retrieved": [
-        "cvm_emergencia.txt_1"
+        "cvm_emergencia.txt",
+        "bcb_orcamento.txt"
       ],
       "recall_at_3": 1.0,
       "concepts_ok": true,
@@ -361,7 +392,7 @@
       "id": "P07",
       "query": "Para imprevistos, devo abrir mão da liquidez para buscar ganho maior?",
       "relevant": [
-        "cvm_emergencia.txt_1"
+        "cvm_emergencia.txt"
       ],
       "expected_answer": "Priorizar baixo risco e liquidez, sem carência.",
       "concepts": [
@@ -377,7 +408,9 @@
       ],
       "category": "cotidiano",
       "retrieved": [
-        "cvm_emergencia.txt_1"
+        "cvm_emergencia.txt",
+        "cvm_liquidez.txt",
+        "cvm_risco.txt"
       ],
       "recall_at_3": 1.0,
       "concepts_ok": true,
@@ -389,7 +422,7 @@
       "id": "Q08",
       "query": "Como avaliar meu perfil de investidor?",
       "relevant": [
-        "cvm_perfil.txt_1"
+        "cvm_perfil.txt"
       ],
       "expected_answer": "Avaliar capacidade de perdas e disposição para risco.",
       "concepts": [
@@ -402,7 +435,9 @@
       ],
       "category": "conceito",
       "retrieved": [
-        "cvm_perfil.txt_1"
+        "cvm_perfil.txt",
+        "cvm_escolha.txt",
+        "cfpb_escala.txt"
       ],
       "recall_at_3": 1.0,
       "concepts_ok": true,
@@ -414,7 +449,7 @@
       "id": "P08",
       "query": "Pessoas da mesma idade precisam ter o mesmo perfil de risco?",
       "relevant": [
-        "cvm_perfil.txt_1"
+        "cvm_perfil.txt"
       ],
       "expected_answer": "Avaliar capacidade de perdas e disposição para risco.",
       "concepts": [
@@ -427,7 +462,9 @@
       ],
       "category": "cotidiano",
       "retrieved": [
-        "cvm_perfil.txt_1"
+        "cvm_perfil.txt",
+        "cvm_risco.txt",
+        "cvm_escolha.txt"
       ],
       "recall_at_3": 1.0,
       "concepts_ok": true,
@@ -439,7 +476,7 @@
       "id": "Q09",
       "query": "Devo desconfiar de promessas de retornos milagrosos?",
       "relevant": [
-        "cvm_risco.txt_1"
+        "cvm_risco.txt"
       ],
       "expected_answer": "Desconfiar de retornos milagrosos porque envolvem risco.",
       "concepts": [
@@ -452,7 +489,8 @@
       ],
       "category": "conceito",
       "retrieved": [
-        "cvm_risco.txt_1"
+        "cvm_risco.txt",
+        "cvm_perfil.txt"
       ],
       "recall_at_3": 1.0,
       "concepts_ok": true,
@@ -464,7 +502,7 @@
       "id": "P09",
       "query": "Se um investimento rendeu bem antes, a rentabilidade futura está garantida?",
       "relevant": [
-        "cvm_risco.txt_1"
+        "cvm_risco.txt"
       ],
       "expected_answer": "Rentabilidade passada não garante retorno futuro.",
       "concepts": [
@@ -477,8 +515,9 @@
       ],
       "category": "cotidiano",
       "retrieved": [
-        "cvm_risco.txt_1",
-        "cvm_liquidez.txt_1"
+        "cvm_risco.txt",
+        "cvm_liquidez.txt",
+        "cvm_escolha.txt"
       ],
       "recall_at_3": 1.0,
       "concepts_ok": true,
@@ -490,7 +529,7 @@
       "id": "Q10",
       "query": "Liquidez diária impede oscilação do preço?",
       "relevant": [
-        "cvm_liquidez.txt_1"
+        "cvm_liquidez.txt"
       ],
       "expected_answer": "Resgate diário não elimina oscilação no preço.",
       "concepts": [
@@ -503,7 +542,9 @@
       ],
       "category": "conceito",
       "retrieved": [
-        "cvm_liquidez.txt_1"
+        "cvm_liquidez.txt",
+        "cvm_emergencia.txt",
+        "cvm_diversificacao.txt"
       ],
       "recall_at_3": 1.0,
       "concepts_ok": true,
@@ -515,7 +556,7 @@
       "id": "P10",
       "query": "Um título com resgate diário pode ter variação de preço?",
       "relevant": [
-        "cvm_liquidez.txt_1"
+        "cvm_liquidez.txt"
       ],
       "expected_answer": "Resgate diário não elimina oscilação no preço.",
       "concepts": [
@@ -528,7 +569,9 @@
       ],
       "category": "cotidiano",
       "retrieved": [
-        "cvm_liquidez.txt_1"
+        "cvm_liquidez.txt",
+        "cvm_emergencia.txt",
+        "cvm_perfil.txt"
       ],
       "recall_at_3": 1.0,
       "concepts_ok": true,
@@ -540,7 +583,7 @@
       "id": "Q11",
       "query": "Diversificação elimina todos os riscos?",
       "relevant": [
-        "cvm_diversificacao.txt_1"
+        "cvm_diversificacao.txt"
       ],
       "expected_answer": "Diversificar reduz riscos mas não elimina todos.",
       "concepts": [
@@ -553,7 +596,9 @@
       ],
       "category": "conceito",
       "retrieved": [
-        "cvm_diversificacao.txt_1"
+        "cvm_diversificacao.txt",
+        "cvm_risco.txt",
+        "cvm_perfil.txt"
       ],
       "recall_at_3": 1.0,
       "concepts_ok": true,
@@ -565,7 +610,7 @@
       "id": "P11",
       "query": "Colocar tudo na mesma empresa reduz meu risco? Como a diversificação ajuda?",
       "relevant": [
-        "cvm_diversificacao.txt_1"
+        "cvm_diversificacao.txt"
       ],
       "expected_answer": "Diversificar reduz riscos mas não elimina todos.",
       "concepts": [
@@ -578,7 +623,9 @@
       ],
       "category": "cotidiano",
       "retrieved": [
-        "cvm_diversificacao.txt_1"
+        "cvm_diversificacao.txt",
+        "cvm_risco.txt",
+        "cvm_perfil.txt"
       ],
       "recall_at_3": 1.0,
       "concepts_ok": true,
@@ -590,7 +637,7 @@
       "id": "Q12",
       "query": "Existe investimento ideal para todos?",
       "relevant": [
-        "cvm_escolha.txt_1"
+        "cvm_escolha.txt"
       ],
       "expected_answer": "A escolha depende dos objetivos e do perfil.",
       "concepts": [
@@ -603,7 +650,9 @@
       ],
       "category": "conceito",
       "retrieved": [
-        "cvm_escolha.txt_1"
+        "cvm_escolha.txt",
+        "cvm_perfil.txt",
+        "cvm_objetivos.txt"
       ],
       "recall_at_3": 1.0,
       "concepts_ok": true,
@@ -615,7 +664,7 @@
       "id": "P12",
       "query": "Vou viajar em dois anos. Como considerar prazo, liquidez e risco ao escolher investimentos?",
       "relevant": [
-        "cvm_escolha.txt_1"
+        "cvm_escolha.txt"
       ],
       "expected_answer": "A escolha depende dos objetivos e do perfil.",
       "concepts": [
@@ -628,11 +677,11 @@
       ],
       "category": "cotidiano",
       "retrieved": [
-        "cvm_liquidez.txt_1",
-        "cvm_risco.txt_1",
-        "cvm_objetivos.txt_1"
+        "cvm_liquidez.txt",
+        "cvm_escolha.txt",
+        "cvm_risco.txt"
       ],
-      "recall_at_3": 0.0,
+      "recall_at_3": 1.0,
       "concepts_ok": false,
       "answered": true,
       "answer": "Com base nas diretrizes do Comissão de Valores Mobiliários (CVM) (SEÇÃO 1: Liquidez):\n\nLiquidez é a possibilidade de converter o investimento em dinheiro. Resgate diário não garante ausência de oscilação no preço de um título de renda fixa. Antes de aplicar, considere quando o dinheiro será necessário e se o resgate pode ocorrer antes do vencimento. Disponibilidade para vender ou resgatar e manutenção do valor investido são características diferentes.\n\nFonte oficial citada: Liquidez.\nURL: https://www.gov.br/investidor/pt-br/investir/antes-de-investir/entenda-as-caracteristicas-dos-investimentos/liquidez",
@@ -642,8 +691,8 @@
       "id": "Q13",
       "query": "Quantas perguntas tem a escala de bem-estar financeiro?",
       "relevant": [
-        "cfpb_escala.txt_1",
-        "cfpb_manual.txt_1"
+        "cfpb_escala.txt",
+        "cfpb_manual.txt"
       ],
       "expected_answer": "A versão padrão possui dez itens.",
       "concepts": [
@@ -656,9 +705,9 @@
       ],
       "category": "conceito",
       "retrieved": [
-        "cfpb_escala.txt_1",
-        "cfpb_manual.txt_1",
-        "cfpb_bemestar.txt_1"
+        "cfpb_escala.txt",
+        "cfpb_manual.txt",
+        "cfpb_bemestar.txt"
       ],
       "recall_at_3": 1.0,
       "concepts_ok": true,
@@ -670,7 +719,7 @@
       "id": "P13",
       "query": "Os quatro elementos do bem-estar financeiro são só renda e patrimônio?",
       "relevant": [
-        "cfpb_escala.txt_1"
+        "cfpb_escala.txt"
       ],
       "expected_answer": "São controle cotidiano, choques, metas e liberdade de escolha.",
       "concepts": [
@@ -689,7 +738,9 @@
       ],
       "category": "cotidiano",
       "retrieved": [
-        "cfpb_escala.txt_1"
+        "cfpb_escala.txt",
+        "cfpb_bemestar.txt",
+        "cfpb_manual.txt"
       ],
       "recall_at_3": 1.0,
       "concepts_ok": true,
@@ -701,7 +752,7 @@
       "id": "Q14",
       "query": "Como foi validada a escala de bem-estar financeiro?",
       "relevant": [
-        "cfpb_manual.txt_1"
+        "cfpb_manual.txt"
       ],
       "expected_answer": "A escala foi desenvolvida com especialistas e testes de validação.",
       "concepts": [
@@ -714,21 +765,21 @@
       ],
       "category": "conceito",
       "retrieved": [
-        "cfpb_manual.txt_1",
-        "cfpb_escala.txt_1",
-        "cfpb_bemestar.txt_1"
+        "cfpb_escala.txt",
+        "cfpb_manual.txt",
+        "cfpb_bemestar.txt"
       ],
       "recall_at_3": 1.0,
-      "concepts_ok": true,
+      "concepts_ok": false,
       "answered": true,
-      "answer": "Com base nas diretrizes do Consumer Financial Protection Bureau (CFPB) (SEÇÃO 1: Escala e aplicação):\n\nO guia da escala de bem-estar financeiro descreve um questionário padrão de dez itens desenvolvido com especialistas e testes de validação. A aplicação deve seguir o método oficial de pontuação. A pontuação de zero a cem depende das respostas e das tabelas oficiais apropriadas à idade e forma de aplicação. Não use simplesmente a soma das respostas como escore. O guia também apresenta uma versão abreviada de cinco itens.\n\nFonte oficial citada: Measuring financial well-being.\nURL: https://files.consumerfinance.gov/f/201512_cfpb_financial-well-being-user-guide-scale.pdf",
-      "passed": true
+      "answer": "Com base nas diretrizes do Consumer Financial Protection Bureau (CFPB) (SEÇÃO 1: Escala):\n\nA Financial Well-Being Scale oferece um questionário de dez itens para medir bem-estar financeiro. Não equivale a uma avaliação de crédito nem a uma recomendação de investimento. Os quatro elementos são controle das finanças cotidianas, capacidade de absorver choques, progresso em metas e liberdade para aproveitar a vida. Renda e patrimônio sozinhos não descrevem toda a percepção de segurança. A escala permite acompanhar mudanças ao longo do tempo.\n\nFonte oficial citada: Financial well-being resources.\nURL: https://www.consumerfinance.gov/consumer-tools/educator-tool/financial-well-being-resources/",
+      "passed": false
     },
     {
       "id": "P14",
       "query": "Posso somar as respostas da escala e chamar o resultado de pontuação oficial?",
       "relevant": [
-        "cfpb_manual.txt_1"
+        "cfpb_manual.txt"
       ],
       "expected_answer": "Usar as tabelas oficiais por idade e aplicação, não a soma simples.",
       "concepts": [
@@ -744,7 +795,9 @@
       ],
       "category": "cotidiano",
       "retrieved": [
-        "cfpb_manual.txt_1"
+        "cfpb_manual.txt",
+        "cfpb_programas.txt",
+        "cfpb_escala.txt"
       ],
       "recall_at_3": 1.0,
       "concepts_ok": true,
@@ -756,7 +809,7 @@
       "id": "Q15",
       "query": "Quais riscos de privacidade os chatbots financeiros apresentam?",
       "relevant": [
-        "cfpb_chatbots.txt_1"
+        "cfpb_chatbots.txt"
       ],
       "expected_answer": "Chatbots podem errar e dificultar atendimento humano, além de riscos de privacidade.",
       "concepts": [
@@ -772,7 +825,9 @@
       ],
       "category": "conceito",
       "retrieved": [
-        "cfpb_chatbots.txt_1"
+        "cfpb_chatbots.txt",
+        "cvm_risco.txt",
+        "anpd_seguranca.txt"
       ],
       "recall_at_3": 1.0,
       "concepts_ok": true,
@@ -784,7 +839,7 @@
       "id": "P15",
       "query": "Um chatbot pode substituir o atendimento humano em toda contestação financeira?",
       "relevant": [
-        "cfpb_chatbots.txt_1"
+        "cfpb_chatbots.txt"
       ],
       "expected_answer": "Chatbots podem errar e dificultar atendimento humano, além de riscos de privacidade.",
       "concepts": [
@@ -800,7 +855,9 @@
       ],
       "category": "cotidiano",
       "retrieved": [
-        "cfpb_chatbots.txt_1"
+        "cfpb_chatbots.txt",
+        "cfpb_programas.txt",
+        "cvm_perfil.txt"
       ],
       "recall_at_3": 1.0,
       "concepts_ok": true,
@@ -812,7 +869,7 @@
       "id": "Q16",
       "query": "Posso repetir a medição da escala durante o acompanhamento?",
       "relevant": [
-        "cfpb_programas.txt_1"
+        "cfpb_programas.txt"
       ],
       "expected_answer": "A escala pode ser repetida ao longo do acompanhamento.",
       "concepts": [
@@ -825,7 +882,9 @@
       ],
       "category": "conceito",
       "retrieved": [
-        "cfpb_programas.txt_1"
+        "cfpb_programas.txt",
+        "cfpb_escala.txt",
+        "cfpb_manual.txt"
       ],
       "recall_at_3": 1.0,
       "concepts_ok": true,
@@ -837,8 +896,8 @@
       "id": "P16",
       "query": "Faz sentido medir o bem-estar financeiro no início e durante um programa de orientação?",
       "relevant": [
-        "cfpb_programas.txt_1",
-        "cfpb_escala.txt_1"
+        "cfpb_programas.txt",
+        "cfpb_escala.txt"
       ],
       "expected_answer": "A escala pode ser repetida ao longo do acompanhamento.",
       "concepts": [
@@ -853,10 +912,11 @@
       ],
       "category": "cotidiano",
       "retrieved": [
-        "cfpb_escala.txt_1",
-        "cfpb_bemestar.txt_1"
+        "cfpb_escala.txt",
+        "cfpb_programas.txt",
+        "cfpb_bemestar.txt"
       ],
-      "recall_at_3": 0.5,
+      "recall_at_3": 1.0,
       "concepts_ok": true,
       "answered": true,
       "answer": "Com base nas diretrizes do Consumer Financial Protection Bureau (CFPB) (SEÇÃO 1: Escala):\n\nA Financial Well-Being Scale oferece um questionário de dez itens para medir bem-estar financeiro. Não equivale a uma avaliação de crédito nem a uma recomendação de investimento. Os quatro elementos são controle das finanças cotidianas, capacidade de absorver choques, progresso em metas e liberdade para aproveitar a vida. Renda e patrimônio sozinhos não descrevem toda a percepção de segurança. A escala permite acompanhar mudanças ao longo do tempo.\n\nFonte oficial citada: Financial well-being resources.\nURL: https://www.consumerfinance.gov/consumer-tools/educator-tool/financial-well-being-resources/",
@@ -866,7 +926,7 @@
       "id": "Q17",
       "query": "O que significa bem-estar financeiro?",
       "relevant": [
-        "cfpb_bemestar.txt_1"
+        "cfpb_bemestar.txt"
       ],
       "expected_answer": "Bem-estar inclui obrigações, segurança e liberdade de escolha.",
       "concepts": [
@@ -882,9 +942,9 @@
       ],
       "category": "conceito",
       "retrieved": [
-        "cfpb_bemestar.txt_1",
-        "cfpb_escala.txt_1",
-        "cfpb_manual.txt_1"
+        "cfpb_bemestar.txt",
+        "cfpb_escala.txt",
+        "cfpb_manual.txt"
       ],
       "recall_at_3": 1.0,
       "concepts_ok": true,
@@ -896,7 +956,7 @@
       "id": "P17",
       "query": "Ganhar mais salário é suficiente para definir bem-estar financeiro?",
       "relevant": [
-        "cfpb_bemestar.txt_1"
+        "cfpb_bemestar.txt"
       ],
       "expected_answer": "Bem-estar inclui obrigações, segurança e liberdade de escolha.",
       "concepts": [
@@ -912,8 +972,9 @@
       ],
       "category": "cotidiano",
       "retrieved": [
-        "cfpb_bemestar.txt_1",
-        "cfpb_escala.txt_1"
+        "cfpb_bemestar.txt",
+        "cfpb_escala.txt",
+        "cfpb_manual.txt"
       ],
       "recall_at_3": 1.0,
       "concepts_ok": true,
@@ -925,7 +986,7 @@
       "id": "Q18",
       "query": "O que significa minimização de dados?",
       "relevant": [
-        "anpd_necessidade.txt_1"
+        "anpd_necessidade.txt"
       ],
       "expected_answer": "Coletar apenas dados necessários, pertinentes e proporcionais à finalidade.",
       "concepts": [
@@ -941,7 +1002,9 @@
       ],
       "category": "conceito",
       "retrieved": [
-        "anpd_necessidade.txt_1"
+        "anpd_necessidade.txt",
+        "anpd_retencao.txt",
+        "bcb_calculadora.txt"
       ],
       "recall_at_3": 1.0,
       "concepts_ok": true,
@@ -953,7 +1016,7 @@
       "id": "P18",
       "query": "Um aplicativo precisa coletar meu extrato inteiro se a finalidade exige menos dados?",
       "relevant": [
-        "anpd_necessidade.txt_1"
+        "anpd_necessidade.txt"
       ],
       "expected_answer": "Coletar apenas dados necessários, pertinentes e proporcionais à finalidade.",
       "concepts": [
@@ -969,7 +1032,9 @@
       ],
       "category": "cotidiano",
       "retrieved": [
-        "anpd_necessidade.txt_1"
+        "anpd_necessidade.txt",
+        "anpd_retencao.txt",
+        "anpd_seguranca.txt"
       ],
       "recall_at_3": 1.0,
       "concepts_ok": true,
@@ -981,7 +1046,7 @@
       "id": "Q19",
       "query": "Como proteger dados com controle de acesso e senhas?",
       "relevant": [
-        "anpd_seguranca.txt_1"
+        "anpd_seguranca.txt"
       ],
       "expected_answer": "Restringir acesso e usar autenticação, senhas e treinamento.",
       "concepts": [
@@ -994,7 +1059,9 @@
       ],
       "category": "conceito",
       "retrieved": [
-        "anpd_seguranca.txt_1"
+        "anpd_seguranca.txt",
+        "anpd_necessidade.txt",
+        "anpd_retencao.txt"
       ],
       "recall_at_3": 1.0,
       "concepts_ok": true,
@@ -1006,7 +1073,7 @@
       "id": "P19",
       "query": "Como proteger minha conta bancária com controle de acesso e senhas?",
       "relevant": [
-        "anpd_seguranca.txt_1"
+        "anpd_seguranca.txt"
       ],
       "expected_answer": "Restringir acesso e usar autenticação, senhas e treinamento.",
       "concepts": [
@@ -1019,7 +1086,7 @@
       ],
       "category": "cotidiano",
       "retrieved": [
-        "anpd_seguranca.txt_1"
+        "anpd_seguranca.txt"
       ],
       "recall_at_3": 1.0,
       "concepts_ok": true,
@@ -1031,7 +1098,7 @@
       "id": "Q20",
       "query": "Existe prazo único na LGPD para guardar dados?",
       "relevant": [
-        "anpd_retencao.txt_1"
+        "anpd_retencao.txt"
       ],
       "expected_answer": "Não há prazo único; a duração depende da finalidade e das hipóteses legais.",
       "concepts": [
@@ -1044,7 +1111,9 @@
       ],
       "category": "conceito",
       "retrieved": [
-        "anpd_retencao.txt_1"
+        "anpd_retencao.txt",
+        "anpd_necessidade.txt",
+        "cvm_escolha.txt"
       ],
       "recall_at_3": 1.0,
       "concepts_ok": true,
@@ -1056,7 +1125,7 @@
       "id": "P20",
       "query": "Os dados devem ser eliminados ao terminar a finalidade, ou existem exceções legais de conservação?",
       "relevant": [
-        "anpd_retencao.txt_1"
+        "anpd_retencao.txt"
       ],
       "expected_answer": "Há exceções legais de conservação após a finalidade.",
       "concepts": [
@@ -1069,8 +1138,9 @@
       ],
       "category": "cotidiano",
       "retrieved": [
-        "anpd_retencao.txt_1",
-        "anpd_necessidade.txt_1"
+        "anpd_retencao.txt",
+        "anpd_necessidade.txt",
+        "cvm_risco.txt"
       ],
       "recall_at_3": 1.0,
       "concepts_ok": true,
@@ -1082,8 +1152,8 @@
       "id": "M01",
       "query": "Para reserva de emergência, como considerar liquidez e risco ao escolher o investimento?",
       "relevant": [
-        "cvm_emergencia.txt_1",
-        "cvm_escolha.txt_1"
+        "cvm_emergencia.txt",
+        "cvm_escolha.txt"
       ],
       "expected_answer": "Considerar objetivo, baixo risco e disponibilidade dos recursos.",
       "concepts": [
@@ -1096,9 +1166,9 @@
       ],
       "category": "multifonte",
       "retrieved": [
-        "cvm_emergencia.txt_1",
-        "cvm_liquidez.txt_1",
-        "cvm_risco.txt_1"
+        "cvm_emergencia.txt",
+        "cvm_liquidez.txt",
+        "cvm_risco.txt"
       ],
       "recall_at_3": 0.5,
       "concepts_ok": true,

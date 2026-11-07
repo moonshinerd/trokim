@@ -3,7 +3,7 @@
     "id": "Q01",
     "query": "Como organizar receitas e despesas no orçamento?",
     "relevant": [
-      "bcb_orcamento.txt_1"
+      "bcb_orcamento.txt"
     ],
     "expected_answer": "Registrar receitas e despesas, acompanhar e avaliar o orçamento.",
     "concepts": [
@@ -20,7 +20,7 @@
     "id": "P01",
     "query": "Anoto até os pequenos gastos da casa? Como começo o orçamento familiar?",
     "relevant": [
-      "bcb_orcamento.txt_1"
+      "bcb_orcamento.txt"
     ],
     "expected_answer": "Registrar receitas e despesas, acompanhar e avaliar o orçamento.",
     "concepts": [
@@ -37,7 +37,7 @@
     "id": "Q02",
     "query": "Quais riscos do uso do crédito e cartão?",
     "relevant": [
-      "bcb_credito.txt_1"
+      "bcb_credito.txt"
     ],
     "expected_answer": "O crédito cobra juros e compromete a renda futura.",
     "concepts": [
@@ -54,7 +54,7 @@
     "id": "P02",
     "query": "Uma parcela pequena de empréstimo significa que posso contratar sem avaliar a renda futura?",
     "relevant": [
-      "bcb_credito.txt_1"
+      "bcb_credito.txt"
     ],
     "expected_answer": "O crédito cobra juros e compromete a renda futura.",
     "concepts": [
@@ -71,7 +71,7 @@
     "id": "Q03",
     "query": "Como começar a organizar minhas dívidas?",
     "relevant": [
-      "bcb_dividas.txt_1"
+      "bcb_dividas.txt"
     ],
     "expected_answer": "Listar dívidas e negociar condições com os credores.",
     "concepts": [
@@ -88,7 +88,7 @@
     "id": "P03",
     "query": "Tenho dívidas atrasadas. Devo procurar os credores para renegociar?",
     "relevant": [
-      "bcb_dividas.txt_1"
+      "bcb_dividas.txt"
     ],
     "expected_answer": "Listar dívidas e negociar condições com os credores.",
     "concepts": [
@@ -105,7 +105,7 @@
     "id": "Q04",
     "query": "Devo comparar crédito só pela taxa de juros?",
     "relevant": [
-      "bcb_custos.txt_1"
+      "bcb_custos.txt"
     ],
     "expected_answer": "Comparar o custo total da operação, não apenas juros.",
     "concepts": [
@@ -122,7 +122,7 @@
     "id": "P04",
     "query": "O cheque especial que aparece no extrato é dinheiro meu ou crédito com juros?",
     "relevant": [
-      "bcb_custos.txt_1"
+      "bcb_custos.txt"
     ],
     "expected_answer": "Cheque especial é crédito do banco, não renda extra.",
     "concepts": [
@@ -139,7 +139,7 @@
     "id": "Q05",
     "query": "A Calculadora do Cidadão verifica os cálculos do banco?",
     "relevant": [
-      "bcb_calculadora.txt_1"
+      "bcb_calculadora.txt"
     ],
     "expected_answer": "A Calculadora do Cidadão simula valores e não verifica os cálculos do banco.",
     "concepts": [
@@ -156,7 +156,7 @@
     "id": "P05",
     "query": "Posso usar a Calculadora do Cidadão como auditoria definitiva do financiamento?",
     "relevant": [
-      "bcb_calculadora.txt_1"
+      "bcb_calculadora.txt"
     ],
     "expected_answer": "A Calculadora do Cidadão simula valores e não verifica os cálculos do banco.",
     "concepts": [
@@ -173,7 +173,7 @@
     "id": "Q06",
     "query": "Como definir metas financeiras e prazos?",
     "relevant": [
-      "cvm_objetivos.txt_1"
+      "cvm_objetivos.txt"
     ],
     "expected_answer": "Definir objetivos e o prazo em que o dinheiro será necessário.",
     "concepts": [
@@ -190,7 +190,7 @@
     "id": "P06",
     "query": "Quero viajar e estudar. Como transformar esses objetivos em metas financeiras com prazos?",
     "relevant": [
-      "cvm_objetivos.txt_1"
+      "cvm_objetivos.txt"
     ],
     "expected_answer": "Definir objetivos e o prazo em que o dinheiro será necessário.",
     "concepts": [
@@ -207,7 +207,7 @@
     "id": "Q07",
     "query": "Onde manter uma reserva de emergência?",
     "relevant": [
-      "cvm_emergencia.txt_1"
+      "cvm_emergencia.txt"
     ],
     "expected_answer": "Priorizar baixo risco e liquidez, sem carência.",
     "concepts": [
@@ -227,7 +227,7 @@
     "id": "P07",
     "query": "Para imprevistos, devo abrir mão da liquidez para buscar ganho maior?",
     "relevant": [
-      "cvm_emergencia.txt_1"
+      "cvm_emergencia.txt"
     ],
     "expected_answer": "Priorizar baixo risco e liquidez, sem carência.",
     "concepts": [
@@ -247,7 +247,7 @@
     "id": "Q08",
     "query": "Como avaliar meu perfil de investidor?",
     "relevant": [
-      "cvm_perfil.txt_1"
+      "cvm_perfil.txt"
     ],
     "expected_answer": "Avaliar capacidade de perdas e disposição para risco.",
     "concepts": [
@@ -264,7 +264,7 @@
     "id": "P08",
     "query": "Pessoas da mesma idade precisam ter o mesmo perfil de risco?",
     "relevant": [
-      "cvm_perfil.txt_1"
+      "cvm_perfil.txt"
     ],
     "expected_answer": "Avaliar capacidade de perdas e disposição para risco.",
     "concepts": [
@@ -281,7 +281,7 @@
     "id": "Q09",
     "query": "Devo desconfiar de promessas de retornos milagrosos?",
     "relevant": [
-      "cvm_risco.txt_1"
+      "cvm_risco.txt"
     ],
     "expected_answer": "Desconfiar de retornos milagrosos porque envolvem risco.",
     "concepts": [
@@ -298,7 +298,7 @@
     "id": "P09",
     "query": "Se um investimento rendeu bem antes, a rentabilidade futura está garantida?",
     "relevant": [
-      "cvm_risco.txt_1"
+      "cvm_risco.txt"
     ],
     "expected_answer": "Rentabilidade passada não garante retorno futuro.",
     "concepts": [
@@ -315,7 +315,7 @@
     "id": "Q10",
     "query": "Liquidez diária impede oscilação do preço?",
     "relevant": [
-      "cvm_liquidez.txt_1"
+      "cvm_liquidez.txt"
     ],
     "expected_answer": "Resgate diário não elimina oscilação no preço.",
     "concepts": [
@@ -332,7 +332,7 @@
     "id": "P10",
     "query": "Um título com resgate diário pode ter variação de preço?",
     "relevant": [
-      "cvm_liquidez.txt_1"
+      "cvm_liquidez.txt"
     ],
     "expected_answer": "Resgate diário não elimina oscilação no preço.",
     "concepts": [
@@ -349,7 +349,7 @@
     "id": "Q11",
     "query": "Diversificação elimina todos os riscos?",
     "relevant": [
-      "cvm_diversificacao.txt_1"
+      "cvm_diversificacao.txt"
     ],
     "expected_answer": "Diversificar reduz riscos mas não elimina todos.",
     "concepts": [
@@ -366,7 +366,7 @@
     "id": "P11",
     "query": "Colocar tudo na mesma empresa reduz meu risco? Como a diversificação ajuda?",
     "relevant": [
-      "cvm_diversificacao.txt_1"
+      "cvm_diversificacao.txt"
     ],
     "expected_answer": "Diversificar reduz riscos mas não elimina todos.",
     "concepts": [
@@ -383,7 +383,7 @@
     "id": "Q12",
     "query": "Existe investimento ideal para todos?",
     "relevant": [
-      "cvm_escolha.txt_1"
+      "cvm_escolha.txt"
     ],
     "expected_answer": "A escolha depende dos objetivos e do perfil.",
     "concepts": [
@@ -400,7 +400,7 @@
     "id": "P12",
     "query": "Vou viajar em dois anos. Como considerar prazo, liquidez e risco ao escolher investimentos?",
     "relevant": [
-      "cvm_escolha.txt_1"
+      "cvm_escolha.txt"
     ],
     "expected_answer": "A escolha depende dos objetivos e do perfil.",
     "concepts": [
@@ -417,8 +417,8 @@
     "id": "Q13",
     "query": "Quantas perguntas tem a escala de bem-estar financeiro?",
     "relevant": [
-      "cfpb_escala.txt_1",
-      "cfpb_manual.txt_1"
+      "cfpb_escala.txt",
+      "cfpb_manual.txt"
     ],
     "expected_answer": "A versão padrão possui dez itens.",
     "concepts": [
@@ -435,7 +435,7 @@
     "id": "P13",
     "query": "Os quatro elementos do bem-estar financeiro são só renda e patrimônio?",
     "relevant": [
-      "cfpb_escala.txt_1"
+      "cfpb_escala.txt"
     ],
     "expected_answer": "São controle cotidiano, choques, metas e liberdade de escolha.",
     "concepts": [
@@ -458,7 +458,7 @@
     "id": "Q14",
     "query": "Como foi validada a escala de bem-estar financeiro?",
     "relevant": [
-      "cfpb_manual.txt_1"
+      "cfpb_manual.txt"
     ],
     "expected_answer": "A escala foi desenvolvida com especialistas e testes de validação.",
     "concepts": [
@@ -475,7 +475,7 @@
     "id": "P14",
     "query": "Posso somar as respostas da escala e chamar o resultado de pontuação oficial?",
     "relevant": [
-      "cfpb_manual.txt_1"
+      "cfpb_manual.txt"
     ],
     "expected_answer": "Usar as tabelas oficiais por idade e aplicação, não a soma simples.",
     "concepts": [
@@ -495,7 +495,7 @@
     "id": "Q15",
     "query": "Quais riscos de privacidade os chatbots financeiros apresentam?",
     "relevant": [
-      "cfpb_chatbots.txt_1"
+      "cfpb_chatbots.txt"
     ],
     "expected_answer": "Chatbots podem errar e dificultar atendimento humano, além de riscos de privacidade.",
     "concepts": [
@@ -515,7 +515,7 @@
     "id": "P15",
     "query": "Um chatbot pode substituir o atendimento humano em toda contestação financeira?",
     "relevant": [
-      "cfpb_chatbots.txt_1"
+      "cfpb_chatbots.txt"
     ],
     "expected_answer": "Chatbots podem errar e dificultar atendimento humano, além de riscos de privacidade.",
     "concepts": [
@@ -535,7 +535,7 @@
     "id": "Q16",
     "query": "Posso repetir a medição da escala durante o acompanhamento?",
     "relevant": [
-      "cfpb_programas.txt_1"
+      "cfpb_programas.txt"
     ],
     "expected_answer": "A escala pode ser repetida ao longo do acompanhamento.",
     "concepts": [
@@ -552,8 +552,8 @@
     "id": "P16",
     "query": "Faz sentido medir o bem-estar financeiro no início e durante um programa de orientação?",
     "relevant": [
-      "cfpb_programas.txt_1",
-      "cfpb_escala.txt_1"
+      "cfpb_programas.txt",
+      "cfpb_escala.txt"
     ],
     "expected_answer": "A escala pode ser repetida ao longo do acompanhamento.",
     "concepts": [
@@ -572,7 +572,7 @@
     "id": "Q17",
     "query": "O que significa bem-estar financeiro?",
     "relevant": [
-      "cfpb_bemestar.txt_1"
+      "cfpb_bemestar.txt"
     ],
     "expected_answer": "Bem-estar inclui obrigações, segurança e liberdade de escolha.",
     "concepts": [
@@ -592,7 +592,7 @@
     "id": "P17",
     "query": "Ganhar mais salário é suficiente para definir bem-estar financeiro?",
     "relevant": [
-      "cfpb_bemestar.txt_1"
+      "cfpb_bemestar.txt"
     ],
     "expected_answer": "Bem-estar inclui obrigações, segurança e liberdade de escolha.",
     "concepts": [
@@ -612,7 +612,7 @@
     "id": "Q18",
     "query": "O que significa minimização de dados?",
     "relevant": [
-      "anpd_necessidade.txt_1"
+      "anpd_necessidade.txt"
     ],
     "expected_answer": "Coletar apenas dados necessários, pertinentes e proporcionais à finalidade.",
     "concepts": [
@@ -632,7 +632,7 @@
     "id": "P18",
     "query": "Um aplicativo precisa coletar meu extrato inteiro se a finalidade exige menos dados?",
     "relevant": [
-      "anpd_necessidade.txt_1"
+      "anpd_necessidade.txt"
     ],
     "expected_answer": "Coletar apenas dados necessários, pertinentes e proporcionais à finalidade.",
     "concepts": [
@@ -652,7 +652,7 @@
     "id": "Q19",
     "query": "Como proteger dados com controle de acesso e senhas?",
     "relevant": [
-      "anpd_seguranca.txt_1"
+      "anpd_seguranca.txt"
     ],
     "expected_answer": "Restringir acesso e usar autenticação, senhas e treinamento.",
     "concepts": [
@@ -669,7 +669,7 @@
     "id": "P19",
     "query": "Como proteger minha conta bancária com controle de acesso e senhas?",
     "relevant": [
-      "anpd_seguranca.txt_1"
+      "anpd_seguranca.txt"
     ],
     "expected_answer": "Restringir acesso e usar autenticação, senhas e treinamento.",
     "concepts": [
@@ -686,7 +686,7 @@
     "id": "Q20",
     "query": "Existe prazo único na LGPD para guardar dados?",
     "relevant": [
-      "anpd_retencao.txt_1"
+      "anpd_retencao.txt"
     ],
     "expected_answer": "Não há prazo único; a duração depende da finalidade e das hipóteses legais.",
     "concepts": [
@@ -703,7 +703,7 @@
     "id": "P20",
     "query": "Os dados devem ser eliminados ao terminar a finalidade, ou existem exceções legais de conservação?",
     "relevant": [
-      "anpd_retencao.txt_1"
+      "anpd_retencao.txt"
     ],
     "expected_answer": "Há exceções legais de conservação após a finalidade.",
     "concepts": [
@@ -720,8 +720,8 @@
     "id": "M01",
     "query": "Para reserva de emergência, como considerar liquidez e risco ao escolher o investimento?",
     "relevant": [
-      "cvm_emergencia.txt_1",
-      "cvm_escolha.txt_1"
+      "cvm_emergencia.txt",
+      "cvm_escolha.txt"
     ],
     "expected_answer": "Considerar objetivo, baixo risco e disponibilidade dos recursos.",
     "concepts": [
