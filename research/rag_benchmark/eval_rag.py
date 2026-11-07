@@ -12,6 +12,7 @@ from typing import Protocol
 
 ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT / "api"))
+from app.core.config import settings  # noqa: E402
 from app.services.rag_service import RAGService  # noqa: E402
 
 QUESTIONS = Path(__file__).with_name("questions.json")
@@ -45,7 +46,7 @@ def fingerprint(paths: list[Path]) -> str:
 def load_cases(path: Path = QUESTIONS) -> list[dict]:
     cases = json.loads(path.read_text(encoding="utf-8"))
     ids = set()
-    valid_ids = {f"{p.name}_1" for p in BASE.glob("*.txt")}
+    valid_ids = {p.name for p in BASE.glob("*.txt")}
     if not isinstance(cases, list) or not cases:
         raise ValueError("Gabarito deve ser uma lista não vazia.")
     for case in cases:
@@ -91,7 +92,7 @@ def load_cases(path: Path = QUESTIONS) -> list[dict]:
 
 
 def evaluate(rag: Answerer | None = None, cases_path: Path = QUESTIONS) -> dict:
-    rag = rag if rag is not None else RAGService(top_k=3, threshold=0.15)
+    rag = rag if rag is not None else RAGService(top_k=3)
     cases = load_cases(cases_path)
     corpus = {c.id: c for c in RAGService().chunks}
     details = []
@@ -99,7 +100,7 @@ def evaluate(rag: Answerer | None = None, cases_path: Path = QUESTIONS) -> dict:
         result = rag.answer_query(case["query"])
         evidences = result["evidences"]
         # Mantém ordem: apenas a primeira evidência é usada na resposta extrativa atual.
-        retrieved = [ev["id"] for ev in evidences[:3]]
+        retrieved = [ev["document_id"] for ev in evidences[:3]]
         relevant = set(case["relevant"])
         recall = len(relevant & set(retrieved)) / len(relevant) if relevant else None
         answer = result.get("answer", "")
@@ -107,7 +108,7 @@ def evaluate(rag: Answerer | None = None, cases_path: Path = QUESTIONS) -> dict:
             any(normalized(term) in normalized(answer) for term in group)
             for group in case["concepts"]
         )
-        primary = corpus.get(retrieved[0]) if retrieved else None
+        primary = corpus.get(evidences[0]["id"]) if evidences else None
         expected_extraction = (
             (
                 f"Com base nas diretrizes do {primary.source_name} ({primary.section}):\n\n"
@@ -121,7 +122,7 @@ def evaluate(rag: Answerer | None = None, cases_path: Path = QUESTIONS) -> dict:
         grounded = bool(
             result["answered"]
             and primary
-            and primary.id in relevant
+            and primary.document_id in relevant
             and answer == expected_extraction
             and primary.source_url
             and concepts_ok
@@ -152,19 +153,38 @@ def evaluate(rag: Answerer | None = None, cases_path: Path = QUESTIONS) -> dict:
         "abstention_accuracy": sum(d["passed"] for d in outside) / len(outside),
     }
     return {
-        "schema_version": 2,
+        "schema_version": 3,
         "configuration": {
             "top_k": 3,
-            "threshold": 0.15,
-            "representation": "tfidf(words=1:2,chars=3:5;weights=.5/.5)",
+            "threshold": getattr(rag, "threshold", settings.RAG_SIMILARITY_THRESHOLD),
+            "representation": "híbrida: cosseno denso + tfidf(words=1:2,chars=3:5;weights=.5/.5)",
+            "embedding_model": settings.RAG_EMBEDDING_MODEL,
+            "hybrid_alpha": getattr(rag, "alpha", settings.RAG_HYBRID_ALPHA),
+            "vector_store": "sqlite-vec (vec0)",
+            "chunk_max_chars": settings.RAG_CHUNK_MAX_CHARS,
+            "chunk_overlap_tokens": settings.RAG_CHUNK_OVERLAP_TOKENS,
         },
         "provenance": {
             "questions_sha256": fingerprint([cases_path]),
             "evaluator_sha256": fingerprint([Path(__file__)]),
             "corpus_sha256": fingerprint(list(BASE.glob("*.txt")) + [BASE / "catalog.json"]),
-            "service_sha256": fingerprint([ROOT / "api/app/services/rag_service.py"]),
+            "service_sha256": fingerprint(
+                [
+                    ROOT / "api/app/services" / name
+                    for name in ("rag_service.py", "chunking_service.py", "ingestion_service.py")
+                ]
+                + list((ROOT / "api/app/clients").glob("*.py"))
+                + [ROOT / "api/app/core/config.py"]
+            ),
             "python": platform.python_version(),
             "scikit_learn": version("scikit-learn"),
+            "fastembed": version("fastembed"),
+            "sqlite_vec": version("sqlite-vec"),
+            "embedding_model": settings.RAG_EMBEDDING_MODEL,
+            "hybrid_alpha": getattr(rag, "alpha", settings.RAG_HYBRID_ALPHA),
+            "vector_store": "sqlite-vec (vec0)",
+            "chunk_max_chars": settings.RAG_CHUNK_MAX_CHARS,
+            "chunk_overlap_tokens": settings.RAG_CHUNK_OVERLAP_TOKENS,
             "policy": type(rag).__name__,
         },
         "counts": {"in_domain": len(valid), "abstention": len(outside)},
@@ -187,7 +207,7 @@ def main() -> int:
     )
     args = parser.parse_args()
     try:
-        rag = RetrievalOnlyRAG(top_k=3, threshold=0.15) if args.retrieval_only else None
+        rag = RetrievalOnlyRAG(top_k=3) if args.retrieval_only else None
         report = evaluate(rag, args.cases)
     except (ValueError, KeyError, OSError) as exc:
         print(f"Erro na avaliação: {exc}", file=sys.stderr)

@@ -15,3 +15,4 @@ Este repositório registra formally todas as decisões de arquitetura e tecnolog
 | [**0005**](0005-importacao-local-ofx-pdf.md) | Importação de Extratos Locais (OFX/PDF) em vez de Open Finance no MVP | Aceita | 04/11/2026 | RF01, RF02, RNF01, GQ02 |
 
 - [0006 — Curadoria rastreável e benchmark](0006-curadoria-benchmark.md)
+- [0007 — Banco vetorial local e embeddings densos no RAG](0007-banco-vetorial-embeddings.md)

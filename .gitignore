@@ -34,6 +34,7 @@ api/.venv/
 *.sqlite3
 api/trokim.db
 api/test_trokim.db
+api/data/
 
 # MkDocs
 site/
