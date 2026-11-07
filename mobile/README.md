@@ -26,10 +26,9 @@ mobile/
 
 ## Execução
 
-Requer Flutter stable e, para gerar o APK, Android SDK completo com licenças,
-plataforma e build-tools compatíveis. Nesta máquina o Flutter fica em
-`/home/victor-schmidt/development/flutter/bin/flutter`; acrescente esse diretório
-ao `PATH` do terminal ou use o caminho completo nos comandos abaixo.
+Requer Flutter stable e, para gerar o APK, JDK 17 e Android SDK 36 (ver
+[Validação local](#validacao-local)). Se o Flutter não estiver no `PATH`, use o
+caminho completo do executável nos comandos abaixo.
 
 ### Backend local
 
@@ -104,8 +103,18 @@ flutter build apk --debug
 Os testes usam `MockClient`, sem backend ativo nem rede. Cobrem conversão de
 respostas, metadados opcionais, erros HTTP/conexão/timeout, concorrência e ciclo
 de vida do controlador, cards, abstenção, carregamento e nova tentativa na tela.
-O build do APK depende do SDK Android da máquina; testes e análise podem ser
-executados sem instalar plataformas ou aceitar licenças do SDK.
+Testes e análise podem ser executados sem instalar plataformas ou aceitar
+licenças do SDK. O build do APK exige:
+
+- JDK 17 (`flutter config --jdk-dir <caminho>`);
+- Android SDK com `platforms;android-36`, `build-tools;36.0.0` e
+  `ndk;28.2.13676358`, com licenças aceitas (`flutter doctor --android-licenses`);
+- acesso a `dl.google.com` e ao Maven Central na primeira execução, para o Gradle
+  baixar as dependências (as execuções seguintes usam o cache).
+
+Sem Android Studio, basta instalar as command-line tools em uma pasta do usuário
+e apontar o Flutter com `flutter config --android-sdk <caminho>`. O APK de debug
+fica em `build/app/outputs/flutter-apk/app-debug.apk`.
 
 Não versionar `build/`, `.dart_tool/`, `android/local.properties` ou demais
 artefatos excluídos pelos arquivos `.gitignore` do Flutter.
