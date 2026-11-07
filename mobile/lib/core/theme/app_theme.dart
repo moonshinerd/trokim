@@ -16,7 +16,6 @@ class AppTheme {
         seedColor: primaryBlue,
         primary: primaryBlue,
         secondary: accentTeal,
-        background: backgroundLight,
         surface: cardLight,
       ),
       scaffoldBackgroundColor: backgroundLight,
@@ -26,7 +25,7 @@ class AppTheme {
         elevation: 0,
         centerTitle: false,
       ),
-      cardTheme: CardTheme(
+      cardTheme: CardThemeData(
         color: cardLight,
         elevation: 1,
         shape: RoundedRectangleBorder(

@@ -1,6 +1,9 @@
 class ApiConstants {
   // Para emulador Android padrão, 10.0.2.2 aponta para o localhost da máquina host
-  static const String defaultBaseUrl = 'http://10.0.2.2:8000/v1';
+  static const String defaultBaseUrl = String.fromEnvironment(
+    'API_BASE_URL',
+    defaultValue: 'http://10.0.2.2:8000/v1',
+  );
 
   static const String healthEndpoint = '/health';
   static const String transactionsEndpoint = '/transactions';
