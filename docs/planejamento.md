@@ -55,7 +55,7 @@ flowchart TD
 
     subgraph "Fase 2: Integração & Validação (BLOQUEANTES)"
         T24["#24 Benchmark Experimental Comparativo<br/><b>@rebecaboncaputo + @moonshinerd</b>"]
-        T25["#25 Integração Ponta a Ponta no Mobile<br/><b>@Luix3005 + @gabrielcrzojo</b>"]
+        T25["#25 Integração Ponta a Ponta no Mobile<br/><b>@zainoca + @gabrielcrzojo</b>"]
         T26["#26 Relatório Comparativo, ADR 0008 & Docs<br/><b>@moonshinerd + @gabrielcrzojo</b>"]
     end
 
@@ -83,7 +83,7 @@ Todas as tarefas estão formalizadas no GitHub e vinculadas à **Milestone "Sema
 | [#22](https://github.com/moonshinerd/trokim/issues/22) | Interface de auditoria de evidências e comparador de respostas no Flutter | @Luix3005 | **Não-bloqueante** | Nenhuma (Início imediato) | Aberta |
 | [#23](https://github.com/moonshinerd/trokim/issues/23) | Camada de síntese generativa (port LLMProvider, Ollama/Mock e endpoint) | @moonshinerd | **Não-bloqueante** | Nenhuma (Início imediato) | Aberta |
 | [#24](https://github.com/moonshinerd/trokim/issues/24) | Benchmark experimental comparativo (LLM pura vs. Naive RAG vs. Trokim) | @rebecaboncaputo, @moonshinerd | **Bloqueante** | **Bloqueada por #20, #21 e #23** | Aguardando Fase 1 |
-| [#25](https://github.com/moonshinerd/trokim/issues/25) | Integração ponta a ponta do chat generativo fundamentado com o backend | @Luix3005, @gabrielcrzojo | **Bloqueante** | **Bloqueada por #22 e #23** | Aguardando Fase 1 |
+| [#25](https://github.com/moonshinerd/trokim/issues/25) | Integração ponta a ponta do chat generativo fundamentado com o backend | @zainoca, @gabrielcrzojo | **Bloqueante** | **Bloqueada por #22 e #23** | Aguardando Fase 1 |
 | [#26](https://github.com/moonshinerd/trokim/issues/26) | Relatório comparativo LLM x RAG, ADR 0008 e atualização no MkDocs | @moonshinerd, @gabrielcrzojo | **Bloqueante** | **Bloqueada por #24 e #25** | Aguardando Fase 2 |
 
 ---

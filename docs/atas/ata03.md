@@ -2,7 +2,7 @@
 
 - **Data e Horário:** 09 de Novembro de 2026, 09h00 – 11h00  
 - **Fase CBL:** Semana 3 — *Investigate & Act (Comparação LLM x RAG e Respostas Baseadas em Evidências)*  
-- **Participantes:** Equipe Trokim (@moonshinerd, @Luix3005, @rebecaboncaputo, @gabrielcrzojo)  
+- **Participantes:** Equipe Trokim (@moonshinerd, @Luix3005, @rebecaboncaputo, @gabrielcrzojo, @zainoca)  
 - **Status da Sprint:** <span class="badge-should">Iniciada / Em Execução</span>
 
 ---
@@ -31,7 +31,7 @@ Para que todos os membros comecem a produzir imediatamente sem bloqueio mútuo, 
 Assim que os módulos da Fase 1 estiverem concluídos, as duplas realizam a integração:
 
 - **@rebecaboncaputo e @moonshinerd ([Issue #24](https://github.com/moonshinerd/trokim/issues/24)):** Execução automatizada do benchmark comparativo entre as 3 abordagens (LLM pura, RAG ingênuo e Trokim estruturado).
-- **@Luix3005 e @gabrielcrzojo ([Issue #25](https://github.com/moonshinerd/trokim/issues/25)):** Integração ponta a ponta do aplicativo Flutter ao backend com validação de usabilidade.
+- **@zainoca e @gabrielcrzojo ([Issue #25](https://github.com/moonshinerd/trokim/issues/25)):** Integração ponta a ponta do aplicativo Flutter ao backend com validação de usabilidade.
 - **@moonshinerd e @gabrielcrzojo ([Issue #26](https://github.com/moonshinerd/trokim/issues/26)):** Formalização do relatório comparativo, elaboração da **ADR 0008** e publicação no MkDocs.
 
 ---
