@@ -8,7 +8,8 @@ Registro formal dos alinhamentos, dinâmicas de ideação e deliberações técn
 
 | Reunião | Data | Fase CBL | Pauta Central | Documento |
 |---|---|---|---|---|
-| **Ata 01** | 26/10/2026 | Semana 1 – *Engage* | Alinhamento inicial da Big Idea (Qualidade de Vida), brainstorming, seleção do tema de finanças pessoais e início das 13 Guiding Questions | [Acessar Ata 01](ata01.md) |
+| **Ata 01** | 26/10/2026 | Semana 1 – *Engage* | Alinhamento inicial da Big Idea (Qualidade de Vida), brainstorming, seleção do tema de finanças pessoais e início das 10 Guiding Questions | [Acessar Ata 01](ata01.md) |
+| **Ata 02** | 06/11/2026 | Semana 2 – *Investigate & Act* | Consolidação da Base de Conhecimento (20 docs), motor vetorial SQLite-Vec + FastEmbed, benchmark RAG (98,78% recall, 100% abstenção) e chat Flutter | [Acessar Ata 02](ata02.md) |
 
 ---
 
@@ -18,7 +19,7 @@ Registro formal dos alinhamentos, dinâmicas de ideação e deliberações técn
 - **Status:** <span class="badge-must">Concluído</span>
 - **Resultados Consolidados:**
   - Definição do escopo MVP: importação local de extratos OFX e faturas PDF, descartando integrações pesadas de Open Finance ([ADR 0005](../adr/0005-importacao-local-ofx-pdf.md)).
-  - Documentação das 13 Guiding Questions com hipóteses e conclusões preliminares.
+  - Documentação das 10 Guiding Questions com hipóteses e conclusões preliminares.
   - Matriz de riscos e mitigação em conformidade com a LGPD e cálculos determinísticos ([ADR 0004](../adr/0004-calculos-deterministicos.md)).
 
 ---

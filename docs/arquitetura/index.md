@@ -1,39 +1,43 @@
 # Arquitetura do Sistema
 
-A arquitetura do **Trokim** foi concebida para atender aos requisitos de alta performance de geração por inteligência artificial, estrita observância à LGPD (*privacy by design*) e facilidade de integração contínua.
+A arquitetura do **Trokim** foi concebida para atender aos requisitos de alta performance de recuperação semântica, estrita observância à LGPD (*privacy by design / local-first*) e integridade nos cálculos orçamentários.
 
 ---
 
 ## Decisões Estruturais Principais
 
 1. **Camada Mobile (Android / Flutter):**
-   - Desenvolvida em Dart/Flutter, garantindo um código fortemente tipado, padrões de componentes limpos e compilação direta para Android.
-   - O aplicativo atua como o cliente primário, fornecendo telas de dashboard, assistente conversacional, gerenciador de lançamentos e seletor de arquivos de extrato.
+   - Desenvolvida em Dart/Flutter, garantindo tipagem estrita, modularidade por funcionalidades (*feature-first*) e compilação nativa para Android.
+   - O aplicativo atua como o cliente primário, fornecendo telas de dashboard, assistente conversacional, gerenciador de lançamentos e importador de arquivos OFX e faturas PDF.
 2. **Camada Backend (FastAPI / Python 3.12+):**
-   - FastAPI pela velocidade de execução, suporte a async nativo e rica integração com bibliotecas de processamento de texto e dados (OFX, PDF, scikit-learn).
-   - Gerenciamento de pacotes ultra-rápido com `uv`.
-   - Banco de dados embutido **SQLite** garantindo que a aplicação funcione completamente local sem containers ou servidores adicionais de banco.
-3. **Mecanismo RAG (Semana 2):**
-   - Camada de recuperação vetorial e semântica sobre os documentos oficiais curados em `research/knowledge_base/`.
-   - Prompts versionados em `api/app/prompts/` com instrução estrita de citação e abstenção.
+   - Construída com FastAPI pela alta performance assíncrona e tipagem robusta com Pydantic v2.
+   - Gerenciamento de dependências ultra-rápido com `uv`.
+   - Banco de dados embutido **SQLite** garantindo funcionamento 100% *local-first* sem necessidade de servidores externos.
+3. **Mecanismo RAG Híbrido e Banco Vetorial (Semana 2):**
+   - Embeddings multilíngues gerados localmente pelo modelo `sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2` (384 dimensões) via **FastEmbed**.
+   - Persistência e indexação vetorial nativa em SQLite com a extensão **sqlite-vec** (tabela virtual `vec0`).
+   - Busca híbrida combinando proximidade de cosseno denso com TF-IDF esparso (palavras e n-grams de caracteres), com calibração balanceada ($\alpha = 0,3$).
+   - Política ativa de **abstenção ética**: se o score estiver abaixo do limiar ou a consulta abordar temas fora do escopo institucional (apostas, criptoativos ou recomendações especulativas), o agente se abstém.
+4. **Cálculo Determinístico:**
+   - A LLM nunca calcula saldos, médias ou limites. Um serviço matemático estrito (`calculation_service.py`) computa os números exatos e os injeta contextualmente.
 
 ---
 
 ## Camadas do Backend (`api/`)
 
-O backend herda a separação limpa adotada no projeto ContrarIA:
+O backend adota uma arquitetura em camadas limpa e desacoplada:
 
 ```text
-routers/ (HTTP fino, validação de requisições e respostas Pydantic)
+routers/ (HTTP fino, validação de esquemas Pydantic e controle de status)
    │
    ▼
-services/ (Regras de negócio, cálculos matemáticos, orquestração de RAG)
+services/ (Regras de negócio, cálculos matemáticos, pipeline RAG e parser de extratos)
    │
    ▼
-domain/   (Entidades puras independentes de frameworks: Transaction, Budget, Evidence)
+domain/   (Entidades de negócio puras e agnósticas: Transaction, Budget, Evidence)
    ▲
    │
-clients/  (Adaptadores de persistência SQLite, leitores de arquivos e provedores de IA)
+clients/  (Adaptadores de persistência: SQLiteVectorStore, FastEmbed e SQLite DB)
 ```
 
-Essa estrutura garante que a evolução do sistema nas semanas 4 (Multiagentes) e 5 (Multimodalidade) ocorra sem acoplamento indevido.
+Essa estrutura garante que a evolução do sistema nas semanas subsequentes (Semanas 3 a 5: Comparação LLM x RAG, Multiagentes e Multimodalidade) ocorra sem acoplamento indevido.
