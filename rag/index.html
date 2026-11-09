@@ -1221,6 +1221,34 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#camada-de-sintese-generativa-local-qwen-ollama" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Camada de Síntese Generativa Local (Qwen / Ollama)
+      </span>
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Camada de Síntese Generativa Local (Qwen &#x2f; Ollama)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#modos-de-geracao-e-prompts-versionados" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Modos de Geração e Prompts Versionados
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#dados-ficticios-e-protecao-do-consumidor" class="md-nav__link">
     <span class="md-ellipsis">
       <span class="md-typeset">
@@ -1671,6 +1699,34 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#camada-de-sintese-generativa-local-qwen-ollama" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Camada de Síntese Generativa Local (Qwen / Ollama)
+      </span>
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Camada de Síntese Generativa Local (Qwen &#x2f; Ollama)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#modos-de-geracao-e-prompts-versionados" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Modos de Geração e Prompts Versionados
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#dados-ficticios-e-protecao-do-consumidor" class="md-nav__link">
     <span class="md-ellipsis">
       <span class="md-typeset">
@@ -1715,8 +1771,13 @@ caso contrário reutiliza os vetores. O modelo ONNX tem cache por processo e arq
 em <code>~/.cache/fastembed</code> (configurável por <code>FASTEMBED_CACHE_PATH</code>), com cache no CI.</p>
 <p><code>POST /v1/chat/ask</code> aceita <code>{"message":"..."}</code> com 1–1000 caracteres e responde com
 <code>query</code>, <code>answered</code>, <code>status</code>, <code>answer</code> e <code>evidences</code> tipadas, incluindo <code>document_id</code>.
-A resposta continua sendo uma extração do primeiro trecho, com citação e URL oficial.
-Não há chamada a LLM nem síntese generativa; a comparação generativa é trabalho posterior.</p>
+A resposta neste endpoint é uma extração direta do primeiro trecho com citação e URL oficial.</p>
+<p>Complementarmente, a camada generativa (Semana 3) introduz o endpoint <code>POST /v1/chat/generate</code>,
+orquestrado pelo <code>GenerationService</code> via port <code>LLMProvider</code>. Suporta três modos de síntese:
+<code>grounded</code> (RAG com fundamentação estrita e prompts versionados), <code>pure</code> (LLM pura sem recuperação)
+e <code>naive</code> (RAG ingênuo sem política de abstenção ou ancoragem institucional). O provedor padrão
+é o modelo local <strong>Qwen</strong> (<code>qwen2.5</code>) executado via <strong>Ollama</strong>, preservando o paradigma local-first
+e LGPD, dispondo de um <code>MockLLMProvider</code> determinístico para testes e integração contínua (CI).</p>
 <h2 id="chunking-e-representacao">Chunking e representação<a class="headerlink" href="#chunking-e-representacao" title="Permanent link">&para;</a></h2>
 <p>Cada seção é segmentada por frases em janelas de até <strong>500 caracteres</strong>, sem cortar
 palavras. Frases maiores que a janela são divididas entre palavras; uma palavra maior
@@ -1834,6 +1895,58 @@ Q14 permanecem registradas: em ambas a primeira evidência não é o documento e
 controle sem política não é uma LLM sem fontes; não há evidência para afirmar
 superioridade geral contra respostas abertas. Regras conservadoras de escopo reduzem
 respostas inadequadas nos casos testados, sem garantir proteção contra todo ataque.</p>
+<h2 id="camada-de-sintese-generativa-local-qwen-ollama">Camada de Síntese Generativa Local (Qwen / Ollama)<a class="headerlink" href="#camada-de-sintese-generativa-local-qwen-ollama" title="Permanent link">&para;</a></h2>
+<p>A partir da Semana 3, o Trokim avança da extração direta para a síntese pedagógica contextualizada
+por meio do endpoint <code>POST /v1/chat/generate</code>. A arquitetura adota o princípio de Port &amp; Adapters
+(<code>LLMProvider</code>), isolando o serviço das especificidades da infraestrutura de inferência:</p>
+<ul>
+<li><strong>Provedor Primário (Local-First):</strong> <code>OllamaProvider</code> conectando-se ao daemon local do Ollama
+  (<code>http://localhost:11434</code>), executando prioritariamente o modelo <strong>Qwen 2.5</strong> (<code>qwen2.5</code>).
+  Isso garante que nenhum dado financeiro ou consulta sensível saia da máquina do usuário,
+  em estrita consonância com a LGPD e o manifesto local-first do projeto.</li>
+<li><strong>Provedor Simulado (CI &amp; Testes):</strong> <code>MockLLMProvider</code> determinístico e configurável, que permite
+  executar a suíte de testes e o pipeline de CI do GitHub Actions sem requisitos de GPU ou dependências externas.</li>
+<li><strong>Factory Flexível:</strong> <code>get_llm_provider(provider_name, model_name)</code> instancia o provedor com base nas
+  variáveis de ambiente (<code>LLM_PROVIDER</code>, <code>LLM_MODEL</code>, <code>OLLAMA_BASE_URL</code>).</li>
+</ul>
+<h3 id="modos-de-geracao-e-prompts-versionados">Modos de Geração e Prompts Versionados<a class="headerlink" href="#modos-de-geracao-e-prompts-versionados" title="Permanent link">&para;</a></h3>
+<p>O serviço generativo (<code>GenerationService</code>) opera em três modos comparativos, fundamentando as análises
+da Entrega 3:</p>
+<ol>
+<li><strong><code>grounded</code> (Trokim Grounded RAG):</strong></li>
+<li>Utiliza <code>prompt_trokim_grounded_v1.txt</code>.</li>
+<li>Recupera evidências oficiais via <code>RAGService</code>.</li>
+<li><strong>Abstenção Ativa:</strong> Se a pergunta violar o escopo institucional ou os trechos não atingirem
+     o limiar de similaridade, o sistema retorna abstenção determinística sem acionar o LLM.</li>
+<li>Restringe o modelo exclusivamente ao conteúdo das fontes citadas, proibindo cálculos financeiros
+     próprios ou recomendações de investimento especulativo.</li>
+<li><strong><code>pure</code> (LLM Zero-Shot):</strong></li>
+<li>Utiliza <code>prompt_llm_pure_v1.txt</code>.</li>
+<li>Executa a inferência direta no modelo de linguagem sem contexto de documentos oficiais.</li>
+<li>Serve como baseline para medir a ocorrência de alucinações e a perda de precisão regulatória.</li>
+<li><strong><code>naive</code> (RAG Ingênuo):</strong></li>
+<li>Utiliza <code>prompt_naive_rag_v1.txt</code>.</li>
+<li>Recupera os documentos com maior similaridade sem filtro de escopo ou limiar de abstenção.</li>
+<li>Demonstra a fragilidade de pipelines RAG que não filtram consultas fora de escopo.</li>
+</ol>
+<pre class="mermaid"><code>flowchart TD
+    Q[Pergunta do Usuário] --&gt; M{Modo de Geração?}
+
+    M -- pure --&gt; PURE[Prompt Pure v1]
+    PURE --&gt; LLM[LLM Provider: Qwen / Ollama]
+
+    M -- naive --&gt; RET_NAIVE[Busca Top-K sem limiar]
+    RET_NAIVE --&gt; NAIVE_P[Prompt Naive RAG v1]
+    NAIVE_P --&gt; LLM
+
+    M -- grounded --&gt; RAG[RAGService: Busca Híbrida]
+    RAG --&gt; SCOPE{Escopo educacional e Score &gt;= Limiar?}
+    SCOPE -- Não --&gt; ABSTAIN[Abstenção Determinística&lt;br/&gt;Sem chamada ao LLM]
+    SCOPE -- Sim --&gt; GROUNDED_P[Prompt Grounded v1&lt;br/&gt;Contexto Regulatório BCB/CVM]
+    GROUNDED_P --&gt; LLM
+
+    LLM --&gt; RESP[GenerateQueryResponse&lt;br/&gt;answer + evidences + citations]
+    ABSTAIN --&gt; RESP</code></pre>
 <h2 id="dados-ficticios-e-protecao-do-consumidor">Dados fictícios e proteção do consumidor<a class="headerlink" href="#dados-ficticios-e-protecao-do-consumidor" title="Permanent link">&para;</a></h2>
 <p><code>research/synthetic_data/</code> contém OFX e fatura PDF reproduzíveis, sem dados reais.
 Testes verificam extração, sinais, datas, IDs e conciliação. As orientações CFPB mantêm

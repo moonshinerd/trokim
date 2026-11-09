@@ -1115,6 +1115,17 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#4-fluxo-de-sintese-generativa-contextualizada-post-v1chatgenerate" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        4. Fluxo de Síntese Generativa Contextualizada (<code>POST /v1/chat/generate</code>)
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     
   
@@ -1625,6 +1636,17 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#4-fluxo-de-sintese-generativa-contextualizada-post-v1chatgenerate" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        4. Fluxo de Síntese Generativa Contextualizada (<code>POST /v1/chat/generate</code>)
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     
   
@@ -1663,6 +1685,7 @@
         Parser["Parser de Documentos&lt;br/&gt;(OFX &amp; PDF)"]
         CalcService["Motor de Cálculo Determinístico&lt;br/&gt;(Totais, Balanço, 50-30-20)"]
         RAGService["Mecanismo RAG Híbrido&lt;br/&gt;(Dense + Sparse TF-IDF)"]
+        GenService["Serviço de Síntese Generativa&lt;br/&gt;(GenerationService)"]
 
         DomainCore["Entidades de Domínio Puro&lt;br/&gt;(Transaction, Budget, EvidenceChunk)"]
 
@@ -1671,13 +1694,22 @@
             VecDB[(SQLite-Vec&lt;br/&gt;Tabela Virtual vec0)]
         end
 
+        subgraph "Provedores de Inferência Local (LLM)"
+            OllamaClient["OllamaProvider&lt;br/&gt;(Qwen 2.5 Local)"]
+            MockLLM["MockLLMProvider&lt;br/&gt;(Testes &amp; CI)"]
+        end
+
         APIEntry --&gt; Parser
         APIEntry --&gt; CalcService
         APIEntry --&gt; RAGService
+        APIEntry --&gt; GenService
 
         Parser --&gt; DomainCore
         CalcService --&gt; DomainCore
         RAGService --&gt; DomainCore
+        GenService --&gt; RAGService
+        GenService --&gt; OllamaClient
+        GenService --&gt; MockLLM
 
         DomainCore --&gt; DB
         RAGService --&gt; VecDB
@@ -1750,6 +1782,46 @@
 
     API--&gt;&gt;Mobile: JSON (ChatQueryResponse)
     Mobile--&gt;&gt;User: Exibe resposta formatada com cartões de fontes governamentais</code></pre>
+<hr />
+<h2 id="4-fluxo-de-sintese-generativa-contextualizada-post-v1chatgenerate">4. Fluxo de Síntese Generativa Contextualizada (<code>POST /v1/chat/generate</code>)<a class="headerlink" href="#4-fluxo-de-sintese-generativa-contextualizada-post-v1chatgenerate" title="Permanent link">&para;</a></h2>
+<pre class="mermaid"><code>sequenceDiagram
+    autonumber
+    actor User as Usuário (Android)
+    participant Mobile as App Flutter
+    participant API as Router Chat
+    participant Gen as Generation Service
+    participant RAG as RAG Service
+    participant Ollama as Ollama / Qwen 2.5 Local
+
+    User-&gt;&gt;Mobile: Pergunta sobre conceito financeiro
+    Mobile-&gt;&gt;API: POST /v1/chat/generate {message, mode: "grounded"}
+    API-&gt;&gt;Gen: generate_answer(query, mode="grounded")
+
+    alt Modo Grounded
+        Gen-&gt;&gt;RAG: retrieve_evidence(query)
+        RAG--&gt;&gt;Gen: Evidências regulatórias
+        alt Abstenção Ativa (Fora de escopo ou sem relevância)
+            Gen--&gt;&gt;API: Resposta determinística de abstenção (sem chamar LLM)
+        else Evidências Válidas Encontradas
+            Gen-&gt;&gt;Gen: Monta prompt versionado ancorado no contexto
+            Gen-&gt;&gt;Ollama: POST /api/generate (prompt ancorado, temp=0.1)
+            Ollama--&gt;&gt;Gen: Texto pedagógico sintetizado
+            Gen--&gt;&gt;API: GenerateQueryResponse (answer + citations + evidences)
+        end
+    else Modo Pure (Zero-Shot)
+        Gen-&gt;&gt;Gen: Monta prompt pure sem contexto
+        Gen-&gt;&gt;Ollama: POST /api/generate (prompt direto)
+        Ollama--&gt;&gt;Gen: Texto gerado sem garantias regulatórias
+        Gen--&gt;&gt;API: GenerateQueryResponse (answer, mode: "pure")
+    else Modo Naive
+        Gen-&gt;&gt;RAG: Busca sem política estrita
+        Gen-&gt;&gt;Ollama: POST /api/generate (prompt naive)
+        Ollama--&gt;&gt;Gen: Texto gerado
+        Gen--&gt;&gt;API: GenerateQueryResponse (answer, mode: "naive")
+    end
+
+    API--&gt;&gt;Mobile: Resposta JSON
+    Mobile--&gt;&gt;User: Exibe síntese educacional enriquecida</code></pre>
 
 
 

@@ -1643,20 +1643,25 @@
 <li>Política ativa de <strong>abstenção ética</strong>: se o score estiver abaixo do limiar ou a consulta abordar temas fora do escopo institucional (apostas, criptoativos ou recomendações especulativas), o agente se abstém.</li>
 <li><strong>Cálculo Determinístico:</strong></li>
 <li>A LLM nunca calcula saldos, médias ou limites. Um serviço matemático estrito (<code>calculation_service.py</code>) computa os números exatos e os injeta contextualmente.</li>
+<li><strong>Camada de Síntese Generativa Local (Semana 3):</strong></li>
+<li>Port abstrato <code>LLMProvider</code> desacoplando as regras de negócio dos provedores de inferência.</li>
+<li>Provedor primário local-first <code>OllamaProvider</code> executando <strong>Qwen 2.5</strong> (<code>qwen2.5</code>) localmente sem envio de dados a nuvens terceiras.</li>
+<li>Provedor simulado determinístico <code>MockLLMProvider</code> para execução reprodutível de testes e CI.</li>
+<li>Orquestrador <code>GenerationService</code> suportando três modos de síntese (<code>grounded</code>, <code>pure</code>, <code>naive</code>), prompts versionados e corte estrito de alucinações via abstenção ética determinística.</li>
 </ol>
 <hr />
 <h2 id="camadas-do-backend-api">Camadas do Backend (<code>api/</code>)<a class="headerlink" href="#camadas-do-backend-api" title="Permanent link">&para;</a></h2>
 <p>O backend adota uma arquitetura em camadas limpa e desacoplada:</p>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>routers/ (HTTP fino, validação de esquemas Pydantic e controle de status)
+<div class="language-text highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>routers/ (HTTP fino, esquemas Pydantic: /transactions, /chat/ask, /chat/generate)
 </span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>   │
 </span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>   ▼
-</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>services/ (Regras de negócio, cálculos matemáticos, pipeline RAG e parser de extratos)
+</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>services/ (Regras de negócio: CalculationService, RAGService, GenerationService)
 </span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>   │
 </span><span id="__span-0-6"><a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>   ▼
-</span><span id="__span-0-7"><a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>domain/   (Entidades de negócio puras e agnósticas: Transaction, Budget, Evidence)
+</span><span id="__span-0-7"><a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>domain/   (Entidades de negócio puras: Transaction, Budget, Evidence)
 </span><span id="__span-0-8"><a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>   ▲
 </span><span id="__span-0-9"><a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>   │
-</span><span id="__span-0-10"><a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>clients/  (Adaptadores de persistência: SQLiteVectorStore, FastEmbed e SQLite DB)
+</span><span id="__span-0-10"><a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>clients/  (Adaptadores de persistência e LLM: SQLiteVectorStore, FastEmbed, OllamaProvider, MockLLMProvider)
 </span></code></pre></div>
 <p>Essa estrutura garante que a evolução do sistema nas semanas subsequentes (Semanas 3 a 5: Comparação LLM x RAG, Multiagentes e Multimodalidade) ocorra sem acoplamento indevido.</p>
 
