@@ -1683,7 +1683,7 @@
 <td>O usuário pode enviar perguntas em linguagem natural respondidas com base nas publicações oficiais do BCB, CVM e CFPB.</td>
 <td><span class="badge-must">Must have</span></td>
 <td><a href="../pesquisa/guiding-questions/">GQ01</a>, <a href="../pesquisa/guiding-questions/">GQ05</a>, <a href="../pesquisa/guiding-questions/">GQ10</a></td>
-<td><a href="../adr/0003-rag-fontes-oficiais/">ADR 0003</a></td>
+<td><a href="../adr/0003-rag-fontes-oficiais/">ADR 0003</a>, <a href="../adr/0006-curadoria-benchmark/">ADR 0006</a>, <a href="../adr/0007-banco-vetorial-embeddings/">ADR 0007</a></td>
 </tr>
 <tr>
 <td><strong>RF06</strong></td>
@@ -1691,7 +1691,7 @@
 <td>O sistema deve recusar responder formalmente quando uma pergunta do usuário estiver fora do escopo ou não tiver respaldo oficial comprovado.</td>
 <td><span class="badge-must">Must have</span></td>
 <td><a href="../pesquisa/guiding-questions/">GQ05</a>, <a href="../pesquisa/guiding-questions/">GQ10</a></td>
-<td><a href="../adr/0003-rag-fontes-oficiais/">ADR 0003</a></td>
+<td><a href="../adr/0003-rag-fontes-oficiais/">ADR 0003</a>, <a href="../adr/0006-curadoria-benchmark/">ADR 0006</a></td>
 </tr>
 <tr>
 <td><strong>RF07</strong></td>
@@ -1723,7 +1723,7 @@
 <td>Cada orientação gerada pelo assistente deve referenciar explicitamente o órgão oficial (ex.: Banco Central) e a seção documental correspondente.</td>
 <td><span class="badge-must">Must have</span></td>
 <td><a href="../pesquisa/guiding-questions/">GQ05</a>, <a href="../pesquisa/guiding-questions/">GQ08</a></td>
-<td><a href="../adr/0003-rag-fontes-oficiais/">ADR 0003</a></td>
+<td><a href="../adr/0003-rag-fontes-oficiais/">ADR 0003</a>, <a href="../adr/0006-curadoria-benchmark/">ADR 0006</a>, <a href="../adr/0007-banco-vetorial-embeddings/">ADR 0007</a></td>
 </tr>
 </tbody>
 </table>
@@ -1771,7 +1771,7 @@
 <td>As consultas RAG locais devem recuperar as evidências e responder em menos de 2 segundos em ambiente de desenvolvimento local.</td>
 <td><span class="badge-should">Should have</span></td>
 <td><a href="../pesquisa/guiding-questions/">GQ05</a>, <a href="../pesquisa/guiding-questions/">GQ10</a></td>
-<td><a href="../adr/0003-rag-fontes-oficiais/">ADR 0003</a></td>
+<td><a href="../adr/0003-rag-fontes-oficiais/">ADR 0003</a>, <a href="../adr/0007-banco-vetorial-embeddings/">ADR 0007</a></td>
 </tr>
 <tr>
 <td><strong>RNF05</strong></td>
@@ -1787,7 +1787,7 @@
 <td>Toda a suíte de testes e validação de hipóteses deve rodar com dados sintéticos em <code>research/synthetic_data/</code>, sem uso de dados reais de alunos.</td>
 <td><span class="badge-must">Must have</span></td>
 <td><a href="../pesquisa/guiding-questions/">GQ02</a>, <a href="../pesquisa/guiding-questions/">GQ03</a>, <a href="../pesquisa/guiding-questions/">GQ04</a></td>
-<td><a href="../adr/0005-importacao-local-ofx-pdf/">ADR 0005</a></td>
+<td><a href="../adr/0005-importacao-local-ofx-pdf/">ADR 0005</a>, <a href="../adr/0006-curadoria-benchmark/">ADR 0006</a></td>
 </tr>
 </tbody>
 </table>
