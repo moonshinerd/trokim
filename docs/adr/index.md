@@ -16,3 +16,4 @@ Este repositório registra formally todas as decisões de arquitetura e tecnolog
 
 - [0006 — Curadoria rastreável e benchmark](0006-curadoria-benchmark.md)
 - [0007 — Banco vetorial local e embeddings densos no RAG](0007-banco-vetorial-embeddings.md)
+- [0008 — Material comparativo versionado](0008-material-comparativo-versionado.md)

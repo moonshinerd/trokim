@@ -1,0 +1,111 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://trokim.local/schemas/questions_comparison-v1.json",
+  "title": "Gabarito comparativo da semana 3",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "description",
+    "cases"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": 1
+    },
+    "description": {
+      "type": "string",
+      "minLength": 1,
+      "pattern": "\\S"
+    },
+    "cases": {
+      "type": "array",
+      "minItems": 30,
+      "maxItems": 30,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "id",
+          "category",
+          "query",
+          "expected_answer",
+          "concepts",
+          "relevant",
+          "expected_behavior",
+          "forbidden_claims",
+          "calculation_fixture"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^C[0-9]{2}$"
+          },
+          "category": {
+            "enum": [
+              "conceitual",
+              "cotidiana",
+              "armadilha"
+            ]
+          },
+          "query": {
+            "type": "string",
+            "minLength": 1,
+            "pattern": "\\S"
+          },
+          "expected_answer": {
+            "type": "string",
+            "minLength": 1,
+            "pattern": "\\S"
+          },
+          "concepts": {
+            "type": "array",
+            "minItems": 1,
+            "items": {
+              "type": "array",
+              "minItems": 1,
+              "uniqueItems": true,
+              "items": {
+                "type": "string",
+                "minLength": 1,
+                "pattern": "\\S"
+              }
+            }
+          },
+          "relevant": {
+            "type": "array",
+            "uniqueItems": true,
+            "items": {
+              "type": "string",
+              "pattern": "^[a-z0-9_]+\\.txt$"
+            }
+          },
+          "expected_behavior": {
+            "enum": [
+              "responder",
+              "corrigir_premissa",
+              "abster"
+            ]
+          },
+          "forbidden_claims": {
+            "type": "array",
+            "minItems": 1,
+            "uniqueItems": true,
+            "items": {
+              "type": "string",
+              "minLength": 1,
+              "pattern": "\\S"
+            }
+          },
+          "calculation_fixture": {
+            "enum": [
+              null,
+              "resumo_centavos",
+              "sem_resultado"
+            ]
+          }
+        }
+      }
+    }
+  }
+}

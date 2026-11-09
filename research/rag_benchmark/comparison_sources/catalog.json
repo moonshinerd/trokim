@@ -1,0 +1,42 @@
+[
+  {
+    "id": "bcb_cartao_limites",
+    "file": "bcb_cartao_limites.txt",
+    "source": "Banco Central do Brasil (BCB)",
+    "title": "Cartão: pagamento parcial e limite de juros e encargos",
+    "url": "https://www.bcb.gov.br/meubc/faqs/s/cartao",
+    "locator": "API: conteudo[Id=9382].Resposta, parágrafo inicial e itens 1–3; conteudo[Id=10448].Resposta, alínea b",
+    "accessed": "2026-11-09",
+    "kind": "resumo editorial",
+    "chunk_sha256": "8f51decdb50f1394b25c10835842955d00929fe52df5c6a3919db047dd55e2f8",
+    "verification": {
+      "method": "leitura do JSON integral retornado pela API oficial do BCB",
+      "checked": "2026-11-09",
+      "resolved_url": "https://www.bcb.gov.br/api/servico/faq/perguntasdesubcategoria?idDaSubcategoria=757",
+      "original_sha256": "cdc0912897ab29003fc3778f881907be2c72624a50b53fa948b67eeb44fcbfbe",
+      "original_bytes": 37072,
+      "locator": "API: conteudo[Id=9382].Resposta, parágrafo inicial e itens 1–3; conteudo[Id=10448].Resposta, alínea b",
+      "excerpt": "não inclui as compras parceladas com juros"
+    }
+  },
+  {
+    "id": "bcb_rotativo_prazo",
+    "file": "bcb_rotativo_prazo.txt",
+    "source": "Banco Central do Brasil (BCB)",
+    "title": "Cartão: prazo de financiamento no rotativo",
+    "url": "https://www.bcb.gov.br/meubc/faqs/p/quando-o-cliente-nao-paga-o-valor-minimo-da-fatura",
+    "locator": "API: conteudo[Id=10448].Resposta, alíneas b e c",
+    "accessed": "2026-11-09",
+    "kind": "resumo editorial",
+    "chunk_sha256": "391b8e3baec5f6deff3d22f49e9bf7177be38192d2a5b315796dc75fd8ef63e3",
+    "verification": {
+      "method": "leitura do JSON integral retornado pela API oficial do BCB",
+      "checked": "2026-11-09",
+      "resolved_url": "https://www.bcb.gov.br/api/servico/faq/perguntasdesubcategoria?idDaSubcategoria=757",
+      "original_sha256": "cdc0912897ab29003fc3778f881907be2c72624a50b53fa948b67eeb44fcbfbe",
+      "original_bytes": 37072,
+      "locator": "API: conteudo[Id=10448].Resposta, alíneas b e c",
+      "excerpt": "o valor somente pode ser financiado até o vencimento da fatura subsequente, em geral, 30 dias"
+    }
+  }
+]

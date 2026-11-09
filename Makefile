@@ -1,4 +1,4 @@
-.PHONY: help setup lint format test docs-serve docs-build api-run mobile-run rag-eval synthetic-data research-test ingest
+.PHONY: help setup lint format test docs-serve docs-build api-run mobile-run rag-eval synthetic-data research-test ingest comparison-validate
 
 RAG_REPORT ?= artifacts/research/current.json
 
@@ -37,8 +37,11 @@ format:
 test: research-test
 	cd api && uv run pytest
 
-research-test: rag-eval
+research-test: rag-eval comparison-validate
 	cd api && uv run pytest -c pyproject.toml ../research
+
+comparison-validate:
+	cd api && uv run python ../research/rag_benchmark/comparison.py
 
 docs-serve:
 	uvx zensical serve
