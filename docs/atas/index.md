@@ -23,9 +23,11 @@ Registro formal dos alinhamentos, dinâmicas de ideação e deliberações técn
 
 ---
 
-### Checkpoint da Semana 2 — Base de Conhecimento e Primeiro RAG (04/11/2026)
-- **Status:** <span class="badge-p0">Em Execução</span>
+### Checkpoint da Semana 2 — Base de Conhecimento e Primeiro RAG (06/11/2026)
+- **Status:** <span class="badge-must">Concluído</span>
 - **Resultados Consolidados:**
-  - Ingestão curada de documentos oficiais: Banco Central do Brasil (BCB), CVM e CFPB.
-  - Estruturação do repositório em monorepo com suporte a Zensical/MkDocs.
-  - Primeiro motor RAG local implementado com suporte a citação formal e política de abstenção ativa comprovada por benchmark ([ADR 0003](../adr/0003-rag-fontes-oficiais.md)).
+  - Curadoria e catalogação de 20 documentos oficiais de órgãos reguladores (BCB, CVM, CFPB, ANPD) com metadados e hashes SHA-256 ([ADR 0006](../adr/0006-curadoria-benchmark.md)).
+  - Implementação do banco vetorial local (SQLite + `sqlite-vec`), chunking semântico e embeddings multilíngues via FastEmbed ([ADR 0007](../adr/0007-banco-vetorial-embeddings.md)).
+  - Benchmark automatizado com 61 consultas: 98,78% de recall@3 e 100% de abstenção ativa em perguntas fora de escopo.
+  - Endpoint `POST /v1/chat/ask` integrado à interface do aplicativo Flutter com exibição de cartões de fontes e tratamento de falhas.
+  - Geração de extrato OFX e fatura PDF sintéticos para validação local em conformidade estrita com a LGPD.
