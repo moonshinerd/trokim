@@ -1,15 +1,17 @@
 name: CI
 
 on:
-  pull_request:
   push:
     branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
 
 permissions:
   contents: read
 
 concurrency:
-  group: ci-${{ github.workflow }}-${{ github.ref }}
+  group: "ci-${{ github.workflow }}-${{ github.ref }}"
   cancel-in-progress: true
 
 jobs:
@@ -17,7 +19,7 @@ jobs:
     name: api (lint + testes)
     runs-on: [self-hosted, macOS]
     env:
-      FASTEMBED_CACHE_PATH: ${{ runner.temp }}/fastembed
+      FASTEMBED_CACHE_PATH: /tmp/fastembed
     defaults:
       run:
         working-directory: api
@@ -42,7 +44,7 @@ jobs:
     name: research (benchmark rag + lint)
     runs-on: [self-hosted, macOS]
     env:
-      FASTEMBED_CACHE_PATH: ${{ runner.temp }}/fastembed
+      FASTEMBED_CACHE_PATH: /tmp/fastembed
     steps:
       - uses: actions/checkout@v4
       - uses: astral-sh/setup-uv@v6
@@ -63,6 +65,7 @@ jobs:
         run: make research-test
       - name: Preservar relatório por caso
         if: always()
+        continue-on-error: true
         uses: actions/upload-artifact@v4
         with:
           name: research-benchmark
