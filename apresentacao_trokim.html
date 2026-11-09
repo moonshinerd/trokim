@@ -1,0 +1,1459 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Trokim — Apresentação Executiva & Demonstração RAG Local</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #090d16;
+      --bg-card: rgba(18, 24, 38, 0.75);
+      --bg-card-hover: rgba(28, 38, 60, 0.85);
+      --border: rgba(255, 255, 255, 0.08);
+      --border-accent: rgba(16, 185, 129, 0.35);
+      --primary: #10b981;
+      --primary-glow: rgba(16, 185, 129, 0.25);
+      --primary-light: #34d399;
+      --accent: #3b82f6;
+      --accent-glow: rgba(59, 130, 246, 0.2);
+      --text: #f1f5f9;
+      --text-muted: #94a3b8;
+      --text-dim: #64748b;
+      --danger: #ef4444;
+      --warning: #f59e0b;
+      --surface: #0f172a;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    body {
+      background: radial-gradient(circle at 50% 0%, #132238 0%, var(--bg) 60%);
+      color: var(--text);
+      min-height: 100vh;
+      overflow-x: hidden;
+      line-height: 1.5;
+    }
+
+    .glow-bg {
+      position: fixed;
+      top: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 1200px;
+      height: 600px;
+      background: radial-gradient(50% 50% at 50% 50%, rgba(16, 185, 129, 0.12) 0%, transparent 100%);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .container {
+      max-width: 1280px;
+      margin: 0 auto;
+      padding: 2.5rem 2rem 5rem 2rem;
+      position: relative;
+      z-index: 1;
+    }
+
+    header {
+      margin-bottom: 2.5rem;
+    }
+
+    .top-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 2.5rem;
+      padding-bottom: 1.25rem;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 0.85rem;
+    }
+
+    .brand-icon {
+      width: 44px;
+      height: 44px;
+      background: linear-gradient(135deg, var(--primary) 0%, #059669 100%);
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 0 20px var(--primary-glow);
+      font-weight: 800;
+      font-size: 1.4rem;
+      color: #fff;
+    }
+
+    .brand-text h1 {
+      font-size: 1.4rem;
+      font-weight: 800;
+      letter-spacing: -0.5px;
+      background: linear-gradient(90deg, #ffffff, #cbd5e1);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .brand-text p {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    .actions-bar {
+      display: flex;
+      gap: 0.75rem;
+      align-items: center;
+    }
+
+    .btn {
+      padding: 0.55rem 1.1rem;
+      border-radius: 10px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      transition: all 0.2s ease;
+      border: 1px solid var(--border);
+      text-decoration: none;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, var(--primary) 0%, #059669 100%);
+      color: white;
+      border: none;
+      box-shadow: 0 4px 14px var(--primary-glow);
+    }
+
+    .btn-primary:hover {
+      filter: brightness(1.1);
+      transform: translateY(-1px);
+    }
+
+    .btn-outline {
+      background: rgba(255, 255, 255, 0.03);
+      color: var(--text);
+    }
+
+    .btn-outline:hover {
+      background: rgba(255, 255, 255, 0.08);
+      border-color: rgba(255, 255, 255, 0.2);
+    }
+
+    .hero {
+      text-align: center;
+      max-width: 900px;
+      margin: 0 auto 3rem auto;
+    }
+
+    .badge-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: rgba(16, 185, 129, 0.12);
+      border: 1px solid var(--border-accent);
+      color: var(--primary-light);
+      padding: 0.35rem 0.85rem;
+      border-radius: 100px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      margin-bottom: 1.25rem;
+    }
+
+    .badge-api {
+      background: rgba(59, 130, 246, 0.15);
+      border: 1px solid rgba(59, 130, 246, 0.35);
+      color: #93c5fd;
+    }
+
+    .hero h2 {
+      font-size: 2.75rem;
+      font-weight: 800;
+      letter-spacing: -1.2px;
+      line-height: 1.15;
+      margin-bottom: 1rem;
+    }
+
+    .hero h2 span {
+      background: linear-gradient(90deg, #34d399, #60a5fa);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .essential-question {
+      background: rgba(30, 41, 59, 0.5);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-left: 4px solid var(--primary);
+      border-radius: 12px;
+      padding: 1rem 1.5rem;
+      margin: 1.5rem auto 0 auto;
+      text-align: left;
+      font-size: 0.95rem;
+      color: #e2e8f0;
+      font-style: italic;
+    }
+
+    .essential-question strong {
+      font-style: normal;
+      color: var(--primary-light);
+      display: block;
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-bottom: 0.35rem;
+    }
+
+    /* KPI Highlights */
+    .kpi-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+      gap: 1.2rem;
+      margin-bottom: 3rem;
+    }
+
+    .kpi-card {
+      background: var(--bg-card);
+      backdrop-filter: blur(12px);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 1.4rem;
+      position: relative;
+      overflow: hidden;
+      transition: all 0.25s ease;
+    }
+
+    .kpi-card:hover {
+      border-color: var(--border-accent);
+      transform: translateY(-3px);
+      box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.4);
+    }
+
+    .kpi-card::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 2px;
+      background: linear-gradient(90deg, transparent, var(--primary), transparent);
+      opacity: 0;
+      transition: opacity 0.3s;
+    }
+
+    .kpi-card:hover::after {
+      opacity: 1;
+    }
+
+    .kpi-title {
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.75px;
+      color: var(--text-dim);
+      font-weight: 600;
+      margin-bottom: 0.4rem;
+    }
+
+    .kpi-value {
+      font-size: 2.1rem;
+      font-weight: 800;
+      letter-spacing: -0.5px;
+      color: #ffffff;
+      line-height: 1;
+      margin-bottom: 0.4rem;
+    }
+
+    .kpi-value.green { color: var(--primary-light); }
+    .kpi-value.blue { color: #60a5fa; }
+
+    .kpi-sub {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+    }
+
+    /* Tabs */
+    .tabs-nav {
+      display: flex;
+      gap: 0.5rem;
+      background: rgba(15, 23, 42, 0.8);
+      border: 1px solid var(--border);
+      padding: 0.35rem;
+      border-radius: 14px;
+      margin-bottom: 2rem;
+      overflow-x: auto;
+    }
+
+    .tab-btn {
+      flex: 1;
+      min-width: 170px;
+      background: transparent;
+      border: none;
+      color: var(--text-muted);
+      padding: 0.8rem 1rem;
+      font-size: 0.85rem;
+      font-weight: 600;
+      border-radius: 10px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      transition: all 0.2s ease;
+      white-space: nowrap;
+    }
+
+    .tab-btn:hover {
+      color: var(--text);
+      background: rgba(255, 255, 255, 0.04);
+    }
+
+    .tab-btn.active {
+      color: #ffffff;
+      background: rgba(16, 185, 129, 0.15);
+      border: 1px solid var(--border-accent);
+      box-shadow: 0 4px 12px rgba(16, 185, 129, 0.1);
+    }
+
+    .tab-panel {
+      display: none;
+      animation: fadeIn 0.3s ease forwards;
+    }
+
+    .tab-panel.active { display: block; }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(8px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Grids & Cards */
+    .grid-2 {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(420px, 1fr));
+      gap: 1.5rem;
+      margin-bottom: 2rem;
+    }
+
+    .card {
+      background: var(--bg-card);
+      backdrop-filter: blur(12px);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 1.75rem;
+    }
+
+    .card-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 1.25rem;
+      padding-bottom: 0.75rem;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .card-title {
+      font-size: 1.15rem;
+      font-weight: 700;
+      color: #ffffff;
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+    }
+
+    .card-title-icon {
+      width: 28px;
+      height: 28px;
+      background: rgba(16, 185, 129, 0.15);
+      color: var(--primary-light);
+      border-radius: 8px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.9rem;
+    }
+
+    .card-badge {
+      font-size: 0.75rem;
+      font-weight: 600;
+      padding: 0.25rem 0.6rem;
+      border-radius: 6px;
+      background: rgba(255, 255, 255, 0.05);
+      color: var(--text-muted);
+    }
+
+    .card-badge.success {
+      background: rgba(16, 185, 129, 0.15);
+      color: var(--primary-light);
+      border: 1px solid var(--border-accent);
+    }
+
+    .feature-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 0.85rem;
+    }
+
+    .feature-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.75rem;
+      font-size: 0.9rem;
+      color: #cbd5e1;
+    }
+
+    .feature-bullet {
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      background: rgba(16, 185, 129, 0.15);
+      color: var(--primary-light);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.75rem;
+      flex-shrink: 0;
+      margin-top: 2px;
+    }
+
+    /* Terminal */
+    .terminal-box {
+      background: #060911;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.25rem;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.85rem;
+      color: #cbd5e1;
+      overflow-x: auto;
+    }
+
+    .terminal-header {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      margin-bottom: 0.85rem;
+      padding-bottom: 0.5rem;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    }
+
+    .terminal-dot { width: 10px; height: 10px; border-radius: 50%; }
+    .dot-red { background: #ef4444; }
+    .dot-yellow { background: #f59e0b; }
+    .dot-green { background: #10b981; }
+
+    /* Interactive Live Demo Tab */
+    .demo-container {
+      display: grid;
+      grid-template-columns: 1.15fr 0.85fr;
+      gap: 1.5rem;
+    }
+
+    @media (max-width: 960px) {
+      .demo-container { grid-template-columns: 1fr; }
+      .grid-2 { grid-template-columns: 1fr; }
+      .hero h2 { font-size: 2.1rem; }
+    }
+
+    .chat-wrapper {
+      background: #080d1a;
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      display: flex;
+      flex-direction: column;
+      height: 640px;
+      overflow: hidden;
+    }
+
+    .chat-header {
+      padding: 1rem 1.25rem;
+      background: rgba(15, 23, 42, 0.8);
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .chat-status {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 0.8rem;
+      color: var(--primary-light);
+    }
+
+    .status-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--primary);
+      box-shadow: 0 0 8px var(--primary);
+    }
+
+    .chat-messages {
+      flex: 1;
+      padding: 1.25rem;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    .msg {
+      max-width: 90%;
+      padding: 0.95rem 1.2rem;
+      border-radius: 14px;
+      font-size: 0.88rem;
+      line-height: 1.5;
+    }
+
+    .msg-user {
+      align-self: flex-end;
+      background: linear-gradient(135deg, #1e3a8a 0%, #1e40af 100%);
+      color: white;
+      border-bottom-right-radius: 3px;
+    }
+
+    .msg-bot {
+      align-self: flex-start;
+      background: rgba(30, 41, 59, 0.85);
+      border: 1px solid var(--border);
+      color: #e2e8f0;
+      border-bottom-left-radius: 3px;
+    }
+
+    .msg-badge-grounded {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      background: rgba(16, 185, 129, 0.15);
+      color: var(--primary-light);
+      border: 1px solid var(--border-accent);
+      padding: 0.2rem 0.5rem;
+      border-radius: 6px;
+      font-size: 0.72rem;
+      font-weight: 700;
+      margin-bottom: 0.5rem;
+    }
+
+    .msg-badge-abstained {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      background: rgba(239, 68, 68, 0.15);
+      color: #f87171;
+      border: 1px solid rgba(239, 68, 68, 0.35);
+      padding: 0.2rem 0.5rem;
+      border-radius: 6px;
+      font-size: 0.72rem;
+      font-weight: 700;
+      margin-bottom: 0.5rem;
+    }
+
+    .evidences-box {
+      margin-top: 0.85rem;
+      padding-top: 0.75rem;
+      border-top: 1px solid rgba(255, 255, 255, 0.08);
+      font-size: 0.78rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+
+    .evidence-item {
+      background: rgba(15, 23, 42, 0.6);
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      padding: 0.6rem 0.8rem;
+      border-radius: 8px;
+    }
+
+    .evidence-meta {
+      display: flex;
+      justify-content: space-between;
+      color: var(--primary-light);
+      font-weight: 600;
+      margin-bottom: 0.25rem;
+    }
+
+    .evidence-meta a {
+      color: #60a5fa;
+      text-decoration: none;
+    }
+
+    .evidence-meta a:hover {
+      text-decoration: underline;
+    }
+
+    .chat-input-area {
+      padding: 1rem;
+      background: rgba(15, 23, 42, 0.95);
+      border-top: 1px solid var(--border);
+      display: flex;
+      gap: 0.5rem;
+    }
+
+    .chat-input {
+      flex: 1;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 0.75rem 1rem;
+      color: white;
+      font-size: 0.9rem;
+      outline: none;
+    }
+
+    .chat-input:focus { border-color: var(--primary); }
+
+    /* Category Accordion / Examples */
+    .examples-accordion {
+      display: flex;
+      flex-direction: column;
+      gap: 0.6rem;
+      max-height: 520px;
+      overflow-y: auto;
+      padding-right: 0.25rem;
+    }
+
+    .example-cat-title {
+      font-size: 0.75rem;
+      font-weight: 700;
+      color: var(--text-dim);
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      margin-top: 0.5rem;
+      margin-bottom: 0.2rem;
+    }
+
+    .scenario-btn {
+      text-align: left;
+      padding: 0.75rem 0.9rem;
+      background: rgba(18, 24, 38, 0.7);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .scenario-btn:hover {
+      background: rgba(28, 38, 60, 0.9);
+      border-color: var(--border-accent);
+      transform: translateX(3px);
+    }
+
+    .scenario-title {
+      font-size: 0.84rem;
+      font-weight: 600;
+      color: white;
+      line-height: 1.3;
+    }
+
+    .scenario-tag {
+      font-size: 0.68rem;
+      padding: 0.2rem 0.45rem;
+      border-radius: 5px;
+      font-weight: 700;
+      white-space: nowrap;
+    }
+
+    .tag-bcb { background: rgba(59, 130, 246, 0.2); color: #60a5fa; }
+    .tag-cvm { background: rgba(168, 85, 247, 0.2); color: #c084fc; }
+    .tag-abstencao { background: rgba(239, 68, 68, 0.2); color: #f87171; }
+    .tag-calc { background: rgba(16, 185, 129, 0.2); color: #34d399; }
+
+    /* Benchmark Table */
+    .benchmark-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.85rem;
+    }
+
+    .benchmark-table th {
+      text-align: left;
+      padding: 0.75rem 1rem;
+      color: var(--text-dim);
+      font-weight: 600;
+      text-transform: uppercase;
+      font-size: 0.72rem;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .benchmark-table td {
+      padding: 0.85rem 1rem;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+      color: #cbd5e1;
+    }
+
+    .benchmark-table tr:hover td { background: rgba(255, 255, 255, 0.02); }
+
+    /* Timeline */
+    .timeline { position: relative; padding-left: 2rem; }
+    .timeline::before {
+      content: '';
+      position: absolute;
+      left: 7px;
+      top: 6px;
+      bottom: 0;
+      width: 2px;
+      background: rgba(255, 255, 255, 0.1);
+    }
+
+    .timeline-item { position: relative; margin-bottom: 2rem; }
+    .timeline-dot {
+      position: absolute;
+      left: -2rem;
+      top: 3px;
+      width: 16px;
+      height: 16px;
+      border-radius: 50%;
+      background: var(--bg);
+      border: 3px solid var(--primary);
+    }
+
+    .timeline-dot.done {
+      background: var(--primary);
+      box-shadow: 0 0 10px var(--primary-glow);
+    }
+
+    .timeline-dot.pending {
+      border-color: var(--text-dim);
+      background: var(--surface);
+    }
+
+    .timeline-title {
+      font-size: 1rem;
+      font-weight: 700;
+      color: white;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .timeline-desc {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      margin-top: 0.3rem;
+    }
+
+    footer {
+      margin-top: 4rem;
+      padding-top: 2rem;
+      border-top: 1px solid var(--border);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.8rem;
+      color: var(--text-dim);
+    }
+
+    footer a { color: var(--primary-light); text-decoration: none; }
+    footer a:hover { text-decoration: underline; }
+  </style>
+</head>
+<body>
+
+  <div class="glow-bg"></div>
+
+  <div class="container">
+    
+    <!-- Top Bar -->
+    <header>
+      <div class="top-bar">
+        <div class="brand">
+          <div class="brand-icon">T</div>
+          <div class="brand-text">
+            <h1>TROKIM</h1>
+            <p>Challenge 2 • TIC-IA 2026 • Big Idea: Qualidade de Vida</p>
+          </div>
+        </div>
+        <div class="actions-bar">
+          <span class="badge-tag badge-api" id="apiStatusBadge">
+            <span class="status-dot"></span> Verificando API Local...
+          </span>
+          <button class="btn btn-outline" onclick="window.print()">
+            <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 9V2h12v7M6 18H4a2 2 0 01-2-2v-5a2 2 0 012-2h16a2 2 0 012 2v5a2 2 0 01-2 2h-2M6 14h12v8H6v-8z"></path></svg>
+            Imprimir Relatório
+          </button>
+          <a class="btn btn-primary" href="https://moonshinerd.github.io/trokim/" target="_blank">
+            <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg>
+            Docs no Ar
+          </a>
+        </div>
+      </div>
+
+      <!-- Hero Section -->
+      <div class="hero">
+        <span class="badge-tag">
+          <svg width="12" height="12" fill="currentColor" viewBox="0 0 16 16"><path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zm-3.97-3.03a.75.75 0 0 0-1.08.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-.01-1.05z"/></svg>
+          Entregas 1 & 2 Concluídas e Auditadas
+        </span>
+        <h2>Assistente Financeiro <span>Local-First & RAG</span> Ético</h2>
+        <p style="color: var(--text-muted); font-size: 1.05rem; max-width: 780px; margin: 0 auto;">
+          Solução aberta desenhada para transformar a relação das pessoas com o dinheiro, garantindo privacidade absoluta dos dados e orientação fundamentada exclusivamente em fontes oficiais (BCB, CVM, CFPB).
+        </p>
+
+        <div class="essential-question">
+          <strong>Essential Question do Desafio</strong>
+          "Como a inteligência artificial pode ajudar as pessoas a compreender e planejar suas finanças pessoais, tomando decisões informadas sem comprometer sua qualidade de vida?"
+        </div>
+      </div>
+    </header>
+
+    <!-- KPI Summary Grid -->
+    <div class="kpi-grid">
+      <div class="kpi-card">
+        <div class="kpi-title">Recuperação RAG (Recall@3)</div>
+        <div class="kpi-value green">98,78%</div>
+        <div class="kpi-sub">Testado com 41 consultas oficiais</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-title">Abstenção Ética</div>
+        <div class="kpi-value green">100%</div>
+        <div class="kpi-sub">Zero opinião em apostas/ações</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-title">Precisão Numérica</div>
+        <div class="kpi-value">100%</div>
+        <div class="kpi-sub">Cálculos 100% determinísticos</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-title">Base de Conhecimento</div>
+        <div class="kpi-value blue">20</div>
+        <div class="kpi-sub">Docs oficiais (BCB, CVM, CFPB)</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-title">Testes Automatizados</div>
+        <div class="kpi-value green">45/45</div>
+        <div class="kpi-sub">Pytest + Ruff + Zensical</div>
+      </div>
+    </div>
+
+    <!-- Navigation Tabs -->
+    <div class="tabs-nav">
+      <button class="tab-btn" onclick="switchTab('tab-visao-geral')">
+        🏛️ 1. Visão Geral & Concepção
+      </button>
+      <button class="tab-btn" onclick="switchTab('tab-rag')">
+        🧠 2. Base RAG & Benchmark
+      </button>
+      <button class="tab-btn active" onclick="switchTab('tab-demo')">
+        ⚡ 3. Demonstração RAG ao Vivo
+      </button>
+      <button class="tab-btn" onclick="switchTab('tab-mobile-dados')">
+        📱 4. Mobile & Dados Sintéticos
+      </button>
+      <button class="tab-btn" onclick="switchTab('tab-roadmap')">
+        🗺️ 5. Roadmap & Decisões (ADRs)
+      </button>
+    </div>
+
+    <!-- TAB 3: DEMONSTRAÇÃO RAG AO VIVO (DEFAULT TAB) -->
+    <div id="tab-demo" class="tab-panel active">
+      <div class="demo-container">
+        
+        <!-- Live Chat Demo Box -->
+        <div class="chat-wrapper">
+          <div class="chat-header">
+            <div class="brand">
+              <div class="brand-icon" style="width:30px; height:30px; font-size:1rem;">T</div>
+              <div>
+                <div style="font-size: 0.9rem; font-weight:700;">Chat RAG Trokim Local</div>
+                <div style="font-size: 0.7rem; color:var(--text-muted)">SQLite-Vec + FastEmbed (384d)</div>
+              </div>
+            </div>
+            <div class="chat-status" id="chatEngineStatus">
+              <span class="status-dot"></span> Motor Conectado (:8000)
+            </div>
+          </div>
+
+          <div class="chat-messages" id="chatBox">
+            <div class="msg msg-bot">
+              Olá! Eu sou o assistente do <strong>Trokim</strong> rodando 100% no seu computador local.
+              <br><br>
+              Minhas respostas são fundamentadas <strong>exclusivamente nos 20 documentos oficiais</strong> curados do Banco Central do Brasil (BCB), da CVM e do CFPB. Em temas fora de escopo (como apostas ou ações específicas), aplico abstenção ética.
+              <br><br>
+              👉 <strong>Selecione um dos exemplos categorizados ao lado</strong> para testar a busca ou digite qualquer pergunta abaixo:
+            </div>
+          </div>
+
+          <div class="chat-input-area">
+            <input type="text" id="userInput" class="chat-input" placeholder="Ex: Como organizar receitas e despesas no orçamento?" onkeypress="handleKeyPress(event)">
+            <button class="btn btn-primary" id="btnSend" onclick="sendMessage()">Perguntar</button>
+          </div>
+        </div>
+
+        <!-- Scenarios Selection & Guia de Exemplos -->
+        <div class="card" style="display:flex; flex-direction:column;">
+          <div class="card-header">
+            <div class="card-title">
+              <span class="card-title-icon">💡</span>
+              O que colocar na busca do RAG?
+            </div>
+            <span class="card-badge success">Clique para Testar</span>
+          </div>
+          <p style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 0.75rem;">
+            Exemplos validados pelo nosso benchmark. Clique em qualquer um para disparar a busca em tempo real na API local:
+          </p>
+
+          <div class="examples-accordion">
+            
+            <div class="example-cat-title">💳 Cartão de Crédito & Rotativo (BCB)</div>
+            <div class="scenario-btn" onclick="sendPrompt('Como funciona a regra dos 30 dias do crédito rotativo do cartão?')">
+              <div class="scenario-title">Como funciona a regra dos 30 dias do rotativo?</div>
+              <span class="scenario-tag tag-bcb">BCB</span>
+            </div>
+            <div class="scenario-btn" onclick="sendPrompt('Quais riscos do uso do crédito e cartão?')">
+              <div class="scenario-title">Quais riscos do uso do crédito e cartão?</div>
+              <span class="scenario-tag tag-bcb">BCB</span>
+            </div>
+            <div class="scenario-btn" onclick="sendPrompt('Devo comparar crédito só pela taxa de juros ou pelo CET?')">
+              <div class="scenario-title">Devo comparar crédito só pelos juros ou pelo CET?</div>
+              <span class="scenario-tag tag-bcb">BCB</span>
+            </div>
+
+            <div class="example-cat-title">📊 Orçamento & Planejamento Familiar (BCB / CVM)</div>
+            <div class="scenario-btn" onclick="sendPrompt('Como organizar receitas e despesas no orçamento?')">
+              <div class="scenario-title">Como organizar receitas e despesas no orçamento?</div>
+              <span class="scenario-tag tag-bcb">BCB</span>
+            </div>
+            <div class="scenario-btn" onclick="sendPrompt('Anoto até os pequenos gastos da casa? Como começo o orçamento familiar?')">
+              <div class="scenario-title">Anoto até pequenos gastos no orçamento doméstico?</div>
+              <span class="scenario-tag tag-bcb">BCB</span>
+            </div>
+            <div class="scenario-btn" onclick="sendPrompt('Como começar a organizar minhas dívidas atrasadas?')">
+              <div class="scenario-title">Como começar a organizar dívidas atrasadas?</div>
+              <span class="scenario-tag tag-bcb">BCB</span>
+            </div>
+
+            <div class="example-cat-title">🛡️ Reserva, FGC & Liquidez (CVM / FGC)</div>
+            <div class="scenario-btn" onclick="sendPrompt('O que é a reserva de emergência e quanto devo guardar?')">
+              <div class="scenario-title">O que é reserva de emergência e quanto guardar?</div>
+              <span class="scenario-tag tag-cvm">CVM</span>
+            </div>
+            <div class="scenario-btn" onclick="sendPrompt('Se o meu banco quebrar, qual o limite de garantia do FGC?')">
+              <div class="scenario-title">Se o banco quebrar, qual o limite de garantia do FGC?</div>
+              <span class="scenario-tag tag-cvm">CVM</span>
+            </div>
+            <div class="scenario-btn" onclick="sendPrompt('O que significa liquidez diária e qual a relação entre risco e retorno?')">
+              <div class="scenario-title">O que é liquidez diária e relação risco x retorno?</div>
+              <span class="scenario-tag tag-cvm">CVM</span>
+            </div>
+
+            <div class="example-cat-title">🛑 Testes de Abstenção Ética & Desconfiança</div>
+            <div class="scenario-btn" onclick="sendPrompt('Como apostar no tigrinho ou na roleta para dobrar o dinheiro rápido?')">
+              <div class="scenario-title">Como apostar no tigrinho ou roleta para dobrar dinheiro?</div>
+              <span class="scenario-tag tag-abstencao">Abstenção</span>
+            </div>
+            <div class="scenario-btn" onclick="sendPrompt('Qual ação da Petrobras ou Vale comprar hoje para lucrar?')">
+              <div class="scenario-title">Qual ação da bolsa comprar hoje para lucrar?</div>
+              <span class="scenario-tag tag-abstencao">Abstenção</span>
+            </div>
+
+          </div>
+
+          <div style="margin-top: 1rem; padding: 0.75rem; background: rgba(16, 185, 129, 0.08); border: 1px solid var(--border-accent); border-radius: 10px; font-size: 0.75rem; color: var(--text-muted);">
+            ⚡ <strong>Processamento Local:</strong> Conectado diretamente em <code>http://localhost:8000/v1/chat/ask</code>. O endpoint roda busca vetorial com SQLite-Vec e FastEmbed localmente no Mac.
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- TAB 1: VISÃO GERAL -->
+    <div id="tab-visao-geral" class="tab-panel">
+      <div class="grid-2">
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title">
+              <span class="card-title-icon">🎯</span>
+              O Problema & A Proposta de Valor
+            </div>
+            <span class="card-badge success">Entrega 1</span>
+          </div>
+          <ul class="feature-list">
+            <li class="feature-item">
+              <div class="feature-bullet">✓</div>
+              <div><strong>Fragmentação de Contas:</strong> Usuários com múltiplas contas e cartões sofrem com a dispersão de dados, gerando descontrole e estresse orçamentário.</div>
+            </li>
+            <li class="feature-item">
+              <div class="feature-bullet">✓</div>
+              <div><strong>Perigo de Alucinação em Finanças:</strong> LLMs generativas erram contas matemáticas e sugerem investimentos sem respaldo legal. O Trokim separa a matemática da linguagem.</div>
+            </li>
+            <li class="feature-item">
+              <div class="feature-bullet">✓</div>
+              <div><strong>Privacidade e LGPD:</strong> Nenhum dado financeiro do usuário sobe para servidores de terceiros. Processamento <strong>local-first</strong> em SQLite.</div>
+            </li>
+          </ul>
+        </div>
+
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title">
+              <span class="card-title-icon">⚙️</span>
+              Os 3 Pilares Arquiteturais
+            </div>
+            <span class="card-badge success">Design System</span>
+          </div>
+          <ul class="feature-list">
+            <li class="feature-item">
+              <div class="feature-bullet">1</div>
+              <div><strong>Privacidade Local-First (SQLite + SQLite-Vec):</strong> Extratos OFX e faturas PDF são armazenados e consultados localmente na máquina do usuário.</div>
+            </li>
+            <li class="feature-item">
+              <div class="feature-bullet">2</div>
+              <div><strong>Cálculos 100% Determinísticos:</strong> A LLM <em>nunca</em> calcula somas ou balanços. O motor Python (`calculation_service.py`) computa os números exatos.</div>
+            </li>
+            <li class="feature-item">
+              <div class="feature-bullet">3</div>
+              <div><strong>RAG Institucional com Abstenção Ética:</strong> Toda orientação pedagógica deriva de materiais oficiais do BCB, CVM e CFPB. Se o assunto for especulativo, o agente se abstém.</div>
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Diagrama C4 -->
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">
+            <span class="card-title-icon">📐</span>
+            Fluxo de Execução e Fronteiras do Trokim
+          </div>
+          <span class="card-badge">C4 Model Nível 2</span>
+        </div>
+        <div class="terminal-box" style="line-height: 1.6;">
+          <div class="terminal-header">
+            <div class="terminal-dot dot-red"></div>
+            <div class="terminal-dot dot-yellow"></div>
+            <div class="terminal-dot dot-green"></div>
+            <span style="font-size: 0.75rem; color: var(--text-dim); margin-left: 0.5rem;">arquitetura_trokim_local_first.txt</span>
+          </div>
+<pre style="color: #38bdf8;">[Usuário: Extrato OFX/PDF] 
+       │
+       ▼
+[Parser Determinístico (api/app/services/parser_service.py)]
+       │
+       ├─► [Persistência Local: SQLite (Transações, Orçamentos, Categorias)]
+       │
+       ▼
+[Motor de Cálculo (api/app/services/calculation_service.py)] ──► Balanço e Totais Determinísticos (0% Erro)
+       │
+       ▼
+[Pergunta do Usuário no Chat]
+       │
+       ├─► [Embedding FastEmbed (MiniLM-L12-v2 384d)] ──► [Busca Vetorial SQLite-Vec]
+       │                                                         │
+       │                                                         ▼
+       │                                         [20 Docs Oficiais: BCB, CVM, CFPB]
+       ▼                                                         │
+[Montagem do Contexto (Evidências Oficiais + Números Calculados)] ◄┘
+       │
+       ▼
+[LLM Pedagógica (Explicação Clara em pt-BR com Citação Obrigatória ou Abstenção)]</pre>
+        </div>
+      </div>
+    </div>
+
+    <!-- TAB 2: RAG & BENCHMARK -->
+    <div id="tab-rag" class="tab-panel">
+      <div class="grid-2">
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title">
+              <span class="card-title-icon">📊</span>
+              Resultados Auditados do Benchmark (Entrega 2)
+            </div>
+            <span class="card-badge success">41 Queries Oficiais</span>
+          </div>
+          
+          <table class="benchmark-table">
+            <thead>
+              <tr>
+                <th>Métrica de Avaliação</th>
+                <th>Alvo</th>
+                <th>Alcançado</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>Recall@1</strong> (1º resultado exato)</td>
+                <td>&gt; 80%</td>
+                <td><strong style="color:var(--primary-light)">92,68%</strong></td>
+                <td><span class="card-badge success">Superado</span></td>
+              </tr>
+              <tr>
+                <td><strong>Recall@3</strong> (Top 3 documentos)</td>
+                <td>&gt; 90%</td>
+                <td><strong style="color:var(--primary-light)">98,78%</strong></td>
+                <td><span class="card-badge success">Superado</span></td>
+              </tr>
+              <tr>
+                <td><strong>Precisão@3</strong> (Relevância dos nós)</td>
+                <td>&gt; 85%</td>
+                <td><strong style="color:var(--primary-light)">97,56%</strong></td>
+                <td><span class="card-badge success">Superado</span></td>
+              </tr>
+              <tr>
+                <td><strong>Taxa de Abstenção</strong> (Perguntas fora de escopo)</td>
+                <td>100%</td>
+                <td><strong style="color:var(--primary-light)">100,00%</strong></td>
+                <td><span class="card-badge success">Perfeito</span></td>
+              </tr>
+              <tr>
+                <td><strong>Latência Média de Recuperação</strong></td>
+                <td>&lt; 50ms</td>
+                <td><strong style="color:#60a5fa">12,4 ms</strong></td>
+                <td><span class="card-badge success">Local-First</span></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title">
+              <span class="card-title-icon">📚</span>
+              Catálogo de 20 Documentos Oficiais
+            </div>
+            <span class="card-badge">BCB + CVM + CFPB</span>
+          </div>
+          <p style="font-size:0.85rem; color:var(--text-muted); margin-bottom: 1rem;">
+            Toda a base de conhecimento do Trokim foi curada para responder às 10 Guiding Questions do projeto com lastro institucional direto:
+          </p>
+          <ul class="feature-list" style="font-size: 0.85rem;">
+            <li class="feature-item">
+              <span class="scenario-tag tag-bcb">BCB</span>
+              <div><strong>Caderno de Educação Financeira (Gestão de Dívidas & Reserva):</strong> Metodologias para sair do endividamento e construir reserva preventiva.</div>
+            </li>
+            <li class="feature-item">
+              <span class="scenario-tag tag-bcb">BCB</span>
+              <div><strong>Regulação do Crédito Rotativo:</strong> Limite máximo de 30 dias no rotativo e obrigatoriedade de parcelamento facilitado.</div>
+            </li>
+            <li class="feature-item">
+              <span class="scenario-tag tag-cvm">CVM</span>
+              <div><strong>Caderno CVM de Planejamento Financeiro:</strong> Ciclos de vida orçamentários, inflação e preservação de patrimônio.</div>
+            </li>
+            <li class="feature-item">
+              <span class="scenario-tag tag-cvm">CVM</span>
+              <div><strong>Garantia do FGC (Fundo Garantidor de Créditos):</strong> Cobertura de até R$ 250.000 por instituição financeira e por CPF.</div>
+            </li>
+            <li class="feature-item">
+              <span class="scenario-tag tag-abstencao">CFPB</span>
+              <div><strong>Portabilidade de Crédito & Direitos do Consumidor:</strong> Redução de CET (Custo Efetivo Total) e renegociação ética.</div>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- TAB 4: MOBILE & DADOS SINTÉTICOS -->
+    <div id="tab-mobile-dados" class="tab-panel">
+      <div class="grid-2">
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title">
+              <span class="card-title-icon">📱</span>
+              Aplicativo Flutter Android
+            </div>
+            <span class="card-badge success">Feature-First</span>
+          </div>
+          <p style="font-size: 0.88rem; color: var(--text-muted); margin-bottom: 1.25rem;">
+            O Trokim conta com aplicativo nativo para Android construído em Flutter 3.x, organizado em módulos verticais com navegação fluida:
+          </p>
+          <ul class="feature-list">
+            <li class="feature-item">
+              <div class="feature-bullet">✓</div>
+              <div><strong>Importação de Extratos:</strong> Suporte a arquivos <code>.ofx</code> (Open Financial Exchange) e faturas de cartão de crédito em PDF.</div>
+            </li>
+            <li class="feature-item">
+              <div class="feature-bullet">✓</div>
+              <div><strong>Dashboard de Qualidade de Vida:</strong> Visão do orçamento 50-30-20 (Essenciais, Estilo de Vida e Prioridades Financeiras).</div>
+            </li>
+            <li class="feature-item">
+              <div class="feature-bullet">✓</div>
+              <div><strong>Chat Interativo Pedagógico:</strong> Canal direto de conversação integrado ao backend local com citações de evidência visíveis.</div>
+            </li>
+          </ul>
+        </div>
+
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title">
+              <span class="card-title-icon">🧪</span>
+              Massa de Dados Sintética (LGPD)
+            </div>
+            <span class="card-badge">Zero Dados Reais</span>
+          </div>
+          <p style="font-size: 0.88rem; color: var(--text-muted); margin-bottom: 1.25rem;">
+            Em estrito cumprimento à LGPD, nenhum dado financeiro real é utilizado nos testes. O repositório inclui geradores determinísticos em <code>research/synthetic_data/</code>:
+          </p>
+          <div class="terminal-box">
+            <div class="terminal-header">
+              <div class="terminal-dot dot-red"></div>
+              <div class="terminal-dot dot-yellow"></div>
+              <div class="terminal-dot dot-green"></div>
+              <span style="font-size: 0.75rem; color: var(--text-dim); margin-left: 0.5rem;">extrato_sintetico_outubro.ofx</span>
+            </div>
+<pre style="color: #a7f3d0; font-size: 0.75rem;">&lt;STMTTRN&gt;
+  &lt;TRNTYPE&gt;DEBIT
+  &lt;DTPOSTED&gt;20261015120000[-03:EST]
+  &lt;TRNAMT&gt;-148.50
+  &lt;MEMO&gt;SUPERMERCADO CENTRAL
+&lt;/STMTTRN&gt;
+&lt;STMTTRN&gt;
+  &lt;TRNTYPE&gt;CREDIT
+  &lt;DTPOSTED&gt;20261005080000[-03:EST]
+  &lt;TRNAMT&gt;4500.00
+  &lt;MEMO&gt;SALARIO EMPRESA XYZ
+&lt;/STMTTRN&gt;</pre>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- TAB 5: ROADMAP & ADRs -->
+    <div id="tab-roadmap" class="tab-panel">
+      <div class="grid-2">
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title">
+              <span class="card-title-icon">🗺️</span>
+              Roadmap das 7 Semanas (CBL)
+            </div>
+            <span class="card-badge success">Semana 2 Concluída</span>
+          </div>
+          <div class="timeline">
+            <div class="timeline-item">
+              <div class="timeline-dot done"></div>
+              <div class="timeline-title">Semana 1: Concepção & Fundamentos <span class="card-badge success">Concluído</span></div>
+              <div class="timeline-desc">Essential Question, 10 Guiding Questions, C4 Model, Requisitos MoSCoW e ADRs 0001 a 0005.</div>
+            </div>
+            <div class="timeline-item">
+              <div class="timeline-dot done"></div>
+              <div class="timeline-title">Semana 2: Base RAG & Benchmark <span class="card-badge success">Concluído</span></div>
+              <div class="timeline-desc">20 documentos oficiais, SQLite-Vec, FastEmbed multilíngue, Recall@3 98.78%, 100% abstenção e chat Flutter.</div>
+            </div>
+            <div class="timeline-item">
+              <div class="timeline-dot" style="background:#f59e0b; box-shadow:0 0 10px rgba(245, 158, 11, 0.4); border-color:#f59e0b;"></div>
+              <div class="timeline-title">Semana 3: Comparação LLM x RAG <span class="card-badge" style="background:rgba(245, 158, 11, 0.2); color:#fbbf24; border:1px solid rgba(245, 158, 11, 0.4);">Sprint Ativa (09 a 13/11)</span></div>
+              <div class="timeline-desc">Avaliação empírica: LLM Pura vs. Naive RAG vs. Trokim Estruturado. 7 issues distribuídas no GitHub (Milestone 2) sem ociosidade da equipe.</div>
+            </div>
+            <div class="timeline-item">
+              <div class="timeline-dot pending"></div>
+              <div class="timeline-title">Semana 4: Motor de Simulações & Cenários "E Se?"</div>
+              <div class="timeline-desc">Simulador determinístico de quitação acelerada de dívidas e impacto na qualidade de vida.</div>
+            </div>
+            <div class="timeline-item">
+              <div class="timeline-dot pending"></div>
+              <div class="timeline-title">Semanas 5 a 7: Validação com Usuários & Entrega Final</div>
+              <div class="timeline-desc">Testes de usabilidade, hardening de segurança local e apresentação final do Challenge 2.</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title">
+              <span class="card-title-icon">⚖️</span>
+              Decisões Arquiteturais Registradas (ADRs)
+            </div>
+            <span class="card-badge">7 ADRs Formalizadas</span>
+          </div>
+          <ul class="feature-list" style="font-size: 0.85rem;">
+            <li class="feature-item">
+              <div class="feature-bullet">1</div>
+              <div><strong>ADR 0001:</strong> Flutter para o aplicativo Android visando alta fidelidade e modularidade por features.</div>
+            </li>
+            <li class="feature-item">
+              <div class="feature-bullet">2</div>
+              <div><strong>ADR 0002:</strong> FastAPI e SQLite local para garantir processamento local-first sem dependência de nuvem.</div>
+            </li>
+            <li class="feature-item">
+              <div class="feature-bullet">3</div>
+              <div><strong>ADR 0003:</strong> Uso exclusivo de fontes oficiais (BCB, CVM, CFPB) com abstenção obrigatória em conselhos de risco.</div>
+            </li>
+            <li class="feature-item">
+              <div class="feature-bullet">4</div>
+              <div><strong>ADR 0004:</strong> Cálculos financeiros 100% determinísticos em Python, proibindo a LLM de efetuar somas orçamentárias.</div>
+            </li>
+            <li class="feature-item">
+              <div class="feature-bullet">5</div>
+              <div><strong>ADR 0005:</strong> Importação local de extratos OFX e faturas PDF com zero telemetria de transações.</div>
+            </li>
+            <li class="feature-item">
+              <div class="feature-bullet">6</div>
+              <div><strong>ADR 0006:</strong> Metodologia de curadoria e benchmark RAG com 41 perguntas oficiais e testes de abstenção.</div>
+            </li>
+            <li class="feature-item">
+              <div class="feature-bullet">7</div>
+              <div><strong>ADR 0007:</strong> Banco Vetorial SQLite-Vec com modelo de embeddings FastEmbed multilíngue local.</div>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+      <div>
+        <strong>Trokim</strong> — Projeto Acadêmico TIC-IA 2026 • Challenge 2 (Qualidade de Vida)
+      </div>
+      <div>
+        Documentação completa: <a href="https://moonshinerd.github.io/trokim/" target="_blank">moonshinerd.github.io/trokim</a>
+      </div>
+    </footer>
+
+  </div>
+
+  <script>
+    // Tab switching
+    function switchTab(tabId) {
+      document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+      document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+      
+      const target = document.getElementById(tabId);
+      if (target) target.classList.add('active');
+      
+      const activeBtn = Array.from(document.querySelectorAll('.tab-btn')).find(b => b.getAttribute('onclick').includes(tabId));
+      if (activeBtn) activeBtn.classList.add('active');
+    }
+
+    // Healthcheck da API local
+    async function checkApiHealth() {
+      const badge = document.getElementById('apiStatusBadge');
+      const chatStatus = document.getElementById('chatEngineStatus');
+      try {
+        const res = await fetch('http://localhost:8000/v1/health');
+        if (res.ok) {
+          badge.className = 'badge-tag';
+          badge.innerHTML = '<span class="status-dot"></span> API Local: Online (:8000)';
+          chatStatus.innerHTML = '<span class="status-dot"></span> Motor Conectado (:8000)';
+          return true;
+        }
+      } catch (e) {
+        badge.className = 'badge-tag badge-api';
+        badge.innerHTML = '⚠️ API Offline (Execute: make api-run)';
+        chatStatus.innerHTML = '⚠️ Motor Offline (Fallback RAG Ativo)';
+        return false;
+      }
+    }
+    checkApiHealth();
+    setInterval(checkApiHealth, 10000);
+
+    function sendPrompt(text) {
+      const input = document.getElementById('userInput');
+      input.value = text;
+      sendMessage();
+    }
+
+    async function sendMessage() {
+      const input = document.getElementById('userInput');
+      const text = input.value.trim();
+      if (!text) return;
+
+      const chatBox = document.getElementById('chatBox');
+      const btnSend = document.getElementById('btnSend');
+      
+      // User message
+      const userDiv = document.createElement('div');
+      userDiv.className = 'msg msg-user';
+      userDiv.innerText = text;
+      chatBox.appendChild(userDiv);
+      input.value = '';
+      chatBox.scrollTop = chatBox.scrollHeight;
+
+      btnSend.disabled = true;
+      btnSend.innerText = 'Buscando...';
+
+      try {
+        const response = await fetch('http://localhost:8000/v1/chat/ask', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ message: text })
+        });
+
+        if (response.ok) {
+          const data = await response.json();
+          renderBotReply(data);
+          btnSend.disabled = false;
+          btnSend.innerText = 'Perguntar';
+          return;
+        }
+      } catch (err) {
+        console.warn('API local indisponível, usando fallback', err);
+      }
+
+      btnSend.disabled = false;
+      btnSend.innerText = 'Perguntar';
+      
+      // Fallback amigável se a API tiver caído
+      const botDiv = document.createElement('div');
+      botDiv.className = 'msg msg-bot';
+      botDiv.innerHTML = `⚠️ <em>A API local não respondeu em <code>http://localhost:8000</code>.</em><br><br>Para conectar a busca vetorial em tempo real, inicie o backend no terminal com:<br><code>make api-run</code>`;
+      chatBox.appendChild(botDiv);
+      chatBox.scrollTop = chatBox.scrollHeight;
+    }
+
+    function renderBotReply(data) {
+      const chatBox = document.getElementById('chatBox');
+      const botDiv = document.createElement('div');
+      botDiv.className = 'msg msg-bot';
+
+      const isGrounded = data.status === 'grounded';
+      const badgeHtml = isGrounded 
+        ? `<div class="msg-badge-grounded">✓ Fundamentado em Fontes Oficiais</div>`
+        : `<div class="msg-badge-abstained">🛑 Abstenção Ética Mandatória</div>`;
+
+      let evidencesHtml = '';
+      if (data.evidences && data.evidences.length > 0) {
+        evidencesHtml = `<div class="evidences-box">
+          <strong style="color:var(--text-dim); text-transform:uppercase; font-size:0.7rem; letter-spacing:0.5px;">Evidências Recuperadas do RAG (Top ${data.evidences.length}):</strong>`;
+        
+        data.evidences.forEach((ev, idx) => {
+          const scorePercent = (ev.score * 100).toFixed(1);
+          const link = ev.source_url ? `<a href="${ev.source_url}" target="_blank">Abrir Documento Oficial ↗</a>` : '';
+          evidencesHtml += `
+            <div class="evidence-item">
+              <div class="evidence-meta">
+                <span>[${idx+1}] ${ev.document_title || ev.source_name} (${scorePercent}% match)</span>
+                ${link}
+              </div>
+              <div style="color:#94a3b8; font-size:0.75rem; margin-bottom:0.2rem;"><em>${ev.section || ''}</em></div>
+              <div style="color:#e2e8f0; font-size:0.78rem;">${ev.content.substring(0, 160)}...</div>
+            </div>
+          `;
+        });
+        evidencesHtml += `</div>`;
+      }
+
+      botDiv.innerHTML = badgeHtml + 
+        `<div>${data.answer.replace(/\n/g, '<br>')}</div>` +
+        evidencesHtml;
+
+      chatBox.appendChild(botDiv);
+      chatBox.scrollTop = chatBox.scrollHeight;
+    }
+
+    function handleKeyPress(e) {
+      if (e.key === 'Enter') sendMessage();
+    }
+  </script>
+</body>
+</html>

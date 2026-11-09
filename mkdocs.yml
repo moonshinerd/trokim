@@ -61,6 +61,7 @@ markdown_extensions:
 
 nav:
   - Início: index.md
+  - Apresentação Executiva: apresentacao.md
   - Planejamento: planejamento.md
   - Guia de Uso: guia-de-uso.md
   - Pesquisa:
@@ -72,6 +73,8 @@ nav:
   - Atas:
       - Índice: atas/index.md
       - "Ata 01 – Alinhamento Inicial (26/10)": atas/ata01.md
+      - "Ata 02 – Checkpoint Semana 2 (06/11)": atas/ata02.md
+      - "Ata 03 – Planejamento Semana 3 (09/11)": atas/ata03.md
   - Arquitetura:
       - Visão Geral: arquitetura/index.md
       - Mapa do Sistema: arquitetura/mapa-do-sistema.md

@@ -1,23 +1,25 @@
 name: CI
 
 on:
-  pull_request:
   push:
     branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
 
 permissions:
   contents: read
 
 concurrency:
-  group: ci-${{ github.workflow }}-${{ github.ref }}
+  group: "ci-${{ github.workflow }}-${{ github.ref }}"
   cancel-in-progress: true
 
 jobs:
   api:
     name: api (lint + testes)
-    runs-on: ubuntu-latest
+    runs-on: [self-hosted, macOS]
     env:
-      FASTEMBED_CACHE_PATH: /home/runner/.cache/fastembed
+      FASTEMBED_CACHE_PATH: /tmp/fastembed
     defaults:
       run:
         working-directory: api
@@ -40,9 +42,9 @@ jobs:
 
   research:
     name: research (benchmark rag + lint)
-    runs-on: ubuntu-latest
+    runs-on: [self-hosted, macOS]
     env:
-      FASTEMBED_CACHE_PATH: /home/runner/.cache/fastembed
+      FASTEMBED_CACHE_PATH: /tmp/fastembed
     steps:
       - uses: actions/checkout@v4
       - uses: astral-sh/setup-uv@v6
@@ -61,17 +63,10 @@ jobs:
           uv run ruff format --check --config pyproject.toml ../research
       - name: Validar curadoria, dados e benchmark
         run: make research-test
-      - name: Preservar relatório por caso
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: research-benchmark
-          path: artifacts/research/current.json
-          if-no-files-found: warn
 
   docs:
     name: docs (zensical build strict)
-    runs-on: ubuntu-latest
+    runs-on: [self-hosted, macOS]
     steps:
       - uses: actions/checkout@v4
       - uses: astral-sh/setup-uv@v6
