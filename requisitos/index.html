@@ -779,10 +779,10 @@
       <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
         
           <li class="md-nav__item">
-  <a href="#tecnica-de-levantamento-e-priorizacao-de-requisitos" class="md-nav__link">
+  <a href="#1-historico-de-versoes-e-changelog-dos-requisitos" class="md-nav__link">
     <span class="md-ellipsis">
       <span class="md-typeset">
-        Técnica de Levantamento e Priorização de Requisitos
+        1. Histórico de Versões e Changelog dos Requisitos
       </span>
     </span>
   </a>
@@ -790,10 +790,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#requisitos-funcionais-rf" class="md-nav__link">
+  <a href="#2-metodologia-de-levantamento-e-priorizacao-moscow" class="md-nav__link">
     <span class="md-ellipsis">
       <span class="md-typeset">
-        Requisitos Funcionais (RF)
+        2. Metodologia de Levantamento e Priorização (MoSCoW)
       </span>
     </span>
   </a>
@@ -801,10 +801,32 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#requisitos-nao-funcionais-rnf" class="md-nav__link">
+  <a href="#3-requisitos-funcionais-rf" class="md-nav__link">
     <span class="md-ellipsis">
       <span class="md-typeset">
-        Requisitos Não Funcionais (RNF)
+        3. Requisitos Funcionais (RF)
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#4-requisitos-nao-funcionais-rnf" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        4. Requisitos Não Funcionais (RNF)
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#5-matriz-de-rastreabilidade-tecnica-cruzada" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        5. Matriz de Rastreabilidade Técnica Cruzada
       </span>
     </span>
   </a>
@@ -1563,10 +1585,10 @@
       <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
         
           <li class="md-nav__item">
-  <a href="#tecnica-de-levantamento-e-priorizacao-de-requisitos" class="md-nav__link">
+  <a href="#1-historico-de-versoes-e-changelog-dos-requisitos" class="md-nav__link">
     <span class="md-ellipsis">
       <span class="md-typeset">
-        Técnica de Levantamento e Priorização de Requisitos
+        1. Histórico de Versões e Changelog dos Requisitos
       </span>
     </span>
   </a>
@@ -1574,10 +1596,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#requisitos-funcionais-rf" class="md-nav__link">
+  <a href="#2-metodologia-de-levantamento-e-priorizacao-moscow" class="md-nav__link">
     <span class="md-ellipsis">
       <span class="md-typeset">
-        Requisitos Funcionais (RF)
+        2. Metodologia de Levantamento e Priorização (MoSCoW)
       </span>
     </span>
   </a>
@@ -1585,10 +1607,32 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#requisitos-nao-funcionais-rnf" class="md-nav__link">
+  <a href="#3-requisitos-funcionais-rf" class="md-nav__link">
     <span class="md-ellipsis">
       <span class="md-typeset">
-        Requisitos Não Funcionais (RNF)
+        3. Requisitos Funcionais (RF)
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#4-requisitos-nao-funcionais-rnf" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        4. Requisitos Não Funcionais (RNF)
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#5-matriz-de-rastreabilidade-tecnica-cruzada" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        5. Matriz de Rastreabilidade Técnica Cruzada
       </span>
     </span>
   </a>
@@ -1616,178 +1660,426 @@
   
 
 
-<h1 id="requisitos-do-sistema-e-matriz-de-rastreabilidade">Requisitos do Sistema e Matriz de Rastreabilidade<a class="headerlink" href="#requisitos-do-sistema-e-matriz-de-rastreabilidade" title="Permanent link">&para;</a></h1>
-<p>Rastreabilidade bidirecional entre os Requisitos do Sistema (Funcionais e Não Funcionais), priorização MoSCoW, as Perguntas Norteadoras da Pesquisa (GQ01 a GQ13) e as Decisões de Arquitetura (ADRs).</p>
+<h1 id="engenharia-de-requisitos-e-matriz-de-rastreabilidade">Engenharia de Requisitos e Matriz de Rastreabilidade<a class="headerlink" href="#engenharia-de-requisitos-e-matriz-de-rastreabilidade" title="Permanent link">&para;</a></h1>
+<p>Rastreabilidade bidirecional entre os Requisitos do Sistema (Funcionais e Não Funcionais), priorização MoSCoW, histórico formal de versionamento, Perguntas Norteadoras da Pesquisa (GQ01 a GQ13) e Decisões de Arquitetura (ADRs).</p>
 <hr />
-<h2 id="tecnica-de-levantamento-e-priorizacao-de-requisitos">Técnica de Levantamento e Priorização de Requisitos<a class="headerlink" href="#tecnica-de-levantamento-e-priorizacao-de-requisitos" title="Permanent link">&para;</a></h2>
-<p>O processo de engenharia de requisitos do <strong>Trokim</strong> seguiu uma abordagem orientada a objetivos, estruturada em duas frentes complementares:</p>
-<ol>
-<li><strong>Formulação de Guiding Questions (GQ01 a GQ13):</strong> Essenciais para a compreensão do problema central da fragmentação financeira. Cada necessidade de negócio e restrição de segurança foi decomposta em requisitos funcionais (RF) e não funcionais (RNF). A coluna de <strong>Origem</strong> estabelece uma rastreabilidade bidirecional direta: todo requisito implementado é formalmente justificado por uma ou mais Guiding Questions, prevenindo requisitos órfãos e desvios de escopo (<em>scope creep</em>).</li>
-<li><strong>Priorização MoSCoW:</strong> Utilizada para gerenciar o escopo do MVP no curto ciclo de 7 semanas do CBL:<ul>
-<li><span class="badge-must">Must have</span>: Itens críticos para o fluxo de valor do MVP (importação de OFX/PDF, cálculo determinístico sem alucinação, RAG oficial com abstenção ativa, interface mobile Flutter e privacidade local-first).</li>
-<li><span class="badge-should">Should have</span>: Recursos fundamentais que aumentam a eficácia e usabilidade (comparação de dois cenários de orçamento, categorização automática assistida e deduplicação de faturas).</li>
-<li><span class="badge-could">Could have</span>: Recursos de valor agregado para iterações seguintes (projeções estatísticas de séries temporais e categorização multimodal via visão computacional na Semana 5).</li>
-<li><strong>Won't have</strong>: Integração bancária direta via Open Finance com agregação comercial de terceiros no MVP (descartada pela <a href="../adr/0005-importacao-local-ofx-pdf/">ADR 0005</a>).</li>
-</ul>
-</li>
-</ol>
-<hr />
-<h2 id="requisitos-funcionais-rf">Requisitos Funcionais (RF)<a class="headerlink" href="#requisitos-funcionais-rf" title="Permanent link">&para;</a></h2>
+<h2 id="1-historico-de-versoes-e-changelog-dos-requisitos">1. Histórico de Versões e Changelog dos Requisitos<a class="headerlink" href="#1-historico-de-versoes-e-changelog-dos-requisitos" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
 <tr>
-<th>ID</th>
-<th>Requisito Funcional</th>
-<th>Descrição</th>
-<th>Priorização (MoSCoW)</th>
-<th>Origem</th>
-<th>ADR Relacionada</th>
+<th style="text-align: center;">Versão</th>
+<th style="text-align: center;">Data</th>
+<th style="text-align: center;">Fase CBL</th>
+<th>Principais Alterações e Justificativas</th>
+<th style="text-align: center;">Autor / Responsável</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td><strong>RF01</strong></td>
-<td>Importação de extratos OFX</td>
-<td>O sistema deve ler e extrair lançamentos de extratos bancários em formato <code>.ofx</code>.</td>
-<td><span class="badge-must">Must have</span></td>
-<td><a href="../pesquisa/guiding-questions/">GQ02</a>, <a href="../pesquisa/guiding-questions/">GQ03</a></td>
-<td><a href="../adr/0005-importacao-local-ofx-pdf/">ADR 0005</a></td>
+<td style="text-align: center;"><strong>v1.0.0</strong></td>
+<td style="text-align: center;">30/10/2026</td>
+<td style="text-align: center;">Semana 1 (<em>Engage</em>)</td>
+<td>Baseline inicial de requisitos do MVP (RF01 a RF10; RNF01 a RNF06). Definição do escopo local-first, cálculo determinístico em Python e premissas de RAG oficial.</td>
+<td style="text-align: center;">Equipe Trokim</td>
 </tr>
 <tr>
-<td><strong>RF02</strong></td>
-<td>Importação de faturas PDF</td>
-<td>O sistema deve extrair texto e transações de faturas de cartão de crédito em formato <code>.pdf</code>.</td>
-<td><span class="badge-must">Must have</span></td>
-<td><a href="../pesquisa/guiding-questions/">GQ02</a>, <a href="../pesquisa/guiding-questions/">GQ03</a></td>
-<td><a href="../adr/0005-importacao-local-ofx-pdf/">ADR 0005</a></td>
-</tr>
-<tr>
-<td><strong>RF03</strong></td>
-<td>Cálculo determinístico de totais</td>
-<td>O sistema deve calcular saldos, receitas, despesas e percentual de poupança exclusivamente por código matemático em Python, sem intervenção aritmética de LLMs.</td>
-<td><span class="badge-must">Must have</span></td>
-<td><a href="../pesquisa/guiding-questions/">GQ04</a>, <a href="../pesquisa/guiding-questions/">GQ07</a></td>
-<td><a href="../adr/0004-calculos-deterministicos/">ADR 0004</a></td>
-</tr>
-<tr>
-<td><strong>RF04</strong></td>
-<td>Deduplicação de transações</td>
-<td>O sistema deve identificar e sinalizar automaticamente transações repetidas entre extratos bancários e faturas de cartão.</td>
-<td><span class="badge-must">Must have</span></td>
-<td><a href="../pesquisa/guiding-questions/">GQ02</a>, <a href="../pesquisa/guiding-questions/">GQ07</a></td>
-<td><a href="../adr/0004-calculos-deterministicos/">ADR 0004</a></td>
-</tr>
-<tr>
-<td><strong>RF05</strong></td>
-<td>Consulta pedagógica via RAG</td>
-<td>O usuário pode enviar perguntas em linguagem natural respondidas com base nas publicações oficiais do BCB, CVM e CFPB.</td>
-<td><span class="badge-must">Must have</span></td>
-<td><a href="../pesquisa/guiding-questions/">GQ01</a>, <a href="../pesquisa/guiding-questions/">GQ05</a>, <a href="../pesquisa/guiding-questions/">GQ10</a></td>
-<td><a href="../adr/0003-rag-fontes-oficiais/">ADR 0003</a>, <a href="../adr/0006-curadoria-benchmark/">ADR 0006</a>, <a href="../adr/0007-banco-vetorial-embeddings/">ADR 0007</a></td>
-</tr>
-<tr>
-<td><strong>RF06</strong></td>
-<td>Abstenção ativa de IA</td>
-<td>O sistema deve recusar responder formalmente quando uma pergunta do usuário estiver fora do escopo ou não tiver respaldo oficial comprovado.</td>
-<td><span class="badge-must">Must have</span></td>
-<td><a href="../pesquisa/guiding-questions/">GQ05</a>, <a href="../pesquisa/guiding-questions/">GQ10</a></td>
-<td><a href="../adr/0003-rag-fontes-oficiais/">ADR 0003</a>, <a href="../adr/0006-curadoria-benchmark/">ADR 0006</a></td>
-</tr>
-<tr>
-<td><strong>RF07</strong></td>
-<td>Dashboard consolidado no Android</td>
-<td>O aplicativo móvel deve exibir o resumo financeiro, saldo líquido, métricas de poupança e distribuição por categoria.</td>
-<td><span class="badge-must">Must have</span></td>
-<td><a href="../pesquisa/guiding-questions/">GQ01</a>, <a href="../pesquisa/guiding-questions/">GQ07</a>, <a href="../pesquisa/guiding-questions/">GQ13</a></td>
-<td><a href="../adr/0001-flutter-android/">ADR 0001</a></td>
-</tr>
-<tr>
-<td><strong>RF08</strong></td>
-<td>Simulação e comparação de cenários</td>
-<td>O sistema deve permitir comparar dois cenários orçamentários (ex.: Cenário Padrão vs. Otimizado com meta de reserva de emergência).</td>
-<td><span class="badge-should">Should have</span></td>
-<td><a href="../pesquisa/guiding-questions/">GQ06</a>, <a href="../pesquisa/guiding-questions/">GQ08</a>, <a href="../pesquisa/guiding-questions/">GQ12</a></td>
-<td><a href="../adr/0004-calculos-deterministicos/">ADR 0004</a></td>
-</tr>
-<tr>
-<td><strong>RF09</strong></td>
-<td>Categorização automática assistida</td>
-<td>O sistema deve inferir a categoria das transações com base no histórico do usuário, permitindo conferência e ajuste no app.</td>
-<td><span class="badge-should">Should have</span></td>
-<td><a href="../pesquisa/guiding-questions/">GQ07</a>, <a href="../pesquisa/guiding-questions/">GQ11</a></td>
-<td><a href="../adr/0004-calculos-deterministicos/">ADR 0004</a></td>
-</tr>
-<tr>
-<td><strong>RF10</strong></td>
-<td>Auditoria e citação direta de fontes</td>
-<td>Cada orientação gerada pelo assistente deve referenciar explicitamente o órgão oficial (ex.: Banco Central) e a seção documental correspondente.</td>
-<td><span class="badge-must">Must have</span></td>
-<td><a href="../pesquisa/guiding-questions/">GQ05</a>, <a href="../pesquisa/guiding-questions/">GQ08</a></td>
-<td><a href="../adr/0003-rag-fontes-oficiais/">ADR 0003</a>, <a href="../adr/0006-curadoria-benchmark/">ADR 0006</a>, <a href="../adr/0007-banco-vetorial-embeddings/">ADR 0007</a></td>
+<td style="text-align: center;"><strong>v1.1.0</strong></td>
+<td style="text-align: center;">07/11/2026</td>
+<td style="text-align: center;">Semana 2 (<em>Investigate &amp; Act</em>)</td>
+<td>Refinamento formal da Entrega 2: inclusão de <strong>RF11 a RF14</strong> (busca híbrida, persistência SQLite-Vec, chat mobile e dados sintéticos) e <strong>RNF07 a RNF09</strong> (ports &amp; adapters, determinismo no benchmark e metas empíricas auditadas). Vinculação das ADRs 0006 e 0007.</td>
+<td style="text-align: center;">Equipe Trokim</td>
 </tr>
 </tbody>
 </table>
 <hr />
-<h2 id="requisitos-nao-funcionais-rnf">Requisitos Não Funcionais (RNF)<a class="headerlink" href="#requisitos-nao-funcionais-rnf" title="Permanent link">&para;</a></h2>
+<h2 id="2-metodologia-de-levantamento-e-priorizacao-moscow">2. Metodologia de Levantamento e Priorização (MoSCoW)<a class="headerlink" href="#2-metodologia-de-levantamento-e-priorizacao-moscow" title="Permanent link">&para;</a></h2>
+<p>A engenharia de requisitos do <strong>Trokim</strong> segue duas frentes fundamentais:</p>
+<ol>
+<li><strong>Rastreabilidade com Guiding Questions (GQ01 a GQ13):</strong> Todo requisito deriva de uma necessidade diagnosticada na pesquisa com fontes oficiais (BCB, CVM, CFPB, ANPD). Requisitos sem origem em GQ são sumariamente rejeitados para evitar <em>scope creep</em>.</li>
+<li><strong>Priorização MoSCoW:</strong></li>
+<li><span class="badge-must">Must have</span>: Mandatórios para o fluxo de valor do MVP e integridade do assistente (importação OFX/PDF, cálculos determinísticos com zero alucinação, RAG oficial com abstenção ativa, banco vetorial local e privacidade LGPD).</li>
+<li><span class="badge-should">Should have</span>: Funcionalidades essenciais para a experiência de uso (comparação de cenários de orçamento, categorização assistida e baixa latência de recuperação).</li>
+<li><span class="badge-could">Could have</span>: Funcionalidades de alto valor agregado previstas para as semanas 4 e 5 (assistente multimodal com visão em comprovantes e orquestração multiagentes).</li>
+<li><strong>Won't have (nesta release)</strong>: Conexões bancárias em nuvem via Open Finance ou agregação de credenciais bancárias (descartadas pela <a href="../adr/0005-importacao-local-ofx-pdf/">ADR 0005</a>).</li>
+</ol>
+<hr />
+<h2 id="3-requisitos-funcionais-rf">3. Requisitos Funcionais (RF)<a class="headerlink" href="#3-requisitos-funcionais-rf" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
 <tr>
-<th>ID</th>
-<th>Requisito Não Funcional</th>
-<th>Descrição</th>
-<th>Priorização (MoSCoW)</th>
-<th>Origem</th>
-<th>ADR Relacionada</th>
+<th style="text-align: center;">ID</th>
+<th>Requisito Funcional</th>
+<th>Descrição Detalhada</th>
+<th style="text-align: center;">Priorização</th>
+<th style="text-align: center;">Origem</th>
+<th style="text-align: center;">ADR Relacionada</th>
+<th style="text-align: center;">Status de Implementação</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td><strong>RNF01</strong></td>
+<td style="text-align: center;"><strong>RF01</strong></td>
+<td>Importação de extratos OFX</td>
+<td>O sistema deve ler e extrair transações financeiras de extratos bancários em formato <code>.ofx</code>.</td>
+<td style="text-align: center;"><span class="badge-must">Must have</span></td>
+<td style="text-align: center;"><a href="../pesquisa/guiding-questions/">GQ02</a>, <a href="../pesquisa/guiding-questions/">GQ03</a></td>
+<td style="text-align: center;"><a href="../adr/0005-importacao-local-ofx-pdf/">ADR 0005</a></td>
+<td style="text-align: center;"><span class="badge-must">Implementado</span></td>
+</tr>
+<tr>
+<td style="text-align: center;"><strong>RF02</strong></td>
+<td>Importação de faturas PDF</td>
+<td>O sistema deve extrair texto, datas e valores de faturas de cartão de crédito em formato <code>.pdf</code>.</td>
+<td style="text-align: center;"><span class="badge-must">Must have</span></td>
+<td style="text-align: center;"><a href="../pesquisa/guiding-questions/">GQ02</a>, <a href="../pesquisa/guiding-questions/">GQ03</a></td>
+<td style="text-align: center;"><a href="../adr/0005-importacao-local-ofx-pdf/">ADR 0005</a></td>
+<td style="text-align: center;"><span class="badge-must">Implementado</span></td>
+</tr>
+<tr>
+<td style="text-align: center;"><strong>RF03</strong></td>
+<td>Cálculo determinístico de totais</td>
+<td>O sistema deve calcular saldos, receitas, despesas e percentual de poupança exclusivamente por código matemático em Python, sem intervenção aritmética de LLMs.</td>
+<td style="text-align: center;"><span class="badge-must">Must have</span></td>
+<td style="text-align: center;"><a href="../pesquisa/guiding-questions/">GQ04</a>, <a href="../pesquisa/guiding-questions/">GQ07</a></td>
+<td style="text-align: center;"><a href="../adr/0004-calculos-deterministicos/">ADR 0004</a></td>
+<td style="text-align: center;"><span class="badge-must">Implementado</span></td>
+</tr>
+<tr>
+<td style="text-align: center;"><strong>RF04</strong></td>
+<td>Deduplicação de transações</td>
+<td>O sistema deve identificar e sinalizar automaticamente transações repetidas entre extratos bancários e faturas de cartão.</td>
+<td style="text-align: center;"><span class="badge-must">Must have</span></td>
+<td style="text-align: center;"><a href="../pesquisa/guiding-questions/">GQ02</a>, <a href="../pesquisa/guiding-questions/">GQ07</a></td>
+<td style="text-align: center;"><a href="../adr/0004-calculos-deterministicos/">ADR 0004</a></td>
+<td style="text-align: center;"><span class="badge-must">Implementado</span></td>
+</tr>
+<tr>
+<td style="text-align: center;"><strong>RF05</strong></td>
+<td>Consulta pedagógica via RAG</td>
+<td>O usuário pode enviar perguntas em linguagem natural respondidas com base nas publicações oficiais do BCB, CVM e CFPB.</td>
+<td style="text-align: center;"><span class="badge-must">Must have</span></td>
+<td style="text-align: center;"><a href="../pesquisa/guiding-questions/">GQ01</a>, <a href="../pesquisa/guiding-questions/">GQ05</a>, <a href="../pesquisa/guiding-questions/">GQ10</a></td>
+<td style="text-align: center;"><a href="../adr/0003-rag-fontes-oficiais/">ADR 0003</a>, <a href="../adr/0006-curadoria-benchmark/">ADR 0006</a>, <a href="../adr/0007-banco-vetorial-embeddings/">ADR 0007</a></td>
+<td style="text-align: center;"><span class="badge-must">Implementado</span></td>
+</tr>
+<tr>
+<td style="text-align: center;"><strong>RF06</strong></td>
+<td>Abstenção ativa de IA</td>
+<td>O sistema deve recusar responder formalmente quando uma pergunta do usuário estiver fora do escopo ou não tiver respaldo oficial comprovado.</td>
+<td style="text-align: center;"><span class="badge-must">Must have</span></td>
+<td style="text-align: center;"><a href="../pesquisa/guiding-questions/">GQ05</a>, <a href="../pesquisa/guiding-questions/">GQ10</a></td>
+<td style="text-align: center;"><a href="../adr/0003-rag-fontes-oficiais/">ADR 0003</a>, <a href="../adr/0006-curadoria-benchmark/">ADR 0006</a></td>
+<td style="text-align: center;"><span class="badge-must">Implementado</span></td>
+</tr>
+<tr>
+<td style="text-align: center;"><strong>RF07</strong></td>
+<td>Dashboard consolidado no Android</td>
+<td>O aplicativo móvel deve exibir o resumo financeiro, saldo líquido, métricas de poupança e distribuição por categoria.</td>
+<td style="text-align: center;"><span class="badge-must">Must have</span></td>
+<td style="text-align: center;"><a href="../pesquisa/guiding-questions/">GQ01</a>, <a href="../pesquisa/guiding-questions/">GQ07</a>, <a href="../pesquisa/guiding-questions/">GQ13</a></td>
+<td style="text-align: center;"><a href="../adr/0001-flutter-android/">ADR 0001</a></td>
+<td style="text-align: center;"><span class="badge-must">Implementado</span></td>
+</tr>
+<tr>
+<td style="text-align: center;"><strong>RF08</strong></td>
+<td>Simulação e comparação de cenários</td>
+<td>O sistema deve permitir comparar dois cenários orçamentários (ex.: Cenário Padrão vs. Otimizado com meta de reserva de emergência).</td>
+<td style="text-align: center;"><span class="badge-should">Should have</span></td>
+<td style="text-align: center;"><a href="../pesquisa/guiding-questions/">GQ06</a>, <a href="../pesquisa/guiding-questions/">GQ08</a>, <a href="../pesquisa/guiding-questions/">GQ12</a></td>
+<td style="text-align: center;"><a href="../adr/0004-calculos-deterministicos/">ADR 0004</a></td>
+<td style="text-align: center;">Previsto (Semana 4)</td>
+</tr>
+<tr>
+<td style="text-align: center;"><strong>RF09</strong></td>
+<td>Categorização automática assistida</td>
+<td>O sistema deve inferir a categoria das transações com base no histórico do usuário, permitindo conferência e ajuste no app.</td>
+<td style="text-align: center;"><span class="badge-should">Should have</span></td>
+<td style="text-align: center;"><a href="../pesquisa/guiding-questions/">GQ07</a>, <a href="../pesquisa/guiding-questions/">GQ11</a></td>
+<td style="text-align: center;"><a href="../adr/0004-calculos-deterministicos/">ADR 0004</a></td>
+<td style="text-align: center;">Previsto (Semana 3)</td>
+</tr>
+<tr>
+<td style="text-align: center;"><strong>RF10</strong></td>
+<td>Auditoria e citação direta de fontes</td>
+<td>Cada orientação gerada pelo assistente deve referenciar explicitamente o órgão oficial (ex.: Banco Central) e a seção documental correspondente.</td>
+<td style="text-align: center;"><span class="badge-must">Must have</span></td>
+<td style="text-align: center;"><a href="../pesquisa/guiding-questions/">GQ05</a>, <a href="../pesquisa/guiding-questions/">GQ08</a></td>
+<td style="text-align: center;"><a href="../adr/0003-rag-fontes-oficiais/">ADR 0003</a>, <a href="../adr/0006-curadoria-benchmark/">ADR 0006</a>, <a href="../adr/0007-banco-vetorial-embeddings/">ADR 0007</a></td>
+<td style="text-align: center;"><span class="badge-must">Implementado</span></td>
+</tr>
+<tr>
+<td style="text-align: center;"><strong>RF11</strong></td>
+<td>Busca híbrida de evidências</td>
+<td>O motor de recuperação deve combinar vetores densos (FastEmbed) com similaridade esparsa (TF-IDF palavras + n-grams de caracteres) com ponderação calibrada.</td>
+<td style="text-align: center;"><span class="badge-must">Must have</span></td>
+<td style="text-align: center;"><a href="../pesquisa/guiding-questions/">GQ05</a>, <a href="../pesquisa/guiding-questions/">GQ10</a></td>
+<td style="text-align: center;"><a href="../adr/0007-banco-vetorial-embeddings/">ADR 0007</a></td>
+<td style="text-align: center;"><span class="badge-must">Implementado</span></td>
+</tr>
+<tr>
+<td style="text-align: center;"><strong>RF12</strong></td>
+<td>Ingestão e persistência vetorial local</td>
+<td>O sistema deve armazenar embeddings e metadados na tabela virtual <code>vec0</code> do SQLite-Vec, reingerindo automaticamente em caso de alteração no corpus via hash SHA-256.</td>
+<td style="text-align: center;"><span class="badge-must">Must have</span></td>
+<td style="text-align: center;"><a href="../pesquisa/guiding-questions/">GQ03</a>, <a href="../pesquisa/guiding-questions/">GQ10</a></td>
+<td style="text-align: center;"><a href="../adr/0002-fastapi-sqlite-local/">ADR 0002</a>, <a href="../adr/0007-banco-vetorial-embeddings/">ADR 0007</a></td>
+<td style="text-align: center;"><span class="badge-must">Implementado</span></td>
+</tr>
+<tr>
+<td style="text-align: center;"><strong>RF13</strong></td>
+<td>Interface conversacional com cartões de fontes</td>
+<td>O app mobile e a API devem disponibilizar canal de diálogo com renderização de cartões destacando a instituição, trecho, score e link do documento governamental.</td>
+<td style="text-align: center;"><span class="badge-must">Must have</span></td>
+<td style="text-align: center;"><a href="../pesquisa/guiding-questions/">GQ01</a>, <a href="../pesquisa/guiding-questions/">GQ05</a></td>
+<td style="text-align: center;"><a href="../adr/0001-flutter-android/">ADR 0001</a>, <a href="../adr/0003-rag-fontes-oficiais/">ADR 0003</a></td>
+<td style="text-align: center;"><span class="badge-must">Implementado</span></td>
+</tr>
+<tr>
+<td style="text-align: center;"><strong>RF14</strong></td>
+<td>Gerador sintético de extratos e faturas</td>
+<td>O projeto deve conter geradores automatizados de dados financeiros fictícios em formatos OFX e PDF para validação contínua em conformidade com a LGPD.</td>
+<td style="text-align: center;"><span class="badge-must">Must have</span></td>
+<td style="text-align: center;"><a href="../pesquisa/guiding-questions/">GQ02</a>, <a href="../pesquisa/guiding-questions/">GQ03</a></td>
+<td style="text-align: center;"><a href="../adr/0005-importacao-local-ofx-pdf/">ADR 0005</a>, <a href="../adr/0006-curadoria-benchmark/">ADR 0006</a></td>
+<td style="text-align: center;"><span class="badge-must">Implementado</span></td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="4-requisitos-nao-funcionais-rnf">4. Requisitos Não Funcionais (RNF)<a class="headerlink" href="#4-requisitos-nao-funcionais-rnf" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th style="text-align: center;">ID</th>
+<th>Requisito Não Funcional</th>
+<th>Descrição Detalhada</th>
+<th style="text-align: center;">Priorização</th>
+<th style="text-align: center;">Origem</th>
+<th style="text-align: center;">ADR Relacionada</th>
+<th style="text-align: center;">Status de Implementação</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: center;"><strong>RNF01</strong></td>
 <td>Privacidade Local-First (LGPD)</td>
-<td>Os extratos bancários e transações devem ser armazenados localmente no dispositivo/servidor local em SQLite, sem persistência em servidores de terceiros.</td>
-<td><span class="badge-must">Must have</span></td>
-<td><a href="../pesquisa/guiding-questions/">GQ03</a>, <a href="../pesquisa/guiding-questions/">GQ06</a></td>
-<td><a href="../adr/0002-fastapi-sqlite-local/">ADR 0002</a>, <a href="../adr/0005-importacao-local-ofx-pdf/">ADR 0005</a></td>
+<td>Os extratos bancários e transações devem ser armazenados localmente no dispositivo em SQLite, sem persistência ou transmissão para servidores de terceiros.</td>
+<td style="text-align: center;"><span class="badge-must">Must have</span></td>
+<td style="text-align: center;"><a href="../pesquisa/guiding-questions/">GQ03</a>, <a href="../pesquisa/guiding-questions/">GQ06</a></td>
+<td style="text-align: center;"><a href="../adr/0002-fastapi-sqlite-local/">ADR 0002</a>, <a href="../adr/0005-importacao-local-ofx-pdf/">ADR 0005</a></td>
+<td style="text-align: center;"><span class="badge-must">Validado</span></td>
 </tr>
 <tr>
-<td><strong>RNF02</strong></td>
-<td>Explicabilidade e Acurácia Aritmética</td>
-<td>O motor de cálculo determinístico deve possuir 100% de acurácia numérica e cobertura por testes automatizados com <code>pytest</code>.</td>
-<td><span class="badge-must">Must have</span></td>
-<td><a href="../pesquisa/guiding-questions/">GQ04</a>, <a href="../pesquisa/guiding-questions/">GQ11</a></td>
-<td><a href="../adr/0004-calculos-deterministicos/">ADR 0004</a></td>
+<td style="text-align: center;"><strong>RNF02</strong></td>
+<td>Explicabilidade e acurácia aritmética</td>
+<td>O motor de cálculo determinístico deve possuir 100% de acurácia numérica e cobertura por testes automatizados com <code>pytest</code> (0% de erro ou alucinação).</td>
+<td style="text-align: center;"><span class="badge-must">Must have</span></td>
+<td style="text-align: center;"><a href="../pesquisa/guiding-questions/">GQ04</a>, <a href="../pesquisa/guiding-questions/">GQ11</a></td>
+<td style="text-align: center;"><a href="../adr/0004-calculos-deterministicos/">ADR 0004</a></td>
+<td style="text-align: center;"><span class="badge-must">Validado</span></td>
 </tr>
 <tr>
-<td><strong>RNF03</strong></td>
-<td>Portabilidade e Performance Mobile</td>
-<td>A interface do app Android deve manter taxa estável de quadros e baixo consumo de memória através da compilação em Flutter.</td>
-<td><span class="badge-must">Must have</span></td>
-<td><a href="../pesquisa/guiding-questions/">GQ01</a></td>
-<td><a href="../adr/0001-flutter-android/">ADR 0001</a></td>
+<td style="text-align: center;"><strong>RNF03</strong></td>
+<td>Portabilidade e performance mobile</td>
+<td>A interface do app Android deve manter taxa de quadros estável e baixo consumo de memória através da compilação nativa em Flutter.</td>
+<td style="text-align: center;"><span class="badge-must">Must have</span></td>
+<td style="text-align: center;"><a href="../pesquisa/guiding-questions/">GQ01</a></td>
+<td style="text-align: center;"><a href="../adr/0001-flutter-android/">ADR 0001</a></td>
+<td style="text-align: center;"><span class="badge-must">Validado</span></td>
 </tr>
 <tr>
-<td><strong>RNF04</strong></td>
-<td>Latência na Recuperação RAG</td>
-<td>As consultas RAG locais devem recuperar as evidências e responder em menos de 2 segundos em ambiente de desenvolvimento local.</td>
-<td><span class="badge-should">Should have</span></td>
-<td><a href="../pesquisa/guiding-questions/">GQ05</a>, <a href="../pesquisa/guiding-questions/">GQ10</a></td>
-<td><a href="../adr/0003-rag-fontes-oficiais/">ADR 0003</a>, <a href="../adr/0007-banco-vetorial-embeddings/">ADR 0007</a></td>
+<td style="text-align: center;"><strong>RNF04</strong></td>
+<td>Baixa latência de recuperação</td>
+<td>As consultas RAG locais devem recuperar as evidências no banco vetorial e responder em menos de 100 ms em desenvolvimento local (alcançado ~12,4 ms).</td>
+<td style="text-align: center;"><span class="badge-should">Should have</span></td>
+<td style="text-align: center;"><a href="../pesquisa/guiding-questions/">GQ05</a>, <a href="../pesquisa/guiding-questions/">GQ10</a></td>
+<td style="text-align: center;"><a href="../adr/0003-rag-fontes-oficiais/">ADR 0003</a>, <a href="../adr/0007-banco-vetorial-embeddings/">ADR 0007</a></td>
+<td style="text-align: center;"><span class="badge-must">Superado</span></td>
 </tr>
 <tr>
-<td><strong>RNF05</strong></td>
-<td>Arquitetura Limpa em Camadas</td>
+<td style="text-align: center;"><strong>RNF05</strong></td>
+<td>Arquitetura limpa em camadas</td>
 <td>O backend deve isolar estritamente o domínio das rotas e adaptadores (<code>routers → services → domain</code>), prevenindo acoplamento indevido.</td>
-<td><span class="badge-must">Must have</span></td>
-<td><a href="../pesquisa/guiding-questions/">GQ03</a></td>
-<td><a href="../adr/0002-fastapi-sqlite-local/">ADR 0002</a></td>
+<td style="text-align: center;"><span class="badge-must">Must have</span></td>
+<td style="text-align: center;"><a href="../pesquisa/guiding-questions/">GQ03</a></td>
+<td style="text-align: center;"><a href="../adr/0002-fastapi-sqlite-local/">ADR 0002</a></td>
+<td style="text-align: center;"><span class="badge-must">Validado</span></td>
 </tr>
 <tr>
-<td><strong>RNF06</strong></td>
-<td>Testabilidade com Dados Sintéticos</td>
-<td>Toda a suíte de testes e validação de hipóteses deve rodar com dados sintéticos em <code>research/synthetic_data/</code>, sem uso de dados reais de alunos.</td>
-<td><span class="badge-must">Must have</span></td>
-<td><a href="../pesquisa/guiding-questions/">GQ02</a>, <a href="../pesquisa/guiding-questions/">GQ03</a>, <a href="../pesquisa/guiding-questions/">GQ04</a></td>
-<td><a href="../adr/0005-importacao-local-ofx-pdf/">ADR 0005</a>, <a href="../adr/0006-curadoria-benchmark/">ADR 0006</a></td>
+<td style="text-align: center;"><strong>RNF06</strong></td>
+<td>Testabilidade com dados sintéticos</td>
+<td>Toda a suíte de testes e validação de hipóteses deve rodar com dados sintéticos em <code>research/synthetic_data/</code>, sem uso de dados reais de usuários.</td>
+<td style="text-align: center;"><span class="badge-must">Must have</span></td>
+<td style="text-align: center;"><a href="../pesquisa/guiding-questions/">GQ02</a>, <a href="../pesquisa/guiding-questions/">GQ03</a></td>
+<td style="text-align: center;"><a href="../adr/0005-importacao-local-ofx-pdf/">ADR 0005</a>, <a href="../adr/0006-curadoria-benchmark/">ADR 0006</a></td>
+<td style="text-align: center;"><span class="badge-must">Validado</span></td>
+</tr>
+<tr>
+<td style="text-align: center;"><strong>RNF07</strong></td>
+<td>Desacoplamento via Ports &amp; Adapters</td>
+<td>O pipeline de embeddings e vector store deve adotar interfaces puras (<code>EmbeddingModel</code>, <code>VectorStore</code>) permitindo substituição de provedores sem alterar o domínio.</td>
+<td style="text-align: center;"><span class="badge-must">Must have</span></td>
+<td style="text-align: center;"><a href="../pesquisa/guiding-questions/">GQ03</a>, <a href="../pesquisa/guiding-questions/">GQ10</a></td>
+<td style="text-align: center;"><a href="../adr/0002-fastapi-sqlite-local/">ADR 0002</a>, <a href="../adr/0007-banco-vetorial-embeddings/">ADR 0007</a></td>
+<td style="text-align: center;"><span class="badge-must">Validado</span></td>
+</tr>
+<tr>
+<td style="text-align: center;"><strong>RNF08</strong></td>
+<td>Auditabilidade e determinismo no benchmark</td>
+<td>O protocolo de avaliação deve ser estritamente reproduzível com saída JSON padronizada, controle de código de saída (exit code) e hashes de integridade.</td>
+<td style="text-align: center;"><span class="badge-must">Must have</span></td>
+<td style="text-align: center;"><a href="../pesquisa/guiding-questions/">GQ05</a>, <a href="../pesquisa/guiding-questions/">GQ08</a></td>
+<td style="text-align: center;"><a href="../adr/0006-curadoria-benchmark/">ADR 0006</a></td>
+<td style="text-align: center;"><span class="badge-must">Validado</span></td>
+</tr>
+<tr>
+<td style="text-align: center;"><strong>RNF09</strong></td>
+<td>Metas empíricas do RAG</td>
+<td>O sistema de recuperação deve atingir métricas mínimas auditadas no benchmark: Recall@3 $\ge 90\%$, Precisão $\ge 85\%$ e Abstenção Ética $= 100\%$.</td>
+<td style="text-align: center;"><span class="badge-must">Must have</span></td>
+<td style="text-align: center;"><a href="../pesquisa/guiding-questions/">GQ05</a>, <a href="../pesquisa/guiding-questions/">GQ08</a></td>
+<td style="text-align: center;"><a href="../adr/0006-curadoria-benchmark/">ADR 0006</a>, <a href="../adr/0007-banco-vetorial-embeddings/">ADR 0007</a></td>
+<td style="text-align: center;"><span class="badge-must">Superado</span></td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="5-matriz-de-rastreabilidade-tecnica-cruzada">5. Matriz de Rastreabilidade Técnica Cruzada<a class="headerlink" href="#5-matriz-de-rastreabilidade-tecnica-cruzada" title="Permanent link">&para;</a></h2>
+<p>Esta matriz estabelece a correspondência bidirecional ponta a ponta entre a <strong>Pergunta Norteadora (GQ)</strong>, o <strong>Requisito</strong>, a <strong>Decisão de Arquitetura (ADR)</strong>, o <strong>Módulo de Código</strong> no repositório e a <strong>Suíte de Testes Automatizados</strong>:</p>
+<pre class="mermaid"><code>graph LR
+    GQ["Pergunta Norteadora (GQ)"] --&gt; REQ["Requisito (RF / RNF)"]
+    REQ --&gt; ADR["Decisão Arquitetural (ADR)"]
+    ADR --&gt; CODE["Módulo de Código (api/ ou mobile/)"]
+    CODE --&gt; TEST["Teste Automatizado (pytest)"]</code></pre>
+<table>
+<thead>
+<tr>
+<th style="text-align: center;">Requisito</th>
+<th style="text-align: center;">GQ Origem</th>
+<th style="text-align: center;">ADR</th>
+<th>Módulo de Implementação</th>
+<th>Suíte de Testes Automatizados</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: center;"><strong>RF01</strong></td>
+<td style="text-align: center;">GQ02, GQ03</td>
+<td style="text-align: center;"><a href="../adr/0005-importacao-local-ofx-pdf/">ADR 0005</a></td>
+<td><code>api/app/services/parser_service.py</code></td>
+<td><code>api/tests/test_parser.py</code></td>
+</tr>
+<tr>
+<td style="text-align: center;"><strong>RF02</strong></td>
+<td style="text-align: center;">GQ02, GQ03</td>
+<td style="text-align: center;"><a href="../adr/0005-importacao-local-ofx-pdf/">ADR 0005</a></td>
+<td><code>api/app/services/parser_service.py</code></td>
+<td><code>api/tests/test_parser.py</code></td>
+</tr>
+<tr>
+<td style="text-align: center;"><strong>RF03</strong></td>
+<td style="text-align: center;">GQ04, GQ07</td>
+<td style="text-align: center;"><a href="../adr/0004-calculos-deterministicos/">ADR 0004</a></td>
+<td><code>api/app/services/calculation_service.py</code></td>
+<td><code>api/tests/test_calculations.py</code></td>
+</tr>
+<tr>
+<td style="text-align: center;"><strong>RF04</strong></td>
+<td style="text-align: center;">GQ02, GQ07</td>
+<td style="text-align: center;"><a href="../adr/0004-calculos-deterministicos/">ADR 0004</a></td>
+<td><code>api/app/services/parser_service.py</code></td>
+<td><code>api/tests/test_parser.py</code></td>
+</tr>
+<tr>
+<td style="text-align: center;"><strong>RF05</strong></td>
+<td style="text-align: center;">GQ01, GQ05, GQ10</td>
+<td style="text-align: center;"><a href="../adr/0003-rag-fontes-oficiais/">ADR 0003</a>, <a href="../adr/0007-banco-vetorial-embeddings/">0007</a></td>
+<td><code>api/app/services/rag_service.py</code></td>
+<td><code>api/tests/test_rag.py</code></td>
+</tr>
+<tr>
+<td style="text-align: center;"><strong>RF06</strong></td>
+<td style="text-align: center;">GQ05, GQ10</td>
+<td style="text-align: center;"><a href="../adr/0003-rag-fontes-oficiais/">ADR 0003</a>, <a href="../adr/0006-curadoria-benchmark/">0006</a></td>
+<td><code>api/app/services/rag_service.py</code></td>
+<td><code>api/tests/test_rag.py</code>, <code>eval_rag.py</code></td>
+</tr>
+<tr>
+<td style="text-align: center;"><strong>RF07</strong></td>
+<td style="text-align: center;">GQ01, GQ07, GQ13</td>
+<td style="text-align: center;"><a href="../adr/0001-flutter-android/">ADR 0001</a></td>
+<td><code>mobile/lib/features/</code></td>
+<td>Testes de integração mobile</td>
+</tr>
+<tr>
+<td style="text-align: center;"><strong>RF10</strong></td>
+<td style="text-align: center;">GQ05, GQ08</td>
+<td style="text-align: center;"><a href="../adr/0003-rag-fontes-oficiais/">ADR 0003</a>, <a href="../adr/0006-curadoria-benchmark/">0006</a></td>
+<td><code>api/app/services/rag_service.py</code></td>
+<td><code>api/tests/test_chat_api.py</code></td>
+</tr>
+<tr>
+<td style="text-align: center;"><strong>RF11</strong></td>
+<td style="text-align: center;">GQ05, GQ10</td>
+<td style="text-align: center;"><a href="../adr/0007-banco-vetorial-embeddings/">ADR 0007</a></td>
+<td><code>api/app/services/rag_service.py</code></td>
+<td><code>api/tests/test_rag.py</code>, <code>eval_rag.py</code></td>
+</tr>
+<tr>
+<td style="text-align: center;"><strong>RF12</strong></td>
+<td style="text-align: center;">GQ03, GQ10</td>
+<td style="text-align: center;"><a href="../adr/0002-fastapi-sqlite-local/">ADR 0002</a>, <a href="../adr/0007-banco-vetorial-embeddings/">0007</a></td>
+<td><code>api/app/clients/sqlite_vector_store.py</code></td>
+<td><code>api/tests/test_vector_store.py</code>, <code>test_ingestion.py</code></td>
+</tr>
+<tr>
+<td style="text-align: center;"><strong>RF13</strong></td>
+<td style="text-align: center;">GQ01, GQ05</td>
+<td style="text-align: center;"><a href="../adr/0001-flutter-android/">ADR 0001</a>, <a href="../adr/0003-rag-fontes-oficiais/">0003</a></td>
+<td><code>mobile/lib/features/chat/</code>, <code>routers/v1/chat.py</code></td>
+<td><code>api/tests/test_chat_api.py</code></td>
+</tr>
+<tr>
+<td style="text-align: center;"><strong>RF14</strong></td>
+<td style="text-align: center;">GQ02, GQ03</td>
+<td style="text-align: center;"><a href="../adr/0005-importacao-local-ofx-pdf/">ADR 0005</a>, <a href="../adr/0006-curadoria-benchmark/">0006</a></td>
+<td><code>research/synthetic_data/</code></td>
+<td><code>research/test_research.py</code></td>
+</tr>
+<tr>
+<td style="text-align: center;"><strong>RNF01</strong></td>
+<td style="text-align: center;">GQ03, GQ06</td>
+<td style="text-align: center;"><a href="../adr/0002-fastapi-sqlite-local/">ADR 0002</a>, <a href="../adr/0005-importacao-local-ofx-pdf/">0005</a></td>
+<td><code>api/app/db/database.py</code></td>
+<td><code>api/tests/test_health.py</code></td>
+</tr>
+<tr>
+<td style="text-align: center;"><strong>RNF02</strong></td>
+<td style="text-align: center;">GQ04, GQ11</td>
+<td style="text-align: center;"><a href="../adr/0004-calculos-deterministicos/">ADR 0004</a></td>
+<td><code>api/app/services/calculation_service.py</code></td>
+<td><code>api/tests/test_calculations.py</code></td>
+</tr>
+<tr>
+<td style="text-align: center;"><strong>RNF07</strong></td>
+<td style="text-align: center;">GQ03, GQ10</td>
+<td style="text-align: center;"><a href="../adr/0002-fastapi-sqlite-local/">ADR 0002</a>, <a href="../adr/0007-banco-vetorial-embeddings/">0007</a></td>
+<td><code>api/app/models/vector_store.py</code></td>
+<td><code>api/tests/test_vector_store.py</code></td>
+</tr>
+<tr>
+<td style="text-align: center;"><strong>RNF08</strong></td>
+<td style="text-align: center;">GQ05, GQ08</td>
+<td style="text-align: center;"><a href="../adr/0006-curadoria-benchmark/">ADR 0006</a></td>
+<td><code>research/rag_benchmark/eval_rag.py</code></td>
+<td><code>make test</code>, <code>eval_rag.py</code></td>
+</tr>
+<tr>
+<td style="text-align: center;"><strong>RNF09</strong></td>
+<td style="text-align: center;">GQ05, GQ08</td>
+<td style="text-align: center;"><a href="../adr/0006-curadoria-benchmark/">ADR 0006</a>, <a href="../adr/0007-banco-vetorial-embeddings/">0007</a></td>
+<td><code>research/rag_benchmark/</code></td>
+<td>CI GitHub Actions / Runner Mac</td>
 </tr>
 </tbody>
 </table>
