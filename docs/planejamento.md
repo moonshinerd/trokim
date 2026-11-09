@@ -6,60 +6,98 @@ O desenvolvimento do **Trokim** segue a metodologia **Challenge Based Learning (
 
 ## 1. Roadmap Oficial das 7 Semanas
 
-| Semana | Foco Temático | Entregável Oficial | Status no Trokim |
-|---|---|---|---|
-| **Semana 1** | Problema, stakeholders, riscos e métricas | Pacote de definição do projeto (cenário, personas, requisitos, riscos, premissas e EQ) | <span class="badge-must">Concluído</span> |
-| **Semana 2** | Base de conhecimento e recuperação | **Base de conhecimento + protótipo de recuperação:** Base curada com pelo menos 20 documentos-fonte; estratégias de chunking e embeddings; banco vetorial; diagrama de arquitetura e ingestão. Consulta recuperando trechos relevantes | <span class="badge-must">Concluído</span> |
-| **Semana 3** | Comparação LLM x RAG | Assistente baseado em evidências + relatório comparativo (LLM puro vs LLM+RAG vs LLM+RAG estruturado) | Previsto |
-| **Semana 4** | Sistema multiagentes | Primeiro protótipo multiagente (Research, Analysis, Validation e Communication Agent) | Previsto |
-| **Semana 5** | Multimodalidade | Assistente multimodal (leitura de faturas PDF, extratos e comprovantes em imagem) | Previsto |
-| **Semana 6** | Integração completa | Aplicação funcional ponta a ponta (Flutter + FastAPI + RAG + Banco Vetorial + Multiagente) | Previsto |
-| **Semana 7** | Testes e refinamento | Apresentação final e entrega consolidada do projeto e repositório | Previsto |
+| Semana | Foco Temático | Entregável Oficial | Status no Trokim | Período |
+|:---:|---|---|:---:|:---:|
+| **Semana 1** | Problema, stakeholders, riscos e métricas | Pacote de definição do projeto (cenário, personas, requisitos v1.0.0, riscos, premissas e EQ) | <span class="badge-must">Concluído</span> | 26/10 a 30/10 |
+| **Semana 2** | Base de conhecimento e recuperação | **Base de conhecimento + protótipo de recuperação:** Base curada com 20 documentos-fonte; chunking semântico; embeddings FastEmbed 384d; banco SQLite-Vec; chat Flutter e benchmark (98,78% Recall@3) | <span class="badge-must">Concluído</span> | 02/11 a 06/11 |
+| **Semana 3** | **Comparação LLM x RAG** | **Assistente baseado em evidências + relatório comparativo:** Avaliação empírica estruturada (LLM pura vs. LLM + RAG ingênuo vs. LLM + RAG estruturado do Trokim), métricas de alucinação e síntese generativa | <span class="badge-should">Sprint Ativa</span> | **09/11 a 13/11** |
+| **Semana 4** | Sistema multiagentes | Primeiro protótipo multiagente (Research, Analysis, Validation e Communication Agent) | Previsto | 16/11 a 20/11 |
+| **Semana 5** | Multimodalidade | Assistente multimodal (leitura de faturas PDF, extratos e comprovantes em imagem) | Previsto | 23/11 a 27/11 |
+| **Semana 6** | Integração completa | Aplicação funcional ponta a ponta (Flutter + FastAPI + RAG + Banco Vetorial + Multiagente) | Previsto | 30/11 a 04/12 |
+| **Semana 7** | Testes e refinamento | Apresentação final e entrega consolidada do projeto e repositório | Previsto | 07/12 a 11/12 |
 
 ---
 
-## 2. Detalhamento e Entregáveis da Semana 2 (Foco Atual)
+## 2. Detalhamento da Semana 3 (Sprint Ativa — Foco Atual)
 
-Conforme a ementa oficial do Challenge 2, o entregável da **Semana 2 (02/11 a 06/11)** é:
+Conforme a ementa oficial do Challenge 2, o entregável da **Semana 3 (09/11 a 13/11)** é:
 
-> **ENTREGA DA SEMANA 2:** *Base de conhecimento + protótipo de recuperação: Base curada com pelo menos 20 documentos-fonte; descrição das estratégias de chunking e embeddings; banco vetorial implementado; diagrama de arquitetura e pipeline de ingestão. Na demonstração, uma consulta deve recuperar trechos relevantes.*
+> **ENTREGA DA SEMANA 3:** *Comparação LLM x RAG — Respostas baseadas em evidências: Assistente baseado em evidências + relatório comparativo avaliando LLM pura vs. LLM com RAG ingênuo vs. LLM com RAG estruturado do Trokim, com métricas de alucinação factual, relevância e abstenção ética.*
 
-### Checklist de Cobertura da Entrega
+### Checklist de Cobertura da Entrega 3 (Prazo: Sexta-feira, 13/11/2026)
 
-- [x] **Base Curada com >= 20 Documentos:** 20 passagens estruturadas de órgãos oficiais ([BCB](https://www.bcb.gov.br), [CVM](https://www.gov.br/investidor), [CFPB](https://www.consumerfinance.gov), [ANPD/LGPD](https://www.gov.br/anpd/pt-br)) em `research/knowledge_base/` com metadados de fonte e citação direta.
-- [x] **Estratégias de Chunking e Embeddings:** Documentação em [rag/index.md](rag/index.md) detalhando chunking semântico com preservação de metadados e vetorização.
-- [x] **Banco Vetorial Implementado:** Armazenamento vetorial local-first indexado para buscas por proximidade de cosseno.
-- [x] **Diagrama de Ingestão e Arquitetura:** Diagramas Mermaid do pipeline de ingestão e recuperação em [rag/index.md](rag/index.md) e [arquitetura/index.md](arquitetura/index.md).
-- [x] **Consulta e Demonstração Funcional:** Endpoint `/v1/chat/ask` e interface Flutter exibindo respostas fundamentadas com cartões de fonte oficial e recusa ativa para perguntas fora de escopo.
-- [x] **Dados Sintéticos e LGPD:** Gerador sintético em `research/synthetic_data/` produzindo extratos `.ofx` e faturas `.pdf` para validação sem expor dados reais.
+- [ ] **Prompts Versionados da Semana 3:** Templates estruturados em `api/app/prompts/` cobrindo LLM pura (`prompt_llm_pure_v1.txt`), RAG ingênuo (`prompt_naive_rag_v1.txt`) e Trokim estruturado (`prompt_trokim_grounded_v1.txt`).
+- [ ] **Gabarito Empírico de 30 Perguntas:** Dataset `questions_comparison.json` contendo dúvidas conceituais, cenários cotidianos e armadilhas deliberadas de alucinação financeira.
+- [ ] **Framework de Métricas de Alucinação:** Script `eval_comparison.py` com cálculo de Token-level F1 (SQuAD), Concept Coverage Recall, Factual Inconsistency Rate (%) e Abstention F1.
+- [ ] **Camada de Síntese Generativa Local-First:** Port abstrato `LLMProvider` com adaptadores para Ollama local e Mock para testes determinísticos (ADR 0008).
+- [ ] **Endpoint REST Tipado:** `POST /v1/chat/generate` retornando resposta sintetizada, evidências citadas e status de fundamentação.
+- [ ] **Interface Mobile com Cartões de Evidência:** Módulo no Flutter com visualização nativa de citações, score de confiança e links governamentais clicáveis.
+- [ ] **Relatório Comparativo Formal:** Publicação em `docs/pesquisa/comparacao-llm-rag.md` com tabelas, gráficos de dispersão e análise de casos de alucinação.
+- [ ] **ADR 0008:** Registro formal da decisão de síntese generativa, controle de alucinação e fallback local.
 
 ---
 
-## 3. Grafo de Precedência Técnica (*Blocked By*)
+## 3. Planejamento Operacional: Estratégia de Não-Ociosidade
 
-A execução da Semana 2 é dividida em duplas especializadas com dependências técnicas formalizadas nativamente no GitHub:
+Para garantir que nenhum membro da equipe fique ocioso aguardando entregas de terceiros, a sprint da Semana 3 foi estruturada em **duas fases estritas**:
+
+1. **Fase 1 (Início Imediato em Paralelo — Tarefas Não-Bloqueantes):** Cada um dos 4 membros da equipe possui uma tarefa independente atribuída no GitHub, podendo iniciar a implementação simultaneamente na segunda-feira.
+2. **Fase 2 (Integração e Fechamento — Tarefas Bloqueantes):** Conforme as bases de prompts, métricas, UI mobile e backend são concluídas, a equipe integra o benchmark experimental, a conexão ponta a ponta e a documentação final.
 
 ```mermaid
 flowchart TD
-    T4["#4 Curadoria de 20 Docs Oficiais + Benchmark + Dados Sintéticos"]
-    T8["#8 Banco Vetorial + Ingestão + Chunking + Embeddings"]
-    T3["#3 Backend RAG + Endpoint /v1/chat/ask + Abstenção"]
-    T5["#5 App Flutter + Chat Conversacional + Demonstração"]
-    T6["#6 Documentação Viva Zensical + Catálogo de Fontes (Concluída ✓)"]
+    subgraph "Fase 1: Início Imediato em Paralelo (NÃO-BLOQUEANTES)"
+        T20["#20 Prompts Versionados & Gabarito<br/><b>@gabrielcrzojo</b>"]
+        T21["#21 Framework de Métricas & Alucinação<br/><b>@rebecaboncaputo</b>"]
+        T22["#22 Interface de Auditoria no Flutter<br/><b>@Luix3005</b>"]
+        T23["#23 Camada de Síntese & Port LLM<br/><b>@moonshinerd</b>"]
+    end
 
-    T4 -->|bloqueia| T8
-    T8 -->|bloqueia| T3
-    T3 -->|bloqueia| T5
+    subgraph "Fase 2: Integração & Validação (BLOQUEANTES)"
+        T24["#24 Benchmark Experimental Comparativo<br/><b>@rebecaboncaputo + @moonshinerd</b>"]
+        T25["#25 Integração Ponta a Ponta no Mobile<br/><b>@Luix3005 + @gabrielcrzojo</b>"]
+        T26["#26 Relatório Comparativo, ADR 0008 & Docs<br/><b>@moonshinerd + @gabrielcrzojo</b>"]
+    end
+
+    T20 -->|bloqueia| T24
+    T21 -->|bloqueia| T24
+    T23 -->|bloqueia| T24
+
+    T22 -->|bloqueia| T25
+    T23 -->|bloqueia| T25
+
+    T24 -->|bloqueia| T26
+    T25 -->|bloqueia| T26
 ```
 
 ---
 
-## 4. Matriz de Tarefas, Responsabilidades e Dependências
+## 4. Matriz de Tarefas, Responsabilidades e Issues (Milestone 2)
 
-| Issue | Escopo / Título | Responsáveis | Precedência Técnica | Status |
-|---|---|---|---|---|
-| [#6](https://github.com/moonshinerd/trokim/issues/6) | Documentação Viva e Fontes Clicáveis | @moonshinerd | Nenhuma | <span class="badge-must">Concluída (PR #7)</span> |
-| [#4](https://github.com/moonshinerd/trokim/issues/4) | Curadoria de 20 Documentos Oficiais e Benchmark | @rebecaboncaputo, @gabrielcrzojo | **Nenhuma** (Ponto de partida) | <span class="badge-must">Concluída (PR #10)</span> |
-| [#8](https://github.com/moonshinerd/trokim/issues/8) | Banco Vetorial e Pipeline de Ingestão | @rebecaboncaputo, @moonshinerd | **Bloqueada por #4** | <span class="badge-must">Concluída (PR #11)</span> |
-| [#3](https://github.com/moonshinerd/trokim/issues/3) | Pipeline de Recuperação e Endpoint `/v1/chat/ask` | @Luix3005, @moonshinerd | **Bloqueada por #8 e #4** | <span class="badge-must">Concluída (PR #11)</span> |
-| [#5](https://github.com/moonshinerd/trokim/issues/5) | Interface Conversacional e Demonstração no Flutter | @Luix3005, @gabrielcrzojo | **Bloqueada por #3** | <span class="badge-must">Concluída (PR #12, #13)</span> |
+Todas as tarefas estão formalizadas no GitHub e vinculadas à **Milestone "Semana 3 — Comparação LLM x RAG (Respostas Baseadas em Evidências)"**, com prazo fatal até **13/11/2026**:
+
+| Issue | Escopo / Título no GitHub | Responsável Primário | Tipo de Precedência | Dependência Técnica | Status |
+|:---:|---|:---:|:---:|---|:---:|
+| [#20](https://github.com/moonshinerd/trokim/issues/20) | Curadoria do gabarito comparativo e prompts versionados da semana 3 | @gabrielcrzojo | **Não-bloqueante** | Nenhuma (Início imediato) | Aberta |
+| [#21](https://github.com/moonshinerd/trokim/issues/21) | Framework de avaliação de alucinação e métricas comparativas | @rebecaboncaputo | **Não-bloqueante** | Nenhuma (Início imediato) | Aberta |
+| [#22](https://github.com/moonshinerd/trokim/issues/22) | Interface de auditoria de evidências e comparador de respostas no Flutter | @Luix3005 | **Não-bloqueante** | Nenhuma (Início imediato) | Aberta |
+| [#23](https://github.com/moonshinerd/trokim/issues/23) | Camada de síntese generativa (port LLMProvider, Ollama/Mock e endpoint) | @moonshinerd | **Não-bloqueante** | Nenhuma (Início imediato) | Aberta |
+| [#24](https://github.com/moonshinerd/trokim/issues/24) | Benchmark experimental comparativo (LLM pura vs. Naive RAG vs. Trokim) | @rebecaboncaputo, @moonshinerd | **Bloqueante** | **Bloqueada por #20, #21 e #23** | Aguardando Fase 1 |
+| [#25](https://github.com/moonshinerd/trokim/issues/25) | Integração ponta a ponta do chat generativo fundamentado com o backend | @Luix3005, @gabrielcrzojo | **Bloqueante** | **Bloqueada por #22 e #23** | Aguardando Fase 1 |
+| [#26](https://github.com/moonshinerd/trokim/issues/26) | Relatório comparativo LLM x RAG, ADR 0008 e atualização no MkDocs | @moonshinerd, @gabrielcrzojo | **Bloqueante** | **Bloqueada por #24 e #25** | Aguardando Fase 2 |
+
+---
+
+## 5. Histórico e Entregáveis Concluídos (Semanas 1 e 2)
+
+### Semana 2 — Base de Conhecimento e Primeiro RAG (Concluída em 06/11/2026)
+- [x] Curadoria de 20 documentos oficiais regulatórios (BCB, CVM, CFPB, ANPD) com catálogo e hashes SHA-256 ([ADR 0006](adr/0006-curadoria-benchmark.md)).
+- [x] Banco vetorial local com `sqlite-vec` (tabela virtual `vec0`) e embeddings FastEmbed multilíngues de 384 dimensões ([ADR 0007](adr/0007-banco-vetorial-embeddings.md)).
+- [x] Busca híbrida densa/léxica com calibração $\alpha = 0,3$ atingindo 98,78% de Recall@3 e 100% de abstenção ética.
+- [x] Endpoint `POST /v1/chat/ask` tipado e interface conversacional inicial no Flutter.
+- [x] Gerador sintético de extratos OFX e faturas PDF aderente à LGPD em `research/synthetic_data/`.
+
+### Semana 1 — Concepção e Fundamentos (Concluída em 30/10/2026)
+- [x] Definição da Essential Question e 10 Guiding Questions (GQ01 a GQ10).
+- [x] Matriz de riscos e mitigação, requisitos MoSCoW e modelagem C4 Model (Nível 2).
+- [x] Formalização das ADRs 0001 a 0005.

@@ -10,6 +10,7 @@ Registro formal dos alinhamentos, dinâmicas de ideação e deliberações técn
 |---|---|---|---|---|
 | **Ata 01** | 26/10/2026 | Semana 1 – *Engage* | Alinhamento inicial da Big Idea (Qualidade de Vida), brainstorming, seleção do tema de finanças pessoais e início das 10 Guiding Questions | [Acessar Ata 01](ata01.md) |
 | **Ata 02** | 06/11/2026 | Semana 2 – *Investigate & Act* | Consolidação da Base de Conhecimento (20 docs), motor vetorial SQLite-Vec + FastEmbed, benchmark RAG (98,78% recall, 100% abstenção) e chat Flutter | [Acessar Ata 02](ata02.md) |
+| **Ata 03** | 09/11/2026 | Semana 3 – *Investigate & Act* | Planejamento da Semana 3 (Comparação LLM x RAG), distribuição de tarefas não-bloqueantes, Milestone 2 (13/11) e métricas de alucinação | [Acessar Ata 03](ata03.md) |
 
 ---
 
@@ -32,3 +33,13 @@ Registro formal dos alinhamentos, dinâmicas de ideação e deliberações técn
   - Benchmark automatizado com 61 consultas: 98,78% de recall@3 e 100% de abstenção ativa em perguntas fora de escopo.
   - Endpoint `POST /v1/chat/ask` integrado à interface do aplicativo Flutter com exibição de cartões de fontes e tratamento de falhas.
   - Geração de extrato OFX e fatura PDF sintéticos para validação local em conformidade estrita com a LGPD.
+
+---
+
+### Checkpoint da Semana 3 — Comparação LLM x RAG (Em Andamento — Prazo: 13/11/2026)
+- **Status:** <span class="badge-should">Sprint Ativa</span>
+- **Frentes em Execução:**
+  - Curadoria do dataset de 30 perguntas com armadilhas de alucinação e prompts versionados ([#20](https://github.com/moonshinerd/trokim/issues/20)).
+  - Framework de métricas de fidelidade factual e F1 de tokens/conceitos ([#21](https://github.com/moonshinerd/trokim/issues/21)).
+  - Interface móvel com cartões de evidência e auditoria de transparência no Flutter ([#22](https://github.com/moonshinerd/trokim/issues/22)).
+  - Camada de síntese generativa com port `LLMProvider` e endpoint `/v1/chat/generate` ([#23](https://github.com/moonshinerd/trokim/issues/23)).
