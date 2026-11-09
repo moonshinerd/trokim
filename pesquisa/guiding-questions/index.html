@@ -1,0 +1,3798 @@
+
+<!doctype html>
+<html lang="pt" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Assistente financeiro pessoal de código aberto com privacidade local-first e RAG (Challenge 2 - Qualidade de Vida)">
+      
+      
+      
+      
+      
+        <link rel="prev" href="../../guia-de-uso/">
+      
+      
+        <link rel="next" href="../matrizes/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="zensical-0.1.0">
+    
+    
+      
+        <title>Perguntas Norteadoras - Trokim</title>
+      
+    
+    
+      
+        
+      
+      <link rel="stylesheet" href="../../assets/stylesheets/modern/main.4ab2de0c.min.css">
+      
+        
+          
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/modern/palette.b60ce83d.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inter:300,300i,400,400i,500,500i,700,700i%7CJetBrains+Mono:400,400i,700,700i&amp;display=fallback">
+        <style>:root{--md-text-font:"Inter";--md-code-font:"JetBrains Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../../stylesheets/extra.css">
+    
+    <script>__md_scope=new URL("../..",location),__md_scope.pathname.endsWith("/")||(__md_scope=new URL(__md_scope.pathname+"/",location)),__md_hash=e=>[...e].reduce(((e,t)=>(e<<5)-e+t.charCodeAt(0)),0),__md_get=(e,t=localStorage,_=__md_scope)=>JSON.parse(t.getItem(_.pathname+"."+e)),__md_set=(e,t,_=localStorage,a=__md_scope)=>{try{_.setItem(a.pathname+"."+e,JSON.stringify(t))}catch(e){}},document.documentElement.setAttribute("data-platform",navigator.platform)</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="custom" data-md-color-accent="custom">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer" aria-hidden="true"></label>
+    <div data-md-component="skip">
+      <a href="#__skip" class="md-skip">
+        Pular para conteúdo
+      </a>
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow md-header--lifted" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Cabeçalho">
+    <a href="../.." title="Trokim" class="md-header__button md-logo" aria-label="Trokim" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-book-open" viewBox="0 0 24 24"><path d="M12 5v16M20.001 19A2 2 0 0 0 22 17V5a2 2 0 0 0-1.999-2L16 3.002A5 5 0 0 0 12 5a5 5 0 0 0-4-2H4a2 2 0 0 0-2 2v12a2 2 0 0 0 1.999 2H8a5 5 0 0 1 4 2 5 5 0 0 1 4-2z"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-menu" viewBox="0 0 24 24"><path d="M4 5h16M4 12h16M4 19h16"/></svg>
+      <span class="md-visually-hidden">Navegação</span>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Trokim
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Perguntas Norteadoras
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="none" data-md-color-scheme="default" data-md-color-primary="custom" data-md-color-accent="custom"  aria-label="Alternar para modo escuro"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Alternar para modo escuro" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m17.75 4.09-2.53 1.94.91 3.06-2.63-1.81-2.63 1.81.91-3.06-2.53-1.94L12.44 4l1.06-3 1.06 3zm3.5 6.91-1.64 1.25.59 1.98-1.7-1.17-1.7 1.17.59-1.98L15.75 11l2.06-.05L18.5 9l.69 1.95zm-2.28 4.95c.83-.08 1.72 1.1 1.19 1.85-.32.45-.66.87-1.08 1.27C15.17 23 8.84 23 4.94 19.07c-3.91-3.9-3.91-10.24 0-14.14.4-.4.82-.76 1.27-1.08.75-.53 1.93.36 1.85 1.19-.27 2.86.69 5.83 2.89 8.02a9.96 9.96 0 0 0 8.02 2.89m-1.64 2.02a12.08 12.08 0 0 1-7.8-3.47c-2.17-2.19-3.33-5-3.49-7.82-2.81 3.14-2.7 7.96.31 10.98 3.02 3.01 7.84 3.12 10.98.31"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="none" data-md-color-scheme="slate" data-md-color-primary="custom" data-md-color-accent="custom"  aria-label="Alternar para modo claro"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Alternar para modo claro" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 7a5 5 0 0 1 5 5 5 5 0 0 1-5 5 5 5 0 0 1-5-5 5 5 0 0 1 5-5m0 2a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3m0-7 2.39 3.42C13.65 5.15 12.84 5 12 5s-1.65.15-2.39.42zM3.34 7l4.16-.35A7.2 7.2 0 0 0 5.94 8.5c-.44.74-.69 1.5-.83 2.29zm.02 10 1.76-3.77a7.131 7.131 0 0 0 2.38 4.14zM20.65 7l-1.77 3.79a7.02 7.02 0 0 0-2.38-4.15zm-.01 10-4.14.36c.59-.51 1.12-1.14 1.54-1.86.42-.73.69-1.5.83-2.29zM12 22l-2.41-3.44c.74.27 1.55.44 2.41.44.82 0 1.63-.17 2.37-.44z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-search" viewBox="0 0 24 24"><path d="m21 21-4.34-4.34"/><circle cx="11" cy="11" r="8"/></svg>
+          <span class="md-visually-hidden">Pesquisar</span>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog" aria-label="Pesquisar">
+  <button type="button" class="md-search__button">
+    Pesquisar
+  </button>
+</div>
+      
+    
+    <div class="md-header__source">
+      
+        <a href="https://github.com/moonshinerd/trokim" title="Ir para repositório" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.3.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2026 Fonticons, Inc.--><path fill="currentColor" d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+      
+    </div>
+  </nav>
+  
+    
+      
+<nav class="md-tabs" aria-label="Abas" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../.." class="md-tabs__link">
+        
+  
+  Início
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../planejamento/" class="md-tabs__link">
+        
+  
+  Planejamento
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../guia-de-uso/" class="md-tabs__link">
+        
+  
+  Guia de Uso
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+    
+  
+  
+    
+      
+    
+    
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="././" class="md-tabs__link">
+          
+  
+  Pesquisa
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../requisitos/" class="md-tabs__link">
+        
+  
+  Requisitos
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../processo/cbl/" class="md-tabs__link">
+        
+  
+  Processo
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    
+      
+    
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../atas/" class="md-tabs__link">
+          
+  
+  Atas
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+      
+    
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../arquitetura/" class="md-tabs__link">
+          
+  
+  Arquitetura
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+      
+    
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../rag/" class="md-tabs__link">
+          
+  
+  Base RAG (Semana 2)
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../glossario/" class="md-tabs__link">
+        
+  
+  Glossário
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    
+      
+    
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../adr/" class="md-tabs__link">
+          
+  
+  Decisões (ADRs)
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+    
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navegação" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="Trokim" class="md-nav__button md-logo" aria-label="Trokim" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-book-open" viewBox="0 0 24 24"><path d="M12 5v16M20.001 19A2 2 0 0 0 22 17V5a2 2 0 0 0-1.999-2L16 3.002A5 5 0 0 0 12 5a5 5 0 0 0-4-2H4a2 2 0 0 0-2 2v12a2 2 0 0 0 1.999 2H8a5 5 0 0 1 4 2 5 5 0 0 1 4-2z"/></svg>
+
+    </a>
+    Trokim
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/moonshinerd/trokim" title="Ir para repositório" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.3.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2026 Fonticons, Inc.--><path fill="currentColor" d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Início
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../planejamento/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Planejamento
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../guia-de-uso/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Guia de Uso
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Pesquisa
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        
+          <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="true">
+            <label class="md-nav__title" for="__nav_4">
+              <span class="md-nav__icon md-icon"></span>
+              
+  
+  Pesquisa
+
+            </label>
+            <ul class="md-nav__list" data-md-scrollfix>
+              
+                
+                  
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Perguntas Norteadoras
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="././" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Perguntas Norteadoras
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+
+<nav class="md-nav md-nav--secondary" aria-label="Índice">
+  
+    
+    
+    
+      
+    
+    
+      <label class="md-nav__title" for="__toc">
+        <span class="md-nav__icon md-icon"></span>
+        Índice
+      </label>
+      <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+        
+          <li class="md-nav__item">
+  <a href="#gq01-como-a-inteligencia-artificial-atuara-de-forma-pratica-para-empoderar-o-usuario-a-compreender-melhor-decidir-melhor-e-viver-melhor-a-sua-rotina-financeira" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        GQ01 — Como a inteligência artificial atuará de forma prática para empoderar o usuário a "compreender melhor, decidir melhor e viver melhor" a sua rotina financeira?
+      </span>
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="GQ01 — Como a inteligência artificial atuará de forma prática para empoderar o usuário a &quot;compreender melhor, decidir melhor e viver melhor&quot; a sua rotina financeira?">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#dados-encontrados-e-fundamentacao-cientifica" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Dados Encontrados e Fundamentação Científica
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#decisao-de-engenharia-no-trokim" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Decisão de Engenharia no Trokim
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#matriz-de-decisao-e-criterios-do-sistema" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Matriz de Decisão e Critérios do Sistema
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#rastreabilidade" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Rastreabilidade
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#gq02-como-delimitar-o-escopo-da-integracao-com-o-open-finance-para-garantir-a-entrega-das-tecnologias-exigidas-pelo-roadmap-como-o-primeiro-mecanismo-rag-na-semana-2-o-sistema-multiagentes-na-semana-4-e-os-agentes-multimodais-na-semana-5" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        GQ02 — Como delimitar o escopo da integração com o Open Finance para garantir a entrega das tecnologias exigidas pelo roadmap, como o primeiro mecanismo RAG na semana 2, o sistema multiagentes na semana 4 e os agentes multimodais na semana 5?
+      </span>
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="GQ02 — Como delimitar o escopo da integração com o Open Finance para garantir a entrega das tecnologias exigidas pelo roadmap, como o primeiro mecanismo RAG na semana 2, o sistema multiagentes na semana 4 e os agentes multimodais na semana 5?">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#dados-encontrados-e-fundamentacao-cientifica_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Dados Encontrados e Fundamentação Científica
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#decisao-de-engenharia-no-trokim_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Decisão de Engenharia no Trokim
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#matriz-de-decisao-e-criterios-do-sistema_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Matriz de Decisão e Critérios do Sistema
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#rastreabilidade_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Rastreabilidade
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#gq03-quais-sao-os-stakeholders-primarios-do-projeto-e-quais-os-riscos-tecnicos-e-de-privacidade-como-vies-e-protecao-de-dadoslgpd-ao-conectar-contas-bancarias-reais-focando-nas-definicoes-iniciais-exigidas-para-a-semana-1" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        GQ03 — Quais são os stakeholders primários do projeto e quais os riscos técnicos e de privacidade (como viés e proteção de dados/LGPD) ao conectar contas bancárias reais, focando nas definições iniciais exigidas para a semana 1?
+      </span>
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="GQ03 — Quais são os stakeholders primários do projeto e quais os riscos técnicos e de privacidade (como viés e proteção de dados&#x2f;LGPD) ao conectar contas bancárias reais, focando nas definições iniciais exigidas para a semana 1?">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#dados-encontrados-e-fundamentacao-cientifica_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Dados Encontrados e Fundamentação Científica
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#decisao-de-engenharia-no-trokim_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Decisão de Engenharia no Trokim
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#matriz-de-decisao-e-criterios-do-sistema_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Matriz de Decisão e Critérios do Sistema
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#rastreabilidade_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Rastreabilidade
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#gq04-quais-metricas-objetivas-de-negocio-e-de-sistema-serao-utilizadas-para-avaliar-e-validar-a-eficacia-do-planejamento-gerado-pela-ia-na-tomada-de-decisao-do-usuario" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        GQ04 — Quais métricas objetivas de negócio e de sistema serão utilizadas para avaliar e validar a eficácia do planejamento gerado pela IA na tomada de decisão do usuário?
+      </span>
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="GQ04 — Quais métricas objetivas de negócio e de sistema serão utilizadas para avaliar e validar a eficácia do planejamento gerado pela IA na tomada de decisão do usuário?">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#dados-encontrados-e-fundamentacao-cientifica_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Dados Encontrados e Fundamentação Científica
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#decisao-de-engenharia-no-trokim_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Decisão de Engenharia no Trokim
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#matriz-de-decisao-e-criterios-do-sistema_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Matriz de Decisão e Critérios do Sistema
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#rastreabilidade_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Rastreabilidade
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#gq05-qual-base-de-conhecimento-estruturada-e-confiavel-ex-diretrizes-de-educacao-financeira-perfis-de-investimento-o-sistema-consumira-para-comparar-cenarios-gerar-respostas-baseadas-em-evidencias-e-evitar-alucinacoes" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        GQ05 — Qual base de conhecimento estruturada e confiável (ex: diretrizes de educação financeira, perfis de investimento) o sistema consumirá para comparar cenários, gerar respostas baseadas em evidências e evitar alucinações?
+      </span>
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="GQ05 — Qual base de conhecimento estruturada e confiável (ex: diretrizes de educação financeira, perfis de investimento) o sistema consumirá para comparar cenários, gerar respostas baseadas em evidências e evitar alucinações?">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#dados-encontrados-e-fundamentacao-cientifica_4" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Dados Encontrados e Fundamentação Científica
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#decisao-de-engenharia-no-trokim_4" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Decisão de Engenharia no Trokim
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#matriz-de-decisao-e-criterios-do-sistema_4" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Matriz de Decisão e Critérios do Sistema
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#rastreabilidade_4" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Rastreabilidade
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#gq06-como-a-inteligencia-artificial-pode-ajudar-as-pessoas-a-gerenciar-melhor-suas-financas-pessoais-sem-comprometer-sua-qualidade-de-vida" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        GQ06 — Como a inteligência artificial pode ajudar as pessoas a gerenciar melhor suas finanças pessoais sem comprometer sua qualidade de vida?
+      </span>
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="GQ06 — Como a inteligência artificial pode ajudar as pessoas a gerenciar melhor suas finanças pessoais sem comprometer sua qualidade de vida?">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#dados-encontrados-e-fundamentacao-cientifica_5" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Dados Encontrados e Fundamentação Científica
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#decisao-de-engenharia-no-trokim_5" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Decisão de Engenharia no Trokim
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#matriz-de-decisao-e-criterios-do-sistema_5" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Matriz de Decisão e Critérios do Sistema
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#rastreabilidade_5" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Rastreabilidade
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#gq07-como-a-ia-pode-identificar-padroes-de-consumo-e-oportunidades-de-economia-a-partir-dos-dados-financeiros-dos-usuarios" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        GQ07 — Como a IA pode identificar padrões de consumo e oportunidades de economia a partir dos dados financeiros dos usuários?
+      </span>
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="GQ07 — Como a IA pode identificar padrões de consumo e oportunidades de economia a partir dos dados financeiros dos usuários?">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#dados-encontrados-e-fundamentacao-cientifica_6" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Dados Encontrados e Fundamentação Científica
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#decisao-de-engenharia-no-trokim_6" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Decisão de Engenharia no Trokim
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#matriz-de-decisao-e-criterios-do-sistema_6" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Matriz de Decisão e Critérios do Sistema
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#rastreabilidade_6" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Rastreabilidade
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#gq08-como-desenvolver-um-sistema-de-recomendacoes-personalizadas-considerando-renda-despesas-dividas-e-objetivos-pessoais" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        GQ08 — Como desenvolver um sistema de recomendações personalizadas considerando renda, despesas, dívidas e objetivos pessoais?
+      </span>
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="GQ08 — Como desenvolver um sistema de recomendações personalizadas considerando renda, despesas, dívidas e objetivos pessoais?">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#dados-encontrados-e-fundamentacao-cientifica_7" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Dados Encontrados e Fundamentação Científica
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#decisao-de-engenharia-no-trokim_7" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Decisão de Engenharia no Trokim
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#matriz-de-decisao-e-criterios-do-sistema_7" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Matriz de Decisão e Critérios do Sistema
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#rastreabilidade_7" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Rastreabilidade
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#gq09-como-utilizar-modelos-preditivos-para-estimar-despesas-futuras-e-identificar-possiveis-desequilibrios-financeiros" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        GQ09 — Como utilizar modelos preditivos para estimar despesas futuras e identificar possíveis desequilíbrios financeiros?
+      </span>
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="GQ09 — Como utilizar modelos preditivos para estimar despesas futuras e identificar possíveis desequilíbrios financeiros?">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#dados-encontrados-e-fundamentacao-cientifica_8" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Dados Encontrados e Fundamentação Científica
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#decisao-de-engenharia-no-trokim_8" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Decisão de Engenharia no Trokim
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#matriz-de-decisao-e-criterios-do-sistema_8" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Matriz de Decisão e Critérios do Sistema
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#rastreabilidade_8" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Rastreabilidade
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#gq10-como-integrar-processamento-de-linguagem-natural-para-permitir-que-os-usuarios-consultem-suas-financas-por-meio-de-conversas" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        GQ10 — Como integrar processamento de linguagem natural para permitir que os usuários consultem suas finanças por meio de conversas?
+      </span>
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="GQ10 — Como integrar processamento de linguagem natural para permitir que os usuários consultem suas finanças por meio de conversas?">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#dados-encontrados-e-fundamentacao-cientifica_9" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Dados Encontrados e Fundamentação Científica
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#decisao-de-engenharia-no-trokim_9" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Decisão de Engenharia no Trokim
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#matriz-de-decisao-e-criterios-do-sistema_9" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Matriz de Decisão e Critérios do Sistema
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#rastreabilidade_9" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Rastreabilidade
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#gq11-quais-metricas-podem-avaliar-a-precisao-das-previsoes-e-a-eficacia-das-recomendacoes-geradas-pela-ia" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        GQ11 — Quais métricas podem avaliar a precisão das previsões e a eficácia das recomendações geradas pela IA?
+      </span>
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="GQ11 — Quais métricas podem avaliar a precisão das previsões e a eficácia das recomendações geradas pela IA?">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#dados-encontrados-e-fundamentacao-cientifica_10" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Dados Encontrados e Fundamentação Científica
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#decisao-de-engenharia-no-trokim_10" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Decisão de Engenharia no Trokim
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#matriz-de-decisao-e-criterios-do-sistema_10" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Matriz de Decisão e Critérios do Sistema
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#rastreabilidade_10" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Rastreabilidade
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#gq12-como-as-recomendacoes-podem-ajudar-a-equilibrar-economia-lazer-e-necessidades-basicas" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        GQ12 — Como as recomendações podem ajudar a equilibrar economia, lazer e necessidades básicas?
+      </span>
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="GQ12 — Como as recomendações podem ajudar a equilibrar economia, lazer e necessidades básicas?">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#dados-encontrados-e-fundamentacao-cientifica_11" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Dados Encontrados e Fundamentação Científica
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#decisao-de-engenharia-no-trokim_11" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Decisão de Engenharia no Trokim
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#matriz-de-decisao-e-criterios-do-sistema_11" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Matriz de Decisão e Critérios do Sistema
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#rastreabilidade_11" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Rastreabilidade
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#gq13-como-avaliar-se-o-sistema-contribui-para-melhorar-o-planejamento-financeiro-e-a-percepcao-de-controle-sobre-o-dinheiro" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        GQ13 — Como avaliar se o sistema contribui para melhorar o planejamento financeiro e a percepção de controle sobre o dinheiro?
+      </span>
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="GQ13 — Como avaliar se o sistema contribui para melhorar o planejamento financeiro e a percepção de controle sobre o dinheiro?">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#dados-encontrados-e-fundamentacao-cientifica_12" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Dados Encontrados e Fundamentação Científica
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#decisao-de-engenharia-no-trokim_12" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Decisão de Engenharia no Trokim
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#matriz-de-decisao-e-criterios-do-sistema_12" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Matriz de Decisão e Critérios do Sistema
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#rastreabilidade_12" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Rastreabilidade
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    
+  
+</nav>
+      
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../matrizes/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Matrizes de Risco e Mitigação
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../referencias/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Fontes e Referências
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+            </ul>
+          </nav>
+        
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../requisitos/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Requisitos
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../processo/cbl/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Processo
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_7" >
+        
+          
+          <label class="md-nav__link" for="__nav_7" id="__nav_7_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Atas
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        
+          <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="false">
+            <label class="md-nav__title" for="__nav_7">
+              <span class="md-nav__icon md-icon"></span>
+              
+  
+  Atas
+
+            </label>
+            <ul class="md-nav__list" data-md-scrollfix>
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../atas/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Índice
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../atas/ata01/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Ata 01 – Alinhamento Inicial (26/10)
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+            </ul>
+          </nav>
+        
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_8" >
+        
+          
+          <label class="md-nav__link" for="__nav_8" id="__nav_8_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Arquitetura
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        
+          <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_8_label" aria-expanded="false">
+            <label class="md-nav__title" for="__nav_8">
+              <span class="md-nav__icon md-icon"></span>
+              
+  
+  Arquitetura
+
+            </label>
+            <ul class="md-nav__list" data-md-scrollfix>
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../arquitetura/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Visão Geral
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../arquitetura/mapa-do-sistema/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Mapa do Sistema
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+            </ul>
+          </nav>
+        
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_9" >
+        
+          
+          <label class="md-nav__link" for="__nav_9" id="__nav_9_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Base RAG (Semana 2)
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        
+          <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_9_label" aria-expanded="false">
+            <label class="md-nav__title" for="__nav_9">
+              <span class="md-nav__icon md-icon"></span>
+              
+  
+  Base RAG (Semana 2)
+
+            </label>
+            <ul class="md-nav__list" data-md-scrollfix>
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../rag/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Mecanismo e Fontes
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../rag/catalogo/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Catálogo de Fontes
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+            </ul>
+          </nav>
+        
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../glossario/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Glossário
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_11" >
+        
+          
+          <label class="md-nav__link" for="__nav_11" id="__nav_11_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Decisões (ADRs)
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        
+          <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_11_label" aria-expanded="false">
+            <label class="md-nav__title" for="__nav_11">
+              <span class="md-nav__icon md-icon"></span>
+              
+  
+  Decisões (ADRs)
+
+            </label>
+            <ul class="md-nav__list" data-md-scrollfix>
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../adr/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Índice
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../adr/0001-flutter-android/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  0001 – Flutter para Android
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../adr/0002-fastapi-sqlite-local/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  0002 – FastAPI e SQLite Local
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../adr/0003-rag-fontes-oficiais/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  0003 – Fontes Oficiais no RAG
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../adr/0004-calculos-deterministicos/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  0004 – Cálculos Determinísticos
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../adr/0005-importacao-local-ofx-pdf/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  0005 – Importação Local de OFX e PDF
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../adr/0006-curadoria-benchmark/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  0006 – Curadoria e Benchmark
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../adr/0007-banco-vetorial-embeddings/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  0007 – Banco Vetorial e Embeddings
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+            </ul>
+          </nav>
+        
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  
+                    
+                    
+                    
+                      
+                    
+                    
+                      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+                      <div class="md-sidebar-button__wrapper">
+                        <label class="md-sidebar-button" for="__toc"></label>
+                      </div>
+                    
+                  
+                  <div class="md-sidebar__inner">
+                    
+
+
+<nav class="md-nav md-nav--secondary" aria-label="Índice">
+  
+    
+    
+    
+      
+    
+    
+      <label class="md-nav__title" for="__toc">
+        <span class="md-nav__icon md-icon"></span>
+        Índice
+      </label>
+      <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+        
+          <li class="md-nav__item">
+  <a href="#gq01-como-a-inteligencia-artificial-atuara-de-forma-pratica-para-empoderar-o-usuario-a-compreender-melhor-decidir-melhor-e-viver-melhor-a-sua-rotina-financeira" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        GQ01 — Como a inteligência artificial atuará de forma prática para empoderar o usuário a "compreender melhor, decidir melhor e viver melhor" a sua rotina financeira?
+      </span>
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="GQ01 — Como a inteligência artificial atuará de forma prática para empoderar o usuário a &quot;compreender melhor, decidir melhor e viver melhor&quot; a sua rotina financeira?">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#dados-encontrados-e-fundamentacao-cientifica" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Dados Encontrados e Fundamentação Científica
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#decisao-de-engenharia-no-trokim" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Decisão de Engenharia no Trokim
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#matriz-de-decisao-e-criterios-do-sistema" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Matriz de Decisão e Critérios do Sistema
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#rastreabilidade" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Rastreabilidade
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#gq02-como-delimitar-o-escopo-da-integracao-com-o-open-finance-para-garantir-a-entrega-das-tecnologias-exigidas-pelo-roadmap-como-o-primeiro-mecanismo-rag-na-semana-2-o-sistema-multiagentes-na-semana-4-e-os-agentes-multimodais-na-semana-5" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        GQ02 — Como delimitar o escopo da integração com o Open Finance para garantir a entrega das tecnologias exigidas pelo roadmap, como o primeiro mecanismo RAG na semana 2, o sistema multiagentes na semana 4 e os agentes multimodais na semana 5?
+      </span>
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="GQ02 — Como delimitar o escopo da integração com o Open Finance para garantir a entrega das tecnologias exigidas pelo roadmap, como o primeiro mecanismo RAG na semana 2, o sistema multiagentes na semana 4 e os agentes multimodais na semana 5?">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#dados-encontrados-e-fundamentacao-cientifica_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Dados Encontrados e Fundamentação Científica
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#decisao-de-engenharia-no-trokim_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Decisão de Engenharia no Trokim
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#matriz-de-decisao-e-criterios-do-sistema_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Matriz de Decisão e Critérios do Sistema
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#rastreabilidade_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Rastreabilidade
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#gq03-quais-sao-os-stakeholders-primarios-do-projeto-e-quais-os-riscos-tecnicos-e-de-privacidade-como-vies-e-protecao-de-dadoslgpd-ao-conectar-contas-bancarias-reais-focando-nas-definicoes-iniciais-exigidas-para-a-semana-1" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        GQ03 — Quais são os stakeholders primários do projeto e quais os riscos técnicos e de privacidade (como viés e proteção de dados/LGPD) ao conectar contas bancárias reais, focando nas definições iniciais exigidas para a semana 1?
+      </span>
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="GQ03 — Quais são os stakeholders primários do projeto e quais os riscos técnicos e de privacidade (como viés e proteção de dados&#x2f;LGPD) ao conectar contas bancárias reais, focando nas definições iniciais exigidas para a semana 1?">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#dados-encontrados-e-fundamentacao-cientifica_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Dados Encontrados e Fundamentação Científica
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#decisao-de-engenharia-no-trokim_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Decisão de Engenharia no Trokim
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#matriz-de-decisao-e-criterios-do-sistema_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Matriz de Decisão e Critérios do Sistema
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#rastreabilidade_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Rastreabilidade
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#gq04-quais-metricas-objetivas-de-negocio-e-de-sistema-serao-utilizadas-para-avaliar-e-validar-a-eficacia-do-planejamento-gerado-pela-ia-na-tomada-de-decisao-do-usuario" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        GQ04 — Quais métricas objetivas de negócio e de sistema serão utilizadas para avaliar e validar a eficácia do planejamento gerado pela IA na tomada de decisão do usuário?
+      </span>
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="GQ04 — Quais métricas objetivas de negócio e de sistema serão utilizadas para avaliar e validar a eficácia do planejamento gerado pela IA na tomada de decisão do usuário?">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#dados-encontrados-e-fundamentacao-cientifica_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Dados Encontrados e Fundamentação Científica
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#decisao-de-engenharia-no-trokim_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Decisão de Engenharia no Trokim
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#matriz-de-decisao-e-criterios-do-sistema_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Matriz de Decisão e Critérios do Sistema
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#rastreabilidade_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Rastreabilidade
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#gq05-qual-base-de-conhecimento-estruturada-e-confiavel-ex-diretrizes-de-educacao-financeira-perfis-de-investimento-o-sistema-consumira-para-comparar-cenarios-gerar-respostas-baseadas-em-evidencias-e-evitar-alucinacoes" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        GQ05 — Qual base de conhecimento estruturada e confiável (ex: diretrizes de educação financeira, perfis de investimento) o sistema consumirá para comparar cenários, gerar respostas baseadas em evidências e evitar alucinações?
+      </span>
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="GQ05 — Qual base de conhecimento estruturada e confiável (ex: diretrizes de educação financeira, perfis de investimento) o sistema consumirá para comparar cenários, gerar respostas baseadas em evidências e evitar alucinações?">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#dados-encontrados-e-fundamentacao-cientifica_4" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Dados Encontrados e Fundamentação Científica
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#decisao-de-engenharia-no-trokim_4" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Decisão de Engenharia no Trokim
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#matriz-de-decisao-e-criterios-do-sistema_4" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Matriz de Decisão e Critérios do Sistema
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#rastreabilidade_4" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Rastreabilidade
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#gq06-como-a-inteligencia-artificial-pode-ajudar-as-pessoas-a-gerenciar-melhor-suas-financas-pessoais-sem-comprometer-sua-qualidade-de-vida" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        GQ06 — Como a inteligência artificial pode ajudar as pessoas a gerenciar melhor suas finanças pessoais sem comprometer sua qualidade de vida?
+      </span>
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="GQ06 — Como a inteligência artificial pode ajudar as pessoas a gerenciar melhor suas finanças pessoais sem comprometer sua qualidade de vida?">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#dados-encontrados-e-fundamentacao-cientifica_5" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Dados Encontrados e Fundamentação Científica
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#decisao-de-engenharia-no-trokim_5" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Decisão de Engenharia no Trokim
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#matriz-de-decisao-e-criterios-do-sistema_5" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Matriz de Decisão e Critérios do Sistema
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#rastreabilidade_5" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Rastreabilidade
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#gq07-como-a-ia-pode-identificar-padroes-de-consumo-e-oportunidades-de-economia-a-partir-dos-dados-financeiros-dos-usuarios" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        GQ07 — Como a IA pode identificar padrões de consumo e oportunidades de economia a partir dos dados financeiros dos usuários?
+      </span>
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="GQ07 — Como a IA pode identificar padrões de consumo e oportunidades de economia a partir dos dados financeiros dos usuários?">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#dados-encontrados-e-fundamentacao-cientifica_6" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Dados Encontrados e Fundamentação Científica
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#decisao-de-engenharia-no-trokim_6" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Decisão de Engenharia no Trokim
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#matriz-de-decisao-e-criterios-do-sistema_6" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Matriz de Decisão e Critérios do Sistema
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#rastreabilidade_6" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Rastreabilidade
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#gq08-como-desenvolver-um-sistema-de-recomendacoes-personalizadas-considerando-renda-despesas-dividas-e-objetivos-pessoais" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        GQ08 — Como desenvolver um sistema de recomendações personalizadas considerando renda, despesas, dívidas e objetivos pessoais?
+      </span>
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="GQ08 — Como desenvolver um sistema de recomendações personalizadas considerando renda, despesas, dívidas e objetivos pessoais?">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#dados-encontrados-e-fundamentacao-cientifica_7" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Dados Encontrados e Fundamentação Científica
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#decisao-de-engenharia-no-trokim_7" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Decisão de Engenharia no Trokim
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#matriz-de-decisao-e-criterios-do-sistema_7" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Matriz de Decisão e Critérios do Sistema
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#rastreabilidade_7" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Rastreabilidade
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#gq09-como-utilizar-modelos-preditivos-para-estimar-despesas-futuras-e-identificar-possiveis-desequilibrios-financeiros" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        GQ09 — Como utilizar modelos preditivos para estimar despesas futuras e identificar possíveis desequilíbrios financeiros?
+      </span>
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="GQ09 — Como utilizar modelos preditivos para estimar despesas futuras e identificar possíveis desequilíbrios financeiros?">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#dados-encontrados-e-fundamentacao-cientifica_8" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Dados Encontrados e Fundamentação Científica
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#decisao-de-engenharia-no-trokim_8" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Decisão de Engenharia no Trokim
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#matriz-de-decisao-e-criterios-do-sistema_8" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Matriz de Decisão e Critérios do Sistema
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#rastreabilidade_8" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Rastreabilidade
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#gq10-como-integrar-processamento-de-linguagem-natural-para-permitir-que-os-usuarios-consultem-suas-financas-por-meio-de-conversas" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        GQ10 — Como integrar processamento de linguagem natural para permitir que os usuários consultem suas finanças por meio de conversas?
+      </span>
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="GQ10 — Como integrar processamento de linguagem natural para permitir que os usuários consultem suas finanças por meio de conversas?">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#dados-encontrados-e-fundamentacao-cientifica_9" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Dados Encontrados e Fundamentação Científica
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#decisao-de-engenharia-no-trokim_9" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Decisão de Engenharia no Trokim
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#matriz-de-decisao-e-criterios-do-sistema_9" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Matriz de Decisão e Critérios do Sistema
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#rastreabilidade_9" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Rastreabilidade
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#gq11-quais-metricas-podem-avaliar-a-precisao-das-previsoes-e-a-eficacia-das-recomendacoes-geradas-pela-ia" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        GQ11 — Quais métricas podem avaliar a precisão das previsões e a eficácia das recomendações geradas pela IA?
+      </span>
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="GQ11 — Quais métricas podem avaliar a precisão das previsões e a eficácia das recomendações geradas pela IA?">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#dados-encontrados-e-fundamentacao-cientifica_10" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Dados Encontrados e Fundamentação Científica
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#decisao-de-engenharia-no-trokim_10" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Decisão de Engenharia no Trokim
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#matriz-de-decisao-e-criterios-do-sistema_10" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Matriz de Decisão e Critérios do Sistema
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#rastreabilidade_10" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Rastreabilidade
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#gq12-como-as-recomendacoes-podem-ajudar-a-equilibrar-economia-lazer-e-necessidades-basicas" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        GQ12 — Como as recomendações podem ajudar a equilibrar economia, lazer e necessidades básicas?
+      </span>
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="GQ12 — Como as recomendações podem ajudar a equilibrar economia, lazer e necessidades básicas?">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#dados-encontrados-e-fundamentacao-cientifica_11" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Dados Encontrados e Fundamentação Científica
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#decisao-de-engenharia-no-trokim_11" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Decisão de Engenharia no Trokim
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#matriz-de-decisao-e-criterios-do-sistema_11" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Matriz de Decisão e Critérios do Sistema
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#rastreabilidade_11" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Rastreabilidade
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#gq13-como-avaliar-se-o-sistema-contribui-para-melhorar-o-planejamento-financeiro-e-a-percepcao-de-controle-sobre-o-dinheiro" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        GQ13 — Como avaliar se o sistema contribui para melhorar o planejamento financeiro e a percepção de controle sobre o dinheiro?
+      </span>
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="GQ13 — Como avaliar se o sistema contribui para melhorar o planejamento financeiro e a percepção de controle sobre o dinheiro?">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#dados-encontrados-e-fundamentacao-cientifica_12" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Dados Encontrados e Fundamentação Científica
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#decisao-de-engenharia-no-trokim_12" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Decisão de Engenharia no Trokim
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#matriz-de-decisao-e-criterios-do-sistema_12" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Matriz de Decisão e Critérios do Sistema
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#rastreabilidade_12" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Rastreabilidade
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                <a id="__skip" tabindex="-1"></a>
+                
+                  
+
+  
+  
+
+
+<h1 id="perguntas-norteadoras-da-pesquisa-guiding-questions">Perguntas Norteadoras da Pesquisa (Guiding Questions)<a class="headerlink" href="#perguntas-norteadoras-da-pesquisa-guiding-questions" title="Permanent link">&para;</a></h1>
+<p>O portfólio de pesquisa e engenharia de requisitos do <strong>Trokim</strong> foi construído ao longo das fases <em>Engage</em> e <em>Investigate</em> da metodologia <strong>Challenge Based Learning (CBL)</strong>, no âmbito do <strong>Challenge 2 (Qualidade de Vida / TIC-IA 2026)</strong>.</p>
+<p>As <strong>13 Perguntas Norteadoras (GQ01 a GQ13)</strong> estruturam as hipóteses investigadas, as evidências bibliográficas e regulatórias levantadas e as decisões de arquitetura e mitigação de risco que fundamentam o MVP.</p>
+<blockquote>
+<p>Para consultar o catálogo completo de fontes com autores, normas e links regulamentares, acesse a página de <a href="../../referencias/">Referências da Pesquisa</a>.</p>
+</blockquote>
+<hr />
+<h2 id="gq01-como-a-inteligencia-artificial-atuara-de-forma-pratica-para-empoderar-o-usuario-a-compreender-melhor-decidir-melhor-e-viver-melhor-a-sua-rotina-financeira">GQ01 — Como a inteligência artificial atuará de forma prática para empoderar o usuário a "compreender melhor, decidir melhor e viver melhor" a sua rotina financeira?<a class="headerlink" href="#gq01-como-a-inteligencia-artificial-atuara-de-forma-pratica-para-empoderar-o-usuario-a-compreender-melhor-decidir-melhor-e-viver-melhor-a-sua-rotina-financeira" title="Permanent link">&para;</a></h2>
+<blockquote>
+<p><strong>Hipótese:</strong> O problema financeiro considerado pelo projeto é a dificuldade para acompanhar várias contas e cartões, saber quanto já havia sido gasto e antecipar a fatura. A hipótese inicial do grupo era que reunir essas informações e explicá-las com IA aumentaria a clareza sobre entradas, saídas e gastos recorrentes. O desconforto com a falta de clareza financeira motiva a proposta, mas não demonstra que o aplicativo reduzirá ansiedade ou melhorará a saúde. A pergunta de pesquisa é se transformar dados dispersos em um retrato verificável ajuda a compreender a situação, comparar escolhas e planejar com mais controle.</p>
+</blockquote>
+<h3 id="dados-encontrados-e-fundamentacao-cientifica">Dados Encontrados e Fundamentação Científica<a class="headerlink" href="#dados-encontrados-e-fundamentacao-cientifica" title="Permanent link">&para;</a></h3>
+<ul>
+<li>
+<p>O <a href="https://www.bcb.gov.br/pre/pef/port/caderno_cidadania_financeira.pdf">Caderno de Cidadania Financeira do Banco Central</a> apresenta o orçamento como instrumento de registro, organização e avaliação de receitas e despesas. A CVM, em Defina seus objetivos, relaciona o planejamento às prioridades de vida da família. Essas referências sustentam partir dos dados e das metas informadas pelo usuário, em vez de oferecer sugestões genéricas.</p>
+</li>
+<li>
+<p>O CFPB define bem-estar financeiro por controle cotidiano, capacidade de enfrentar imprevistos, progresso em metas e liberdade de escolha. Seu relatório <a href="https://www.consumerfinance.gov/data-research/research-reports/chatbots-in-consumer-finance/">Chatbots in Consumer Finance (CFPB)</a> também registra riscos de respostas inexatas e assistência insuficiente. Logo, conversar com uma IA ou reduzir gastos não comprova, por si só, melhora na qualidade de vida. A aplicação ao Pierre é uma hipótese de projeto, não um resultado demonstrado por essas publicações.</p>
+</li>
+</ul>
+<h3 id="decisao-de-engenharia-no-trokim">Decisão de Engenharia no Trokim<a class="headerlink" href="#decisao-de-engenharia-no-trokim" title="Permanent link">&para;</a></h3>
+<p>A conclusão desta pergunta norteadora estabelece que:
+Propõe-se um MVP local centrado em um percurso completo: importar e revisar dados, compreender um resumo, comparar dois cenários e registrar uma meta escolhida pelo usuário. A IA será uma interface de explicação e apoio à decisão, com cálculos verificáveis e referências educacionais recuperadas pela base de conhecimento. O protótipo não executará pagamentos nem contratará produtos financeiros. Para a entrega documental de sexta-feira, esse percurso descreve o escopo e a forma de avaliação; não representa uma funcionalidade já implementada.</p>
+<p>Esta decisão está formalizada no repositório através de: <a href="../../adr/0003-rag-fontes-oficiais/">ADR 0003</a>, <a href="../../adr/0004-calculos-deterministicos/">ADR 0004</a>.</p>
+<h3 id="matriz-de-decisao-e-criterios-do-sistema">Matriz de Decisão e Critérios do Sistema<a class="headerlink" href="#matriz-de-decisao-e-criterios-do-sistema" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Dimensão de Apoio</th>
+<th>Abordagem Convencional de Mercado</th>
+<th>Padrão Adotado no Trokim</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Interface com o Usuário</strong></td>
+<td>Chatbot conversacional aberto sem cálculo prévio</td>
+<td>Cálculos matemáticos determinísticos prévios explicados pela IA</td>
+</tr>
+<tr>
+<td><strong>Conselho Financeiro</strong></td>
+<td>Sugestões genéricas ou especulativas de corte de gastos</td>
+<td>Apoio à decisão com cenários ajustáveis pelo usuário</td>
+</tr>
+<tr>
+<td><strong>Ações Financeiras</strong></td>
+<td>Promessas de automação bancária desassistida</td>
+<td>Escopo estritamente consultivo, sem movimentação de dinheiro no MVP</td>
+</tr>
+</tbody>
+</table>
+<h3 id="rastreabilidade">Rastreabilidade<a class="headerlink" href="#rastreabilidade" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong>Requisitos Associados:</strong> RF05, RF07, RNF01</li>
+<li><strong>ADRs Vinculadas:</strong> <a href="../../adr/0003-rag-fontes-oficiais/">ADR 0003</a>, <a href="../../adr/0004-calculos-deterministicos/">ADR 0004</a></li>
+</ul>
+<hr />
+<h2 id="gq02-como-delimitar-o-escopo-da-integracao-com-o-open-finance-para-garantir-a-entrega-das-tecnologias-exigidas-pelo-roadmap-como-o-primeiro-mecanismo-rag-na-semana-2-o-sistema-multiagentes-na-semana-4-e-os-agentes-multimodais-na-semana-5">GQ02 — Como delimitar o escopo da integração com o Open Finance para garantir a entrega das tecnologias exigidas pelo roadmap, como o primeiro mecanismo RAG na semana 2, o sistema multiagentes na semana 4 e os agentes multimodais na semana 5?<a class="headerlink" href="#gq02-como-delimitar-o-escopo-da-integracao-com-o-open-finance-para-garantir-a-entrega-das-tecnologias-exigidas-pelo-roadmap-como-o-primeiro-mecanismo-rag-na-semana-2-o-sistema-multiagentes-na-semana-4-e-os-agentes-multimodais-na-semana-5" title="Permanent link">&para;</a></h2>
+<blockquote>
+<p><strong>Hipótese:</strong> A proposta inicial considerava conectar contas bancárias e analisar transações com IA. Como alternativa de integração, foi avaliada a <a href="https://docs.pluggy.ai/">Pluggy Sandbox API</a>, em comparação com o fluxo de importação manual. Também foi considerada a fricção de exigir cadastro e === PAGE 22 === autorização em serviço externo. A hipótese inicial era preservar a facilidade de reunir contas sem deixar que a obtenção dos dados consumisse o prazo do projeto. A alternativa de solução local reformula essa hipótese; ela não torna irrelevante a dificuldade de uso da importação manual.</p>
+</blockquote>
+<h3 id="dados-encontrados-e-fundamentacao-cientifica_1">Dados Encontrados e Fundamentação Científica<a class="headerlink" href="#dados-encontrados-e-fundamentacao-cientifica_1" title="Permanent link">&para;</a></h3>
+<ul>
+<li>
+<p>A documentação da <a href="https://docs.pluggy.ai/">Pluggy Sandbox API</a> confirma os mecanismos de integração, credenciais e autenticação. Na página oficial de preços, consultada em 28/10/2026, o plano Dados aparece a partir de R$</p>
+</li>
+<li>
+<p>A referência da API descreve conectores de sandbox que simulam instituições. Esse ambiente permite testar um fluxo, mas não demonstra acesso gratuito e permanente a contas reais. A alternativa deve ser descrita como prova técnica, com condições verificadas na documentação e no contrato, em vez de transformar o limite de contas citado na conversa em uma regra de produção.</p>
+</li>
+</ul>
+<h3 id="decisao-de-engenharia-no-trokim_1">Decisão de Engenharia no Trokim<a class="headerlink" href="#decisao-de-engenharia-no-trokim_1" title="Permanent link">&para;</a></h3>
+<p>A conclusão desta pergunta norteadora estabelece que:
+A hipótese final é priorizar processamento documental local e adiar a integração bancária real. No cronograma proposto, a semana 1 concentra escopo e dados sintéticos; a semana 2 entrega o primeiro RAG com fontes; a semana 3 integra importação e validação; a semana 4 entrega agentes de categorização, análise e planejamento com responsabilidades definidas; a semana 5 entrega um agente multimodal para PDF ou imagem de documento; e as semanas 6 e 7 concentram avaliação e integração. Esse recorte preserva as entregas de IA mencionadas na pergunta e mantém a obtenção dos dados sob controle. A viabilidade de desempenho e o hardware serão verificados nos testes.</p>
+<p>Esta decisão está formalizada no repositório através de: <a href="../../adr/0005-importacao-local-ofx-pdf/">ADR 0005</a>.</p>
+<h3 id="matriz-de-decisao-e-criterios-do-sistema_1">Matriz de Decisão e Critérios do Sistema<a class="headerlink" href="#matriz-de-decisao-e-criterios-do-sistema_1" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Canal de Entrada</th>
+<th>Vantagens Avaliadas</th>
+<th>Decisão no MVP do Trokim</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Open Finance (<a href="https://docs.pluggy.ai/">Pluggy Sandbox API</a> / Klavi)</strong></td>
+<td>Sincronização bancária direta e automática</td>
+<td>Postergado pós-MVP para evitar atrito de autorização e dependência externa</td>
+</tr>
+<tr>
+<td><strong>Importação Manual OFX / PDF</strong></td>
+<td>Privacidade total, dados sob controle do usuário, zero credencial externa</td>
+<td>Padrão Adotado no MVP. Processamento documental local</td>
+</tr>
+<tr>
+<td><strong>Dados Sintéticos (Semana 1-2)</strong></td>
+<td>Conformidade absoluta com LGPD e validação com gabarito conhecido</td>
+<td>Padrão Adotado para todos os testes e demonstrações</td>
+</tr>
+</tbody>
+</table>
+<h3 id="rastreabilidade_1">Rastreabilidade<a class="headerlink" href="#rastreabilidade_1" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong>Requisitos Associados:</strong> RF01, RF02, RNF01</li>
+<li><strong>ADRs Vinculadas:</strong> <a href="../../adr/0005-importacao-local-ofx-pdf/">ADR 0005</a></li>
+</ul>
+<hr />
+<h2 id="gq03-quais-sao-os-stakeholders-primarios-do-projeto-e-quais-os-riscos-tecnicos-e-de-privacidade-como-vies-e-protecao-de-dadoslgpd-ao-conectar-contas-bancarias-reais-focando-nas-definicoes-iniciais-exigidas-para-a-semana-1">GQ03 — Quais são os stakeholders primários do projeto e quais os riscos técnicos e de privacidade (como viés e proteção de dados/LGPD) ao conectar contas bancárias reais, focando nas definições iniciais exigidas para a semana 1?<a class="headerlink" href="#gq03-quais-sao-os-stakeholders-primarios-do-projeto-e-quais-os-riscos-tecnicos-e-de-privacidade-como-vies-e-protecao-de-dadoslgpd-ao-conectar-contas-bancarias-reais-focando-nas-definicoes-iniciais-exigidas-para-a-semana-1" title="Permanent link">&para;</a></h2>
+<blockquote>
+<p><strong>Hipótese:</strong> O público considerado pelo projeto inclui pessoas que têm dados financeiros dispersos e querem compreender sua rotina; a equipe também se reconhece nessa dor. A hipótese inicial é que esses usuários são o público prioritário para validar a utilidade, enquanto a equipe assume desenvolvimento e testes. Instituições financeiras e integradores só entram no fluxo se houver conexão real. A identificação de quem trata os dados e de quais riscos isso cria precisa acompanhar a arquitetura escolhida; não pode ser deduzida apenas da intenção de conectar bancos. Além disso, criar contas e autorizar conexões em outro serviço pode dificultar a experiência do usuário, o que inclui esse fornecedor no mapeamento apenas se a integração for realmente adotada.</p>
+</blockquote>
+<h3 id="dados-encontrados-e-fundamentacao-cientifica_2">Dados Encontrados e Fundamentação Científica<a class="headerlink" href="#dados-encontrados-e-fundamentacao-cientifica_2" title="Permanent link">&para;</a></h3>
+<ul>
+<li>
+<p>A pesquisa indica que é necessário distinguir tratamento de dados pessoais, participação regulada em Open Finance e decisões de arquitetura. Os riscos não tornam todo protótipo uma instituição financeira. As evidências abaixo orientam o recorte inicial e deverão ser aplicadas conforme o fluxo efetivo de dados.</p>
+</li>
+<li>
+<p>A LGPD prevê finalidade, necessidade, transparência, segurança e não discriminação; a base legal depende do tratamento. Dados financeiros não integram automaticamente a definição legal de dados sensíveis. O art. 38 permite à autoridade === PAGE 23 === determinar um RIPD, sem torná-lo obrigação automática para todo protótipo. Fonte: LGPD, arts. 5º, 6º, 7º, 11, 38 e</p>
+</li>
+</ul>
+<h3 id="decisao-de-engenharia-no-trokim_2">Decisão de Engenharia no Trokim<a class="headerlink" href="#decisao-de-engenharia-no-trokim_2" title="Permanent link">&para;</a></h3>
+<p>A conclusão desta pergunta norteadora estabelece que:
+A hipótese final é validar o assistente com arquivos importados e processamento local, mantendo Open Finance real como integração futura ou prova em sandbox. Usuários e equipe de desenvolvimento são os atores centrais; fornecedores e reguladores têm papéis externos conforme o uso adotado. A redução de dependências não dispensa testar proteção dos dados, qualidade das respostas e controle do usuário.</p>
+<p>Esta decisão está formalizada no repositório através de: <a href="../../adr/0002-fastapi-sqlite-local/">ADR 0002</a>, <a href="../../adr/0005-importacao-local-ofx-pdf/">ADR 0005</a>.</p>
+<h3 id="matriz-de-decisao-e-criterios-do-sistema_2">Matriz de Decisão e Critérios do Sistema<a class="headerlink" href="#matriz-de-decisao-e-criterios-do-sistema_2" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Risco Identificado</th>
+<th>Severidade</th>
+<th>Medida de Mitigação Implementada</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Vazamento de dados em logs / nuvem</strong></td>
+<td>Crítica</td>
+<td>Arquitetura local-first. SQLite local sem envio de extratos para APIs externas</td>
+</tr>
+<tr>
+<td><strong>Exposição de dados reais de alunos/usuários</strong></td>
+<td>Alta</td>
+<td>Uso estrito de geradores sintéticos em research/synthetic_data/</td>
+</tr>
+<tr>
+<td><strong>Erros de parsing e duplicatas em faturas</strong></td>
+<td>Média</td>
+<td>Algoritmo determinístico de deduplicação e conferência visual no app</td>
+</tr>
+</tbody>
+</table>
+<h3 id="rastreabilidade_2">Rastreabilidade<a class="headerlink" href="#rastreabilidade_2" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong>Requisitos Associados:</strong> RNF01, RNF05, RNF06</li>
+<li><strong>ADRs Vinculadas:</strong> <a href="../../adr/0002-fastapi-sqlite-local/">ADR 0002</a>, <a href="../../adr/0005-importacao-local-ofx-pdf/">ADR 0005</a></li>
+</ul>
+<hr />
+<h2 id="gq04-quais-metricas-objetivas-de-negocio-e-de-sistema-serao-utilizadas-para-avaliar-e-validar-a-eficacia-do-planejamento-gerado-pela-ia-na-tomada-de-decisao-do-usuario">GQ04 — Quais métricas objetivas de negócio e de sistema serão utilizadas para avaliar e validar a eficácia do planejamento gerado pela IA na tomada de decisão do usuário?<a class="headerlink" href="#gq04-quais-metricas-objetivas-de-negocio-e-de-sistema-serao-utilizadas-para-avaliar-e-validar-a-eficacia-do-planejamento-gerado-pela-ia-na-tomada-de-decisao-do-usuario" title="Permanent link">&para;</a></h2>
+<blockquote>
+<p><strong>Hipótese:</strong> A proposta parte de que a solução precisa melhorar a experiência cotidiana, e não apenas demonstrar uma técnica de IA, e trouxe como problema concreto a dificuldade de entender gastos em várias contas. Para esta pergunta, a hipótese derivada é que uma demonstração bem-sucedida precisa combinar cálculos corretos com compreensão e uma decisão mais informada. As métricas e o protocolo abaixo são propostas desta análise; não devem ser apresentados como resultados ou critérios formalmente validados. O projeto prioriza tratar os dados para o usuário, em vez de concentrar o esforço no módulo de obtenção. Isso orienta medir a passagem do arquivo bruto para uma informação compreensível.</p>
+</blockquote>
+<h3 id="dados-encontrados-e-fundamentacao-cientifica_3">Dados Encontrados e Fundamentação Científica<a class="headerlink" href="#dados-encontrados-e-fundamentacao-cientifica_3" title="Permanent link">&para;</a></h3>
+<ul>
+<li>
+<p>A documentação do scikit-learn oferece MAE para medir erro absoluto de previsões e F1 para combinar precisão e revocação na classificação. Já a <a href="https://www.consumerfinance.gov/data-research/research-reports/financial-well-being-scale/">Financial Well-Being Scale do CFPB</a> mede uma dimensão percebida de bem-estar, distinta da exatidão técnica. Essas fontes justificam avaliar o funcionamento do sistema e a experiência do usuário separadamente.</p>
+</li>
+<li>
+<p>Para a qualidade dos dados, propõe-se medir a proporção de transações importadas corretamente, a taxa de duplicatas e a quantidade de divergências encaminhadas à revisão. Um conjunto de arquivos sintéticos terá datas, descrições e valores conhecidos para comparação. A conciliação usará valores em centavos e considerará saldo anterior, créditos, juros e ajustes quando existirem; a soma simples das compras não será imposta a todo tipo de extrato ou fatura.</p>
+</li>
+</ul>
+<h3 id="decisao-de-engenharia-no-trokim_3">Decisão de Engenharia no Trokim<a class="headerlink" href="#decisao-de-engenharia-no-trokim_3" title="Permanent link">&para;</a></h3>
+<p>A conclusão desta pergunta norteadora estabelece que:
+Propõe-se começar com três cenários financeiros sintéticos e vinte perguntas com respostas e fontes de referência. Como critérios iniciais de aceite, todas as somas determinísticas do conjunto deverão coincidir com o gabarito; nenhuma divergência de conciliação poderá ser aceita silenciosamente; e toda resposta educacional deverá trazer uma fonte que sustente a afirmação ou reconhecer a falta de evidência. Esses critérios são escolhas do projeto, não patamares extraídos de estudos. === PAGE 24 ===</p>
+<p>Esta decisão está formalizada no repositório através de: <a href="../../adr/0004-calculos-deterministicos/">ADR 0004</a>.</p>
+<h3 id="matriz-de-decisao-e-criterios-do-sistema_3">Matriz de Decisão e Critérios do Sistema<a class="headerlink" href="#matriz-de-decisao-e-criterios-do-sistema_3" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Métrica</th>
+<th>Definição Técnica</th>
+<th>Meta no MVP</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Taxa de Importação Correta</strong></td>
+<td>Lançamentos com data, valor e descrição corretos / total gabarito</td>
+<td>100% nos extratos sintéticos padronizados</td>
+</tr>
+<tr>
+<td><strong>Acurácia Numérica</strong></td>
+<td>Saldos e totais por categoria computados sem desvio aritmético</td>
+<td>100% garantido por testes determinísticos com pytest</td>
+</tr>
+<tr>
+<td><strong>Taxa de Fundamentação RAG</strong></td>
+<td>Respostas sustentadas por citação documental oficial / total consultas</td>
+<td>&gt;= 90% em consultas no domínio</td>
+</tr>
+</tbody>
+</table>
+<h3 id="rastreabilidade_3">Rastreabilidade<a class="headerlink" href="#rastreabilidade_3" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong>Requisitos Associados:</strong> RF03, RNF02, RNF06</li>
+<li><strong>ADRs Vinculadas:</strong> <a href="../../adr/0004-calculos-deterministicos/">ADR 0004</a></li>
+</ul>
+<hr />
+<h2 id="gq05-qual-base-de-conhecimento-estruturada-e-confiavel-ex-diretrizes-de-educacao-financeira-perfis-de-investimento-o-sistema-consumira-para-comparar-cenarios-gerar-respostas-baseadas-em-evidencias-e-evitar-alucinacoes">GQ05 — Qual base de conhecimento estruturada e confiável (ex: diretrizes de educação financeira, perfis de investimento) o sistema consumirá para comparar cenários, gerar respostas baseadas em evidências e evitar alucinações?<a class="headerlink" href="#gq05-qual-base-de-conhecimento-estruturada-e-confiavel-ex-diretrizes-de-educacao-financeira-perfis-de-investimento-o-sistema-consumira-para-comparar-cenarios-gerar-respostas-baseadas-em-evidencias-e-evitar-alucinacoes" title="Permanent link">&para;</a></h2>
+<blockquote>
+<p><strong>Hipótese:</strong> A proposta associa o assistente à análise de gastos e à possibilidade de modelos preditivos, mas informações bancárias, sozinhas, não fornecem uma base educacional sobre como planejar. A hipótese inicial derivada é separar o conhecimento sobre finanças pessoais dos dados de cada usuário. O sistema precisará de referências identificáveis para explicar conceitos e de registros revisados para calcular valores. O corpus descrito a seguir é uma seleção de pesquisa para o MVP, não uma base já definida ou carregada pelo grupo. As propostas de ferramentas precisam ser confrontadas com suas documentações.</p>
+</blockquote>
+<h3 id="dados-encontrados-e-fundamentacao-cientifica_4">Dados Encontrados e Fundamentação Científica<a class="headerlink" href="#dados-encontrados-e-fundamentacao-cientifica_4" title="Permanent link">&para;</a></h3>
+<ul>
+<li>
+<p>O <a href="https://www.bcb.gov.br/pre/pef/port/caderno_cidadania_financeira.pdf">Caderno de Cidadania Financeira do Banco Central</a> reúne conteúdos sobre orçamento, crédito, consumo, poupança e prevenção de riscos. A CVM oferece materiais sobre organização financeira, objetivos e reserva para emergências. Esses conteúdos são candidatos ao corpus inicial por sua autoria institucional e relação direta com o escopo do MVP.</p>
+</li>
+<li>
+<p>O artigo de Lewis e colaboradores sobre Retrieval-Augmented Generation descreve a combinação de geração com recuperação de documentos externos. Isso fundamenta a escolha de RAG como abordagem a testar, mas não demonstra que qualquer aplicação financeira ficará correta. O relatório do CFPB sobre chatbots registra riscos de inexatidão; por isso, citar uma página só será útil quando o trecho recuperado sustentar a resposta.</p>
+</li>
+</ul>
+<h3 id="decisao-de-engenharia-no-trokim_4">Decisão de Engenharia no Trokim<a class="headerlink" href="#decisao-de-engenharia-no-trokim_4" title="Permanent link">&para;</a></h3>
+<p>A conclusão desta pergunta norteadora estabelece que:
+Propõe-se um RAG local com corpus institucional pequeno, versionado e verificável. A resposta deverá exibir o nome da fonte com link direto e, quando disponível, a página ou seção utilizada. Se a evidência for insuficiente, o Pierre deverá informar isso e solicitar os dados que faltam. Essa é uma especificação de comportamento a implementar e avaliar; não uma garantia de eliminação de alucinações.</p>
+<p>Esta decisão está formalizada no repositório através de: <a href="../../adr/0003-rag-fontes-oficiais/">ADR 0003</a>.</p>
+<h3 id="matriz-de-decisao-e-criterios-do-sistema_4">Matriz de Decisão e Critérios do Sistema<a class="headerlink" href="#matriz-de-decisao-e-criterios-do-sistema_4" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Fonte Oficial</th>
+<th>Publicação de Referência</th>
+<th>Uso no Sistema</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Banco Central do Brasil (BCB)</strong></td>
+<td>Caderno de Cidadania Financeira</td>
+<td>Diretrizes de orçamento familiar, reserva de emergência e dívidas</td>
+</tr>
+<tr>
+<td><strong>Comissão de Valores Mobiliários (CVM)</strong></td>
+<td>Portal do Investidor (Metas e Prazos)</td>
+<td>Planejamento financeiro de curto/médio/longo prazo e diversificação</td>
+</tr>
+<tr>
+<td><strong>CFPB (EUA)</strong></td>
+<td><a href="https://www.consumerfinance.gov/data-research/research-reports/financial-well-being-scale/">Financial Well-Being Scale do CFPB</a> &amp; Chatbot Report</td>
+<td>Pilares de qualidade de vida e salvaguardas contra alucinação de IA</td>
+</tr>
+</tbody>
+</table>
+<h3 id="rastreabilidade_4">Rastreabilidade<a class="headerlink" href="#rastreabilidade_4" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong>Requisitos Associados:</strong> RF05, RF06, RF10</li>
+<li><strong>ADRs Vinculadas:</strong> <a href="../../adr/0003-rag-fontes-oficiais/">ADR 0003</a></li>
+</ul>
+<hr />
+<h2 id="gq06-como-a-inteligencia-artificial-pode-ajudar-as-pessoas-a-gerenciar-melhor-suas-financas-pessoais-sem-comprometer-sua-qualidade-de-vida">GQ06 — Como a inteligência artificial pode ajudar as pessoas a gerenciar melhor suas finanças pessoais sem comprometer sua qualidade de vida?<a class="headerlink" href="#gq06-como-a-inteligencia-artificial-pode-ajudar-as-pessoas-a-gerenciar-melhor-suas-financas-pessoais-sem-comprometer-sua-qualidade-de-vida" title="Permanent link">&para;</a></h2>
+<blockquote>
+<p><strong>Hipótese:</strong> Qualidade de vida é tratada neste projeto como algo amplo e dependente da pessoa, incluindo saúde, relações, produtividade e previsibilidade financeira. Depois, delimitou uma dor financeira concreta. A hipótese inicial é que ajudar a organizar o dinheiro pode contribuir para essa dimensão da vida, mas não substitui todas as outras. O planejamento deve ser compatível com prioridades individuais; reduzir gastos indiscriminadamente não equivale a melhorar a vida.</p>
+</blockquote>
+<h3 id="dados-encontrados-e-fundamentacao-cientifica_5">Dados Encontrados e Fundamentação Científica<a class="headerlink" href="#dados-encontrados-e-fundamentacao-cientifica_5" title="Permanent link">&para;</a></h3>
+<ul>
+<li>
+<p>A página Organize a sua vida financeira, da CVM, relaciona organização, despesas presentes e objetivos futuros. Já a definição de bem-estar financeiro do CFPB inclui liberdade de escolha. Essas referências apoiam avaliar a adequação do planejamento à vida do usuário, sem presumir que toda economia represente melhora. === PAGE 25 ===</p>
+</li>
+<li>
+<p>No Pierre, propõe-se que o usuário informe compromissos, metas e despesas que deseja preservar. A IA explicará onde há margem de ajuste e comparará alternativas calculadas pelo sistema. Se o orçamento não comportar uma meta, deverá mostrar a insuficiência e permitir rever o prazo ou o objetivo. A prioridade atribuída a uma despesa será declarada pela pessoa, sem ser inferida apenas pelo estabelecimento.</p>
+</li>
+</ul>
+<h3 id="decisao-de-engenharia-no-trokim_5">Decisão de Engenharia no Trokim<a class="headerlink" href="#decisao-de-engenharia-no-trokim_5" title="Permanent link">&para;</a></h3>
+<p>A conclusão desta pergunta norteadora estabelece que:
+O MVP deverá produzir um plano ajustável e compreensível, preservando a decisão do usuário. A utilidade será testada por tarefas e perguntas de compreensão; a contribuição para qualidade de vida será uma hipótese de acompanhamento. O percurso operacional está detalhado na pergunta 1 e os indicadores, nas perguntas 4 e</p>
+<p>Esta decisão está formalizada no repositório através de: <a href="../../adr/0004-calculos-deterministicos/">ADR 0004</a>.</p>
+<h3 id="matriz-de-decisao-e-criterios-do-sistema_5">Matriz de Decisão e Critérios do Sistema<a class="headerlink" href="#matriz-de-decisao-e-criterios-do-sistema_5" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Premissa</th>
+<th>Risco Abordado</th>
+<th>Solução no Trokim</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Regra Rígida 50-30-20</strong></td>
+<td>Inaplicável para rendas variáveis ou orçamentos deficitários</td>
+<td>Simulação de cenários flexíveis definidos pelo usuário</td>
+</tr>
+<tr>
+<td><strong>Corte Indiscriminado de Despesas</strong></td>
+<td>Degradação da saúde mental e sensação de punição</td>
+<td>Preservação explícita de itens de bem-estar e lazer</td>
+</tr>
+<tr>
+<td><strong>Autonomia Decisória</strong></td>
+<td>IA impondo metas irreais de economia</td>
+<td>A IA atua como conselheira reflexiva; o usuário escolhe a meta</td>
+</tr>
+</tbody>
+</table>
+<h3 id="rastreabilidade_5">Rastreabilidade<a class="headerlink" href="#rastreabilidade_5" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong>Requisitos Associados:</strong> RF08, RNF01</li>
+<li><strong>ADRs Vinculadas:</strong> <a href="../../adr/0004-calculos-deterministicos/">ADR 0004</a></li>
+</ul>
+<hr />
+<h2 id="gq07-como-a-ia-pode-identificar-padroes-de-consumo-e-oportunidades-de-economia-a-partir-dos-dados-financeiros-dos-usuarios">GQ07 — Como a IA pode identificar padrões de consumo e oportunidades de economia a partir dos dados financeiros dos usuários?<a class="headerlink" href="#gq07-como-a-ia-pode-identificar-padroes-de-consumo-e-oportunidades-de-economia-a-partir-dos-dados-financeiros-dos-usuarios" title="Permanent link">&para;</a></h2>
+<blockquote>
+<p><strong>Hipótese:</strong> Os exemplos iniciais foram saber quanto entrou na conta, quanto foi transferido e quanto se gasta com transporte, alimentação e outras despesas fixas. A hipótese inicial era que detalhar esses movimentos já entregaria valor mesmo antes de uma previsão avançada. Para tornar isso testável, o sistema deverá distinguir categoria, origem e período, sem contar duas vezes o mesmo gasto quando a fatura e seu pagamento aparecem em arquivos diferentes. O desenho proposto distingue categorização e análise.</p>
+</blockquote>
+<h3 id="dados-encontrados-e-fundamentacao-cientifica_6">Dados Encontrados e Fundamentação Científica<a class="headerlink" href="#dados-encontrados-e-fundamentacao-cientifica_6" title="Permanent link">&para;</a></h3>
+<ul>
+<li>
+<p>A CVM, em Para onde vai o seu dinheiro, destaca a importância de conhecer a distribuição dos gastos. Para avaliar a classificação automática, a documentação de F1 do scikit-learn fornece uma medida que combina precisão e revocação. Esses materiais sustentam organizar os dados e medir a qualidade das categorias antes de usar a classificação para sugerir mudanças.</p>
+</li>
+<li>
+<p>Propõe-se normalizar datas, valores, descrições e identificadores, detectar duplicatas e aplicar primeiro regras corrigíveis pelo usuário. Depois, o sistema calculará totais por categoria, variações entre períodos equivalentes e possíveis recorrências por descrição, intervalo e valor. Transferências internas e pagamento de fatura precisarão de tratamento específico para não duplicar despesas. Um mês parcial não será comparado diretamente a um mês completo sem aviso.</p>
+</li>
+</ul>
+<h3 id="decisao-de-engenharia-no-trokim_6">Decisão de Engenharia no Trokim<a class="headerlink" href="#decisao-de-engenharia-no-trokim_6" title="Permanent link">&para;</a></h3>
+<p>A conclusão desta pergunta norteadora estabelece que:
+O MVP começará com regras, agregações e revisão humana, usando a IA para os casos ambíguos. Cada padrão apresentado deverá permitir consultar as transações de origem. Uma possível recorrência será marcada como hipótese, e um aumento de gasto não será automaticamente classificado como desperdício. A escolha entre regras e modelos mais complexos dependerá dos erros observados no conjunto de avaliação.</p>
+<p>Esta decisão está formalizada no repositório através de: <a href="../../adr/0004-calculos-deterministicos/">ADR 0004</a>.</p>
+<h3 id="matriz-de-decisao-e-criterios-do-sistema_6">Matriz de Decisão e Critérios do Sistema<a class="headerlink" href="#matriz-de-decisao-e-criterios-do-sistema_6" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Etapa do Pipeline</th>
+<th>Mecanismo</th>
+<th>Garantia de Qualidade</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Classificação Primária</strong></td>
+<td>Heurística determinística de palavras-chave no histórico</td>
+<td>Transparência total sobre a categoria inferida</td>
+</tr>
+<tr>
+<td><strong>Deduplicação de Lançamentos</strong></td>
+<td>Chave unificada (data, valor absoluto, descrição, tipo)</td>
+<td>Evita dupla contagem entre fatura de cartão e débito bancário</td>
+</tr>
+<tr>
+<td><strong>Casos Ambíguos</strong></td>
+<td>Sinalização visual para conferência e ajuste no app Flutter</td>
+<td>Controle humano no loop antes de consolidar métricas</td>
+</tr>
+</tbody>
+</table>
+<h3 id="rastreabilidade_6">Rastreabilidade<a class="headerlink" href="#rastreabilidade_6" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong>Requisitos Associados:</strong> RF03, RF04, RF09</li>
+<li><strong>ADRs Vinculadas:</strong> <a href="../../adr/0004-calculos-deterministicos/">ADR 0004</a></li>
+</ul>
+<hr />
+<h2 id="gq08-como-desenvolver-um-sistema-de-recomendacoes-personalizadas-considerando-renda-despesas-dividas-e-objetivos-pessoais">GQ08 — Como desenvolver um sistema de recomendações personalizadas considerando renda, despesas, dívidas e objetivos pessoais?<a class="headerlink" href="#gq08-como-desenvolver-um-sistema-de-recomendacoes-personalizadas-considerando-renda-despesas-dividas-e-objetivos-pessoais" title="Permanent link">&para;</a></h2>
+<blockquote>
+<p><strong>Hipótese:</strong> O escopo inicial prevê uma análise que faça sentido para a rotina financeira da pessoa, começando por entradas, transferências e gastos fixos. A hipótese derivada para recomendações é que os mesmos totais não justificam o mesmo plano para todos: compromissos, renda e prioridades precisam ser conhecidos. Ainda é necessário testar como transformar o diagnóstico em alternativas úteis. O desenho de regras e === PAGE 26 === cenários abaixo é uma proposta para esse passo, não uma decisão detalhada já registrada pelo grupo.</p>
+</blockquote>
+<h3 id="dados-encontrados-e-fundamentacao-cientifica_7">Dados Encontrados e Fundamentação Científica<a class="headerlink" href="#dados-encontrados-e-fundamentacao-cientifica_7" title="Permanent link">&para;</a></h3>
+<ul>
+<li>
+<p>A CVM, em Defina seus objetivos, coloca as prioridades de vida no centro do planejamento. Em Planeje os seus gastos, descreve o orçamento como projeção ajustável. A documentação de validadores do Pydantic permite definir verificações de campos e de conjuntos de dados; no projeto, essa capacidade poderá verificar as restrições calculáveis do plano, sem provar que a recomendação é adequada por si só.</p>
+</li>
+<li>
+<p>Propõe-se calcular a margem disponível depois das despesas e compromissos conhecidos, separar despesas essenciais das ajustáveis conforme escolha do usuário e simular alternativas de prazo ou contribuição mensal. Informações de dívida deverão incluir saldo, parcelas e custo quando disponíveis; sem esses dados, o sistema não afirmará qual dívida é a mais cara. A IA explicará as opções com os valores retornados pelo cálculo, solicitando confirmação quando houver lacunas.</p>
+</li>
+</ul>
+<h3 id="decisao-de-engenharia-no-trokim_7">Decisão de Engenharia no Trokim<a class="headerlink" href="#decisao-de-engenharia-no-trokim_7" title="Permanent link">&para;</a></h3>
+<p>A conclusão desta pergunta norteadora estabelece que:
+O primeiro recomendador será baseado em regras e cenários, com justificativa, premissas e possibilidade de correção. Não adotará um percentual universal obrigatório de poupança nem recomendará produtos de investimento. O teste verificará se o plano respeita as restrições declaradas e se o usuário entende a diferença entre as alternativas. Recursos mais sofisticados dependerão de evidência de utilidade além dessa referência simples.</p>
+<p>Esta decisão está formalizada no repositório através de: <a href="../../adr/0003-rag-fontes-oficiais/">ADR 0003</a>, <a href="../../adr/0004-calculos-deterministicos/">ADR 0004</a>.</p>
+<h3 id="matriz-de-decisao-e-criterios-do-sistema_7">Matriz de Decisão e Critérios do Sistema<a class="headerlink" href="#matriz-de-decisao-e-criterios-do-sistema_7" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Componente</th>
+<th>Função Técnica</th>
+<th>Garantia de Rastreabilidade</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Motor de Diagnóstico</strong></td>
+<td>Compara receitas, despesas fixas e variáveis calculadas</td>
+<td>Sem alucinações numéricas</td>
+</tr>
+<tr>
+<td><strong>Recuperador RAG</strong></td>
+<td>Injeta princípios do BCB/CVM no prompt de contexto</td>
+<td>Cada sugestão exibe a fonte oficial e seção citada</td>
+</tr>
+<tr>
+<td><strong>Simulador Comparativo</strong></td>
+<td>Gera dois cenários alternativos (Padrão vs. Otimizado)</td>
+<td>Usuário visualiza o impacto exato na margem livre</td>
+</tr>
+</tbody>
+</table>
+<h3 id="rastreabilidade_7">Rastreabilidade<a class="headerlink" href="#rastreabilidade_7" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong>Requisitos Associados:</strong> RF08, RF10</li>
+<li><strong>ADRs Vinculadas:</strong> <a href="../../adr/0003-rag-fontes-oficiais/">ADR 0003</a>, <a href="../../adr/0004-calculos-deterministicos/">ADR 0004</a></li>
+</ul>
+<hr />
+<h2 id="gq09-como-utilizar-modelos-preditivos-para-estimar-despesas-futuras-e-identificar-possiveis-desequilibrios-financeiros">GQ09 — Como utilizar modelos preditivos para estimar despesas futuras e identificar possíveis desequilíbrios financeiros?<a class="headerlink" href="#gq09-como-utilizar-modelos-preditivos-para-estimar-despesas-futuras-e-identificar-possiveis-desequilibrios-financeiros" title="Permanent link">&para;</a></h2>
+<blockquote>
+<p><strong>Hipótese:</strong> Os modelos preditivos são considerados como extensão da análise financeira. A hipótese inicial é que conhecer o padrão de entradas e saídas permitirá antecipar despesas e desequilíbrios. A proposta, porém, não demonstra disponibilidade de histórico ou precisão de previsão. Portanto, a investigação precisa separar o que é compromisso conhecido, estimativa baseada no passado e evento que os dados não permitem prever. Priorizar o tratamento e a qualidade dos dados é necessário antes de afirmar desempenho preditivo.</p>
+</blockquote>
+<h3 id="dados-encontrados-e-fundamentacao-cientifica_8">Dados Encontrados e Fundamentação Científica<a class="headerlink" href="#dados-encontrados-e-fundamentacao-cientifica_8" title="Permanent link">&para;</a></h3>
+<ul>
+<li>
+<p>A CVM descreve o orçamento doméstico como projeção que permite antecipar ajustes. A documentação do TimeSeriesSplit alerta para o uso incorreto de dados futuros no treinamento de avaliações temporais. Já o MAE permite expressar o erro absoluto das previsões na unidade dos valores avaliados. Essas referências orientam uma projeção com premissas claras e teste em períodos posteriores.</p>
+</li>
+<li>
+<p>Propõe-se somar compromissos futuros conhecidos e estimar despesas variáveis a partir de períodos anteriores comparáveis. Saldo inicial e receitas previstas precisarão estar disponíveis e identificados; sem eles, o Pierre poderá projetar despesas, mas não prometer um saldo futuro completo. Eventos extraordinários serão separados das recorrências. Cenários conservador e habitual poderão variar premissas explícitas, sem apresentar faixas arbitrárias como intervalos estatísticos de confiança.</p>
+</li>
+</ul>
+<h3 id="decisao-de-engenharia-no-trokim_8">Decisão de Engenharia no Trokim<a class="headerlink" href="#decisao-de-engenharia-no-trokim_8" title="Permanent link">&para;</a></h3>
+<p>A conclusão desta pergunta norteadora estabelece que:
+O MVP utilizará inicialmente projeção por regras e uma referência como repetir o último período comparável. Modelos de regressão ou séries temporais só serão adotados se houver histórico suficiente e melhora observada em teste cronológico. Na ausência desse histórico, a entrega demonstrará a lógica com dados sintéticos e registrará que a precisão preditiva em uso real ainda não foi validada. === PAGE 27 ===</p>
+<p>Esta decisão está formalizada no repositório através de: <a href="../../adr/0004-calculos-deterministicos/">ADR 0004</a>.</p>
+<h3 id="matriz-de-decisao-e-criterios-do-sistema_8">Matriz de Decisão e Critérios do Sistema<a class="headerlink" href="#matriz-de-decisao-e-criterios-do-sistema_8" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Tipo de Projeção</th>
+<th>Complexidade</th>
+<th>Abordagem no Trokim</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Linha de Base (Baseline)</strong></td>
+<td>Repetição do último período comparável + despesas fixas conhecidas</td>
+<td>Adotado como padrão auditável no MVP</td>
+</tr>
+<tr>
+<td><strong>Modelos Estatísticos (ARIMA/Séries)</strong></td>
+<td>Exigem histórico extenso de múltiplos meses para calibrar</td>
+<td>Postergado para fases avançadas após validação do baseline</td>
+</tr>
+<tr>
+<td><strong>Alertas de Desequilíbrio</strong></td>
+<td>Notificação se despesas fixas excederem 70% das receitas médias</td>
+<td>Regra explícita determinística com aviso pedagógico</td>
+</tr>
+</tbody>
+</table>
+<h3 id="rastreabilidade_8">Rastreabilidade<a class="headerlink" href="#rastreabilidade_8" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong>Requisitos Associados:</strong> RF03, RF08</li>
+<li><strong>ADRs Vinculadas:</strong> <a href="../../adr/0004-calculos-deterministicos/">ADR 0004</a></li>
+</ul>
+<hr />
+<h2 id="gq10-como-integrar-processamento-de-linguagem-natural-para-permitir-que-os-usuarios-consultem-suas-financas-por-meio-de-conversas">GQ10 — Como integrar processamento de linguagem natural para permitir que os usuários consultem suas finanças por meio de conversas?<a class="headerlink" href="#gq10-como-integrar-processamento-de-linguagem-natural-para-permitir-que-os-usuarios-consultem-suas-financas-por-meio-de-conversas" title="Permanent link">&para;</a></h2>
+<blockquote>
+<p><strong>Hipótese:</strong> Uma interface conversacional é uma possibilidade do projeto; o canal final e seu funcionamento ainda não foram definidos. A hipótese inicial derivada é que perguntas em linguagem cotidiana podem facilitar o acesso a informações como gastos e entradas. Para o MVP, a prioridade será testar a compreensão da pergunta e a correção da resposta; uma integração com aplicativo de mensagens dependerá de análise própria.</p>
+</blockquote>
+<h3 id="dados-encontrados-e-fundamentacao-cientifica_9">Dados Encontrados e Fundamentação Científica<a class="headerlink" href="#dados-encontrados-e-fundamentacao-cientifica_9" title="Permanent link">&para;</a></h3>
+<ul>
+<li>
+<p>A documentação do Ollama sobre tool calling descreve chamadas de ferramentas e uso de seus resultados nas respostas. A documentação de saídas estruturadas permite especificar um esquema JSON para a resposta do modelo. Esses recursos apoiam separar a interpretação da pergunta da execução das consultas; sua disponibilidade deve ser confirmada no modelo local selecionado.</p>
+</li>
+<li>
+<p>No desenho proposto, uma pergunta será convertida em parâmetros validados, como período e categoria. Uma função autorizada consultará a base local e retornará o total e os lançamentos utilizados; a IA apresentará uma explicação. O modelo não receberá permissão para executar SQL arbitrário. Expressões ambíguas, como “mês passado” em um arquivo de período antigo, deverão ser confirmadas com o usuário quando o contexto não bastar.</p>
+</li>
+</ul>
+<h3 id="decisao-de-engenharia-no-trokim_9">Decisão de Engenharia no Trokim<a class="headerlink" href="#decisao-de-engenharia-no-trokim_9" title="Permanent link">&para;</a></h3>
+<p>A conclusão desta pergunta norteadora estabelece que:
+O chat começará por consultas de leitura e explicações acompanhadas do período analisado. Registros ou alterações sugeridos por conversa precisarão de confirmação e validação antes da gravação. O teste utilizará perguntas equivalentes, períodos ambíguos e pedidos sem dados suficientes. O sucesso será medido pela correção da consulta e da resposta, e não apenas pela naturalidade da conversa.</p>
+<p>Esta decisão está formalizada no repositório através de: <a href="../../adr/0003-rag-fontes-oficiais/">ADR 0003</a>.</p>
+<h3 id="matriz-de-decisao-e-criterios-do-sistema_9">Matriz de Decisão e Critérios do Sistema<a class="headerlink" href="#matriz-de-decisao-e-criterios-do-sistema_9" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Recurso NLP</th>
+<th>Objetivo no MVP</th>
+<th>Salvaguarda de Segurança</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Consultas Conversacionais</strong></td>
+<td>Permitir perguntas livres sobre despesas e conceitos regulados</td>
+<td>RAG estrito com verificação de relevância</td>
+</tr>
+<tr>
+<td><strong>Política de Abstenção Ativa</strong></td>
+<td>Recusar respostas quando não houver evidência oficial comprovada</td>
+<td>Threshold de similaridade semântica com recusa explícita</td>
+</tr>
+<tr>
+<td><strong>Tool Calling / Estruturação</strong></td>
+<td>Integração estruturada entre interface de chat e dados da API</td>
+<td>Respostas com metadados de fonte e lista de evidências</td>
+</tr>
+</tbody>
+</table>
+<h3 id="rastreabilidade_9">Rastreabilidade<a class="headerlink" href="#rastreabilidade_9" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong>Requisitos Associados:</strong> RF05, RF06</li>
+<li><strong>ADRs Vinculadas:</strong> <a href="../../adr/0003-rag-fontes-oficiais/">ADR 0003</a></li>
+</ul>
+<hr />
+<h2 id="gq11-quais-metricas-podem-avaliar-a-precisao-das-previsoes-e-a-eficacia-das-recomendacoes-geradas-pela-ia">GQ11 — Quais métricas podem avaliar a precisão das previsões e a eficácia das recomendações geradas pela IA?<a class="headerlink" href="#gq11-quais-metricas-podem-avaliar-a-precisao-das-previsoes-e-a-eficacia-das-recomendacoes-geradas-pela-ia" title="Permanent link">&para;</a></h2>
+<blockquote>
+<p><strong>Hipótese:</strong> O projeto propõe analisar dados e considera modelos preditivos, mas a utilidade dessas técnicas depende de resultados verificáveis. Para esta pergunta, a hipótese derivada é que o sistema deve distinguir precisão de extração, classificação, cálculo, previsão e explicação. Não há uma única “acurácia da IA” que represente todas essas tarefas. O recorte técnico abaixo complementa os indicadores de compreensão, operação e valor apresentados na pergunta 4.</p>
+</blockquote>
+<h3 id="dados-encontrados-e-fundamentacao-cientifica_10">Dados Encontrados e Fundamentação Científica<a class="headerlink" href="#dados-encontrados-e-fundamentacao-cientifica_10" title="Permanent link">&para;</a></h3>
+<ul>
+<li>
+<p>O scikit-learn documenta MAE para erros absolutos, MAPE para erros relativos e F1 para classificação. O MAPE pode assumir valores muito elevados quando o valor real é próximo de zero. Por isso, a avaliação principal de despesas será o MAE em reais, acompanhado do tamanho da amostra e da comparação com uma estimativa simples.</p>
+</li>
+<li>
+<p>Na classificação de despesas, propõe-se reportar precisão, revocação e F1 por categoria e média macro, além da matriz de erros. Isso permitirá observar categorias pouco frequentes e distinguir erros de classificação de dados faltantes. Para as respostas, serão medidos acerto numérico, sustentação da afirmação pela fonte e reconhecimento de perguntas sem evidência. Repetições de uma mesma pergunta não deverão inflar a avaliação de generalização. === PAGE 28 ===</p>
+</li>
+</ul>
+<h3 id="decisao-de-engenharia-no-trokim_10">Decisão de Engenharia no Trokim<a class="headerlink" href="#decisao-de-engenharia-no-trokim_10" title="Permanent link">&para;</a></h3>
+<p>A conclusão desta pergunta norteadora estabelece que:
+O relatório deverá distinguir erros de importação, classificação, cálculo, previsão e explicação. Previsões só serão consideradas superiores à referência se melhorarem no mesmo conjunto de teste temporal; recomendações deverão respeitar as restrições e ser compreendidas pelo usuário. Valores ainda não medidos serão identificados como não avaliados, sem converter metas propostas em resultados.</p>
+<p>Esta decisão está formalizada no repositório através de: <a href="../../adr/0004-calculos-deterministicos/">ADR 0004</a>.</p>
+<h3 id="matriz-de-decisao-e-criterios-do-sistema_10">Matriz de Decisão e Critérios do Sistema<a class="headerlink" href="#matriz-de-decisao-e-criterios-do-sistema_10" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Tarefa Técnica</th>
+<th>Métrica Avaliada</th>
+<th>Critério de Aceite</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Classificação por Categoria</strong></td>
+<td>Macro F1 e F1-score por categoria (Scikit-Learn)</td>
+<td>F1 &gt;= 0.85 nas categorias essenciais</td>
+</tr>
+<tr>
+<td><strong>Projeção Numérica em Reais</strong></td>
+<td>Mean Absolute Error (MAE) comparado contra o baseline</td>
+<td>MAE inferior ao desvio padrão histórico</td>
+</tr>
+<tr>
+<td><strong>Explicação Textual</strong></td>
+<td>Taxa de alinhamento com a fonte recuperada</td>
+<td>Zero contradição factual com os textos do BCB/CVM</td>
+</tr>
+</tbody>
+</table>
+<h3 id="rastreabilidade_10">Rastreabilidade<a class="headerlink" href="#rastreabilidade_10" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong>Requisitos Associados:</strong> RNF02, RF09</li>
+<li><strong>ADRs Vinculadas:</strong> <a href="../../adr/0004-calculos-deterministicos/">ADR 0004</a></li>
+</ul>
+<hr />
+<h2 id="gq12-como-as-recomendacoes-podem-ajudar-a-equilibrar-economia-lazer-e-necessidades-basicas">GQ12 — Como as recomendações podem ajudar a equilibrar economia, lazer e necessidades básicas?<a class="headerlink" href="#gq12-como-as-recomendacoes-podem-ajudar-a-equilibrar-economia-lazer-e-necessidades-basicas" title="Permanent link">&para;</a></h2>
+<blockquote>
+<p><strong>Hipótese:</strong> A definição de qualidade de vida adotada considera que as prioridades variam entre pessoas e incluem aspectos além de produtividade ou dinheiro. A hipótese inicial derivada é que o assistente precisa considerar o que o usuário deseja preservar quando propõe ajustes. Lazer e necessidades básicas não serão tratados como categorias universalmente cortáveis; a pesquisa deverá verificar como negociar metas e limites sem produzir um plano incompatível com a rotina da pessoa.</p>
+</blockquote>
+<h3 id="dados-encontrados-e-fundamentacao-cientifica_11">Dados Encontrados e Fundamentação Científica<a class="headerlink" href="#dados-encontrados-e-fundamentacao-cientifica_11" title="Permanent link">&para;</a></h3>
+<ul>
+<li>
+<p>A CVM, em Planejamento e gestão de reservas financeiras, observa que destinar toda a sobra à poupança sem considerar qualidade de vida pode afetar a motivação de longo prazo. A página Momentos da vida também discute o equilíbrio entre despesas presentes e objetivos futuros. Essas referências apoiam cenários que preservem prioridades explícitas, sem uma regra única para todas as pessoas.</p>
+</li>
+<li>
+<p>Propõe-se que o Pierre pergunte quais despesas são indispensáveis e quais podem ser ajustadas. O usuário poderá comparar, por exemplo, uma contribuição mensal menor para uma meta com prazo maior ou uma redução escolhida em uma categoria ajustável. Quando não houver margem, o sistema explicará o conflito e permitirá rever a meta, sem sugerir que uma despesa essencial seja sacrificada automaticamente.</p>
+</li>
+</ul>
+<h3 id="decisao-de-engenharia-no-trokim_11">Decisão de Engenharia no Trokim<a class="headerlink" href="#decisao-de-engenharia-no-trokim_11" title="Permanent link">&para;</a></h3>
+<p>A conclusão desta pergunta norteadora estabelece que:
+As sugestões deverão apresentar efeitos e escolhas, permitindo preservar lazer e necessidades básicas dentro das restrições conhecidas. A validação verificará se o usuário reconhece suas prioridades no plano e consegue explicar o compromisso entre prazo, economia e gastos presentes. A sustentabilidade do comportamento dependerá de acompanhamento posterior, conforme a pergunta</p>
+<p>Esta decisão está formalizada no repositório através de: <a href="../../adr/0004-calculos-deterministicos/">ADR 0004</a>.</p>
+<h3 id="matriz-de-decisao-e-criterios-do-sistema_11">Matriz de Decisão e Critérios do Sistema<a class="headerlink" href="#matriz-de-decisao-e-criterios-do-sistema_11" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Pilar Orçamentário</th>
+<th>Tratamento no Sistema</th>
+<th>Evidência Bibliográfica</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Necessidades Básicas</strong></td>
+<td>Protegidas de corte arbitrário no simulador</td>
+<td>Caderno de Cidadania do BCB (Despesas Fixas Essenciais)</td>
+</tr>
+<tr>
+<td><strong>Lazer e Bem-Estar</strong></td>
+<td>Reconhecido como componente essencial da saúde mental</td>
+<td><a href="https://www.gov.br/investidor/pt-br/investir/antes-de-investir">Portal do Investidor da CVM</a> e Escala do CFPB</td>
+</tr>
+<tr>
+<td><strong>Meta de Poupança</strong></td>
+<td>Ajustada pelo usuário conforme a folga real do orçamento</td>
+<td>Metas sustentáveis evitam desistência no médio prazo</td>
+</tr>
+</tbody>
+</table>
+<h3 id="rastreabilidade_11">Rastreabilidade<a class="headerlink" href="#rastreabilidade_11" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong>Requisitos Associados:</strong> RF08, RNF01</li>
+<li><strong>ADRs Vinculadas:</strong> <a href="../../adr/0004-calculos-deterministicos/">ADR 0004</a></li>
+</ul>
+<hr />
+<h2 id="gq13-como-avaliar-se-o-sistema-contribui-para-melhorar-o-planejamento-financeiro-e-a-percepcao-de-controle-sobre-o-dinheiro">GQ13 — Como avaliar se o sistema contribui para melhorar o planejamento financeiro e a percepção de controle sobre o dinheiro?<a class="headerlink" href="#gq13-como-avaliar-se-o-sistema-contribui-para-melhorar-o-planejamento-financeiro-e-a-percepcao-de-controle-sobre-o-dinheiro" title="Permanent link">&para;</a></h2>
+<blockquote>
+<p><strong>Hipótese:</strong> O problema de pesquisa combina desorganização das informações, incerteza sobre a fatura e desconforto com essa falta de clareza. A hipótese inicial é que consolidar e explicar os dados aumentará a percepção de controle. Isso precisa ser observado: uma interface considerada agradável não prova melhoria financeira. A avaliação proposta separará compreensão imediata, percepção relatada e mudanças que só podem aparecer ao longo do tempo.</p>
+</blockquote>
+<h3 id="dados-encontrados-e-fundamentacao-cientifica_12">Dados Encontrados e Fundamentação Científica<a class="headerlink" href="#dados-encontrados-e-fundamentacao-cientifica_12" title="Permanent link">&para;</a></h3>
+<ul>
+<li>
+<p>O guia da <a href="https://www.consumerfinance.gov/data-research/research-reports/financial-well-being-scale/">Financial Well-Being Scale do CFPB</a> apresenta um instrumento para medir segurança e liberdade de escolha percebidas. A CVM relaciona organização financeira a objetivos e bem-estar. Esses materiais sustentam combinar indicadores objetivos de tarefa e relato do usuário; o uso de um questionário adaptado pelo projeto exige identificação própria, sem alegar validação equivalente ao instrumento original. === PAGE 29 ===</p>
+</li>
+<li>
+<p>Propõe-se um teste exploratório em que cada participante execute tarefas com o mesmo cenário antes e depois de receber apoio do Pierre. Serão registrados acertos, tempo, necessidade de ajuda e capacidade de justificar uma escolha. Perguntas curtas de compreensão e controle percebido complementarão o teste. A ordem das tarefas e a familiaridade prévia serão registradas para reconhecer possíveis efeitos de aprendizagem.</p>
+</li>
+</ul>
+<h3 id="decisao-de-engenharia-no-trokim_12">Decisão de Engenharia no Trokim<a class="headerlink" href="#decisao-de-engenharia-no-trokim_12" title="Permanent link">&para;</a></h3>
+<p>A conclusão desta pergunta norteadora estabelece que:
+Para o primeiro ciclo, a evidência esperada é demonstrar que o usuário entende melhor um cenário e consegue avaliar opções com apoio do assistente. A entrega distinguirá claramente protocolo, resultados de teste e limitações da amostra. A melhoria duradoura no planejamento e no bem-estar permanecerá como hipótese de pesquisa até que exista acompanhamento suficiente. Matriz de riscos e mitigação Privacidade e LGPD — evitar dados reais nos testes iniciais, minimizar coleta, revisar logs e conexões e definir responsabilidades [8, 9]. Erro de extração — comparar com gabarito, detectar duplicidades e submeter divergências à revisão humana [2]. Alucinações e recomendações inadequadas — cálculos determinísticos, RAG com fontes identificadas, indicação de limites e direito de recusa [5, 12]. Viés e diferentes situações financeiras — testes de renda variável, orçamento deficitário e dados incompletos, sem sugerir cortes universais [4, 8]. Viabilidade — começar por arquivos locais e medir usabilidade e desempenho antes de prometer escalabilidade [1, 6]. Métricas, validação e roadmap Importação correta = lançamentos com data, descrição e valor corretos / total esperado no gabarito. Acerto numérico = respostas com cálculo correto / perguntas numéricas avaliadas. Classificação = F1 macro e F1 por categoria [10]; previsão = MAE em reais comparado com baseline [11]. Fundamentação = respostas educacionais sustentadas por fonte identificada / respostas avaliadas. Utilidade = tarefas concluídas, tempo, necessidade de ajuda e justificativa da escolha; percepção declarada não comprova efeito causal [4]. Roadmap oficial [1]: semana 1 definições; 2 primeiro RAG; 3 comparação LLM x RAG; 4 primeiro sistema multiagentes; 5 multimodalidade; 6 integração; 7 avaliação final. Pendências: aprovação do escopo, responsáveis, dados sintéticos, desenho do piloto e metas quantitativas de aceite. Referências bibliográficas e documentação [1] Challenge 2 — Big Idea: Qualidade de Vida, slides oficiais da disciplina, 2026 (material fornecido). [2] Banco Central. Caderno de Educação Financeira. https://www.bcb.gov.br/pre/pef/port/caderno_cidadania_financeira.pdf</p>
+<p>Esta decisão está formalizada no repositório através de: <a href="../../adr/0001-flutter-android/">ADR 0001</a>, <a href="../../adr/0003-rag-fontes-oficiais/">ADR 0003</a>.</p>
+<h3 id="matriz-de-decisao-e-criterios-do-sistema_12">Matriz de Decisão e Critérios do Sistema<a class="headerlink" href="#matriz-de-decisao-e-criterios-do-sistema_12" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Indicador de Utilidade</th>
+<th>Método de Coleta</th>
+<th>Significado para o Projeto</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Taxa de Conclusão de Tarefas</strong></td>
+<td>Importar extrato, consultar saldo e simular cenário com sucesso</td>
+<td>Usabilidade e clareza da interface Flutter no Android</td>
+</tr>
+<tr>
+<td><strong>Tempo de Execução da Tarefa</strong></td>
+<td>Cronometragem do fluxo antes e depois do apoio da IA</td>
+<td>Redução de esforço e atrito cognitivo do usuário</td>
+</tr>
+<tr>
+<td><strong>Controle Percebido (CFPB Adaptado)</strong></td>
+<td>Questionário breve com base na <a href="https://www.consumerfinance.gov/data-research/research-reports/financial-well-being-scale/">Financial Well-Being Scale do CFPB</a></td>
+<td>Indício exploratório de melhora na percepção de clareza</td>
+</tr>
+</tbody>
+</table>
+<h3 id="rastreabilidade_12">Rastreabilidade<a class="headerlink" href="#rastreabilidade_12" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong>Requisitos Associados:</strong> RF07, RNF01</li>
+<li><strong>ADRs Vinculadas:</strong> <a href="../../adr/0001-flutter-android/">ADR 0001</a>, <a href="../../adr/0003-rag-fontes-oficiais/">ADR 0003</a></li>
+</ul>
+<hr />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-circle-arrow-up" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="m16 12-4-4-4 4M12 16V8"/></svg>
+  Voltar para o topo
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://zensical.org/" target="_blank" rel="noopener">
+      Zensical
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog" role="status" aria-atomic="true">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      
+      
+        
+        
+      <script id="__config" type="application/json">{"annotate":null,"base":"../..","features":["navigation.tabs","navigation.tabs.sticky","navigation.sections","navigation.expand","navigation.top","search.suggest","search.highlight","search.share","content.code.copy"],"redirect":null,"search":"../../assets/javascripts/workers/search.719e0d91.min.js","tags":null,"translations":{"clipboard.copied":"Copiado para área de transferência","clipboard.copy":"Copiar para área de transferência","clipboard.error":"Could not copy to clipboard","search.result.more.one":"mais 1 nesta página","search.result.more.other":"# mais nesta página","search.result.none":"Nenhum documento encontrado","search.result.one":"1 documento encontrado","search.result.other":"# documentos encontrados","search.result.placeholder":"Digite para iniciar a busca","search.result.term.missing":"Ausente","select.version":"Selecione a versão"},"version":null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.d31f0ffa.min.js"></script>
+      
+    
+  </body>
+</html>
