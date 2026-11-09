@@ -15,9 +15,9 @@ concurrency:
 jobs:
   api:
     name: api (lint + testes)
-    runs-on: ubuntu-latest
+    runs-on: [self-hosted, macOS]
     env:
-      FASTEMBED_CACHE_PATH: /home/runner/.cache/fastembed
+      FASTEMBED_CACHE_PATH: ${{ runner.temp }}/fastembed
     defaults:
       run:
         working-directory: api
@@ -40,9 +40,9 @@ jobs:
 
   research:
     name: research (benchmark rag + lint)
-    runs-on: ubuntu-latest
+    runs-on: [self-hosted, macOS]
     env:
-      FASTEMBED_CACHE_PATH: /home/runner/.cache/fastembed
+      FASTEMBED_CACHE_PATH: ${{ runner.temp }}/fastembed
     steps:
       - uses: actions/checkout@v4
       - uses: astral-sh/setup-uv@v6
@@ -71,7 +71,7 @@ jobs:
 
   docs:
     name: docs (zensical build strict)
-    runs-on: ubuntu-latest
+    runs-on: [self-hosted, macOS]
     steps:
       - uses: actions/checkout@v4
       - uses: astral-sh/setup-uv@v6

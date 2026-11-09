@@ -9,7 +9,7 @@ O desenvolvimento do **Trokim** segue a metodologia **Challenge Based Learning (
 | Semana | Foco Temático | Entregável Oficial | Status no Trokim |
 |---|---|---|---|
 | **Semana 1** | Problema, stakeholders, riscos e métricas | Pacote de definição do projeto (cenário, personas, requisitos, riscos, premissas e EQ) | <span class="badge-must">Concluído</span> |
-| **Semana 2** | Base de conhecimento e recuperação | **Base de conhecimento + protótipo de recuperação:** Base curada com pelo menos 20 documentos-fonte; estratégias de chunking e embeddings; banco vetorial; diagrama de arquitetura e ingestão. Consulta recuperando trechos relevantes | <span class="badge-p0">Em Execução</span> |
+| **Semana 2** | Base de conhecimento e recuperação | **Base de conhecimento + protótipo de recuperação:** Base curada com pelo menos 20 documentos-fonte; estratégias de chunking e embeddings; banco vetorial; diagrama de arquitetura e ingestão. Consulta recuperando trechos relevantes | <span class="badge-must">Concluído</span> |
 | **Semana 3** | Comparação LLM x RAG | Assistente baseado em evidências + relatório comparativo (LLM puro vs LLM+RAG vs LLM+RAG estruturado) | Previsto |
 | **Semana 4** | Sistema multiagentes | Primeiro protótipo multiagente (Research, Analysis, Validation e Communication Agent) | Previsto |
 | **Semana 5** | Multimodalidade | Assistente multimodal (leitura de faturas PDF, extratos e comprovantes em imagem) | Previsto |
@@ -59,7 +59,7 @@ flowchart TD
 | Issue | Escopo / Título | Responsáveis | Precedência Técnica | Status |
 |---|---|---|---|---|
 | [#6](https://github.com/moonshinerd/trokim/issues/6) | Documentação Viva e Fontes Clicáveis | @moonshinerd | Nenhuma | <span class="badge-must">Concluída (PR #7)</span> |
-| [#4](https://github.com/moonshinerd/trokim/issues/4) | Curadoria de 20 Documentos Oficiais e Benchmark | @rebecaboncaputo, @gabrielcrzojo | **Nenhuma** (Ponto de partida) | <span class="badge-p0">Em Execução</span> |
-| [#8](https://github.com/moonshinerd/trokim/issues/8) | Banco Vetorial e Pipeline de Ingestão | @rebecaboncaputo, @moonshinerd | **Bloqueada por #4** | <span class="badge-p0">Em Execução</span> |
-| [#3](https://github.com/moonshinerd/trokim/issues/3) | Pipeline de Recuperação e Endpoint `/v1/chat/ask` | @Luix3005, @moonshinerd | **Bloqueada por #8 e #4** | <span class="badge-p0">Em Execução</span> |
-| [#5](https://github.com/moonshinerd/trokim/issues/5) | Interface Conversacional e Demonstração no Flutter | @Luix3005, @gabrielcrzojo | **Bloqueada por #3** | <span class="badge-p0">Em Execução</span> |
+| [#4](https://github.com/moonshinerd/trokim/issues/4) | Curadoria de 20 Documentos Oficiais e Benchmark | @rebecaboncaputo, @gabrielcrzojo | **Nenhuma** (Ponto de partida) | <span class="badge-must">Concluída (PR #10)</span> |
+| [#8](https://github.com/moonshinerd/trokim/issues/8) | Banco Vetorial e Pipeline de Ingestão | @rebecaboncaputo, @moonshinerd | **Bloqueada por #4** | <span class="badge-must">Concluída (PR #11)</span> |
+| [#3](https://github.com/moonshinerd/trokim/issues/3) | Pipeline de Recuperação e Endpoint `/v1/chat/ask` | @Luix3005, @moonshinerd | **Bloqueada por #8 e #4** | <span class="badge-must">Concluída (PR #11)</span> |
+| [#5](https://github.com/moonshinerd/trokim/issues/5) | Interface Conversacional e Demonstração no Flutter | @Luix3005, @gabrielcrzojo | **Bloqueada por #3** | <span class="badge-must">Concluída (PR #12, #13)</span> |
