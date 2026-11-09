@@ -20,6 +20,11 @@ A arquitetura do **Trokim** foi concebida para atender aos requisitos de alta pe
    - Política ativa de **abstenção ética**: se o score estiver abaixo do limiar ou a consulta abordar temas fora do escopo institucional (apostas, criptoativos ou recomendações especulativas), o agente se abstém.
 4. **Cálculo Determinístico:**
    - A LLM nunca calcula saldos, médias ou limites. Um serviço matemático estrito (`calculation_service.py`) computa os números exatos e os injeta contextualmente.
+5. **Camada de Síntese Generativa Local (Semana 3):**
+   - Port abstrato `LLMProvider` desacoplando as regras de negócio dos provedores de inferência.
+   - Provedor primário local-first `OllamaProvider` executando **Qwen 2.5** (`qwen2.5`) localmente sem envio de dados a nuvens terceiras.
+   - Provedor simulado determinístico `MockLLMProvider` para execução reprodutível de testes e CI.
+   - Orquestrador `GenerationService` suportando três modos de síntese (`grounded`, `pure`, `naive`), prompts versionados e corte estrito de alucinações via abstenção ética determinística.
 
 ---
 
@@ -28,16 +33,16 @@ A arquitetura do **Trokim** foi concebida para atender aos requisitos de alta pe
 O backend adota uma arquitetura em camadas limpa e desacoplada:
 
 ```text
-routers/ (HTTP fino, validação de esquemas Pydantic e controle de status)
+routers/ (HTTP fino, esquemas Pydantic: /transactions, /chat/ask, /chat/generate)
    │
    ▼
-services/ (Regras de negócio, cálculos matemáticos, pipeline RAG e parser de extratos)
+services/ (Regras de negócio: CalculationService, RAGService, GenerationService)
    │
    ▼
-domain/   (Entidades de negócio puras e agnósticas: Transaction, Budget, Evidence)
+domain/   (Entidades de negócio puras: Transaction, Budget, Evidence)
    ▲
    │
-clients/  (Adaptadores de persistência: SQLiteVectorStore, FastEmbed e SQLite DB)
+clients/  (Adaptadores de persistência e LLM: SQLiteVectorStore, FastEmbed, OllamaProvider, MockLLMProvider)
 ```
 
 Essa estrutura garante que a evolução do sistema nas semanas subsequentes (Semanas 3 a 5: Comparação LLM x RAG, Multiagentes e Multimodalidade) ocorra sem acoplamento indevido.

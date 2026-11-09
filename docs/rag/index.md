@@ -15,8 +15,14 @@ em `~/.cache/fastembed` (configurável por `FASTEMBED_CACHE_PATH`), com cache no
 
 `POST /v1/chat/ask` aceita `{"message":"..."}` com 1–1000 caracteres e responde com
 `query`, `answered`, `status`, `answer` e `evidences` tipadas, incluindo `document_id`.
-A resposta continua sendo uma extração do primeiro trecho, com citação e URL oficial.
-Não há chamada a LLM nem síntese generativa; a comparação generativa é trabalho posterior.
+A resposta neste endpoint é uma extração direta do primeiro trecho com citação e URL oficial.
+
+Complementarmente, a camada generativa (Semana 3) introduz o endpoint `POST /v1/chat/generate`,
+orquestrado pelo `GenerationService` via port `LLMProvider`. Suporta três modos de síntese:
+`grounded` (RAG com fundamentação estrita e prompts versionados), `pure` (LLM pura sem recuperação)
+e `naive` (RAG ingênuo sem política de abstenção ou ancoragem institucional). O provedor padrão
+é o modelo local **Qwen** (`qwen2.5`) executado via **Ollama**, preservando o paradigma local-first
+e LGPD, dispondo de um `MockLLMProvider` determinístico para testes e integração contínua (CI).
 
 ## Chunking e representação
 
@@ -109,6 +115,63 @@ O conjunto foi usado no desenvolvimento e na calibração, não é avaliação c
 controle sem política não é uma LLM sem fontes; não há evidência para afirmar
 superioridade geral contra respostas abertas. Regras conservadoras de escopo reduzem
 respostas inadequadas nos casos testados, sem garantir proteção contra todo ataque.
+
+## Camada de Síntese Generativa Local (Qwen / Ollama)
+
+A partir da Semana 3, o Trokim avança da extração direta para a síntese pedagógica contextualizada
+por meio do endpoint `POST /v1/chat/generate`. A arquitetura adota o princípio de Port & Adapters
+(`LLMProvider`), isolando o serviço das especificidades da infraestrutura de inferência:
+
+- **Provedor Primário (Local-First):** `OllamaProvider` conectando-se ao daemon local do Ollama
+  (`http://localhost:11434`), executando prioritariamente o modelo **Qwen 2.5** (`qwen2.5`).
+  Isso garante que nenhum dado financeiro ou consulta sensível saia da máquina do usuário,
+  em estrita consonância com a LGPD e o manifesto local-first do projeto.
+- **Provedor Simulado (CI & Testes):** `MockLLMProvider` determinístico e configurável, que permite
+  executar a suíte de testes e o pipeline de CI do GitHub Actions sem requisitos de GPU ou dependências externas.
+- **Factory Flexível:** `get_llm_provider(provider_name, model_name)` instancia o provedor com base nas
+  variáveis de ambiente (`LLM_PROVIDER`, `LLM_MODEL`, `OLLAMA_BASE_URL`).
+
+### Modos de Geração e Prompts Versionados
+
+O serviço generativo (`GenerationService`) opera em três modos comparativos, fundamentando as análises
+da Entrega 3:
+
+1. **`grounded` (Trokim Grounded RAG):**
+   - Utiliza `prompt_trokim_grounded_v1.txt`.
+   - Recupera evidências oficiais via `RAGService`.
+   - **Abstenção Ativa:** Se a pergunta violar o escopo institucional ou os trechos não atingirem
+     o limiar de similaridade, o sistema retorna abstenção determinística sem acionar o LLM.
+   - Restringe o modelo exclusivamente ao conteúdo das fontes citadas, proibindo cálculos financeiros
+     próprios ou recomendações de investimento especulativo.
+2. **`pure` (LLM Zero-Shot):**
+   - Utiliza `prompt_llm_pure_v1.txt`.
+   - Executa a inferência direta no modelo de linguagem sem contexto de documentos oficiais.
+   - Serve como baseline para medir a ocorrência de alucinações e a perda de precisão regulatória.
+3. **`naive` (RAG Ingênuo):**
+   - Utiliza `prompt_naive_rag_v1.txt`.
+   - Recupera os documentos com maior similaridade sem filtro de escopo ou limiar de abstenção.
+   - Demonstra a fragilidade de pipelines RAG que não filtram consultas fora de escopo.
+
+```mermaid
+flowchart TD
+    Q[Pergunta do Usuário] --> M{Modo de Geração?}
+    
+    M -- pure --> PURE[Prompt Pure v1]
+    PURE --> LLM[LLM Provider: Qwen / Ollama]
+    
+    M -- naive --> RET_NAIVE[Busca Top-K sem limiar]
+    RET_NAIVE --> NAIVE_P[Prompt Naive RAG v1]
+    NAIVE_P --> LLM
+    
+    M -- grounded --> RAG[RAGService: Busca Híbrida]
+    RAG --> SCOPE{Escopo educacional e Score >= Limiar?}
+    SCOPE -- Não --> ABSTAIN[Abstenção Determinística<br/>Sem chamada ao LLM]
+    SCOPE -- Sim --> GROUNDED_P[Prompt Grounded v1<br/>Contexto Regulatório BCB/CVM]
+    GROUNDED_P --> LLM
+    
+    LLM --> RESP[GenerateQueryResponse<br/>answer + evidences + citations]
+    ABSTAIN --> RESP
+```
 
 ## Dados fictícios e proteção do consumidor
 
