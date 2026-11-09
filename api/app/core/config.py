@@ -14,9 +14,12 @@ class Settings(BaseSettings):
 
     DATABASE_URL: str = "sqlite+aiosqlite:///trokim.db"
 
-    LLM_MODEL: str = "ollama/llama3.2"
+    LLM_PROVIDER: str = "ollama"
+    LLM_MODEL: str = "qwen2.5"
     LLM_API_BASE: str = "http://localhost:11434"
     LLM_API_KEY: str = ""
+    LLM_TIMEOUT: float = 60.0
+    LLM_TEMPERATURE: float = 0.1
 
     RAG_SIMILARITY_THRESHOLD: float = 0.15
     RAG_TOP_K: int = 3

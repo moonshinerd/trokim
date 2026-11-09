@@ -30,11 +30,50 @@ make api-run
 A API estará disponível em:
 - **Endpoints e Swagger interativo:** `http://127.0.0.1:8000/docs`
 - **Health check:** `http://127.0.0.1:8000/v1/health`
-- **Consulta RAG e Chat:** `POST http://127.0.0.1:8000/v1/chat/ask`
+- **Consulta RAG Extrativa:** `POST http://127.0.0.1:8000/v1/chat/ask`
+- **Síntese Generativa Contextualizada:** `POST http://127.0.0.1:8000/v1/chat/generate`
 
 ---
 
-## 3. Apresentação Executiva e Demonstração Interativa
+## 3. Síntese Generativa Local (Qwen 2.5 via Ollama)
+
+A camada generativa do Trokim utiliza o modelo **Qwen 2.5** executado localmente via **Ollama**, mantendo conformidade integral com a LGPD e soberania de dados.
+
+### Configuração do Ollama:
+```bash
+# Baixa e executa o modelo Qwen 2.5 localmente
+ollama run qwen2.5
+
+# Opcional: Para ambientes sem GPU ou CI, use o provider mock:
+export LLM_PROVIDER="mock"
+```
+
+### Exemplos de Requisições HTTP:
+
+#### Modo Grounded (Fundamentado no RAG com Abstenção Ativa):
+```bash
+curl -X POST http://127.0.0.1:8000/v1/chat/generate \
+  -H "Content-Type: application/json" \
+  -d '{"message": "Como funciona o rotativo do cartao de credito?", "mode": "grounded"}'
+```
+
+#### Modo Pure (Baseline Zero-Shot sem RAG):
+```bash
+curl -X POST http://127.0.0.1:8000/v1/chat/generate \
+  -H "Content-Type: application/json" \
+  -d '{"message": "Como funciona o rotativo do cartao de credito?", "mode": "pure"}'
+```
+
+#### Modo Naive (RAG Ingênuo sem Política de Abstenção):
+```bash
+curl -X POST http://127.0.0.1:8000/v1/chat/generate \
+  -H "Content-Type: application/json" \
+  -d '{"message": "Como funciona o rotativo do cartao de credito?", "mode": "naive"}'
+```
+
+---
+
+## 4. Apresentação Executiva e Demonstração Interativa
 
 O Trokim inclui uma aplicação web interativa para apresentação e demonstração em tempo real das Entregas 1 & 2:
 
@@ -47,7 +86,7 @@ Na interface, é possível testar o chat conectado à API local, disparar cenár
 
 ---
 
-## 4. Testes e Avaliação do Motor RAG (Benchmark)
+## 5. Testes e Avaliação do Motor RAG (Benchmark)
 
 Para rodar a suíte de avaliação empírica contra o gabarito oficial de 61 consultas:
 
@@ -64,7 +103,7 @@ O script reporta **Recall@3**, precisão de recuperação fundamentada e taxa de
 
 ---
 
-## 5. Geração de Dados Sintéticos (LGPD)
+## 6. Geração de Dados Sintéticos (LGPD)
 
 Para gerar novos extratos bancários `.ofx` e faturas `.pdf` sintéticas e reproduzíveis:
 
@@ -76,7 +115,7 @@ Os arquivos serão criados em `research/synthetic_data/`, garantindo 100% de pri
 
 ---
 
-## 6. Documentação Viva com Zensical
+## 7. Documentação Viva com Zensical
 
 Para compilar e servir localmente o site de documentação:
 
@@ -88,7 +127,7 @@ Acesse no navegador: `http://127.0.0.1:8000` (ou porta alternativa exibida no te
 
 ---
 
-## 7. Execução do Aplicativo Mobile (Flutter)
+## 8. Execução do Aplicativo Mobile (Flutter)
 
 Com um emulador Android ou dispositivo físico conectado:
 
