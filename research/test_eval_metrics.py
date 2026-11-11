@@ -27,6 +27,13 @@ def test_concept_recall_aceita_alternativas_por_grupo():
     assert eval_comparison.concept_recall(answer, []) is None
 
 
+def test_concept_recall_reconhece_flexoes_regulares_ptbr():
+    answer = "Diversificar reduz riscos e o teto vale para operações originadas nesta data."
+    concepts = [["reduzir riscos"], ["operação"]]
+
+    assert eval_comparison.concept_recall(answer, concepts) == 1
+
+
 def test_numeric_facts_compara_moeda_e_separadores_ptbr():
     case = {
         "query": "Qual é o limite?",

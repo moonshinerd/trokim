@@ -133,13 +133,58 @@ def _contains_phrase(text_tokens: list[str], phrase_tokens: list[str]) -> bool:
     )
 
 
+def _concept_token_forms(token: str) -> set[str]:
+    forms = {token}
+    plural_forms = {
+        "oes": "ao",
+        "aes": "ao",
+        "ais": "al",
+        "eis": "el",
+        "ois": "ol",
+    }
+    for suffix, replacement in plural_forms.items():
+        if token.endswith(suffix) and len(token) > len(suffix) + 2:
+            forms.add(token[: -len(suffix)] + replacement)
+    if token.endswith("s") and len(token) > 4 and not token.endswith(("is", "us")):
+        forms.add(token[:-1])
+
+    for ending in ("ar", "er", "ir"):
+        if token.endswith(ending) and len(token) > 5:
+            forms.add(token[:-2])
+    for ending in ("ando", "endo", "indo"):
+        if token.endswith(ending) and len(token) > len(ending) + 2:
+            forms.add(token[: -len(ending)])
+    for ending in ("am", "em", "ou", "eu", "iu"):
+        if token.endswith(ending) and len(token) > len(ending) + 3:
+            forms.add(token[: -len(ending)])
+    if token.endswith(("a", "e", "o")) and len(token) > 5:
+        forms.add(token[:-1])
+    return forms
+
+
+def _contains_concept_phrase(text_tokens: list[str], phrase_tokens: list[str]) -> bool:
+    if not phrase_tokens or len(phrase_tokens) > len(text_tokens):
+        return False
+    forms = [_concept_token_forms(token) for token in phrase_tokens]
+    width = len(forms)
+    return any(
+        all(
+            bool(_concept_token_forms(text_tokens[index + offset]) & concept_forms)
+            for offset, concept_forms in enumerate(forms)
+        )
+        for index in range(len(text_tokens) - width + 1)
+    )
+
+
 def concept_recall(answer: str, concepts: list[list[str]]) -> float | None:
     """Recall de conceitos; cada grupo conta uma vez e aceita termos alternativos."""
     if not concepts:
         return None
     answer_tokens = normalize_tokens(answer)
     covered = sum(
-        any(_contains_phrase(answer_tokens, normalize_tokens(term)) for term in alternatives)
+        any(
+            _contains_concept_phrase(answer_tokens, normalize_tokens(term)) for term in alternatives
+        )
         for alternatives in concepts
     )
     return covered / len(concepts)
@@ -495,7 +540,7 @@ def evaluate_comparison(
             ),
             "concept_recall": (
                 "Cada grupo de conceitos vale uma unidade; qualquer alternativa textual "
-                "contígua cobre o grupo."
+                "contígua cobre o grupo, com normalização conservadora de flexões regulares pt-BR."
             ),
             "factual_inconsistency_rate": (
                 "Proporção de respostas não abstidas com número sem suporte, frase proibida "

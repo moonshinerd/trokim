@@ -133,7 +133,8 @@ O script grava `artifacts/research/comparison_report.json` e
 `artifacts/research/comparison_report.md`. `--cases`, `--results`, `--json-output` e
 `--markdown-output` permitem definir caminhos diferentes. F1 de tokens usa unigramas
 normalizados em pt-BR e contagem multiconjunto; concept recall aceita uma alternativa
-textual por grupo. A taxa factual sinaliza números sem suporte no gabarito/fontes,
+textual contígua por grupo e reconhece flexões regulares de palavras em português. A taxa
+factual sinaliza números sem suporte no gabarito/fontes,
 afirmações proibidas literais e possíveis contradições por negação. Essa última métrica
 é heurística lexical, não um verificador semântico: revise os casos sinalizados antes de
 tirar conclusões científicas. A matriz de confusão produz precision, recall e F1 de
