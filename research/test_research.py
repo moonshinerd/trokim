@@ -10,11 +10,10 @@ from pathlib import Path
 from urllib.parse import urlsplit
 
 import pytest
-from ofxparse import OfxParser
-from pypdf import PdfReader
-
 from app.services.parser_service import ParserService
 from app.services.rag_service import RAGService
+from ofxparse import OfxParser
+from pypdf import PdfReader
 
 ROOT = Path(__file__).parent
 
