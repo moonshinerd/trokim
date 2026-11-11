@@ -96,7 +96,7 @@ NUMBER_PATTERN = re.compile(
     r"\s*(?P<percent>%)?",
     re.IGNORECASE,
 )
-SENTENCE_PATTERN = re.compile(r"(?<=[.!?;])\s+|\n+")
+SENTENCE_PATTERN = re.compile(r"(?<=[.!?;:])\s+|\n+")
 
 
 def _ascii(text: str) -> str:
@@ -198,7 +198,8 @@ def _content_tokens(text: str) -> set[str]:
 
 
 def _has_negation(text: str) -> bool:
-    return bool(set(normalize_tokens(text)) & NEGATIONS)
+    tokens = set(normalize_tokens(text))
+    return bool(tokens & NEGATIONS or "ausencia" in tokens)
 
 
 def _contradictions(answer: str, trusted_texts: list[str]) -> list[str]:
@@ -551,7 +552,10 @@ def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--cases", type=Path, default=DEFAULT_CASES, help="Gabarito da issue #20.")
     parser.add_argument(
-        "--results", type=Path, default=DEFAULT_RESULTS, help="Respostas geradas pela issue #24."
+        "--results",
+        type=Path,
+        default=DEFAULT_RESULTS,
+        help="Respostas geradas pela issue #24.",
     )
     parser.add_argument("--json-output", type=Path, default=DEFAULT_JSON_REPORT)
     parser.add_argument("--markdown-output", type=Path, default=DEFAULT_MARKDOWN_REPORT)

@@ -69,6 +69,32 @@ def test_contradicao_por_negacao_e_sinalizada():
     assert any("contradição por negação" in finding for finding in findings)
 
 
+def test_equivalencias_negativas_e_limites_de_clausula_nao_sao_contradicoes():
+    case = {
+        "query": "Pergunta",
+        "expected_answer": "",
+        "forbidden_claims": [],
+    }
+
+    no_waiting_period = eval_comparison.factual_inconsistencies(
+        "Priorizar baixo risco e liquidez, sem carência.",
+        case,
+        ["Priorize baixo risco, liquidez diária e ausência de carência."],
+    )
+    no_free_credit = eval_comparison.factual_inconsistencies(
+        "Não. O prazo limita o uso do rotativo até a fatura subsequente, "
+        "não concede gratuidade; há juros e encargos contratuais.",
+        case,
+        [
+            "O financiamento vai até a fatura subsequente. Essa duração não é uma "
+            "carência gratuita: há juros e encargos contratuais."
+        ],
+    )
+
+    assert no_waiting_period == []
+    assert no_free_credit == []
+
+
 def test_frase_proibida_literal_e_sinalizada():
     phrase = "promessa de retorno garantido"
     case = {
@@ -132,8 +158,16 @@ def test_relatorio_compara_tres_abordagens_sem_servico_externo(tmp_path):
             {
                 "id": "C01",
                 "responses": {
-                    "llm_pura": {"answer": supported, "answered": True, "status": "pure_baseline"},
-                    "rag_ingenuo": {"answer": supported, "answered": True, "status": "naive_rag"},
+                    "llm_pura": {
+                        "answer": supported,
+                        "answered": True,
+                        "status": "pure_baseline",
+                    },
+                    "rag_ingenuo": {
+                        "answer": supported,
+                        "answered": True,
+                        "status": "naive_rag",
+                    },
                     "trokim_estruturado": {
                         "answer": supported,
                         "answered": True,
@@ -189,7 +223,10 @@ def test_cli_grava_json_e_markdown(tmp_path):
                     {
                         "id": "C01",
                         "responses": {
-                            method: {"answer": "Resposta de referência.", "status": "grounded"}
+                            method: {
+                                "answer": "Resposta de referência.",
+                                "status": "grounded",
+                            }
                             for method in eval_comparison.METHODS
                         },
                     }
@@ -219,9 +256,22 @@ def test_cli_grava_json_e_markdown(tmp_path):
 
 
 def test_resultados_incompletos_sao_rejeitados():
-    cases = [{"id": "C01", "query": "Q", "expected_answer": "A", "concepts": [], "relevant": []}]
+    cases = [
+        {
+            "id": "C01",
+            "query": "Q",
+            "expected_answer": "A",
+            "concepts": [],
+            "relevant": [],
+        }
+    ]
     results = {
-        "cases": [{"id": "C01", "responses": {"llm_pura": {"answer": "A", "status": "grounded"}}}]
+        "cases": [
+            {
+                "id": "C01",
+                "responses": {"llm_pura": {"answer": "A", "status": "grounded"}},
+            }
+        ]
     }
 
     try:
