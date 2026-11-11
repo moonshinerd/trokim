@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../../../core/theme/app_theme.dart';
 import '../domain/chat_models.dart';
 import 'chat_controller.dart';
+import 'evidence_card.dart';
 
 class ChatScreen extends StatefulWidget {
   const ChatScreen({super.key, this.controller});
@@ -17,6 +18,7 @@ class _ChatScreenState extends State<ChatScreen> {
   final TextEditingController _textController = TextEditingController();
   final ScrollController _scrollController = ScrollController();
   late ChatController _chat;
+  bool _auditMode = false;
 
   @override
   void initState() {
@@ -56,11 +58,49 @@ class _ChatScreenState extends State<ChatScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Assistente Trokim (RAG)')),
+      appBar: AppBar(
+        title: const Text('Assistente Trokim'),
+        actions: [
+          Row(mainAxisSize: MainAxisSize.min, children: [
+            const Text('Auditoria', style: TextStyle(fontSize: 12)),
+            Semantics(
+              label: 'Modo de auditoria pedagógica',
+              child: Switch(
+                value: _auditMode,
+                onChanged: (value) => setState(() => _auditMode = value),
+                activeThumbColor: Colors.white,
+              ),
+            ),
+          ]),
+        ],
+      ),
       body: AnimatedBuilder(
         animation: _chat,
         builder: (context, _) => Column(
           children: [
+            if (_auditMode)
+              Container(
+                width: double.infinity,
+                margin: const EdgeInsets.fromLTRB(12, 10, 12, 0),
+                padding: const EdgeInsets.all(12),
+                decoration: BoxDecoration(
+                  color: const Color(0xFFEFF6FF),
+                  borderRadius: BorderRadius.circular(12),
+                  border: Border.all(color: const Color(0xFFBFDBFE)),
+                ),
+                child: const Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Icon(Icons.fact_check_outlined,
+                          color: AppTheme.primaryBlue, size: 19),
+                      SizedBox(width: 8),
+                      Expanded(
+                          child: Text(
+                        'Auditoria pedagógica: respostas fundamentadas exibem as fontes e os trechos recuperados. O Trokim não fabrica um comparativo sem evidências.',
+                        style: TextStyle(fontSize: 12, height: 1.4),
+                      )),
+                    ]),
+              ),
             Expanded(
               child: LayoutBuilder(
                 builder: (context, constraints) => ListView.builder(
@@ -92,6 +132,14 @@ class _ChatScreenState extends State<ChatScreen> {
                           index == _chat.messages.length - 1 && !_chat.isLoading
                               ? _chat.retry
                               : null,
+                      auditMode: _auditMode,
+                      onQuickQuestion: (question) {
+                        _textController.text = question;
+                        _textController.selection = TextSelection.collapsed(
+                          offset: question.length,
+                        );
+                        _sendMessage();
+                      },
                     );
                   },
                 ),
@@ -142,11 +190,15 @@ class _MessageBubble extends StatelessWidget {
     required this.message,
     required this.maxWidth,
     this.onRetry,
+    required this.auditMode,
+    this.onQuickQuestion,
   });
 
   final ChatMessage message;
   final double maxWidth;
   final VoidCallback? onRetry;
+  final bool auditMode;
+  final ValueChanged<String>? onQuickQuestion;
 
   @override
   Widget build(BuildContext context) {
@@ -197,6 +249,39 @@ class _MessageBubble extends StatelessWidget {
                 height: 1.4,
               ),
             ),
+            if (message.isAbstained)
+              Padding(
+                padding: const EdgeInsets.only(top: 10),
+                child: Container(
+                  padding: const EdgeInsets.all(10),
+                  decoration: BoxDecoration(
+                    color: const Color(0xFFFFF7E6),
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  child: const Text(
+                    'Risco de especulação: não há evidências oficiais suficientes para responder com segurança.',
+                    style: TextStyle(fontSize: 12, height: 1.35),
+                  ),
+                ),
+              ),
+            if (message.isAbstained) ...[
+              const SizedBox(height: 8),
+              Wrap(spacing: 4, runSpacing: 0, children: [
+                _QuickQuestion(
+                    label: 'Reserva de emergência',
+                    onPressed: () => onQuickQuestion
+                        ?.call('Como começar uma reserva de emergência?')),
+                _QuickQuestion(
+                    label: 'Organizar o orçamento',
+                    onPressed: () => onQuickQuestion
+                        ?.call('Como organizar meu orçamento mensal?')),
+              ]),
+            ],
+            if (auditMode &&
+                !message.isUser &&
+                !message.isError &&
+                message.status != null)
+              _AuditComparison(message: message),
             if (message.isError && onRetry != null)
               TextButton.icon(
                 onPressed: onRetry,
@@ -206,36 +291,95 @@ class _MessageBubble extends StatelessWidget {
             if (!message.isUser && !message.isError && !message.isAbstained)
               for (final evidence in message.evidences) ...[
                 const SizedBox(height: 8),
-                Card(
-                  margin: EdgeInsets.zero,
-                  child: Padding(
-                    padding: const EdgeInsets.all(12),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          '${evidence.sourceName} • ${evidence.documentTitle}',
-                          style: const TextStyle(fontWeight: FontWeight.w600),
-                        ),
-                        const SizedBox(height: 4),
-                        Text(evidence.section),
-                        if (evidence.sourceUrl != null &&
-                            evidence.sourceUrl!.isNotEmpty) ...[
-                          const SizedBox(height: 8),
-                          SelectableText(
-                            evidence.sourceUrl!,
-                            style: const TextStyle(
-                                color: AppTheme.primaryBlue, fontSize: 12),
-                          ),
-                        ],
-                      ],
-                    ),
-                  ),
-                ),
+                EvidenceCard(evidence: evidence),
               ],
           ],
         ),
       ),
     );
   }
+}
+
+class _QuickQuestion extends StatelessWidget {
+  const _QuickQuestion({required this.label, required this.onPressed});
+  final String label;
+  final VoidCallback? onPressed;
+
+  @override
+  Widget build(BuildContext context) => ActionChip(
+        label: Text(label, style: const TextStyle(fontSize: 11)),
+        onPressed: onPressed,
+        visualDensity: VisualDensity.compact,
+      );
+}
+
+class _AuditComparison extends StatelessWidget {
+  const _AuditComparison({required this.message});
+  final ChatMessage message;
+
+  @override
+  Widget build(BuildContext context) {
+    final grounded = message.status == 'grounded';
+    return Container(
+      width: double.infinity,
+      margin: const EdgeInsets.only(top: 10),
+      padding: const EdgeInsets.all(10),
+      decoration: BoxDecoration(
+        color: const Color(0xFFF8FAFC),
+        borderRadius: BorderRadius.circular(10),
+        border: Border.all(color: const Color(0xFFE2E8F0)),
+      ),
+      child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+        const Text('Comparativo de transparência',
+            style: TextStyle(fontWeight: FontWeight.w700, fontSize: 12)),
+        const SizedBox(height: 8),
+        _AuditRow(
+          icon: grounded ? Icons.verified : Icons.warning_amber_rounded,
+          color: grounded ? const Color(0xFF168447) : Colors.blueGrey,
+          title: grounded ? 'Com RAG' : 'Com RAG: abstenção ética',
+          body: grounded
+              ? 'Resposta vinculada às fontes oficiais abaixo.'
+              : 'O sistema não encontrou evidências suficientes para orientar.',
+        ),
+        const SizedBox(height: 7),
+        const _AuditRow(
+          icon: Icons.link_off,
+          color: AppTheme.primaryBlue,
+          title: 'Sem lastro verificável',
+          body:
+              'Nenhuma resposta alternativa é apresentada: sem fontes, um palpite poderia induzir a uma decisão financeira inadequada.',
+        ),
+      ]),
+    );
+  }
+}
+
+class _AuditRow extends StatelessWidget {
+  const _AuditRow(
+      {required this.icon,
+      required this.color,
+      required this.title,
+      required this.body});
+  final IconData icon;
+  final Color color;
+  final String title;
+  final String body;
+
+  @override
+  Widget build(BuildContext context) => Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Icon(icon, color: color, size: 16),
+          const SizedBox(width: 6),
+          Expanded(
+            child:
+                Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+              Text(title,
+                  style: TextStyle(
+                      fontWeight: FontWeight.w600, color: color, fontSize: 11)),
+              Text(body, style: const TextStyle(fontSize: 11, height: 1.35)),
+            ]),
+          ),
+        ],
+      );
 }
