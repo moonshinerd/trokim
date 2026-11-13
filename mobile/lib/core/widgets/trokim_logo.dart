@@ -2,13 +2,14 @@ import 'package:flutter/material.dart';
 
 import '../theme/app_theme.dart';
 
-/// Marca do Trokim: um "T" sólido e um ponto dourado, o "troco".
+/// Marca do Trokim: uma moeda e o "troquinho" dourado que sai dela.
+/// Trokim vem de troquinho, que vem de troco.
 class TrokimMark extends StatelessWidget {
   const TrokimMark({super.key, this.size = 40, this.onDark = false});
 
   final double size;
 
-  /// Usa versão sem fundo (traço claro) para aplicar sobre cores escuras.
+  /// Versão com a moeda branca, para aplicar sobre cores escuras.
   final bool onDark;
 
   @override
@@ -30,36 +31,17 @@ class _MarkPainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
     canvas.scale(size.width / 64);
-
-    if (!onDark) {
-      canvas.drawRRect(
-        RRect.fromRectAndRadius(
-          const Rect.fromLTWH(0, 0, 64, 64),
-          const Radius.circular(18),
-        ),
-        Paint()..color = AppTheme.forest,
-      );
-    }
-
-    final white = Paint()..color = Colors.white;
-    // "T" geométrico: barra e haste sólidas.
-    canvas.drawRRect(
-      RRect.fromRectAndRadius(
-        const Rect.fromLTWH(16, 17, 32, 9),
-        const Radius.circular(4.5),
-      ),
-      white,
-    );
-    canvas.drawRRect(
-      RRect.fromRectAndRadius(
-        const Rect.fromLTWH(24, 17, 9, 31),
-        const Radius.circular(4.5),
-      ),
-      white,
-    );
-    // O "troco": um ponto dourado.
+    // A moeda grande e o "troquinho" dourado que sai dela.
     canvas.drawCircle(
-        const Offset(42, 43.5), 4.5, Paint()..color = AppTheme.coin);
+      const Offset(26, 30),
+      20,
+      Paint()..color = onDark ? Colors.white : AppTheme.emerald,
+    );
+    canvas.drawCircle(
+      const Offset(50, 50),
+      8,
+      Paint()..color = AppTheme.coin,
+    );
   }
 
   @override
