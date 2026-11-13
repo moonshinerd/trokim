@@ -23,7 +23,7 @@ class ChatRepository {
 
   Future<AssistantReply> ask(String message) async {
     try {
-      return AssistantReply.fromJson(await _apiClient.askAssistant(message));
+      return AssistantReply.fromJson(await _apiClient.generateAssistant(message));
     } on TimeoutException {
       throw const ChatException(
         'O assistente demorou para responder. Tente novamente.',

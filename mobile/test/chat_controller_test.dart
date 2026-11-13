@@ -8,6 +8,8 @@ import 'package:trokim/core/network/api_client.dart';
 import 'package:trokim/features/chat_assistant/data/chat_repository.dart';
 import 'package:trokim/features/chat_assistant/presentation/chat_controller.dart';
 
+import 'support/abortable_client.dart';
+
 void main() {
   ChatController controllerFor(
     Future<http.Response> Function(http.Request) handler,
@@ -23,10 +25,24 @@ void main() {
 
   http.Response response({bool answered = true}) => http.Response.bytes(
     utf8.encode(jsonEncode(<String, dynamic>{
+      'query': 'Como criar uma reserva?',
+      'mode': 'grounded',
+      'model': 'qwen2.5',
       'answered': answered,
       'status': answered ? 'grounded' : 'abstained',
       'answer': answered ? 'Resposta oficial' : 'Não há evidências suficientes.',
-      'evidences': [],
+      'evidences': answered
+          ? [
+              {
+                'id': 'cvm_reserva_1',
+                'source_name': 'CVM',
+                'document_title': 'Reserva de emergência',
+                'section': 'Planejamento',
+                'content': 'Mantenha uma reserva.',
+                'score': 0.42,
+              },
+            ]
+          : [],
     })),
     200,
   );
@@ -44,7 +60,7 @@ void main() {
     var calls = 0;
     final controller = controllerFor((request) {
       calls++;
-      expect(jsonDecode(request.body), {'message': 'Reserva?'});
+      expect(jsonDecode(request.body), {'message': 'Reserva?', 'mode': 'grounded'});
       return pending.future;
     });
     await controller.send('   ');
@@ -82,6 +98,45 @@ void main() {
     expect(controller.messages.last.text, 'Resposta oficial');
     await controller.retry();
     expect(questions.length, 2);
+  });
+
+  test('timeout aborta antes de retry e ignora resposta tardia', () async {
+    final pending = Completer<http.Response>();
+    var active = 0;
+    var calls = 0;
+    var aborted = false;
+    final repository = ChatRepository(
+      apiClient: ApiClient(
+        generationTimeout: const Duration(milliseconds: 10),
+        client: abortableClient((request) async {
+          expect(active, 0);
+          active++;
+          calls++;
+          if (calls == 1) return pending.future;
+          active--;
+          return response();
+        }, onAbort: () {
+          active--;
+          aborted = true;
+        }),
+      ),
+    );
+    final controller = ChatController(repository: repository);
+    addTearDown(repository.close);
+    addTearDown(controller.dispose);
+    await controller.send('Reserva?');
+    expect(aborted, isTrue);
+    expect(active, 0);
+    expect(controller.messages.last.isError, isTrue);
+    await controller.retry();
+    expect(calls, 2);
+    expect(controller.messages.where((message) => message.isUser).length, 1);
+    expect(controller.messages.last.isError, isFalse);
+    final messages = controller.messages;
+    pending.complete(response(answered: false));
+    await Future<void>.delayed(Duration.zero);
+    expect(controller.messages, messages);
+    expect(controller.messages.last.isAbstained, isFalse);
   });
 
   test('nova pergunta substitui alvo de retry anterior', () async {

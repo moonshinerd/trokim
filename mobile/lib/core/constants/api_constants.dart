@@ -11,7 +11,12 @@ class ApiConstants {
   static const String transactionsUploadEndpoint = '/transactions/upload';
   static const String chatAskEndpoint = '/chat/ask';
 
-  /// Endpoint preparado para a integração ponta a ponta do chat.
+  static const int chatGenerateTimeoutSeconds = int.fromEnvironment(
+    'CHAT_GENERATE_TIMEOUT_SECONDS',
+    defaultValue: 90,
+  );
+
+  /// Endpoint de síntese fundamentada com o modelo local.
   static const String chatGenerateEndpoint = '/chat/generate';
   static const String budgetsCompareEndpoint = '/budgets/compare';
 }
