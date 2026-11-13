@@ -1,4 +1,4 @@
-# 0012 — Preferências salvas localmente e aba de Ajustes
+# 0013 — Preferências salvas localmente e aba de Ajustes
 
 - **Status:** Aceita
 - **Data:** 13/11/2026

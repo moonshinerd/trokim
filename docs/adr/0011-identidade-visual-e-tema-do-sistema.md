@@ -1,4 +1,4 @@
-# 0010 — Identidade visual, design system e tema claro/escuro pelo sistema
+# 0011 — Identidade visual, design system e tema claro/escuro pelo sistema
 
 - **Status:** Aceita
 - **Data:** 13/11/2026
@@ -18,7 +18,7 @@ impediam trocar de tema sem reescrever cada uma.
   Gold `#DAA520`. No escuro o verde assume o fundo e o bege escurece, virando
   texto suave.
 - **Tema pelo sistema:** `ThemeMode.system` por padrão, com opção de fixar claro
-  ou escuro em Ajustes (ADR 0012).
+  ou escuro em Ajustes (ADR 0013).
 - **Tokens centralizados:** `AppTheme` (marca e semânticas) e a `ThemeExtension`
   `AppColors` (fundo, superfície, contorno, texto, realce), lida por
   `context.colors`. Telas não usam cores de superfície fixas.

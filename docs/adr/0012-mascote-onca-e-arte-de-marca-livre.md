@@ -1,4 +1,4 @@
-# 0011 — Mascote onça-pintada e arte de marca com licença livre e arquivos trocáveis
+# 0012 — Mascote onça-pintada e arte de marca com licença livre e arquivos trocáveis
 
 - **Status:** Aceita
 - **Data:** 13/11/2026

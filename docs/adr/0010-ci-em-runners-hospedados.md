@@ -1,4 +1,4 @@
-# 0009 — CI em runners hospedados do GitHub Actions
+# 0010 — CI em runners hospedados do GitHub Actions
 
 - **Status:** Aceita
 - **Data:** 13/11/2026

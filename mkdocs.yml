@@ -77,6 +77,7 @@ nav:
   - Pesquisa:
       - Perguntas Norteadoras: pesquisa/guiding-questions.md
       - Matrizes de Risco e Mitigação: pesquisa/matrizes.md
+      - Comparação LLM × RAG (Semana 3): pesquisa/comparacao-llm-rag.md
       - Fontes e Referências: referencias.md
   - Requisitos: requisitos.md
   - Processo: processo/cbl.md
@@ -102,7 +103,9 @@ nav:
       - "0006 – Curadoria e Benchmark": adr/0006-curadoria-benchmark.md
       - "0007 – Banco Vetorial e Embeddings": adr/0007-banco-vetorial-embeddings.md
       - "0008 – Material Comparativo": adr/0008-material-comparativo-versionado.md
-      - "0009 – CI em Runners Hospedados": adr/0009-ci-em-runners-hospedados.md
-      - "0010 – Identidade Visual e Tema": adr/0010-identidade-visual-e-tema-do-sistema.md
-      - "0011 – Mascote e Arte Livre": adr/0011-mascote-onca-e-arte-de-marca-livre.md
-      - "0012 – Preferências e Ajustes": adr/0012-preferencias-locais-e-aba-de-ajustes.md
+      - "0009 – Síntese Generativa Local": adr/0009-sintese-generativa-local.md
+      - "0010 – CI em Runners Hospedados": adr/0010-ci-em-runners-hospedados.md
+      - "0011 – Identidade Visual e Tema": adr/0011-identidade-visual-e-tema-do-sistema.md
+      - "0012 – Mascote e Arte Livre": adr/0012-mascote-onca-e-arte-de-marca-livre.md
+      - "0013 – Preferências e Ajustes": adr/0013-preferencias-locais-e-aba-de-ajustes.md
+      - "0014 – Histórico de Conversas e Títulos": adr/0014-historico-de-conversas-e-titulos.md
