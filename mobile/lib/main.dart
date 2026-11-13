@@ -5,6 +5,7 @@ import 'core/settings/settings_controller.dart';
 import 'core/theme/app_theme.dart';
 import 'core/widgets/app_motion.dart';
 import 'core/widgets/coin.dart';
+import 'core/widgets/mascot.dart';
 import 'features/budget_scenarios/presentation/scenarios_screen.dart';
 import 'features/chat_assistant/presentation/chat_screen.dart';
 import 'features/dashboard/presentation/dashboard_screen.dart';
@@ -14,6 +15,7 @@ import 'features/transactions/presentation/transactions_screen.dart';
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   final settings = await SettingsController.load();
+  await Mascot.load();
   runApp(SettingsScope(controller: settings, child: const TrokimApp()));
 }
 

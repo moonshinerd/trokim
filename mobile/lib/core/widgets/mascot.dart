@@ -1,4 +1,7 @@
+import 'dart:ui' as ui;
+
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart' show rootBundle;
 
 /// Mascote do Trokim: a onça-pintada (a da nota de R\$ 50) de perfil, num disco
 /// dourado, desenhada em espaço negativo. Gerado a partir de `docs/assets/logo.svg`.
@@ -9,7 +12,33 @@ class Mascot {
   static const double extent = 155;
 
   /// [simple] omite os detalhes finos e engrossa os traços (tamanhos pequenos).
+  /// Arte final do mascote (assets/brand/mascot.png), carregada na abertura.
+  /// Se ainda não estiver carregada (ex.: testes), usa o desenho vetorial.
+  static ui.Image? image;
+
+  static Future<void> load() async {
+    try {
+      final data = await rootBundle.load('assets/brand/mascot.png');
+      final codec = await ui.instantiateImageCodec(data.buffer.asUint8List());
+      image = (await codec.getNextFrame()).image;
+    } on Object {
+      image = null;
+    }
+  }
+
   static void paint(Canvas canvas, {bool simple = false}) {
+    final img = image;
+    if (img != null) {
+      canvas.drawImageRect(
+        img,
+        Rect.fromLTWH(0, 0, img.width.toDouble(), img.height.toDouble()),
+        const Rect.fromLTRB(-160, -160, 160, 160),
+        Paint()
+          ..filterQuality = FilterQuality.high
+          ..isAntiAlias = true,
+      );
+      return;
+    }
     final k = simple ? 1.7 : 1.0;
     final gold = Paint()
       ..isAntiAlias = true
