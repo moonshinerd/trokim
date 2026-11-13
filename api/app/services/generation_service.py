@@ -25,6 +25,9 @@ ABSTENTION_MESSAGE = (
 )
 
 
+NO_CALCULATION_RESULTS = "Nenhum resultado determinístico fornecido."
+
+
 class GenerationResult(BaseModel):
     """Resultado da síntese generativa de linguagem natural."""
 
@@ -118,7 +121,11 @@ class GenerationService:
                 )
 
             context_text = self._format_context(evidences)
-            prompt = self.prompt_grounded_tpl.format(context=context_text, question=clean_query)
+            prompt = self.prompt_grounded_tpl.format(
+                calculation_results=NO_CALCULATION_RESULTS,
+                context=context_text,
+                question=clean_query,
+            )
             llm_res = await self.llm_provider.generate(
                 prompt=prompt,
                 context_chunks=evidences,
@@ -138,7 +145,9 @@ class GenerationService:
 
         # 2. Modo Pure (Baseline de LLM pura sem contexto — Semana 3):
         if mode == "pure":
-            prompt = self.prompt_pure_tpl.format(question=clean_query)
+            prompt = self.prompt_pure_tpl.format(
+                calculation_results=NO_CALCULATION_RESULTS, question=clean_query
+            )
             llm_res = await self.llm_provider.generate(
                 prompt=prompt,
                 context_chunks=None,
@@ -162,7 +171,11 @@ class GenerationService:
             if naive_chunks
             else "Nenhum trecho relevante recuperado."
         )
-        prompt = self.prompt_naive_tpl.format(context=context_text, question=clean_query)
+        prompt = self.prompt_naive_tpl.format(
+            calculation_results=NO_CALCULATION_RESULTS,
+            context=context_text,
+            question=clean_query,
+        )
         llm_res = await self.llm_provider.generate(
             prompt=prompt,
             context_chunks=naive_chunks,
