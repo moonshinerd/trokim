@@ -25,24 +25,26 @@ void main() {
   }
 
   Map<String, dynamic> payload({bool answered = true}) => <String, dynamic>{
-    'answered': answered,
-    'status': answered ? 'grounded' : 'abstained',
-    'answer': answered ? 'Organize sua reserva.' : 'Não há evidências suficientes.',
-    'evidences': answered
-        ? [
-            <String, dynamic>{
-              'id': 'cvm_1',
-              'document_id': 'cvm.txt',
-              'source_name': 'CVM',
-              'source_url': 'https://www.gov.br/investidor/',
-              'document_title': 'Reserva de emergência',
-              'section': 'Planejamento',
-              'content': 'Mantenha uma reserva.',
-              'score': 1,
-            },
-          ]
-        : [],
-  };
+        'answered': answered,
+        'status': answered ? 'grounded' : 'abstained',
+        'answer': answered
+            ? 'Organize sua reserva.'
+            : 'Não há evidências suficientes.',
+        'evidences': answered
+            ? [
+                <String, dynamic>{
+                  'id': 'cvm_1',
+                  'document_id': 'cvm.txt',
+                  'source_name': 'CVM',
+                  'source_url': 'https://www.gov.br/investidor/',
+                  'document_title': 'Reserva de emergência',
+                  'section': 'Planejamento',
+                  'content': 'Mantenha uma reserva.',
+                  'score': 1,
+                },
+              ]
+            : [],
+      };
 
   test('envia contrato HTTP e converte resposta fundamentada', () async {
     final repository = repositoryFor((request) async {
@@ -69,7 +71,8 @@ void main() {
   });
 
   for (final omitFields in [true, false]) {
-    test('aceita metadados opcionais ${omitFields ? 'ausentes' : 'nulos'}', () async {
+    test('aceita metadados opcionais ${omitFields ? 'ausentes' : 'nulos'}',
+        () async {
       final body = payload();
       final evidence = (body['evidences'] as List).single as Map;
       for (final key in ['document_id', 'source_url']) {
@@ -90,7 +93,8 @@ void main() {
 
   test('converte abstenção sem evidências', () async {
     final repository = repositoryFor(
-      (_) async => http.Response.bytes(utf8.encode(jsonEncode(payload(answered: false))), 200),
+      (_) async => http.Response.bytes(
+          utf8.encode(jsonEncode(payload(answered: false))), 200),
     );
     final reply = await repository.ask('Pergunta sem base');
     expect(reply.answered, isFalse);
@@ -150,7 +154,8 @@ void main() {
 
   for (final body in ['não é JSON', '[]', '{}']) {
     test('traduz resposta inválida: $body', () async {
-      final repository = repositoryFor((_) async => http.Response.bytes(utf8.encode(body), 200));
+      final repository = repositoryFor(
+          (_) async => http.Response.bytes(utf8.encode(body), 200));
       await expectLater(
         repository.ask('Reserva?'),
         throwsA(isA<ChatException>().having(
@@ -163,11 +168,13 @@ void main() {
   }
 
   test('ApiClient expõe status HTTP sem decodificar corpo de erro', () async {
-    final client = ApiClient(client: MockClient((_) async => http.Response('', 500)));
+    final client =
+        ApiClient(client: MockClient((_) async => http.Response('', 500)));
     addTearDown(client.close);
     await expectLater(
       client.askAssistant('Reserva?'),
-      throwsA(isA<ApiException>().having((error) => error.statusCode, 'status', 500)),
+      throwsA(isA<ApiException>()
+          .having((error) => error.statusCode, 'status', 500)),
     );
   });
 }

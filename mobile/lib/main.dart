@@ -1,16 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
+import 'core/settings/settings_controller.dart';
 import 'core/theme/app_theme.dart';
 import 'core/widgets/app_motion.dart';
 import 'core/widgets/coin.dart';
 import 'features/budget_scenarios/presentation/scenarios_screen.dart';
 import 'features/chat_assistant/presentation/chat_screen.dart';
 import 'features/dashboard/presentation/dashboard_screen.dart';
+import 'features/settings/presentation/settings_screen.dart';
 import 'features/transactions/presentation/transactions_screen.dart';
 
-void main() {
-  runApp(const TrokimApp());
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  final settings = await SettingsController.load();
+  runApp(SettingsScope(controller: settings, child: const TrokimApp()));
 }
 
 class TrokimApp extends StatelessWidget {
@@ -23,7 +27,7 @@ class TrokimApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       theme: AppTheme.lightTheme,
       darkTheme: AppTheme.darkTheme,
-      themeMode: ThemeMode.system,
+      themeMode: SettingsScope.of(context).themeMode,
       scrollBehavior: const NoStretchScrollBehavior(),
       builder: (context, child) {
         final dark = Theme.of(context).brightness == Brightness.dark;
@@ -70,6 +74,7 @@ class _MainNavigationScreenState extends State<MainNavigationScreen>
         Icons.chat_bubble_rounded),
     _Destination(
         'Cenários', Icons.swap_horiz_rounded, Icons.swap_horiz_rounded),
+    _Destination('Ajustes', Icons.tune_rounded, Icons.tune_rounded),
   ];
 
   // Mantidas vivas no IndexedStack para preservar estado (ex.: conversa).
@@ -78,6 +83,7 @@ class _MainNavigationScreenState extends State<MainNavigationScreen>
     TransactionsScreen(),
     ChatScreen(),
     ScenariosScreen(),
+    SettingsScreen(),
   ];
 
   void _select(int index) {
@@ -262,7 +268,9 @@ class _SplashGateState extends State<SplashGate> {
 
   @override
   Widget build(BuildContext context) {
-    if (Motion.reduced(context)) return widget.child;
+    if (Motion.reduced(context) || !SettingsScope.of(context).showSplash) {
+      return widget.child;
+    }
     return AnimatedSwitcher(
       duration: const Duration(milliseconds: 600),
       switchInCurve: Motion.emphasized,

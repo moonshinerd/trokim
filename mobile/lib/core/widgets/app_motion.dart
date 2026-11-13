@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../settings/settings_controller.dart';
+
 /// Curva e durações padrão de movimento do Trokim.
 class Motion {
   Motion._();
@@ -9,8 +11,10 @@ class Motion {
   static const Curve enter = Curves.easeOutCubic;
   static const Curve emphasized = Cubic(0.2, 0.0, 0, 1.0);
 
+  /// Reduz movimento se o sistema pedir ou se o usuário ativar em Ajustes.
   static bool reduced(BuildContext context) =>
-      MediaQuery.maybeOf(context)?.disableAnimations ?? false;
+      (MediaQuery.maybeOf(context)?.disableAnimations ?? false) ||
+      (SettingsScope.maybeOf(context)?.reduceMotion ?? false);
 }
 
 /// Transição de rotas: fade + leve deslize vertical (respeita
