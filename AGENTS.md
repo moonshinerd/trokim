@@ -68,7 +68,7 @@ trokim/
 │   ├── pubspec.yaml           # Dependências do app
 │   └── lib/
 │       ├── core/              # Temas, constantes e cliente HTTP da API
-│       ├── features/          # Módulos verticais (extratos, dashboard, chat, simulações)
+│       ├── features/          # Módulos verticais (extratos, dashboard, chat, simulações, ajustes)
 │       └── main.dart          # Ponto de entrada do app Flutter
 ├── research/                  # Laboratório de dados e avaliação da Semana 2+
 │   ├── knowledge_base/        # Documentos oficiais (BCB, CVM, CFPB) para o RAG

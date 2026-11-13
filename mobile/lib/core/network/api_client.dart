@@ -15,10 +15,16 @@ class ApiClient {
   final http.Client _client;
   final Duration timeout;
 
+  /// O LLM local pode levar dezenas de segundos na primeira resposta.
+  final Duration generativeTimeout;
+  final Duration titleTimeout;
+
   ApiClient({
     this.baseUrl = ApiConstants.defaultBaseUrl,
     http.Client? client,
     this.timeout = const Duration(seconds: 15),
+    this.generativeTimeout = const Duration(seconds: 150),
+    this.titleTimeout = const Duration(seconds: 40),
   }) : _client = client ?? http.Client();
 
   Future<Map<String, dynamic>> getSummary() async {
@@ -28,14 +34,39 @@ class ApiClient {
     return _decode(response);
   }
 
-  Future<Map<String, dynamic>> askAssistant(String message) async {
+  /// Consulta o assistente. Com [generative], usa o LLM local
+  /// (`/chat/generate`), que é mais lento; senão, a busca extrativa (`/chat/ask`).
+  Future<Map<String, dynamic>> askAssistant(
+    String message, {
+    bool generative = false,
+  }) async {
     final response = await _client
         .post(
-          Uri.parse('$baseUrl${ApiConstants.chatAskEndpoint}'),
+          Uri.parse(
+            '$baseUrl${generative ? ApiConstants.chatGenerateEndpoint : ApiConstants.chatAskEndpoint}',
+          ),
           headers: {'Content-Type': 'application/json'},
           body: jsonEncode({'message': message}),
         )
-        .timeout(timeout);
+        .timeout(generative ? generativeTimeout : timeout);
+    return _decode(response);
+  }
+
+  /// Pede ao LLM local um título curto para a conversa.
+  Future<Map<String, dynamic>> generateTitle(
+    String message, {
+    String? answer,
+  }) async {
+    final response = await _client
+        .post(
+          Uri.parse('$baseUrl${ApiConstants.chatTitleEndpoint}'),
+          headers: {'Content-Type': 'application/json'},
+          body: jsonEncode({
+            'message': message,
+            if (answer != null && answer.isNotEmpty) 'answer': answer,
+          }),
+        )
+        .timeout(titleTimeout);
     return _decode(response);
   }
 

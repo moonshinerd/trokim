@@ -8,7 +8,15 @@ theme:
   name: material
   custom_dir: overrides
   language: pt-BR
+  logo: assets/logo.png
+  favicon: assets/icon.png
+  font:
+    text: Plus Jakarta Sans
+    code: JetBrains Mono
   features:
+    - navigation.instant
+    - navigation.instant.progress
+    - navigation.tracking
     - navigation.tabs
     - navigation.tabs.sticky
     - navigation.sections
@@ -19,18 +27,20 @@ theme:
     - search.share
     - content.code.copy
   palette:
-    - scheme: default
-      primary: custom
-      accent: custom
-      toggle:
-        icon: material/weather-night
-        name: Alternar para modo escuro
-    - scheme: slate
+    - media: "(prefers-color-scheme: dark)"
+      scheme: slate
       primary: custom
       accent: custom
       toggle:
         icon: material/weather-sunny
         name: Alternar para modo claro
+    - media: "(prefers-color-scheme: light)"
+      scheme: default
+      primary: custom
+      accent: custom
+      toggle:
+        icon: material/weather-night
+        name: Alternar para modo escuro
 
 extra_css:
   - stylesheets/extra.css
@@ -91,3 +101,8 @@ nav:
       - "0005 – Importação Local de OFX e PDF": adr/0005-importacao-local-ofx-pdf.md
       - "0006 – Curadoria e Benchmark": adr/0006-curadoria-benchmark.md
       - "0007 – Banco Vetorial e Embeddings": adr/0007-banco-vetorial-embeddings.md
+      - "0008 – Material Comparativo": adr/0008-material-comparativo-versionado.md
+      - "0009 – CI em Runners Hospedados": adr/0009-ci-em-runners-hospedados.md
+      - "0010 – Identidade Visual e Tema": adr/0010-identidade-visual-e-tema-do-sistema.md
+      - "0011 – Mascote e Arte Livre": adr/0011-mascote-onca-e-arte-de-marca-livre.md
+      - "0012 – Preferências e Ajustes": adr/0012-preferencias-locais-e-aba-de-ajustes.md

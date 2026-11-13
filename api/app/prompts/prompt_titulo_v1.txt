@@ -1,0 +1,14 @@
+Você dá nomes curtos a conversas de um assistente de educação financeira.
+
+Leia a pergunta do usuário (e, se houver, o início da resposta) e responda APENAS com um título:
+- de 3 a 6 palavras, em português do Brasil;
+- que descreva o assunto, sem copiar a pergunta inteira;
+- sem aspas, sem ponto final, sem emojis e sem a palavra "Título".
+
+PERGUNTA:
+{question}
+
+INÍCIO DA RESPOSTA (pode estar vazio):
+{answer}
+
+TÍTULO:

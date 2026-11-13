@@ -14,11 +14,21 @@ class Settings(BaseSettings):
 
     DATABASE_URL: str = "sqlite+aiosqlite:///trokim.db"
 
-    LLM_PROVIDER: str = "ollama"
-    LLM_MODEL: str = "qwen2.5"
-    LLM_API_BASE: str = "http://localhost:11434"
+    # Provedores: "litellm" (qualquer modelo), "ollama" (cliente direto) ou "mock".
+    LLM_PROVIDER: str = "litellm"
+    # Formato do LiteLLM: "ollama/qwen2.5", "openai/gpt-4o-mini", "anthropic/...".
+    LLM_MODEL: str = "ollama/qwen2.5"
+    # Vazio usa o padrão do provedor; para Ollama local é http://localhost:11434.
+    LLM_API_BASE: str = ""
     LLM_API_KEY: str = ""
     LLM_TIMEOUT: float = 60.0
+    # Raciocínio estendido ("thinking") dos modelos locais que o suportam. Desligado por
+    # padrão: respostas muito mais rápidas e sem gastar tokens "pensando".
+    LLM_THINKING: bool = False
+    # Tempo máximo para nomear uma conversa antes de usar o título de reserva.
+    LLM_TITLE_TIMEOUT: float = 25.0
+    # Modelo leve só para nomear conversas (ex.: "ollama/qwen2.5:1.5b"). Vazio = usa LLM_MODEL.
+    LLM_TITLE_MODEL: str = ""
     LLM_TEMPERATURE: float = 0.1
 
     RAG_SIMILARITY_THRESHOLD: float = 0.15

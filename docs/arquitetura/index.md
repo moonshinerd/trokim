@@ -9,6 +9,7 @@ A arquitetura do **Trokim** foi concebida para atender aos requisitos de alta pe
 1. **Camada Mobile (Android / Flutter):**
    - Desenvolvida em Dart/Flutter, garantindo tipagem estrita, modularidade por funcionalidades (*feature-first*) e compilação nativa para Android.
    - O aplicativo atua como o cliente primário, fornecendo telas de dashboard, assistente conversacional, gerenciador de lançamentos e importador de arquivos OFX e faturas PDF.
+   - A interface segue um design system próprio (paleta Champagne, Tidewater e Fortuna Gold, [ADR 0010](../adr/0010-identidade-visual-e-tema-do-sistema.md)) com tema claro/escuro pelo sistema, transições suaves que respeitam "reduzir movimento" e uma aba de **Ajustes** com preferências salvas só no aparelho ([ADR 0012](../adr/0012-preferencias-locais-e-aba-de-ajustes.md)). O mascote (onça-pintada) e a moeda 3D da abertura vêm de arte livre e trocável ([ADR 0011](../adr/0011-mascote-onca-e-arte-de-marca-livre.md)).
 2. **Camada Backend (FastAPI / Python 3.12+):**
    - Construída com FastAPI pela alta performance assíncrona e tipagem robusta com Pydantic v2.
    - Gerenciamento de dependências ultra-rápido com `uv`.

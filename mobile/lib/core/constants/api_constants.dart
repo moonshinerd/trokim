@@ -13,5 +13,6 @@ class ApiConstants {
 
   /// Endpoint preparado para a integração ponta a ponta do chat.
   static const String chatGenerateEndpoint = '/chat/generate';
+  static const String chatTitleEndpoint = '/chat/title';
   static const String budgetsCompareEndpoint = '/budgets/compare';
 }
