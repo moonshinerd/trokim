@@ -73,16 +73,9 @@ curl -X POST http://127.0.0.1:8000/v1/chat/generate \
 
 ---
 
-## 4. Apresentação Executiva e Demonstração Interativa
+## 4. Apresentação Executiva e Demonstração
 
-O Trokim inclui uma aplicação web interativa para apresentação e demonstração em tempo real das Entregas 1 & 2:
-
-```bash
-# Certifique-se de que a API está ativa (make api-run) e abra no navegador:
-open apresentacao_trokim.html
-```
-
-Na interface, é possível testar o chat conectado à API local, disparar cenários oficiais pré-configurados (rotativo, reserva de emergência, FGC e abstenção ética) e visualizar os metadados das evidências recuperadas.
+O painel de resultados e as perguntas de demonstração validadas pelo benchmark estão em [Apresentação Executiva](apresentacao.md).
 
 ---
 
