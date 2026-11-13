@@ -71,3 +71,29 @@ jobs:
       - uses: actions/checkout@v4
       - uses: astral-sh/setup-uv@v6
       - run: uvx zensical build --strict
+
+  mobile:
+    name: mobile (análise + testes)
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: mobile
+    steps:
+      - uses: actions/checkout@v4
+      - uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+          flutter-version: '3.50.0'
+          cache: true
+      - name: Registrar versão do SDK
+        run: flutter --version
+      - name: Instalar dependências fixadas
+        run: flutter pub get --enforce-lockfile
+      - name: Verificar formatação
+        run: dart format --output=none --set-exit-if-changed lib test
+      - name: Analisar aplicativo
+        # Avisos informativos (ex.: depreciação de material.dart no Flutter 3.50) não
+        # quebram o CI; erros e warnings continuam bloqueando.
+        run: flutter analyze --no-fatal-infos
+      - name: Executar testes mobile
+        run: flutter test

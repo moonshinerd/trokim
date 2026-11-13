@@ -5,14 +5,28 @@ from unittest.mock import AsyncMock, patch
 import httpx
 import pytest
 from fastapi.testclient import TestClient
+from test_rag import FakeEmbedder
 
 from app.clients.llm_factory import get_llm_provider
 from app.clients.mock_llm import MockLLMProvider
 from app.clients.ollama_provider import OllamaProvider
+from app.clients.sqlite_vector_store import SQLiteVectorStore
 from app.domain.models import EvidenceChunk
 from app.main import app
 from app.services.generation_service import ABSTENTION_MESSAGE, GenerationService
 from app.services.rag_service import RAGService
+
+
+@pytest.fixture
+def endpoint_service(tmp_path) -> GenerationService:
+    rag = RAGService(
+        embedder=FakeEmbedder(),
+        store=SQLiteVectorStore(tmp_path / "generation.db", dimension=2),
+    )
+    return GenerationService(
+        rag_service=rag,
+        llm_provider=MockLLMProvider(model_name="qwen2.5-mock"),
+    )
 
 
 @pytest.fixture
@@ -197,11 +211,10 @@ async def test_generation_service_naive_mode(sample_chunk: EvidenceChunk) -> Non
     assert len(result.evidences) == 1
 
 
-def test_endpoint_generate_grounded() -> None:
+def test_endpoint_generate_grounded(endpoint_service: GenerationService) -> None:
     from app.routers.v1.chat import get_generation_service
 
-    test_service = GenerationService(llm_provider=MockLLMProvider(model_name="qwen2.5-mock"))
-    app.dependency_overrides[get_generation_service] = lambda: test_service
+    app.dependency_overrides[get_generation_service] = lambda: endpoint_service
     try:
         client = TestClient(app)
         payload = {
@@ -220,11 +233,10 @@ def test_endpoint_generate_grounded() -> None:
         app.dependency_overrides.pop(get_generation_service, None)
 
 
-def test_endpoint_generate_abstained() -> None:
+def test_endpoint_generate_abstained(endpoint_service: GenerationService) -> None:
     from app.routers.v1.chat import get_generation_service
 
-    test_service = GenerationService(llm_provider=MockLLMProvider(model_name="qwen2.5-mock"))
-    app.dependency_overrides[get_generation_service] = lambda: test_service
+    app.dependency_overrides[get_generation_service] = lambda: endpoint_service
     try:
         client = TestClient(app)
         payload = {
@@ -241,11 +253,10 @@ def test_endpoint_generate_abstained() -> None:
         app.dependency_overrides.pop(get_generation_service, None)
 
 
-def test_endpoint_generate_pure() -> None:
+def test_endpoint_generate_pure(endpoint_service: GenerationService) -> None:
     from app.routers.v1.chat import get_generation_service
 
-    test_service = GenerationService(llm_provider=MockLLMProvider(model_name="qwen2.5-mock"))
-    app.dependency_overrides[get_generation_service] = lambda: test_service
+    app.dependency_overrides[get_generation_service] = lambda: endpoint_service
     try:
         client = TestClient(app)
         payload = {

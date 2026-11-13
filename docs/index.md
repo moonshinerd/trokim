@@ -1,7 +1,21 @@
-# Trokim — Assistente Financeiro Pessoal com IA
+---
+title: Trokim — Assistente Financeiro Pessoal com IA
+---
 
-> **Challenge 2 — Big Idea: Qualidade de Vida**  
-> *"Empoderando pessoas com IA para compreender melhor, decidir melhor e viver melhor."*
+<div class="tk-hero" markdown>
+
+<img src="assets/hero-coin.png" class="tk-coin" alt="Moeda do Trokim com a onça-pintada, mascote do projeto" width="300" height="300">
+
+# Entenda seu dinheiro. Decida com calma.
+
+Assistente financeiro pessoal de código aberto, **local-first**: seus extratos ficam no seu aparelho, os números são calculados por código e as orientações vêm de fontes oficiais (BCB, CVM e CFPB).
+
+[Conhecer a solução](apresentacao.md){ .md-button .md-button--primary }
+[Guia de uso](guia-de-uso.md){ .md-button }
+
+</div>
+
+*Challenge 2 — Big Idea: Qualidade de Vida. "Empoderando pessoas com IA para compreender melhor, decidir melhor e viver melhor."*
 
 O **Trokim** é um assistente financeiro de código aberto (*open-source*) projetado com foco em privacidade (*local-first*), explicabilidade determinística e fundamentação estrita em educação financeira oficial.
 
@@ -12,22 +26,30 @@ O **Trokim** é um assistente financeiro de código aberto (*open-source*) proje
 <div class="grid cards" markdown>
 
 -   :material-database-search:{ .lg .middle } **Base RAG Oficial com 20 Documentos**
+
     ---
+
     Acervo curado com metadados e hashes de órgãos reguladores: **BCB**, **CVM**, **CFPB** e **ANPD**.
     [:octicons-arrow-right-24: Ver Catálogo de Fontes](rag/catalogo.md)
 
 -   :material-chart-line-variant:{ .lg .middle } **Benchmark RAG Auditado**
+
     ---
+
     **98,78%** de Recall@3, **97,56%** de precisão fundamentada e **100% de abstenção ativa** em casos fora de escopo.
     [:octicons-arrow-right-24: Ver Métricas e Calibração](rag/index.md)
 
 -   :material-calculator:{ .lg .middle } **Cálculos 100% Determinísticos**
+
     ---
+
     Zero alucinação matemática. Lançamentos, balanços e médias são computados por motor estrito em Python.
     [:octicons-arrow-right-24: Ver ADR 0004](adr/0004-calculos-deterministicos.md)
 
 -   :material-cellphone:{ .lg .middle } **Mobile Flutter & Local-First**
+
     ---
+
     App Android integrado à API local em SQLite + `sqlite-vec`. Extratos OFX e faturas PDF processados no aparelho.
     [:octicons-arrow-right-24: Ver Guia de Uso](guia-de-uso.md)
 

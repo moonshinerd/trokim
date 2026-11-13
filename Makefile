@@ -1,20 +1,22 @@
-.PHONY: help setup lint format test docs-serve docs-build api-run mobile-run rag-eval synthetic-data research-test ingest comparison-validate
+.PHONY: help setup lint format test docs-serve docs-build api-run mobile-run rag-eval synthetic-data research-test ingest comparison-validate comparison-eval
 
 RAG_REPORT ?= artifacts/research/current.json
 
 help:
 	@echo "Comandos disponíveis no repositório Trokim:"
-	@echo "  make setup          - Cria api/.env e instala dependências locais (uv)"
-	@echo "  make lint           - Checagem estática com ruff na api e research"
-	@echo "  make format         - Auto-formatação com ruff"
-	@echo "  make test           - Executa a bateria de testes automatizados (pytest)"
-	@echo "  make docs-serve     - Inicia servidor local de documentação MkDocs (:8001)"
-	@echo "  make docs-build     - Compila a documentação estrita (--strict)"
-	@echo "  make api-run        - Inicia o servidor backend FastAPI (:8000)"
-	@echo "  make mobile-run     - Inicia o aplicativo Flutter no emulador/dispositivo Android"
-	@echo "  make rag-eval       - Executa benchmark e avaliação da base RAG (Semana 2)"
-	@echo "  make ingest         - Ingere a base de conhecimento no banco vetorial local"
-	@echo "  make synthetic-data - Gera extratos OFX e faturas sintéticas para testes LGPD"
+	@echo "  make setup               - Cria api/.env e instala dependências locais (uv)"
+	@echo "  make lint                - Checagem estática com ruff na api e research"
+	@echo "  make format              - Auto-formatação com ruff"
+	@echo "  make test                - Executa a bateria de testes automatizados (pytest)"
+	@echo "  make docs-serve          - Inicia servidor local de documentação MkDocs (:8001)"
+	@echo "  make docs-build          - Compila a documentação estrita (--strict)"
+	@echo "  make api-run             - Inicia o servidor backend FastAPI (:8000)"
+	@echo "  make mobile-run          - Inicia o aplicativo Flutter no emulador/dispositivo Android"
+	@echo "  make rag-eval            - Executa benchmark e avaliação da base RAG (Semana 2)"
+	@echo "  make ingest              - Ingere a base de conhecimento no banco vetorial local"
+	@echo "  make synthetic-data      - Gera extratos OFX e faturas sintéticas para testes LGPD"
+	@echo "  make comparison-validate - Valida integridade do material comparativo (Semana 3)"
+	@echo "  make comparison-eval     - Executa o benchmark comparativo das 3 abordagens (Semana 3)"
 
 setup:
 	@test -f api/.env || cp api/.env.example api/.env
@@ -42,6 +44,9 @@ research-test: rag-eval comparison-validate
 
 comparison-validate:
 	cd api && uv run python ../research/rag_benchmark/comparison.py
+
+comparison-eval:
+	cd api && uv run python ../research/rag_benchmark/run_comparison.py
 
 docs-serve:
 	uvx zensical serve

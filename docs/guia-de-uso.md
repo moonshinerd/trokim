@@ -73,16 +73,28 @@ curl -X POST http://127.0.0.1:8000/v1/chat/generate \
 
 ---
 
-## 4. Apresentação Executiva e Demonstração Interativa
+## 3.1. Aplicativo Mobile no Emulador
 
-O Trokim inclui uma aplicação web interativa para apresentação e demonstração em tempo real das Entregas 1 & 2:
+Para rodar o app Android (Flutter) com o backend local:
 
 ```bash
-# Certifique-se de que a API está ativa (make api-run) e abra no navegador:
-open apresentacao_trokim.html
+# Terminal 1: backend (a partir da raiz do repositório)
+DEBUG=false ENVIRONMENT=development make api-run
+
+# Terminal 2: app (requer Flutter estável, JDK 17 e Android SDK 36)
+cd mobile
+flutter pub get
+flutter test          # 36 testes
+flutter run           # emulador Android; a API fica em http://10.0.2.2:8000/v1
 ```
 
-Na interface, é possível testar o chat conectado à API local, disparar cenários oficiais pré-configurados (rotativo, reserva de emergência, FGC e abstenção ética) e visualizar os metadados das evidências recuperadas.
+No app, a aba **Ajustes** permite escolher o tema (por padrão segue o claro/escuro do aparelho), reduzir animações, desligar a abertura animada e **testar a conexão** com a API. Para apontar para outro endereço, use `--dart-define=API_BASE_URL=http://<ip>:8000/v1`.
+
+---
+
+## 4. Apresentação Executiva e Demonstração
+
+O painel de resultados e as perguntas de demonstração validadas pelo benchmark estão em [Apresentação Executiva](apresentacao.md).
 
 ---
 

@@ -468,6 +468,7 @@ def evaluate_comparison(
         concept_scores: list[float] = []
         expected_abstentions: list[bool] = []
         actual_abstentions: list[bool] = []
+        latencies: list[float] = []
         inconsistency_count = 0
         answered_count = 0
         details = []
@@ -482,6 +483,8 @@ def evaluate_comparison(
             expected_abstain = expected_abstention(case)
             expected_abstentions.append(expected_abstain)
             actual_abstentions.append(abstained)
+            if "latency_ms" in response and isinstance(response["latency_ms"], (int, float)):
+                latencies.append(float(response["latency_ms"]))
 
             f1 = None if expected_abstain else token_f1(answer, case["expected_answer"])
             if f1 is not None:
@@ -512,6 +515,7 @@ def evaluate_comparison(
                     "token_f1": f1,
                     "concept_recall": recall,
                     "factual_inconsistencies": findings,
+                    "latency_ms": response.get("latency_ms"),
                 }
             )
 
@@ -528,6 +532,7 @@ def evaluate_comparison(
             "inconsistent_answers": inconsistency_count,
             "abstention_f1": abstention["f1"],
             "abstention": abstention,
+            "latency_mean_ms": _mean(latencies),
             "case_details": details,
         }
 
@@ -562,8 +567,11 @@ def render_markdown(report: dict[str, Any]) -> str:
         "",
         f"Casos avaliados: **{report['case_count']}**.",
         "",
-        "| Abordagem | F1 de tokens | Concept recall | Inconsistência factual | Abstention F1 |",
-        "|---|---:|---:|---:|---:|",
+        (
+            "| Abordagem | F1 de tokens | Concept recall | "
+            "Inconsistência factual | Abstention F1 | Latência média |"
+        ),
+        "|---|---:|---:|---:|---:|---:|",
     ]
     for method in METHODS:
         metrics = report["methods"][method]
@@ -571,13 +579,17 @@ def render_markdown(report: dict[str, Any]) -> str:
         def percent(value: float | None) -> str:
             return "—" if value is None else f"{value:.1%}"
 
+        def latency(value: float | None) -> str:
+            return "—" if value is None else f"{value:.0f} ms"
+
         lines.append(
-            "| {label} | {token} | {concept} | {factual} | {abstention} |".format(
+            "| {label} | {token} | {concept} | {factual} | {abstention} | {latency} |".format(
                 label=metrics["label"],
                 token=percent(metrics["token_f1"]),
                 concept=percent(metrics["concept_recall"]),
                 factual=percent(metrics["factual_inconsistency_rate"]),
                 abstention=percent(metrics["abstention_f1"]),
+                latency=latency(metrics.get("latency_mean_ms")),
             )
         )
     lines.extend(

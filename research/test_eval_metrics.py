@@ -260,6 +260,45 @@ def test_cli_grava_json_e_markdown(tmp_path):
     assert exit_code == 0
     assert json.loads(json_path.read_text())["case_count"] == 1
     assert "Abstention F1" in markdown_path.read_text()
+    assert "Latência média" in markdown_path.read_text()
+
+
+def test_latencia_media_por_abordagem():
+    cases = [
+        {
+            "id": "C01",
+            "query": "Q",
+            "expected_answer": "A",
+            "concepts": [["A"]],
+            "relevant": [],
+            "expected_behavior": "responder",
+            "forbidden_claims": [],
+        }
+    ]
+    results = {
+        "cases": [
+            {
+                "id": "C01",
+                "responses": {
+                    "llm_pura": {"answer": "A", "status": "pure_baseline", "latency_ms": 120.0},
+                    "rag_ingenuo": {"answer": "A", "status": "naive_rag", "latency_ms": 250.0},
+                    "trokim_estruturado": {
+                        "answer": "A",
+                        "status": "grounded",
+                        "latency_ms": 180.0,
+                    },
+                },
+            }
+        ]
+    }
+    report = eval_comparison.evaluate_comparison(cases, results, sources={})
+    assert report["methods"]["llm_pura"]["latency_mean_ms"] == 120.0
+    assert report["methods"]["rag_ingenuo"]["latency_mean_ms"] == 250.0
+    assert report["methods"]["trokim_estruturado"]["latency_mean_ms"] == 180.0
+    md = eval_comparison.render_markdown(report)
+    assert "120 ms" in md
+    assert "250 ms" in md
+    assert "180 ms" in md
 
 
 def test_resultados_incompletos_sao_rejeitados():
