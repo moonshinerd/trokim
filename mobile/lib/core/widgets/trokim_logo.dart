@@ -2,9 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../theme/app_theme.dart';
 
-/// Marca do Trokim: um "T" cuja barra superior é uma troca (⇄) entre duas
-/// setas, e cuja haste termina numa moeda. "Trokim" vem de trocar/troco:
-/// converter dispersão de contas em decisões claras.
+/// Marca do Trokim: um "T" sólido e um ponto dourado, o "troco".
 class TrokimMark extends StatelessWidget {
   const TrokimMark({super.key, this.size = 40, this.onDark = false});
 
@@ -31,56 +29,37 @@ class _MarkPainter extends CustomPainter {
 
   @override
   void paint(Canvas canvas, Size size) {
-    final s = size.width / 64;
-    canvas.scale(s);
+    canvas.scale(size.width / 64);
 
     if (!onDark) {
-      final bg = RRect.fromRectAndRadius(
-        const Rect.fromLTWH(0, 0, 64, 64),
-        const Radius.circular(18),
-      );
       canvas.drawRRect(
-        bg,
-        Paint()
-          ..shader = const LinearGradient(
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-            colors: [AppTheme.emerald, AppTheme.forest],
-          ).createShader(const Rect.fromLTWH(0, 0, 64, 64)),
+        RRect.fromRectAndRadius(
+          const Rect.fromLTWH(0, 0, 64, 64),
+          const Radius.circular(18),
+        ),
+        Paint()..color = AppTheme.forest,
       );
     }
 
-    final stroke = Paint()
-      ..color = Colors.white
-      ..style = PaintingStyle.stroke
-      ..strokeWidth = 5.5
-      ..strokeCap = StrokeCap.round
-      ..strokeJoin = StrokeJoin.round;
-
-    // Barra de troca ⇄ (duas setas opostas).
-    final top = Path()
-      ..moveTo(16, 21)
-      ..lineTo(46, 21)
-      ..moveTo(40, 15)
-      ..lineTo(46, 21)
-      ..lineTo(40, 27);
-    final bottom = Path()
-      ..moveTo(48, 33)
-      ..lineTo(18, 33)
-      ..moveTo(24, 27)
-      ..lineTo(18, 33)
-      ..lineTo(24, 39);
-    // Haste do T.
-    final stem = Path()
-      ..moveTo(32, 33)
-      ..lineTo(32, 44);
-
-    canvas.drawPath(top, stroke);
-    canvas.drawPath(bottom, stroke);
-    canvas.drawPath(stem, stroke);
-
-    // Moeda no pé da haste.
-    canvas.drawCircle(const Offset(32, 51), 5, Paint()..color = AppTheme.coin);
+    final white = Paint()..color = Colors.white;
+    // "T" geométrico: barra e haste sólidas.
+    canvas.drawRRect(
+      RRect.fromRectAndRadius(
+        const Rect.fromLTWH(16, 17, 32, 9),
+        const Radius.circular(4.5),
+      ),
+      white,
+    );
+    canvas.drawRRect(
+      RRect.fromRectAndRadius(
+        const Rect.fromLTWH(24, 17, 9, 31),
+        const Radius.circular(4.5),
+      ),
+      white,
+    );
+    // O "troco": um ponto dourado.
+    canvas.drawCircle(
+        const Offset(42, 43.5), 4.5, Paint()..color = AppTheme.coin);
   }
 
   @override
