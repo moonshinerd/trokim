@@ -19,11 +19,32 @@ class ChatRepository {
   final ApiClient _apiClient;
 
   ChatRepository({ApiClient? apiClient})
-      : _apiClient = apiClient ?? ApiClient();
+    : _apiClient = apiClient ?? ApiClient();
 
-  Future<AssistantReply> ask(String message) async {
+  /// Pede um título curto ao LLM. Devolve `null` se a API não conseguir
+  /// (o app mantém o título provisório; nunca mostra erro por isso).
+  Future<String?> generateTitle(String message, {String? answer}) async {
     try {
-      return AssistantReply.fromJson(await _apiClient.generateAssistant(message));
+      final json = await _apiClient.generateTitle(message, answer: answer);
+      final title = (json['title'] as String?)?.trim();
+      return (title == null || title.isEmpty) ? null : title;
+    } on Object {
+      return null;
+    }
+  }
+
+  /// Consulta o assistente. Com [generative] (padrão), o LLM local redige a
+  /// resposta (`/chat/generate`); sem ele, só a busca extrativa (`/chat/ask`).
+  Future<AssistantReply> ask(String message, {bool generative = true}) async {
+    try {
+      if (!generative) {
+        return AssistantReply.fromExtractiveJson(
+          await _apiClient.askAssistant(message),
+        );
+      }
+      return AssistantReply.fromJson(
+        await _apiClient.generateAssistant(message),
+      );
     } on TimeoutException {
       throw const ChatException(
         'O assistente demorou para responder. Tente novamente.',

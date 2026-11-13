@@ -24,32 +24,39 @@ void main() {
   }
 
   http.Response response({bool answered = true}) => http.Response.bytes(
-    utf8.encode(jsonEncode(<String, dynamic>{
-      'query': 'Como criar uma reserva?',
-      'mode': 'grounded',
-      'model': 'qwen2.5',
-      'answered': answered,
-      'status': answered ? 'grounded' : 'abstained',
-      'answer': answered ? 'Resposta oficial' : 'Não há evidências suficientes.',
-      'evidences': answered
-          ? [
-              {
-                'id': 'cvm_reserva_1',
-                'source_name': 'CVM',
-                'document_title': 'Reserva de emergência',
-                'section': 'Planejamento',
-                'content': 'Mantenha uma reserva.',
-                'score': 0.42,
-              },
-            ]
-          : [],
-    })),
+    utf8.encode(
+      jsonEncode(<String, dynamic>{
+        'query': 'Como criar uma reserva?',
+        'mode': 'grounded',
+        'model': 'qwen2.5',
+        'answered': answered,
+        'status': answered ? 'grounded' : 'abstained',
+        'answer': answered
+            ? 'Resposta oficial'
+            : 'Não há evidências suficientes.',
+        'evidences': answered
+            ? [
+                {
+                  'id': 'cvm_reserva_1',
+                  'source_name': 'CVM',
+                  'document_title': 'Reserva de emergência',
+                  'section': 'Planejamento',
+                  'content': 'Mantenha uma reserva.',
+                  'score': 0.42,
+                },
+              ]
+            : [],
+      }),
+    ),
     200,
   );
 
   test('preserva boas-vindas e expõe lista imutável', () {
     final controller = controllerFor((_) async => response());
-    expect(controller.messages.single.text, startsWith('Olá! Sou o assistente do Trokim.'));
+    expect(
+      controller.messages.single.text,
+      startsWith('Olá! Sou o assistente do Trokim.'),
+    );
     expect(controller.messages.single.isUser, isFalse);
     expect(controller.isLoading, isFalse);
     expect(() => controller.messages.clear(), throwsUnsupportedError);
@@ -60,7 +67,10 @@ void main() {
     var calls = 0;
     final controller = controllerFor((request) {
       calls++;
-      expect(jsonDecode(request.body), {'message': 'Reserva?', 'mode': 'grounded'});
+      expect(jsonDecode(request.body), {
+        'message': 'Reserva?',
+        'mode': 'grounded',
+      });
       return pending.future;
     });
     await controller.send('   ');
@@ -108,17 +118,20 @@ void main() {
     final repository = ChatRepository(
       apiClient: ApiClient(
         generationTimeout: const Duration(milliseconds: 10),
-        client: abortableClient((request) async {
-          expect(active, 0);
-          active++;
-          calls++;
-          if (calls == 1) return pending.future;
-          active--;
-          return response();
-        }, onAbort: () {
-          active--;
-          aborted = true;
-        }),
+        client: abortableClient(
+          (request) async {
+            expect(active, 0);
+            active++;
+            calls++;
+            if (calls == 1) return pending.future;
+            active--;
+            return response();
+          },
+          onAbort: () {
+            active--;
+            aborted = true;
+          },
+        ),
       ),
     );
     final controller = ChatController(repository: repository);
@@ -160,28 +173,31 @@ void main() {
   });
 
   for (final fails in [false, true]) {
-    test('dispose durante ${fails ? 'erro' : 'sucesso'} não notifica nem altera mensagens', () async {
-      final pending = Completer<http.Response>();
-      final controller = controllerFor((_) => pending.future);
-      var notifications = 0;
-      controller.addListener(() => notifications++);
-      final sending = controller.send('Reserva?');
-      expect(notifications, 1);
-      await Future<void>.delayed(Duration.zero);
-      final beforeDispose = controller.messages;
-      controller.dispose();
-      if (fails) {
-        pending.completeError(http.ClientException('Sem conexão'));
-      } else {
-        pending.complete(response());
-      }
-      await sending;
-      expect(notifications, 1);
-      expect(controller.messages, beforeDispose);
-      expect(controller.isLoading, isFalse);
-      await controller.send('Depois do dispose');
-      await controller.retry();
-      expect(controller.messages, beforeDispose);
-    });
+    test(
+      'dispose durante ${fails ? 'erro' : 'sucesso'} não notifica nem altera mensagens',
+      () async {
+        final pending = Completer<http.Response>();
+        final controller = controllerFor((_) => pending.future);
+        var notifications = 0;
+        controller.addListener(() => notifications++);
+        final sending = controller.send('Reserva?');
+        expect(notifications, 1);
+        await Future<void>.delayed(Duration.zero);
+        final beforeDispose = controller.messages;
+        controller.dispose();
+        if (fails) {
+          pending.completeError(http.ClientException('Sem conexão'));
+        } else {
+          pending.complete(response());
+        }
+        await sending;
+        expect(notifications, 1);
+        expect(controller.messages, beforeDispose);
+        expect(controller.isLoading, isFalse);
+        await controller.send('Depois do dispose');
+        await controller.retry();
+        expect(controller.messages, beforeDispose);
+      },
+    );
   }
 }

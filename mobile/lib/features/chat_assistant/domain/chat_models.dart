@@ -3,10 +3,10 @@ enum AssistantStatus {
   abstained;
 
   static AssistantStatus fromJson(Object? value) => switch (value) {
-        'grounded' => AssistantStatus.grounded,
-        'abstained' => AssistantStatus.abstained,
-        _ => throw const FormatException('Status incompatível com o chat.'),
-      };
+    'grounded' => AssistantStatus.grounded,
+    'abstained' => AssistantStatus.abstained,
+    _ => throw const FormatException('Status incompatível com o chat.'),
+  };
 }
 
 String _requiredText(Map<String, dynamic> json, String key) {
@@ -54,6 +54,17 @@ final class Evidence {
       score: score.toDouble(),
     );
   }
+
+  Map<String, dynamic> toJson() => {
+    'id': id,
+    'document_id': documentId,
+    'source_name': sourceName,
+    'source_url': sourceUrl,
+    'document_title': documentTitle,
+    'section': section,
+    'content': content,
+    'score': score,
+  };
 }
 
 final class AssistantReply {
@@ -74,6 +85,16 @@ final class AssistantReply {
     required this.answer,
     required List<Evidence> evidences,
   }) : evidences = List.unmodifiable(evidences);
+
+  /// Resposta da busca extrativa (`/chat/ask`): mesmo contrato estrito, mas sem
+  /// `mode` e sem `model`, pois nenhum LLM participa.
+  factory AssistantReply.fromExtractiveJson(Map<String, dynamic> json) {
+    return AssistantReply.fromJson({
+      ...json,
+      'mode': 'grounded',
+      'model': 'busca extrativa',
+    });
+  }
 
   factory AssistantReply.fromJson(Map<String, dynamic> json) {
     if (json['mode'] != 'grounded') {
@@ -110,6 +131,9 @@ class ChatMessage {
   final bool isError;
   final AssistantStatus? status;
 
+  /// Modelo que gerou a resposta (ex.: `ollama/qwen2.5`), se houver.
+  final String? model;
+
   bool get isAbstained => status == AssistantStatus.abstained;
 
   ChatMessage({
@@ -118,5 +142,31 @@ class ChatMessage {
     List<Evidence> evidences = const [],
     this.isError = false,
     this.status,
+    this.model,
   }) : evidences = List.unmodifiable(evidences);
+
+  /// Lê uma mensagem guardada no aparelho (formato próprio do histórico).
+  factory ChatMessage.fromJson(Map<String, dynamic> json) => ChatMessage(
+    isUser: json['is_user'] as bool,
+    text: json['text'] as String,
+    evidences: (json['evidences'] as List<dynamic>? ?? const [])
+        .map((value) => Evidence.fromJson(value as Map<String, dynamic>))
+        .toList(),
+    isError: json['is_error'] as bool? ?? false,
+    status: switch (json['status']) {
+      'grounded' => AssistantStatus.grounded,
+      'abstained' => AssistantStatus.abstained,
+      _ => null,
+    },
+    model: json['model'] as String?,
+  );
+
+  Map<String, dynamic> toJson() => {
+    'is_user': isUser,
+    'text': text,
+    'evidences': evidences.map((e) => e.toJson()).toList(),
+    'is_error': isError,
+    'status': status?.name,
+    'model': model,
+  };
 }

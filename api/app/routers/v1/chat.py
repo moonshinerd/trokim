@@ -1,12 +1,13 @@
 from functools import lru_cache
 from typing import Annotated, Literal
 
-from fastapi import APIRouter, Depends, Request
+from fastapi import APIRouter, Depends, HTTPException, Request
 from pydantic import BaseModel, Field
 
 from app.core.request_lifecycle import run_while_connected
 from app.services.generation_service import GenerationService
 from app.services.rag_service import RAGService
+from app.services.title_service import TitleService
 
 router = APIRouter(prefix="/chat", tags=["Chat & RAG"])
 
@@ -19,6 +20,11 @@ def get_rag_service() -> RAGService:
 @lru_cache
 def get_generation_service() -> GenerationService:
     return GenerationService()
+
+
+@lru_cache
+def get_title_service() -> TitleService:
+    return TitleService()
 
 
 class ChatQueryRequest(BaseModel):
@@ -110,13 +116,58 @@ async def generate_financial_response(
     connection: Request,
     generation_service: Annotated[GenerationService, Depends(get_generation_service)],
 ) -> GenerateQueryResponse:
-    result = await run_while_connected(
-        connection,
-        generation_service.generate_answer(
-            request.message,
-            mode=request.mode,
-            top_k=request.top_k,
-            temperature=request.temperature,
-        ),
-    )
+    try:
+        result = await run_while_connected(
+            connection,
+            generation_service.generate_answer(
+                request.message,
+                mode=request.mode,
+                top_k=request.top_k,
+                temperature=request.temperature,
+            ),
+        )
+    except RuntimeError as exc:
+        # Modelo fora do ar, inexistente ou lento demais: erro claro, não um 500 cru.
+        raise HTTPException(
+            status_code=503,
+            detail="O modelo de linguagem está indisponível no momento. Tente novamente.",
+        ) from exc
     return GenerateQueryResponse.model_validate(result.model_dump())
+
+
+class TitleRequest(BaseModel):
+    message: str = Field(
+        min_length=1,
+        max_length=1000,
+        description="Primeira pergunta da conversa.",
+        examples=["Como montar uma reserva de emergência?"],
+    )
+    answer: str | None = Field(
+        default=None,
+        max_length=4000,
+        description="Início da resposta (opcional), para dar contexto ao título.",
+    )
+
+
+class TitleResponse(BaseModel):
+    title: str
+    source: Literal["llm", "fallback"]
+    model: str | None = None
+
+
+@router.post(
+    "/title",
+    response_model=TitleResponse,
+    summary="Nomeia uma conversa com o LLM local",
+    description=(
+        "Gera um título curto (3 a 6 palavras) para a conversa usando o modelo configurado. "
+        "Se o modelo estiver indisponível ou lento, devolve um título determinístico de "
+        "reserva (`source = fallback`), então o app nunca fica sem título."
+    ),
+)
+async def generate_conversation_title(
+    request: TitleRequest,
+    title_service: Annotated[TitleService, Depends(get_title_service)],
+) -> TitleResponse:
+    result = await title_service.generate_title(request.message, request.answer)
+    return TitleResponse.model_validate(result.model_dump())

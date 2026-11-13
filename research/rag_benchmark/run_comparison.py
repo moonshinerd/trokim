@@ -519,11 +519,22 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--chart-svg", type=Path, default=DEFAULT_CHART_SVG)
     parser.add_argument(
         "--provider",
-        choices=["ollama", "mock"],
+        choices=["litellm", "ollama", "mock"],
         default=None,
-        help="Provedor LLM (ollama local ou mock determinístico).",
+        help=(
+            "Provedor LLM: litellm (padrão; qualquer modelo pela camada do app, a mesma do "
+            "/v1/chat/generate), ollama (cliente direto) ou mock determinístico."
+        ),
     )
-    parser.add_argument("--model", type=str, default="qwen2.5", help="Modelo de linguagem.")
+    parser.add_argument(
+        "--model",
+        type=str,
+        default=None,
+        help=(
+            "Modelo no formato do LiteLLM (ex.: ollama/qwen2.5, openai/gpt-4o-mini). "
+            "Padrão: LLM_MODEL do api/.env."
+        ),
+    )
     parser.add_argument("--temperature", type=float, default=0.1, help="Temperatura de amostragem.")
     parser.add_argument(
         "--timeout", type=float, default=120.0, help="Timeout em segundos para o LLM."
@@ -536,17 +547,22 @@ def main(argv: list[str] | None = None) -> int:
         if args.limit:
             cases = cases[: args.limit]
 
-        provider_name = args.provider or "ollama"
+        # Mesma camada de modelos do app: o benchmark mede o que o usuário realmente usa.
+        provider_name = args.provider or "litellm"
         if provider_name == "ollama":
             from app.clients.ollama_provider import OllamaProvider
 
             llm: LLMProvider = OllamaProvider(model=args.model, timeout=args.timeout)
+        elif provider_name == "litellm":
+            from app.clients.litellm_provider import LiteLLMProvider
+
+            llm = LiteLLMProvider(model=args.model, timeout=args.timeout)
         else:
             llm = get_llm_provider(provider_name=provider_name, model_name=args.model)
 
         print(
             f"Iniciando benchmark: {len(cases)} casos | "
-            f"Provedor: {provider_name} | Modelo: {args.model}"
+            f"Provedor: {provider_name} | Modelo: {getattr(llm, 'model', args.model)}"
         )
         print("Carregando e indexando corpus unificado (22 fontes)...")
         retriever = UnifiedCorpusRetriever()

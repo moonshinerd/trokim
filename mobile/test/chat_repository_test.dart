@@ -33,7 +33,9 @@ void main() {
     'model': 'qwen2.5',
     'answered': answered,
     'status': answered ? 'grounded' : 'abstained',
-    'answer': answered ? 'Organize sua reserva.' : 'Não há evidências suficientes.',
+    'answer': answered
+        ? 'Organize sua reserva.'
+        : 'Não há evidências suficientes.',
     'evidences': answered
         ? [
             <String, dynamic>{
@@ -81,28 +83,34 @@ void main() {
   });
 
   for (final omitFields in [true, false]) {
-    test('aceita metadados opcionais ${omitFields ? 'ausentes' : 'nulos'}', () async {
-      final body = payload();
-      final evidence = (body['evidences'] as List).single as Map;
-      for (final key in ['document_id', 'source_url']) {
-        if (omitFields) {
-          evidence.remove(key);
-        } else {
-          evidence[key] = null;
+    test(
+      'aceita metadados opcionais ${omitFields ? 'ausentes' : 'nulos'}',
+      () async {
+        final body = payload();
+        final evidence = (body['evidences'] as List).single as Map;
+        for (final key in ['document_id', 'source_url']) {
+          if (omitFields) {
+            evidence.remove(key);
+          } else {
+            evidence[key] = null;
+          }
         }
-      }
-      final repository = repositoryFor(
-        (_) async => http.Response.bytes(utf8.encode(jsonEncode(body)), 200),
-      );
-      final reply = await repository.ask('Reserva?');
-      expect(reply.evidences.single.documentId, isNull);
-      expect(reply.evidences.single.sourceUrl, isNull);
-    });
+        final repository = repositoryFor(
+          (_) async => http.Response.bytes(utf8.encode(jsonEncode(body)), 200),
+        );
+        final reply = await repository.ask('Reserva?');
+        expect(reply.evidences.single.documentId, isNull);
+        expect(reply.evidences.single.sourceUrl, isNull);
+      },
+    );
   }
 
   test('converte abstenção sem evidências', () async {
     final repository = repositoryFor(
-      (_) async => http.Response.bytes(utf8.encode(jsonEncode(payload(answered: false))), 200),
+      (_) async => http.Response.bytes(
+        utf8.encode(jsonEncode(payload(answered: false))),
+        200,
+      ),
     );
     final reply = await repository.ask('Pergunta sem base');
     expect(reply.answered, isFalse);
@@ -117,11 +125,13 @@ void main() {
       );
       await expectLater(
         repository.ask('Reserva?'),
-        throwsA(isA<ChatException>().having(
-          (error) => error.message,
-          'mensagem',
-          contains(status == 422 ? '1000 caracteres' : 'indisponível'),
-        )),
+        throwsA(
+          isA<ChatException>().having(
+            (error) => error.message,
+            'mensagem',
+            contains(status == 422 ? '1000 caracteres' : 'indisponível'),
+          ),
+        ),
       );
     });
   }
@@ -134,11 +144,13 @@ void main() {
       final repository = repositoryFor((_) async => throw error);
       await expectLater(
         repository.ask('Reserva?'),
-        throwsA(isA<ChatException>().having(
-          (error) => error.message,
-          'mensagem',
-          contains('Verifique sua conexão'),
-        )),
+        throwsA(
+          isA<ChatException>().having(
+            (error) => error.message,
+            'mensagem',
+            contains('Verifique sua conexão'),
+          ),
+        ),
       );
     });
   }
@@ -151,25 +163,31 @@ void main() {
     );
     await expectLater(
       repository.ask('Reserva?'),
-      throwsA(isA<ChatException>().having(
-        (error) => error.message,
-        'mensagem',
-        contains('demorou'),
-      )),
+      throwsA(
+        isA<ChatException>().having(
+          (error) => error.message,
+          'mensagem',
+          contains('demorou'),
+        ),
+      ),
     );
     pending.complete(http.Response('{}', 200));
   });
 
   for (final body in ['não é JSON', '[]', '{}']) {
     test('traduz resposta inválida: $body', () async {
-      final repository = repositoryFor((_) async => http.Response.bytes(utf8.encode(body), 200));
+      final repository = repositoryFor(
+        (_) async => http.Response.bytes(utf8.encode(body), 200),
+      );
       await expectLater(
         repository.ask('Reserva?'),
-        throwsA(isA<ChatException>().having(
-          (error) => error.message,
-          'mensagem',
-          contains('resposta inválida'),
-        )),
+        throwsA(
+          isA<ChatException>().having(
+            (error) => error.message,
+            'mensagem',
+            contains('resposta inválida'),
+          ),
+        ),
       );
     });
   }
@@ -200,11 +218,13 @@ void main() {
       });
       await expectLater(
         repository.ask('Reserva?'),
-        throwsA(isA<ChatException>().having(
-          (error) => error.message,
-          'mensagem',
-          contains('resposta inválida'),
-        )),
+        throwsA(
+          isA<ChatException>().having(
+            (error) => error.message,
+            'mensagem',
+            contains('resposta inválida'),
+          ),
+        ),
       );
       expect(requests, 1);
     });
@@ -215,41 +235,54 @@ void main() {
     final repository = repositoryFor(
       (_) async => http.Response.bytes(utf8.encode(jsonEncode(body)), 200),
     );
-    await expectLater(repository.ask('Reserva?'), throwsA(isA<ChatException>()));
-  });
-
-  test('timeout da geração é independente do prazo das demais chamadas', () async {
-    final pending = Completer<http.Response>();
-    final client = ApiClient(
-      client: MockClient((_) => pending.future),
-      timeout: const Duration(milliseconds: 1),
-      generationTimeout: const Duration(seconds: 1),
-    );
-    final repository = ChatRepository(apiClient: client);
-    addTearDown(repository.close);
-    final asking = repository.ask('Reserva?');
-    await Future<void>.delayed(const Duration(milliseconds: 10));
-    pending.complete(http.Response.bytes(utf8.encode(jsonEncode(payload())), 200));
-    expect((await asking).status, AssistantStatus.grounded);
-  });
-
-  test('falha do modelo é erro e não abstenção nem resposta extrativa', () async {
-    var requests = 0;
-    final repository = repositoryFor((request) async {
-      requests++;
-      expect(request.url.path, '/v1/chat/generate');
-      return http.Response('Erro interno sensível do modelo', 500);
-    });
     await expectLater(
       repository.ask('Reserva?'),
-      throwsA(isA<ChatException>().having(
-        (error) => error.message,
-        'mensagem',
-        allOf(contains('indisponível'), isNot(contains('sensível'))),
-      )),
+      throwsA(isA<ChatException>()),
     );
-    expect(requests, 1);
   });
+
+  test(
+    'timeout da geração é independente do prazo das demais chamadas',
+    () async {
+      final pending = Completer<http.Response>();
+      final client = ApiClient(
+        client: MockClient((_) => pending.future),
+        timeout: const Duration(milliseconds: 1),
+        generationTimeout: const Duration(seconds: 1),
+      );
+      final repository = ChatRepository(apiClient: client);
+      addTearDown(repository.close);
+      final asking = repository.ask('Reserva?');
+      await Future<void>.delayed(const Duration(milliseconds: 10));
+      pending.complete(
+        http.Response.bytes(utf8.encode(jsonEncode(payload())), 200),
+      );
+      expect((await asking).status, AssistantStatus.grounded);
+    },
+  );
+
+  test(
+    'falha do modelo é erro e não abstenção nem resposta extrativa',
+    () async {
+      var requests = 0;
+      final repository = repositoryFor((request) async {
+        requests++;
+        expect(request.url.path, '/v1/chat/generate');
+        return http.Response('Erro interno sensível do modelo', 500);
+      });
+      await expectLater(
+        repository.ask('Reserva?'),
+        throwsA(
+          isA<ChatException>().having(
+            (error) => error.message,
+            'mensagem',
+            allOf(contains('indisponível'), isNot(contains('sensível'))),
+          ),
+        ),
+      );
+      expect(requests, 1);
+    },
+  );
 
   test('timeout também aborta durante a leitura do corpo', () async {
     var aborted = false;
@@ -257,36 +290,50 @@ void main() {
       await body.toBytes();
       final responseBody = StreamController<List<int>>();
       final abort = (request as http.Abortable).abortTrigger!;
-      unawaited(abort.then((_) async {
-        aborted = true;
-        responseBody.addError(http.RequestAbortedException(request.url));
-        await responseBody.close();
-      }));
+      unawaited(
+        abort.then((_) async {
+          aborted = true;
+          responseBody.addError(http.RequestAbortedException(request.url));
+          await responseBody.close();
+        }),
+      );
       return http.StreamedResponse(responseBody.stream, 200);
     });
-    final repository = ChatRepository(apiClient: ApiClient(
-      client: transport,
-      generationTimeout: const Duration(milliseconds: 10),
-    ));
-    addTearDown(repository.close);
-    await expectLater(repository.ask('Reserva?'), throwsA(
-      isA<ChatException>().having(
-        (error) => error.message, 'mensagem', contains('demorou'),
+    final repository = ChatRepository(
+      apiClient: ApiClient(
+        client: transport,
+        generationTimeout: const Duration(milliseconds: 10),
       ),
-    ));
+    );
+    addTearDown(repository.close);
+    await expectLater(
+      repository.ask('Reserva?'),
+      throwsA(
+        isA<ChatException>().having(
+          (error) => error.message,
+          'mensagem',
+          contains('demorou'),
+        ),
+      ),
+    );
     expect(aborted, isTrue);
   });
 
   test('fechar cliente aborta uma geração pendente', () async {
     final started = Completer<void>();
     var aborted = false;
-    final client = ApiClient(client: abortableClient((_) {
-      started.complete();
-      return Completer<http.Response>().future;
-    }, onAbort: () => aborted = true));
+    final client = ApiClient(
+      client: abortableClient((_) {
+        started.complete();
+        return Completer<http.Response>().future;
+      }, onAbort: () => aborted = true),
+    );
     addTearDown(client.close);
     final asking = client.generateAssistant('Reserva?');
-    final assertion = expectLater(asking, throwsA(isA<http.RequestAbortedException>()));
+    final assertion = expectLater(
+      asking,
+      throwsA(isA<http.RequestAbortedException>()),
+    );
     await started.future;
     client.close();
     await assertion;
@@ -300,11 +347,15 @@ void main() {
   }
 
   test('ApiClient expõe status HTTP sem decodificar corpo de erro', () async {
-    final client = ApiClient(client: MockClient((_) async => http.Response('', 500)));
+    final client = ApiClient(
+      client: MockClient((_) async => http.Response('', 500)),
+    );
     addTearDown(client.close);
     await expectLater(
       client.generateAssistant('Reserva?'),
-      throwsA(isA<ApiException>().having((error) => error.statusCode, 'status', 500)),
+      throwsA(
+        isA<ApiException>().having((error) => error.statusCode, 'status', 500),
+      ),
     );
   });
 }

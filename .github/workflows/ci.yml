@@ -92,6 +92,8 @@ jobs:
       - name: Verificar formatação
         run: dart format --output=none --set-exit-if-changed lib test
       - name: Analisar aplicativo
-        run: flutter analyze
+        # Avisos informativos (ex.: depreciação de material.dart no Flutter 3.50) não
+        # quebram o CI; erros e warnings continuam bloqueando.
+        run: flutter analyze --no-fatal-infos
       - name: Executar testes mobile
         run: flutter test

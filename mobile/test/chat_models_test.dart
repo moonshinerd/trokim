@@ -3,23 +3,23 @@ import 'package:trokim/features/chat_assistant/domain/chat_models.dart';
 
 void main() {
   Map<String, dynamic> evidence() => {
-        'id': 'cvm_reserva_1',
-        'source_name': 'CVM',
-        'document_title': 'Reserva',
-        'section': 'Planejamento',
-        'content': 'Priorize liquidez e baixo risco.',
-        'score': 0.8,
-      };
+    'id': 'cvm_reserva_1',
+    'source_name': 'CVM',
+    'document_title': 'Reserva',
+    'section': 'Planejamento',
+    'content': 'Priorize liquidez e baixo risco.',
+    'score': 0.8,
+  };
 
   Map<String, dynamic> reply({bool abstained = false}) => {
-        'query': 'Reserva?',
-        'mode': 'grounded',
-        'model': 'qwen2.5',
-        'status': abstained ? 'abstained' : 'grounded',
-        'answered': !abstained,
-        'answer': abstained ? 'Sem evidências.' : 'Monte uma reserva.',
-        'evidences': abstained ? [] : [evidence()],
-      };
+    'query': 'Reserva?',
+    'mode': 'grounded',
+    'model': 'qwen2.5',
+    'status': abstained ? 'abstained' : 'grounded',
+    'answered': !abstained,
+    'answer': abstained ? 'Sem evidências.' : 'Monte uma reserva.',
+    'evidences': abstained ? [] : [evidence()],
+  };
 
   for (final abstained in [false, true]) {
     test('status é a origem do estado de abstenção: $abstained', () {
@@ -37,7 +37,13 @@ void main() {
     });
   }
 
-  for (final field in ['id', 'source_name', 'document_title', 'section', 'content']) {
+  for (final field in [
+    'id',
+    'source_name',
+    'document_title',
+    'section',
+    'content',
+  ]) {
     test('Evidence rejeita campo vazio diretamente: $field', () {
       final json = evidence()..[field] = '   ';
       expect(() => Evidence.fromJson(json), throwsFormatException);

@@ -16,12 +16,16 @@ class ApiClient {
   final http.Client _client;
   final Duration timeout;
   final Duration generationTimeout;
+
+  /// Nomear a conversa com o LLM local não pode travar o chat.
+  final Duration titleTimeout;
   final Set<Completer<void>> _generationAborts = {};
 
   ApiClient({
     this.baseUrl = ApiConstants.defaultBaseUrl,
     http.Client? client,
     this.timeout = const Duration(seconds: 15),
+    this.titleTimeout = const Duration(seconds: 40),
     this.generationTimeout = const Duration(
       seconds: ApiConstants.chatGenerateTimeoutSeconds,
     ),
@@ -49,27 +53,51 @@ class ApiClient {
     return _decode(response);
   }
 
+  /// Pede ao LLM local um título curto para a conversa.
+  Future<Map<String, dynamic>> generateTitle(
+    String message, {
+    String? answer,
+  }) async {
+    final response = await _client
+        .post(
+          Uri.parse('$baseUrl${ApiConstants.chatTitleEndpoint}'),
+          headers: {'Content-Type': 'application/json'},
+          body: jsonEncode({
+            'message': message,
+            if (answer != null && answer.isNotEmpty) 'answer': answer,
+          }),
+        )
+        .timeout(titleTimeout);
+    return _decode(response);
+  }
+
   Future<Map<String, dynamic>> generateAssistant(String message) async {
     final abort = Completer<void>();
     _generationAborts.add(abort);
-    final request = http.AbortableRequest(
-      'POST',
-      Uri.parse('$baseUrl${ApiConstants.chatGenerateEndpoint}'),
-      abortTrigger: abort.future,
-    )
-      ..headers['Content-Type'] = 'application/json'
-      ..body = jsonEncode({'message': message, 'mode': 'grounded'});
+    final request =
+        http.AbortableRequest(
+            'POST',
+            Uri.parse('$baseUrl${ApiConstants.chatGenerateEndpoint}'),
+            abortTrigger: abort.future,
+          )
+          ..headers['Content-Type'] = 'application/json'
+          ..body = jsonEncode({'message': message, 'mode': 'grounded'});
     var timedOut = false;
     final timer = Timer(generationTimeout, () {
       timedOut = true;
       if (!abort.isCompleted) abort.complete();
     });
     try {
-      final response = await http.Response.fromStream(await _client.send(request));
+      final response = await http.Response.fromStream(
+        await _client.send(request),
+      );
       return _decode(response);
     } on http.RequestAbortedException {
       if (timedOut) {
-        throw TimeoutException('Tempo limite da geração excedido.', generationTimeout);
+        throw TimeoutException(
+          'Tempo limite da geração excedido.',
+          generationTimeout,
+        );
       }
       rethrow;
     } finally {

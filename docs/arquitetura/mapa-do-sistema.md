@@ -11,7 +11,11 @@ graph TD
     subgraph "Dispositivo Android (Mobile)"
         FlutterApp["App Flutter Trokim<br/>(UI Material 3 / Dart)"]
         StateManagement["Gerenciamento de Estado<br/>(Feature-First / Repositories)"]
+        DesignSystem["Design System<br/>(Tema claro/escuro, movimento, mascote)"]
+        Settings["Ajustes locais<br/>(shared_preferences)"]
         FlutterApp --> StateManagement
+        FlutterApp --> DesignSystem
+        FlutterApp --> Settings
     end
 
     subgraph "Serviço Backend Local (Python / FastAPI)"

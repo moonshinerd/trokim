@@ -18,5 +18,6 @@ class ApiConstants {
 
   /// Endpoint de síntese fundamentada com o modelo local.
   static const String chatGenerateEndpoint = '/chat/generate';
+  static const String chatTitleEndpoint = '/chat/title';
   static const String budgetsCompareEndpoint = '/budgets/compare';
 }
