@@ -24,8 +24,8 @@ class TransactionsScreen extends StatelessWidget {
         index: 5,
         child: FloatingActionButton.extended(
           onPressed: () => _import(context),
-          backgroundColor: AppTheme.forest,
-          foregroundColor: Colors.white,
+          backgroundColor: AppTheme.gold,
+          foregroundColor: AppTheme.forest,
           elevation: 2,
           shape:
               RoundedRectangleBorder(borderRadius: BorderRadius.circular(18)),
@@ -62,13 +62,13 @@ class TransactionsScreen extends StatelessWidget {
                         TextStyle(fontSize: 18, fontWeight: FontWeight.w800)),
               ),
             ),
-            const Padding(
+            Padding(
               padding: EdgeInsets.fromLTRB(20, 0, 20, 10),
               child: Reveal(
                 index: 3,
                 child: _FileTile(
                   icon: Icons.account_balance_rounded,
-                  color: AppTheme.emerald,
+                  color: context.colors.accent,
                   name: 'extrato_novembro_sintetico.ofx',
                   detail: '3 transações importadas • sem duplicatas',
                   badge: 'OFX',
@@ -106,7 +106,7 @@ class _PrivacyBanner extends StatelessWidget {
       child: Container(
         padding: const EdgeInsets.all(20),
         decoration: BoxDecoration(
-          color: AppTheme.mint,
+          color: context.colors.tint,
           borderRadius: BorderRadius.circular(24),
         ),
         child: Row(children: [
@@ -114,26 +114,26 @@ class _PrivacyBanner extends StatelessWidget {
             width: 52,
             height: 52,
             decoration: BoxDecoration(
-              color: AppTheme.surface,
+              color: context.colors.surface,
               borderRadius: BorderRadius.circular(18),
             ),
-            child: const Icon(Icons.lock_rounded,
-                color: AppTheme.forest, size: 26),
+            child: Icon(Icons.lock_rounded,
+                color: context.colors.accent, size: 26),
           ),
           const SizedBox(width: 16),
-          const Expanded(
+          Expanded(
             child:
                 Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
               Text('Processamento 100% local',
                   style: TextStyle(
                       fontWeight: FontWeight.w800,
                       fontSize: 15,
-                      color: AppTheme.forest)),
+                      color: context.colors.ink)),
               SizedBox(height: 4),
               Text(
                 'Aceita OFX e faturas em PDF. Seus dados ficam em SQLite no aparelho.',
                 style: TextStyle(
-                    fontSize: 13, height: 1.4, color: AppTheme.forest),
+                    fontSize: 13, height: 1.4, color: context.colors.ink),
               ),
             ]),
           ),
@@ -163,9 +163,9 @@ class _FileTile extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: AppTheme.surface,
+        color: context.colors.surface,
         borderRadius: BorderRadius.circular(AppTheme.radius),
-        border: Border.all(color: AppTheme.line),
+        border: Border.all(color: context.colors.line),
       ),
       child: Row(children: [
         Container(
@@ -188,14 +188,14 @@ class _FileTile extends StatelessWidget {
                     const TextStyle(fontWeight: FontWeight.w700, fontSize: 14)),
             const SizedBox(height: 3),
             Text(detail,
-                style: const TextStyle(color: AppTheme.muted, fontSize: 12)),
+                style: TextStyle(color: context.colors.muted, fontSize: 12)),
           ]),
         ),
         const SizedBox(width: 8),
         Container(
           padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
           decoration: BoxDecoration(
-            color: AppTheme.paper,
+            color: context.colors.bg,
             borderRadius: BorderRadius.circular(10),
           ),
           child: Text(badge,

@@ -26,8 +26,8 @@ class ScreenHeader extends StatelessWidget {
             if (subtitle != null) ...[
               const SizedBox(height: 6),
               Text(subtitle!,
-                  style: const TextStyle(
-                      color: AppTheme.muted, fontSize: 14, height: 1.4)),
+                  style: TextStyle(
+                      color: context.colors.muted, fontSize: 14, height: 1.4)),
             ],
           ],
         ),

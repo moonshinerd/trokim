@@ -4,7 +4,7 @@ import 'package:intl/intl.dart';
 import '../../../core/theme/app_theme.dart';
 import '../../../core/widgets/app_motion.dart';
 import '../../../core/widgets/screen_header.dart';
-import '../../../core/widgets/trokim_logo.dart';
+import '../../../core/widgets/coin.dart';
 
 final _brl = NumberFormat.currency(locale: 'pt_BR', symbol: 'R\$');
 
@@ -19,7 +19,7 @@ class _Category {
 const _categories = [
   _Category('Moradia', 1500, Icons.home_rounded, Color(0xFF2F6FB0)),
   _Category('Alimentação', 650.5, Icons.restaurant_rounded, Color(0xFFE9892F)),
-  _Category('Transporte', 280, Icons.directions_car_rounded, Color(0xFF0F8F6B)),
+  _Category('Transporte', 280, Icons.directions_car_rounded, AppTheme.positive),
   _Category('Lazer e Bem-Estar', 210, Icons.spa_rounded, Color(0xFF8B5CF6)),
 ];
 
@@ -101,14 +101,14 @@ class _SampleTag extends StatelessWidget {
   Widget build(BuildContext context) => Container(
         padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
         decoration: BoxDecoration(
-          color: AppTheme.coin.withValues(alpha: 0.18),
+          color: context.colors.tint,
           borderRadius: BorderRadius.circular(20),
         ),
-        child: const Text('dados de exemplo',
+        child: Text('dados de exemplo',
             style: TextStyle(
                 fontSize: 11,
                 fontWeight: FontWeight.w700,
-                color: Color(0xFF8A6512))),
+                color: context.colors.accent)),
       );
 }
 
@@ -130,10 +130,14 @@ class _BalanceCard extends StatelessWidget {
     return Container(
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(28),
-        gradient: const LinearGradient(
+        gradient: LinearGradient(
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
-          colors: [AppTheme.emerald, AppTheme.forest],
+          colors: const [
+            Color(0xFF3F6666),
+            Color(0xFF2F4F4F),
+            Color(0xFF1B3232)
+          ],
         ),
         boxShadow: [
           BoxShadow(
@@ -153,7 +157,7 @@ class _BalanceCard extends StatelessWidget {
         Positioned(
           right: 22,
           top: 22,
-          child: TrokimMark.animated(size: 54, onDark: true),
+          child: const SpinningCoin(size: 70),
         ),
         Padding(
           padding: const EdgeInsets.all(22),
@@ -257,7 +261,7 @@ class _SavingsBar extends StatelessWidget {
               value: v,
               minHeight: 8,
               backgroundColor: Colors.white.withValues(alpha: 0.18),
-              valueColor: const AlwaysStoppedAnimation(AppTheme.coin),
+              valueColor: const AlwaysStoppedAnimation(AppTheme.gold),
             ),
           ),
         ),
@@ -314,9 +318,9 @@ class _CategoryTile extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: AppTheme.surface,
+        color: context.colors.surface,
         borderRadius: BorderRadius.circular(AppTheme.radius),
-        border: Border.all(color: AppTheme.line),
+        border: Border.all(color: context.colors.line),
       ),
       child: Column(children: [
         Row(children: [

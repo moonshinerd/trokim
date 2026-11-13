@@ -3,7 +3,7 @@ import 'package:flutter/services.dart';
 
 import 'core/theme/app_theme.dart';
 import 'core/widgets/app_motion.dart';
-import 'core/widgets/trokim_logo.dart';
+import 'core/widgets/coin.dart';
 import 'features/budget_scenarios/presentation/scenarios_screen.dart';
 import 'features/chat_assistant/presentation/chat_screen.dart';
 import 'features/dashboard/presentation/dashboard_screen.dart';
@@ -22,15 +22,23 @@ class TrokimApp extends StatelessWidget {
       title: 'Trokim',
       debugShowCheckedModeBanner: false,
       theme: AppTheme.lightTheme,
-      builder: (context, child) => AnnotatedRegion<SystemUiOverlayStyle>(
-        value: const SystemUiOverlayStyle(
-          statusBarColor: Colors.transparent,
-          statusBarIconBrightness: Brightness.dark,
-          systemNavigationBarColor: AppTheme.paper,
-          systemNavigationBarIconBrightness: Brightness.dark,
-        ),
-        child: child!,
-      ),
+      darkTheme: AppTheme.darkTheme,
+      themeMode: ThemeMode.system,
+      scrollBehavior: const NoStretchScrollBehavior(),
+      builder: (context, child) {
+        final dark = Theme.of(context).brightness == Brightness.dark;
+        final c = context.colors;
+        return AnnotatedRegion<SystemUiOverlayStyle>(
+          value: SystemUiOverlayStyle(
+            statusBarColor: Colors.transparent,
+            statusBarIconBrightness: dark ? Brightness.light : Brightness.dark,
+            systemNavigationBarColor: c.bg,
+            systemNavigationBarIconBrightness:
+                dark ? Brightness.light : Brightness.dark,
+          ),
+          child: child!,
+        );
+      },
       home: const SplashGate(child: MainNavigationScreen()),
     );
   }
@@ -138,10 +146,10 @@ class _FloatingNavBar extends StatelessWidget {
         child: Container(
           height: 68,
           decoration: BoxDecoration(
-            color: AppTheme.surface,
+            color: context.colors.surface,
             borderRadius: BorderRadius.circular(26),
-            border: Border.all(color: AppTheme.line),
-            boxShadow: AppTheme.softShadow,
+            border: Border.all(color: context.colors.line),
+            boxShadow: AppTheme.softShadow(context),
           ),
           child: LayoutBuilder(builder: (context, c) {
             final w = c.maxWidth / destinations.length;
@@ -155,7 +163,7 @@ class _FloatingNavBar extends StatelessWidget {
                 height: 52,
                 child: DecoratedBox(
                   decoration: BoxDecoration(
-                    color: AppTheme.mint,
+                    color: context.colors.tint,
                     borderRadius: BorderRadius.circular(18),
                   ),
                 ),
@@ -191,7 +199,7 @@ class _NavItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final color = selected ? AppTheme.forest : AppTheme.muted;
+    final color = selected ? context.colors.accent : context.colors.muted;
     return Semantics(
       button: true,
       selected: selected,
@@ -231,7 +239,8 @@ class _NavItem extends StatelessWidget {
   }
 }
 
-/// Abertura: a moeda se monta, o nome aparece e a tela entra suavemente.
+/// Abertura: a moeda gira em 3D enquanto o app carrega e depois a tela
+/// entra suavemente.
 class SplashGate extends StatefulWidget {
   const SplashGate({super.key, required this.child});
   final Widget child;
@@ -246,7 +255,7 @@ class _SplashGateState extends State<SplashGate> {
   @override
   void initState() {
     super.initState();
-    Future<void>.delayed(const Duration(milliseconds: 1900), () {
+    Future<void>.delayed(const Duration(milliseconds: 3000), () {
       if (mounted) setState(() => _done = true);
     });
   }
@@ -255,7 +264,7 @@ class _SplashGateState extends State<SplashGate> {
   Widget build(BuildContext context) {
     if (Motion.reduced(context)) return widget.child;
     return AnimatedSwitcher(
-      duration: const Duration(milliseconds: 550),
+      duration: const Duration(milliseconds: 600),
       switchInCurve: Motion.emphasized,
       switchOutCurve: Curves.easeIn,
       child: _done
@@ -265,42 +274,97 @@ class _SplashGateState extends State<SplashGate> {
   }
 }
 
-class _Splash extends StatelessWidget {
+class _Splash extends StatefulWidget {
   const _Splash({super.key});
 
   @override
+  State<_Splash> createState() => _SplashState();
+}
+
+class _SplashState extends State<_Splash> {
+  double _t = 0;
+
+  @override
   Widget build(BuildContext context) {
+    final c = context.colors;
     return Scaffold(
-      backgroundColor: AppTheme.paper,
-      body: Center(
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            TrokimMark.animated(size: 112),
-            const SizedBox(height: 22),
-            TweenAnimationBuilder<double>(
-              tween: Tween(begin: 0, end: 1),
-              duration: const Duration(milliseconds: 700),
-              curve: Curves.easeOut,
-              builder: (_, t, child) => Opacity(
-                opacity: t,
-                child: Transform.translate(
-                    offset: Offset(0, (1 - t) * 8), child: child),
+      backgroundColor: c.bg,
+      body: Stack(children: [
+        const Positioned.fill(child: DustField()),
+        // Brilho dourado atrás da moeda.
+        Center(
+          child: Container(
+            width: 360,
+            height: 360,
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              gradient: RadialGradient(colors: [
+                AppTheme.gold.withValues(alpha: 0.16),
+                AppTheme.gold.withValues(alpha: 0),
+              ]),
+            ),
+          ),
+        ),
+        Center(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              SpinningCoin(
+                size: 320,
+                turns: 2,
+                duration: const Duration(milliseconds: 2600),
+                onProgress: (v) => setState(() => _t = v),
               ),
-              child: const Text(
-                'trokim',
-                style: TextStyle(
-                  fontFamily: AppTheme.fontFamily,
-                  fontSize: 34,
-                  fontWeight: FontWeight.w800,
-                  letterSpacing: -1.2,
-                  color: AppTheme.ink,
+              const SizedBox(height: 4),
+              Opacity(
+                opacity: ((_t - 0.45) / 0.35).clamp(0.0, 1.0),
+                child: Transform.translate(
+                  offset: Offset(
+                      0, (1 - ((_t - 0.45) / 0.35).clamp(0.0, 1.0)) * 10),
+                  child: Text(
+                    'trokim',
+                    style: TextStyle(
+                      fontFamily: AppTheme.fontFamily,
+                      fontSize: 38,
+                      fontWeight: FontWeight.w800,
+                      letterSpacing: -1.4,
+                      color: c.ink,
+                    ),
+                  ),
                 ),
               ),
-            ),
-          ],
+              const SizedBox(height: 28),
+              // Barra de carregamento em verde-limão.
+              ClipRRect(
+                borderRadius: BorderRadius.circular(4),
+                child: SizedBox(
+                  width: 120,
+                  height: 4,
+                  child: LinearProgressIndicator(
+                    value: _t,
+                    backgroundColor: c.line,
+                    valueColor: const AlwaysStoppedAnimation(AppTheme.gold),
+                  ),
+                ),
+              ),
+            ],
+          ),
         ),
-      ),
+      ]),
     );
   }
+}
+
+/// Rolagem firme: sem o efeito de esticar (Android 12+) nem brilho nas bordas.
+class NoStretchScrollBehavior extends MaterialScrollBehavior {
+  const NoStretchScrollBehavior();
+
+  @override
+  Widget buildOverscrollIndicator(
+          BuildContext context, Widget child, ScrollableDetails details) =>
+      child;
+
+  @override
+  ScrollPhysics getScrollPhysics(BuildContext context) =>
+      const ClampingScrollPhysics();
 }
