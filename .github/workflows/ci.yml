@@ -83,6 +83,7 @@ jobs:
       - uses: subosito/flutter-action@v2
         with:
           channel: stable
+          flutter-version: '3.50.0'
           cache: true
       - name: Registrar versão do SDK
         run: flutter --version

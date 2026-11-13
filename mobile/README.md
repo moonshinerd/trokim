@@ -26,7 +26,7 @@ mobile/
 
 ## Execução
 
-Requer Flutter stable e, para gerar o APK, JDK 17 e Android SDK 36 (ver
+Requer Flutter **3.50.0** (mesma versão do CI) e, para gerar o APK, JDK 17 e Android SDK 36 (ver
 [Validação local](#validacao-local)). Se o Flutter não estiver no `PATH`, use o
 caminho completo do executável nos comandos abaixo.
 
@@ -152,7 +152,7 @@ consulte [Validação do chat generativo](VALIDACAO_CHAT_GENERATIVO.md).
 
 ## Verificações no CI
 
-O job **mobile (análise + testes)** usa Flutter stable, instala as dependências
+O job **mobile (análise + testes)** usa Flutter 3.50.0, instala as dependências
 com `--enforce-lockfile` e executa a checagem de formatação, `flutter analyze` e
 `flutter test`. A versão efetivamente instalada aparece no log do job. Esse job
 não substitui a homologação com Android e Ollama reais.

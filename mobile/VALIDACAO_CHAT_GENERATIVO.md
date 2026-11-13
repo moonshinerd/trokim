@@ -13,7 +13,7 @@ Referência: [issue #25](https://github.com/moonshinerd/trokim/issues/25).
 | `flutter analyze` e `flutter test` | Não executados: Flutter/Dart não encontrados no ambiente; acesso ao servidor de distribuição falhou por DNS |
 | Testes da API (`test_generation.py`, `test_chat_api.py`, `test_request_lifecycle.py`) | 28 passaram após a revisão. Testes dos endpoints usam FakeEmbedder e SQLite temporário, sem depender do cache/modelo FastEmbed |
 | Ruff nos arquivos Python alterados | `ruff check` e `ruff format --check` aprovados |
-| CI mobile | Job adicionado com Flutter stable, dependências fixadas, formatação, análise e testes; ainda não executado nesta branch |
+| CI mobile | Job adicionado com Flutter 3.50.0 fixado, dependências fixadas, formatação, análise e testes; ainda não executado nesta branch |
 | Ollama | Executável 0.32.0 encontrado no aplicativo instalado; conexão a `127.0.0.1:11434` bloqueada pelo ambiente. Modelo disponível não confirmado |
 | Emulador/dispositivo Android | Não executado: SDK/emulador não encontrados nos caminhos usuais |
 
@@ -72,3 +72,19 @@ Após cada cenário, acrescente resultado real e evidência correspondente. Se a
 pergunta proposta não produzir o estado esperado, registre o desvio; não substitua
 resultados observados por expectativas. Disponibilize o registro atualizado para
 a consolidação da issue #26.
+
+## Correção da instalação de dependências no CI
+
+A execução 43441816963 da PR #46 falhou antes da análise/testes, com Flutter
+3.50.0 e Dart 3.14.0. O workflow agora fixa Flutter 3.50.0. As entradas de
+`listen`, `meta`, `test_api` e `vector_math` foram alinhadas ao lockfile oficial
+desse SDK, incluindo os hashes publicados. `vector_math` permanece em 2.4.3,
+compatível com o requisito `^2.4.3` do SDK, sem exigir a atualização para 2.4.4
+sugerida pelo resolvedor na execução anterior.
+
+Fonte: https://github.com/flutter/flutter/blob/3.50.0/pubspec.lock
+
+O SDK segue indisponível neste ambiente, e o download falhou por DNS. Foram
+conferidos os YAMLs, as entradas oficiais e o diff. A instalação com
+`--enforce-lockfile`, a formatação, a análise e os testes ainda exigem nova
+execução no CI; não foram declarados aprovados por esta correção.
