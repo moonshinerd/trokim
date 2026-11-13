@@ -22,18 +22,20 @@ void main() {
   }
 
   http.Response response({bool answered = true}) => http.Response.bytes(
-    utf8.encode(jsonEncode(<String, dynamic>{
-      'answered': answered,
-      'status': answered ? 'grounded' : 'abstained',
-      'answer': answered ? 'Resposta oficial' : 'Não há evidências suficientes.',
-      'evidences': [],
-    })),
-    200,
-  );
+        utf8.encode(jsonEncode(<String, dynamic>{
+          'answered': answered,
+          'status': answered ? 'grounded' : 'abstained',
+          'answer':
+              answered ? 'Resposta oficial' : 'Não há evidências suficientes.',
+          'evidences': [],
+        })),
+        200,
+      );
 
   test('preserva boas-vindas e expõe lista imutável', () {
     final controller = controllerFor((_) async => response());
-    expect(controller.messages.single.text, startsWith('Olá! Sou o assistente do Trokim.'));
+    expect(controller.messages.single.text,
+        startsWith('Olá! Sou o assistente do Trokim.'));
     expect(controller.messages.single.isUser, isFalse);
     expect(controller.isLoading, isFalse);
     expect(() => controller.messages.clear(), throwsUnsupportedError);
@@ -105,7 +107,9 @@ void main() {
   });
 
   for (final fails in [false, true]) {
-    test('dispose durante ${fails ? 'erro' : 'sucesso'} não notifica nem altera mensagens', () async {
+    test(
+        'dispose durante ${fails ? 'erro' : 'sucesso'} não notifica nem altera mensagens',
+        () async {
       final pending = Completer<http.Response>();
       final controller = controllerFor((_) => pending.future);
       var notifications = 0;

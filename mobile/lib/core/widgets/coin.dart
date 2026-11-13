@@ -3,6 +3,7 @@ import 'dart:math' as math;
 import 'package:flutter/material.dart';
 
 import '../theme/app_theme.dart';
+import 'app_motion.dart';
 import 'mascot.dart';
 
 /// Moeda 3D do Trokim desenhada em tempo real.
@@ -206,7 +207,7 @@ class CoinPainter extends CustomPainter {
         ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 9),
     );
     canvas.restore();
-    canvas.scale(1.28);
+    canvas.scale(1.22);
     Mascot.paint(canvas);
   }
 
@@ -352,7 +353,7 @@ class _SpinningCoinState extends State<SpinningCoin>
 
   @override
   Widget build(BuildContext context) {
-    final reduced = MediaQuery.maybeOf(context)?.disableAnimations ?? false;
+    final reduced = Motion.reduced(context);
     if (reduced) {
       return SizedBox.square(
         dimension: widget.size,
