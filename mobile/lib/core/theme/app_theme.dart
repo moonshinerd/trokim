@@ -33,7 +33,8 @@ class AppColors extends ThemeExtension<AppColors> {
   /// Realce suave (indicadores, avisos).
   final Color tint;
 
-  /// Violeta legível sobre o fundo atual (ícones, links).
+  /// Cor de destaque legível sobre o fundo atual (ícones e links): Tidewater no
+  /// claro e dourado no escuro.
   final Color accent;
 
   /// Champagne sobre Tidewater Green: o bege é o fundo, o verde é a tinta.

@@ -26,8 +26,13 @@ const _categories = [
 class DashboardScreen extends StatelessWidget {
   const DashboardScreen({super.key});
 
+  // Dados de exemplo: o cálculo real é feito pelo backend
+  // (`calculation_service.py`), nunca pelo app. Valores fixos até a tela
+  // consumir `/transactions/summary`.
   static const double _income = 5000;
   static const double _expenses = 2150.5;
+  static const double _balance = 2849.5;
+  static const double _savingsRate = 0.5699;
 
   @override
   Widget build(BuildContext context) {
@@ -53,10 +58,10 @@ class DashboardScreen extends StatelessWidget {
               child: const Reveal(
                 index: 1,
                 child: _BalanceCard(
-                  balance: balance,
+                  balance: _balance,
                   income: _income,
                   expenses: _expenses,
-                  savingsRate: savingsRate,
+                  savingsRate: _savingsRate,
                 ),
               ),
             ),

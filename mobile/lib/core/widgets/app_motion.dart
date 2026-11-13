@@ -99,17 +99,15 @@ class CountUp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    if (Motion.reduced(context)) return Text(format(value), style: style);
+    final tabular = (style ?? const TextStyle()).copyWith(
+      fontFeatures: const [FontFeature.tabularFigures()],
+    );
+    if (Motion.reduced(context)) return Text(format(value), style: tabular);
     return TweenAnimationBuilder<double>(
       tween: Tween(begin: 0, end: value),
       duration: duration,
       curve: Motion.emphasized,
-      builder: (_, v, __) => Text(
-        format(v),
-        style: style?.copyWith(
-          fontFeatures: const [FontFeature.tabularFigures()],
-        ),
-      ),
+      builder: (_, v, __) => Text(format(v), style: tabular),
     );
   }
 }

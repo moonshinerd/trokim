@@ -73,6 +73,25 @@ curl -X POST http://127.0.0.1:8000/v1/chat/generate \
 
 ---
 
+## 3.1. Aplicativo Mobile no Emulador
+
+Para rodar o app Android (Flutter) com o backend local:
+
+```bash
+# Terminal 1: backend (a partir da raiz do repositório)
+DEBUG=false ENVIRONMENT=development make api-run
+
+# Terminal 2: app (requer Flutter estável, JDK 17 e Android SDK 36)
+cd mobile
+flutter pub get
+flutter test          # 36 testes
+flutter run           # emulador Android; a API fica em http://10.0.2.2:8000/v1
+```
+
+No app, a aba **Ajustes** permite escolher o tema (por padrão segue o claro/escuro do aparelho), reduzir animações, desligar a abertura animada e **testar a conexão** com a API. Para apontar para outro endereço, use `--dart-define=API_BASE_URL=http://<ip>:8000/v1`.
+
+---
+
 ## 4. Apresentação Executiva e Demonstração
 
 O painel de resultados e as perguntas de demonstração validadas pelo benchmark estão em [Apresentação Executiva](apresentacao.md).

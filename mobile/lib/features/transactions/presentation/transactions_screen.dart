@@ -57,9 +57,13 @@ class TransactionsScreen extends StatelessWidget {
               padding: EdgeInsets.fromLTRB(20, 20, 20, 10),
               child: Reveal(
                 index: 2,
-                child: Text('Importados',
-                    style:
-                        TextStyle(fontSize: 18, fontWeight: FontWeight.w800)),
+                child: Row(children: [
+                  Text('Importados',
+                      style:
+                          TextStyle(fontSize: 18, fontWeight: FontWeight.w800)),
+                  SizedBox(width: 10),
+                  _ExampleTag(),
+                ]),
               ),
             ),
             Padding(
@@ -93,6 +97,24 @@ class TransactionsScreen extends StatelessWidget {
       ),
     );
   }
+}
+
+class _ExampleTag extends StatelessWidget {
+  const _ExampleTag();
+
+  @override
+  Widget build(BuildContext context) => Container(
+        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+        decoration: BoxDecoration(
+          color: context.colors.tint,
+          borderRadius: BorderRadius.circular(20),
+        ),
+        child: Text('dados de exemplo',
+            style: TextStyle(
+                fontSize: 11,
+                fontWeight: FontWeight.w700,
+                color: context.colors.accent)),
+      );
 }
 
 class _PrivacyBanner extends StatelessWidget {

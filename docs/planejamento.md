@@ -35,6 +35,10 @@ Conforme a ementa oficial do Challenge 2, o entregável da **Semana 3 (09/11 a 1
 - [ ] **Relatório Comparativo Formal:** Publicação em `docs/pesquisa/comparacao-llm-rag.md` com tabelas, gráficos de dispersão e análise de casos de alucinação.
 - [ ] **ADR 0008:** Registro formal da decisão de síntese generativa, controle de alucinação e fallback local.
 
+### Entregas de Interface (fora do checklist da ementa)
+
+Redesenho da identidade visual do app e do MkDocs, centralizado no PR #43: paleta Champagne, Tidewater e Fortuna Gold com tema claro/escuro pelo sistema ([#38](https://github.com/moonshinerd/trokim/issues/38)), aba de Ajustes ([#39](https://github.com/moonshinerd/trokim/issues/39)), abertura com moeda 3D e mascote onça-pintada ([#40](https://github.com/moonshinerd/trokim/issues/40)), rolagem sem esticar e toolchain Android ([#41](https://github.com/moonshinerd/trokim/issues/41)) e MkDocs repaginado ([#42](https://github.com/moonshinerd/trokim/issues/42)). Registradas nas ADRs 0009 a 0012 e nos requisitos RF15, RNF10 e RNF11. O histórico de conversas com título gerado pelo LLM local (RF16, [#45](https://github.com/moonshinerd/trokim/issues/44)) está planejado.
+
 ---
 
 ## 3. Planejamento Operacional: Estratégia de Não-Ociosidade

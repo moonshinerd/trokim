@@ -13,14 +13,22 @@ class Mascot {
   static ui.Image? head;
 
   static Future<void> load() async {
-    body = await _decode('assets/brand/mascot_body.png');
-    head = await _decode('assets/brand/mascot_head.png');
+    final images = await Future.wait([
+      _decode('assets/brand/mascot_body.png', 960),
+      _decode('assets/brand/mascot_head.png', 512),
+    ]);
+    body = images[0];
+    head = images[1];
   }
 
-  static Future<ui.Image?> _decode(String asset) async {
+  /// Decodifica já reduzida ([width] px) para poupar memória e tempo de abertura.
+  static Future<ui.Image?> _decode(String asset, int width) async {
     try {
       final data = await rootBundle.load(asset);
-      final codec = await ui.instantiateImageCodec(data.buffer.asUint8List());
+      final codec = await ui.instantiateImageCodec(
+        data.buffer.asUint8List(),
+        targetWidth: width,
+      );
       return (await codec.getNextFrame()).image;
     } on Object {
       return null;

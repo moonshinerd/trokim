@@ -101,3 +101,8 @@ nav:
       - "0005 – Importação Local de OFX e PDF": adr/0005-importacao-local-ofx-pdf.md
       - "0006 – Curadoria e Benchmark": adr/0006-curadoria-benchmark.md
       - "0007 – Banco Vetorial e Embeddings": adr/0007-banco-vetorial-embeddings.md
+      - "0008 – Material Comparativo": adr/0008-material-comparativo-versionado.md
+      - "0009 – CI em Runners Hospedados": adr/0009-ci-em-runners-hospedados.md
+      - "0010 – Identidade Visual e Tema": adr/0010-identidade-visual-e-tema-do-sistema.md
+      - "0011 – Mascote e Arte Livre": adr/0011-mascote-onca-e-arte-de-marca-livre.md
+      - "0012 – Preferências e Ajustes": adr/0012-preferencias-locais-e-aba-de-ajustes.md

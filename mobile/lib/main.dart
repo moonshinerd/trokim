@@ -258,26 +258,30 @@ class SplashGate extends StatefulWidget {
 }
 
 class _SplashGateState extends State<SplashGate> {
-  bool _done = false;
+  bool _timerDone = false;
+
+  /// Decidido uma única vez, na abertura: mudar essa opção em Ajustes vale
+  /// para a próxima abertura e nunca recria o app em uso (o que apagaria a
+  /// conversa do chat e a aba atual).
+  bool? _skip;
 
   @override
   void initState() {
     super.initState();
     Future<void>.delayed(const Duration(milliseconds: 3000), () {
-      if (mounted) setState(() => _done = true);
+      if (mounted) setState(() => _timerDone = true);
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    if (Motion.reduced(context) || !SettingsScope.of(context).showSplash) {
-      return widget.child;
-    }
+    _skip ??= Motion.reduced(context) || !SettingsScope.of(context).showSplash;
+    final showApp = _skip! || _timerDone;
     return AnimatedSwitcher(
-      duration: const Duration(milliseconds: 600),
+      duration: _skip! ? Duration.zero : const Duration(milliseconds: 600),
       switchInCurve: Motion.emphasized,
       switchOutCurve: Curves.easeIn,
-      child: _done
+      child: showApp
           ? KeyedSubtree(key: const ValueKey('app'), child: widget.child)
           : const _Splash(key: ValueKey('splash')),
     );

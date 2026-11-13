@@ -17,7 +17,7 @@ class TrokimMark extends StatelessWidget {
         child: SizedBox(
           width: size,
           height: size,
-          child: CustomPaint(painter: _MascotPainter(simple: size < 56)),
+          child: CustomPaint(painter: _MascotPainter()),
         ),
       );
 }
@@ -51,9 +51,6 @@ class TrokimLogo extends StatelessWidget {
 }
 
 class _MascotPainter extends CustomPainter {
-  _MascotPainter({required this.simple});
-  final bool simple;
-
   @override
   void paint(Canvas canvas, Size size) {
     final r = size.shortestSide / 2;
@@ -85,5 +82,5 @@ class _MascotPainter extends CustomPainter {
   }
 
   @override
-  bool shouldRepaint(covariant _MascotPainter old) => old.simple != simple;
+  bool shouldRepaint(covariant _MascotPainter old) => false;
 }

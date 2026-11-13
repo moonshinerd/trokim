@@ -14,12 +14,18 @@ mobile/
 │   ├── core/
 │   │   ├── constants/        # URLs da API e constantes
 │   │   ├── network/          # Cliente HTTP REST
-│   │   └── theme/            # Design System (Material 3)
+│   │   ├── settings/         # Preferências locais (SettingsController/Scope)
+│   │   ├── theme/            # Design System: paleta, claro/escuro, AppColors
+│   │   └── widgets/          # Moeda 3D, mascote, movimento e cabeçalhos
 │   └── features/
 │       ├── dashboard/        # Resumo de receitas, despesas e poupança
 │       ├── transactions/     # Importação e listagem de extratos OFX/PDF
 │       ├── chat_assistant/   # Chat consultivo com RAG oficial
-│       └── budget_scenarios/ # Simulador e comparador de cenários
+│       ├── budget_scenarios/ # Simulador e comparador de cenários
+│       └── settings/         # Aba Ajustes: tema, animações, conexão e privacidade
+├── assets/
+│   ├── brand/                # Arte do mascote (ver LEIA-ME.md, licença CC0)
+│   └── fonts/                # Plus Jakarta Sans (OFL)
 ```
 
 ---
