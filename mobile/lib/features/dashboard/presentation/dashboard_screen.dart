@@ -150,7 +150,11 @@ class _BalanceCard extends StatelessWidget {
           top: -40,
           child: _Ring(size: 160, color: Colors.white.withValues(alpha: 0.07)),
         ),
-        const Positioned(right: 24, top: 24, child: TrokimMark(size: 56)),
+        Positioned(
+          right: 22,
+          top: 22,
+          child: TrokimMark.animated(size: 54, onDark: true),
+        ),
         Padding(
           padding: const EdgeInsets.all(22),
           child: Column(

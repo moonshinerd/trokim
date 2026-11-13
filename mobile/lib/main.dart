@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 
 import 'core/theme/app_theme.dart';
 import 'core/widgets/app_motion.dart';
+import 'core/widgets/trokim_logo.dart';
 import 'features/budget_scenarios/presentation/scenarios_screen.dart';
 import 'features/chat_assistant/presentation/chat_screen.dart';
 import 'features/dashboard/presentation/dashboard_screen.dart';
@@ -30,7 +31,7 @@ class TrokimApp extends StatelessWidget {
         ),
         child: child!,
       ),
-      home: const MainNavigationScreen(),
+      home: const SplashGate(child: MainNavigationScreen()),
     );
   }
 }
@@ -224,6 +225,80 @@ class _NavItem extends StatelessWidget {
               ),
             ],
           ),
+        ),
+      ),
+    );
+  }
+}
+
+/// Abertura: a moeda se monta, o nome aparece e a tela entra suavemente.
+class SplashGate extends StatefulWidget {
+  const SplashGate({super.key, required this.child});
+  final Widget child;
+
+  @override
+  State<SplashGate> createState() => _SplashGateState();
+}
+
+class _SplashGateState extends State<SplashGate> {
+  bool _done = false;
+
+  @override
+  void initState() {
+    super.initState();
+    Future<void>.delayed(const Duration(milliseconds: 1900), () {
+      if (mounted) setState(() => _done = true);
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    if (Motion.reduced(context)) return widget.child;
+    return AnimatedSwitcher(
+      duration: const Duration(milliseconds: 550),
+      switchInCurve: Motion.emphasized,
+      switchOutCurve: Curves.easeIn,
+      child: _done
+          ? KeyedSubtree(key: const ValueKey('app'), child: widget.child)
+          : const _Splash(key: ValueKey('splash')),
+    );
+  }
+}
+
+class _Splash extends StatelessWidget {
+  const _Splash({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: AppTheme.paper,
+      body: Center(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            TrokimMark.animated(size: 112),
+            const SizedBox(height: 22),
+            TweenAnimationBuilder<double>(
+              tween: Tween(begin: 0, end: 1),
+              duration: const Duration(milliseconds: 700),
+              curve: Curves.easeOut,
+              builder: (_, t, child) => Opacity(
+                opacity: t,
+                child: Transform.translate(
+                    offset: Offset(0, (1 - t) * 8), child: child),
+              ),
+              child: const Text(
+                'trokim',
+                style: TextStyle(
+                  fontFamily: AppTheme.fontFamily,
+                  fontSize: 34,
+                  fontWeight: FontWeight.w800,
+                  letterSpacing: -1.2,
+                  color: AppTheme.ink,
+                ),
+              ),
+            ),
+          ],
         ),
       ),
     );
