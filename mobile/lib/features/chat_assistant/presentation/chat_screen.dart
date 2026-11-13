@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 
 import '../../../core/theme/app_theme.dart';
+import '../../../core/widgets/app_motion.dart';
+import '../../../core/widgets/trokim_logo.dart';
 import '../domain/chat_models.dart';
 import 'chat_controller.dart';
 import 'evidence_card.dart';
@@ -59,16 +61,23 @@ class _ChatScreenState extends State<ChatScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Assistente Trokim'),
+        title: const Row(children: [
+          TrokimMark(size: 30),
+          SizedBox(width: 10),
+          Flexible(
+            child: Text('Assistente',
+                maxLines: 1, overflow: TextOverflow.ellipsis),
+          ),
+        ]),
         actions: [
           Row(mainAxisSize: MainAxisSize.min, children: [
-            const Text('Auditoria', style: TextStyle(fontSize: 12)),
+            const Text('Auditoria',
+                style: TextStyle(fontSize: 12, fontWeight: FontWeight.w600)),
             Semantics(
               label: 'Modo de auditoria pedagógica',
               child: Switch(
                 value: _auditMode,
                 onChanged: (value) => setState(() => _auditMode = value),
-                activeThumbColor: Colors.white,
               ),
             ),
           ]),
@@ -81,23 +90,23 @@ class _ChatScreenState extends State<ChatScreen> {
             if (_auditMode)
               Container(
                 width: double.infinity,
-                margin: const EdgeInsets.fromLTRB(12, 10, 12, 0),
-                padding: const EdgeInsets.all(12),
+                margin: const EdgeInsets.fromLTRB(16, 4, 16, 0),
+                padding: const EdgeInsets.all(14),
                 decoration: BoxDecoration(
-                  color: const Color(0xFFEFF6FF),
-                  borderRadius: BorderRadius.circular(12),
-                  border: Border.all(color: const Color(0xFFBFDBFE)),
+                  color: AppTheme.mint,
+                  borderRadius: BorderRadius.circular(18),
                 ),
                 child: const Row(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Icon(Icons.fact_check_outlined,
-                          color: AppTheme.primaryBlue, size: 19),
+                          color: AppTheme.forest, size: 19),
                       SizedBox(width: 8),
                       Expanded(
                           child: Text(
                         'Auditoria pedagógica: respostas fundamentadas exibem as fontes e os trechos recuperados. O Trokim não fabrica um comparativo sem evidências.',
-                        style: TextStyle(fontSize: 12, height: 1.4),
+                        style: TextStyle(
+                            fontSize: 12, height: 1.4, color: AppTheme.forest),
                       )),
                     ]),
               ),
@@ -116,10 +125,12 @@ class _ChatScreenState extends State<ChatScreen> {
                             SizedBox(
                               width: 18,
                               height: 18,
-                              child: CircularProgressIndicator(strokeWidth: 2),
+                              child: CircularProgressIndicator(
+                                  strokeWidth: 2.4, color: AppTheme.emerald),
                             ),
                             SizedBox(width: 12),
-                            Text('Consultando fontes oficiais...'),
+                            Text('Consultando fontes oficiais...',
+                                style: TextStyle(color: AppTheme.muted)),
                           ],
                         ),
                       );
@@ -146,10 +157,17 @@ class _ChatScreenState extends State<ChatScreen> {
               ),
             ),
             Container(
-              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-              color: Colors.white,
+              margin: const EdgeInsets.fromLTRB(16, 4, 16, 6),
+              padding: const EdgeInsets.fromLTRB(18, 4, 6, 4),
+              decoration: BoxDecoration(
+                color: AppTheme.surface,
+                borderRadius: BorderRadius.circular(26),
+                border: Border.all(color: AppTheme.line),
+                boxShadow: AppTheme.softShadow,
+              ),
               child: SafeArea(
                 top: false,
+                bottom: false,
                 child: Row(
                   crossAxisAlignment: CrossAxisAlignment.end,
                   children: [
@@ -158,21 +176,33 @@ class _ChatScreenState extends State<ChatScreen> {
                         controller: _textController,
                         enabled: !_chat.isLoading,
                         maxLength: 1000,
+                        buildCounter: (_,
+                                {required currentLength,
+                                required isFocused,
+                                maxLength}) =>
+                            null,
                         minLines: 1,
                         maxLines: 3,
                         textInputAction: TextInputAction.send,
                         decoration: const InputDecoration(
-                          hintText: 'Pergunte sobre orçamento ou reserva...',
+                          hintText: 'Pergunte sobre orçamento ou reserva…',
                           border: InputBorder.none,
                         ),
                         onSubmitted: (_) => _sendMessage(),
                       ),
                     ),
-                    IconButton(
-                      tooltip: 'Enviar',
-                      icon: const Icon(Icons.send),
-                      color: AppTheme.primaryBlue,
-                      onPressed: _chat.isLoading ? null : _sendMessage,
+                    Padding(
+                      padding: const EdgeInsets.only(bottom: 2),
+                      child: IconButton.filled(
+                        tooltip: 'Enviar',
+                        icon: const Icon(Icons.send, size: 20),
+                        style: IconButton.styleFrom(
+                          backgroundColor: AppTheme.emerald,
+                          disabledBackgroundColor: AppTheme.line,
+                          foregroundColor: Colors.white,
+                        ),
+                        onPressed: _chat.isLoading ? null : _sendMessage,
+                      ),
                     ),
                   ],
                 ),
@@ -203,97 +233,102 @@ class _MessageBubble extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final color = message.isUser
-        ? AppTheme.primaryBlue
+        ? AppTheme.forest
         : message.isError
-            ? Colors.red.shade50
+            ? const Color(0xFFFDECE8)
             : message.isAbstained
-                ? Theme.of(context).colorScheme.surfaceContainerHighest
-                : Colors.white;
-    return Align(
-      alignment: message.isUser ? Alignment.centerRight : Alignment.centerLeft,
-      child: Container(
-        margin: const EdgeInsets.only(bottom: 12),
-        padding: const EdgeInsets.all(14),
-        constraints: BoxConstraints(maxWidth: maxWidth),
-        decoration: BoxDecoration(
-          color: color,
-          borderRadius: BorderRadius.circular(14),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withValues(alpha: 0.04),
-              blurRadius: 4,
-              offset: const Offset(0, 2),
-            ),
-          ],
-        ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            if (message.isAbstained || message.isError) ...[
-              Icon(
-                message.isError
-                    ? Icons.error_outline
-                    : Icons.warning_amber_rounded,
-                color: message.isError ? AppTheme.dangerRed : Colors.blueGrey,
-                semanticLabel: message.isError
-                    ? 'Erro de conexão'
-                    : 'Sem evidências suficientes',
-              ),
-              const SizedBox(height: 8),
-            ],
-            Text(
-              message.text,
-              style: TextStyle(
-                color: message.isUser ? Colors.white : AppTheme.textDark,
-                fontSize: 14,
-                height: 1.4,
-              ),
-            ),
-            if (message.isAbstained)
-              Padding(
-                padding: const EdgeInsets.only(top: 10),
-                child: Container(
-                  padding: const EdgeInsets.all(10),
-                  decoration: BoxDecoration(
-                    color: const Color(0xFFFFF7E6),
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                  child: const Text(
-                    'Risco de especulação: não há evidências oficiais suficientes para responder com segurança.',
-                    style: TextStyle(fontSize: 12, height: 1.35),
-                  ),
+                ? const Color(0xFFEFEDE6)
+                : AppTheme.surface;
+    final radius = BorderRadius.only(
+      topLeft: const Radius.circular(20),
+      topRight: const Radius.circular(20),
+      bottomLeft: Radius.circular(message.isUser ? 20 : 6),
+      bottomRight: Radius.circular(message.isUser ? 6 : 20),
+    );
+    return Reveal(
+      step: Duration.zero,
+      offset: 10,
+      child: Align(
+        alignment:
+            message.isUser ? Alignment.centerRight : Alignment.centerLeft,
+        child: Container(
+          margin: const EdgeInsets.only(bottom: 12),
+          padding: const EdgeInsets.all(14),
+          constraints: BoxConstraints(maxWidth: maxWidth),
+          decoration: BoxDecoration(
+            color: color,
+            borderRadius: radius,
+            border: message.isUser ? null : Border.all(color: AppTheme.line),
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              if (message.isAbstained || message.isError) ...[
+                Icon(
+                  message.isError
+                      ? Icons.error_outline
+                      : Icons.warning_amber_rounded,
+                  color: message.isError ? AppTheme.negative : AppTheme.muted,
+                  semanticLabel: message.isError
+                      ? 'Erro de conexão'
+                      : 'Sem evidências suficientes',
+                ),
+                const SizedBox(height: 8),
+              ],
+              Text(
+                message.text,
+                style: TextStyle(
+                  color: message.isUser ? Colors.white : AppTheme.ink,
+                  fontSize: 14.5,
+                  height: 1.45,
                 ),
               ),
-            if (message.isAbstained) ...[
-              const SizedBox(height: 8),
-              Wrap(spacing: 4, runSpacing: 0, children: [
-                _QuickQuestion(
-                    label: 'Reserva de emergência',
-                    onPressed: () => onQuickQuestion
-                        ?.call('Como começar uma reserva de emergência?')),
-                _QuickQuestion(
-                    label: 'Organizar o orçamento',
-                    onPressed: () => onQuickQuestion
-                        ?.call('Como organizar meu orçamento mensal?')),
-              ]),
-            ],
-            if (auditMode &&
-                !message.isUser &&
-                !message.isError &&
-                message.status != null)
-              _AuditComparison(message: message),
-            if (message.isError && onRetry != null)
-              TextButton.icon(
-                onPressed: onRetry,
-                icon: const Icon(Icons.refresh),
-                label: const Text('Tentar novamente'),
-              ),
-            if (!message.isUser && !message.isError && !message.isAbstained)
-              for (final evidence in message.evidences) ...[
+              if (message.isAbstained)
+                Padding(
+                  padding: const EdgeInsets.only(top: 10),
+                  child: Container(
+                    padding: const EdgeInsets.all(10),
+                    decoration: BoxDecoration(
+                      color: const Color(0xFFFFF7E6),
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    child: const Text(
+                      'Risco de especulação: não há evidências oficiais suficientes para responder com segurança.',
+                      style: TextStyle(fontSize: 12, height: 1.35),
+                    ),
+                  ),
+                ),
+              if (message.isAbstained) ...[
                 const SizedBox(height: 8),
-                EvidenceCard(evidence: evidence),
+                Wrap(spacing: 4, runSpacing: 0, children: [
+                  _QuickQuestion(
+                      label: 'Reserva de emergência',
+                      onPressed: () => onQuickQuestion
+                          ?.call('Como começar uma reserva de emergência?')),
+                  _QuickQuestion(
+                      label: 'Organizar o orçamento',
+                      onPressed: () => onQuickQuestion
+                          ?.call('Como organizar meu orçamento mensal?')),
+                ]),
               ],
-          ],
+              if (auditMode &&
+                  !message.isUser &&
+                  !message.isError &&
+                  message.status != null)
+                _AuditComparison(message: message),
+              if (message.isError && onRetry != null)
+                TextButton.icon(
+                  onPressed: onRetry,
+                  icon: const Icon(Icons.refresh),
+                  label: const Text('Tentar novamente'),
+                ),
+              if (!message.isUser && !message.isError && !message.isAbstained)
+                for (final evidence in message.evidences) ...[
+                  const SizedBox(height: 8),
+                  EvidenceCard(evidence: evidence),
+                ],
+            ],
+          ),
         ),
       ),
     );
