@@ -271,7 +271,7 @@ a, .md-nav__link, .md-tabs__link { transition-property: color, opacity; transiti
   border: 30px solid rgba(255, 255, 255, 0.07);
   pointer-events: none;
 }
-.md-typeset .tk-hero img { display: block; margin-bottom: 1rem; border-radius: 20px; }
+.md-typeset .tk-hero img { display: block; margin-bottom: 1rem; }
 .md-typeset .tk-hero h1 { color: #fff; margin: 0 0 0.6rem; max-width: 18ch; }
 .md-typeset .tk-hero p { max-width: 52ch; color: rgba(255, 255, 255, 0.85); }
 .md-typeset .tk-hero a:not(.md-button) { color: var(--tk-coin); }
