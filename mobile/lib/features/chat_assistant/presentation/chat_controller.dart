@@ -46,13 +46,11 @@ class ChatController extends ChangeNotifier {
     try {
       final reply = await _repository.ask(question);
       if (_isDisposed) return;
-      final isAbstained = !reply.answered || reply.status == 'abstained';
       _messages.add(
         ChatMessage(
           isUser: false,
           text: reply.answer,
-          evidences: isAbstained ? const [] : reply.evidences,
-          isAbstained: isAbstained,
+          evidences: reply.evidences,
           status: reply.status,
         ),
       );

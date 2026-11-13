@@ -39,12 +39,53 @@ make setup
 make api-run
 ```
 
-A tela atual usa `POST /v1/chat/ask`, recebendo `message` e retornando `answered`,
-`status`, `answer` e `evidences`. A constante `chatGenerateEndpoint` prepara o
-cliente para `POST /v1/chat/generate`, cuja integração ponta a ponta fica para a
-etapa seguinte. O chat não calcula valores financeiros nem usa chaves de provedor
-no aplicativo. As evidências preservam instituição, título, seção e URL;
-`document_id` e `source_url` podem estar ausentes ou nulos.
+Antes de iniciar a API, disponibilize o modelo local em outro terminal:
+
+```bash
+ollama serve
+```
+
+Com o servidor Ollama ativo, prepare o modelo uma vez:
+
+```bash
+ollama pull qwen2.5
+```
+
+O download inicial do modelo exige internet. Durante a demonstração, configure
+`LLM_PROVIDER=ollama`, `LLM_MODEL=qwen2.5` e
+`LLM_API_BASE=http://localhost:11434` no ambiente do backend. O timeout padrão do
+modelo é `LLM_TIMEOUT=60` segundos. Prepare também o corpus/embeddings locais
+conforme as instruções da API antes da demonstração.
+
+A tela usa `POST /v1/chat/generate`, enviando `message` e `mode: grounded`.
+O aplicativo recebe `query`, `answered`, `status`, `mode`, `answer`, `model` e
+`evidences`. Modos experimentais e respostas incompatíveis são rejeitados com
+mensagem amigável, sem fallback para `/ask`. O endpoint extrativo permanece
+disponível na API, mas não é usado pelo fluxo normal do chat.
+
+As evidências preservam instituição, título, seção, trecho, relevância e URL;
+`document_id` e `source_url` podem estar ausentes ou nulos no cliente.
+
+### Timeout da geração
+
+A geração tem prazo próprio de **90 segundos**, independente dos 15 segundos
+usados pelas demais chamadas. O prazo inclui recuperação, geração e comunicação;
+ajuste-o ao equipamento e mantenha margem sobre `LLM_TIMEOUT` do backend:
+
+```bash
+flutter run --dart-define=CHAT_GENERATE_TIMEOUT_SECONDS=120
+```
+
+Use um valor inteiro positivo em segundos. Assim como `API_BASE_URL`, essa
+configuração é definida na compilação e exige reiniciar a execução do app.
+
+O prazo é aplicado ao transporte HTTP completo, inclusive à leitura do corpo.
+Ao expirar, o cliente aborta a requisição e só devolve o erro quando o transporte
+confirma o cancelamento. Fechar o cliente também aborta gerações pendentes.
+A API monitora a desconexão, cancela a operação associada e aguarda sua limpeza;
+o cliente HTTP do provedor local é encerrado durante esse cancelamento.
+Isso não constitui confirmação de que o Ollama já interrompeu seu processamento
+interno: esse comportamento precisa ser conferido no ambiente de demonstração.
 
 ### Emulador Android
 
@@ -92,18 +133,36 @@ título, relevância, trecho recuperado e link para o documento oficial. O contr
 **Auditoria** mostra a origem da resposta com RAG e explica por que não apresenta
 uma resposta alternativa sem evidências. Abstenções aparecem com aviso e perguntas
 rápidas para temas permitidos, sem cartões de evidência. Falha de conexão, timeout
-de 15 segundos ou erro HTTP geram mensagem amigável e a ação **Tentar novamente**,
+da geração ou erro HTTP geram mensagem amigável e a ação **Tentar novamente**,
 que repete a última pergunta com erro sem duplicar seu balão.
 
-Para demonstrar no emulador, inicie a API e rode `flutter run`; pergunte, por
+O histórico existe apenas na sessão visual: cada requisição envia a pergunta
+atual, sem mensagens anteriores, extratos ou saldos. O modelo não realiza os
+cálculos financeiros. A resposta é exibida integralmente após a geração, sem
+streaming. `grounded` indica uso de evidências recuperadas, sem certificar cada
+afirmação ou citação. Abrir um link oficial no navegador é um acesso externo
+voluntário, separado do processamento local da pergunta.
+
+Para demonstrar no emulador, inicie Ollama e a API e rode `flutter run`; pergunte, por
 exemplo, **Como montar uma reserva de emergência?**. Ative **Auditoria** e expanda
 um cartão para conferir a seção original e abrir a fonte oficial.
+
+Para o roteiro de homologação e o registro das verificações desta integração,
+consulte [Validação do chat generativo](VALIDACAO_CHAT_GENERATIVO.md).
+
+## Verificações no CI
+
+O job **mobile (análise + testes)** usa Flutter stable, instala as dependências
+com `--enforce-lockfile` e executa a checagem de formatação, `flutter analyze` e
+`flutter test`. A versão efetivamente instalada aparece no log do job. Esse job
+não substitui a homologação com Android e Ollama reais.
 
 ## Validação local
 
 Na pasta `mobile/`:
 
 ```bash
+dart format --output=none --set-exit-if-changed lib test
 flutter analyze
 flutter test
 flutter build apk --debug

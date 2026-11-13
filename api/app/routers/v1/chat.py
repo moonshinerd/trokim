@@ -1,9 +1,10 @@
 from functools import lru_cache
 from typing import Annotated, Literal
 
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, Request
 from pydantic import BaseModel, Field
 
+from app.core.request_lifecycle import run_while_connected
 from app.services.generation_service import GenerationService
 from app.services.rag_service import RAGService
 
@@ -106,12 +107,16 @@ async def ask_financial_assistant(
 )
 async def generate_financial_response(
     request: GenerateQueryRequest,
+    connection: Request,
     generation_service: Annotated[GenerationService, Depends(get_generation_service)],
 ) -> GenerateQueryResponse:
-    result = await generation_service.generate_answer(
-        request.message,
-        mode=request.mode,
-        top_k=request.top_k,
-        temperature=request.temperature,
+    result = await run_while_connected(
+        connection,
+        generation_service.generate_answer(
+            request.message,
+            mode=request.mode,
+            top_k=request.top_k,
+            temperature=request.temperature,
+        ),
     )
     return GenerateQueryResponse.model_validate(result.model_dump())
