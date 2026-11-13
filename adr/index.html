@@ -1322,45 +1322,6 @@
   
 </li>
         
-          <li class="md-nav__item">
-  <a href="#sintese-das-decisoes-por-fase-do-projeto" class="md-nav__link">
-    <span class="md-ellipsis">
-      <span class="md-typeset">
-        Síntese das Decisões por Fase do Projeto
-      </span>
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Síntese das Decisões por Fase do Projeto">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#concepcao-e-fundamentos-semana-1" class="md-nav__link">
-    <span class="md-ellipsis">
-      <span class="md-typeset">
-        Concepção e Fundamentos (Semana 1)
-      </span>
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#base-de-conhecimento-e-recuperacao-rag-semana-2" class="md-nav__link">
-    <span class="md-ellipsis">
-      <span class="md-typeset">
-        Base de Conhecimento e Recuperação RAG (Semana 2)
-      </span>
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-        
       </ul>
     
   
@@ -1620,45 +1581,6 @@
   
 </li>
         
-          <li class="md-nav__item">
-  <a href="#sintese-das-decisoes-por-fase-do-projeto" class="md-nav__link">
-    <span class="md-ellipsis">
-      <span class="md-typeset">
-        Síntese das Decisões por Fase do Projeto
-      </span>
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Síntese das Decisões por Fase do Projeto">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#concepcao-e-fundamentos-semana-1" class="md-nav__link">
-    <span class="md-ellipsis">
-      <span class="md-typeset">
-        Concepção e Fundamentos (Semana 1)
-      </span>
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#base-de-conhecimento-e-recuperacao-rag-semana-2" class="md-nav__link">
-    <span class="md-ellipsis">
-      <span class="md-typeset">
-        Base de Conhecimento e Recuperação RAG (Semana 2)
-      </span>
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-        
       </ul>
     
   
@@ -1746,20 +1668,10 @@
 </tr>
 </tbody>
 </table>
-<hr />
-<h2 id="sintese-das-decisoes-por-fase-do-projeto">Síntese das Decisões por Fase do Projeto<a class="headerlink" href="#sintese-das-decisoes-por-fase-do-projeto" title="Permanent link">&para;</a></h2>
-<h3 id="concepcao-e-fundamentos-semana-1">Concepção e Fundamentos (Semana 1)<a class="headerlink" href="#concepcao-e-fundamentos-semana-1" title="Permanent link">&para;</a></h3>
 <ul>
-<li><strong>ADR 0001 (Flutter Android):</strong> Escolha do Flutter para interface mobile por prover componentes nativos Material 3, modularidade vertical (<em>feature-first</em>) e compilação direta sem pontes web lentas.</li>
-<li><strong>ADR 0002 (FastAPI + SQLite Local):</strong> Adoção de arquitetura estritamente <em>local-first</em>, eliminando servidores de banco de dados e assegurando soberania de dados do usuário (LGPD).</li>
-<li><strong>ADR 0003 (RAG em Fontes Oficiais):</strong> Exigência de que toda resposta pedagógica do assistente derive com exclusividade de cadernos oficiais do BCB, CVM e CFPB, com abstenção ativa em tópicos especulativos.</li>
-<li><strong>ADR 0004 (Cálculos Determinísticos):</strong> Proibição da LLM de efetuar operações aritméticas de saldos ou orçamentos, delegando o cálculo a funções puras em Python.</li>
-<li><strong>ADR 0005 (Extratos OFX e PDF):</strong> Foco no processamento local de arquivos bancários fornecidos pelo usuário, descartando integrações complexas e invasivas de Open Finance.</li>
-</ul>
-<h3 id="base-de-conhecimento-e-recuperacao-rag-semana-2">Base de Conhecimento e Recuperação RAG (Semana 2)<a class="headerlink" href="#base-de-conhecimento-e-recuperacao-rag-semana-2" title="Permanent link">&para;</a></h3>
-<ul>
-<li><strong>ADR 0006 (Curadoria Rastreável e Benchmark):</strong> Estruturação do catálogo de 20 fontes com hashes SHA-256 de proveniência, gabarito de 61 consultas e metas mínimas (Recall@3 $\ge 90\%$, Abstenção $= 100\%$).</li>
-<li><strong>ADR 0007 (Banco Vetorial e Embeddings Densos):</strong> Implementação de persistência vetorial nativa em SQLite (<code>sqlite-vec</code> / <code>vec0</code>) e embeddings multilíngues via FastEmbed (<code>MiniLM-L12-v2</code> 384d), com busca híbrida densa/léxica calibrada em $\alpha = 0,3$.</li>
+<li><a href="0006-curadoria-benchmark/">0006 — Curadoria rastreável e benchmark</a></li>
+<li><a href="0007-banco-vetorial-embeddings/">0007 — Banco vetorial local e embeddings densos no RAG</a></li>
+<li><a href="0008-material-comparativo-versionado/">0008 — Material comparativo versionado</a></li>
 </ul>
 
 
