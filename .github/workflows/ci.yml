@@ -17,9 +17,9 @@ concurrency:
 jobs:
   api:
     name: api (lint + testes)
-    runs-on: [self-hosted, macOS]
+    runs-on: ubuntu-latest
     env:
-      FASTEMBED_CACHE_PATH: /tmp/fastembed
+      FASTEMBED_CACHE_PATH: ${{ github.workspace }}/.fastembed
     defaults:
       run:
         working-directory: api
@@ -30,7 +30,7 @@ jobs:
           python-version: "3.12"
       - uses: actions/cache@v4
         with:
-          path: ~/.cache/fastembed
+          path: ${{ github.workspace }}/.fastembed
           key: fastembed-${{ runner.os }}-${{ hashFiles('api/uv.lock') }}
       - run: uv sync --frozen
       - name: ruff check
@@ -42,9 +42,9 @@ jobs:
 
   research:
     name: research (benchmark rag + lint)
-    runs-on: [self-hosted, macOS]
+    runs-on: ubuntu-latest
     env:
-      FASTEMBED_CACHE_PATH: /tmp/fastembed
+      FASTEMBED_CACHE_PATH: ${{ github.workspace }}/.fastembed
     steps:
       - uses: actions/checkout@v4
       - uses: astral-sh/setup-uv@v6
@@ -52,7 +52,7 @@ jobs:
           python-version: "3.12"
       - uses: actions/cache@v4
         with:
-          path: ~/.cache/fastembed
+          path: ${{ github.workspace }}/.fastembed
           key: fastembed-${{ runner.os }}-${{ hashFiles('api/uv.lock') }}
       - name: Instalar dependências fixadas
         run: cd api && uv sync --frozen
@@ -66,7 +66,7 @@ jobs:
 
   docs:
     name: docs (zensical build strict)
-    runs-on: [self-hosted, macOS]
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
       - uses: astral-sh/setup-uv@v6

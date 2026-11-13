@@ -14,7 +14,7 @@ concurrency:
 
 jobs:
   deploy:
-    runs-on: [self-hosted, macOS]
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
       - uses: astral-sh/setup-uv@v6
