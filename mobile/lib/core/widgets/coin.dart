@@ -3,6 +3,7 @@ import 'dart:math' as math;
 import 'package:flutter/material.dart';
 
 import '../theme/app_theme.dart';
+import 'mascot.dart';
 
 /// Moeda 3D do Trokim desenhada em tempo real.
 ///
@@ -71,8 +72,8 @@ class CoinPainter extends CustomPainter {
       final milled = i.isEven;
       final shade = (t.abs());
       final color = Color.lerp(
-        milled ? const Color(0xFFC9AEFF) : const Color(0xFF5A2BD0),
-        const Color(0xFF1E0F57),
+        milled ? const Color(0xFFF0CD6A) : const Color(0xFFB8860B),
+        const Color(0xFF6B4A06),
         shade * 0.6,
       )!;
       canvas.drawOval(
@@ -107,10 +108,10 @@ class CoinPainter extends CustomPainter {
           begin: Alignment(-0.9, -1),
           end: Alignment(0.9, 1),
           colors: [
-            Color(0xFFEFE6FF),
-            Color(0xFFA87BFF),
-            Color(0xFF6A33E8),
-            Color(0xFF24106A),
+            Color(0xFF7FA8A5),
+            Color(0xFF4A7573),
+            Color(0xFF2F4F4F),
+            Color(0xFF142828),
           ],
           stops: [0, 0.3, 0.62, 1],
         ).createShader(circle),
@@ -143,7 +144,7 @@ class CoinPainter extends CustomPainter {
         Paint()
           ..style = PaintingStyle.stroke
           ..strokeWidth = 10 * (r / 250)
-          ..color = const Color(0xFFD6F85A).withValues(alpha: 0.35)
+          ..color = const Color(0xFFE9B44C).withValues(alpha: 0.35)
           ..maskFilter = MaskFilter.blur(BlurStyle.normal, r * 0.05),
       );
     }
@@ -155,8 +156,8 @@ class CoinPainter extends CustomPainter {
         r - 2 * scale,
         Paint()
           ..style = PaintingStyle.stroke
-          ..strokeWidth = 5 * scale
-          ..color = Colors.white.withValues(alpha: 0.9));
+          ..strokeWidth = 6 * scale
+          ..color = const Color(0xFFF0CD6A));
     if (!compact) {
       canvas.drawCircle(
           Offset.zero,
@@ -164,14 +165,14 @@ class CoinPainter extends CustomPainter {
           Paint()
             ..style = PaintingStyle.stroke
             ..strokeWidth = 2.5 * scale
-            ..color = const Color(0xFF2A1470).withValues(alpha: 0.5));
+            ..color = const Color(0xFF0E1B1B).withValues(alpha: 0.6));
       canvas.drawCircle(
           Offset.zero,
           r - 20 * scale,
           Paint()
             ..style = PaintingStyle.stroke
             ..strokeWidth = 2 * scale
-            ..color = Colors.white.withValues(alpha: 0.45));
+            ..color = const Color(0xFFDAA520).withValues(alpha: 0.8));
     }
 
     // Texto gravado em anel.
@@ -194,32 +195,19 @@ class CoinPainter extends CustomPainter {
   }
 
   void _mark(Canvas canvas) {
-    canvas.translate(0, -4);
-    final dark = Paint()..color = const Color(0xFF1B0B4F);
-    for (var i = 12; i > 0; i--) {
-      canvas.save();
-      canvas.translate(-i * 0.7, i * 0.9);
-      canvas.drawPath(_bar, dark);
-      canvas.drawPath(_stem, dark);
-      canvas.restore();
-    }
-    final fill = Paint()
-      ..shader = const LinearGradient(
-        begin: Alignment.topLeft,
-        end: Alignment.bottomRight,
-        colors: [Color(0xFFF8FFC7), Color(0xFFD6F85A), Color(0xFF9ACB00)],
-      ).createShader(const Rect.fromLTWH(-140, -120, 280, 260));
-    canvas.drawPath(_bar, fill);
-    canvas.drawPath(_stem, fill);
-    final edge = Paint()
-      ..style = PaintingStyle.stroke
-      ..strokeWidth = 3
-      ..color = Colors.white.withValues(alpha: 0.9);
+    // sombra suave do relevo
     canvas.save();
-    canvas.translate(-1.2, -1.2);
-    canvas.drawPath(_bar, edge);
-    canvas.drawPath(_stem, edge);
+    canvas.translate(4, 7);
+    canvas.drawCircle(
+      const Offset(0, 8),
+      132,
+      Paint()
+        ..color = Colors.black.withValues(alpha: 0.35)
+        ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 9),
+    );
     canvas.restore();
+    canvas.scale(1.28);
+    Mascot.paint(canvas);
   }
 
   void _glyph(Canvas canvas, String text) {
@@ -236,8 +224,8 @@ class CoinPainter extends CustomPainter {
           ),
           textDirection: TextDirection.ltr,
         )..layout();
-    final shadow = make(const Color(0xFF1B0B4F));
-    final face = make(AppTheme.lime);
+    final shadow = make(const Color(0xFF3D2706));
+    final face = make(const Color(0xFFF6D27A));
     final off = Offset(-face.width / 2, -face.height / 2);
     for (var i = 10; i > 0; i--) {
       shadow.paint(canvas, off + Offset(-i * 0.7, i * 0.9));
@@ -258,7 +246,7 @@ class CoinPainter extends CustomPainter {
               fontSize: fontSize,
               fontWeight: FontWeight.w800,
               letterSpacing: 0,
-              color: Colors.white.withValues(alpha: 0.85),
+              color: const Color(0xFFF0CD6A).withValues(alpha: 0.95),
             ),
           ),
           textDirection: TextDirection.ltr,
@@ -285,7 +273,7 @@ class CoinPainter extends CustomPainter {
           text: p.text!.toPlainText(),
           style: (p.text! as TextSpan)
               .style!
-              .copyWith(color: const Color(0xFF1B0B4F).withValues(alpha: 0.7)),
+              .copyWith(color: const Color(0xFF0A1414).withValues(alpha: 0.8)),
         ),
         textDirection: TextDirection.ltr,
       )..layout();
@@ -468,7 +456,7 @@ class _DustPainter extends CustomPainter {
       final y = (m.y - t * m.speed * 0.35) % 1.0;
       final x = m.x + math.sin((t + m.phase) * 2 * math.pi) * 0.012;
       final tw = 0.5 + 0.5 * math.sin((t * 3 + m.phase) * 2 * math.pi);
-      final color = (m.lime ? const Color(0xFFD6F85A) : const Color(0xFFB79BFF))
+      final color = (m.lime ? const Color(0xFFF0CD6A) : const Color(0xFFB9D6CF))
           .withValues(alpha: 0.15 + 0.6 * tw);
       canvas.drawCircle(
         Offset(x * size.width, y * size.height),

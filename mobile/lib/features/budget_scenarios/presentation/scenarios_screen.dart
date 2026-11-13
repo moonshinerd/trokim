@@ -111,9 +111,9 @@ class _ScenarioCard extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
-        color: hi ? AppTheme.violet : context.colors.surface,
+        color: hi ? AppTheme.emerald : context.colors.surface,
         borderRadius: BorderRadius.circular(26),
-        border: Border.all(color: hi ? AppTheme.violet : context.colors.line),
+        border: Border.all(color: hi ? AppTheme.emerald : context.colors.line),
         boxShadow: hi ? AppTheme.softShadow(context) : null,
       ),
       child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
@@ -139,7 +139,7 @@ class _ScenarioCard extends StatelessWidget {
             Container(
               padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
               decoration: BoxDecoration(
-                color: AppTheme.lime,
+                color: AppTheme.gold,
                 borderRadius: BorderRadius.circular(20),
               ),
               child: Text('Sugerido',
@@ -155,7 +155,7 @@ class _ScenarioCard extends StatelessWidget {
         _Row('Renda mensal', s.income, null, hi),
         _Row('Despesas fixas', s.fixed, AppTheme.info, hi),
         _Row('Despesas variáveis', s.variable, const Color(0xFFE9892F), hi),
-        _Row('Aporte na reserva', s.savings, AppTheme.lime, hi, strong: true),
+        _Row('Aporte na reserva', s.savings, AppTheme.gold, hi, strong: true),
         _Row('Margem operacional', s.margin, const Color(0xFF9AA8A2), hi),
       ]),
     );
@@ -173,7 +173,7 @@ class _AllocationBar extends StatelessWidget {
     final parts = [
       (s.fixed, AppTheme.info),
       (s.variable, const Color(0xFFE9892F)),
-      (s.savings, AppTheme.lime),
+      (s.savings, AppTheme.gold),
       (s.margin, const Color(0xFF9AA8A2)),
     ];
     return Semantics(

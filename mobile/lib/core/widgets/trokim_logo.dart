@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 
 import '../theme/app_theme.dart';
-import 'coin.dart';
+import 'mascot.dart';
 
-/// Marca do Trokim: uma moeda violeta com o "T" em verde-limão.
+/// Marca do Trokim: a onça-pintada, de pelagem dourada como uma moeda.
 /// Trokim vem de troquinho, que vem de troco.
 class TrokimMark extends StatelessWidget {
   const TrokimMark({super.key, this.size = 40});
@@ -17,7 +17,7 @@ class TrokimMark extends StatelessWidget {
         child: SizedBox(
           width: size,
           height: size,
-          child: CustomPaint(painter: CoinPainter(compact: true, tilt: 0)),
+          child: CustomPaint(painter: _MascotPainter()),
         ),
       );
 }
@@ -48,4 +48,16 @@ class TrokimLogo extends StatelessWidget {
           ),
         ],
       );
+}
+
+class _MascotPainter extends CustomPainter {
+  @override
+  void paint(Canvas canvas, Size size) {
+    canvas.translate(size.width / 2, size.height / 2);
+    canvas.scale(size.shortestSide / (Mascot.extent * 2.05));
+    Mascot.paint(canvas);
+  }
+
+  @override
+  bool shouldRepaint(covariant CustomPainter old) => false;
 }

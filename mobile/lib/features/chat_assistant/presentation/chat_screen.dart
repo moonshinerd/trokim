@@ -236,7 +236,7 @@ class _MessageBubble extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final color = message.isUser
-        ? AppTheme.violet
+        ? AppTheme.emerald
         : message.isError
             ? AppTheme.negative.withValues(alpha: 0.14)
             : message.isAbstained
@@ -295,7 +295,7 @@ class _MessageBubble extends StatelessWidget {
                   child: Container(
                     padding: const EdgeInsets.all(10),
                     decoration: BoxDecoration(
-                      color: AppTheme.lime.withValues(alpha: 0.16),
+                      color: AppTheme.gold.withValues(alpha: 0.16),
                       borderRadius: BorderRadius.circular(10),
                     ),
                     child: const Text(

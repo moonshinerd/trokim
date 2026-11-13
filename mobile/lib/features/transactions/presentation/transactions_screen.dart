@@ -24,8 +24,8 @@ class TransactionsScreen extends StatelessWidget {
         index: 5,
         child: FloatingActionButton.extended(
           onPressed: () => _import(context),
-          backgroundColor: AppTheme.lime,
-          foregroundColor: AppTheme.charcoal,
+          backgroundColor: AppTheme.gold,
+          foregroundColor: AppTheme.forest,
           elevation: 2,
           shape:
               RoundedRectangleBorder(borderRadius: BorderRadius.circular(18)),

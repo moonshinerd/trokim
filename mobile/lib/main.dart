@@ -291,7 +291,7 @@ class _SplashState extends State<_Splash> {
       backgroundColor: c.bg,
       body: Stack(children: [
         const Positioned.fill(child: DustField()),
-        // Brilho violeta atrás da moeda.
+        // Brilho dourado atrás da moeda.
         Center(
           child: Container(
             width: 360,
@@ -299,8 +299,8 @@ class _SplashState extends State<_Splash> {
             decoration: BoxDecoration(
               shape: BoxShape.circle,
               gradient: RadialGradient(colors: [
-                AppTheme.violet.withValues(alpha: 0.32),
-                AppTheme.violet.withValues(alpha: 0),
+                AppTheme.gold.withValues(alpha: 0.16),
+                AppTheme.gold.withValues(alpha: 0),
               ]),
             ),
           ),
@@ -343,7 +343,7 @@ class _SplashState extends State<_Splash> {
                   child: LinearProgressIndicator(
                     value: _t,
                     backgroundColor: c.line,
-                    valueColor: const AlwaysStoppedAnimation(AppTheme.lime),
+                    valueColor: const AlwaysStoppedAnimation(AppTheme.gold),
                   ),
                 ),
               ),

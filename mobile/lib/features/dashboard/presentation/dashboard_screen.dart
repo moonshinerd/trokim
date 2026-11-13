@@ -134,14 +134,14 @@ class _BalanceCard extends StatelessWidget {
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
           colors: const [
-            Color(0xFF8E5BFF),
-            Color(0xFF5B22D6),
-            Color(0xFF1E0F57)
+            Color(0xFF3F6666),
+            Color(0xFF2F4F4F),
+            Color(0xFF1B3232)
           ],
         ),
         boxShadow: [
           BoxShadow(
-            color: AppTheme.violetDeep.withValues(alpha: 0.28),
+            color: AppTheme.forest.withValues(alpha: 0.28),
             blurRadius: 30,
             offset: const Offset(0, 14),
           ),
@@ -157,7 +157,7 @@ class _BalanceCard extends StatelessWidget {
         Positioned(
           right: 22,
           top: 22,
-          child: const SpinningCoin(size: 60, compact: true),
+          child: const SpinningCoin(size: 70),
         ),
         Padding(
           padding: const EdgeInsets.all(22),
@@ -261,7 +261,7 @@ class _SavingsBar extends StatelessWidget {
               value: v,
               minHeight: 8,
               backgroundColor: Colors.white.withValues(alpha: 0.18),
-              valueColor: const AlwaysStoppedAnimation(AppTheme.lime),
+              valueColor: const AlwaysStoppedAnimation(AppTheme.gold),
             ),
           ),
         ),
