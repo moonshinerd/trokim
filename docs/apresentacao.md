@@ -20,17 +20,7 @@ Este documento reúne a visão consolidada das **Entregas 1 e 2** do projeto **T
 
 ## 2. Demonstração ao Vivo com a API Local
 
-Para demonstrar o RAG em tempo real, inicie a API e dispare consultas ao endpoint `POST /v1/chat/ask` (ou use o Swagger em `http://localhost:8000/docs`):
-
-```bash
-make api-run
-
-curl -s -X POST http://localhost:8000/v1/chat/ask \
-  -H "Content-Type: application/json" \
-  -d '{"message": "Como funciona a regra dos 30 dias do rotativo?"}'
-```
-
-A resposta traz as evidências recuperadas, com scores de relevância e links para as fontes governamentais. As perguntas abaixo foram validadas pelo benchmark:
+Com a API ativa (`make api-run`), as perguntas abaixo disparam consultas ao endpoint `POST /v1/chat/ask`. A resposta traz as evidências recuperadas, com scores de relevância e links para as fontes governamentais. As perguntas abaixo foram validadas pelo benchmark:
 
 | Tema | Pergunta de demonstração | Fonte | Resultado esperado |
 |---|---|:---:|---|

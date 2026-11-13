@@ -75,7 +75,7 @@ curl -X POST http://127.0.0.1:8000/v1/chat/generate \
 
 ## 4. Apresentação Executiva e Demonstração
 
-O painel de resultados e as perguntas de demonstração validadas pelo benchmark estão em [Apresentação Executiva](apresentacao.md). Com a API ativa (`make api-run`), basta disparar as consultas por `curl` ou pelo Swagger em `/docs`.
+O painel de resultados e as perguntas de demonstração validadas pelo benchmark estão em [Apresentação Executiva](apresentacao.md).
 
 ---
 
