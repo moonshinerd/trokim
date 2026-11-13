@@ -17,13 +17,19 @@ const question = 'Como montar uma reserva de emergência?';
 const answer = 'Priorize baixo risco e liquidez diária.';
 const sourceUrl = 'https://www.gov.br/investidor/pt-br/reserva-de-emergencia';
 
-http.Response reply({bool abstained = false, bool withUrl = true}) =>
+http.Response reply({
+  bool abstained = false,
+  bool withUrl = true,
+  String responseText = answer,
+}) =>
     http.Response.bytes(
       utf8.encode(jsonEncode({
         'query': question,
+        'mode': 'grounded',
+        'model': 'qwen2.5',
         'answered': !abstained,
         'status': abstained ? 'abstained' : 'grounded',
-        'answer': abstained ? 'Não há evidências suficientes.' : answer,
+        'answer': abstained ? 'Não há evidências suficientes.' : responseText,
         'evidences': abstained
             ? []
             : [
@@ -135,7 +141,7 @@ void main() {
       (tester) async {
     var attempts = 0;
     await openChat(tester, (request) async {
-      expect(jsonDecode(request.body), {'message': question});
+      expect(jsonDecode(request.body), {'message': question, 'mode': 'grounded'});
       if (++attempts == 1) throw const SocketException('Sem rede');
       return reply();
     });
@@ -194,7 +200,7 @@ void main() {
     });
     await sendQuestion(tester);
     await tester.pump();
-    expect(find.text('Consultando fontes oficiais...'), findsOneWidget);
+    expect(find.text('Consultando fontes e gerando resposta...'), findsOneWidget);
     expect(find.byType(CircularProgressIndicator), findsOneWidget);
     expect(
         tester
@@ -221,6 +227,47 @@ void main() {
     expect(find.byType(Card), findsOneWidget);
     expect(find.byType(SelectableText), findsNothing);
     expect(find.text('null'), findsNothing);
+  });
+
+  for (final size in [const Size(320, 640), const Size(800, 1280)]) {
+    testWidgets('resposta longa e carregamento cabem em $size', (tester) async {
+      tester.view.physicalSize = size;
+      tester.view.devicePixelRatio = 1;
+      addTearDown(tester.view.resetPhysicalSize);
+      addTearDown(tester.view.resetDevicePixelRatio);
+      final pending = Completer<http.Response>();
+      await openChat(tester, (_) => pending.future);
+      await sendQuestion(tester);
+      await tester.pump();
+      expect(find.text('Consultando fontes e gerando resposta...'), findsOneWidget);
+      expect(tester.takeException(), isNull);
+      final longAnswer = List.filled(40, answer).join(' ');
+      pending.complete(reply(responseText: longAnswer));
+      await tester.pumpAndSettle();
+      expect(find.text(longAnswer), findsOneWidget);
+      expect(find.byType(Card), findsOneWidget);
+      expect(tester.takeException(), isNull);
+    });
+  }
+
+  testWidgets('falha do modelo permite retry sem aviso de abstenção', (tester) async {
+    var requests = 0;
+    await openChat(tester, (request) async {
+      expect(request.url.path, '/v1/chat/generate');
+      expect((jsonDecode(request.body) as Map)['mode'], 'grounded');
+      return ++requests == 1 ? http.Response('Ollama indisponível', 500) : reply();
+    });
+    await sendQuestion(tester);
+    await tester.pumpAndSettle();
+    expect(find.text('Tentar novamente'), findsOneWidget);
+    expect(find.text('Reserva de emergência'), findsNothing);
+    expect(find.byType(Card), findsNothing);
+    expect(find.textContaining('Ollama'), findsNothing);
+    await tester.tap(find.text('Tentar novamente'));
+    await tester.pumpAndSettle();
+    expect(requests, 2);
+    expect(find.text(question), findsOneWidget);
+    expect(find.text(answer), findsOneWidget);
   });
 
   testWidgets('mensagem vazia não envia requisição', (tester) async {

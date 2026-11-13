@@ -119,7 +119,11 @@ class _ChatScreenState extends State<ChatScreen> {
                               child: CircularProgressIndicator(strokeWidth: 2),
                             ),
                             SizedBox(width: 12),
-                            Text('Consultando fontes oficiais...'),
+                            Expanded(
+                              child: Text(
+                                'Consultando fontes e gerando resposta...',
+                              ),
+                            ),
                           ],
                         ),
                       );
@@ -319,7 +323,7 @@ class _AuditComparison extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final grounded = message.status == 'grounded';
+    final grounded = message.status == AssistantStatus.grounded;
     return Container(
       width: double.infinity,
       margin: const EdgeInsets.only(top: 10),
