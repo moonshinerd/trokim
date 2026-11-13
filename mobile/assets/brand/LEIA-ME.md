@@ -1,14 +1,19 @@
 # Mascote do Trokim
 
-Para trocar a arte do mascote, substitua **`mascot.png`** por um PNG quadrado
-(1024 × 1024), com fundo transparente e o desenho centralizado, já nas cores
-finais. Ele aparece na abertura (moeda 3D), no cabeçalho, no cartão de saldo e
-em Ajustes. Nada mais precisa mudar no código.
+A onça-pintada do Trokim usa dois arquivos PNG com fundo transparente:
 
-Para o ícone do app e para o site, atualize também:
+- `mascot_body.png`: corpo inteiro, usado na moeda 3D da abertura e no site.
+- `mascot_head.png`: cabeça (quadrada, 1024 × 1024, com esmaecido suave nas
+  bordas), usada nos tamanhos pequenos: cabeçalho e Ajustes.
 
-- `mobile/android/app/src/main/res/mipmap-*/ic_launcher.png`
-- `docs/assets/logo.svg`, `docs/assets/icon.svg` e `docs/assets/hero-coin.svg`
+Para trocar a arte, substitua os dois arquivos mantendo os nomes. Nada mais
+precisa mudar no código.
 
-Use somente arte própria ou com licença que permita uso comercial (CC0,
-domínio público ou licença paga), e registre a origem no PR.
+## Créditos
+
+A arte parte do vetor **"Jaguar SVG"**, de **Jordan Irwin (AntumDeluge)**,
+publicado em <https://opengameart.org/node/98089> sob **CC0 (domínio
+público)**, baseado numa fotografia também CC0. Atribuição não é obrigatória;
+fica aqui por boa prática. Modificações do Trokim: remoção das pedras do
+cenário, ampliação da área de desenho e estilização em quatro tons dourados com
+as manchas vazadas.

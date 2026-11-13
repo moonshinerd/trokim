@@ -198,17 +198,15 @@ class CoinPainter extends CustomPainter {
   void _mark(Canvas canvas) {
     // sombra suave do relevo
     canvas.save();
-    canvas.translate(4, 7);
-    canvas.drawCircle(
-      const Offset(0, 8),
-      132,
+    canvas.translate(4, 8);
+    canvas.drawOval(
+      Rect.fromCenter(center: const Offset(0, 6), width: 300, height: 170),
       Paint()
-        ..color = Colors.black.withValues(alpha: 0.35)
-        ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 9),
+        ..color = Colors.black.withValues(alpha: 0.28)
+        ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 12),
     );
     canvas.restore();
-    canvas.scale(1.22);
-    Mascot.paint(canvas);
+    Mascot.paintBody(canvas, width: 330);
   }
 
   void _glyph(Canvas canvas, String text) {
