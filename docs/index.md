@@ -4,7 +4,7 @@ title: Trokim — Assistente Financeiro Pessoal com IA
 
 <div class="tk-hero" markdown>
 
-<img src="assets/logo-hero.svg" alt="Logo do Trokim" width="84" height="84">
+<img src="assets/hero-coin.svg" class="tk-coin" alt="Moeda do Trokim com a onça-pintada, mascote do projeto">
 
 # Entenda seu dinheiro. Decida com calma.
 
