@@ -1,36 +1,184 @@
 /* ==========================================================================
-   Trokim - Design System & Visual Polish
-   Palette:
-     - #0D47A1 (Azul Profundo - Primária)
-     - #00B4D8 (Azul Turquesa - Destaque / Accent)
-     - #10B981 (Verde Esmeralda - Sucesso / Concluído)
-     - #64748B (Ardósia / Neutro)
+   Trokim - Design System
+   Verde-esmeralda profundo, papel quente e detalhe dourado (a "moeda").
+     --tk-forest  #0B3D2E   --tk-emerald #0F8F6B   --tk-mint #DDF1E8
+     --tk-coin    #E9B44C   --tk-paper   #F5F3EE   --tk-ink  #0E1F1A
+   Mesma paleta do aplicativo mobile.
    ========================================================================== */
+
+:root {
+  --tk-forest: #0B3D2E;
+  --tk-emerald: #0F8F6B;
+  --tk-mint: #DDF1E8;
+  --tk-coin: #E9B44C;
+  --tk-paper: #F5F3EE;
+  --tk-ink: #0E1F1A;
+  --tk-line: #E6E2D8;
+  --tk-ease: cubic-bezier(0.2, 0, 0, 1);
+}
 
 :root,
 [data-md-color-scheme="default"] {
-  --md-primary-fg-color:              #0D47A1;
-  --md-primary-fg-color--light:       #1976D2;
-  --md-primary-fg-color--dark:        #0A3478;
-  --md-primary-bg-color:              #FFFFFF;
-  --md-accent-fg-color:               #0284C7;
-  --md-typeset-a-color:               #0284C7;
+  --md-primary-fg-color:        #0B3D2E;
+  --md-primary-fg-color--light: #146C54;
+  --md-primary-fg-color--dark:  #082B20;
+  --md-primary-bg-color:        #FFFFFF;
+  --md-accent-fg-color:         #0F8F6B;
+  --md-typeset-a-color:         #0F8F6B;
+  --md-default-bg-color:        #F5F3EE;
+  --md-default-fg-color:        #0E1F1A;
+  --md-default-fg-color--light: #4B5B55;
+  --md-code-bg-color:           #ECE9E1;
+  --md-footer-bg-color:         #0B3D2E;
 
-  --md-mermaid-edge-color:            #64748B;
-  --md-mermaid-label-bg-color:        #FFFFFF;
-  --md-mermaid-label-fg-color:        #1E293B;
+  --md-mermaid-edge-color:      #6B7A74;
+  --md-mermaid-label-bg-color:  #FFFFFF;
+  --md-mermaid-label-fg-color:  #0E1F1A;
 }
 
 [data-md-color-scheme="slate"] {
-  --md-primary-fg-color:              #1E293B;
-  --md-primary-fg-color--light:       #334155;
-  --md-primary-fg-color--dark:        #0F172A;
-  --md-accent-fg-color:               #38BDF8;
-  --md-typeset-a-color:               #38BDF8;
+  --md-primary-fg-color:        #0A2A20;
+  --md-primary-fg-color--light: #0F8F6B;
+  --md-primary-fg-color--dark:  #06190F;
+  --md-accent-fg-color:         #E9B44C;
+  --md-typeset-a-color:         #4FD1A5;
+  --md-default-bg-color:        #0B1512;
+  --md-default-fg-color:        #E8EFEC;
+  --md-code-bg-color:           #12211C;
+  --md-footer-bg-color:         #06190F;
 
-  --md-mermaid-edge-color:            #94A3B8;
-  --md-mermaid-label-bg-color:        #1E293B;
-  --md-mermaid-label-fg-color:        #F1F5F9;
+  --md-mermaid-edge-color:      #8FA39B;
+  --md-mermaid-label-bg-color:  #12211C;
+  --md-mermaid-label-fg-color:  #E8EFEC;
+}
+
+/* --------------------------------------------------------------------------
+   Tipografia e ritmo
+   -------------------------------------------------------------------------- */
+.md-typeset h1 {
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  color: var(--md-default-fg-color);
+  text-wrap: balance;
+}
+.md-typeset h2 {
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  text-wrap: balance;
+}
+.md-typeset h3 { font-weight: 700; letter-spacing: -0.01em; }
+.md-typeset { font-feature-settings: "ss01", "tnum"; }
+
+/* --------------------------------------------------------------------------
+   Cabeçalho e abas
+   -------------------------------------------------------------------------- */
+.md-header {
+  box-shadow: none;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+.md-header__button.md-logo img,
+.md-header__button.md-logo svg { height: 1.7rem; width: auto; }
+.md-header__title { font-weight: 800; letter-spacing: -0.02em; }
+.md-tabs { border-bottom: 1px solid rgba(255, 255, 255, 0.06); }
+.md-tabs__link { font-weight: 600; opacity: 0.72; transition: opacity 0.2s var(--tk-ease); }
+.md-tabs__link--active, .md-tabs__link:hover { opacity: 1; }
+
+/* --------------------------------------------------------------------------
+   Cartões de destaque (grid cards)
+   -------------------------------------------------------------------------- */
+.md-typeset .grid.cards > ul > li,
+.md-typeset .grid > .card {
+  border: 1px solid var(--tk-line);
+  border-radius: 20px;
+  background: #fff;
+  padding: 1.1rem 1.2rem;
+  transition: transform 0.35s var(--tk-ease), box-shadow 0.35s var(--tk-ease), border-color 0.35s var(--tk-ease);
+}
+.md-typeset .grid.cards > ul > li:hover {
+  transform: translateY(-4px);
+  border-color: var(--tk-emerald);
+  box-shadow: 0 18px 40px -18px rgba(11, 61, 46, 0.35);
+}
+[data-md-color-scheme="slate"] .md-typeset .grid.cards > ul > li {
+  background: #12211C;
+  border-color: rgba(255, 255, 255, 0.08);
+}
+.md-typeset .grid.cards > ul > li .twemoji,
+.md-typeset .grid.cards > ul > li .lg { color: var(--tk-emerald); }
+
+/* --------------------------------------------------------------------------
+   Admonitions, código e tabelas
+   -------------------------------------------------------------------------- */
+.md-typeset .admonition, .md-typeset details {
+  border-radius: 16px;
+  border-width: 1px;
+  box-shadow: none;
+}
+.md-typeset code { border-radius: 8px; }
+.md-typeset pre > code { border-radius: 14px; }
+.md-typeset table:not([class]) {
+  font-size: 0.85rem;
+  border: 1px solid var(--tk-line);
+  border-radius: 14px;
+  border-collapse: separate;
+  border-spacing: 0;
+  overflow: hidden;
+  width: 100%;
+  display: table;
+  box-shadow: none;
+  background: #fff;
+}
+.md-typeset table:not([class]) th {
+  background: var(--tk-mint);
+  color: var(--tk-forest);
+  font-weight: 700;
+}
+.md-typeset table:not([class]) tr:hover td { background: rgba(15, 143, 107, 0.05); }
+[data-md-color-scheme="slate"] .md-typeset table:not([class]) {
+  background: #12211C;
+  border-color: rgba(255, 255, 255, 0.08);
+}
+[data-md-color-scheme="slate"] .md-typeset table:not([class]) th {
+  background: rgba(79, 209, 165, 0.12);
+  color: #BDEBD9;
+}
+
+/* --------------------------------------------------------------------------
+   Botões (md-button)
+   -------------------------------------------------------------------------- */
+.md-typeset .md-button {
+  border-radius: 14px;
+  font-weight: 700;
+  transition: transform 0.2s var(--tk-ease), box-shadow 0.2s var(--tk-ease);
+}
+.md-typeset .md-button--primary {
+  background: var(--tk-forest);
+  border-color: var(--tk-forest);
+}
+.md-typeset .md-button:hover { transform: translateY(-2px); }
+
+/* --------------------------------------------------------------------------
+   Transições suaves entre páginas (navigation.instant)
+   -------------------------------------------------------------------------- */
+@keyframes tk-page-in {
+  from { opacity: 0; transform: translateY(10px); }
+  to   { opacity: 1; transform: none; }
+}
+.md-content__inner { animation: tk-page-in 0.45s var(--tk-ease) both; }
+.md-sidebar { animation: tk-page-in 0.35s var(--tk-ease) both; }
+
+.md-progress { background: var(--tk-coin); height: 3px; }
+
+a, .md-nav__link, .md-tabs__link { transition-property: color, opacity; transition-duration: 0.2s; }
+
+:focus-visible { outline: 2px solid var(--tk-coin); outline-offset: 2px; border-radius: 4px; }
+
+@media (prefers-reduced-motion: reduce) {
+  .md-content__inner, .md-sidebar { animation: none; }
+  .md-typeset .grid.cards > ul > li,
+  .md-typeset .md-button { transition: none; }
+  .md-typeset .grid.cards > ul > li:hover,
+  .md-typeset .md-button:hover { transform: none; }
 }
 
 /* --------------------------------------------------------------------------
@@ -99,18 +247,33 @@
   border: 1px solid rgba(239, 68, 68, 0.4);
 }
 
-/* Tabelas */
-.md-typeset table:not([class]) {
-  font-size: 0.85rem;
-  border-collapse: collapse;
-  width: 100%;
-  display: table;
-}
 
-.md-typeset table:not([class]) th {
-  background-color: rgba(0, 0, 0, 0.04);
+/* --------------------------------------------------------------------------
+   Hero da página inicial
+   -------------------------------------------------------------------------- */
+.md-typeset .tk-hero {
+  position: relative;
+  overflow: hidden;
+  padding: 2.4rem 2rem 2rem;
+  margin: 0 0 1.6rem;
+  border-radius: 28px;
+  color: #fff;
+  background: linear-gradient(135deg, #0F8F6B 0%, #0B3D2E 100%);
 }
-
-[data-md-color-scheme="slate"] .md-typeset table:not([class]) th {
-  background-color: rgba(255, 255, 255, 0.05);
+.md-typeset .tk-hero::after {
+  content: "";
+  position: absolute;
+  right: -70px;
+  top: -70px;
+  width: 260px;
+  height: 260px;
+  border-radius: 50%;
+  border: 30px solid rgba(255, 255, 255, 0.07);
+  pointer-events: none;
 }
+.md-typeset .tk-hero img { display: block; margin-bottom: 1rem; border-radius: 20px; }
+.md-typeset .tk-hero h1 { color: #fff; margin: 0 0 0.6rem; max-width: 18ch; }
+.md-typeset .tk-hero p { max-width: 52ch; color: rgba(255, 255, 255, 0.85); }
+.md-typeset .tk-hero a:not(.md-button) { color: var(--tk-coin); }
+.md-typeset .tk-hero .md-button { color: #fff; border-color: rgba(255, 255, 255, 0.5); }
+.md-typeset .tk-hero .md-button--primary { background: var(--tk-coin); border-color: var(--tk-coin); color: var(--tk-ink); }
