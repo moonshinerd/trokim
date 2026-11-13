@@ -1,0 +1,8 @@
+FONTE: Banco Central do Brasil (BCB)
+TITULO: Cartão: pagamento parcial e limite de juros e encargos
+URL: https://www.bcb.gov.br/meubc/faqs/s/cartao
+CONSULTA: 2026-11-09
+TIPO: Resumo editorial em português; não é transcrição
+
+[SEÇÃO 1: Cartão: alcance e encargos]
+Nas operações de rotativo e parcelamento de saldo da fatura originadas a partir de 3 de janeiro de 2024, juros e encargos financeiros acumulados não podem exceder o valor original da dívida. A data relevante é a origem da operação, independentemente da assinatura do contrato. O limite não inclui compras parceladas com juros. A migração do rotativo para parcelamento da fatura preserva o limite acumulado; não estabelece teto de taxa mensal. Pagar parcialmente, ao menos o mínimo, sem parcelar o restante leva ao rotativo, com juros e encargos contratuais.

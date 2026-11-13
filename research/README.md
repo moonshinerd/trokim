@@ -1,5 +1,10 @@
 # Pesquisa e avaliação RAG — issue #4
 
+O material da semana 3 (issue #20) está em
+[Comparação LLM × RAG](rag_benchmark/COMPARACAO.md): três prompts, 30 casos,
+schema e manifesto de proveniência próprios. `make comparison-validate` valida os
+insumos sem executar modelos. O suplemento documental é exclusivo da comparação.
+
 Base curada com **20 documentos-fonte distintos**, segmentados em janelas de evidência, de BCB, CVM, CFPB
 e ANPD. `knowledge_base/catalog.json` registra título, instituição, URL, localização,
 data de consulta, resumo editorial e SHA-256 do arquivo local. O campo `verification`
