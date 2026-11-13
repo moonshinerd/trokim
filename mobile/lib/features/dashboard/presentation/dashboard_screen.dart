@@ -4,6 +4,7 @@ import 'package:intl/intl.dart';
 import '../../../core/theme/app_theme.dart';
 import '../../../core/widgets/app_motion.dart';
 import '../../../core/widgets/screen_header.dart';
+import '../../../core/widgets/trokim_logo.dart';
 
 final _brl = NumberFormat.currency(locale: 'pt_BR', symbol: 'R\$');
 
@@ -149,14 +150,7 @@ class _BalanceCard extends StatelessWidget {
           top: -40,
           child: _Ring(size: 160, color: Colors.white.withValues(alpha: 0.07)),
         ),
-        Positioned(
-          right: 24,
-          top: 24,
-          child: _Ring(
-              size: 56,
-              color: AppTheme.coin.withValues(alpha: 0.9),
-              filled: true),
-        ),
+        const Positioned(right: 24, top: 24, child: TrokimMark(size: 56)),
         Padding(
           padding: const EdgeInsets.all(22),
           child: Column(
@@ -203,10 +197,9 @@ class _BalanceCard extends StatelessWidget {
 }
 
 class _Ring extends StatelessWidget {
-  const _Ring({required this.size, required this.color, this.filled = false});
+  const _Ring({required this.size, required this.color});
   final double size;
   final Color color;
-  final bool filled;
 
   @override
   Widget build(BuildContext context) => ExcludeSemantics(
@@ -215,8 +208,7 @@ class _Ring extends StatelessWidget {
           height: size,
           decoration: BoxDecoration(
             shape: BoxShape.circle,
-            color: filled ? color : null,
-            border: filled ? null : Border.all(color: color, width: 18),
+            border: Border.all(color: color, width: 18),
           ),
         ),
       );

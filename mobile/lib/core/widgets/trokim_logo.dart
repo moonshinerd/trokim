@@ -1,16 +1,15 @@
+import 'dart:math' as math;
+
 import 'package:flutter/material.dart';
 
 import '../theme/app_theme.dart';
 
-/// Marca do Trokim: uma moeda e o "troquinho" dourado que sai dela.
+/// Marca do Trokim: uma moeda dourada com um "T" cunhado.
 /// Trokim vem de troquinho, que vem de troco.
 class TrokimMark extends StatelessWidget {
-  const TrokimMark({super.key, this.size = 40, this.onDark = false});
+  const TrokimMark({super.key, this.size = 40});
 
   final double size;
-
-  /// Versão com a moeda branca, para aplicar sobre cores escuras.
-  final bool onDark;
 
   @override
   Widget build(BuildContext context) => Semantics(
@@ -19,33 +18,62 @@ class TrokimMark extends StatelessWidget {
         child: SizedBox(
           width: size,
           height: size,
-          child: CustomPaint(painter: _MarkPainter(onDark: onDark)),
+          child: CustomPaint(painter: _MarkPainter()),
         ),
       );
 }
 
 class _MarkPainter extends CustomPainter {
-  _MarkPainter({required this.onDark});
-  final bool onDark;
+  _MarkPainter();
+
+  static const Color _rim = Color(0xFFC98F1F);
+  static const Color _milled = Color(0xFFB87F14);
 
   @override
   void paint(Canvas canvas, Size size) {
     canvas.scale(size.width / 64);
-    // A moeda grande e o "troquinho" dourado que sai dela.
+    const c = Offset(32, 32);
+
+    // Moeda dourada com aro.
+    canvas.drawCircle(c, 30, Paint()..color = AppTheme.coin);
     canvas.drawCircle(
-      const Offset(26, 30),
-      20,
-      Paint()..color = onDark ? Colors.white : AppTheme.emerald,
+      c,
+      30,
+      Paint()
+        ..color = _rim
+        ..style = PaintingStyle.stroke
+        ..strokeWidth = 1.5,
     );
-    canvas.drawCircle(
-      const Offset(50, 50),
-      8,
-      Paint()..color = AppTheme.coin,
+    // Borda serrilhada: pontos ao redor.
+    final dot = Paint()..color = _milled;
+    for (var i = 0; i < 28; i++) {
+      final a = i * 2 * math.pi / 28;
+      canvas.drawCircle(
+        c + Offset(math.cos(a), math.sin(a)) * 23.5,
+        0.95,
+        dot,
+      );
+    }
+    // "T" cunhado.
+    final ink = Paint()..color = AppTheme.forest;
+    canvas.drawRRect(
+      RRect.fromRectAndRadius(
+        const Rect.fromLTWH(19, 18, 26, 8),
+        const Radius.circular(3),
+      ),
+      ink,
+    );
+    canvas.drawRRect(
+      RRect.fromRectAndRadius(
+        const Rect.fromLTWH(28, 18, 8, 28),
+        const Radius.circular(3),
+      ),
+      ink,
     );
   }
 
   @override
-  bool shouldRepaint(covariant _MarkPainter old) => old.onDark != onDark;
+  bool shouldRepaint(covariant _MarkPainter old) => false;
 }
 
 /// Logo horizontal: símbolo + nome.
