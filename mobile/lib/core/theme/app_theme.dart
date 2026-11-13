@@ -2,69 +2,149 @@ import 'package:flutter/material.dart';
 
 import '../widgets/app_motion.dart';
 
-/// Identidade visual do Trokim: verde-esmeralda profundo, papel quente e
-/// um toque dourado de "moeda". Tipografia Plus Jakarta Sans.
+/// Cores que mudam entre o tema claro e o escuro.
+@immutable
+class AppColors extends ThemeExtension<AppColors> {
+  const AppColors({
+    required this.bg,
+    required this.surface,
+    required this.line,
+    required this.muted,
+    required this.ink,
+    required this.tint,
+    required this.accent,
+  });
+
+  /// Fundo das telas.
+  final Color bg;
+
+  /// Cartões e barras.
+  final Color surface;
+
+  /// Contornos sutis.
+  final Color line;
+
+  /// Texto secundário.
+  final Color muted;
+
+  /// Texto principal.
+  final Color ink;
+
+  /// Realce suave (indicadores, avisos).
+  final Color tint;
+
+  /// Violeta legível sobre o fundo atual (ícones, links).
+  final Color accent;
+
+  static const light = AppColors(
+    bg: Color(0xFFF6F5FA),
+    surface: Colors.white,
+    line: Color(0xFFE6E3F0),
+    muted: Color(0xFF6E6A82),
+    ink: Color(0xFF14141A),
+    tint: Color(0xFFEDE6FF),
+    accent: Color(0xFF5B22D6),
+  );
+
+  static const dark = AppColors(
+    bg: Color(0xFF111116),
+    surface: Color(0xFF1B1B23),
+    line: Color(0xFF2B2B37),
+    muted: Color(0xFF9C9AB0),
+    ink: Color(0xFFF3F2F8),
+    tint: Color(0xFF2A2145),
+    accent: Color(0xFFB79BFF),
+  );
+
+  @override
+  AppColors copyWith() => this;
+
+  @override
+  AppColors lerp(ThemeExtension<AppColors>? other, double t) {
+    if (other is! AppColors) return this;
+    return AppColors(
+      bg: Color.lerp(bg, other.bg, t)!,
+      surface: Color.lerp(surface, other.surface, t)!,
+      line: Color.lerp(line, other.line, t)!,
+      muted: Color.lerp(muted, other.muted, t)!,
+      ink: Color.lerp(ink, other.ink, t)!,
+      tint: Color.lerp(tint, other.tint, t)!,
+      accent: Color.lerp(accent, other.accent, t)!,
+    );
+  }
+}
+
+extension AppColorsContext on BuildContext {
+  /// Paleta atual (cai no tema claro se não houver tema do Trokim, ex.: testes).
+  AppColors get colors =>
+      Theme.of(this).extension<AppColors>() ?? AppColors.light;
+}
+
+/// Identidade visual do Trokim: carvão profundo, violeta elétrico e verde-limão
+/// ácido. Tema escuro como referência; segue a configuração do sistema.
 class AppTheme {
   AppTheme._();
 
-  // Marca
-  static const Color ink = Color(0xFF0E1F1A);
-  static const Color forest = Color(0xFF0B3D2E);
-  static const Color emerald = Color(0xFF0F8F6B);
-  static const Color mint = Color(0xFFDDF1E8);
-  static const Color coin = Color(0xFFE9B44C);
-
-  // Superfícies
-  static const Color paper = Color(0xFFF5F3EE);
-  static const Color surface = Colors.white;
-  static const Color line = Color(0xFFE6E2D8);
-  static const Color muted = Color(0xFF6B7A74);
+  // Marca (iguais nos dois temas)
+  static const Color charcoal = Color(0xFF14141A);
+  static const Color violet = Color(0xFF7B3FF2);
+  static const Color violetDeep = Color(0xFF2A1470);
+  static const Color lime = Color(0xFFC6F135);
 
   // Semânticas
-  static const Color positive = Color(0xFF0F8F6B);
-  static const Color negative = Color(0xFFD9573F);
-  static const Color info = Color(0xFF2F6FB0);
-
-  // Aliases mantidos para compatibilidade com telas existentes.
-  static const Color primaryBlue = emerald;
-  static const Color accentTeal = emerald;
-  static const Color backgroundLight = paper;
-  static const Color cardLight = surface;
-  static const Color textDark = ink;
-  static const Color successGreen = positive;
-  static const Color dangerRed = negative;
+  static const Color positive = Color(0xFF2BD98B);
+  static const Color negative = Color(0xFFFF5C7A);
+  static const Color info = Color(0xFF5AA9FF);
 
   static const double radius = 20;
   static const String fontFamily = 'PlusJakartaSans';
 
-  static List<BoxShadow> get softShadow => [
+  /// Degradê dos cartões de destaque.
+  static const LinearGradient hero = LinearGradient(
+    begin: Alignment.topLeft,
+    end: Alignment.bottomRight,
+    colors: [Color(0xFF8E5BFF), Color(0xFF5B22D6), Color(0xFF1E0F57)],
+    stops: [0.0, 0.55, 1.0],
+  );
+
+  static List<BoxShadow> softShadow(BuildContext context) => [
         BoxShadow(
-          color: forest.withValues(alpha: 0.07),
+          color: Colors.black.withValues(
+            alpha:
+                Theme.of(context).brightness == Brightness.dark ? 0.35 : 0.08,
+          ),
           blurRadius: 24,
           offset: const Offset(0, 8),
         ),
       ];
 
-  static ThemeData get lightTheme {
+  static ThemeData get lightTheme => _build(Brightness.light, AppColors.light);
+  static ThemeData get darkTheme => _build(Brightness.dark, AppColors.dark);
+
+  static ThemeData _build(Brightness brightness, AppColors c) {
+    final isDark = brightness == Brightness.dark;
     final scheme = ColorScheme.fromSeed(
-      seedColor: emerald,
-      brightness: Brightness.light,
+      seedColor: violet,
+      brightness: brightness,
     ).copyWith(
-      primary: emerald,
+      primary: isDark ? const Color(0xFF9B6BFF) : violet,
       onPrimary: Colors.white,
-      secondary: coin,
-      surface: surface,
-      onSurface: ink,
-      outlineVariant: line,
+      secondary: lime,
+      onSecondary: charcoal,
+      surface: c.surface,
+      onSurface: c.ink,
+      outlineVariant: c.line,
     );
 
-    const base = TextStyle(fontFamily: fontFamily, color: ink);
+    final base = TextStyle(fontFamily: fontFamily, color: c.ink);
 
     return ThemeData(
       useMaterial3: true,
+      brightness: brightness,
       colorScheme: scheme,
       fontFamily: fontFamily,
-      scaffoldBackgroundColor: paper,
+      scaffoldBackgroundColor: c.bg,
+      extensions: [c],
       splashFactory: InkSparkle.splashFactory,
       textTheme: const TextTheme(
         headlineMedium: TextStyle(
@@ -75,10 +155,10 @@ class AppTheme {
         bodyLarge: TextStyle(fontSize: 15, height: 1.5),
         bodyMedium: TextStyle(fontSize: 14, height: 1.45),
         labelLarge: TextStyle(fontSize: 14, fontWeight: FontWeight.w700),
-      ).apply(bodyColor: ink, displayColor: ink),
-      appBarTheme: const AppBarTheme(
-        backgroundColor: paper,
-        foregroundColor: ink,
+      ).apply(bodyColor: c.ink, displayColor: c.ink),
+      appBarTheme: AppBarTheme(
+        backgroundColor: c.bg,
+        foregroundColor: c.ink,
         elevation: 0,
         scrolledUnderElevation: 0,
         centerTitle: false,
@@ -87,38 +167,38 @@ class AppTheme {
           fontSize: 20,
           fontWeight: FontWeight.w800,
           letterSpacing: -0.3,
-          color: ink,
+          color: c.ink,
         ),
       ),
       cardTheme: CardThemeData(
-        color: surface,
+        color: c.surface,
         elevation: 0,
         margin: EdgeInsets.zero,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(radius),
-          side: const BorderSide(color: line),
+          side: BorderSide(color: c.line),
         ),
       ),
       chipTheme: ChipThemeData(
-        backgroundColor: mint,
+        backgroundColor: c.tint,
         side: BorderSide.none,
         labelStyle: base.copyWith(fontSize: 12, fontWeight: FontWeight.w600),
         shape: const StadiumBorder(),
       ),
       switchTheme: SwitchThemeData(
         thumbColor: WidgetStateProperty.resolveWith(
-            (s) => s.contains(WidgetState.selected) ? Colors.white : muted),
+            (s) => s.contains(WidgetState.selected) ? charcoal : c.muted),
         trackColor: WidgetStateProperty.resolveWith(
-            (s) => s.contains(WidgetState.selected) ? emerald : line),
+            (s) => s.contains(WidgetState.selected) ? lime : c.line),
         trackOutlineColor: const WidgetStatePropertyAll(Colors.transparent),
       ),
-      inputDecorationTheme: const InputDecorationTheme(
+      inputDecorationTheme: InputDecorationTheme(
         border: InputBorder.none,
-        hintStyle: TextStyle(color: muted),
+        hintStyle: TextStyle(color: c.muted),
       ),
       snackBarTheme: SnackBarThemeData(
         behavior: SnackBarBehavior.floating,
-        backgroundColor: ink,
+        backgroundColor: isDark ? c.tint : charcoal,
         contentTextStyle:
             base.copyWith(color: Colors.white, fontWeight: FontWeight.w600),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),

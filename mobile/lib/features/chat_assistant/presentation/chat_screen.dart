@@ -93,20 +93,22 @@ class _ChatScreenState extends State<ChatScreen> {
                 margin: const EdgeInsets.fromLTRB(16, 4, 16, 0),
                 padding: const EdgeInsets.all(14),
                 decoration: BoxDecoration(
-                  color: AppTheme.mint,
+                  color: context.colors.tint,
                   borderRadius: BorderRadius.circular(18),
                 ),
-                child: const Row(
+                child: Row(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Icon(Icons.fact_check_outlined,
-                          color: AppTheme.forest, size: 19),
+                          color: context.colors.accent, size: 19),
                       SizedBox(width: 8),
                       Expanded(
                           child: Text(
                         'Auditoria pedagógica: respostas fundamentadas exibem as fontes e os trechos recuperados. O Trokim não fabrica um comparativo sem evidências.',
                         style: TextStyle(
-                            fontSize: 12, height: 1.4, color: AppTheme.forest),
+                            fontSize: 12,
+                            height: 1.4,
+                            color: context.colors.ink),
                       )),
                     ]),
               ),
@@ -118,7 +120,7 @@ class _ChatScreenState extends State<ChatScreen> {
                   itemCount: _chat.messages.length + (_chat.isLoading ? 1 : 0),
                   itemBuilder: (context, index) {
                     if (index == _chat.messages.length) {
-                      return const Padding(
+                      return Padding(
                         padding: EdgeInsets.symmetric(vertical: 12),
                         child: Row(
                           children: [
@@ -126,11 +128,12 @@ class _ChatScreenState extends State<ChatScreen> {
                               width: 18,
                               height: 18,
                               child: CircularProgressIndicator(
-                                  strokeWidth: 2.4, color: AppTheme.emerald),
+                                  strokeWidth: 2.4,
+                                  color: context.colors.accent),
                             ),
                             SizedBox(width: 12),
                             Text('Consultando fontes oficiais...',
-                                style: TextStyle(color: AppTheme.muted)),
+                                style: TextStyle(color: context.colors.muted)),
                           ],
                         ),
                       );
@@ -160,10 +163,10 @@ class _ChatScreenState extends State<ChatScreen> {
               margin: const EdgeInsets.fromLTRB(16, 4, 16, 6),
               padding: const EdgeInsets.fromLTRB(18, 4, 6, 4),
               decoration: BoxDecoration(
-                color: AppTheme.surface,
+                color: context.colors.surface,
                 borderRadius: BorderRadius.circular(26),
-                border: Border.all(color: AppTheme.line),
-                boxShadow: AppTheme.softShadow,
+                border: Border.all(color: context.colors.line),
+                boxShadow: AppTheme.softShadow(context),
               ),
               child: SafeArea(
                 top: false,
@@ -197,8 +200,8 @@ class _ChatScreenState extends State<ChatScreen> {
                         tooltip: 'Enviar',
                         icon: const Icon(Icons.send, size: 20),
                         style: IconButton.styleFrom(
-                          backgroundColor: AppTheme.emerald,
-                          disabledBackgroundColor: AppTheme.line,
+                          backgroundColor: context.colors.accent,
+                          disabledBackgroundColor: context.colors.line,
                           foregroundColor: Colors.white,
                         ),
                         onPressed: _chat.isLoading ? null : _sendMessage,
@@ -233,12 +236,12 @@ class _MessageBubble extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final color = message.isUser
-        ? AppTheme.forest
+        ? AppTheme.violet
         : message.isError
-            ? const Color(0xFFFDECE8)
+            ? AppTheme.negative.withValues(alpha: 0.14)
             : message.isAbstained
-                ? const Color(0xFFEFEDE6)
-                : AppTheme.surface;
+                ? context.colors.line
+                : context.colors.surface;
     final radius = BorderRadius.only(
       topLeft: const Radius.circular(20),
       topRight: const Radius.circular(20),
@@ -258,7 +261,8 @@ class _MessageBubble extends StatelessWidget {
           decoration: BoxDecoration(
             color: color,
             borderRadius: radius,
-            border: message.isUser ? null : Border.all(color: AppTheme.line),
+            border:
+                message.isUser ? null : Border.all(color: context.colors.line),
           ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -268,7 +272,9 @@ class _MessageBubble extends StatelessWidget {
                   message.isError
                       ? Icons.error_outline
                       : Icons.warning_amber_rounded,
-                  color: message.isError ? AppTheme.negative : AppTheme.muted,
+                  color: message.isError
+                      ? AppTheme.negative
+                      : context.colors.muted,
                   semanticLabel: message.isError
                       ? 'Erro de conexão'
                       : 'Sem evidências suficientes',
@@ -278,7 +284,7 @@ class _MessageBubble extends StatelessWidget {
               Text(
                 message.text,
                 style: TextStyle(
-                  color: message.isUser ? Colors.white : AppTheme.ink,
+                  color: message.isUser ? Colors.white : context.colors.ink,
                   fontSize: 14.5,
                   height: 1.45,
                 ),
@@ -289,7 +295,7 @@ class _MessageBubble extends StatelessWidget {
                   child: Container(
                     padding: const EdgeInsets.all(10),
                     decoration: BoxDecoration(
-                      color: const Color(0xFFFFF7E6),
+                      color: AppTheme.lime.withValues(alpha: 0.16),
                       borderRadius: BorderRadius.circular(10),
                     ),
                     child: const Text(
@@ -360,9 +366,9 @@ class _AuditComparison extends StatelessWidget {
       margin: const EdgeInsets.only(top: 10),
       padding: const EdgeInsets.all(10),
       decoration: BoxDecoration(
-        color: const Color(0xFFF8FAFC),
+        color: context.colors.surface,
         borderRadius: BorderRadius.circular(10),
-        border: Border.all(color: const Color(0xFFE2E8F0)),
+        border: Border.all(color: context.colors.line),
       ),
       child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
         const Text('Comparativo de transparência',
@@ -370,16 +376,16 @@ class _AuditComparison extends StatelessWidget {
         const SizedBox(height: 8),
         _AuditRow(
           icon: grounded ? Icons.verified : Icons.warning_amber_rounded,
-          color: grounded ? const Color(0xFF168447) : Colors.blueGrey,
+          color: grounded ? AppTheme.positive : context.colors.muted,
           title: grounded ? 'Com RAG' : 'Com RAG: abstenção ética',
           body: grounded
               ? 'Resposta vinculada às fontes oficiais abaixo.'
               : 'O sistema não encontrou evidências suficientes para orientar.',
         ),
         const SizedBox(height: 7),
-        const _AuditRow(
+        _AuditRow(
           icon: Icons.link_off,
-          color: AppTheme.primaryBlue,
+          color: context.colors.accent,
           title: 'Sem lastro verificável',
           body:
               'Nenhuma resposta alternativa é apresentada: sem fontes, um palpite poderia induzir a uma decisão financeira inadequada.',

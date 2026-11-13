@@ -111,10 +111,10 @@ class _ScenarioCard extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
-        color: hi ? AppTheme.forest : AppTheme.surface,
+        color: hi ? AppTheme.violet : context.colors.surface,
         borderRadius: BorderRadius.circular(26),
-        border: Border.all(color: hi ? AppTheme.forest : AppTheme.line),
-        boxShadow: hi ? AppTheme.softShadow : null,
+        border: Border.all(color: hi ? AppTheme.violet : context.colors.line),
+        boxShadow: hi ? AppTheme.softShadow(context) : null,
       ),
       child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
         Row(children: [
@@ -125,28 +125,28 @@ class _ScenarioCard extends StatelessWidget {
                   style: TextStyle(
                       fontSize: 18,
                       fontWeight: FontWeight.w800,
-                      color: hi ? Colors.white : AppTheme.ink)),
+                      color: hi ? Colors.white : context.colors.ink)),
               const SizedBox(height: 2),
               Text(subtitle,
                   style: TextStyle(
                       fontSize: 13,
                       color: hi
                           ? Colors.white.withValues(alpha: 0.7)
-                          : AppTheme.muted)),
+                          : context.colors.muted)),
             ]),
           ),
           if (hi)
             Container(
               padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
               decoration: BoxDecoration(
-                color: AppTheme.coin,
+                color: AppTheme.lime,
                 borderRadius: BorderRadius.circular(20),
               ),
-              child: const Text('Sugerido',
+              child: Text('Sugerido',
                   style: TextStyle(
                       fontSize: 12,
                       fontWeight: FontWeight.w800,
-                      color: AppTheme.ink)),
+                      color: context.colors.ink)),
             ),
         ]),
         const SizedBox(height: 18),
@@ -155,7 +155,7 @@ class _ScenarioCard extends StatelessWidget {
         _Row('Renda mensal', s.income, null, hi),
         _Row('Despesas fixas', s.fixed, AppTheme.info, hi),
         _Row('Despesas variáveis', s.variable, const Color(0xFFE9892F), hi),
-        _Row('Aporte na reserva', s.savings, AppTheme.coin, hi, strong: true),
+        _Row('Aporte na reserva', s.savings, AppTheme.lime, hi, strong: true),
         _Row('Margem operacional', s.margin, const Color(0xFF9AA8A2), hi),
       ]),
     );
@@ -173,7 +173,7 @@ class _AllocationBar extends StatelessWidget {
     final parts = [
       (s.fixed, AppTheme.info),
       (s.variable, const Color(0xFFE9892F)),
-      (s.savings, AppTheme.coin),
+      (s.savings, AppTheme.lime),
       (s.margin, const Color(0xFF9AA8A2)),
     ];
     return Semantics(
@@ -214,8 +214,9 @@ class _Row extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final fg = dark ? Colors.white : AppTheme.ink;
-    final sub = dark ? Colors.white.withValues(alpha: 0.7) : AppTheme.muted;
+    final fg = dark ? Colors.white : context.colors.ink;
+    final sub =
+        dark ? Colors.white.withValues(alpha: 0.7) : context.colors.muted;
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 6),
       child: Row(children: [
@@ -255,17 +256,17 @@ class _DeltaCard extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(18),
       decoration: BoxDecoration(
-        color: AppTheme.mint,
+        color: context.colors.tint,
         borderRadius: BorderRadius.circular(22),
       ),
       child: Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
-        const Icon(Icons.trending_up_rounded, color: AppTheme.forest),
+        Icon(Icons.trending_up_rounded, color: context.colors.accent),
         const SizedBox(width: 12),
         Expanded(
           child: Text.rich(
             TextSpan(
-              style: const TextStyle(
-                  color: AppTheme.forest, height: 1.45, fontSize: 14),
+              style: TextStyle(
+                  color: context.colors.ink, height: 1.45, fontSize: 14),
               children: [
                 const TextSpan(text: 'Reduzindo '),
                 TextSpan(

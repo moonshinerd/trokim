@@ -41,11 +41,11 @@ class EvidenceCard extends StatelessWidget {
       child: ExpansionTile(
         tilePadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
         childrenPadding: const EdgeInsets.fromLTRB(12, 0, 12, 12),
-        leading: const CircleAvatar(
+        leading: CircleAvatar(
           radius: 17,
-          backgroundColor: Color(0xFFE8F5E9),
-          child:
-              Icon(Icons.verified_outlined, size: 19, color: Color(0xFF168447)),
+          backgroundColor: AppTheme.positive.withValues(alpha: 0.16),
+          child: const Icon(Icons.verified_outlined,
+              size: 19, color: AppTheme.positive),
         ),
         title: Text('${evidence.sourceName} • ${evidence.documentTitle}',
             maxLines: 2,
@@ -75,7 +75,7 @@ class EvidenceCard extends StatelessWidget {
             const SizedBox(height: 8),
             SelectableText(
               evidence.sourceUrl!,
-              style: const TextStyle(color: AppTheme.primaryBlue, fontSize: 11),
+              style: TextStyle(color: context.colors.accent, fontSize: 11),
             ),
             Align(
               alignment: Alignment.centerLeft,
@@ -83,8 +83,8 @@ class EvidenceCard extends StatelessWidget {
                 onPressed: () => _openSource(context),
                 icon: const Icon(Icons.open_in_new, size: 16),
                 label: const Text('Abrir documento oficial'),
-                style:
-                    TextButton.styleFrom(foregroundColor: AppTheme.primaryBlue),
+                style: TextButton.styleFrom(
+                    foregroundColor: context.colors.accent),
               ),
             ),
           ],
@@ -102,10 +102,10 @@ class _Tag extends StatelessWidget {
   Widget build(BuildContext context) => Container(
         padding: const EdgeInsets.symmetric(horizontal: 7, vertical: 3),
         decoration: BoxDecoration(
-          color: const Color(0xFFEFF6FF),
+          color: context.colors.tint,
           borderRadius: BorderRadius.circular(20),
         ),
         child: Text(label,
-            style: const TextStyle(color: AppTheme.primaryBlue, fontSize: 10)),
+            style: TextStyle(color: context.colors.accent, fontSize: 10)),
       );
 }
