@@ -1,3 +1,4 @@
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 
 import '../../../core/theme/app_theme.dart';
@@ -339,11 +340,7 @@ class _MessageBubbleState extends State<_MessageBubble> {
                 ),
                 const SizedBox(height: 8),
               ],
-              _MessageText(
-                message: message,
-                sourceCount: _cardKeys.length,
-                onSource: _goToSource,
-              ),
+              _MessageText(message: message, onSource: _goToSource),
               if (message.isAbstained)
                 Padding(
                   padding: const EdgeInsets.only(top: 10),
@@ -578,22 +575,55 @@ class _TypingDotsState extends State<_TypingDots>
 }
 
 /// Texto da mensagem. As respostas do assistente saem sem o bloco de fontes e
-/// sem URLs soltas (as fontes estão nos cartões, com link clicável), com
-/// negrito e marcadores [n] formatados.
-class _MessageText extends StatelessWidget {
+/// sem URLs soltas; cada marcador [n] vira o nome da fonte, como um link no
+/// próprio texto, que leva ao cartão da fonte logo abaixo.
+class _MessageText extends StatefulWidget {
   const _MessageText({
     required this.message,
-    required this.sourceCount,
     required this.onSource,
   });
   final ChatMessage message;
-
-  /// Quantos cartões de fonte existem; marcadores acima disso ficam só texto.
-  final int sourceCount;
   final ValueChanged<int> onSource;
 
   @override
+  State<_MessageText> createState() => _MessageTextState();
+}
+
+class _MessageTextState extends State<_MessageText> {
+  final List<TapGestureRecognizer> _taps = [];
+
+  void _disposeTaps() {
+    for (final t in _taps) {
+      t.dispose();
+    }
+    _taps.clear();
+  }
+
+  @override
+  void dispose() {
+    _disposeTaps();
+    super.dispose();
+  }
+
+  /// "BCB · Caderno de Educação Fin…": instituição + título, com limite.
+  static String sourceLabel(Evidence e, {int max = 30}) {
+    final name = e.sourceName.toLowerCase();
+    final inst = name.contains('banco central') || name.contains('bcb')
+        ? 'BCB'
+        : name.contains('cvm')
+            ? 'CVM'
+            : name.contains('cfpb')
+                ? 'CFPB'
+                : e.sourceName;
+    final full = '$inst · ${e.documentTitle}';
+    return full.length <= max
+        ? full
+        : '${full.substring(0, max - 1).trimRight()}…';
+  }
+
+  @override
   Widget build(BuildContext context) {
+    final message = widget.message;
     final style = TextStyle(
       color: message.isUser ? Colors.white : context.colors.ink,
       fontSize: 14.5,
@@ -602,6 +632,8 @@ class _MessageText extends StatelessWidget {
     if (message.isUser || message.isError || message.isAbstained) {
       return Text(message.text, style: style);
     }
+    _disposeTaps();
+    final link = context.colors.accent;
     final cleaned = AnswerFormat.clean(message.text);
     return Text.rich(
       TextSpan(
@@ -609,57 +641,27 @@ class _MessageText extends StatelessWidget {
         children: AnswerFormat.spans(
           cleaned,
           style,
-          citationColor: context.colors.accent,
-          citation: (n) => n <= sourceCount
-              ? WidgetSpan(
-                  alignment: PlaceholderAlignment.middle,
-                  child: _CitationChip(number: n, onTap: () => onSource(n)),
-                )
-              : TextSpan(text: '[$n]'),
-        ),
-      ),
-    );
-  }
-}
-
-/// Marcador de fonte [n] no texto: toque leva ao cartão da fonte abaixo.
-class _CitationChip extends StatelessWidget {
-  const _CitationChip({required this.number, required this.onTap});
-  final int number;
-  final VoidCallback onTap;
-
-  @override
-  Widget build(BuildContext context) {
-    final c = context.colors;
-    return Semantics(
-      button: true,
-      label: 'Ver fonte $number',
-      child: ExcludeSemantics(
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 2),
-          child: InkWell(
-            onTap: onTap,
-            borderRadius: BorderRadius.circular(8),
-            child: Container(
-              constraints: const BoxConstraints(minWidth: 22, minHeight: 20),
-              padding: const EdgeInsets.symmetric(horizontal: 5),
-              alignment: Alignment.center,
-              decoration: BoxDecoration(
-                color: c.tint,
-                borderRadius: BorderRadius.circular(8),
-                border: Border.all(color: AppTheme.gold.withValues(alpha: 0.7)),
+          citationColor: link,
+          citation: (n) {
+            if (n < 1 || n > message.evidences.length) {
+              return TextSpan(text: '[$n]');
+            }
+            final tap = TapGestureRecognizer()
+              ..onTap = () => widget.onSource(n);
+            _taps.add(tap);
+            return TextSpan(
+              text: sourceLabel(message.evidences[n - 1]),
+              recognizer: tap,
+              semanticsLabel:
+                  'Ver fonte: ${message.evidences[n - 1].documentTitle}',
+              style: TextStyle(
+                color: link,
+                fontWeight: FontWeight.w700,
+                decoration: TextDecoration.underline,
+                decorationColor: link.withValues(alpha: 0.5),
               ),
-              child: Text(
-                '$number',
-                style: TextStyle(
-                  fontSize: 11.5,
-                  fontWeight: FontWeight.w800,
-                  color: c.accent,
-                  height: 1.1,
-                ),
-              ),
-            ),
-          ),
+            );
+          },
         ),
       ),
     );

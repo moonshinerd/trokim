@@ -56,22 +56,24 @@ void main() {
     await openChat(tester, answer);
     expect(find.textContaining('https://'), findsNothing);
     expect(find.textContaining('Fontes:'), findsNothing);
-    expect(find.textContaining('Priorize baixo risco'), findsOneWidget);
+    expect(find.textContaining('Priorize baixo risco', findRichText: true),
+        findsOneWidget);
+    expect(find.textContaining('[1]', findRichText: true), findsNothing);
   });
 
-  testWidgets('tocar no [n] abre o cartão da fonte correspondente',
+  testWidgets('tocar no nome da fonte abre o cartão correspondente',
       (tester) async {
     await openChat(tester, answer);
     // cartões começam fechados
     expect(find.text('Conteúdo da fonte 1'), findsNothing);
     expect(find.text('Conteúdo da fonte 2'), findsNothing);
 
-    await tester.tap(find.widgetWithText(InkWell, '2'));
+    await tester.tapOnText(find.textRange.ofSubstring('BCB · Documento 2'));
     await tester.pumpAndSettle();
     expect(find.text('Conteúdo da fonte 2'), findsOneWidget);
     expect(find.text('Conteúdo da fonte 1'), findsNothing);
 
-    await tester.tap(find.widgetWithText(InkWell, '1'));
+    await tester.tapOnText(find.textRange.ofSubstring('BCB · Documento 1'));
     await tester.pumpAndSettle();
     expect(find.text('Conteúdo da fonte 1'), findsOneWidget);
   });
@@ -79,8 +81,7 @@ void main() {
   testWidgets('marcador sem cartão correspondente fica só texto',
       (tester) async {
     await openChat(tester, answer);
-    // [3] não tem cartão: não vira botão
-    expect(find.widgetWithText(InkWell, '3'), findsNothing);
-    expect(find.textContaining('[3]'), findsWidgets);
+    // [3] não tem cartão: não vira link, fica o texto original
+    expect(find.textContaining('[3]', findRichText: true), findsOneWidget);
   });
 }

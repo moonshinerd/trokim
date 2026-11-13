@@ -128,7 +128,6 @@ class EvidenceCardState extends State<EvidenceCard>
           subtitle: Padding(
             padding: const EdgeInsets.only(top: 5),
             child: Wrap(spacing: 6, runSpacing: 4, children: [
-              if (number != null) _Tag(label: '[$number]'),
               _Tag(label: _institution),
               _Tag(label: 'Relevância $score%'),
             ]),
