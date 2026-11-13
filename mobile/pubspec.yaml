@@ -28,7 +28,8 @@ dev_dependencies:
 flutter:
   uses-material-design: true
   assets:
-    - assets/brand/mascot.png
+    - assets/brand/mascot_body.png
+    - assets/brand/mascot_head.png
   fonts:
     - family: PlusJakartaSans
       fonts:
