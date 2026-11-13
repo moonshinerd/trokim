@@ -53,6 +53,7 @@ class ChatController extends ChangeNotifier {
           text: reply.answer,
           evidences: isAbstained ? const [] : reply.evidences,
           isAbstained: isAbstained,
+          status: reply.status,
         ),
       );
     } catch (error) {

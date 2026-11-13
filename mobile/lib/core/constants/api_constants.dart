@@ -10,5 +10,8 @@ class ApiConstants {
   static const String transactionsSummaryEndpoint = '/transactions/summary';
   static const String transactionsUploadEndpoint = '/transactions/upload';
   static const String chatAskEndpoint = '/chat/ask';
+
+  /// Endpoint preparado para a integração ponta a ponta do chat.
+  static const String chatGenerateEndpoint = '/chat/generate';
   static const String budgetsCompareEndpoint = '/budgets/compare';
 }

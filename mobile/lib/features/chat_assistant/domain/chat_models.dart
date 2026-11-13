@@ -60,6 +60,7 @@ class ChatMessage {
   final List<Evidence> evidences;
   final bool isError;
   final bool isAbstained;
+  final String? status;
 
   ChatMessage({
     required this.isUser,
@@ -67,5 +68,6 @@ class ChatMessage {
     List<Evidence> evidences = const [],
     this.isError = false,
     this.isAbstained = false,
+    this.status,
   }) : evidences = List.unmodifiable(evidences);
 }

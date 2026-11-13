@@ -39,10 +39,12 @@ make setup
 make api-run
 ```
 
-A API deve oferecer `POST /v1/chat/ask`, recebendo `message` e retornando `answered`,
-`status`, `answer` e `evidences`. O chat não calcula valores financeiros nem usa
-chaves de provedor no aplicativo. As evidências preservam instituição, título,
-seção e URL; `document_id` e `source_url` podem estar ausentes ou nulos.
+A tela atual usa `POST /v1/chat/ask`, recebendo `message` e retornando `answered`,
+`status`, `answer` e `evidences`. A constante `chatGenerateEndpoint` prepara o
+cliente para `POST /v1/chat/generate`, cuja integração ponta a ponta fica para a
+etapa seguinte. O chat não calcula valores financeiros nem usa chaves de provedor
+no aplicativo. As evidências preservam instituição, título, seção e URL;
+`document_id` e `source_url` podem estar ausentes ou nulos.
 
 ### Emulador Android
 
@@ -85,10 +87,17 @@ uma porta diferente se 8000 estiver ocupada.
 A funcionalidade separa modelos em `domain/`, acesso à API em `data/` e estado/
 interface em `presentation/`. O controlador mantém o histórico durante a sessão,
 impede envios simultâneos e preserva as boas-vindas. Mensagens podem ter até 1000
-caracteres. Respostas fundamentadas exibem cards com fontes e URLs selecionáveis;
-abstenções aparecem com aviso e sem cards. Falha de conexão, timeout de 15 segundos
-ou erro HTTP geram mensagem amigável e a ação **Tentar novamente**, que repete a
-última pergunta com erro sem duplicar seu balão.
+caracteres. Respostas fundamentadas exibem cartões expansíveis com instituição,
+título, relevância, trecho recuperado e link para o documento oficial. O controle
+**Auditoria** mostra a origem da resposta com RAG e explica por que não apresenta
+uma resposta alternativa sem evidências. Abstenções aparecem com aviso e perguntas
+rápidas para temas permitidos, sem cartões de evidência. Falha de conexão, timeout
+de 15 segundos ou erro HTTP geram mensagem amigável e a ação **Tentar novamente**,
+que repete a última pergunta com erro sem duplicar seu balão.
+
+Para demonstrar no emulador, inicie a API e rode `flutter run`; pergunte, por
+exemplo, **Como montar uma reserva de emergência?**. Ative **Auditoria** e expanda
+um cartão para conferir a seção original e abrir a fonte oficial.
 
 ## Validação local
 
@@ -102,7 +111,8 @@ flutter build apk --debug
 
 Os testes usam `MockClient`, sem backend ativo nem rede. Cobrem conversão de
 respostas, metadados opcionais, erros HTTP/conexão/timeout, concorrência e ciclo
-de vida do controlador, cards, abstenção, carregamento e nova tentativa na tela.
+de vida do controlador, cartões expansíveis, abertura de URL, comparação de
+auditoria, abstenção, perguntas rápidas, carregamento e nova tentativa.
 Testes e análise podem ser executados sem instalar plataformas ou aceitar
 licenças do SDK. O build do APK exige:
 
