@@ -121,6 +121,30 @@ Não demonstra superioridade contra uma LLM sem RAG: o controle é uma ablação
 recuperador. Uma comparação generativa exige definir modelo, prompts, execuções e rubrica
 independente. Essa conclusão mais ampla não é inferida dos critérios de recuperação da #4.
 
+## Métricas comparativas da Semana 3 — issue #21
+
+`rag_benchmark/eval_comparison.py` calcula métricas sobre as respostas já gravadas pela
+issue #24; não executa modelos nem chama APIs. A entrada é `artifacts/research/comparison_results.json`,
+com uma lista `cases`, cada item contendo `id` e `responses` para `llm_pura`, `rag_ingenuo`
+e `trokim_estruturado`. Cada resposta contém `answer` e `status` ou `answered`. O gabarito
+é `rag_benchmark/questions_comparison.json`, preparado pela issue #20.
+
+```sh
+cd api
+uv run python ../research/rag_benchmark/eval_comparison.py
+```
+
+O script grava `artifacts/research/comparison_report.json` e
+`artifacts/research/comparison_report.md`. `--cases`, `--results`, `--json-output` e
+`--markdown-output` permitem definir caminhos diferentes. F1 de tokens usa unigramas
+normalizados em pt-BR e contagem multiconjunto; concept recall aceita uma alternativa
+textual contígua por grupo e reconhece flexões regulares de palavras em português. A taxa
+factual sinaliza números sem suporte no gabarito/fontes,
+afirmações proibidas literais e possíveis contradições por negação. Essa última métrica
+é heurística lexical, não um verificador semântico: revise os casos sinalizados antes de
+tirar conclusões científicas. A matriz de confusão produz precision, recall e F1 de
+abstenção usando `expected_behavior: abster` como classe positiva.
+
 O gabarito foi usado durante o desenvolvimento, inclusive na escolha da representação.
 Não é um teste cego de generalização. A revisão corrigiu duas anotações incompletas: o
 manual também responde ao número de itens da escala e a página da escala sustenta o
