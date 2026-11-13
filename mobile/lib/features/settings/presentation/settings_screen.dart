@@ -62,11 +62,22 @@ class SettingsScreen extends StatelessWidget {
               ),
               _Section(
                 index: 3,
+                title: 'Assistente',
+                child: _SwitchRow(
+                  title: 'Respostas com IA (LLM local)',
+                  subtitle:
+                      'O modelo de linguagem redige a resposta com base nas fontes oficiais. Desligado, o assistente só recupera os trechos, de forma mais rápida.',
+                  value: settings.generativeChat,
+                  onChanged: settings.setGenerativeChat,
+                ),
+              ),
+              _Section(
+                index: 4,
                 title: 'Conexão',
                 child: _ConnectionCard(client: client),
               ),
               _Section(
-                index: 4,
+                index: 5,
                 title: 'Privacidade',
                 child: const _InfoRow(
                   icon: Icons.lock_rounded,
@@ -75,7 +86,7 @@ class SettingsScreen extends StatelessWidget {
                       'apenas explica, com base em fontes oficiais.',
                 ),
               ),
-              Reveal(index: 5, child: const _About()),
+              Reveal(index: 6, child: const _About()),
             ],
           ),
         ),

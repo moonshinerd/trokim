@@ -29,6 +29,17 @@ class Evidence {
         content: json['content'] as String,
         score: (json['score'] as num).toDouble(),
       );
+
+  Map<String, dynamic> toJson() => {
+        'id': id,
+        'document_id': documentId,
+        'source_name': sourceName,
+        'source_url': sourceUrl,
+        'document_title': documentTitle,
+        'section': section,
+        'content': content,
+        'score': score,
+      };
 }
 
 class AssistantReply {
@@ -37,11 +48,15 @@ class AssistantReply {
   final String answer;
   final List<Evidence> evidences;
 
+  /// Modelo que gerou a resposta (só no modo generativo).
+  final String? model;
+
   AssistantReply({
     required this.answered,
     required this.status,
     required this.answer,
     required List<Evidence> evidences,
+    this.model,
   }) : evidences = List.unmodifiable(evidences);
 
   factory AssistantReply.fromJson(Map<String, dynamic> json) => AssistantReply(
@@ -51,6 +66,7 @@ class AssistantReply {
         evidences: (json['evidences'] as List<dynamic>)
             .map((value) => Evidence.fromJson(value as Map<String, dynamic>))
             .toList(),
+        model: json['model'] as String?,
       );
 }
 
@@ -61,6 +77,7 @@ class ChatMessage {
   final bool isError;
   final bool isAbstained;
   final String? status;
+  final String? model;
 
   ChatMessage({
     required this.isUser,
@@ -69,5 +86,28 @@ class ChatMessage {
     this.isError = false,
     this.isAbstained = false,
     this.status,
+    this.model,
   }) : evidences = List.unmodifiable(evidences);
+
+  factory ChatMessage.fromJson(Map<String, dynamic> json) => ChatMessage(
+        isUser: json['is_user'] as bool,
+        text: json['text'] as String,
+        evidences: (json['evidences'] as List<dynamic>? ?? const [])
+            .map((value) => Evidence.fromJson(value as Map<String, dynamic>))
+            .toList(),
+        isError: json['is_error'] as bool? ?? false,
+        isAbstained: json['is_abstained'] as bool? ?? false,
+        status: json['status'] as String?,
+        model: json['model'] as String?,
+      );
+
+  Map<String, dynamic> toJson() => {
+        'is_user': isUser,
+        'text': text,
+        'evidences': evidences.map((e) => e.toJson()).toList(),
+        'is_error': isError,
+        'is_abstained': isAbstained,
+        'status': status,
+        'model': model,
+      };
 }

@@ -3,8 +3,13 @@ import 'package:flutter/material.dart';
 import '../../../core/theme/app_theme.dart';
 import '../../../core/widgets/app_motion.dart';
 import '../../../core/widgets/trokim_logo.dart';
+import '../domain/answer_format.dart';
 import '../domain/chat_models.dart';
+import '../domain/conversation.dart';
+import '../../../core/settings/settings_controller.dart';
+import '../data/conversation_store.dart';
 import 'chat_controller.dart';
+import 'history_screen.dart';
 import 'evidence_card.dart';
 
 class ChatScreen extends StatefulWidget {
@@ -25,7 +30,9 @@ class _ChatScreenState extends State<ChatScreen> {
   @override
   void initState() {
     super.initState();
-    _chat = widget.controller ?? ChatController();
+    _chat = widget.controller ??
+        ChatController(store: PrefsConversationStore(), generative: true);
+    if (widget.controller == null) _chat.init();
     _chat.addListener(_scrollToLatest);
   }
 
@@ -57,27 +64,47 @@ class _ChatScreenState extends State<ChatScreen> {
     super.dispose();
   }
 
+  void _openHistory() {
+    Navigator.of(context).push(
+      MaterialPageRoute<void>(builder: (_) => HistoryScreen(chat: _chat)),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
+    // O controlador criado aqui segue a opção de Ajustes (IA ou extrativo).
+    if (widget.controller == null) {
+      _chat.generative = SettingsScope.of(context).generativeChat;
+    }
     return Scaffold(
       appBar: AppBar(
-        title: const Row(children: [
-          TrokimMark(size: 30),
-          SizedBox(width: 10),
-          Flexible(
-            child: Text('Assistente',
-                maxLines: 1, overflow: TextOverflow.ellipsis),
-          ),
+        title: Row(children: [
+          const TrokimMark(size: 30),
+          const SizedBox(width: 10),
+          Flexible(child: _ConversationTitle(chat: _chat)),
         ]),
         actions: [
+          if (_chat.hasHistory) ...[
+            IconButton(
+              tooltip: 'Histórico de conversas',
+              icon: const Icon(Icons.history_rounded),
+              onPressed: _openHistory,
+            ),
+            IconButton(
+              tooltip: 'Nova conversa',
+              icon: const Icon(Icons.add_comment_outlined),
+              onPressed: _chat.startNew,
+            ),
+          ],
           Row(mainAxisSize: MainAxisSize.min, children: [
-            const Text('Auditoria',
-                style: TextStyle(fontSize: 12, fontWeight: FontWeight.w600)),
             Semantics(
               label: 'Modo de auditoria pedagógica',
-              child: Switch(
-                value: _auditMode,
-                onChanged: (value) => setState(() => _auditMode = value),
+              child: Tooltip(
+                message: 'Auditoria pedagógica',
+                child: Switch(
+                  value: _auditMode,
+                  onChanged: (value) => setState(() => _auditMode = value),
+                ),
               ),
             ),
           ]),
@@ -218,7 +245,7 @@ class _ChatScreenState extends State<ChatScreen> {
   }
 }
 
-class _MessageBubble extends StatelessWidget {
+class _MessageBubble extends StatefulWidget {
   const _MessageBubble({
     required this.message,
     required this.maxWidth,
@@ -234,7 +261,38 @@ class _MessageBubble extends StatelessWidget {
   final ValueChanged<String>? onQuickQuestion;
 
   @override
+  State<_MessageBubble> createState() => _MessageBubbleState();
+}
+
+class _MessageBubbleState extends State<_MessageBubble> {
+  // O State é reaproveitado quando a mensagem daquela posição muda (ex.: o erro
+  // vira resposta no "tentar novamente"), então as chaves acompanham a mensagem
+  // atual em vez de serem criadas uma única vez.
+  final List<GlobalKey<EvidenceCardState>> _cardKeys = [];
+
+  void _syncCardKeys() {
+    final n = widget.message.evidences.length;
+    while (_cardKeys.length < n) {
+      _cardKeys.add(GlobalKey<EvidenceCardState>());
+    }
+    if (_cardKeys.length > n) _cardKeys.removeRange(n, _cardKeys.length);
+  }
+
+  /// Leva ao cartão da fonte [number] (1, 2…): abre, rola e destaca.
+  void _goToSource(int number) {
+    if (number < 1 || number > _cardKeys.length) return;
+    _cardKeys[number - 1].currentState?.reveal();
+  }
+
+  ChatMessage get message => widget.message;
+  double get maxWidth => widget.maxWidth;
+  VoidCallback? get onRetry => widget.onRetry;
+  bool get auditMode => widget.auditMode;
+  ValueChanged<String>? get onQuickQuestion => widget.onQuickQuestion;
+
+  @override
   Widget build(BuildContext context) {
+    _syncCardKeys();
     final color = message.isUser
         ? AppTheme.emerald
         : message.isError
@@ -281,13 +339,10 @@ class _MessageBubble extends StatelessWidget {
                 ),
                 const SizedBox(height: 8),
               ],
-              Text(
-                message.text,
-                style: TextStyle(
-                  color: message.isUser ? Colors.white : context.colors.ink,
-                  fontSize: 14.5,
-                  height: 1.45,
-                ),
+              _MessageText(
+                message: message,
+                sourceCount: _cardKeys.length,
+                onSource: _goToSource,
               ),
               if (message.isAbstained)
                 Padding(
@@ -329,9 +384,13 @@ class _MessageBubble extends StatelessWidget {
                   label: const Text('Tentar novamente'),
                 ),
               if (!message.isUser && !message.isError && !message.isAbstained)
-                for (final evidence in message.evidences) ...[
+                for (var i = 0; i < message.evidences.length; i++) ...[
                   const SizedBox(height: 8),
-                  EvidenceCard(evidence: evidence),
+                  EvidenceCard(
+                    key: _cardKeys[i],
+                    evidence: message.evidences[i],
+                    number: i + 1,
+                  ),
                 ],
             ],
           ),
@@ -423,4 +482,186 @@ class _AuditRow extends StatelessWidget {
           ),
         ],
       );
+}
+
+/// Título da conversa na barra: "Assistente" numa conversa nova; depois, o
+/// título provisório (a primeira pergunta) que troca suavemente pelo do LLM.
+class _ConversationTitle extends StatelessWidget {
+  const _ConversationTitle({required this.chat});
+  final ChatController chat;
+
+  @override
+  Widget build(BuildContext context) {
+    return AnimatedBuilder(
+      animation: chat,
+      builder: (context, _) {
+        final conv = chat.current;
+        final generating = conv?.titleState == TitleState.generating;
+        return Row(mainAxisSize: MainAxisSize.min, children: [
+          Flexible(
+            child: AnimatedSwitcher(
+              duration: Motion.base,
+              switchInCurve: Motion.emphasized,
+              transitionBuilder: (child, anim) => FadeTransition(
+                opacity: anim,
+                child: SlideTransition(
+                  position: Tween<Offset>(
+                    begin: const Offset(0, 0.25),
+                    end: Offset.zero,
+                  ).animate(anim),
+                  child: child,
+                ),
+              ),
+              child: Text(
+                conv?.title ?? 'Assistente',
+                key: ValueKey(conv?.title ?? 'Assistente'),
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+              ),
+            ),
+          ),
+          if (generating) ...[
+            const SizedBox(width: 8),
+            Semantics(
+              label: 'Gerando título',
+              child: const _TypingDots(),
+            ),
+          ],
+        ]);
+      },
+    );
+  }
+}
+
+/// Três pontinhos pulsando: "gerando título".
+class _TypingDots extends StatefulWidget {
+  const _TypingDots();
+
+  @override
+  State<_TypingDots> createState() => _TypingDotsState();
+}
+
+class _TypingDotsState extends State<_TypingDots>
+    with SingleTickerProviderStateMixin {
+  late final AnimationController _c = AnimationController(
+    vsync: this,
+    duration: const Duration(milliseconds: 1000),
+  )..repeat();
+
+  @override
+  void dispose() {
+    _c.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final color = context.colors.muted;
+    return AnimatedBuilder(
+      animation: _c,
+      builder: (_, __) => Row(mainAxisSize: MainAxisSize.min, children: [
+        for (var i = 0; i < 3; i++)
+          Container(
+            width: 5,
+            height: 5,
+            margin: const EdgeInsets.symmetric(horizontal: 1.5),
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              color: color.withValues(
+                alpha: 0.25 + 0.75 * (((_c.value * 3) - i) % 3 < 1 ? 1 : 0.0),
+              ),
+            ),
+          ),
+      ]),
+    );
+  }
+}
+
+/// Texto da mensagem. As respostas do assistente saem sem o bloco de fontes e
+/// sem URLs soltas (as fontes estão nos cartões, com link clicável), com
+/// negrito e marcadores [n] formatados.
+class _MessageText extends StatelessWidget {
+  const _MessageText({
+    required this.message,
+    required this.sourceCount,
+    required this.onSource,
+  });
+  final ChatMessage message;
+
+  /// Quantos cartões de fonte existem; marcadores acima disso ficam só texto.
+  final int sourceCount;
+  final ValueChanged<int> onSource;
+
+  @override
+  Widget build(BuildContext context) {
+    final style = TextStyle(
+      color: message.isUser ? Colors.white : context.colors.ink,
+      fontSize: 14.5,
+      height: 1.45,
+    );
+    if (message.isUser || message.isError || message.isAbstained) {
+      return Text(message.text, style: style);
+    }
+    final cleaned = AnswerFormat.clean(message.text);
+    return Text.rich(
+      TextSpan(
+        style: style,
+        children: AnswerFormat.spans(
+          cleaned,
+          style,
+          citationColor: context.colors.accent,
+          citation: (n) => n <= sourceCount
+              ? WidgetSpan(
+                  alignment: PlaceholderAlignment.middle,
+                  child: _CitationChip(number: n, onTap: () => onSource(n)),
+                )
+              : TextSpan(text: '[$n]'),
+        ),
+      ),
+    );
+  }
+}
+
+/// Marcador de fonte [n] no texto: toque leva ao cartão da fonte abaixo.
+class _CitationChip extends StatelessWidget {
+  const _CitationChip({required this.number, required this.onTap});
+  final int number;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    final c = context.colors;
+    return Semantics(
+      button: true,
+      label: 'Ver fonte $number',
+      child: ExcludeSemantics(
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 2),
+          child: InkWell(
+            onTap: onTap,
+            borderRadius: BorderRadius.circular(8),
+            child: Container(
+              constraints: const BoxConstraints(minWidth: 22, minHeight: 20),
+              padding: const EdgeInsets.symmetric(horizontal: 5),
+              alignment: Alignment.center,
+              decoration: BoxDecoration(
+                color: c.tint,
+                borderRadius: BorderRadius.circular(8),
+                border: Border.all(color: AppTheme.gold.withValues(alpha: 0.7)),
+              ),
+              child: Text(
+                '$number',
+                style: TextStyle(
+                  fontSize: 11.5,
+                  fontWeight: FontWeight.w800,
+                  color: c.accent,
+                  height: 1.1,
+                ),
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
 }

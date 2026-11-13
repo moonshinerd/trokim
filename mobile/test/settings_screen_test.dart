@@ -23,6 +23,16 @@ Future<SettingsController> openSettings(
   return settings;
 }
 
+/// A lista é preguiçosa: rola até o texto existir na árvore.
+Future<void> _scrollTo(WidgetTester tester, String text) async {
+  await tester.scrollUntilVisible(
+    find.text(text),
+    300,
+    scrollable: find.byType(Scrollable).first,
+  );
+  await tester.pumpAndSettle();
+}
+
 void main() {
   testWidgets('segue o sistema por padrão e permite fixar o tema escuro',
       (tester) async {
@@ -34,6 +44,16 @@ void main() {
     await tester.pumpAndSettle();
     expect(settings.themeMode, ThemeMode.dark);
     expect(find.text('Fixo no tema escuro.'), findsOneWidget);
+  });
+
+  testWidgets('a IA generativa vem ligada e pode ser desligada',
+      (tester) async {
+    final settings = await openSettings(tester);
+    expect(settings.generativeChat, isTrue);
+    await _scrollTo(tester, 'Respostas com IA (LLM local)');
+    await tester.tap(find.text('Respostas com IA (LLM local)'));
+    await tester.pumpAndSettle();
+    expect(settings.generativeChat, isFalse);
   });
 
   testWidgets('alterna animações e abertura', (tester) async {
@@ -56,10 +76,8 @@ void main() {
       client:
           MockClient((_) async => http.Response('{"status":"healthy"}', 200)),
     );
-    await tester.ensureVisible(find.text('Não testado'));
+    await _scrollTo(tester, 'Testar conexão');
     expect(find.text('Não testado'), findsOneWidget);
-    await tester.ensureVisible(find.text('Testar conexão'));
-    await tester.pumpAndSettle();
     await tester.tap(find.text('Testar conexão'));
     await tester.pumpAndSettle();
     expect(find.text('Conectado'), findsOneWidget);
@@ -70,8 +88,7 @@ void main() {
       tester,
       client: MockClient((_) async => throw Exception('offline')),
     );
-    await tester.ensureVisible(find.text('Testar conexão'));
-    await tester.pumpAndSettle();
+    await _scrollTo(tester, 'Testar conexão');
     await tester.tap(find.text('Testar conexão'));
     await tester.pumpAndSettle();
     expect(find.text('Sem conexão com a API'), findsOneWidget);
