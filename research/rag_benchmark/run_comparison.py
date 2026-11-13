@@ -211,11 +211,17 @@ async def execute_case_pure(
     case: dict[str, Any],
     llm: LLMProvider,
     temperature: float = 0.1,
+    max_tokens: int = 300,
 ) -> dict[str, Any]:
     """Abordagem 1: LLM Pura (sem contexto documental, apenas conhecimento paramétrico)."""
     prompt = render_prompt("llm_pure", case, context="")
     t0 = time.perf_counter()
-    res = await llm.generate(prompt=prompt, context_chunks=None, temperature=temperature)
+    res = await llm.generate(
+        prompt=prompt,
+        context_chunks=None,
+        temperature=temperature,
+        max_tokens=max_tokens,
+    )
     latency_ms = round((time.perf_counter() - t0) * 1000, 2)
 
     return {
@@ -235,6 +241,7 @@ async def execute_case_naive(
     llm: LLMProvider,
     temperature: float = 0.1,
     top_k: int = 3,
+    max_tokens: int = 300,
 ) -> dict[str, Any]:
     """Abordagem 2: Naive RAG (recuperação densa pura, sem controle de escopo nem abstenção)."""
     query = case["query"]
@@ -242,7 +249,12 @@ async def execute_case_naive(
     chunks = retriever.retrieve_dense(query, top_k=top_k)
     context_text = format_context(chunks)
     prompt = render_prompt("naive_rag", case, context=context_text)
-    res = await llm.generate(prompt=prompt, context_chunks=chunks, temperature=temperature)
+    res = await llm.generate(
+        prompt=prompt,
+        context_chunks=chunks,
+        temperature=temperature,
+        max_tokens=max_tokens,
+    )
     latency_ms = round((time.perf_counter() - t0) * 1000, 2)
 
     return {
@@ -264,6 +276,7 @@ async def execute_case_grounded(
     temperature: float = 0.1,
     top_k: int = 3,
     threshold: float = 0.15,
+    max_tokens: int = 300,
 ) -> dict[str, Any]:
     """Abordagem 3: Trokim Estruturado (híbrido, cálculo determinístico e abstenção ativa)."""
     query = case["query"]
@@ -297,7 +310,12 @@ async def execute_case_grounded(
     # 3. Síntese generativa fundamentada com citação estrita
     context_text = format_context(chunks)
     prompt = render_prompt("trokim_grounded", case, context=context_text)
-    res = await llm.generate(prompt=prompt, context_chunks=chunks, temperature=temperature)
+    res = await llm.generate(
+        prompt=prompt,
+        context_chunks=chunks,
+        temperature=temperature,
+        max_tokens=max_tokens,
+    )
     latency_ms = round((time.perf_counter() - t0) * 1000, 2)
 
     return {
@@ -507,6 +525,9 @@ def main(argv: list[str] | None = None) -> int:
     )
     parser.add_argument("--model", type=str, default="qwen2.5", help="Modelo de linguagem.")
     parser.add_argument("--temperature", type=float, default=0.1, help="Temperatura de amostragem.")
+    parser.add_argument(
+        "--timeout", type=float, default=120.0, help="Timeout em segundos para o LLM."
+    )
     parser.add_argument("--limit", type=int, default=None, help="Limita o número de casos.")
     args = parser.parse_args(argv)
 
@@ -516,7 +537,12 @@ def main(argv: list[str] | None = None) -> int:
             cases = cases[: args.limit]
 
         provider_name = args.provider or "ollama"
-        llm = get_llm_provider(provider_name=provider_name, model_name=args.model)
+        if provider_name == "ollama":
+            from app.clients.ollama_provider import OllamaProvider
+
+            llm: LLMProvider = OllamaProvider(model=args.model, timeout=args.timeout)
+        else:
+            llm = get_llm_provider(provider_name=provider_name, model_name=args.model)
 
         print(
             f"Iniciando benchmark: {len(cases)} casos | "
@@ -563,7 +589,10 @@ def main(argv: list[str] | None = None) -> int:
         print(md_content)
         return 0
     except Exception as exc:
-        print(f"Erro na execução do benchmark: {exc}", file=sys.stderr)
+        import traceback
+
+        traceback.print_exc()
+        print(f"Erro na execução do benchmark: {type(exc)} {exc}", file=sys.stderr)
         return 2
 
 
