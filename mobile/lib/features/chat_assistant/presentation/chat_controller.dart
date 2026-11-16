@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/foundation.dart';
 
+import '../../../core/network/api_client.dart';
 import '../data/chat_repository.dart';
 import '../data/conversation_store.dart';
 import '../domain/chat_models.dart';
@@ -43,7 +44,12 @@ class ChatController extends ChangeNotifier {
     ChatRepository? repository,
     ConversationStore? store,
     this.generative = true,
-  }) : _repository = repository ?? ChatRepository(),
+    String Function()? baseUrlProvider,
+  }) : _repository =
+           repository ??
+           ChatRepository(
+             apiClient: ApiClient(baseUrlProvider: baseUrlProvider),
+           ),
        _ownsRepository = repository == null,
        _store = store;
 

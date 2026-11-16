@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:http/http.dart' as http;
 import 'package:http/testing.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:trokim/core/constants/api_constants.dart';
 import 'package:trokim/core/settings/settings_controller.dart';
 import 'package:trokim/features/settings/presentation/settings_screen.dart';
 
@@ -95,5 +97,113 @@ void main() {
     await tester.tap(find.text('Testar conexão'));
     await tester.pumpAndSettle();
     expect(find.text('Sem conexão com a API'), findsOneWidget);
+  });
+
+  group('endereço da API', () {
+    testWidgets('começa no padrão e salva um endereço novo normalizado', (
+      tester,
+    ) async {
+      final settings = await openSettings(tester);
+      expect(settings.apiBaseUrl, ApiConstants.defaultBaseUrl);
+      await _scrollTo(tester, 'Salvar endereço');
+
+      await tester.enterText(
+        find.byType(TextField),
+        '  http://192.168.0.10:8000/v1/  ',
+      );
+      await tester.tap(find.text('Salvar endereço'));
+      await tester.pumpAndSettle();
+
+      expect(settings.apiBaseUrl, 'http://192.168.0.10:8000/v1');
+      expect(find.text('http://192.168.0.10:8000/v1'), findsOneWidget);
+    });
+
+    testWidgets('endereço inválido mostra erro e não altera o salvo', (
+      tester,
+    ) async {
+      final settings = await openSettings(tester);
+      await _scrollTo(tester, 'Salvar endereço');
+
+      await tester.enterText(find.byType(TextField), 'localhost sem esquema');
+      await tester.tap(find.text('Salvar endereço'));
+      await tester.pumpAndSettle();
+
+      expect(find.textContaining('Use um endereço http://'), findsOneWidget);
+      expect(settings.apiBaseUrl, ApiConstants.defaultBaseUrl);
+    });
+
+    testWidgets('"Restaurar padrão" volta ao endereço original', (
+      tester,
+    ) async {
+      final settings = await openSettings(tester);
+      settings.setApiBaseUrl('http://10.1.1.1:9000/v1');
+      await tester.pumpAndSettle();
+      await _scrollTo(tester, 'Restaurar padrão');
+
+      await tester.tap(find.text('Restaurar padrão'));
+      await tester.pumpAndSettle();
+
+      expect(settings.apiBaseUrl, ApiConstants.defaultBaseUrl);
+      expect(find.text(ApiConstants.defaultBaseUrl), findsOneWidget);
+    });
+
+    testWidgets('o teste de conexão usa o endereço salvo', (tester) async {
+      final urls = <Uri>[];
+      final settings = await openSettings(
+        tester,
+        client: MockClient((request) async {
+          urls.add(request.url);
+          return http.Response('{"status":"healthy"}', 200);
+        }),
+      );
+      settings.setApiBaseUrl('http://192.168.0.10:8000/v1');
+      await tester.pumpAndSettle();
+      await _scrollTo(tester, 'Testar conexão');
+
+      await tester.tap(find.text('Testar conexão'));
+      await tester.pumpAndSettle();
+
+      expect(urls.single.toString(), 'http://192.168.0.10:8000/v1/health');
+    });
+
+    test(
+      'é guardado no aparelho e um valor corrompido volta ao padrão',
+      () async {
+        SharedPreferences.setMockInitialValues({
+          'api_base_url': 'http://10.0.0.5:8000/v1',
+        });
+        final saved = await SettingsController.load();
+        expect(saved.apiBaseUrl, 'http://10.0.0.5:8000/v1');
+
+        saved.setApiBaseUrl('https://trokim.exemplo.local/v1');
+        final reopened = await SettingsController.load();
+        expect(reopened.apiBaseUrl, 'https://trokim.exemplo.local/v1');
+
+        SharedPreferences.setMockInitialValues({'api_base_url': 'lixo'});
+        final broken = await SettingsController.load();
+        expect(broken.apiBaseUrl, ApiConstants.defaultBaseUrl);
+      },
+    );
+
+    test('normalizeBaseUrl aceita só http(s) com servidor', () {
+      expect(
+        ApiConstants.normalizeBaseUrl('http://10.0.2.2:8000/v1///'),
+        'http://10.0.2.2:8000/v1',
+      );
+      expect(
+        ApiConstants.normalizeBaseUrl('https://api.exemplo.com'),
+        'https://api.exemplo.com',
+      );
+      for (final bad in [
+        '',
+        'abc',
+        'http://',
+        'ftp://servidor/v1',
+        'http://x/v1?a=1',
+        'http://x/v1#topo',
+      ]) {
+        expect(ApiConstants.normalizeBaseUrl(bad), isNull, reason: bad);
+      }
+    });
   });
 }

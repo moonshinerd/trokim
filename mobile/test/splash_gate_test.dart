@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:trokim/core/settings/settings_controller.dart';
@@ -68,5 +70,83 @@ void main() {
     expect(find.text('app em uso'), findsOneWidget);
     expect(find.text('trokim'), findsNothing);
     await tester.pump(const Duration(seconds: 4));
+  });
+
+  group('carregamento real', () {
+    Future<void> openWith(WidgetTester tester, Future<void> ready) async {
+      final settings = SettingsController.memory();
+      addTearDown(settings.dispose);
+      await tester.pumpWidget(
+        SettingsScope(
+          controller: settings,
+          child: MaterialApp(
+            home: SplashGate(ready: ready, child: const _Probe()),
+          ),
+        ),
+      );
+    }
+
+    double barValue(WidgetTester tester) => tester
+        .widget<LinearProgressIndicator>(find.byType(LinearProgressIndicator))
+        .value!;
+
+    testWidgets('espera o carregamento mesmo depois da animação acabar', (
+      tester,
+    ) async {
+      final done = Completer<void>();
+      await openWith(tester, done.future);
+
+      await tester.pump(const Duration(seconds: 4));
+      expect(find.text('app em uso'), findsNothing, reason: 'ainda carregando');
+      expect(barValue(tester), closeTo(0.9, 1e-9), reason: 'não chega a 100%');
+
+      done.complete();
+      await tester.pump();
+      await tester.pump(const Duration(seconds: 1));
+      expect(find.text('app em uso'), findsOneWidget);
+    });
+
+    testWidgets('com carregamento rápido a barra completa junto da moeda', (
+      tester,
+    ) async {
+      await openWith(tester, Future<void>.value());
+
+      await tester.pump(const Duration(milliseconds: 2700));
+      expect(barValue(tester), closeTo(1, 1e-9));
+      expect(find.text('app em uso'), findsNothing, reason: 'moeda ainda gira');
+
+      // Deixa a abertura terminar (nenhum timer pode sobrar ao fim do teste).
+      await tester.pump(const Duration(seconds: 1));
+      await tester.pump(const Duration(seconds: 1));
+      expect(find.text('app em uso'), findsOneWidget);
+    });
+
+    testWidgets('sem resposta da API, abre depois do tempo máximo', (
+      tester,
+    ) async {
+      await openWith(tester, Completer<void>().future);
+
+      await tester.pump(const Duration(seconds: 7));
+      expect(find.text('app em uso'), findsNothing);
+
+      await tester.pump(const Duration(seconds: 2));
+      await tester.pump(const Duration(seconds: 1));
+      expect(find.text('app em uso'), findsOneWidget);
+    });
+
+    testWidgets('falha no carregamento não trava a abertura', (tester) async {
+      // O erro só ocorre depois do primeiro build, quando a abertura já ouve.
+      await openWith(
+        tester,
+        Future<void>.delayed(
+          const Duration(milliseconds: 10),
+          () => throw StateError('API fora'),
+        ),
+      );
+
+      await tester.pump(const Duration(seconds: 4));
+      await tester.pump(const Duration(seconds: 1));
+      expect(find.text('app em uso'), findsOneWidget);
+    });
   });
 }

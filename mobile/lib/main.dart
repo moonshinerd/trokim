@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
+import 'core/network/api_client.dart';
 import 'core/settings/settings_controller.dart';
 import 'core/theme/app_theme.dart';
 import 'core/widgets/app_motion.dart';
@@ -9,6 +10,8 @@ import 'core/widgets/mascot.dart';
 import 'features/budget_scenarios/presentation/scenarios_screen.dart';
 import 'features/chat_assistant/presentation/chat_screen.dart';
 import 'features/dashboard/presentation/dashboard_screen.dart';
+import 'features/finance/data/finance_repository.dart';
+import 'features/finance/presentation/finance_controller.dart';
 import 'features/settings/presentation/settings_screen.dart';
 import 'features/transactions/presentation/transactions_screen.dart';
 
@@ -16,11 +19,30 @@ Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   final settings = await SettingsController.load();
   await Mascot.load();
-  runApp(SettingsScope(controller: settings, child: const TrokimApp()));
+  final finance = FinanceController(
+    FinanceRepository(
+      () => ApiClient(baseUrlProvider: () => settings.apiBaseUrl),
+    ),
+  );
+  // A abertura espera este carregamento real: o resumo já aparece pronto.
+  final firstLoad = finance.load();
+  runApp(
+    SettingsScope(
+      controller: settings,
+      child: FinanceScope(
+        controller: finance,
+        child: TrokimApp(firstLoad: firstLoad),
+      ),
+    ),
+  );
 }
 
 class TrokimApp extends StatelessWidget {
-  const TrokimApp({super.key});
+  const TrokimApp({super.key, this.firstLoad});
+
+  /// Carregamento inicial dos dados; a abertura só termina quando ele acaba
+  /// (ou depois de um tempo máximo, se a API não responder).
+  final Future<void>? firstLoad;
 
   @override
   Widget build(BuildContext context) {
@@ -46,7 +68,7 @@ class TrokimApp extends StatelessWidget {
           child: child!,
         );
       },
-      home: const SplashGate(child: MainNavigationScreen()),
+      home: SplashGate(ready: firstLoad, child: const MainNavigationScreen()),
     );
   }
 }
@@ -271,15 +293,24 @@ class _NavItem extends StatelessWidget {
 /// Abertura: a moeda gira em 3D enquanto o app carrega e depois a tela
 /// entra suavemente.
 class SplashGate extends StatefulWidget {
-  const SplashGate({super.key, required this.child});
+  const SplashGate({super.key, required this.child, this.ready});
   final Widget child;
+
+  /// Carregamento real que a barra de progresso acompanha. Sem ele, a
+  /// abertura dura só o tempo da animação.
+  final Future<void>? ready;
 
   @override
   State<SplashGate> createState() => _SplashGateState();
 }
 
 class _SplashGateState extends State<SplashGate> {
+  /// Tempo máximo esperando [SplashGate.ready]: sem resposta da API, o app
+  /// abre mesmo assim e a tela de resumo mostra o erro.
+  static const _maxWait = Duration(seconds: 8);
+
   bool _timerDone = false;
+  bool _loaded = false;
 
   /// Decidido uma única vez, na abertura: mudar essa opção em Ajustes vale
   /// para a próxima abertura e nunca recria o app em uso (o que apagaria a
@@ -292,25 +323,37 @@ class _SplashGateState extends State<SplashGate> {
     Future<void>.delayed(const Duration(milliseconds: 3000), () {
       if (mounted) setState(() => _timerDone = true);
     });
+    final ready = widget.ready;
+    if (ready == null) {
+      _loaded = true;
+    } else {
+      ready.timeout(_maxWait).catchError((Object _) {}).whenComplete(() {
+        if (mounted) setState(() => _loaded = true);
+      });
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     _skip ??= Motion.reduced(context) || !SettingsScope.of(context).showSplash;
-    final showApp = _skip! || _timerDone;
+    final showApp = _skip! || (_timerDone && _loaded);
     return AnimatedSwitcher(
       duration: _skip! ? Duration.zero : const Duration(milliseconds: 600),
       switchInCurve: Motion.emphasized,
       switchOutCurve: Curves.easeIn,
       child: showApp
           ? KeyedSubtree(key: const ValueKey('app'), child: widget.child)
-          : const _Splash(key: ValueKey('splash')),
+          : _Splash(key: const ValueKey('splash'), loaded: _loaded),
     );
   }
 }
 
 class _Splash extends StatefulWidget {
-  const _Splash({super.key});
+  const _Splash({super.key, required this.loaded});
+
+  /// O carregamento real terminou. A barra só chega a 100% quando isso
+  /// acontece, mesmo que a animação da moeda já tenha acabado.
+  final bool loaded;
 
   @override
   State<_Splash> createState() => _SplashState();
@@ -381,7 +424,7 @@ class _SplashState extends State<_Splash> {
                     width: 120,
                     height: 4,
                     child: LinearProgressIndicator(
-                      value: _t,
+                      value: _t * 0.9 + (widget.loaded ? 0.1 : 0),
                       backgroundColor: c.line,
                       valueColor: const AlwaysStoppedAnimation(AppTheme.gold),
                     ),
