@@ -1347,10 +1347,10 @@
       <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
         
           <li class="md-nav__item">
-  <a href="#intencoes-previstas" class="md-nav__link">
+  <a href="#intencoes-suportadas-e-formulas" class="md-nav__link">
     <span class="md-ellipsis">
       <span class="md-typeset">
-        Intenções previstas
+        Intenções Suportadas e Fórmulas
       </span>
     </span>
   </a>
@@ -1358,10 +1358,43 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#como-funciona-na-pratica" class="md-nav__link">
+  <a href="#principio-de-abstencao-numerica" class="md-nav__link">
     <span class="md-ellipsis">
       <span class="md-typeset">
-        Como funciona na prática
+        Princípio de Abstenção Numérica
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#extracao-de-metas-em-linguagem-natural" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Extração de Metas em Linguagem Natural
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#exemplo-de-saida-calculationresult" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Exemplo de Saída (<code>CalculationResult</code>)
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#testes-automatizados" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Testes Automatizados
       </span>
     </span>
   </a>
@@ -2154,10 +2187,10 @@
       <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
         
           <li class="md-nav__item">
-  <a href="#intencoes-previstas" class="md-nav__link">
+  <a href="#intencoes-suportadas-e-formulas" class="md-nav__link">
     <span class="md-ellipsis">
       <span class="md-typeset">
-        Intenções previstas
+        Intenções Suportadas e Fórmulas
       </span>
     </span>
   </a>
@@ -2165,10 +2198,43 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#como-funciona-na-pratica" class="md-nav__link">
+  <a href="#principio-de-abstencao-numerica" class="md-nav__link">
     <span class="md-ellipsis">
       <span class="md-typeset">
-        Como funciona na prática
+        Princípio de Abstenção Numérica
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#extracao-de-metas-em-linguagem-natural" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Extração de Metas em Linguagem Natural
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#exemplo-de-saida-calculationresult" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Exemplo de Saída (<code>CalculationResult</code>)
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#testes-automatizados" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Testes Automatizados
       </span>
     </span>
   </a>
@@ -2208,51 +2274,104 @@
 
 
 <h1 id="analysis-agent">Analysis Agent<a class="headerlink" href="#analysis-agent" title="Permanent link">&para;</a></h1>
-<div class="admonition info">
-<p class="admonition-title">Status: Planejado</p>
-<p>Issue <a href="https://github.com/moonshinerd/trokim/issues/53">#53</a>. Esta página é preenchida no mesmo PR da implementação (regra: o MkDocs nunca fica defasado).</p>
+<div class="admonition success">
+<p class="admonition-title">Status: Implementado</p>
+<p>Implementado na issue <a href="https://github.com/moonshinerd/trokim/issues/53">#53</a>. O motor determinístico de cálculo financeiro elimina alucinações aritméticas e assegura conformidade estrita com a ADR 0004.</p>
 </div>
-<p>Faz <strong>todo cálculo</strong> de uma pergunta numérica por código, para que o modelo só explique números prontos
-(<a href="../../adr/0004-calculos-deterministicos/">ADR 0004</a>). Resolve na raiz as falhas C29 (percentuais
-inventados) e C30 (cálculo sem resultado do sistema). Não usa modelo de linguagem.</p>
-<h2 id="intencoes-previstas">Intenções previstas<a class="headerlink" href="#intencoes-previstas" title="Permanent link">&para;</a></h2>
+<p>O <strong>Analysis Agent</strong> (<code>api/app/services/agents/analysis.py</code>) é o responsável exclusivo por computar quaisquer grandezas numéricas sobre os lançamentos da sessão ou sobre parâmetros informados pelo usuário. Ele nunca utiliza modelos generativos (LLMs).</p>
+<h2 id="intencoes-suportadas-e-formulas">Intenções Suportadas e Fórmulas<a class="headerlink" href="#intencoes-suportadas-e-formulas" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
 <tr>
 <th>Intenção</th>
+<th>Palavras-chave</th>
 <th>O que calcula</th>
-<th>Base</th>
+<th>Função no <code>CalculationService</code></th>
+<th style="text-align: center;">Unidade</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td>Resumo</td>
-<td>Receitas, despesas, saldo e taxa de poupança</td>
-<td><code>CalculationService.calculate_summary</code></td>
+<td><strong>Resumo</strong></td>
+<td><code>saldo</code>, <code>receita</code>, <code>despesa</code>, <code>gastei</code>, <code>resumo</code>, <code>balanco</code>, <code>total</code>, <code>poupança</code></td>
+<td>Receitas totais, despesas totais, saldo líquido e taxa de poupança</td>
+<td><code>calculate_summary</code></td>
+<td style="text-align: center;"><code>BRL</code>, <code>%</code></td>
 </tr>
 <tr>
-<td>Categorias</td>
-<td>Despesa por categoria e participação no total</td>
-<td><code>category_shares</code> (novo)</td>
+<td><strong>Categorias</strong></td>
+<td><code>categoria</code>, <code>alimentacao</code>, <code>moradia</code>, <code>transporte</code>, <code>saude</code>, <code>lazer</code>, <code>educacao</code>, <code>servicos</code></td>
+<td>Total por categoria e participação percentual sobre as despesas totais</td>
+<td><code>category_shares</code></td>
+<td style="text-align: center;"><code>BRL</code>, <code>%</code></td>
 </tr>
 <tr>
-<td>Meta</td>
-<td>Meses para juntar um valor poupando um aporte mensal</td>
-<td><code>months_to_goal</code> (novo)</td>
+<td><strong>Meta</strong></td>
+<td><code>meta</code>, <code>juntar</code>, <code>meses</code>, <code>tempo</code>, <code>objetivo</code>, <code>poupando</code></td>
+<td>Prazo em meses para alcançar um objetivo: $\lceil \text{meta} / \text{aporte} \rceil$</td>
+<td><code>months_to_goal</code></td>
+<td style="text-align: center;"><code>meses</code></td>
 </tr>
 <tr>
-<td>Cenários</td>
-<td>Comparação de dois cenários informados</td>
-<td><code>CalculationService.compare_budget_scenarios</code></td>
+<td><strong>Cenários</strong></td>
+<td><code>cenario</code>, <code>comparar</code>, <code>simulacao</code></td>
+<td>Margem operacional e delta de poupança entre propostas</td>
+<td><code>compare_budget_scenarios</code></td>
+<td style="text-align: center;"><code>BRL</code></td>
 </tr>
 </tbody>
 </table>
-<p>Sem lançamentos importados, ou com uma pergunta numérica que o agente não sabe calcular, o passo é
-<code>skipped</code> e as premissas dizem <strong>o que falta</strong>; o Communication Agent deve repetir isso, nunca estimar.</p>
-<h2 id="como-funciona-na-pratica">Como funciona na prática<a class="headerlink" href="#como-funciona-na-pratica" title="Permanent link">&para;</a></h2>
-<p><em>(A preencher: tabela de palavras-chave, fórmulas e exemplos numéricos reais com o extrato sintético.)</em></p>
+<h2 id="principio-de-abstencao-numerica">Princípio de Abstenção Numérica<a class="headerlink" href="#principio-de-abstencao-numerica" title="Permanent link">&para;</a></h2>
+<p>Se a consulta exigir dados dos extratos e não houver lançamentos carregados na sessão da API, o agente:</p>
+<ol>
+<li>Registra a premissa explicativa em <code>ctx.assumptions</code>: <em>"Nenhum lançamento foi importado para calcular o resumo financeiro."</em></li>
+<li>Emite o passo com status <code>skipped</code> sem chutar ou estimar grandezas.</li>
+<li>Garante que o Communication Agent receba a premissa e solicite a importação do extrato (OFX/PDF) ao usuário.</li>
+</ol>
+<h2 id="extracao-de-metas-em-linguagem-natural">Extração de Metas em Linguagem Natural<a class="headerlink" href="#extracao-de-metas-em-linguagem-natural" title="Permanent link">&para;</a></h2>
+<p>O agente extrai valores monetários diretamente da pergunta do usuário:</p>
+<ul>
+<li>Formatos aceitos: <code>R$ 6.000</code>, <code>R$ 6.000,00</code>, <code>6000 reais</code>, <code>6 mil</code>, <code>500 reais por mês</code>.</li>
+<li>Exemplo: <em>"Em quantos meses consigo juntar R$ 6.000 poupando R$ 500 por mês?"</em></li>
+<li>$\text{Objetivo} = 6.000,00$ BRL</li>
+<li>$\text{Aporte} = 500,00$ BRL</li>
+<li>$\text{Meses} = \lceil 6000 / 500 \rceil = 12$ meses.</li>
+</ul>
+<h2 id="exemplo-de-saida-calculationresult">Exemplo de Saída (<code>CalculationResult</code>)<a class="headerlink" href="#exemplo-de-saida-calculationresult" title="Permanent link">&para;</a></h2>
+<div class="language-json highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="p">[</span>
+</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="w">  </span><span class="p">{</span>
+</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="w">    </span><span class="nt">"key"</span><span class="p">:</span><span class="w"> </span><span class="s2">"net_balance"</span><span class="p">,</span>
+</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="w">    </span><span class="nt">"label"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Saldo líquido"</span><span class="p">,</span>
+</span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="w">    </span><span class="nt">"value"</span><span class="p">:</span><span class="w"> </span><span class="mf">2500.0</span><span class="p">,</span>
+</span><span id="__span-0-6"><a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="w">    </span><span class="nt">"unit"</span><span class="p">:</span><span class="w"> </span><span class="s2">"BRL"</span><span class="p">,</span>
+</span><span id="__span-0-7"><a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="w">    </span><span class="nt">"source"</span><span class="p">:</span><span class="w"> </span><span class="s2">"CalculationService.calculate_summary"</span>
+</span><span id="__span-0-8"><a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="w">  </span><span class="p">},</span>
+</span><span id="__span-0-9"><a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="w">  </span><span class="p">{</span>
+</span><span id="__span-0-10"><a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="w">    </span><span class="nt">"key"</span><span class="p">:</span><span class="w"> </span><span class="s2">"savings_rate"</span><span class="p">,</span>
+</span><span id="__span-0-11"><a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a><span class="w">    </span><span class="nt">"label"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Taxa de poupança"</span><span class="p">,</span>
+</span><span id="__span-0-12"><a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a><span class="w">    </span><span class="nt">"value"</span><span class="p">:</span><span class="w"> </span><span class="mf">50.0</span><span class="p">,</span>
+</span><span id="__span-0-13"><a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a><span class="w">    </span><span class="nt">"unit"</span><span class="p">:</span><span class="w"> </span><span class="s2">"%"</span><span class="p">,</span>
+</span><span id="__span-0-14"><a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a><span class="w">    </span><span class="nt">"source"</span><span class="p">:</span><span class="w"> </span><span class="s2">"CalculationService.calculate_summary"</span>
+</span><span id="__span-0-15"><a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a><span class="w">  </span><span class="p">},</span>
+</span><span id="__span-0-16"><a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a><span class="w">  </span><span class="p">{</span>
+</span><span id="__span-0-17"><a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a><span class="w">    </span><span class="nt">"key"</span><span class="p">:</span><span class="w"> </span><span class="s2">"months_to_goal"</span><span class="p">,</span>
+</span><span id="__span-0-18"><a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a><span class="w">    </span><span class="nt">"label"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Meses necessários"</span><span class="p">,</span>
+</span><span id="__span-0-19"><a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a><span class="w">    </span><span class="nt">"value"</span><span class="p">:</span><span class="w"> </span><span class="mi">12</span><span class="p">,</span>
+</span><span id="__span-0-20"><a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a><span class="w">    </span><span class="nt">"unit"</span><span class="p">:</span><span class="w"> </span><span class="s2">"meses"</span><span class="p">,</span>
+</span><span id="__span-0-21"><a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a><span class="w">    </span><span class="nt">"source"</span><span class="p">:</span><span class="w"> </span><span class="s2">"CalculationService.months_to_goal"</span>
+</span><span id="__span-0-22"><a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a><span class="w">  </span><span class="p">}</span>
+</span><span id="__span-0-23"><a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a><span class="p">]</span>
+</span></code></pre></div>
+<h2 id="testes-automatizados">Testes Automatizados<a class="headerlink" href="#testes-automatizados" title="Permanent link">&para;</a></h2>
+<p>O comportamento do Analysis Agent e as rotinas matemáticas são cobertos em:</p>
+<ul>
+<li><code>api/tests/test_calculations.py</code>: funções puras <code>months_to_goal</code>, <code>category_shares</code>, <code>calculate_summary</code> e <code>compare_budget_scenarios</code>.</li>
+<li><code>api/tests/test_analysis_agent.py</code>: extração de metas em pt-BR, cálculo consolidado de categorias e comportamento defensivo com lista de transações vazia.</li>
+</ul>
 <h2 id="limitacoes">Limitações<a class="headerlink" href="#limitacoes" title="Permanent link">&para;</a></h2>
-<p><em>(A preencher.)</em></p>
+<ul>
+<li>O cálculo de meta atual assume aporte fixo e linear sem juros compostos ou inflação. Essa premissa é explicitada nas <code>assumptions</code> entregues ao Communication Agent.</li>
+</ul>
 
 
 
