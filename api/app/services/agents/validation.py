@@ -480,7 +480,7 @@ def check_citations(
 
     if max_evidences > 0:
         # Exige pelo menos uma citação (numérica ou link nomeado)
-        if not has_citations and len(draft_answer.strip()) > 50:
+        if not has_citations:
             issues.append(
                 ValidationIssue(
                     code=ValidationIssueCode.CITATION_INVALID,
