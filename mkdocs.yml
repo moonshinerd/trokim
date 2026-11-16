@@ -10,9 +10,8 @@ theme:
   language: pt-BR
   logo: assets/logo.png
   favicon: assets/icon.png
-  font:
-    text: Plus Jakarta Sans
-    code: JetBrains Mono
+  # Fonte embarcada em docs/assets/fonts (extra.css); false evita o Google Fonts.
+  font: false
   features:
     - navigation.instant
     - navigation.instant.progress
