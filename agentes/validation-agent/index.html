@@ -1374,10 +1374,10 @@
       <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
         
           <li class="md-nav__item">
-  <a href="#regras-previstas" class="md-nav__link">
+  <a href="#regras-de-validacao-e-codigos-de-bloqueio" class="md-nav__link">
     <span class="md-ellipsis">
       <span class="md-typeset">
-        Regras previstas
+        Regras de Validação e Códigos de Bloqueio
       </span>
     </span>
   </a>
@@ -1385,10 +1385,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#casos-de-regressao-da-semana-3" class="md-nav__link">
+  <a href="#extracao-de-numeros-sem-falsos-positivos" class="md-nav__link">
     <span class="md-ellipsis">
       <span class="md-typeset">
-        Casos de regressão da Semana 3
+        Extração de Números sem Falsos Positivos
       </span>
     </span>
   </a>
@@ -1396,10 +1396,32 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#como-funciona-na-pratica" class="md-nav__link">
+  <a href="#taxa-de-falso-positivo-medida" class="md-nav__link">
     <span class="md-ellipsis">
       <span class="md-typeset">
-        Como funciona na prática
+        Taxa de Falso Positivo Medida
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#como-funciona-nos-casos-de-regressao-da-semana-3" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Como Funciona nos Casos de Regressão da Semana 3
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#testes-automatizados" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Testes Automatizados
       </span>
     </span>
   </a>
@@ -2165,10 +2187,10 @@
       <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
         
           <li class="md-nav__item">
-  <a href="#regras-previstas" class="md-nav__link">
+  <a href="#regras-de-validacao-e-codigos-de-bloqueio" class="md-nav__link">
     <span class="md-ellipsis">
       <span class="md-typeset">
-        Regras previstas
+        Regras de Validação e Códigos de Bloqueio
       </span>
     </span>
   </a>
@@ -2176,10 +2198,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#casos-de-regressao-da-semana-3" class="md-nav__link">
+  <a href="#extracao-de-numeros-sem-falsos-positivos" class="md-nav__link">
     <span class="md-ellipsis">
       <span class="md-typeset">
-        Casos de regressão da Semana 3
+        Extração de Números sem Falsos Positivos
       </span>
     </span>
   </a>
@@ -2187,10 +2209,32 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#como-funciona-na-pratica" class="md-nav__link">
+  <a href="#taxa-de-falso-positivo-medida" class="md-nav__link">
     <span class="md-ellipsis">
       <span class="md-typeset">
-        Como funciona na prática
+        Taxa de Falso Positivo Medida
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#como-funciona-nos-casos-de-regressao-da-semana-3" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Como Funciona nos Casos de Regressão da Semana 3
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#testes-automatizados" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Testes Automatizados
       </span>
     </span>
   </a>
@@ -2230,55 +2274,89 @@
 
 
 <h1 id="validation-agent">Validation Agent<a class="headerlink" href="#validation-agent" title="Permanent link">&para;</a></h1>
-<div class="admonition info">
-<p class="admonition-title">Status: Planejado</p>
-<p>Issue <a href="https://github.com/moonshinerd/trokim/issues/54">#54</a>. Esta página é preenchida no mesmo PR da implementação (regra: o MkDocs nunca fica defasado).</p>
+<div class="admonition success">
+<p class="admonition-title">Status: Implementado</p>
+<p>Implementado na issue <a href="https://github.com/moonshinerd/trokim/issues/54">#54</a>. Última linha de defesa defensiva do Trokim, garantindo que nenhuma resposta seja entregue ao usuário com dados alucinados ou conselhos fora de escopo.</p>
 </div>
-<p>Garante que <strong>nenhuma resposta saia sem uma checagem independente e determinística</strong> do rascunho.
-Reaproveita as ideias do avaliador da Semana 3, dentro da API. Não usa modelo de linguagem.</p>
-<h2 id="regras-previstas">Regras previstas<a class="headerlink" href="#regras-previstas" title="Permanent link">&para;</a></h2>
+<p>O <strong>Validation Agent</strong> (<code>api/app/services/agents/validation.py</code>) opera como o auditor independente do sistema multiagente. Ele analisa o rascunho produzido pelo Communication Agent antes de sua liberação final, avaliando aderência factual, integridade das citações e conformidade de escopo (<a href="../../adr/0016-arquitetura-multiagente/">ADR 0016</a>). É 100% determinístico e não recorre a LLMs.</p>
+<h2 id="regras-de-validacao-e-codigos-de-bloqueio">Regras de Validação e Códigos de Bloqueio<a class="headerlink" href="#regras-de-validacao-e-codigos-de-bloqueio" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
 <tr>
 <th>Código</th>
-<th>Severidade</th>
-<th>Quando</th>
+<th style="text-align: center;">Severidade</th>
+<th>Gatilho de Bloqueio</th>
+<th style="text-align: center;">Caso da Semana 3</th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td><code>NUMBER_NOT_SUPPORTED</code></td>
-<td>Bloqueio</td>
-<td>Número no rascunho que não está nos cálculos nem nas evidências</td>
+<td style="text-align: center;"><strong>BLOCKER</strong></td>
+<td>Grandeza numérica (moeda, percentual, prazo) sem respaldo em <code>calculations</code> ou <code>evidences</code></td>
+<td style="text-align: center;">C29, C04, C17</td>
 </tr>
 <tr>
 <td><code>CITATION_INVALID</code></td>
-<td>Bloqueio</td>
-<td>Marcador <code>[n]</code> sem evidência correspondente, ou resposta com evidências e nenhuma citação</td>
+<td style="text-align: center;"><strong>BLOCKER</strong></td>
+<td>Citação a <code>[n]</code> inexistente ou resposta com evidências oficiais sem nenhuma citação</td>
+<td style="text-align: center;">Heurística RAG</td>
 </tr>
 <tr>
 <td><code>OUT_OF_SCOPE_ADVICE</code></td>
-<td>Bloqueio</td>
-<td>Recomendação de produto ou ação específica, promessa de rendimento</td>
+<td style="text-align: center;"><strong>BLOCKER</strong></td>
+<td>Indicação de ativo financeiro específico, promessa de rentabilidade ou previsão de preço</td>
+<td style="text-align: center;">C27</td>
 </tr>
 <tr>
 <td><code>ABSTENTION_MISMATCH</code></td>
-<td>Bloqueio</td>
-<td>Respondeu apesar de haver motivo de abstenção</td>
+<td style="text-align: center;"><strong>BLOCKER</strong></td>
+<td>Texto substantivo emitido quando já existia motivo de abstenção registrado</td>
+<td style="text-align: center;">Política ética</td>
 </tr>
 <tr>
 <td><code>CALCULATION_MISSING</code></td>
-<td>Bloqueio</td>
-<td>Pergunta numérica sem cálculos e rascunho com resultado numérico próprio</td>
+<td style="text-align: center;"><strong>BLOCKER</strong></td>
+<td>Pergunta que demandava cálculo sobre lançamentos sem cálculos gerados pelo sistema</td>
+<td style="text-align: center;">C30</td>
 </tr>
 </tbody>
 </table>
-<h2 id="casos-de-regressao-da-semana-3">Casos de regressão da Semana 3<a class="headerlink" href="#casos-de-regressao-da-semana-3" title="Permanent link">&para;</a></h2>
-<p>C27 (previsão de preço), C29 (percentual não fornecido), C30 (resultado calculado sem o sistema), C04 e C17 (valores inventados).</p>
-<h2 id="como-funciona-na-pratica">Como funciona na prática<a class="headerlink" href="#como-funciona-na-pratica" title="Permanent link">&para;</a></h2>
-<p><em>(A preencher: extração de números em pt-BR, exemplos reais e taxa de falso positivo medida.)</em></p>
+<h2 id="extracao-de-numeros-sem-falsos-positivos">Extração de Números sem Falsos Positivos<a class="headerlink" href="#extracao-de-numeros-sem-falsos-positivos" title="Permanent link">&para;</a></h2>
+<p>Na Semana 3, a heurística de validação apresentava falsos positivos ao confundir numeração de tópicos estruturais com dados factuais. O Validation Agent resolveu isso com filtros estruturais em cascata:</p>
+<ol>
+<li><strong>Marcadores de citação:</strong> <code>[1]</code>, <code>[2]</code> são desconsiderados.</li>
+<li><strong>Listas ordenadas:</strong> Numerações de início de linha ou pós-pontuação (<code>1.</code>, <code>2)</code>, <code>Passo 1:</code>) são expurgadas antes da análise factual.</li>
+<li><strong>Identificadores legais:</strong> Menções a normas (<code>Resolução 4.966</code>, <code>Lei 14.181</code>, <code>art. 5º</code>) são preservadas no texto mas ignoradas como grandezas monetárias.</li>
+<li><strong>Anos de calendário:</strong> <code>2024</code>, <code>2025</code>, <code>2026</code> não são tratados como valores de cálculo.</li>
+</ol>
+<h2 id="taxa-de-falso-positivo-medida">Taxa de Falso Positivo Medida<a class="headerlink" href="#taxa-de-falso-positivo-medida" title="Permanent link">&para;</a></h2>
+<p>Em bateria de testes automatizados com <strong>10 rascunhos bons legítimos</strong> em linguagem natural (cobrindo listas numeradas, metas em meses, regras 50/30/20, explicações conceituais e consultas combinadas), a taxa de falso positivo registrada foi de:</p>
+<p>$$\text{Taxa de Falso Positivo} = 0\% \quad (0 \text{ bloqueios indevidos em } 10 \text{ casos testados})$$</p>
+<h2 id="como-funciona-nos-casos-de-regressao-da-semana-3">Como Funciona nos Casos de Regressão da Semana 3<a class="headerlink" href="#como-funciona-nos-casos-de-regressao-da-semana-3" title="Permanent link">&para;</a></h2>
+<ul>
+<li><strong>Caso C27 (Previsão de Preço / Recomendação):</strong></li>
+<li><em>Rascunho:</em> "Recomendo comprar ações com preço alvo de R$ 45,00."</li>
+<li><em>Ação:</em> Bloqueado com <code>OUT_OF_SCOPE_ADVICE</code>. O orquestrador aciona revisão ou rejeita com segurança.</li>
+<li><strong>Caso C29 (Percentual Extrapolado):</strong></li>
+<li><em>Rascunho:</em> "Você deve destinar 33,33% para despesas fixas."</li>
+<li><em>Ação:</em> Bloqueado com <code>NUMBER_NOT_SUPPORTED</code> (33,33% não existe nas fontes oficiais nem nos cálculos).</li>
+<li><strong>Caso C30 (Cálculo sem Dado do Sistema):</strong></li>
+<li><em>Rascunho:</em> "Seu saldo calculado é de R$ 1.850,00." (sem nenhum lançamento processado).</li>
+<li><em>Ação:</em> Bloqueado com <code>CALCULATION_MISSING</code>.</li>
+</ul>
+<h2 id="testes-automatizados">Testes Automatizados<a class="headerlink" href="#testes-automatizados" title="Permanent link">&para;</a></h2>
+<p>Implementados em <code>api/tests/test_validation_agent.py</code>:</p>
+<ul>
+<li>Bloqueio determinístico nos cenários de regressão C27, C29, C30, C04 e C17.</li>
+<li>Rejeição de citações fora do intervalo de evidências recuperadas.</li>
+<li>Validação estrita de abstenção.</li>
+<li>Bateria de não-regressão em rascunhos bem-formados com zero falsos positivos.</li>
+</ul>
 <h2 id="limitacoes">Limitações<a class="headerlink" href="#limitacoes" title="Permanent link">&para;</a></h2>
-<p><em>(A preencher.)</em></p>
+<ul>
+<li>A validação baseia-se em regras léxicas e numéricas determinísticas. Paráfrases de alta complexidade sem numerais ou conselhos sutis que não usem termos explícitos podem passar como avisos, motivo pelo qual a curadoria do prompt do Communication Agent permanece complementar.</li>
+</ul>
 
 
 
