@@ -11,7 +11,7 @@ O desenvolvimento do **Trokim** segue a metodologia **Challenge Based Learning (
 | **Semana 1** | Problema, stakeholders, riscos e métricas | Pacote de definição do projeto (cenário, personas, requisitos v1.0.0, riscos, premissas e EQ) | <span class="badge-must">Concluído</span> | 26/10 a 30/10 |
 | **Semana 2** | Base de conhecimento e recuperação | **Base de conhecimento + protótipo de recuperação:** Base curada com 20 documentos-fonte; chunking semântico; embeddings FastEmbed 384d; banco SQLite-Vec; chat Flutter e benchmark (98,78% Recall@3) | <span class="badge-must">Concluído</span> | 02/11 a 06/11 |
 | **Semana 3** | **Comparação LLM x RAG** | **Assistente baseado em evidências + relatório comparativo:** Avaliação empírica estruturada (LLM pura vs. LLM + RAG ingênuo vs. LLM + RAG estruturado do Trokim), métricas de alucinação e síntese generativa | <span class="badge-must">Concluído</span> | **09/11 a 13/11** |
-| **Semana 4** | Sistema multiagentes | Primeiro protótipo multiagente (Research, Analysis, Validation e Communication Agent) | <span class="badge-should">Em planejamento</span> | 16/11 a 20/11 |
+| **Semana 4** | Sistema multiagentes | Primeiro protótipo multiagente (Research, Analysis, Validation e Communication Agent) | <span class="badge-should">Sprint Ativa</span> | 16/11 a 20/11 |
 | **Semana 5** | Multimodalidade | Assistente multimodal (leitura de faturas PDF, extratos e comprovantes em imagem) | Previsto | 23/11 a 27/11 |
 | **Semana 6** | Integração completa | Aplicação funcional ponta a ponta (Flutter + FastAPI + RAG + Banco Vetorial + Multiagente) | Previsto | 30/11 a 04/12 |
 | **Semana 7** | Testes e refinamento | Apresentação final e entrega consolidada do projeto e repositório | Previsto | 07/12 a 11/12 |
@@ -101,6 +101,12 @@ Todas as tarefas estão formalizadas no GitHub e vinculadas à **Milestone "Sema
 
 ## 5. Histórico e Entregáveis Concluídos (Semanas 1 e 2)
 
+### Semana 3 — Comparação LLM x RAG (Concluída em 16/11/2026)
+- [x] Gabarito de 30 casos, três prompts versionados, framework de métricas e camada de síntese generativa (`LLMProvider` com LiteLLM, Ollama e mock) com os endpoints `/v1/chat/generate` e `/v1/chat/title` ([ADR 0008](adr/0008-material-comparativo-versionado.md), [ADR 0009](adr/0009-sintese-generativa-local.md)).
+- [x] Benchmark das três abordagens: alucinações confirmadas de 30,0% (piso, LLM pura) para 13,3% (RAG ingênuo) e 6,7% (Trokim estruturado); uma segunda execução mudou os números, então o ranking entre RAG ingênuo e Trokim não se sustenta ([Histórico de Resultados](pesquisa/resultados.md)).
+- [x] App com chat generativo, fontes clicáveis, histórico de conversas, resumo e extratos com dados reais e importação de OFX e PDF ([ADR 0014](adr/0014-historico-de-conversas-e-titulos.md), [ADR 0015](adr/0015-dados-reais-importacao-e-endereco-da-api.md)).
+- [x] Pendências assumidas: homologação em aparelho Android físico, revisão humana cega, persistência dos lançamentos em SQLite.
+
 ### Semana 2 — Base de Conhecimento e Primeiro RAG (Concluída em 06/11/2026)
 - [x] Curadoria de 20 documentos oficiais regulatórios (BCB, CVM, CFPB, ANPD) com catálogo e hashes SHA-256 ([ADR 0006](adr/0006-curadoria-benchmark.md)).
 - [x] Banco vetorial local com `sqlite-vec` (tabela virtual `vec0`) e embeddings FastEmbed multilíngues de 384 dimensões ([ADR 0007](adr/0007-banco-vetorial-embeddings.md)).
@@ -112,3 +118,84 @@ Todas as tarefas estão formalizadas no GitHub e vinculadas à **Milestone "Sema
 - [x] Definição da Essential Question e 10 Guiding Questions (GQ01 a GQ10).
 - [x] Matriz de riscos e mitigação, requisitos MoSCoW e modelagem C4 Model (Nível 2).
 - [x] Formalização das ADRs 0001 a 0005.
+
+---
+
+## 6. Semana 4 — Sistema Multiagentes (Sprint Ativa)
+
+O entregável oficial da **Semana 4 (16/11 a 20/11)** é o *primeiro protótipo multiagente* (Research, Analysis, Validation e Communication Agent). A equipe entrega na **quarta-feira, 18/11/2026**. Todas as tarefas estão na milestone **"Semana 4 — Sistema Multiagentes (Primeiro Protótipo)"**, com o épico [#50](https://github.com/moonshinerd/trokim/issues/50) e o contrato de mensagens dos agentes; a decisão arquitetural está na [ADR 0016](adr/0016-arquitetura-multiagente.md) e a especificação, em [Agentes](agentes/index.md).
+
+**Hipótese a testar:** o sistema multiagente reduz as falhas dos casos C27, C29 e C30 da Semana 3 sem perder cobertura de conceitos. A medição entra no [Histórico de Resultados](pesquisa/resultados.md) como uma nova execução versionada.
+
+### 6.1 Cronograma
+
+| Quando | O que | Issues |
+|---|---|---|
+| **Segunda 16/11** | **Fase 1:** tarefas independentes, todas em paralelo | [#51](https://github.com/moonshinerd/trokim/issues/51), [#52](https://github.com/moonshinerd/trokim/issues/52), [#53](https://github.com/moonshinerd/trokim/issues/53), [#54](https://github.com/moonshinerd/trokim/issues/54), [#55](https://github.com/moonshinerd/trokim/issues/55), [#56](https://github.com/moonshinerd/trokim/issues/56) e (opcional) [#57](https://github.com/moonshinerd/trokim/issues/57) |
+| **Terça 17/11** | Revisão cruzada e merge dos PRs da Fase 1; quem estiver desbloqueado adianta a Fase 2 | revisão dos PRs |
+| **Quarta 18/11** | **Fase 2:** tarefas bloqueadas, integração, benchmark, documentação e **entrega** | [#58](https://github.com/moonshinerd/trokim/issues/58), [#59](https://github.com/moonshinerd/trokim/issues/59), [#60](https://github.com/moonshinerd/trokim/issues/60), [#61](https://github.com/moonshinerd/trokim/issues/61) |
+
+```mermaid
+flowchart TD
+    subgraph "Fase 1: segunda (independentes)"
+        A["#51 Contratos e orquestrador<br/><b>@moonshinerd</b>"]
+        B["#52 Research Agent<br/><b>@gabrielcrzojo</b>"]
+        C["#53 Analysis Agent<br/><b>@zainoca</b>"]
+        D["#54 Validation Agent<br/><b>@rebecaboncaputo</b>"]
+        E["#55 Communication Agent<br/><b>@Luix3005</b>"]
+        F["#56 Gabarito multiagente<br/><b>@gabrielcrzojo</b>"]
+        G["#57 Protótipo no MkDocs (opcional)<br/><b>@Luix3005</b>"]
+    end
+    subgraph "Fase 2: quarta (bloqueadas)"
+        H["#58 Endpoint e integração<br/><b>@moonshinerd + @gabrielcrzojo</b>"]
+        I["#59 Mobile: trilha dos agentes<br/><b>@zainoca + @Luix3005</b>"]
+        J["#60 Benchmark multiagente<br/><b>@rebecaboncaputo + @gabrielcrzojo</b>"]
+        K["#61 Docs e Entrega 4<br/><b>@moonshinerd + @Luix3005</b>"]
+    end
+    A -->|bloqueia| H
+    B -->|bloqueia| H
+    C -->|bloqueia| H
+    D -->|bloqueia| H
+    E -->|bloqueia| H
+    H -->|bloqueia| I
+    F -->|bloqueia| J
+    H -->|bloqueia| J
+    I -->|bloqueia| K
+    J -->|bloqueia| K
+```
+
+### 6.2 Matriz de tarefas e responsabilidades
+
+| Issue | Escopo | Responsável | Fase | Precedência | Estimativa |
+|:---:|---|:---:|:---:|---|:---:|
+| [#51](https://github.com/moonshinerd/trokim/issues/51) | Contratos dos agentes e orquestrador | @moonshinerd | 1 | **Não-bloqueante** | 3 h |
+| [#52](https://github.com/moonshinerd/trokim/issues/52) | Research Agent (evidências e abstenção) | @gabrielcrzojo | 1 | **Não-bloqueante** | 1,5 h |
+| [#53](https://github.com/moonshinerd/trokim/issues/53) | Analysis Agent (cálculos determinísticos) | @zainoca | 1 | **Não-bloqueante** | 3 h |
+| [#54](https://github.com/moonshinerd/trokim/issues/54) | Validation Agent (números, citações, escopo) | @rebecaboncaputo | 1 | **Não-bloqueante** | 3 h |
+| [#55](https://github.com/moonshinerd/trokim/issues/55) | Communication Agent (redação com prompt versionado) | @Luix3005 | 1 | **Não-bloqueante** | 2,5 h |
+| [#56](https://github.com/moonshinerd/trokim/issues/56) | Gabarito multiagente de 20 cenários | @gabrielcrzojo | 1 | **Não-bloqueante** | 3 h |
+| [#57](https://github.com/moonshinerd/trokim/issues/57) | Protótipo visual do app no MkDocs (opcional) | @Luix3005 | 1 | **Não-bloqueante**, P2 | 4 h |
+| [#58](https://github.com/moonshinerd/trokim/issues/58) | Endpoint `POST /v1/agents/ask` e integração | @moonshinerd, @gabrielcrzojo | 2 | **Bloqueada por [#51](https://github.com/moonshinerd/trokim/issues/51) a [#55](https://github.com/moonshinerd/trokim/issues/55)** | 3 h |
+| [#59](https://github.com/moonshinerd/trokim/issues/59) | Mobile: modo multiagente e trilha dos agentes | @zainoca, @Luix3005 | 2 | **Bloqueada por [#58](https://github.com/moonshinerd/trokim/issues/58)** | 4 h |
+| [#60](https://github.com/moonshinerd/trokim/issues/60) | Benchmark multiagente contra o Trokim estruturado | @rebecaboncaputo, @gabrielcrzojo | 2 | **Bloqueada por [#56](https://github.com/moonshinerd/trokim/issues/56) e [#58](https://github.com/moonshinerd/trokim/issues/58)** | 4 h |
+| [#61](https://github.com/moonshinerd/trokim/issues/61) | Docs, ADR 0016 final e guia da Entrega 4 | @moonshinerd, @Luix3005 | 2 | **Bloqueada por [#59](https://github.com/moonshinerd/trokim/issues/59) e [#60](https://github.com/moonshinerd/trokim/issues/60)** | 4 h |
+
+**Revisão cruzada** (1 aprovação de outro membro por PR): [#51](https://github.com/moonshinerd/trokim/issues/51) por @rebecaboncaputo, [#52](https://github.com/moonshinerd/trokim/issues/52) por @moonshinerd, [#53](https://github.com/moonshinerd/trokim/issues/53) por @gabrielcrzojo, [#54](https://github.com/moonshinerd/trokim/issues/54) por @Luix3005, [#55](https://github.com/moonshinerd/trokim/issues/55) por @zainoca, [#56](https://github.com/moonshinerd/trokim/issues/56) por @rebecaboncaputo e [#57](https://github.com/moonshinerd/trokim/issues/57) por @zainoca.
+
+### 6.3 MkDocs sempre atualizado
+
+Cada issue exige a atualização do MkDocs **no mesmo PR**, e o PR não é mergeado sem isso (regra no `AGENTS.md`, no template de PR e no de tarefa). Para não haver conflito, cada issue edita só as suas páginas:
+
+| Issue | Páginas do MkDocs que ela atualiza |
+|:---:|---|
+| [#51](https://github.com/moonshinerd/trokim/issues/51) | [Orquestrador](agentes/orquestrador.md), [Mapa do Sistema](arquitetura/mapa-do-sistema.md) (fluxo multiagente), [ADR 0016](adr/0016-arquitetura-multiagente.md) (se o contrato mudar) |
+| [#52](https://github.com/moonshinerd/trokim/issues/52) | [Research Agent](agentes/research-agent.md), [Base RAG](rag/index.md) (se tocar a política de escopo) |
+| [#53](https://github.com/moonshinerd/trokim/issues/53) | [Analysis Agent](agentes/analysis-agent.md), [ADR 0004](adr/0004-calculos-deterministicos.md) (nota) |
+| [#54](https://github.com/moonshinerd/trokim/issues/54) | [Validation Agent](agentes/validation-agent.md), [Comparação LLM × RAG](pesquisa/comparacao-llm-rag.md) (se a heurística diferir) |
+| [#55](https://github.com/moonshinerd/trokim/issues/55) | [Communication Agent](agentes/communication-agent.md), [Guia de Uso](guia-de-uso.md) (se criar variável de configuração) |
+| [#56](https://github.com/moonshinerd/trokim/issues/56) | [Gabarito Multiagente](pesquisa/gabarito-multiagente.md), [ADR 0008](adr/0008-material-comparativo-versionado.md) (nota) |
+| [#57](https://github.com/moonshinerd/trokim/issues/57) | `docs/prototipo.md` (nova) e o menu |
+| [#58](https://github.com/moonshinerd/trokim/issues/58) | [Agentes](agentes/index.md) (endpoint), [Guia de Uso](guia-de-uso.md) (seção da API), [Arquitetura](arquitetura/index.md) |
+| [#59](https://github.com/moonshinerd/trokim/issues/59) | [Guia de Uso](guia-de-uso.md) (seção do app), `mobile/README.md` |
+| [#60](https://github.com/moonshinerd/trokim/issues/60) | [Histórico de Resultados](pesquisa/resultados.md) (nova execução e gráficos), [Gabarito Multiagente](pesquisa/gabarito-multiagente.md) |
+| [#61](https://github.com/moonshinerd/trokim/issues/61) | **Varredura final de todo o MkDocs**: ADR 0016 aceita, requisitos, planejamento, glossário, apresentação e atas |

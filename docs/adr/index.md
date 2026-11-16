@@ -23,6 +23,7 @@ Este repositório registra formalmente todas as decisões de arquitetura e tecno
 | [**0013**](0013-preferencias-locais-e-aba-de-ajustes.md) | Preferências Salvas Localmente e Aba de Ajustes | <span class="badge-must">Aceita</span> | 13/11/2026 | RF15, RNF01, RNF10, GQ01, GQ03 |
 | [**0014**](0014-historico-de-conversas-e-titulos.md) | Histórico de Conversas Local e Títulos Gerados pelo LLM | <span class="badge-must">Aceita</span> | 13/11/2026 | RF16, RNF01, GQ01, GQ03, GQ05 |
 | [**0015**](0015-dados-reais-importacao-e-endereco-da-api.md) | Resumo e Extratos com Dados Reais da API, Importação pelo App e Endereço da API Editável | <span class="badge-must">Aceita</span> | 16/11/2026 | RF01, RF02, RF07, RF15, RNF03, RNF10, GQ01, GQ02, GQ03, GQ07 |
+| [**0016**](0016-arquitetura-multiagente.md) | Arquitetura Multiagente: Research, Analysis, Communication e Validation | <span class="badge-should">Proposta</span> | 16/11/2026 | RF18, RF19, RF20, RF21, GQ01, GQ05, GQ10, GQ11 |
 
 - [0006 — Curadoria rastreável e benchmark](0006-curadoria-benchmark.md)
 - [0007 — Banco vetorial local e embeddings densos no RAG](0007-banco-vetorial-embeddings.md)
@@ -34,3 +35,4 @@ Este repositório registra formalmente todas as decisões de arquitetura e tecno
 - [0013 — Preferências locais e aba de Ajustes](0013-preferencias-locais-e-aba-de-ajustes.md)
 - [0014 — Histórico de conversas e títulos](0014-historico-de-conversas-e-titulos.md)
 - [0015 — Dados reais, importação e endereço da API](0015-dados-reais-importacao-e-endereco-da-api.md)
+- [0016 — Arquitetura multiagente](0016-arquitetura-multiagente.md)
