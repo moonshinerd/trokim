@@ -2,7 +2,6 @@ import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:trokim/core/widgets/app_motion.dart';
 import 'package:trokim/core/widgets/coin.dart';
 
 void main() {
@@ -25,7 +24,9 @@ void main() {
       expect(find.byType(CustomPaint), findsWidgets);
     });
 
-    testWidgets('desenha face posterior (angle = pi) sem erros', (tester) async {
+    testWidgets('desenha face posterior (angle = pi) sem erros', (
+      tester,
+    ) async {
       await tester.pumpWidget(
         MaterialApp(
           home: Scaffold(
@@ -111,9 +112,7 @@ void main() {
           home: MediaQuery(
             data: MediaQueryData(disableAnimations: true),
             child: Scaffold(
-              body: Center(
-                child: SpinningCoin(size: 80, compact: true),
-              ),
+              body: Center(child: SpinningCoin(size: 80, compact: true)),
             ),
           ),
         ),

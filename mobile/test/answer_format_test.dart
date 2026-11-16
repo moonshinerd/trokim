@@ -65,7 +65,10 @@ void main() {
       link: (label, url) {
         tappedLabel = label;
         tappedUrl = url;
-        return TextSpan(text: label, style: const TextStyle(color: Colors.teal));
+        return TextSpan(
+          text: label,
+          style: const TextStyle(color: Colors.teal),
+        );
       },
     ).cast<TextSpan>();
 
