@@ -49,12 +49,6 @@
     
     
       
-        
-        
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Plus+Jakarta+Sans:300,300i,400,400i,500,500i,700,700i%7CJetBrains+Mono:400,400i,700,700i&amp;display=fallback">
-        <style>:root{--md-text-font:"Plus Jakarta Sans";--md-code-font:"JetBrains Mono"}</style>
-      
     
     
       <link rel="stylesheet" href="../stylesheets/extra.css">
@@ -1901,6 +1895,7 @@
 <li>Desenvolvida em Dart/Flutter, garantindo tipagem estrita, modularidade por funcionalidades (<em>feature-first</em>) e compilação nativa para Android.</li>
 <li>O aplicativo atua como o cliente primário, fornecendo telas de dashboard, assistente conversacional, gerenciador de lançamentos e importador de arquivos OFX e faturas PDF.</li>
 <li>A interface segue um design system próprio (paleta Champagne, Tidewater e Fortuna Gold, <a href="../adr/0011-identidade-visual-e-tema-do-sistema/">ADR 0011</a>) com tema claro/escuro pelo sistema, transições suaves que respeitam "reduzir movimento" e uma aba de <strong>Ajustes</strong> com preferências salvas só no aparelho (<a href="../adr/0013-preferencias-locais-e-aba-de-ajustes/">ADR 0013</a>). O mascote (onça-pintada) e a moeda 3D da abertura vêm de arte livre e trocável (<a href="../adr/0012-mascote-onca-e-arte-de-marca-livre/">ADR 0012</a>).</li>
+<li>Resumo e Extratos exibem o que a API calculou e importam OFX e PDF pelo seletor de arquivos do sistema (<a href="../adr/0015-dados-reais-importacao-e-endereco-da-api/">ADR 0015</a>); o chat guarda o histórico no aparelho, com título gerado pelo LLM local.</li>
 <li><strong>Camada Backend (FastAPI / Python 3.12+):</strong></li>
 <li>Construída com FastAPI pela alta performance assíncrona e tipagem robusta com Pydantic v2.</li>
 <li>Gerenciamento de dependências ultra-rápido com <code>uv</code>.</li>
@@ -1912,27 +1907,27 @@
 <li>Política ativa de <strong>abstenção ética</strong>: se o score estiver abaixo do limiar ou a consulta abordar temas fora do escopo institucional (apostas, criptoativos ou recomendações especulativas), o agente se abstém.</li>
 <li><strong>Cálculo Determinístico:</strong></li>
 <li>A LLM nunca calcula saldos, médias ou limites. Um serviço matemático estrito (<code>calculation_service.py</code>) computa os números exatos e os injeta contextualmente.</li>
-<li><strong>Camada de Síntese Generativa Local (Semana 3):</strong></li>
+<li><strong>Camada de Síntese Generativa Local (Semana 3, <a href="../adr/0009-sintese-generativa-local/">ADR 0009</a>):</strong></li>
 <li>Port abstrato <code>LLMProvider</code> desacoplando as regras de negócio dos provedores de inferência.</li>
-<li>Provedor primário local-first <code>OllamaProvider</code> executando <strong>Qwen 2.5</strong> (<code>qwen2.5</code>) localmente sem envio de dados a nuvens terceiras.</li>
-<li>Provedor simulado determinístico <code>MockLLMProvider</code> para execução reprodutível de testes e CI.</li>
-<li>Orquestrador <code>GenerationService</code> suportando três modos de síntese (<code>grounded</code>, <code>pure</code>, <code>naive</code>), prompts versionados e corte estrito de alucinações via abstenção ética determinística.</li>
+<li><code>LiteLLMProvider</code> (padrão): qualquer modelo definido por configuração (<code>LLM_MODEL</code>, por exemplo <code>ollama/qwen2.5:1.5b</code>). Modelos locais não enviam dados a terceiros; modelos de nuvem são uma escolha explícita.</li>
+<li><code>OllamaProvider</code> (cliente direto) e <code>MockLLMProvider</code> (determinístico, para testes e CI).</li>
+<li><code>GenerationService</code> com três modos (<code>grounded</code>, <code>naive</code>, <code>pure</code>), prompts versionados e abstenção determinística (fora de escopo ou sem evidência) antes de chamar o modelo; <code>TitleService</code> dá título às conversas (<code>/v1/chat/title</code>, <a href="../adr/0014-historico-de-conversas-e-titulos/">ADR 0014</a>).</li>
 </ol>
 <hr />
 <h2 id="camadas-do-backend-api">Camadas do Backend (<code>api/</code>)<a class="headerlink" href="#camadas-do-backend-api" title="Permanent link">&para;</a></h2>
 <p>O backend adota uma arquitetura em camadas limpa e desacoplada:</p>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>routers/ (HTTP fino, esquemas Pydantic: /transactions, /chat/ask, /chat/generate)
+<div class="language-text highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>routers/ (HTTP fino, esquemas Pydantic: /transactions, /chat/ask, /chat/generate, /chat/title, /budgets)
 </span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>   │
 </span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>   ▼
-</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>services/ (Regras de negócio: CalculationService, RAGService, GenerationService)
+</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>services/ (Regras de negócio: CalculationService, ParserService, RAGService, GenerationService, TitleService)
 </span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>   │
 </span><span id="__span-0-6"><a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>   ▼
 </span><span id="__span-0-7"><a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>domain/   (Entidades de negócio puras: Transaction, Budget, Evidence)
 </span><span id="__span-0-8"><a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>   ▲
 </span><span id="__span-0-9"><a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>   │
-</span><span id="__span-0-10"><a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>clients/  (Adaptadores de persistência e LLM: SQLiteVectorStore, FastEmbed, OllamaProvider, MockLLMProvider)
+</span><span id="__span-0-10"><a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>clients/  (Adaptadores de persistência e LLM: SQLiteVectorStore, FastEmbed, LiteLLMProvider, OllamaProvider, MockLLMProvider)
 </span></code></pre></div>
-<p>Essa estrutura garante que a evolução do sistema nas semanas subsequentes (Semanas 3 a 5: Comparação LLM x RAG, Multiagentes e Multimodalidade) ocorra sem acoplamento indevido.</p>
+<p>Essa estrutura garante que a evolução do sistema nas semanas seguintes (Semana 4: multiagentes; Semana 5: multimodalidade; Semana 6: integração) ocorra sem acoplamento indevido.</p>
 
 
 

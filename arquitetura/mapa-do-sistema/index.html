@@ -49,12 +49,6 @@
     
     
       
-        
-        
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Plus+Jakarta+Sans:300,300i,400,400i,500,500i,700,700i%7CJetBrains+Mono:400,400i,700,700i&amp;display=fallback">
-        <style>:root{--md-text-font:"Plus Jakarta Sans";--md-code-font:"JetBrains Mono"}</style>
-      
     
     
       <link rel="stylesheet" href="../../stylesheets/extra.css">
@@ -1146,10 +1140,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#2-fluxo-de-importacao-e-calculo-de-extratos" class="md-nav__link">
+  <a href="#2-fluxo-de-importacao-de-extratos-e-resumo" class="md-nav__link">
     <span class="md-ellipsis">
       <span class="md-typeset">
-        2. Fluxo de Importação e Cálculo de Extratos
+        2. Fluxo de Importação de Extratos e Resumo
       </span>
     </span>
   </a>
@@ -1172,6 +1166,17 @@
     <span class="md-ellipsis">
       <span class="md-typeset">
         4. Fluxo de Síntese Generativa Contextualizada (<code>POST /v1/chat/generate</code>)
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#5-titulo-da-conversa-post-v1chattitle" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        5. Título da Conversa (<code>POST /v1/chat/title</code>)
       </span>
     </span>
   </a>
@@ -1883,10 +1888,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#2-fluxo-de-importacao-e-calculo-de-extratos" class="md-nav__link">
+  <a href="#2-fluxo-de-importacao-de-extratos-e-resumo" class="md-nav__link">
     <span class="md-ellipsis">
       <span class="md-typeset">
-        2. Fluxo de Importação e Cálculo de Extratos
+        2. Fluxo de Importação de Extratos e Resumo
       </span>
     </span>
   </a>
@@ -1909,6 +1914,17 @@
     <span class="md-ellipsis">
       <span class="md-typeset">
         4. Fluxo de Síntese Generativa Contextualizada (<code>POST /v1/chat/generate</code>)
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#5-titulo-da-conversa-post-v1chattitle" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        5. Título da Conversa (<code>POST /v1/chat/title</code>)
       </span>
     </span>
   </a>
@@ -1946,9 +1962,11 @@
         StateManagement["Gerenciamento de Estado&lt;br/&gt;(Feature-First / Repositories)"]
         DesignSystem["Design System&lt;br/&gt;(Tema claro/escuro, movimento, mascote)"]
         Settings["Ajustes locais&lt;br/&gt;(shared_preferences)"]
+        History["Histórico de conversas&lt;br/&gt;(no aparelho)"]
         FlutterApp --&gt; StateManagement
         FlutterApp --&gt; DesignSystem
         FlutterApp --&gt; Settings
+        FlutterApp --&gt; History
     end
 
     subgraph "Serviço Backend Local (Python / FastAPI)"
@@ -1958,16 +1976,18 @@
         CalcService["Motor de Cálculo Determinístico&lt;br/&gt;(Totais, Balanço, 50-30-20)"]
         RAGService["Mecanismo RAG Híbrido&lt;br/&gt;(Dense + Sparse TF-IDF)"]
         GenService["Serviço de Síntese Generativa&lt;br/&gt;(GenerationService)"]
+        TitleSvc["Título de conversa&lt;br/&gt;(TitleService)"]
 
         DomainCore["Entidades de Domínio Puro&lt;br/&gt;(Transaction, Budget, EvidenceChunk)"]
 
         subgraph "Persistência Local (SQLite)"
-            DB[(SQLite Relacional&lt;br/&gt;Transações e Orçamentos)]
+            Mem[(Memória da API&lt;br/&gt;Lançamentos da sessão)]
             VecDB[(SQLite-Vec&lt;br/&gt;Tabela Virtual vec0)]
         end
 
-        subgraph "Provedores de Inferência Local (LLM)"
-            OllamaClient["OllamaProvider&lt;br/&gt;(Qwen 2.5 Local)"]
+        subgraph "Provedores de Inferência (LLM)"
+            LiteLLM["LiteLLMProvider&lt;br/&gt;(padrão; ex.: ollama/qwen2.5:1.5b)"]
+            OllamaClient["OllamaProvider&lt;br/&gt;(cliente direto)"]
             MockLLM["MockLLMProvider&lt;br/&gt;(Testes &amp; CI)"]
         end
 
@@ -1975,15 +1995,18 @@
         APIEntry --&gt; CalcService
         APIEntry --&gt; RAGService
         APIEntry --&gt; GenService
+        APIEntry --&gt; TitleSvc
 
         Parser --&gt; DomainCore
         CalcService --&gt; DomainCore
         RAGService --&gt; DomainCore
         GenService --&gt; RAGService
+        GenService --&gt; LiteLLM
         GenService --&gt; OllamaClient
         GenService --&gt; MockLLM
+        TitleSvc --&gt; LiteLLM
 
-        DomainCore --&gt; DB
+        DomainCore --&gt; Mem
         RAGService --&gt; VecDB
     end
 
@@ -1997,7 +2020,8 @@
 
     StateManagement --&gt;|HTTP / JSON Local| APIEntry</code></pre>
 <hr />
-<h2 id="2-fluxo-de-importacao-e-calculo-de-extratos">2. Fluxo de Importação e Cálculo de Extratos<a class="headerlink" href="#2-fluxo-de-importacao-e-calculo-de-extratos" title="Permanent link">&para;</a></h2>
+<h2 id="2-fluxo-de-importacao-de-extratos-e-resumo">2. Fluxo de Importação de Extratos e Resumo<a class="headerlink" href="#2-fluxo-de-importacao-de-extratos-e-resumo" title="Permanent link">&para;</a></h2>
+<p>Os lançamentos importados ficam na <strong>memória da API</strong> (somem ao reiniciá-la, <a href="../../adr/0015-dados-reais-importacao-e-endereco-da-api/">ADR 0015</a>). O app só exibe o que o backend calculou.</p>
 <pre class="mermaid"><code>sequenceDiagram
     autonumber
     actor User as Usuário (Android)
@@ -2005,18 +2029,22 @@
     participant API as Router FastAPI
     participant Parser as Parser Service
     participant Calc as Calculation Service
-    participant DB as SQLite Local
+    participant Mem as Memória da API
 
-    User-&gt;&gt;Mobile: Seleciona arquivo .ofx ou .pdf
-    Mobile-&gt;&gt;API: POST /v1/transactions/upload
-    API-&gt;&gt;Parser: parse_file(content, filename)
-    Parser-&gt;&gt;Parser: Extrai transações e valida duplicatas
-    Parser-&gt;&gt;DB: Salva lançamentos normalizados
-    API-&gt;&gt;Calc: compute_balance_and_metrics()
-    Calc-&gt;&gt;DB: Consulta lançamentos consolidados
-    Calc--&gt;&gt;API: Totais, saldo, despesas essenciais e estilo de vida
-    API--&gt;&gt;Mobile: Retorno JSON com dados determinísticos
-    Mobile--&gt;&gt;User: Exibe Dashboard financeiro atualizado (0% erro)</code></pre>
+    User-&gt;&gt;Mobile: Escolhe um arquivo .ofx ou .pdf (seletor do sistema)
+    Mobile-&gt;&gt;API: POST /v1/transactions/upload (multipart)
+    API-&gt;&gt;Parser: parse_ofx ou parse_pdf_text
+    Parser-&gt;&gt;Parser: Extrai os lançamentos e marca duplicatas do arquivo
+    API-&gt;&gt;API: Compara com os já importados (data, descrição, valor e tipo)
+    API-&gt;&gt;Mem: Guarda os lançamentos (duplicatas marcadas ficam fora dos totais)
+    API--&gt;&gt;Mobile: filename, imported_count, duplicate_count
+    Mobile-&gt;&gt;API: GET /v1/transactions/summary
+    API-&gt;&gt;Calc: calculate_summary(lançamentos)
+    Calc--&gt;&gt;API: Receitas, despesas, saldo, taxa de poupança e categorias
+    API--&gt;&gt;Mobile: Resumo calculado pelo backend
+    Mobile-&gt;&gt;API: GET /v1/transactions
+    API--&gt;&gt;Mobile: Lançamentos (o app agrupa por arquivo de origem)
+    Mobile--&gt;&gt;User: Resumo e lista de arquivos atualizados</code></pre>
 <hr />
 <h2 id="3-fluxo-de-pergunta-pedagogica-via-rag-local">3. Fluxo de Pergunta Pedagógica via RAG Local<a class="headerlink" href="#3-fluxo-de-pergunta-pedagogica-via-rag-local" title="Permanent link">&para;</a></h2>
 <pre class="mermaid"><code>sequenceDiagram
@@ -2063,7 +2091,7 @@
     participant API as Router Chat
     participant Gen as Generation Service
     participant RAG as RAG Service
-    participant Ollama as Ollama / Qwen 2.5 Local
+    participant Ollama as Provedor LLM (LiteLLM → Ollama local)
 
     User-&gt;&gt;Mobile: Pergunta sobre conceito financeiro
     Mobile-&gt;&gt;API: POST /v1/chat/generate {message, mode: "grounded"}
@@ -2076,24 +2104,47 @@
             Gen--&gt;&gt;API: Resposta determinística de abstenção (sem chamar LLM)
         else Evidências Válidas Encontradas
             Gen-&gt;&gt;Gen: Monta prompt versionado ancorado no contexto
-            Gen-&gt;&gt;Ollama: POST /api/generate (prompt ancorado, temp=0.1)
+            Gen-&gt;&gt;Ollama: generate(prompt ancorado, temperatura 0,1)
             Ollama--&gt;&gt;Gen: Texto pedagógico sintetizado
             Gen--&gt;&gt;API: GenerateQueryResponse (answer + citations + evidences)
         end
     else Modo Pure (Zero-Shot)
         Gen-&gt;&gt;Gen: Monta prompt pure sem contexto
-        Gen-&gt;&gt;Ollama: POST /api/generate (prompt direto)
+        Gen-&gt;&gt;Ollama: generate(prompt direto)
         Ollama--&gt;&gt;Gen: Texto gerado sem garantias regulatórias
         Gen--&gt;&gt;API: GenerateQueryResponse (answer, mode: "pure")
     else Modo Naive
         Gen-&gt;&gt;RAG: Busca sem política estrita
-        Gen-&gt;&gt;Ollama: POST /api/generate (prompt naive)
+        Gen-&gt;&gt;Ollama: generate(prompt naive)
         Ollama--&gt;&gt;Gen: Texto gerado
         Gen--&gt;&gt;API: GenerateQueryResponse (answer, mode: "naive")
     end
 
-    API--&gt;&gt;Mobile: Resposta JSON
-    Mobile--&gt;&gt;User: Exibe síntese educacional enriquecida</code></pre>
+    API--&gt;&gt;Mobile: Resposta JSON (ou 503 com mensagem clara se o modelo estiver indisponível)
+    Mobile--&gt;&gt;User: Exibe síntese educacional com fontes clicáveis</code></pre>
+<hr />
+<h2 id="5-titulo-da-conversa-post-v1chattitle">5. Título da Conversa (<code>POST /v1/chat/title</code>)<a class="headerlink" href="#5-titulo-da-conversa-post-v1chattitle" title="Permanent link">&para;</a></h2>
+<pre class="mermaid"><code>sequenceDiagram
+    autonumber
+    actor User as Usuário (Android)
+    participant Mobile as App Flutter
+    participant API as Router Chat
+    participant Title as TitleService
+    participant LLM as Provedor LLM (LiteLLM → Ollama local)
+
+    User-&gt;&gt;Mobile: Envia a primeira pergunta da conversa
+    Mobile-&gt;&gt;Mobile: Salva a conversa no aparelho com título provisório (pergunta encurtada)
+    Mobile-&gt;&gt;API: POST /v1/chat/title {message, answer?}
+    API-&gt;&gt;Title: Gera o título (prompt versionado, 3 a 6 palavras)
+    alt Modelo responde a tempo
+        Title-&gt;&gt;LLM: generate(prompt de título)
+        LLM--&gt;&gt;Title: Título curto
+        Title--&gt;&gt;API: title, source = "llm"
+    else Modelo indisponível, lento ou em modo mock
+        Title--&gt;&gt;API: Primeiras palavras da pergunta, source = "fallback"
+    end
+    API--&gt;&gt;Mobile: Título
+    Mobile--&gt;&gt;User: Atualiza o título (uma renomeação manual nunca é sobrescrita)</code></pre>
 
 
 

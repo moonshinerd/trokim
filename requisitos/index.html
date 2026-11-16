@@ -49,12 +49,6 @@
     
     
       
-        
-        
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Plus+Jakarta+Sans:300,300i,400,400i,500,500i,700,700i%7CJetBrains+Mono:400,400i,700,700i&amp;display=fallback">
-        <style>:root{--md-text-font:"Plus Jakarta Sans";--md-code-font:"JetBrains Mono"}</style>
-      
     
     
       <link rel="stylesheet" href="../stylesheets/extra.css">
@@ -1998,6 +1992,13 @@
 <td><strong>RF07</strong> passa a consumir <code>/transactions/summary</code>; <strong>RF01</strong> e <strong>RF02</strong> ganham importação pelo app e reenvio sem duplicar totais; <strong>RF15</strong> passa a incluir a edição do endereço da API. Vinculação da ADR 0015.</td>
 <td style="text-align: center;">Equipe Trokim</td>
 </tr>
+<tr>
+<td style="text-align: center;"><strong>v1.3.1</strong></td>
+<td style="text-align: center;">16/11/2026</td>
+<td style="text-align: center;">Semana 3 (<em>Revisão da documentação</em>)</td>
+<td><strong>RNF09</strong> alinhado ao benchmark: a meta de resposta fundamentada é 90% (como em <code>eval_rag.py</code> e na Entrega 2), e não 85%.</td>
+<td style="text-align: center;">Equipe Trokim</td>
+</tr>
 </tbody>
 </table>
 <hr />
@@ -2271,7 +2272,7 @@
 <tr>
 <td style="text-align: center;"><strong>RNF09</strong></td>
 <td>Metas empíricas do RAG</td>
-<td>O sistema de recuperação deve atingir métricas mínimas auditadas no benchmark: Recall@3 ≥ 90%, Precisão ≥ 85% e Abstenção Ética = 100%.</td>
+<td>O sistema de recuperação deve atingir métricas mínimas auditadas no benchmark: Recall@3 ≥ 90%, resposta fundamentada ≥ 90% e abstenção ética = 100%.</td>
 <td style="text-align: center;"><span class="badge-must">Must have</span></td>
 <td style="text-align: center;"><a href="../pesquisa/guiding-questions/">GQ05</a>, <a href="../pesquisa/guiding-questions/">GQ08</a></td>
 <td style="text-align: center;"><a href="../adr/0006-curadoria-benchmark/">ADR 0006</a>, <a href="../adr/0007-banco-vetorial-embeddings/">ADR 0007</a></td>

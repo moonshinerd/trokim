@@ -49,12 +49,6 @@
     
     
       
-        
-        
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Plus+Jakarta+Sans:300,300i,400,400i,500,500i,700,700i%7CJetBrains+Mono:400,400i,700,700i&amp;display=fallback">
-        <style>:root{--md-text-font:"Plus Jakarta Sans";--md-code-font:"JetBrains Mono"}</style>
-      
     
     
       <link rel="stylesheet" href="../stylesheets/extra.css">
@@ -1908,6 +1902,14 @@
 <li><strong>Abstenção Ativa:</strong> Comportamento intencional do sistema de declarar ausência de dados e recusar-se a responder quando a consulta não possuir respaldo documental confiável.</li>
 <li><strong>Cálculo Determinístico:</strong> Processamento matemático estrito realizado por algoritmos imperativos (Python), garantindo exatidão aritmética sem intervenção de modelos probabilísticos.</li>
 <li><strong>Local-First:</strong> Abordagem de engenharia em que os dados primários do usuário residem e são processados em seu próprio dispositivo, garantindo privacidade estrita e conformidade com a LGPD.</li>
+<li><strong>LLMProvider:</strong> Porta (interface) que isola o restante do sistema do modelo de linguagem em uso. Tem adaptadores para LiteLLM, Ollama e um mock determinístico (<a href="../adr/0009-sintese-generativa-local/">ADR 0009</a>).</li>
+<li><strong>LiteLLM:</strong> Biblioteca que dá uma interface única a vários modelos. No Trokim é o provedor padrão, e o modelo é escolhido por configuração (<code>LLM_MODEL</code>).</li>
+<li><strong>Modos <code>grounded</code>, <code>naive</code> e <code>pure</code>:</strong> Os três modos de síntese. <code>grounded</code> é o do produto (evidências oficiais, citação e abstenção); <code>naive</code> injeta trechos sem regras estritas; <code>pure</code> não usa documentos. Os dois últimos são bases de comparação.</li>
+<li><strong>F1 de tokens:</strong> Sobreposição lexical entre a resposta e a resposta de referência. Mede palavras em comum, não fidelidade semântica.</li>
+<li><strong>Cobertura de conceitos:</strong> Proporção dos conceitos obrigatórios do gabarito presentes na resposta.</li>
+<li><strong>Inconsistência factual (heurística):</strong> Sinalização automática de número sem suporte na fonte, frase proibida ou negação contraditória. Gera falsos positivos e negativos e exige revisão humana.</li>
+<li><strong>Taxa auditada:</strong> Proporção de casos com alucinação confirmada pela revisão manual. É a medida principal de alucinação, e um piso quando nem todos os casos foram revisados.</li>
+<li><strong>Execução (run):</strong> Registro versionado de uma rodada do benchmark, com data, commit, modelo, parâmetros e métricas (<code>run.json</code>). Ver <a href="../pesquisa/resultados/">Histórico de Resultados</a>.</li>
 </ul>
 
 

@@ -49,12 +49,6 @@
     
     
       
-        
-        
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Plus+Jakarta+Sans:300,300i,400,400i,500,500i,700,700i%7CJetBrains+Mono:400,400i,700,700i&amp;display=fallback">
-        <style>:root{--md-text-font:"Plus Jakarta Sans";--md-code-font:"JetBrains Mono"}</style>
-      
     
     
       <link rel="stylesheet" href="../../stylesheets/extra.css">
@@ -1899,7 +1893,7 @@
 <li><strong>Act (Ação):</strong> Construção iterativa dos protótipos funcionais com entregas incrementais a cada semana:</li>
 <li>Semana 1: Definição do problema, matriz de riscos e métricas.</li>
 <li>Semana 2: Base regulada e primeiro motor RAG.</li>
-<li>Semana 3: Comparativo LLM x RAG com métricas de fundamentação.</li>
+<li>Semana 3: Comparativo LLM x RAG com métricas de fundamentação (concluída em 16/11/2026).</li>
 <li>Semana 4: Orquestração multiagentes.</li>
 <li>Semana 5: Agentes multimodais (visão em faturas/comprovantes).</li>
 <li>Semana 6: Integração ponta a ponta (Flutter + Backend).</li>
@@ -1911,6 +1905,8 @@
 <li>Cada decisão de design e escolha de tecnologia deve ser registrada como uma <strong>ADR</strong> em <code>docs/adr/</code>.</li>
 <li>Todos os requisitos (RF e RNF) rastreiam sua origem em uma ou mais Guiding Questions (GQ).</li>
 <li>Garantia de que a branch principal (<code>main</code>) permaneça sempre estável, exigindo validação de testes e documentação a cada entrega.</li>
+<li><strong>MkDocs sempre atualizado:</strong> toda issue ou PR que muda comportamento, contrato de API, métrica, resultado ou arquitetura atualiza o MkDocs <strong>no mesmo PR</strong>: as páginas afetadas, a ADR (se houver decisão nova), os requisitos e a matriz de rastreabilidade, o planejamento e, quando houver resultados, o histórico de resultados e os gráficos (<code>make report-charts</code>). O <code>make docs-build</code> (modo estrito) precisa passar, e o PR não é mergeado com documentação defasada.</li>
+<li><strong>Revisão geral antes de cada semana:</strong> no início de cada semana a equipe revisa todas as páginas do MkDocs contra o estado real do código e mergeia as correções antes de abrir as issues da semana.</li>
 </ul>
 
 

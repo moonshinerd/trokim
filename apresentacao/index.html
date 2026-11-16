@@ -49,12 +49,6 @@
     
     
       
-        
-        
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Plus+Jakarta+Sans:300,300i,400,400i,500,500i,700,700i%7CJetBrains+Mono:400,400i,700,700i&amp;display=fallback">
-        <style>:root{--md-text-font:"Plus Jakarta Sans";--md-code-font:"JetBrains Mono"}</style>
-      
     
     
       <link rel="stylesheet" href="../stylesheets/extra.css">
@@ -1960,10 +1954,10 @@
 <td>Benchmark em <code>research/rag_benchmark/</code> (41 consultas)</td>
 </tr>
 <tr>
-<td><strong>Precisão Fundamentada</strong></td>
-<td style="text-align: center;">≥ 85%</td>
-<td style="text-align: center;"><strong>97,56%</strong></td>
-<td>Extração exata com citações e URLs canônicas</td>
+<td><strong>Resposta Fundamentada</strong></td>
+<td style="text-align: center;">≥ 90%</td>
+<td style="text-align: center;"><strong>95,12%</strong></td>
+<td>Primeiro trecho de documento relevante, com conceitos esperados, título e URL (39 de 41 casos)</td>
 </tr>
 <tr>
 <td><strong>Abstenção Ética Ativa</strong></td>
@@ -1986,8 +1980,8 @@
 <tr>
 <td><strong>Testes Automatizados</strong></td>
 <td style="text-align: center;">Passando</td>
-<td style="text-align: center;"><strong>45/45 testes verdes</strong></td>
-<td>CI no GitHub Actions (runners <code>ubuntu-latest</code>)</td>
+<td style="text-align: center;"><strong>87 (API), 67 (pesquisa) e 123 (app) verdes</strong></td>
+<td>CI no GitHub Actions (jobs api, research, docs e mobile)</td>
 </tr>
 </tbody>
 </table>

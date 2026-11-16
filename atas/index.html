@@ -49,12 +49,6 @@
     
     
       
-        
-        
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Plus+Jakarta+Sans:300,300i,400,400i,500,500i,700,700i%7CJetBrains+Mono:400,400i,700,700i&amp;display=fallback">
-        <style>:root{--md-text-font:"Plus Jakarta Sans";--md-code-font:"JetBrains Mono"}</style>
-      
     
     
       <link rel="stylesheet" href="../stylesheets/extra.css">
@@ -984,10 +978,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#checkpoint-da-semana-3-comparacao-llm-x-rag-em-andamento-prazo-13112026" class="md-nav__link">
+  <a href="#checkpoint-da-semana-3-comparacao-llm-x-rag-16112026" class="md-nav__link">
     <span class="md-ellipsis">
       <span class="md-typeset">
-        Checkpoint da Semana 3 — Comparação LLM x RAG (Em Andamento — Prazo: 13/11/2026)
+        Checkpoint da Semana 3 — Comparação LLM x RAG (16/11/2026)
       </span>
     </span>
   </a>
@@ -1934,10 +1928,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#checkpoint-da-semana-3-comparacao-llm-x-rag-em-andamento-prazo-13112026" class="md-nav__link">
+  <a href="#checkpoint-da-semana-3-comparacao-llm-x-rag-16112026" class="md-nav__link">
     <span class="md-ellipsis">
       <span class="md-typeset">
-        Checkpoint da Semana 3 — Comparação LLM x RAG (Em Andamento — Prazo: 13/11/2026)
+        Checkpoint da Semana 3 — Comparação LLM x RAG (16/11/2026)
       </span>
     </span>
   </a>
@@ -2030,14 +2024,16 @@
 <li>Geração de extrato OFX e fatura PDF sintéticos para validação local em conformidade estrita com a LGPD.</li>
 </ul>
 <hr />
-<h3 id="checkpoint-da-semana-3-comparacao-llm-x-rag-em-andamento-prazo-13112026">Checkpoint da Semana 3 — Comparação LLM x RAG (Em Andamento — Prazo: 13/11/2026)<a class="headerlink" href="#checkpoint-da-semana-3-comparacao-llm-x-rag-em-andamento-prazo-13112026" title="Permanent link">&para;</a></h3>
+<h3 id="checkpoint-da-semana-3-comparacao-llm-x-rag-16112026">Checkpoint da Semana 3 — Comparação LLM x RAG (16/11/2026)<a class="headerlink" href="#checkpoint-da-semana-3-comparacao-llm-x-rag-16112026" title="Permanent link">&para;</a></h3>
 <ul>
-<li><strong>Status:</strong> <span class="badge-should">Sprint Ativa</span></li>
-<li><strong>Frentes em Execução:</strong></li>
-<li>Curadoria do dataset de 30 perguntas com armadilhas de alucinação e prompts versionados (<a href="https://github.com/moonshinerd/trokim/issues/20">#20</a>).</li>
-<li>Framework de métricas de fidelidade factual e F1 de tokens/conceitos (<a href="https://github.com/moonshinerd/trokim/issues/21">#21</a>).</li>
-<li>Interface móvel com cartões de evidência e auditoria de transparência no Flutter (<a href="https://github.com/moonshinerd/trokim/issues/22">#22</a>).</li>
-<li>Camada de síntese generativa com port <code>LLMProvider</code> e endpoint <code>/v1/chat/generate</code> (<a href="https://github.com/moonshinerd/trokim/issues/23">#23</a>).</li>
+<li><strong>Status:</strong> <span class="badge-must">Concluído</span> (com pendências assumidas, listadas abaixo)</li>
+<li><strong>Resultados Consolidados:</strong></li>
+<li>Gabarito de 30 casos e três prompts versionados (<a href="https://github.com/moonshinerd/trokim/issues/20">#20</a>, <a href="../adr/0008-material-comparativo-versionado/">ADR 0008</a>); framework de métricas de fidelidade factual, F1 de tokens e cobertura de conceitos (<a href="https://github.com/moonshinerd/trokim/issues/21">#21</a>).</li>
+<li>Cartões de evidência e auditoria no Flutter (<a href="https://github.com/moonshinerd/trokim/issues/22">#22</a>); camada de síntese com <code>LLMProvider</code>, LiteLLM, Ollama e mock, e endpoints <code>/v1/chat/generate</code> e <code>/v1/chat/title</code> (<a href="https://github.com/moonshinerd/trokim/issues/23">#23</a>, <a href="../adr/0009-sintese-generativa-local/">ADR 0009</a>).</li>
+<li>Benchmark comparativo das três abordagens (<a href="https://github.com/moonshinerd/trokim/issues/24">#24</a>) e integração do chat generativo no app (<a href="https://github.com/moonshinerd/trokim/issues/25">#25</a>).</li>
+<li>Relatório comparativo, histórico versionado de resultados com gráficos e documentação (<a href="https://github.com/moonshinerd/trokim/issues/26">#26</a>); histórico de conversas (<a href="https://github.com/moonshinerd/trokim/issues/44">#44</a>) e dados reais no app (<a href="https://github.com/moonshinerd/trokim/issues/45">#45</a>).</li>
+<li>Resultado central: a fundamentação em evidências reduziu as alucinações confirmadas de 30,0% (piso) na LLM pura para 13,3% (RAG ingênuo) e 6,7% (Trokim estruturado); uma segunda execução mudou os números, então o ranking entre RAG ingênuo e Trokim não se sustenta (<a href="../pesquisa/resultados/">Histórico de Resultados</a>).</li>
+<li><strong>Pendências assumidas:</strong> homologação do chat generativo em aparelho Android físico; revisão humana cega e repetição com modelos maiores; persistência dos lançamentos em SQLite. Não houve reunião de validação, então não há Ata 04.</li>
 </ul>
 
 
