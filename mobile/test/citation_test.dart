@@ -115,4 +115,18 @@ void main() {
     // [3] não tem cartão: não vira link, fica o texto original
     expect(find.textContaining('[3]', findRichText: true), findsOneWidget);
   });
+
+  testWidgets(
+    'link markdown com nome da fonte abre o cartão correspondente diretamente',
+    (tester) async {
+      const namedAnswer =
+          'Segundo o [Banco Central do Brasil](https://www.bcb.gov.br/doc1), reserve uma quantia.';
+      await openChat(tester, namedAnswer);
+      expect(find.text('Conteúdo da fonte 1'), findsNothing);
+
+      tapLink(tester, 'Banco Central do Brasil');
+      await tester.pumpAndSettle();
+      expect(find.text('Conteúdo da fonte 1'), findsOneWidget);
+    },
+  );
 }

@@ -1,5 +1,6 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import '../../../core/theme/app_theme.dart';
 import '../../../core/widgets/app_motion.dart';
@@ -684,6 +685,37 @@ class _MessageTextState extends State<_MessageText> {
           cleaned,
           style,
           citationColor: link,
+          link: (label, url) {
+            final tap = TapGestureRecognizer()
+              ..onTap = () async {
+                final idx = message.evidences.indexWhere(
+                  (e) =>
+                      e.sourceUrl == url ||
+                      e.sourceName.toLowerCase() == label.toLowerCase() ||
+                      e.documentTitle.toLowerCase() == label.toLowerCase(),
+                );
+                if (idx >= 0) {
+                  widget.onSource(idx + 1);
+                } else {
+                  final uri = Uri.tryParse(url);
+                  if (uri != null && await canLaunchUrl(uri)) {
+                    await launchUrl(uri, mode: LaunchMode.externalApplication);
+                  }
+                }
+              };
+            _taps.add(tap);
+            return TextSpan(
+              text: label,
+              recognizer: tap,
+              semanticsLabel: 'Ver fonte: $label',
+              style: TextStyle(
+                color: link,
+                fontWeight: FontWeight.w700,
+                decoration: TextDecoration.underline,
+                decorationColor: link.withValues(alpha: 0.5),
+              ),
+            );
+          },
           citation: (n) {
             if (n < 1 || n > message.evidences.length) {
               return TextSpan(text: '[$n]');

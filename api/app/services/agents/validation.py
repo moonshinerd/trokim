@@ -40,8 +40,9 @@ def _parse_canonical_float(raw: str) -> float | None:
 
 def clean_text_for_numbers(text: str) -> str:
     """Remove elementos estruturais que contêm números mas não são dados factuais."""
-    # 1. Marcadores de citação [1], [2]
+    # 1. Marcadores de citação [1], [2] e links markdown [Fonte](url)
     cleaned = re.sub(r"\[\d+\]", " ", text)
+    cleaned = re.sub(r"\[([^\]]+)\]\([^\)]+\)", r" \1 ", cleaned)
     # 2. Resoluções, leis e artigos (ex.: "Resolução 4.966", "Lei nº 14.181", "art. 5º")
     cleaned = re.sub(
         r"\b(?:lei|resolucao|resolução|artigo|art\.?|norma|decreto)\s*(?:nº|no|n\.)?\s*[\d\.\/\-]+",
@@ -107,18 +108,21 @@ def check_number_support(
 
 def check_citations(draft: str, evidences_count: int) -> list[ValidationIssue]:
     issues: list[ValidationIssue] = []
-    citations = [int(m) for m in re.findall(r"\[(\d+)\]", draft)]
+    numbered_citations = [int(m) for m in re.findall(r"\[(\d+)\]", draft)]
+    named_links = re.findall(r"\[([^\]]+)\]\((https?://[^\)]+)\)", draft)
+
+    has_citations = bool(numbered_citations or named_links)
 
     if evidences_count > 0:
-        if not citations and len(draft.strip()) > 50:
+        if not has_citations and len(draft.strip()) > 50:
             issues.append(
                 ValidationIssue(
                     code="CITATION_INVALID",
                     severity=IssueSeverity.BLOCKER,
-                    message="A resposta utiliza evidências mas não contém citações [n].",
+                    message="A resposta utiliza evidências mas não contém citações às fontes.",
                 )
             )
-        for c in citations:
+        for c in numbered_citations:
             if c < 1 or c > evidences_count:
                 issues.append(
                     ValidationIssue(
@@ -128,12 +132,12 @@ def check_citations(draft: str, evidences_count: int) -> list[ValidationIssue]:
                     )
                 )
     else:
-        if citations:
+        if has_citations:
             issues.append(
                 ValidationIssue(
                     code="CITATION_INVALID",
                     severity=IssueSeverity.BLOCKER,
-                    message="Resposta cita fontes [n], mas nenhuma evidência foi recuperada.",
+                    message="Resposta cita fontes, mas nenhuma evidência foi recuperada.",
                 )
             )
     return issues
