@@ -1,24 +1,86 @@
 # Orquestrador e Contratos
 
-!!! info "Status: Planejado"
-    Issue [#51](https://github.com/moonshinerd/trokim/issues/51). Esta página é preenchida no mesmo PR da implementação (regra: o MkDocs nunca fica defasado).
+!!! success "Status: Implementado"
+    Implementado na issue [#51](https://github.com/moonshinerd/trokim/issues/51). O contrato de mensagens é estrito e a orquestração segue um fluxo linear defensivo com revisão única em caso de bloqueio.
 
-Coordena os quatro agentes e monta a trilha. Código previsto: `api/app/domain/agents.py` (contrato),
-`api/app/services/agents/base.py` (protocolo `Agent`) e `api/app/services/agents/orchestrator.py`.
+Coordena os quatro agentes especializados e constrói a trilha de auditoria (`steps`). O código está estruturado em:
 
-## Regras
+- `api/app/domain/agents.py`: contrato puro de domínio (Pydantic v2), sem dependências de frameworks externos ou rede.
+- `api/app/services/agents/base.py`: protocolo assíncrono `Agent`.
+- `api/app/services/agents/orchestrator.py`: classe `Orchestrator` e função de roteamento `needs_analysis`.
 
-1. **Research.** Se `abstain_reason` vier preenchido, encerra com `abstained` e uma resposta fixa, sem chamar o LLM.
-2. **Analysis** só roda se a pergunta pede números (regra por palavras-chave); senão o passo é `skipped`.
-3. **Communication** escreve o rascunho a partir de `evidences` e `calculations`.
-4. **Validation** confere o rascunho. Com bloqueio e revisão disponível (`max_revisions`, padrão 1), volta ao Communication com os problemas; persistindo o bloqueio, encerra com `rejected` e uma mensagem segura.
-5. Cada passo vira um `AgentStep` com a duração medida; uma falha inesperada vira `failed` e a resposta `rejected`.
+## Regras de Execução
 
-## Como funciona na prática
-*(A preencher na implementação: fluxo real, regras de `needs_analysis`, mensagens fixas e exemplos de trilha.)*
+1. **Research Agent (Primeira Linha de Defesa):** Recupera evidências institucionais. Se `abstain_reason` for preenchido (fora de escopo ou sem evidência suficiente), o orquestrador encerra a execução com status `abstained` e devolve a mensagem fixa de abstenção imediatamente, sem acionar o LLM.
+2. **Analysis Agent (Cálculo Determinístico):** É executado somente se a pergunta demandar números ou raciocínio orçamentário sobre extratos (`needs_analysis`). Caso contrário, o passo é marcado como `skipped`.
+3. **Communication Agent (Redação em pt-BR):** Elabora o rascunho de resposta (`draft_answer`) ancorando-se estritamente nas evidências numeradas e nos cálculos realizados.
+4. **Validation Agent (Guarda Defensivo):** Audita o rascunho. Caso encontre problemas com severidade `blocker` e ainda haja tentativas disponíveis (`max_revisions = 1`), o orquestrador reenvia o contexto para revisão do Communication Agent. Caso o bloqueio persista ou se esgotem as revisões, encerra com status `rejected` e uma mensagem fixa de segurança, sem inventar conteúdo.
+5. **Trilha de Auditoria e Resiliência:** Cada etapa registra um `AgentStep` com status, duração em milissegundos e sumário. Qualquer falha inesperada em um agente é capturada de forma defensiva, convertida em `failed` na trilha e resulta em `rejected` seguro para o usuário final.
 
-## Testes
-*(A preencher: arquivos de teste e o que cobrem.)*
+## Regras de Detecção Numérica (`needs_analysis`)
+
+A função `needs_analysis(question)` normaliza acentuações e avalia a presença de palavras-chave orçamentárias:
+
+- Saldo, receitas, despesas, gastei, gasto, gastos.
+- Categoria, categorias, poupança, poupar, meta, metas, meses.
+- Cenário, cenários, projeção, projeções, quanto, orçamento, guardar, economizar.
+
+Perguntas conceituais puras (ex.: *"O que é o FGC?"* ou *"Explique a regra 50/30/20"*) pulam a etapa de análise com status `skipped`.
+
+## Mensagens Fixas do Sistema
+
+- **Abstenção (`ABSTAINED`):**
+  > *"O Trokim não possui evidências suficientes nas diretrizes oficiais (Banco Central do Brasil, CVM, CFPB ou ANPD) para responder a essa consulta com segurança. Para sua proteção financeira, recomendamos consultar canais oficiais regulamentados."*
+- **Rejeição Segura (`REJECTED`):**
+  > *"A resposta preliminar gerada pelo assistente não passou pelas regras de validação e segurança do Trokim (conformidade com cálculos auditáveis e diretrizes oficiais). Por segurança financeira, a resposta foi retida."*
+
+## Exemplo de Trilha de Auditoria (`AgentStep`)
+
+```json
+[
+  {
+    "agent": "research",
+    "status": "ok",
+    "summary": "Recuperação concluída",
+    "duration_ms": 12,
+    "detail": { "count": 2 }
+  },
+  {
+    "agent": "analysis",
+    "status": "ok",
+    "summary": "Cálculo determinístico finalizado",
+    "duration_ms": 8,
+    "detail": { "calculations_count": 1 }
+  },
+  {
+    "agent": "communication",
+    "status": "ok",
+    "summary": "Rascunho elaborado em pt-BR",
+    "duration_ms": 420,
+    "detail": { "attempt": 1, "model": "ollama/qwen2.5:1.5b" }
+  },
+  {
+    "agent": "validation",
+    "status": "ok",
+    "summary": "Validação concluída sem bloqueios",
+    "duration_ms": 14,
+    "detail": { "issues_count": 0 }
+  }
+]
+```
+
+## Testes Automatizados
+
+O comportamento do orquestrador é coberto sem dependência de modelo de IA nem rede externa em `api/tests/test_orchestrator.py`:
+
+- Detecção de intenção numérica em `needs_analysis` (perguntas numéricas vs. conceituais).
+- Curto-circuito de abstenção no Research (não aciona Communication nem Analysis).
+- Passo `skipped` no Analysis quando a pergunta não pede cálculos.
+- Ativação do Analysis e propagação de cálculos no contexto.
+- Ciclo de revisão: blocker na 1ª validação e aprovação na 2ª validação.
+- Bloqueio persistente convertendo resposta em `rejected` com mensagem segura.
+- Captura resiliente de exceção em agente (passo `failed` e resposta `rejected`).
 
 ## Limitações
-*(A preencher.)*
+
+- O orquestrador atual segue um grafo linear determinístico com no máximo 1 ciclo de revisão. Não há suporte a branching complexo ou chamadas paralelas, o que é intencional para manter rastreabilidade estrita e latência previsível.

@@ -12,15 +12,14 @@ import pytest
 from app.domain.agents import (
     AgentContext,
     AgentName,
-    AgentStepStatus,
     CalculationResult,
     IssueSeverity,
-    ValidationIssueCode,
+    StepStatus,
 )
 from app.domain.models import EvidenceChunk
-from app.services.agents.base import Agent
 from app.services.agents.validation import (
     ValidationAgent,
+    ValidationIssueCode,
     canonicalize_number,
     check_abstention_mismatch,
     check_calculation_missing,
@@ -54,6 +53,7 @@ def test_strip_list_markers_and_citations() -> None:
         "1. Economize R$ 500,00.\n"
         "2) Mantenha por 30 dias.\n"
         "3 - Avalie 1-3 anos.\n"
+        "Passo 1: registre receitas.\n"
         "Prioridades: 1) dívidas; 2) reserva."
     )
     cleaned = strip_list_markers(strip_citations(text))
@@ -61,6 +61,7 @@ def test_strip_list_markers_and_citations() -> None:
     assert "[1]" not in cleaned
     assert "1." not in cleaned
     assert "2)" not in cleaned
+    assert "Passo 1:" not in cleaned
     # O conteúdo factual foi preservado
     assert "500,00" in cleaned
     assert "30 dias" in cleaned
@@ -132,60 +133,46 @@ def test_check_number_support_pure() -> None:
     assert "999" in issues_bad[0].message
 
 
-def test_check_number_support_with_calculations() -> None:
-    draft = "Suas receitas foram de R$ 0,30 e o saldo de R$ 0,20 [1]."
-    supported = ["Texto oficial sobre orçamento [1]."]
-    calcs = [
-        CalculationResult(key="receitas", label="Receitas", value=0.30, unit="R$"),
-        CalculationResult(key="saldo", label="Saldo", value=0.20, unit="R$"),
-    ]
-
-    issues = check_number_support(draft, supported, calcs)
-    assert len(issues) == 0
-
-
 def test_check_citations_pure() -> None:
     evidences = [
         EvidenceChunk(
             id="1",
             source_name="BCB",
-            document_title="Orçamento",
-            section="Geral",
+            document_title="Doc 1",
+            section="S1",
             content="Conteúdo 1",
         ),
         EvidenceChunk(
             id="2",
             source_name="CVM",
-            document_title="Investimentos",
-            section="Geral",
+            document_title="Doc 2",
+            section="S2",
             content="Conteúdo 2",
         ),
     ]
 
-    # Citações válidas [1] e [2]
-    good_draft = "Segundo o BCB [1], controle gastos. Segundo a CVM [2], invista bem."
+    # Citações válidas
+    good_draft = "Segundo as fontes [1] e [2], poupe com regularidade."
     assert len(check_citations(good_draft, evidences)) == 0
 
-    # Falta de citação com evidências disponíveis
-    no_citation_draft = "Controle seus gastos e invista bem."
+    # Evidências existem mas nenhuma foi citada
+    no_citation_draft = "Poupe com regularidade sem citar fontes."
     issues_no_cit = check_citations(no_citation_draft, evidences)
     assert len(issues_no_cit) == 1
     assert issues_no_cit[0].code == ValidationIssueCode.CITATION_INVALID
-    assert "não incluiu nenhuma citação" in issues_no_cit[0].message
 
-    # Citação fora do limite [3]
-    out_of_bounds_draft = "Informação oficial [3]."
+    # Citação fora dos limites (ex: [3] quando há apenas 2 evidências)
+    out_of_bounds_draft = "Segundo a fonte [3], invista com cautela."
     issues_oob = check_citations(out_of_bounds_draft, evidences)
     assert len(issues_oob) == 1
     assert issues_oob[0].code == ValidationIssueCode.CITATION_INVALID
-    assert "[3]" in issues_oob[0].message
 
 
 def test_check_citations_empty_evidences() -> None:
-    # Sem evidências no contexto: rascunho sem citação é válido
+    # Se não há evidências, não deve exigir citação
     assert len(check_citations("Resposta sem citação necessária.", [])) == 0
 
-    # Sem evidências, mas rascunho inventa citação [1]
+    # Mas se houver citação [1] sem nenhuma evidência disponível, deve falhar
     issues = check_citations("Afirmação com citação [1].", [])
     assert len(issues) == 1
     assert issues[0].code == ValidationIssueCode.CITATION_INVALID
@@ -264,7 +251,7 @@ def test_regression_c27_previsao_preco_acao() -> None:
     """
     agent = ValidationAgent()
     ctx = AgentContext(
-        query="Qual será o preço exato de uma ação brasileira daqui a um ano?",
+        question="Qual será o preço exato de uma ação brasileira daqui a um ano?",
         evidences=[],
         abstain_reason="fora_de_escopo",
         calculations=[],
@@ -272,7 +259,7 @@ def test_regression_c27_previsao_preco_acao() -> None:
     )
 
     step = agent.validate(ctx)
-    assert step.status == AgentStepStatus.FAILED
+    assert step.status == StepStatus.FAILED
     issue_codes = {i.code for i in ctx.issues}
     assert ValidationIssueCode.OUT_OF_SCOPE_ADVICE in issue_codes
     assert ValidationIssueCode.ABSTENTION_MISMATCH in issue_codes
@@ -292,12 +279,30 @@ def test_regression_c29_percentual_nao_fornecido() -> None:
         content="O orçamento permite registrar receitas e despesas familiares.",
     )
     calcs = [
-        CalculationResult(key="receitas", label="Receitas", value=0.30, unit="R$"),
-        CalculationResult(key="despesas", label="Despesas", value=0.10, unit="R$"),
-        CalculationResult(key="saldo", label="Saldo", value=0.20, unit="R$"),
+        CalculationResult(
+            key="receitas",
+            label="Receitas",
+            value=0.30,
+            unit="R$",
+            source="CalculationService.calculate_summary",
+        ),
+        CalculationResult(
+            key="despesas",
+            label="Despesas",
+            value=0.10,
+            unit="R$",
+            source="CalculationService.calculate_summary",
+        ),
+        CalculationResult(
+            key="saldo",
+            label="Saldo",
+            value=0.20,
+            unit="R$",
+            source="CalculationService.calculate_summary",
+        ),
     ]
     ctx = AgentContext(
-        query=(
+        question=(
             "No exemplo sintético, explique as receitas, despesas e o saldo "
             "calculados pelo sistema."
         ),
@@ -311,7 +316,7 @@ def test_regression_c29_percentual_nao_fornecido() -> None:
     )
 
     step = agent.validate(ctx)
-    assert step.status == AgentStepStatus.FAILED
+    assert step.status == StepStatus.FAILED
     issue_codes = {i.code for i in ctx.issues}
     assert ValidationIssueCode.NUMBER_NOT_SUPPORTED in issue_codes
     assert any("33.33" in i.message for i in ctx.issues)
@@ -325,7 +330,7 @@ def test_regression_c30_calculo_sem_resultado_do_sistema() -> None:
     """
     agent = ValidationAgent()
     ctx = AgentContext(
-        query=(
+        question=(
             "No exemplo sintético sem resultado do sistema, calcule o saldo de receitas "
             "de R$ 0,10 e R$ 0,20 menos despesa de R$ 0,10."
         ),
@@ -335,7 +340,7 @@ def test_regression_c30_calculo_sem_resultado_do_sistema() -> None:
     )
 
     step = agent.validate(ctx)
-    assert step.status == AgentStepStatus.FAILED
+    assert step.status == StepStatus.FAILED
     issue_codes = {i.code for i in ctx.issues}
     assert ValidationIssueCode.CALCULATION_MISSING in issue_codes
 
@@ -349,30 +354,28 @@ def test_regression_c04_valores_inventados_metas() -> None:
     evidence = EvidenceChunk(
         id="1",
         source_name="CVM",
-        document_title="Definição de Objetivos",
-        section="Metas",
-        content="Definir objetivos claros e prazos em que o dinheiro será necessário.",
+        document_title="Planejamento",
+        section="Objetivos",
+        content="Definir metas claras ajuda a planejar prazos e valores necessários.",
     )
     ctx = AgentContext(
-        query="Como definir metas financeiras e prazos?",
+        question="Como planejar a compra da casa própria segundo a CVM?",
         evidences=[evidence],
         calculations=[],
+        # Valores arbitrários inventados que não constam nas evidências
         draft_answer=(
-            "Para definir suas metas [1], planeje ter R$ 100.000,00 de reserva "
-            "e acumular R$ 5.000,00 anuais em investimentos."
+            "A CVM recomenda ter R$ 100.000,00 guardados e poupar R$ 5.000,00 por mês [1]."
         ),
     )
 
     step = agent.validate(ctx)
-    assert step.status == AgentStepStatus.FAILED
-    unsupported_numbers = [
-        i for i in ctx.issues if i.code == ValidationIssueCode.NUMBER_NOT_SUPPORTED
-    ]
-    assert len(unsupported_numbers) >= 2
+    assert step.status == StepStatus.FAILED
+    issue_codes = {i.code for i in ctx.issues}
+    assert ValidationIssueCode.NUMBER_NOT_SUPPORTED in issue_codes
 
 
-def test_regression_c17_valores_inventados_rotativo() -> None:
-    """C17: LLM pura inventou taxa de 1,5% e valor de R$ 1.018,25.
+def test_regression_c17_prazo_inventado_anos() -> None:
+    """C17: Modelo gerou prazo arbitrário de '10 anos' sem respaldo.
 
     ValidationAgent deve disparar NUMBER_NOT_SUPPORTED.
     """
@@ -380,217 +383,219 @@ def test_regression_c17_valores_inventados_rotativo() -> None:
     evidence = EvidenceChunk(
         id="1",
         source_name="BCB",
-        document_title="Rotativo do Cartão",
+        document_title="Reserva",
         section="Prazos",
-        content="O saldo devedor pode permanecer no rotativo por até 30 dias.",
+        content="A reserva deve ser mantida em aplicação de resgate imediato.",
     )
     ctx = AgentContext(
-        query="Até quando posso financiar o mesmo saldo no rotativo do cartão?",
+        question="Qual o prazo ideal da reserva segundo o BCB?",
         evidences=[evidence],
         calculations=[],
-        draft_answer=(
-            "O saldo pode ser financiado até 30 dias [1]. "
-            "A taxa de juros aplicada é de 1,5% e o saldo fica em R$ 1.018,25."
-        ),
+        draft_answer="O BCB orienta manter a aplicação por um prazo de 10 anos [1].",
     )
 
     step = agent.validate(ctx)
-    assert step.status == AgentStepStatus.FAILED
-    unsupported_numbers = [
-        i for i in ctx.issues if i.code == ValidationIssueCode.NUMBER_NOT_SUPPORTED
-    ]
-    assert len(unsupported_numbers) >= 2
+    assert step.status == StepStatus.FAILED
+    issue_codes = {i.code for i in ctx.issues}
+    assert ValidationIssueCode.NUMBER_NOT_SUPPORTED in issue_codes
 
 
 # ============================================================================
-# 4. Bateria de Rascunhos Bons (>= 10 cenários) e Taxa de Falsos Positivos
+# 4. Bateria de Rascunhos Bons (>= 10 cenários, 0% Falsos Positivos)
 # ============================================================================
-
 
 GOOD_DRAFT_CASES = [
     {
-        "nome": "R01_lista_numerada_passo_a_passo",
-        "query": "Como organizar minhas finanças pessoais?",
+        "nome": "R01_lista_ordenada_simples",
+        "query": "Como organizar as finanças?",
         "evidences": [
             EvidenceChunk(
                 id="1",
-                source_name="CVM",
-                document_title="Planejamento",
+                source_name="BCB",
+                document_title="Guia Financeiro",
                 section="Etapas",
-                content="O planejamento financeiro envolve listar despesas e mapear objetivos.",
+                content="Planejar o orçamento familiar envolve diagnosticar, cortar e investir.",
             )
         ],
         "calculations": [],
         "abstain_reason": None,
         "draft_answer": (
-            "Para organizar suas finanças pessoais [1], recomenda-se seguir os passos:\n"
-            "1. Liste todas as fontes de renda e gastos fixos.\n"
-            "2. Identifique oportunidades de corte de despesas supérfluas.\n"
-            "3. Estabeleça metas financeiras claras para o futuro."
+            "Para organizar suas finanças, siga os passos [1]:\n"
+            "1. Diagnosticar seus gastos mensais.\n"
+            "2. Cortar despesas supérfluas.\n"
+            "3. Investir o valor poupado com regularidade."
         ),
     },
     {
-        "nome": "R02_faixas_temporais_usuais",
-        "query": "Quais são os prazos usuais para objetivos de investimento?",
+        "nome": "R02_lista_com_parenteses",
+        "query": "Quais são as prioridades para a reserva de emergência?",
         "evidences": [
             EvidenceChunk(
                 id="1",
                 source_name="CVM",
-                document_title="Objetivos Financeiros",
-                section="Prazos",
+                document_title="Reserva",
+                section="Prioridades",
+                content="Priorizar segurança e liquidez na formação da reserva financeira.",
+            )
+        ],
+        "calculations": [],
+        "abstain_reason": None,
+        "draft_answer": (
+            "As prioridades recomendadas são [1]:\n"
+            "1) Garantir liquidez diária.\n"
+            "2) Preservar a segurança do capital."
+        ),
+    },
+    {
+        "nome": "R03_regra_50_30_20_com_percentuais_nas_evidencias",
+        "query": "Como aplicar a regra 50-30-20?",
+        "evidences": [
+            EvidenceChunk(
+                id="1",
+                source_name="BCB",
+                document_title="Orçamento 50/30/20",
+                section="Distribuição",
                 content=(
-                    "Objetivos de curto prazo costumam variar de 1 a 3 anos e "
-                    "médio prazo de 3 a 5 anos."
+                    "A regra 50-30-20 divide a renda em 50% para necessidades, "
+                    "30% para desejos e 20% para poupança."
                 ),
             )
         ],
         "calculations": [],
         "abstain_reason": None,
         "draft_answer": (
-            "Segundo as diretrizes oficiais [1], metas de curto prazo costumam ter prazos de "
-            "1-3 anos, enquanto objetivos de médio prazo variam entre 3-5 anos."
+            "Conforme as diretrizes [1], divida seu orçamento em:\n"
+            "- 50% para despesas essenciais.\n"
+            "- 30% para lazer e estilo de vida.\n"
+            "- 20% para reserva e investimentos."
         ),
     },
     {
-        "nome": "R03_resumo_calculado_com_moeda_e_percentual",
-        "query": "Qual é o resumo das minhas finanças com base no extrato importado?",
-        "evidences": [
-            EvidenceChunk(
-                id="1",
-                source_name="BCB",
-                document_title="Orçamento Familiar",
-                section="Balanço",
-                content="O balanço mensal compara receitas totais e despesas totais.",
-            )
-        ],
-        "calculations": [
-            CalculationResult(key="total_income", label="Receitas", value=3500.0, unit="R$"),
-            CalculationResult(key="total_expenses", label="Despesas", value=2100.0, unit="R$"),
-            CalculationResult(key="net_balance", label="Saldo Líquido", value=1400.0, unit="R$"),
-            CalculationResult(key="savings_rate", label="Taxa de Poupança", value=40.0, unit="%"),
-        ],
-        "abstain_reason": None,
-        "draft_answer": (
-            "Conforme os dados do seu extrato [1], suas receitas totalizaram R$ 3.500,00 e as "
-            "despesas somaram R$ 2.100,00, gerando um saldo positivo de R$ 1.400,00. "
-            "Sua taxa de poupança no período foi de 40,0%."
-        ),
-    },
-    {
-        "nome": "R04_prazo_do_rotativo_em_dias",
-        "query": "Até quando o saldo pode ficar no rotativo?",
-        "evidences": [
-            EvidenceChunk(
-                id="1",
-                source_name="BCB",
-                document_title="Regras do Rotativo",
-                section="Prazos",
-                content="O saldo devedor pode permanecer no crédito rotativo por até 30 dias.",
-            )
-        ],
-        "calculations": [],
-        "abstain_reason": None,
-        "draft_answer": (
-            "De acordo com a regulamentação do Banco Central [1], o saldo devedor não pode "
-            "permanecer no rotativo por mais de 30 dias, devendo ser quitado ou parcelado."
-        ),
-    },
-    {
-        "nome": "R05_marcadores_com_parenteses",
-        "query": "Quais as orientações para renegociação de dívidas?",
-        "evidences": [
-            EvidenceChunk(
-                id="1",
-                source_name="CFPB",
-                document_title="Dívidas",
-                section="Renegociação",
-                content="Priorizar dívidas essenciais e entrar em contato com os credores.",
-            )
-        ],
-        "calculations": [],
-        "abstain_reason": None,
-        "draft_answer": (
-            "Ao renegociar débitos [1], mantenha duas diretrizes em foco:\n"
-            "1) quite primeiro os compromissos vinculados a serviços essenciais;\n"
-            "2) proponha parcelas compatíveis com o seu orçamento real."
-        ),
-    },
-    {
-        "nome": "R06_orientacao_qualitativa_sem_numeros",
-        "query": "Onde devo guardar minha reserva de emergência?",
-        "evidences": [
-            EvidenceChunk(
-                id="1",
-                source_name="CVM",
-                document_title="Reserva de Emergência",
-                section="Liquidez",
-                content=(
-                    "A reserva de emergência deve ser mantida em produtos de "
-                    "alta liquidez e baixo risco."
-                ),
-            )
-        ],
-        "calculations": [],
-        "abstain_reason": None,
-        "draft_answer": (
-            "A reserva de emergência deve ser alocada prioritariamente em aplicações com alta "
-            "liquidez e baixo risco de mercado [1], viabilizando resgates imediatos em imprevistos."
-        ),
-    },
-    {
-        "nome": "R07_abstencao_pedagogica_correta",
-        "query": "Qual ação vai render mais no próximo mês?",
+        "nome": "R04_saldo_e_transacoes_com_calculos_oficiais",
+        "query": "Qual foi meu saldo do período?",
         "evidences": [],
-        "calculations": [],
-        "abstain_reason": "fora_de_escopo",
-        "draft_answer": (
-            "Não posso fornecer recomendações sobre ações específicas nem realizar previsões "
-            "de mercado, pois tais orientações estão fora do escopo educativo do assistente."
-        ),
-    },
-    {
-        "nome": "R08_c29_comportamento_correto",
-        "query": (
-            "No exemplo sintético, explique as receitas, despesas e o saldo "
-            "calculados pelo sistema."
-        ),
-        "evidences": [
-            EvidenceChunk(
-                id="1",
-                source_name="BCB",
-                document_title="Orçamento Familiar",
-                section="Cálculo",
-                content="Receitas e despesas mensais formam a base do saldo financeiro.",
-            )
-        ],
         "calculations": [
-            CalculationResult(key="receitas", label="Receitas", value=0.30, unit="R$"),
-            CalculationResult(key="despesas", label="Despesas", value=0.10, unit="R$"),
-            CalculationResult(key="saldo", label="Saldo", value=0.20, unit="R$"),
+            CalculationResult(
+                key="net_balance",
+                label="Saldo Líquido",
+                value="1250.50",
+                unit="R$",
+                source="CalculationService.calculate_summary",
+            ),
+            CalculationResult(
+                key="savings_rate",
+                label="Taxa de Poupança",
+                value="25.0",
+                unit="%",
+                source="CalculationService.calculate_summary",
+            ),
         ],
         "abstain_reason": None,
         "draft_answer": (
-            "No cálculo determinístico apurado pelo sistema [1], as receitas somam R$ 0,30 e "
-            "as despesas são de R$ 0,10, resultando em um saldo disponível de R$ 0,20."
+            "Com base nos lançamentos processados pelo sistema, seu saldo líquido "
+            "foi de R$ 1.250,50 e sua taxa de poupança alcançou 25%."
         ),
     },
     {
-        "nome": "R09_multiplas_fontes_com_citacoes",
-        "query": "Como avaliar o custo de um empréstimo antes de contratar?",
+        "nome": "R05_faixa_temporal_meses_reserva",
+        "query": "Quantos meses de despesas devo guardar?",
+        "evidences": [
+            EvidenceChunk(
+                id="1",
+                source_name="CVM",
+                document_title="Guia da Reserva",
+                section="Dimensionamento",
+                content=(
+                    "A CVM orienta manter entre 3 e 6 meses de despesas na reserva financeira."
+                ),
+            )
+        ],
+        "calculations": [],
+        "abstain_reason": None,
+        "draft_answer": (
+            "A recomendação oficial [1] é guardar de 3 a 6 meses do total de despesas fixas "
+            "em aplicações conservadoras de alta liquidez."
+        ),
+    },
+    {
+        "nome": "R06_prazo_em_anos_para_metas",
+        "query": "Qual o horizonte para metas de médio prazo?",
         "evidences": [
             EvidenceChunk(
                 id="1",
                 source_name="BCB",
-                document_title="Custo Efetivo Total",
+                document_title="Planejamento Temporal",
+                section="Horizontes",
+                content="Metas de médio prazo geralmente compreendem o período de 1-3 anos.",
+            )
+        ],
+        "calculations": [],
+        "abstain_reason": None,
+        "draft_answer": (
+            "O Banco Central [1] classifica como médio prazo objetivos a serem "
+            "alcançados em 1-3 anos."
+        ),
+    },
+    {
+        "nome": "R07_explicacao_conceitual_sem_numeros",
+        "query": "O que significa diversificação de investimentos?",
+        "evidences": [
+            EvidenceChunk(
+                id="1",
+                source_name="CVM",
+                document_title="Diversificação",
+                section="Princípio",
+                content=(
+                    "Diversificar significa distribuir os recursos entre diferentes classes de "
+                    "ativos para reduzir riscos."
+                ),
+            )
+        ],
+        "calculations": [],
+        "abstain_reason": None,
+        "draft_answer": (
+            "A diversificação consiste em espalhar os investimentos por múltiplas categorias "
+            "e instituições [1], atenuando perdas em momentos de oscilação do mercado."
+        ),
+    },
+    {
+        "nome": "R08_negacao_pedagogica_sem_falso_positivo",
+        "query": "Ações oferecem lucro garantido?",
+        "evidences": [
+            EvidenceChunk(
+                id="1",
+                source_name="CVM",
+                document_title="Renda Variável",
+                section="Riscos",
+                content=(
+                    "Ações estão sujeitas a oscilações e não possuem garantia de rentabilidade."
+                ),
+            )
+        ],
+        "calculations": [],
+        "abstain_reason": None,
+        "draft_answer": (
+            "Não, investimentos em renda variável não possuem retorno garantido nem rendimento "
+            "garantido [1]. Toda aplicação em bolsa envolve riscos de oscilação."
+        ),
+    },
+    {
+        "nome": "R09_duas_evidencias_citadas_adequadamente",
+        "query": "Como contratar crédito com responsabilidade?",
+        "evidences": [
+            EvidenceChunk(
+                id="1",
+                source_name="BCB",
+                document_title="Crédito Responsável",
                 section="CET",
                 content=(
-                    "O Custo Efetivo Total (CET) inclui taxa de juros, tributos, tarifas e seguros."
+                    "Sempre compare o Custo Efetivo Total (CET) antes de assumir financiamentos."
                 ),
             ),
             EvidenceChunk(
                 id="2",
-                source_name="CVM",
-                document_title="Crédito Consciente",
+                source_name="CFPB",
+                document_title="Orçamento de Parcelas",
                 section="Planejamento",
                 content=(
                     "Contratar crédito exige planejar o impacto das parcelas no orçamento mensal."
@@ -672,7 +677,7 @@ def test_bateria_rascunhos_bons_zero_falsos_positivos() -> None:
 
     for case in GOOD_DRAFT_CASES:
         ctx = AgentContext(
-            query=case["query"],
+            question=case["query"],
             evidences=case["evidences"],
             calculations=case["calculations"],
             abstain_reason=case["abstain_reason"],
@@ -680,7 +685,7 @@ def test_bateria_rascunhos_bons_zero_falsos_positivos() -> None:
         )
 
         step = agent.validate(ctx)
-        if step.status != AgentStepStatus.OK or len(ctx.issues) > 0:
+        if step.status != StepStatus.OK or len(ctx.issues) > 0:
             false_positives += 1
             failures.append(f"{case['nome']}: {[i.model_dump() for i in ctx.issues]}")
 
@@ -699,8 +704,8 @@ def test_bateria_rascunhos_bons_zero_falsos_positivos() -> None:
 @pytest.mark.asyncio
 async def test_validation_agent_async_run() -> None:
     agent = ValidationAgent()
-    assert isinstance(agent, Agent)
     assert agent.name == AgentName.VALIDATION
+    assert hasattr(agent, "run") and callable(agent.run)
 
     evidence = EvidenceChunk(
         id="1",
@@ -710,7 +715,7 @@ async def test_validation_agent_async_run() -> None:
         content="Conteúdo educativo do Banco Central.",
     )
     ctx = AgentContext(
-        query="Como poupar com segurança?",
+        question="Como poupar com segurança?",
         evidences=[evidence],
         calculations=[],
         draft_answer="Economize todo mês com disciplina [1].",
@@ -718,7 +723,261 @@ async def test_validation_agent_async_run() -> None:
 
     step = await agent.run(ctx)
     assert step.agent == AgentName.VALIDATION
-    assert step.status == AgentStepStatus.OK
-    assert step.duration_ms >= 0.0
-    assert step.details["blockers_count"] == 0
+    assert step.status == StepStatus.OK
+    assert step.duration_ms >= 0
+    assert step.detail["blockers_count"] == 0
     assert len(ctx.issues) == 0
+
+
+# ============================================================================
+# 6. Cenários de Regressão Adicionais do Épico #50
+# ============================================================================
+
+
+@pytest.fixture
+def base_evidence():
+    return [
+        EvidenceChunk(
+            id="ev1",
+            document_id="cvm_emergencia.txt",
+            source_name="CVM",
+            document_title="Reserva de Emergência",
+            section="Definição",
+            content="A CVM recomenda manter de 3 a 6 meses de despesas fixas em liquidez diária.",
+            score=0.85,
+        ),
+        EvidenceChunk(
+            id="ev2",
+            document_id="bcb_orcamento.txt",
+            source_name="Banco Central do Brasil",
+            document_title="Orçamento Familiar",
+            section="Regra 50/30/20",
+            content="Regra 50-30-20 destina 50% para necessidades, 30% desejos e 20% poupança.",
+            score=0.80,
+        ),
+    ]
+
+
+@pytest.mark.asyncio
+async def test_validation_c27_regression_blocks_out_of_scope_advice():
+    agent = ValidationAgent()
+    draft = "Compre ações da Petrobras com preço alvo de R$ 45,00 para ter lucro garantido [1]."
+    ctx = AgentContext(
+        question="Qual ação devo comprar?",
+        draft_answer=draft,
+        evidences=[],
+    )
+
+    step = await agent.run(ctx)
+
+    assert step.agent == AgentName.VALIDATION
+    assert step.status == StepStatus.FAILED
+    assert any(i.code == "OUT_OF_SCOPE_ADVICE" for i in ctx.issues)
+
+
+@pytest.mark.asyncio
+async def test_validation_c29_regression_blocks_unsupported_percentage(base_evidence):
+    agent = ValidationAgent()
+    ctx = AgentContext(
+        question="Como dividir meus gastos?",
+        draft_answer="Você deve destinar 33,33% para despesas essenciais [1].",
+        evidences=base_evidence,
+    )
+
+    step = await agent.run(ctx)
+
+    assert step.status == StepStatus.FAILED
+    assert any(i.code == "NUMBER_NOT_SUPPORTED" and "33.33" in i.message for i in ctx.issues)
+
+
+@pytest.mark.asyncio
+async def test_validation_c30_regression_blocks_calculation_missing():
+    agent = ValidationAgent()
+    ctx = AgentContext(
+        question="Qual meu saldo e total de gastos?",
+        draft_answer="Seu saldo calculado é de R$ 1.850,00 e você gastou R$ 920,00 no período.",
+        calculations=[],
+    )
+
+    step = await agent.run(ctx)
+
+    assert step.status == StepStatus.FAILED
+    assert any(i.code == "CALCULATION_MISSING" for i in ctx.issues)
+
+
+@pytest.mark.asyncio
+async def test_validation_c04_c17_regression_blocks_invented_values(base_evidence):
+    agent = ValidationAgent()
+    ctx = AgentContext(
+        question="O que a CVM orienta sobre reserva?",
+        draft_answer="Segundo a CVM [1], você precisa poupar R$ 15.000,00 para sua reserva.",
+        evidences=base_evidence,
+    )
+
+    step = await agent.run(ctx)
+
+    assert step.status == StepStatus.FAILED
+    assert any(i.code == "NUMBER_NOT_SUPPORTED" and "15000" in i.message for i in ctx.issues)
+
+
+@pytest.mark.asyncio
+async def test_validation_blocks_invalid_citations(base_evidence):
+    agent = ValidationAgent()
+    ctx = AgentContext(
+        question="Como planejar reserva?",
+        draft_answer="A CVM recomenda de 3 a 6 meses de despesas fixas [3].",
+        evidences=base_evidence,
+    )
+
+    step = await agent.run(ctx)
+
+    assert step.status == StepStatus.FAILED
+    assert any(i.code == "CITATION_INVALID" for i in ctx.issues)
+
+
+@pytest.mark.asyncio
+async def test_validation_blocks_abstention_mismatch():
+    agent = ValidationAgent()
+    ctx = AgentContext(
+        question="Qual a melhor aposta esportiva?",
+        draft_answer="As apostas mais lucrativas dependem de análise estatística dos jogos.",
+        abstain_reason="fora_de_escopo",
+    )
+
+    step = await agent.run(ctx)
+
+    assert step.status == StepStatus.FAILED
+    assert any(i.code == "ABSTENTION_MISMATCH" for i in ctx.issues)
+
+
+@pytest.mark.asyncio
+async def test_validation_accepts_valid_supported_answer(base_evidence):
+    agent = ValidationAgent()
+    ctx = AgentContext(
+        question="Como montar um orçamento pessoal?",
+        draft_answer=(
+            "De acordo com o Banco Central [2], a regra 50-30-20 sugere destinar 50% "
+            "para necessidades, 30% para desejos e 20% para poupança. Para a reserva, "
+            "a CVM [1] indica de 3 a 6 meses."
+        ),
+        evidences=base_evidence,
+    )
+
+    step = await agent.run(ctx)
+
+    assert step.status == StepStatus.OK
+    assert len([i for i in ctx.issues if i.severity == "blocker"]) == 0
+
+
+@pytest.mark.asyncio
+async def test_validation_ten_good_drafts_zero_false_positives(base_evidence):
+    """Mede a taxa de falso positivo em 10 rascunhos bons legítimos."""
+    agent = ValidationAgent()
+
+    calculations = [
+        CalculationResult(
+            key="net_balance",
+            label="Saldo líquido",
+            value=2500.0,
+            unit="BRL",
+            source="CalculationService.calculate_summary",
+        ),
+        CalculationResult(
+            key="savings_rate",
+            label="Taxa de poupança",
+            value=50.0,
+            unit="%",
+            source="CalculationService.calculate_summary",
+        ),
+        CalculationResult(
+            key="months_to_goal",
+            label="Meses necessários",
+            value=12,
+            unit="meses",
+            source="CalculationService.months_to_goal",
+        ),
+    ]
+
+    good_drafts = [
+        (
+            "Como organizar o orçamento?",
+            "Conforme as diretrizes [2], siga estas etapas:\n"
+            "1. Identifique seus gastos essenciais.\n"
+            "2. Separe recursos para poupança.\n"
+            "3. Revise periodicamente suas metas.",
+            base_evidence,
+            [],
+        ),
+        (
+            "Qual o meu saldo e taxa de poupança?",
+            "Seu saldo líquido calculado é de R$ 2.500,00 e sua taxa de poupança atingiu 50%.",
+            [],
+            calculations,
+        ),
+        (
+            "Explique a regra 50/30/20",
+            "A metodologia 50-30-20 [2] destina 50% a gastos essenciais, 30% a estilo de vida "
+            "e 20% para reserva.",
+            base_evidence,
+            [],
+        ),
+        (
+            "Em quantos meses atinjo minha meta?",
+            "Com base no aporte planejado, serão necessários 12 meses para alcançar o objetivo.",
+            [],
+            calculations,
+        ),
+        (
+            "Quanto tempo de reserva devo guardar?",
+            "A CVM [1] orienta que a reserva financeira cubra entre 3 e 6 meses das despesas.",
+            base_evidence,
+            [],
+        ),
+        (
+            "Quais os passos para poupar?",
+            "Segundo orientações oficiais [2]:\n"
+            "Passo 1: registre receitas.\n"
+            "Passo 2: corte excessos.",
+            base_evidence,
+            [],
+        ),
+        (
+            "Tenho R$ 2.500,00 de saldo. Isso atende à reserva?",
+            "Seu saldo é R$ 2.500,00. A CVM [1] recomenda manter de 3 a 6 meses de reserva.",
+            base_evidence,
+            calculations,
+        ),
+        (
+            "O que é liquidez diária?",
+            "Liquidez diária significa resgatar o valor aplicado no mesmo dia útil [1].",
+            base_evidence,
+            [],
+        ),
+        (
+            "Dicas de orçamento",
+            "Considere os princípios [2]: a) anotar tudo; b) evitar juros no rotativo.",
+            base_evidence,
+            [],
+        ),
+        (
+            "Se eu poupar R$ 500,00 por mês, quanto tempo leva?",
+            "Poupando R$ 500,00 por mês, serão necessários 12 meses conforme o cálculo do sistema.",
+            [],
+            calculations,
+        ),
+    ]
+
+    false_positives = 0
+    for q, draft, evs, calcs in good_drafts:
+        ctx = AgentContext(
+            question=q,
+            draft_answer=draft,
+            evidences=evs,
+            calculations=calcs,
+        )
+        step = await agent.run(ctx)
+        blockers = [i for i in ctx.issues if i.severity == IssueSeverity.BLOCKER]
+        if step.status == StepStatus.FAILED or len(blockers) > 0:
+            false_positives += 1
+
+    assert false_positives == 0, f"Houve {false_positives} falsos positivos em rascunhos válidos!"

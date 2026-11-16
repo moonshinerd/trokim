@@ -7,23 +7,33 @@ e sem acesso à rede.
 
 from __future__ import annotations
 
+import math
 import re
 import time
 import unicodedata
 from dataclasses import dataclass
 from decimal import Decimal, InvalidOperation
+from enum import StrEnum
 
 from app.domain.agents import (
     AgentContext,
     AgentName,
     AgentStep,
-    AgentStepStatus,
     CalculationResult,
     IssueSeverity,
+    StepStatus,
     ValidationIssue,
-    ValidationIssueCode,
 )
 from app.domain.models import EvidenceChunk
+
+
+class ValidationIssueCode(StrEnum):
+    NUMBER_NOT_SUPPORTED = "NUMBER_NOT_SUPPORTED"
+    CITATION_INVALID = "CITATION_INVALID"
+    OUT_OF_SCOPE_ADVICE = "OUT_OF_SCOPE_ADVICE"
+    ABSTENTION_MISMATCH = "ABSTENTION_MISMATCH"
+    CALCULATION_MISSING = "CALCULATION_MISSING"
+
 
 # Padrões para remoção de elementos estruturais que não constituem fatos numéricos
 CITATION_PATTERN = re.compile(r"\[\d+(?:\s*[,-]\s*\d+)*\]")
@@ -33,9 +43,18 @@ LIST_MARKER_PATTERNS = [
     # Marcador inline com parênteses: "1) ", "(1) " (não precedido por dígito, vírgula ou ponto)
     re.compile(r"(?<![\d,\.])\(?\d{1,2}\)\s+(?=[A-Za-zÀ-ÿ])"),
     # Marcador após pontuação final e espaço: ". 1. ", "; 2) "
-    re.compile(r"(?<=[.!?;]\s)\(?\d{1,2}[\.\)]\s+(?=[A-Za-zÀ-ÿ])"),
+    re.compile(r"(?<=[.!?;:\n]\s)\(?\d{1,2}[\.\)]\s+(?=[A-Za-zÀ-ÿ])"),
     # Numerais ordinais: "1º", "2ª"
     re.compile(r"\b\d+[ºª]\b"),
+    # Passos, etapas, itens, opções: "Passo 1:", "item 2"
+    re.compile(r"\b(?:passo|etapa|item|opcao|opção)\s+\d+[:\.]?\b", re.IGNORECASE),
+    # Leis, resoluções, artigos: "Resolução 4.966", "Lei nº 14.181", "art. 5º"
+    re.compile(
+        r"\b(?:lei|resolucao|resolução|artigo|art\.?|norma|decreto)\s*(?:nº|no|n\.)?\s*[\d\.\/\-]+",
+        re.IGNORECASE,
+    ),
+    # Anos de 4 dígitos (ex.: 2024, 2025, 2026, 1999)
+    re.compile(r"\b(19\d{2}|20\d{2})\b"),
 ]
 
 # Padrões para extração de fatos numéricos em pt-BR
@@ -112,7 +131,7 @@ OUT_OF_SCOPE_PATTERNS = [
 ]
 
 NEGATION_PREFIX_PATTERN = re.compile(
-    r"(?:\bnão\s+|\bsem\s+|\bnunca\s+|\bjamais\s+|\bimpossível\s+|\bnão\s+há\s+|\bnão\s+é\s+possível\s+|\bnão\s+oferece\s+|\bnão\s+possu[ei]\s+)[^.!?]{0,40}$",
+    r"(?:\bnão\s+|\bsem\s+|\bnunca\s+|\bjamais\s+|\bnem\s+|\bimpossível\s+|\bnão\s+há\s+|\bnão\s+é\s+possível\s+|\bnão\s+oferece\s+|\bnão\s+possu[ei]\s+)[^.!?]{0,60}$",
     re.IGNORECASE,
 )
 
@@ -143,13 +162,17 @@ NUMERIC_QUERY_PATTERNS = [
     re.compile(r"\bcalcular\b", re.IGNORECASE),
     re.compile(r"\bcálculo\b", re.IGNORECASE),
     re.compile(r"\bcalculo\b", re.IGNORECASE),
-    re.compile(r"\bqual\s+(?:é\s+)?o\s+(?:saldo|total|resultado|valor)\b", re.IGNORECASE),
-    re.compile(r"\bquanto\s+(?:sobra|sobrou|resta|rendeu|custa)\b", re.IGNORECASE),
+    re.compile(
+        r"\bqual\s+(?:é\s+)?(?:o\s+|meu\s+)?(?:saldo|total|resultado|valor)\b",
+        re.IGNORECASE,
+    ),
+    re.compile(r"\bquanto\s+(?:sobra|sobrou|resta|rendeu|custa|gastei|preciso)\b", re.IGNORECASE),
     re.compile(r"\bquantos\s+meses\b", re.IGNORECASE),
     re.compile(r"\btaxa\s+de\s+poupança\b", re.IGNORECASE),
     re.compile(r"\breceitas\s+de\b.*?\bdespesas\s+de\b", re.IGNORECASE),
     re.compile(r"\bdespesas\s+de\b.*?\breceitas\s+de\b", re.IGNORECASE),
     re.compile(r"\bmenos\s+despesa\b", re.IGNORECASE),
+    re.compile(r"\btotal\s+de\s+gastos\b", re.IGNORECASE),
 ]
 
 
@@ -165,6 +188,47 @@ class NumberFact:
 def _ascii(text: str) -> str:
     """Normaliza texto removendo acentos para minúsculas."""
     return unicodedata.normalize("NFKD", text).encode("ascii", "ignore").decode("ascii").lower()
+
+
+def _strip_accents(text: str) -> str:
+    nfkd = unicodedata.normalize("NFKD", text)
+    return "".join(c for c in nfkd if not unicodedata.combining(c))
+
+
+def _parse_canonical_float(raw: str) -> float | None:
+    clean = raw.strip().replace("R$", "").replace("%", "").strip()
+    if not clean:
+        return None
+    if "." in clean and "," in clean:
+        clean = clean.replace(".", "").replace(",", ".")
+    elif "," in clean:
+        clean = clean.replace(",", ".")
+    elif "." in clean:
+        parts = clean.split(".")
+        if len(parts) == 2 and len(parts[1]) == 3:
+            clean = parts[0] + parts[1]
+    try:
+        val = float(clean)
+        return val if not math.isnan(val) and not math.isinf(val) else None
+    except ValueError:
+        return None
+
+
+def clean_text_for_numbers(text: str) -> str:
+    """Remove elementos estruturais que contêm números mas não são dados factuais."""
+    cleaned = strip_citations(text)
+    return strip_list_markers(cleaned)
+
+
+def extract_numbers_from_text(text: str) -> list[tuple[float, str]]:
+    """Extrai grandezas numéricas candidatas (valores monetários, percentuais e prazos)."""
+    facts = extract_ptbr_numbers(text, filter_structural=True)
+    res: list[tuple[float, str]] = []
+    for f in facts:
+        val = _parse_canonical_float(f.canonical)
+        if val is not None:
+            res.append((val, f.raw_text))
+    return res
 
 
 def canonicalize_number(raw: str) -> str:
@@ -337,9 +401,8 @@ def check_number_support(
         val_str = str(calc.value)
         calculation_canonicals.add(canonicalize_number(val_str))
         # Extrai também números do rótulo ou unidade do cálculo se existirem
-        source_facts.update(
-            extract_ptbr_numbers(f"{calc.label} {calc.value} {calc.unit}", filter_structural=False)
-        )
+        calc_text = f"{calc.label} {calc.value} {calc.unit or ''}"
+        source_facts.update(extract_ptbr_numbers(calc_text, filter_structural=False))
 
     issues: list[ValidationIssue] = []
     unsupported_facts: list[NumberFact] = []
@@ -383,7 +446,7 @@ def check_number_support(
 
 def check_citations(
     draft_answer: str,
-    evidences: list[EvidenceChunk],
+    evidences: list[EvidenceChunk] | int,
 ) -> list[ValidationIssue]:
     """Valida a integridade das citações [n] no rascunho de resposta.
 
@@ -396,7 +459,7 @@ def check_citations(
 
     citations = [int(m) for m in re.findall(r"\[(\d+)\]", draft_answer)]
     issues: list[ValidationIssue] = []
-    max_evidences = len(evidences)
+    max_evidences = evidences if isinstance(evidences, int) else len(evidences)
 
     # Se há evidências disponíveis, exige pelo menos uma citação
     if max_evidences > 0 and not citations:
@@ -502,14 +565,15 @@ def check_abstention_mismatch(
 def check_calculation_missing(
     query: str,
     draft_answer: str,
-    calculations: list[CalculationResult],
+    calculations: list[CalculationResult] | int,
 ) -> list[ValidationIssue]:
     """Valida se uma pergunta numérica recebeu cálculo determinístico oficial.
 
     Gera CALCULATION_MISSING (BLOCKER) se a pergunta exige cálculo, calculations está vazio
     e o rascunho tenta apresentar resultado aritmético autônomo.
     """
-    if not query or not draft_answer or calculations:
+    calcs_count = calculations if isinstance(calculations, int) else len(calculations)
+    if not query or not draft_answer or calcs_count > 0:
         return []
 
     # Verifica se a pergunta demanda cálculo numérico
@@ -572,32 +636,37 @@ class ValidationAgent:
         issues.extend(check_citations(draft, ctx.evidences))
 
         # 4. Cálculo numérico ausente em pergunta quantitativa
-        issues.extend(check_calculation_missing(ctx.query, draft, ctx.calculations))
+        issues.extend(check_calculation_missing(ctx.question, draft, ctx.calculations))
 
         # 5. Números sem suporte nas evidências ou cálculos
-        supported_texts = [ctx.query] + [e.content for e in ctx.evidences]
+        supported_texts = [ctx.question] + [
+            f"{e.document_title} {e.section} {e.content}" for e in ctx.evidences
+        ]
         issues.extend(check_number_support(draft, supported_texts, ctx.calculations))
 
         # Atualiza a lista de issues do contexto
-        ctx.issues.extend(issues)
+        ctx.issues = issues
 
         # Determina o status do passo
         has_blocker = any(i.severity == IssueSeverity.BLOCKER for i in ctx.issues)
-        status = AgentStepStatus.FAILED if has_blocker else AgentStepStatus.OK
-        duration_ms = (time.perf_counter() - start_time) * 1000
+        status = StepStatus.FAILED if has_blocker else StepStatus.OK
+        duration_ms = max(1, int(round((time.perf_counter() - start_time) * 1000)))
 
         summary = (
             f"Validação reprovada: {len(ctx.issues)} problema(s) impeditivo(s) encontrado(s)."
             if has_blocker
-            else "Validação aprovada: resposta em conformidade com as regras de integridade."
+            else (
+                "Validação aprovada: resposta em conformidade com as regras de "
+                f"integridade ({len(ctx.issues)} avisos)."
+            )
         )
 
         return AgentStep(
             agent=self.name,
             status=status,
             summary=summary,
-            duration_ms=round(duration_ms, 2),
-            details={
+            duration_ms=duration_ms,
+            detail={
                 "issues_count": len(ctx.issues),
                 "blockers_count": sum(1 for i in ctx.issues if i.severity == IssueSeverity.BLOCKER),
                 "warnings_count": sum(1 for i in ctx.issues if i.severity == IssueSeverity.WARNING),

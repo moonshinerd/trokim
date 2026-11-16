@@ -1,9 +1,9 @@
 # Validation Agent
 
 !!! success "Status: Implementado"
-    Issue [#54](https://github.com/moonshinerd/trokim/issues/54). O agente opera de forma 100% determinística dentro da API (`api/app/services/agents/validation.py`), sem chamadas a modelos de linguagem e sem acesso externo à rede.
+    Issue [#54](https://github.com/moonshinerd/trokim/issues/54). O agente opera de forma 100% determinística dentro da API (`api/app/services/agents/validation.py`), sem chamadas a modelos de linguagem e sem acesso externo à rede, em conformidade com a [ADR 0016](../adr/0016-arquitetura-multiagente.md).
 
-O **ValidationAgent** (`AgentName.VALIDATION`) atua como a última linha de defesa antes da entrega da resposta ao usuário. Ele inspeciona o rascunho de resposta gerado pelo agente de comunicação (`draft_answer`), confrontando-o com as evidências regulatórias recuperadas (`evidences`), os cálculos determinísticos apurados (`calculations`), a pergunta original (`query`) e eventuais motivos de abstenção (`abstain_reason`).
+O **ValidationAgent** (`AgentName.VALIDATION`) atua como a última linha de defesa antes da entrega da resposta ao usuário. Ele inspeciona o rascunho de resposta gerado pelo agente de comunicação (`draft_answer`), confrontando-o com as evidências regulatórias recuperadas (`evidences`), os cálculos determinísticos apurados (`calculations`), a pergunta original (`question`) e eventuais motivos de abstenção (`abstain_reason`).
 
 Se qualquer inconformidade de severidade `BLOCKER` for detectada, o agente anota as falhas em `ctx.issues` e retorna o passo com estado `FAILED`. Caso contrário, retorna `OK`.
 
@@ -33,6 +33,9 @@ O `ValidationAgent` introduz uma camada especializada de pré-processamento estr
 1. **Marcadores de Citação:** Expressões `[n]`, `[1, 2]` ou `[1-3]` são neutralizadas antes da extração para não serem confundidas com dados numéricos.
 2. **Marcadores de Listas Ordenadas:** Padrões no início de linhas ou após pontuação (como `1. `, `2) `, `3 - `) são removidos do fluxo factual.
 3. **Ordinais da Língua Portuguesa:** Termos como `1º` ou `2ª` são explicitamente descartados.
+4. **Passos e Itens:** Expressões como `Passo 1:` ou `item 2` são expurgadas antes da análise factual.
+5. **Identificadores Legais e Normativos:** Menções a resoluções e normas (`Resolução 4.966`, `Lei nº 14.181`, `art. 5º`) não são tratadas como grandezas monetárias.
+6. **Anos de Calendário:** Menções a anos de 4 dígitos (`2024`, `2025`, `2026`) são descartadas como dados de cálculo.
 
 ### 2.2. Normalização e Canonicalização
 - **Moedas pt-BR:** Reconhece prefixos `R$`, `US$` e `USD`, tratando milhares com ponto e decimais com vírgula (`R$ 1.234,56` $\rightarrow$ canonical `"1234.56"`).
