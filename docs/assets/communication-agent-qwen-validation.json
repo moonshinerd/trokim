@@ -1,0 +1,92 @@
+{
+  "date": "2026-11-16",
+  "model": "qwen2.5:1.5b",
+  "temperature": 0.1,
+  "max_tokens": 384,
+  "prompt_version": "prompt_agente_comunicacao_v1.txt",
+  "cases": [
+    {
+      "case": "C01",
+      "question": "Como organizar receitas e despesas no orçamento?",
+      "evidence": {
+        "source": "Banco Central do Brasil",
+        "document": "Caderno de Educação Financeira",
+        "section": "Módulo 2: orçamento",
+        "quote": "O orçamento registra receitas e despesas para compreender hábitos de consumo e planejar as finanças pessoais."
+      },
+      "calculations": [],
+      "model_output": "Para organizar receitas e despesas no orçamento, é importante seguir algumas etapas:\n\n1. **Identificar as Receitas**: Liste todas as fontes de receita disponíveis para você. Isso pode incluir salários, renda do trabalho, vendas, investimentos ou qualquer outra fonte que contribua com seu dinheiro.\n\n2. **Análise das Despesas**: Anote todos os gastos mensais que você faz. Isso pode variar de um pouco em um para o outro, mas geralmente inclui aluguel, alimentação, transporte, educação e outros itens essenciais.\n\n3. **Estabelecer Prioridades**: Determine quais despesas são absolutamente necessárias (como a casa) e quais podem ser reduzidas ou eliminadas (como alguns lanches).\n\n4. **Criar um Orçamento Mensal**: Baseado nas suas receitas e despesas, crie um orçamento mensal que seja suficiente para cobrir todas as suas necessidades básicas.\n\n5. **Monitorar o Orçamento**: Ao longo do mês, compare a sua renda com os gastos. Se você estiver sobrando, pode ser uma boa ideia investir em algo útil ou planejar um pequeno aumento de receita. Caso contrário, talvez seja necessário ajustar suas despesas para manter o equilíbrio.\n\n6. **Revisar Regularmente**: A organização do orçamento deve ser revisada regularmente para garantir que você está seguindo as diretrizes e não se encontre em situações de sobrecarga financeira ou excesso de gastos.\n\n7. **Adaptação ao Tempo**: Se a sua renda mudar (por exemplo, se você ganhar",
+      "guard": "safe_fallback",
+      "guarded_draft": "O orçamento registra receitas e despesas para compreender hábitos de consumo e planejar as finanças pessoais. [1]"
+    },
+    {
+      "case": "C03",
+      "question": "Devo comparar crédito só pela taxa de juros?",
+      "evidence": {
+        "source": "Banco Central do Brasil",
+        "document": "Cartilha para migrantes e refugiados",
+        "section": "Crédito",
+        "quote": "Ao comparar crédito, não considere apenas a taxa de juros."
+      },
+      "calculations": [],
+      "model_output": "Devo comparar crédito só pela taxa de juros? [1]",
+      "guard": "safe_fallback",
+      "guarded_draft": "Ao comparar crédito, não considere apenas a taxa de juros. [1]"
+    },
+    {
+      "case": "C05",
+      "question": "Onde manter uma reserva de emergência?",
+      "evidence": {
+        "source": "Comissão de Valores Mobiliários",
+        "document": "Emergências e aposentadoria",
+        "section": "Reserva de emergência",
+        "quote": "A reserva de emergência pode ser necessária a qualquer momento. Priorize baixo risco, liquidez diária e ausência de carência."
+      },
+      "calculations": [],
+      "model_output": "A reserva de emergência pode ser necessária a qualquer momento, e deve ser priorizada em baixo risco, liquidez diária e ausência de carência.",
+      "guard": "safe_fallback",
+      "guarded_draft": "A reserva de emergência pode ser necessária a qualquer momento. [1] Priorize baixo risco, liquidez diária e ausência de carência. [1] A aposentadoria também deve integrar o planejamento. [1] Um imprevisto não tem data marcada: não comprometa a disponibilidade desse dinheiro para buscar rentabilidade maior. [1] Segurança e possibilidade de resgate importam mais que o maior ganho. [1] A reserva para aposentadoria tem horizonte diferente e deve ser planejada conforme a situação pessoal. [1]"
+    },
+    {
+      "case": "C17",
+      "question": "Até quando posso financiar o mesmo saldo no rotativo do cartão?",
+      "evidence": {
+        "source": "Banco Central do Brasil",
+        "document": "Rotativo do cartão",
+        "section": "Financiamento do saldo",
+        "quote": "O financiamento do saldo no rotativo vai até o vencimento da fatura subsequente, em geral 30 dias."
+      },
+      "calculations": [],
+      "model_output": "O financiamento do saldo no rotativo do cartão vai até o vencimento da fatura subsequente, em geral 30 dias. [1]",
+      "guard": "safe_fallback",
+      "guarded_draft": "O financiamento do saldo no rotativo vai até o vencimento da fatura subsequente, em geral 30 dias. [1]"
+    },
+    {
+      "case": "C29",
+      "question": "No exemplo sintético, explique as receitas, despesas e o saldo calculados pelo sistema.",
+      "evidence": {
+        "source": "Banco Central do Brasil",
+        "document": "Caderno de Educação Financeira",
+        "section": "Módulo 2: orçamento",
+        "quote": "O orçamento registra receitas e despesas para compreender hábitos de consumo e planejar as finanças pessoais."
+      },
+      "calculations": [
+        {
+          "label": "Receitas",
+          "value": "R$ 0,30"
+        },
+        {
+          "label": "Despesas",
+          "value": "R$ 0,10"
+        },
+        {
+          "label": "Saldo",
+          "value": "R$ 0,20"
+        }
+      ],
+      "model_output": "No exemplo sintético, o sistema calcula as receitas, despesas e saldo do orçamento para entender os hábitos de consumo e planejar as finanças pessoais. Seguem os detalhes:\n\n- Receitas: R$ 0,30. Este valor é obtido através da chamada à classe CalculationService com a função calculate_summary.\n- Despesas: R$ 0,10. Também calculado pela chamada à classe CalculationService e a função calculate_summary.\n- Saldo: R$ 0,20. Calculado pela soma das receitas (R$ 0,30) menos as despesas (R$ 0,10).\n\nNenhuma premissa nem dado ausente foi informado para este exemplo.",
+      "guard": "safe_fallback",
+      "guarded_draft": "O orçamento registra receitas e despesas para compreender hábitos de consumo e planejar as finanças pessoais. [1]\nReceitas: R$ 0,30\nDespesas: R$ 0,10\nSaldo: R$ 0,20"
+    }
+  ]
+}

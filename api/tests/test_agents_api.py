@@ -1,3 +1,4 @@
+import re
 from datetime import date
 
 import pytest
@@ -28,18 +29,18 @@ class GroundedMockLLM(MockLLMProvider):
         parts = []
         if context_chunks:
             primary = context_chunks[0]
-            url = primary.source_url or "https://www.bcb.gov.br"
-            parts.append(
-                f"Segundo diretrizes do [{primary.source_name}]({url}), "
-                "é recomendável manter o planejamento financeiro em dia [1]."
+            parts.append(re.sub(r"([.!?])(?=\s|$)", r"\1 [1]", primary.content.strip()))
+        if "CÁLCULOS DO SISTEMA (DETERMINÍSTICOS):" in prompt:
+            calculation_section = prompt.split("CÁLCULOS DO SISTEMA (DETERMINÍSTICOS):", 1)[
+                1
+            ].split("\n\nPREMISSAS", 1)[0]
+            parts.extend(
+                line[2:].strip()
+                for line in calculation_section.splitlines()
+                if line.startswith("- ")
             )
-        if "4000" in prompt or "3500" in prompt or "net_balance" in prompt:
-            val = "4.000,00" if "4000" in prompt else "3.500,00"
-            parts.append(f"Seu saldo líquido atual é R$ {val}.")
-        elif not context_chunks:
-            parts.append("Consultas aos lançamentos registradas com sucesso.")
 
-        content = " ".join(parts)
+        content = "\n".join(parts)
         return LLMResponse(
             content=content,
             model="grounded-mock",
