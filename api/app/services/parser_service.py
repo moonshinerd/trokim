@@ -1,5 +1,6 @@
 import io
 import re
+from collections.abc import Iterable
 from datetime import datetime
 
 from ofxparse import OfxParser
@@ -110,12 +111,22 @@ class ParserService:
 
         return cls.deduplicate(transactions)
 
+    @staticmethod
+    def _dedup_key(tx: Transaction) -> tuple:
+        return (tx.date, tx.description.lower(), tx.amount, tx.type)
+
     @classmethod
-    def deduplicate(cls, transactions: list[Transaction]) -> list[Transaction]:
-        """Identifica duplicatas com base em data, descrição e valor."""
-        seen = set()
+    def deduplicate(
+        cls, transactions: list[Transaction], known: Iterable[Transaction] = ()
+    ) -> list[Transaction]:
+        """Identifica duplicatas com base em data, descrição e valor.
+
+        Com ``known`` (lançamentos já importados), reenviar o mesmo extrato não
+        conta duas vezes: o que já existe entre eles marca o novo como duplicata.
+        """
+        seen = {cls._dedup_key(tx) for tx in known if not tx.is_duplicate}
         for tx in transactions:
-            key = (tx.date, tx.description.lower(), tx.amount, tx.type)
+            key = cls._dedup_key(tx)
             if key in seen:
                 tx.is_duplicate = True
             else:
