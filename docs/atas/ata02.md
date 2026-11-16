@@ -10,7 +10,7 @@
 ## 1. Pauta da Reunião
 
 1. Validação final dos 20 documentos oficiais curados e catalogados em `research/knowledge_base/`.
-2. Avaliação dos resultados empíricos do benchmark RAG (Recall@3, precisão, taxa de abstenção e calibração do $\alpha$).
+2. Avaliação dos resultados empíricos do benchmark RAG (Recall@3, precisão, taxa de abstenção e calibração do α).
 3. Homologação da integração do endpoint `POST /v1/chat/ask` com a interface mobile em Flutter.
 4. Verificação da massa sintética de dados (OFX e PDF) em conformidade com a LGPD.
 5. Transição e planejamento da Semana 3 (Comparação LLM pura vs. RAG fundamentado).
@@ -30,7 +30,7 @@
 ### 2.2 Motor de Recuperação Vetorial e Híbrida (ADR 0007)
 - Adotado o modelo `sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2` (384 dimensões) via FastEmbed local.
 - Persistência vetorial em SQLite com a extensão `sqlite-vec` (tabela virtual `vec0`), garantindo processamento *local-first* sem servidores externos.
-- Calibração do índice híbrido fixada em $\alpha = 0,3$ (ponderação entre cosseno denso e TF-IDF léxico), atingindo:
+- Calibração do índice híbrido fixada em α = 0,3 (ponderação entre cosseno denso e TF-IDF léxico), atingindo:
   - **Recall@3:** 98,78% (40/41 consultas de teste atendidas no top-3).
   - **Recuperação Fundamentada:** 95,12%.
   - **Taxa de Abstenção Ativa:** 100% (20/20 casos fora de escopo corretamente recusados).
