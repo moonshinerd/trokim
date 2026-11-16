@@ -122,7 +122,7 @@ def test_pergunta_so_de_evidencia(test_setup):
     assert AgentName.VALIDATION in step_agents
 
 
-def test_pergunta_so_de_calculo_com_transacoes(test_setup):
+def test_pergunta_de_saldo_pessoal_abstem_mesmo_com_transacoes(test_setup):
     client, _, _ = test_setup
     # Popula transações na sessão local
     _LOCAL_TRANSACTIONS.extend(
@@ -154,11 +154,15 @@ def test_pergunta_so_de_calculo_com_transacoes(test_setup):
     )
     assert resp.status_code == 200
     data = resp.json()
-    assert data["status"] == MultiAgentStatus.ANSWERED
-    # Verifica que cálculos determinísticos foram computados
-    calcs = {c["key"]: c["value"] for c in data["calculations"]}
-    assert "net_balance" in calcs
-    assert calcs["net_balance"] == 3500.0
+    # A integração de perguntas pessoais com cálculos segue pendente (#58).
+    # A presença de transações não deve contornar a política de escopo do Research.
+    assert data["status"] == MultiAgentStatus.ABSTAINED
+    assert data["calculations"] == []
+    assert data["evidences"] == []
+    assert data["model"] is None
+    assert len(data["steps"]) == 1
+    assert data["steps"][0]["agent"] == AgentName.RESEARCH
+    assert data["steps"][0]["status"] == StepStatus.ABSTAINED
 
 
 def test_pergunta_combinada_evidencia_e_calculo(test_setup):
