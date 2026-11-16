@@ -2299,7 +2299,7 @@
 <tr>
 <td><code>CITATION_INVALID</code></td>
 <td style="text-align: center;"><strong>BLOCKER</strong></td>
-<td>Citação a <code>[n]</code> inexistente ou resposta com evidências oficiais sem nenhuma citação</td>
+<td>Citação inválida ou ausente (aceita links clicáveis com o nome da fonte <code>[Nome](url)</code> e numeração <code>[n]</code>)</td>
 <td style="text-align: center;">Heurística RAG</td>
 </tr>
 <tr>
@@ -2325,7 +2325,7 @@
 <h2 id="extracao-de-numeros-sem-falsos-positivos">Extração de Números sem Falsos Positivos<a class="headerlink" href="#extracao-de-numeros-sem-falsos-positivos" title="Permanent link">&para;</a></h2>
 <p>Na Semana 3, a heurística de validação apresentava falsos positivos ao confundir numeração de tópicos estruturais com dados factuais. O Validation Agent resolveu isso com filtros estruturais em cascata:</p>
 <ol>
-<li><strong>Marcadores de citação:</strong> <code>[1]</code>, <code>[2]</code> são desconsiderados.</li>
+<li><strong>Marcadores de citação e links:</strong> <code>[1]</code>, <code>[2]</code> e links Markdown <code>[Nome da Fonte](url)</code> são desconsiderados na extração de números, evitando que URLs com dígitos gerem falsos positivos.</li>
 <li><strong>Listas ordenadas:</strong> Numerações de início de linha ou pós-pontuação (<code>1.</code>, <code>2)</code>, <code>Passo 1:</code>) são expurgadas antes da análise factual.</li>
 <li><strong>Identificadores legais:</strong> Menções a normas (<code>Resolução 4.966</code>, <code>Lei 14.181</code>, <code>art. 5º</code>) são preservadas no texto mas ignoradas como grandezas monetárias.</li>
 <li><strong>Anos de calendário:</strong> <code>2024</code>, <code>2025</code>, <code>2026</code> não são tratados como valores de cálculo.</li>
