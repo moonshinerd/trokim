@@ -2435,12 +2435,12 @@ similaridade, não probabilidades de veracidade.</p>
   o merge da PR #65, a dependência foi atendida e os testes passaram a importar
   os contratos e o orquestrador reais, sem skip nem substituição dos modelos.
   Essa dependência e sua resolução devem constar na descrição da PR.</li>
-<li><strong>Perguntas sobre gastos pessoais e lançamentos:</strong> consultas como “quanto gastei com alimentação?”
-  ou “qual o meu saldo atual?” sem lançamentos importados no contexto são recusadas pelo filtro de escopo.
-  Quando o usuário possui lançamentos importados e a consulta demanda cálculo determinístico (<code>needs_analysis</code>),
-  o <code>ResearchAgent</code> direciona a consulta diretamente para o <code>AnalysisAgent</code> (integrado na
-  <a href="https://github.com/moonshinerd/trokim/issues/58">issue #58</a> / <a href="https://github.com/moonshinerd/trokim/pull/72">PR #72</a>),
-  garantindo que cálculos matemáticos sejam sempre computados por código auditável e nunca inferidos pelo LLM.</li>
+<li><strong>Perguntas sobre gastos pessoais:</strong> preserva-se a recusa atual a consultas como
+  “quanto gastei com alimentação?”, mesmo que existam lançamentos no contexto.
+  A liberação exige combinar Research, Analysis e orquestrador no planejamento de
+  integração do <a href="https://github.com/moonshinerd/trokim/issues/50">épico #50</a> e da
+  <a href="https://github.com/moonshinerd/trokim/issues/58">issue #58</a>. Esta limitação também
+  deve constar na PR; não se autoriza o modelo a calcular ou inferir valores.</li>
 </ul>
 <h2 id="limitacoes-e-validacao">Limitações e validação<a class="headerlink" href="#limitacoes-e-validacao" title="Permanent link">&para;</a></h2>
 <p>As regras de intenção não cobrem todas as paráfrases e podem gerar falsos positivos
