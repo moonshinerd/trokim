@@ -98,12 +98,12 @@ similaridade, não probabilidades de veracidade.
   o merge da PR #65, a dependência foi atendida e os testes passaram a importar
   os contratos e o orquestrador reais, sem skip nem substituição dos modelos.
   Essa dependência e sua resolução devem constar na descrição da PR.
-- **Perguntas sobre gastos pessoais:** preserva-se a recusa atual a consultas como
-  “quanto gastei com alimentação?”, mesmo que existam lançamentos no contexto.
-  A liberação exige combinar Research, Analysis e orquestrador no planejamento de
-  integração do [épico #50](https://github.com/moonshinerd/trokim/issues/50) e da
-  [issue #58](https://github.com/moonshinerd/trokim/issues/58). Esta limitação também
-  deve constar na PR; não se autoriza o modelo a calcular ou inferir valores.
+- **Perguntas sobre gastos pessoais e lançamentos:** consultas como “quanto gastei com alimentação?”
+  ou “qual o meu saldo atual?” sem lançamentos importados no contexto são recusadas pelo filtro de escopo.
+  Quando o usuário possui lançamentos importados e a consulta demanda cálculo determinístico (`needs_analysis`),
+  o `ResearchAgent` direciona a consulta diretamente para o `AnalysisAgent` (integrado na
+  [issue #58](https://github.com/moonshinerd/trokim/issues/58) / [PR #72](https://github.com/moonshinerd/trokim/pull/72)),
+  garantindo que cálculos matemáticos sejam sempre computados por código auditável e nunca inferidos pelo LLM.
 
 ## Limitações e validação
 
