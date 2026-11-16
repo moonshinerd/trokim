@@ -141,6 +141,9 @@ da Entrega 3:
    - Recupera evidências oficiais via `RAGService`.
    - **Abstenção Ativa:** Se a pergunta violar o escopo institucional ou os trechos não atingirem
      o limiar de similaridade, o sistema retorna abstenção determinística sem acionar o LLM.
+     A verificação de escopo é exposta publicamente pelo método `RAGService.is_outside_scope`
+     (com alias `_outside_scope` para compatibilidade), sendo consumida diretamente pelo
+     [Research Agent](../agentes/research-agent.md) da arquitetura multiagente.
    - Restringe o modelo exclusivamente ao conteúdo das fontes citadas, proibindo cálculos financeiros
      próprios ou recomendações de investimento especulativo.
 2. **`pure` (LLM Zero-Shot):**
