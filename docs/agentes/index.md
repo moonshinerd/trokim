@@ -4,8 +4,8 @@ O primeiro protótipo multiagente do Trokim: quatro agentes com papéis separado
 orquestrador determinístico, com a **trilha** de cada resposta visível no app. A decisão está na
 [ADR 0016](../adr/0016-arquitetura-multiagente.md); o planejamento, em [Planejamento](../planejamento.md).
 
-!!! info "Status: Planejado; endpoint na Fase 2"
-    Issue [#58](https://github.com/moonshinerd/trokim/issues/58). Esta página é preenchida no mesmo PR da implementação (regra: o MkDocs nunca fica defasado).
+!!! success "Status: Implementado e integrado (Fase 2)"
+    A integração dos quatro agentes e a exposição HTTP via `POST /v1/agents/ask` foi concluída na issue [#58](https://github.com/moonshinerd/trokim/issues/58). O endpoint conta com suite completa de testes de integração em `api/tests/test_agents_api.py` executando com mocks determinísticos e embeddings sem requisições externas no CI.
 
 ## Por que multiagente
 
@@ -52,10 +52,99 @@ Os modelos ficam em `api/app/domain/agents.py` (domínio puro) e o protocolo `Ag
 | `ValidationIssue` | Um problema encontrado, com código estável, severidade (`blocker` ou `warning`) e mensagem em pt-BR |
 | `MultiAgentResponse` | Resposta final: estado (`answered`, `abstained`, `rejected`), texto, evidências, cálculos, problemas e trilha |
 
-## Endpoint
+## Endpoint: POST /v1/agents/ask
 
-`POST /v1/agents/ask` com `{"message": "..."}` devolve `MultiAgentResponse`; `503` com mensagem clara se
-o modelo estiver indisponível. *(Exemplo real de requisição e resposta: preenchido pela issue [#58](https://github.com/moonshinerd/trokim/issues/58).)*
+O endpoint `POST /v1/agents/ask` recebe uma consulta em linguagem natural e processa a requisição sequencialmente através da orquestração dos quatro agentes: **Research Agent** (recuperação e análise de escopo) $\to$ **Analysis Agent** (cálculos determinísticos sobre transações) $\to$ **Communication Agent** (redação em pt-BR com LLM local) $\to$ **Validation Agent** (auditoria defensiva e barreira de segurança).
+
+### Requisição
+
+- **URL:** `/v1/agents/ask`
+- **Método:** `POST`
+- **Cabeçalhos:** `Content-Type: application/json`
+- **Corpo:** JSON contendo o campo `message` (entre 1 e 1000 caracteres).
+
+```json
+{
+  "message": "Como montar uma reserva de emergência e quanto tempo leva com meu saldo atual?"
+}
+```
+
+### Resposta de Sucesso (`200 OK`)
+
+A resposta segue rigorosamente o contrato de `MultiAgentResponse` com a trilha de auditoria completa:
+
+```json
+{
+  "status": "answered",
+  "answer": "De acordo com o [Banco Central do Brasil](https://www.bcb.gov.br), a reserva de emergência ideal deve cobrir de 3 a 6 meses das despesas essenciais do seu orçamento familiar. Com base nos seus lançamentos importados, suas despesas mensais somam R$ 1.500,00 e o seu saldo líquido atual é de R$ 3.500,00.",
+  "evidences": [
+    {
+      "id": "chunk_bcb_01",
+      "document_title": "Caderno de Educação Financeira - Gestão de Finanças Pessoais",
+      "section": "Reserva de Emergência",
+      "content": "A reserva de emergência deve cobrir de 3 a 6 meses dos seus gastos essenciais...",
+      "source_name": "Banco Central do Brasil",
+      "source_url": "https://www.bcb.gov.br/cidadaniafinanceira",
+      "score": 0.89
+    }
+  ],
+  "calculations": [
+    {
+      "key": "net_balance",
+      "label": "Saldo líquido",
+      "value": 3500.0,
+      "unit": "reais",
+      "source": "Lançamentos importados"
+    },
+    {
+      "key": "total_expenses",
+      "label": "Total de despesas",
+      "value": 1500.0,
+      "unit": "reais",
+      "source": "Lançamentos importados"
+    }
+  ],
+  "issues": [],
+  "steps": [
+    {
+      "agent": "research",
+      "status": "ok",
+      "summary": "1 evidência(s) recuperada(s).",
+      "duration_ms": 32,
+      "detail": {"chunks_count": 1}
+    },
+    {
+      "agent": "analysis",
+      "status": "ok",
+      "summary": "2 cálculo(s) realizado(s).",
+      "duration_ms": 2,
+      "detail": {"keys": ["net_balance", "total_expenses"]}
+    },
+    {
+      "agent": "communication",
+      "status": "ok",
+      "summary": "Rascunho de resposta redigido com base em evidências e cálculos.",
+      "duration_ms": 412,
+      "detail": {"model": "qwen2.5:1.5b", "attempt": 1}
+    },
+    {
+      "agent": "validation",
+      "status": "ok",
+      "summary": "Validação aprovada sem bloqueios (0 avisos informativos).",
+      "duration_ms": 4,
+      "detail": {"issues_count": 0}
+    }
+  ]
+}
+```
+
+### Códigos de Retorno e Tratamento de Erros
+
+| Código HTTP | Significado | Condição e Comportamento |
+|:---:|---|---|
+| `200 OK` | Sucesso | Retorna `MultiAgentResponse` com `status: answered`, `abstained` (abstenção defensiva quando a pergunta for fora de escopo ou sem evidências oficiais) ou `rejected` (rejeição segura quando a validação detecta alucinação sem suporte após as tentativas de revisão). |
+| `422 Unprocessable Entity` | Erro de Validação | Corpo inválido, campo `message` em branco, tipo incompatível ou consulta excedendo 1000 caracteres. |
+| `503 Service Unavailable` | Serviço Indisponível | O provedor de modelo local (Ollama) está offline/indisponível ou a conexão HTTP com o cliente foi cancelada durante a geração (`run_while_connected`). O corpo contém `{"detail": "O modelo de linguagem está indisponível no momento. Tente novamente."}`. |
 
 ## Avaliação
 
