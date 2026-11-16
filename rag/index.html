@@ -1511,6 +1511,17 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#politica-publica-de-escopo-e-research-agent" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Política pública de escopo e Research Agent
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#avaliacao-empirica" class="md-nav__link">
     <span class="md-ellipsis">
       <span class="md-typeset">
@@ -2232,6 +2243,17 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#politica-publica-de-escopo-e-research-agent" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Política pública de escopo e Research Agent
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#avaliacao-empirica" class="md-nav__link">
     <span class="md-ellipsis">
       <span class="md-typeset">
@@ -2379,6 +2401,26 @@ mantém apenas o chunk de maior score de cada documento. Configuração final:
     D --&gt; R{Score acima do limiar?}
     R -- Não --&gt; A
     R -- Sim --&gt; X[Extração do primeiro chunk com título e URL]</code></pre>
+<h2 id="politica-publica-de-escopo-e-research-agent">Política pública de escopo e Research Agent<a class="headerlink" href="#politica-publica-de-escopo-e-research-agent" title="Permanent link">&para;</a></h2>
+<p><code>RAGService.is_outside_scope(query)</code> expõe a checagem determinística de escopo para
+o <a href="../agentes/research-agent/">Research Agent</a>. A regra é uma função pura em
+<code>app/domain/scope_policy.py</code>, sem dependências de infraestrutura. <code>_outside_scope()</code>
+permanece como alias de compatibilidade e respeita sobrescritas do método público;
+os consumidores antigos e o controle <code>RetrievalOnlyRAG</code> continuam usando esse ponto
+de extensão, preservando a ablação sem política.</p>
+<p>A política distingue educação de pedidos de ação: perguntas sobre riscos de ações,
+criptoativos e apostas podem passar pela checagem, mas seleção de ativos para compra,
+estratégias de apostas, garantias de rendimento e pedidos de fabricação de fontes
+são recusados pelas regras de intenção. O caso C28 e a versão sem “ignore suas regras”
+devem ser recusados antes da busca, mesmo que existam documentos sobre o tema.
+As regras normalizam acentos, caixa e espaços; não constituem proteção geral contra
+ataques nem reconhecem todas as paráfrases.</p>
+<p>O ranking, o limiar e o top-k permanecem os mesmos. <code>retrieve_evidence()</code> continua
+sendo apenas recuperação: quem o chama precisa aplicar a política apropriada.
+O Research não usa LLM e separa <code>fora_de_escopo</code> de <code>sem_evidencia</code>. Sua integração
+usa os contratos da #51, já integrados à <code>main</code>. A recusa atual a consultas de gastos pessoais é
+preservada até o alinhamento com o agente de cálculos e o orquestrador (#50/#58).
+Essas decisões e a cobertura de testes estão detalhadas na página do agente.</p>
 <h2 id="avaliacao-empirica">Avaliação empírica<a class="headerlink" href="#avaliacao-empirica" title="Permanent link">&para;</a></h2>
 <p><code>make test</code> executa benchmark, testes de research e API. <code>make research-test</code> executa
 apenas research. A CLI reprova metas não atingidas e gabaritos inválidos; o CI preserva

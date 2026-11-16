@@ -2783,7 +2783,7 @@
 <td>Research Agent (evidências e abstenção)</td>
 <td style="text-align: center;">@gabrielcrzojo</td>
 <td style="text-align: center;">1</td>
-<td><strong>Não-bloqueante</strong></td>
+<td>Contratos da <strong>#51</strong> necessários; dependência atendida</td>
 <td style="text-align: center;">1,5 h</td>
 </tr>
 <tr>
@@ -2861,6 +2861,11 @@
 </tbody>
 </table>
 <p><strong>Revisão cruzada</strong> (1 aprovação de outro membro por PR): <a href="https://github.com/moonshinerd/trokim/issues/51">#51</a> por @rebecaboncaputo, <a href="https://github.com/moonshinerd/trokim/issues/52">#52</a> por @moonshinerd, <a href="https://github.com/moonshinerd/trokim/issues/53">#53</a> por @zainoca, <a href="https://github.com/moonshinerd/trokim/issues/54">#54</a> por @Luix3005, <a href="https://github.com/moonshinerd/trokim/issues/55">#55</a> por @zainoca, <a href="https://github.com/moonshinerd/trokim/issues/56">#56</a> por @rebecaboncaputo e <a href="https://github.com/moonshinerd/trokim/issues/57">#57</a> por @zainoca.</p>
+<p>O <a href="../agentes/research-agent/">Research Agent</a> depende dos contratos da #51, apesar da
+classificação inicial de tarefa não bloqueante. Essa dependência foi atendida pela
+PR #65: a #52 usa os modelos e o orquestrador reais, sem duplicá-los nem suspender
+seus testes. Consultas de gastos pessoais mantêm a recusa atual até o alinhamento
+com Analysis e orquestrador na integração (#50/#58).</p>
 <h3 id="63-mkdocs-sempre-atualizado">6.3 MkDocs sempre atualizado<a class="headerlink" href="#63-mkdocs-sempre-atualizado" title="Permanent link">&para;</a></h3>
 <p>Cada issue exige a atualização do MkDocs <strong>no mesmo PR</strong>, e o PR não é mergeado sem isso (regra no <code>AGENTS.md</code>, no template de PR e no de tarefa). Para não haver conflito, cada issue edita só as suas páginas:</p>
 <table>

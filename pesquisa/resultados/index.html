@@ -2554,6 +2554,14 @@ generativa. Não são comparáveis com os 30 casos acima.</p>
 <p>O baseline (<code>results/baseline.json</code>) é o mesmo recuperador sem a política de escopo: a
 abstenção cai para 35,00%, o que mostra que o limiar de similaridade sozinho não basta. O
 valor atual vem de <code>results/current.json</code>.</p>
+<p><strong>Verificação de regressão da #52 (16/11/2026):</strong> após expor a política pública de
+escopo e acrescentar as recusas do Research Agent, os snapshots <code>current.json</code> e
+<code>baseline.json</code> foram regenerados com Python 3.12.16. Os resultados por caso e as
+métricas permaneceram iguais: Recall@3 de 98,78%, resposta fundamentada de 95,12% e
+abstenção de 100% com política ou 35% sem ela. Mudaram apenas os metadados de
+proveniência: código, versão de Python e avaliador, que passou a incluir o arquivo
+da política de domínio no hash do serviço. Os gráficos continuam representando esses valores;
+esta verificação não é uma avaliação do fluxo multiagente nem uma nova execução com LLM.</p>
 <p><img alt="Recall@3 e resposta fundamentada conforme o peso da similaridade densa (alpha)" src="../../assets/comparacao/semana2/fig-calibracao-alpha.png" /></p>
 <p>Dados da calibração em
 <a href="https://github.com/moonshinerd/trokim/blob/main/research/rag_benchmark/results/alpha_calibration.json"><code>alpha_calibration.json</code></a>,
