@@ -8,7 +8,7 @@ from app.services.rag_service import RAGService
 
 # Expõe is_outside_scope como método público preservando o hash estrito de rag_service.py
 if not hasattr(RAGService, "is_outside_scope"):
-    setattr(RAGService, "is_outside_scope", staticmethod(RAGService._outside_scope))
+    RAGService.is_outside_scope = staticmethod(RAGService._outside_scope)
 
 STRICTLY_FORBIDDEN_PATTERNS = (
     r"\b(escreva|crie|faca|conte|componha|gere)\b.*\b(poema|poesia|musica|conto|roteiro|piada)\b",
