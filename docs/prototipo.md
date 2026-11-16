@@ -1,8 +1,10 @@
 # Protótipo do aplicativo
 
-Esta demonstração estática apresenta cinco telas do Trokim em uma navegação semelhante à do aplicativo. Use a barra inferior para alternar entre **Resumo**, **Extratos**, **Assistente**, **Cenários** e **Ajustes**. No teclado, `Alt+1` a `Alt+5` também troca de tela.
+Esta demonstração estática apresenta cinco telas do Trokim em uma navegação semelhante à do aplicativo. Use a barra inferior para alternar entre **Resumo**, **Extratos**, **Assistente**, **Cenários** e **Ajustes**. Com o foco dentro da demonstração, `Alt+1` a `Alt+5` também troca de tela, inclusive em teclados nos quais `Alt` modifica o caractere digitado.
 
-<iframe src="prototipo/demo.html" title="Protótipo navegável do aplicativo Trokim" width="100%" height="900" loading="lazy" style="border: 1px solid #e6d2b3; border-radius: 16px;"></iframe>
+<iframe src="../prototipo/demo.html" title="Protótipo navegável do aplicativo Trokim" width="100%" height="900" loading="lazy" style="border: 1px solid #e6d2b3; border-radius: 16px;"></iframe>
+
+[Abrir o protótipo em uma página própria](prototipo/demo.html).
 
 ## O que corresponde ao aplicativo
 
@@ -16,3 +18,5 @@ Esta demonstração estática apresenta cinco telas do Trokim em uma navegação
 Todos os lançamentos, saldos, categorias, mensagens, fontes associadas à conversa e valores de cenários são exemplos sintéticos criados para esta demonstração. O protótipo não importa arquivos, consulta API, executa cálculos, envia mensagens nem salva preferências. Os controles sem navegação são apenas visuais. O link da fonte só abre o site do Banco Central se selecionado e houver conexão; a demonstração e seus arquivos carregam sem serviços externos.
 
 O layout se adapta a telas estreitas e largas; em desktop, a interface fica centralizada. Os arquivos são HTML, CSS e JavaScript estáticos, sem bibliotecas externas, CDN ou fontes remotas. O contorno de foco visível permite navegar pelos controles usando teclado.
+
+O iframe usa um caminho relativo compatível com a página publicada em `/prototipo/`, inclusive quando o site está em um subdiretório. Os endereços `#resumo`, `#extratos`, `#assistente`, `#cenarios` e `#ajustes` abrem a tela correspondente; um fragmento desconhecido retorna ao Resumo.

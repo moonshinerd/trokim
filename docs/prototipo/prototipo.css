@@ -151,7 +151,7 @@ to{opacity:1;transform:translateY(0)}
 }
 
 @media(min-width:760px){body{padding:24px}
-.app-shell{min-height:min(860px,calc(100svh - 48px));border:1px solid var(--line);border-radius:28px;overflow:hidden;box-shadow:var(--shadow)}
+.app-shell{min-height:min(860px,calc(100svh - 48px));border:1px solid var(--line);border-radius:28px;overflow:clip;box-shadow:var(--shadow)}
 .topbar{padding:0 40px}
 .bottom-nav{padding-left:max(18px,calc((100% - 760px)/2));padding-right:max(18px,calc((100% - 760px)/2))}
 main{padding-top:38px}
@@ -164,4 +164,3 @@ main{padding-top:38px}
 .balance-meta{gap:8px 13px}
 .amount{font-size:10px}
 }
-
