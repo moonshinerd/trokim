@@ -23,5 +23,6 @@ Closes #
 - [ ] Não utiliza dados financeiros reais de pessoas (apenas sintéticos em `research/synthetic_data/`)
 - [ ] Se mexeu em `api/` ou `research/`: `make test` e `make lint` passaram com sucesso
 - [ ] Se mexeu em `docs/`: `make docs-build` compilou sem avisos (`--strict`)
+- [ ] **MkDocs atualizado no mesmo PR:** páginas afetadas, ADR, requisitos/rastreabilidade, planejamento e, se houver resultados, histórico de resultados e gráficos (`make report-charts`). Se nada precisou mudar, explique por quê na descrição
 - [ ] Se alterou regras de negócio ou contratos de domínio (`app/domain/`): documentou o motivo
 - [ ] Mensagens de commit limpas, sem trailers ou menções sintéticas de IA (conforme `AGENTS.md`)

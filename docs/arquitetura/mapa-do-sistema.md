@@ -13,9 +13,11 @@ graph TD
         StateManagement["Gerenciamento de Estado<br/>(Feature-First / Repositories)"]
         DesignSystem["Design System<br/>(Tema claro/escuro, movimento, mascote)"]
         Settings["Ajustes locais<br/>(shared_preferences)"]
+        History["Histórico de conversas<br/>(no aparelho)"]
         FlutterApp --> StateManagement
         FlutterApp --> DesignSystem
         FlutterApp --> Settings
+        FlutterApp --> History
     end
 
     subgraph "Serviço Backend Local (Python / FastAPI)"
@@ -25,16 +27,18 @@ graph TD
         CalcService["Motor de Cálculo Determinístico<br/>(Totais, Balanço, 50-30-20)"]
         RAGService["Mecanismo RAG Híbrido<br/>(Dense + Sparse TF-IDF)"]
         GenService["Serviço de Síntese Generativa<br/>(GenerationService)"]
+        TitleSvc["Título de conversa<br/>(TitleService)"]
         
         DomainCore["Entidades de Domínio Puro<br/>(Transaction, Budget, EvidenceChunk)"]
         
         subgraph "Persistência Local (SQLite)"
-            DB[(SQLite Relacional<br/>Transações e Orçamentos)]
+            Mem[(Memória da API<br/>Lançamentos da sessão)]
             VecDB[(SQLite-Vec<br/>Tabela Virtual vec0)]
         end
 
-        subgraph "Provedores de Inferência Local (LLM)"
-            OllamaClient["OllamaProvider<br/>(Qwen 2.5 Local)"]
+        subgraph "Provedores de Inferência (LLM)"
+            LiteLLM["LiteLLMProvider<br/>(padrão; ex.: ollama/qwen2.5:1.5b)"]
+            OllamaClient["OllamaProvider<br/>(cliente direto)"]
             MockLLM["MockLLMProvider<br/>(Testes & CI)"]
         end
         
@@ -42,15 +46,18 @@ graph TD
         APIEntry --> CalcService
         APIEntry --> RAGService
         APIEntry --> GenService
+        APIEntry --> TitleSvc
         
         Parser --> DomainCore
         CalcService --> DomainCore
         RAGService --> DomainCore
         GenService --> RAGService
+        GenService --> LiteLLM
         GenService --> OllamaClient
         GenService --> MockLLM
+        TitleSvc --> LiteLLM
         
-        DomainCore --> DB
+        DomainCore --> Mem
         RAGService --> VecDB
     end
 
@@ -67,7 +74,9 @@ graph TD
 
 ---
 
-## 2. Fluxo de Importação e Cálculo de Extratos
+## 2. Fluxo de Importação de Extratos e Resumo
+
+Os lançamentos importados ficam na **memória da API** (somem ao reiniciá-la, [ADR 0015](../adr/0015-dados-reais-importacao-e-endereco-da-api.md)). O app só exibe o que o backend calculou.
 
 ```mermaid
 sequenceDiagram
@@ -77,18 +86,22 @@ sequenceDiagram
     participant API as Router FastAPI
     participant Parser as Parser Service
     participant Calc as Calculation Service
-    participant DB as SQLite Local
+    participant Mem as Memória da API
 
-    User->>Mobile: Seleciona arquivo .ofx ou .pdf
-    Mobile->>API: POST /v1/transactions/upload
-    API->>Parser: parse_file(content, filename)
-    Parser->>Parser: Extrai transações e valida duplicatas
-    Parser->>DB: Salva lançamentos normalizados
-    API->>Calc: compute_balance_and_metrics()
-    Calc->>DB: Consulta lançamentos consolidados
-    Calc-->>API: Totais, saldo, despesas essenciais e estilo de vida
-    API-->>Mobile: Retorno JSON com dados determinísticos
-    Mobile-->>User: Exibe Dashboard financeiro atualizado (0% erro)
+    User->>Mobile: Escolhe um arquivo .ofx ou .pdf (seletor do sistema)
+    Mobile->>API: POST /v1/transactions/upload (multipart)
+    API->>Parser: parse_ofx ou parse_pdf_text
+    Parser->>Parser: Extrai os lançamentos e marca duplicatas do arquivo
+    API->>API: Compara com os já importados (data, descrição, valor e tipo)
+    API->>Mem: Guarda os lançamentos (duplicatas marcadas ficam fora dos totais)
+    API-->>Mobile: filename, imported_count, duplicate_count
+    Mobile->>API: GET /v1/transactions/summary
+    API->>Calc: calculate_summary(lançamentos)
+    Calc-->>API: Receitas, despesas, saldo, taxa de poupança e categorias
+    API-->>Mobile: Resumo calculado pelo backend
+    Mobile->>API: GET /v1/transactions
+    API-->>Mobile: Lançamentos (o app agrupa por arquivo de origem)
+    Mobile-->>User: Resumo e lista de arquivos atualizados
 ```
 
 ---
@@ -145,7 +158,7 @@ sequenceDiagram
     participant API as Router Chat
     participant Gen as Generation Service
     participant RAG as RAG Service
-    participant Ollama as Ollama / Qwen 2.5 Local
+    participant Ollama as Provedor LLM (LiteLLM → Ollama local)
 
     User->>Mobile: Pergunta sobre conceito financeiro
     Mobile->>API: POST /v1/chat/generate {message, mode: "grounded"}
@@ -158,22 +171,50 @@ sequenceDiagram
             Gen-->>API: Resposta determinística de abstenção (sem chamar LLM)
         else Evidências Válidas Encontradas
             Gen->>Gen: Monta prompt versionado ancorado no contexto
-            Gen->>Ollama: POST /api/generate (prompt ancorado, temp=0.1)
+            Gen->>Ollama: generate(prompt ancorado, temperatura 0,1)
             Ollama-->>Gen: Texto pedagógico sintetizado
             Gen-->>API: GenerateQueryResponse (answer + citations + evidences)
         end
     else Modo Pure (Zero-Shot)
         Gen->>Gen: Monta prompt pure sem contexto
-        Gen->>Ollama: POST /api/generate (prompt direto)
+        Gen->>Ollama: generate(prompt direto)
         Ollama-->>Gen: Texto gerado sem garantias regulatórias
         Gen-->>API: GenerateQueryResponse (answer, mode: "pure")
     else Modo Naive
         Gen->>RAG: Busca sem política estrita
-        Gen->>Ollama: POST /api/generate (prompt naive)
+        Gen->>Ollama: generate(prompt naive)
         Ollama-->>Gen: Texto gerado
         Gen-->>API: GenerateQueryResponse (answer, mode: "naive")
     end
     
-    API-->>Mobile: Resposta JSON
-    Mobile-->>User: Exibe síntese educacional enriquecida
+    API-->>Mobile: Resposta JSON (ou 503 com mensagem clara se o modelo estiver indisponível)
+    Mobile-->>User: Exibe síntese educacional com fontes clicáveis
+```
+
+---
+
+## 5. Título da Conversa (`POST /v1/chat/title`)
+
+```mermaid
+sequenceDiagram
+    autonumber
+    actor User as Usuário (Android)
+    participant Mobile as App Flutter
+    participant API as Router Chat
+    participant Title as TitleService
+    participant LLM as Provedor LLM (LiteLLM → Ollama local)
+
+    User->>Mobile: Envia a primeira pergunta da conversa
+    Mobile->>Mobile: Salva a conversa no aparelho com título provisório (pergunta encurtada)
+    Mobile->>API: POST /v1/chat/title {message, answer?}
+    API->>Title: Gera o título (prompt versionado, 3 a 6 palavras)
+    alt Modelo responde a tempo
+        Title->>LLM: generate(prompt de título)
+        LLM-->>Title: Título curto
+        Title-->>API: title, source = "llm"
+    else Modelo indisponível, lento ou em modo mock
+        Title-->>API: Primeiras palavras da pergunta, source = "fallback"
+    end
+    API-->>Mobile: Título
+    Mobile-->>User: Atualiza o título (uma renomeação manual nunca é sobrescrita)
 ```

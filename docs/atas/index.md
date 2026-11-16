@@ -36,10 +36,12 @@ Registro formal dos alinhamentos, dinâmicas de ideação e deliberações técn
 
 ---
 
-### Checkpoint da Semana 3 — Comparação LLM x RAG (Em Andamento — Prazo: 13/11/2026)
-- **Status:** <span class="badge-should">Sprint Ativa</span>
-- **Frentes em Execução:**
-  - Curadoria do dataset de 30 perguntas com armadilhas de alucinação e prompts versionados ([#20](https://github.com/moonshinerd/trokim/issues/20)).
-  - Framework de métricas de fidelidade factual e F1 de tokens/conceitos ([#21](https://github.com/moonshinerd/trokim/issues/21)).
-  - Interface móvel com cartões de evidência e auditoria de transparência no Flutter ([#22](https://github.com/moonshinerd/trokim/issues/22)).
-  - Camada de síntese generativa com port `LLMProvider` e endpoint `/v1/chat/generate` ([#23](https://github.com/moonshinerd/trokim/issues/23)).
+### Checkpoint da Semana 3 — Comparação LLM x RAG (16/11/2026)
+- **Status:** <span class="badge-must">Concluído</span> (com pendências assumidas, listadas abaixo)
+- **Resultados Consolidados:**
+  - Gabarito de 30 casos e três prompts versionados ([#20](https://github.com/moonshinerd/trokim/issues/20), [ADR 0008](../adr/0008-material-comparativo-versionado.md)); framework de métricas de fidelidade factual, F1 de tokens e cobertura de conceitos ([#21](https://github.com/moonshinerd/trokim/issues/21)).
+  - Cartões de evidência e auditoria no Flutter ([#22](https://github.com/moonshinerd/trokim/issues/22)); camada de síntese com `LLMProvider`, LiteLLM, Ollama e mock, e endpoints `/v1/chat/generate` e `/v1/chat/title` ([#23](https://github.com/moonshinerd/trokim/issues/23), [ADR 0009](../adr/0009-sintese-generativa-local.md)).
+  - Benchmark comparativo das três abordagens ([#24](https://github.com/moonshinerd/trokim/issues/24)) e integração do chat generativo no app ([#25](https://github.com/moonshinerd/trokim/issues/25)).
+  - Relatório comparativo, histórico versionado de resultados com gráficos e documentação ([#26](https://github.com/moonshinerd/trokim/issues/26)); histórico de conversas ([#44](https://github.com/moonshinerd/trokim/issues/44)) e dados reais no app ([#45](https://github.com/moonshinerd/trokim/issues/45)).
+  - Resultado central: a fundamentação em evidências reduziu as alucinações confirmadas de 30,0% (piso) na LLM pura para 13,3% (RAG ingênuo) e 6,7% (Trokim estruturado); uma segunda execução mudou os números, então o ranking entre RAG ingênuo e Trokim não se sustenta ([Histórico de Resultados](../pesquisa/resultados.md)).
+- **Pendências assumidas:** homologação do chat generativo em aparelho Android físico; revisão humana cega e repetição com modelos maiores; persistência dos lançamentos em SQLite. Não houve reunião de validação, então não há Ata 04.

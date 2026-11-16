@@ -97,6 +97,8 @@ trokim/
 - Todo Requisito Funcional (**RF**) e Não Funcional (**RNF**) deve referenciar sua **Guiding Question (GQ)** de origem.
 - Decisões estruturais significativas devem ser registradas como uma nova **ADR** em `docs/adr/`.
 - Mantenha o diagrama Mermaid de arquitetura atualizado a cada grande mudança.
+- **O MkDocs nunca pode ficar desatualizado:** toda mudança de comportamento, contrato de API, métrica, resultado ou arquitetura atualiza o MkDocs **no mesmo PR** (páginas afetadas, ADR, requisitos e rastreabilidade, planejamento e, se houver resultados, o histórico de resultados e os gráficos com `make report-charts`). `make docs-build` precisa passar. Não mergeie com documentação defasada.
+- No início de cada semana, revise todo o MkDocs contra o código e mergeie as correções antes de abrir as issues da semana.
 
 ---
 

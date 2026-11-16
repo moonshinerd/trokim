@@ -71,3 +71,11 @@ body:
       description: O que precisa estar funcionando e testado para considerar a tarefa concluída.
     validations:
       required: true
+  - type: checkboxes
+    id: documentacao
+    attributes:
+      label: Documentação (MkDocs)
+      description: O MkDocs nunca pode ficar desatualizado.
+      options:
+        - label: Atualizar, no mesmo PR, as páginas do MkDocs afetadas, a ADR, os requisitos, o planejamento e, se houver resultados, o histórico de resultados e os gráficos (`make report-charts`), com `make docs-build` passando
+          required: true

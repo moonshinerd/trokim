@@ -49,4 +49,4 @@ Catálogo consolidado de referências bibliográficas, materiais institucionais 
 ## 5. Créditos de Arte
 
 - **Mascote (onça-pintada):** estilizado a partir do vetor *Jaguar SVG*, de Jordan Irwin (AntumDeluge), publicado em [OpenGameArt](https://opengameart.org/node/98089) sob **CC0 (domínio público)**. Atribuição não é obrigatória; fica aqui por boa prática. O Trokim removeu o cenário, ampliou a área de desenho e recolorou a arte em tons dourados com as manchas vazadas.
-- **Tipografia:** [Plus Jakarta Sans](https://fonts.google.com/specimen/Plus+Jakarta+Sans), licença SIL Open Font License 1.1.
+- **Tipografia:** [Plus Jakarta Sans](https://fonts.google.com/specimen/Plus+Jakarta+Sans), licença SIL Open Font License 1.1 (arquivo embarcado no site em `docs/assets/fonts/` e no app, sem requisição ao Google Fonts).

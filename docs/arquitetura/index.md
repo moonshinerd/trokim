@@ -10,6 +10,7 @@ A arquitetura do **Trokim** foi concebida para atender aos requisitos de alta pe
    - Desenvolvida em Dart/Flutter, garantindo tipagem estrita, modularidade por funcionalidades (*feature-first*) e compilação nativa para Android.
    - O aplicativo atua como o cliente primário, fornecendo telas de dashboard, assistente conversacional, gerenciador de lançamentos e importador de arquivos OFX e faturas PDF.
    - A interface segue um design system próprio (paleta Champagne, Tidewater e Fortuna Gold, [ADR 0011](../adr/0011-identidade-visual-e-tema-do-sistema.md)) com tema claro/escuro pelo sistema, transições suaves que respeitam "reduzir movimento" e uma aba de **Ajustes** com preferências salvas só no aparelho ([ADR 0013](../adr/0013-preferencias-locais-e-aba-de-ajustes.md)). O mascote (onça-pintada) e a moeda 3D da abertura vêm de arte livre e trocável ([ADR 0012](../adr/0012-mascote-onca-e-arte-de-marca-livre.md)).
+   - Resumo e Extratos exibem o que a API calculou e importam OFX e PDF pelo seletor de arquivos do sistema ([ADR 0015](../adr/0015-dados-reais-importacao-e-endereco-da-api.md)); o chat guarda o histórico no aparelho, com título gerado pelo LLM local.
 2. **Camada Backend (FastAPI / Python 3.12+):**
    - Construída com FastAPI pela alta performance assíncrona e tipagem robusta com Pydantic v2.
    - Gerenciamento de dependências ultra-rápido com `uv`.
@@ -21,11 +22,11 @@ A arquitetura do **Trokim** foi concebida para atender aos requisitos de alta pe
    - Política ativa de **abstenção ética**: se o score estiver abaixo do limiar ou a consulta abordar temas fora do escopo institucional (apostas, criptoativos ou recomendações especulativas), o agente se abstém.
 4. **Cálculo Determinístico:**
    - A LLM nunca calcula saldos, médias ou limites. Um serviço matemático estrito (`calculation_service.py`) computa os números exatos e os injeta contextualmente.
-5. **Camada de Síntese Generativa Local (Semana 3):**
+5. **Camada de Síntese Generativa Local (Semana 3, [ADR 0009](../adr/0009-sintese-generativa-local.md)):**
    - Port abstrato `LLMProvider` desacoplando as regras de negócio dos provedores de inferência.
-   - Provedor primário local-first `OllamaProvider` executando **Qwen 2.5** (`qwen2.5`) localmente sem envio de dados a nuvens terceiras.
-   - Provedor simulado determinístico `MockLLMProvider` para execução reprodutível de testes e CI.
-   - Orquestrador `GenerationService` suportando três modos de síntese (`grounded`, `pure`, `naive`), prompts versionados e corte estrito de alucinações via abstenção ética determinística.
+   - `LiteLLMProvider` (padrão): qualquer modelo definido por configuração (`LLM_MODEL`, por exemplo `ollama/qwen2.5:1.5b`). Modelos locais não enviam dados a terceiros; modelos de nuvem são uma escolha explícita.
+   - `OllamaProvider` (cliente direto) e `MockLLMProvider` (determinístico, para testes e CI).
+   - `GenerationService` com três modos (`grounded`, `naive`, `pure`), prompts versionados e abstenção determinística (fora de escopo ou sem evidência) antes de chamar o modelo; `TitleService` dá título às conversas (`/v1/chat/title`, [ADR 0014](../adr/0014-historico-de-conversas-e-titulos.md)).
 
 ---
 
@@ -34,16 +35,16 @@ A arquitetura do **Trokim** foi concebida para atender aos requisitos de alta pe
 O backend adota uma arquitetura em camadas limpa e desacoplada:
 
 ```text
-routers/ (HTTP fino, esquemas Pydantic: /transactions, /chat/ask, /chat/generate)
+routers/ (HTTP fino, esquemas Pydantic: /transactions, /chat/ask, /chat/generate, /chat/title, /budgets)
    │
    ▼
-services/ (Regras de negócio: CalculationService, RAGService, GenerationService)
+services/ (Regras de negócio: CalculationService, ParserService, RAGService, GenerationService, TitleService)
    │
    ▼
 domain/   (Entidades de negócio puras: Transaction, Budget, Evidence)
    ▲
    │
-clients/  (Adaptadores de persistência e LLM: SQLiteVectorStore, FastEmbed, OllamaProvider, MockLLMProvider)
+clients/  (Adaptadores de persistência e LLM: SQLiteVectorStore, FastEmbed, LiteLLMProvider, OllamaProvider, MockLLMProvider)
 ```
 
-Essa estrutura garante que a evolução do sistema nas semanas subsequentes (Semanas 3 a 5: Comparação LLM x RAG, Multiagentes e Multimodalidade) ocorra sem acoplamento indevido.
+Essa estrutura garante que a evolução do sistema nas semanas seguintes (Semana 4: multiagentes; Semana 5: multimodalidade; Semana 6: integração) ocorra sem acoplamento indevido.

@@ -6,6 +6,16 @@
    Mesma paleta do aplicativo mobile.
    ========================================================================== */
 
+/* Fonte embarcada (OFL, ver assets/fonts/OFL.txt): o site não pede nada ao Google Fonts,
+   mantendo a premissa local-first. */
+@font-face {
+  font-family: "Plus Jakarta Sans";
+  src: url("../assets/fonts/PlusJakartaSans.ttf") format("truetype");
+  font-weight: 200 800;
+  font-style: normal;
+  font-display: swap;
+}
+
 :root {
   --tk-forest: #1B3232;
   --tk-emerald: #2F4F4F;
@@ -15,6 +25,8 @@
   --tk-ink: #1F3A3A;
   --tk-line: #E6D2B3;
   --tk-ease: cubic-bezier(0.2, 0, 0, 1);
+  --md-text-font: "Plus Jakarta Sans";
+  --md-code-font: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
 }
 
 :root,
