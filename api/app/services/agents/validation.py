@@ -220,7 +220,11 @@ class ValidationAgent:
     async def run(self, ctx: AgentContext) -> AgentStep:
         t0 = time.perf_counter()
         draft = ctx.draft_answer or ""
-        issues: list[ValidationIssue] = []
+        # Preserva o bloqueio local do Communication Agent para que um fallback
+        # seguro não seja confundido com um rascunho gerado e aprovado pelo modelo.
+        issues: list[ValidationIssue] = [
+            issue for issue in ctx.issues if issue.code == "DRAFT_NOT_GROUNDED"
+        ]
 
         # 1. Checagem de incompatibilidade de abstenção
         issues.extend(check_abstention_mismatch(draft, ctx.abstain_reason))
