@@ -981,3 +981,22 @@ async def test_validation_ten_good_drafts_zero_false_positives(base_evidence):
             false_positives += 1
 
     assert false_positives == 0, f"Houve {false_positives} falsos positivos em rascunhos válidos!"
+
+
+@pytest.mark.asyncio
+async def test_validation_accepts_named_markdown_links(base_evidence):
+    agent = ValidationAgent()
+    draft = (
+        "Conforme diretrizes oficiais do [Banco Central do Brasil](https://www.bcb.gov.br/doc1), "
+        "é recomendável destinar recursos para a reserva financeira."
+    )
+    ctx = AgentContext(
+        question="Como organizar minha reserva?",
+        draft_answer=draft,
+        evidences=base_evidence,
+    )
+
+    step = await agent.run(ctx)
+
+    assert step.status == StepStatus.OK
+    assert not any(i.severity == "blocker" for i in ctx.issues)

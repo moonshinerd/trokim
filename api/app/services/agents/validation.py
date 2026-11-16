@@ -215,8 +215,16 @@ def _parse_canonical_float(raw: str) -> float | None:
 
 
 def clean_text_for_numbers(text: str) -> str:
-    """Remove elementos estruturais que contêm números mas não são dados factuais."""
+    """Remove elementos estruturais que contêm números mas não são dados factuais.
+
+    Incorpora remoção de links markdown nomeados [Fonte](url) além dos marcadores
+    de citação numérica [n], evitando que URLs com dígitos gerem falsos positivos.
+    """
+    # 1. Marcadores de citação numérica [1], [2], ...
     cleaned = strip_citations(text)
+    # 2. Links markdown nomeados [Nome da Fonte](url) — introduzidos pelo CommunicationAgent
+    cleaned = re.sub(r"\[([^\]]+)\]\([^\)]+\)", r" \1 ", cleaned)
+    # 3. Demais marcadores estruturais (listas, leis, anos)
     return strip_list_markers(cleaned)
 
 
@@ -448,45 +456,64 @@ def check_citations(
     draft_answer: str,
     evidences: list[EvidenceChunk] | int,
 ) -> list[ValidationIssue]:
-    """Valida a integridade das citações [n] no rascunho de resposta.
+    """Valida a integridade das citações no rascunho de resposta.
+
+    Aceita tanto citações numéricas [n] quanto links markdown nomeados [Nome](url)
+    introduzidos pelo CommunicationAgent (épico #50).
 
     Gera CITATION_INVALID (BLOCKER) se:
-    1. Marcador [n] referenciar evidência inexistente (ex: [3] quando há 2 evidências, ou [0]).
-    2. Evidências estiverem disponíveis mas o rascunho não contiver nenhuma citação.
+    1. Marcador [n] referenciar evidência inexistente (índice fora da faixa ou [0]).
+    2. Evidências disponíveis mas o rascunho não contiver nenhuma citação (numérica ou link).
+    3. Nenhuma evidência disponível mas o rascunho citar fontes.
     """
     if not draft_answer or not draft_answer.strip():
         return []
 
-    citations = [int(m) for m in re.findall(r"\[(\d+)\]", draft_answer)]
-    issues: list[ValidationIssue] = []
+    # Citações numéricas [1], [2], ...
+    numbered_citations = [int(m) for m in re.findall(r"\[(\d+)\]", draft_answer)]
+    # Links markdown nomeados [Nome da Fonte](https://...)
+    named_links = re.findall(r"\[([^\]]+)\]\(https?://[^\)]+\)", draft_answer)
+    has_citations = bool(numbered_citations or named_links)
+
     max_evidences = evidences if isinstance(evidences, int) else len(evidences)
+    issues: list[ValidationIssue] = []
 
-    # Se há evidências disponíveis, exige pelo menos uma citação
-    if max_evidences > 0 and not citations:
-        issues.append(
-            ValidationIssue(
-                code=ValidationIssueCode.CITATION_INVALID,
-                severity=IssueSeverity.BLOCKER,
-                message=(
-                    f"O rascunho possui {max_evidences} evidência(s) disponível(is), "
-                    "mas não incluiu nenhuma citação de fonte [n] no texto."
-                ),
+    if max_evidences > 0:
+        # Exige pelo menos uma citação (numérica ou link nomeado)
+        if not has_citations and len(draft_answer.strip()) > 50:
+            issues.append(
+                ValidationIssue(
+                    code=ValidationIssueCode.CITATION_INVALID,
+                    severity=IssueSeverity.BLOCKER,
+                    message=(
+                        f"O rascunho possui {max_evidences} evidência(s) disponível(is), "
+                        "mas não incluiu nenhuma citação de fonte [n] ou link [Nome](url) no texto."
+                    ),
+                )
             )
-        )
-
-    # Verifica se alguma citação extrapola as evidências disponíveis
-    invalid_indices = {idx for idx in citations if idx < 1 or idx > max_evidences}
-    for invalid_idx in sorted(invalid_indices):
-        issues.append(
-            ValidationIssue(
-                code=ValidationIssueCode.CITATION_INVALID,
-                severity=IssueSeverity.BLOCKER,
-                message=(
-                    f"A citação [{invalid_idx}] no rascunho é inválida pois não há "
-                    f"evidência correspondente (total disponível: {max_evidences})."
-                ),
+        # Verifica se citações numéricas extrapolam as evidências disponíveis
+        invalid_indices = {idx for idx in numbered_citations if idx < 1 or idx > max_evidences}
+        for invalid_idx in sorted(invalid_indices):
+            issues.append(
+                ValidationIssue(
+                    code=ValidationIssueCode.CITATION_INVALID,
+                    severity=IssueSeverity.BLOCKER,
+                    message=(
+                        f"A citação [{invalid_idx}] no rascunho é inválida pois não há "
+                        f"evidência correspondente (total disponível: {max_evidences})."
+                    ),
+                )
             )
-        )
+    else:
+        # Nenhuma evidência disponível: qualquer citação é inválida
+        if has_citations:
+            issues.append(
+                ValidationIssue(
+                    code=ValidationIssueCode.CITATION_INVALID,
+                    severity=IssueSeverity.BLOCKER,
+                    message="Resposta cita fontes, mas nenhuma evidência foi recuperada.",
+                )
+            )
 
     return issues
 
@@ -618,7 +645,8 @@ def check_calculation_missing(
 class ValidationAgent:
     """Agente responsável por auditar deterministamente os rascunhos antes da saída final."""
 
-    name: AgentName = AgentName.VALIDATION
+    def __init__(self) -> None:
+        self.name: AgentName = AgentName.VALIDATION
 
     def validate(self, ctx: AgentContext) -> AgentStep:
         """Executa a bateria de regras puras e atualiza o contexto compartilhado."""

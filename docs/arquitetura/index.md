@@ -27,6 +27,9 @@ A arquitetura do **Trokim** foi concebida para atender aos requisitos de alta pe
    - `LiteLLMProvider` (padrão): qualquer modelo definido por configuração (`LLM_MODEL`, por exemplo `ollama/qwen2.5:1.5b`). Modelos locais não enviam dados a terceiros; modelos de nuvem são uma escolha explícita.
    - `OllamaProvider` (cliente direto) e `MockLLMProvider` (determinístico, para testes e CI).
    - `GenerationService` com três modos (`grounded`, `naive`, `pure`), prompts versionados e abstenção determinística (fora de escopo ou sem evidência) antes de chamar o modelo; `TitleService` dá título às conversas (`/v1/chat/title`, [ADR 0014](../adr/0014-historico-de-conversas-e-titulos.md)).
+6. **Sistema Multiagente Determinístico e Auditável (Semana 4, [ADR 0016](../adr/0016-arquitetura-multiagente.md)):**
+   - Orquestrador determinístico coordenando quatro agentes especializados: `ResearchAgent` (recuperação de evidências e verificação de escopo), `AnalysisAgent` (cálculos matemáticos determinísticos sem LLM), `CommunicationAgent` (redação pedagógica ancorada em fontes oficiais) e `ValidationAgent` (auditoria defensiva factual contra alucinações).
+   - Exposição via endpoint HTTP `POST /v1/agents/ask` devolvendo `MultiAgentResponse` com a trilha de auditoria (`steps`) detalhando o papel e tempo de execução de cada agente.
 
 ---
 
@@ -35,13 +38,13 @@ A arquitetura do **Trokim** foi concebida para atender aos requisitos de alta pe
 O backend adota uma arquitetura em camadas limpa e desacoplada:
 
 ```text
-routers/ (HTTP fino, esquemas Pydantic: /transactions, /chat/ask, /chat/generate, /chat/title, /budgets)
+routers/ (HTTP fino, esquemas Pydantic: /transactions, /chat/ask, /chat/generate, /chat/title, /budgets, /agents/ask)
    │
    ▼
-services/ (Regras de negócio: CalculationService, ParserService, RAGService, GenerationService, TitleService)
+services/ (Regras de negócio: CalculationService, ParserService, RAGService, GenerationService, TitleService, Orchestrator e agentes)
    │
    ▼
-domain/   (Entidades de negócio puras: Transaction, Budget, Evidence)
+domain/   (Entidades de negócio puras: Transaction, Budget, EvidenceChunk, MultiAgentResponse)
    ▲
    │
 clients/  (Adaptadores de persistência e LLM: SQLiteVectorStore, FastEmbed, LiteLLMProvider, OllamaProvider, MockLLMProvider)

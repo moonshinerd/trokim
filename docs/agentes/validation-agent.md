@@ -7,8 +7,6 @@ O **ValidationAgent** (`AgentName.VALIDATION`) atua como a última linha de defe
 
 Se qualquer inconformidade de severidade `BLOCKER` for detectada, o agente anota as falhas em `ctx.issues` e retorna o passo com estado `FAILED`. Caso contrário, retorna `OK`.
 
----
-
 ## 1. Tabela de Regras e Severidades
 
 Todas as regras são implementadas como **funções puras, isoladas e testáveis**, retornando códigos padronizados e mensagens diagnósticas claras em pt-BR:
@@ -16,7 +14,7 @@ Todas as regras são implementadas como **funções puras, isoladas e testáveis
 | Código | Severidade | Condição de Disparo | Exemplo de Mensagem |
 |---|:---:|---|---|
 | `NUMBER_NOT_SUPPORTED` | **Bloqueio** (`BLOCKER`) | Número (valor monetário, percentual ou prazo) no rascunho que não está presente nas evidências oficiais, nos cálculos determinísticos nem na pergunta. | *"Número sem suporte factual encontrado no rascunho: '33,33%' (valor canônico: 33.33, tipo: percentual)."* |
-| `CITATION_INVALID` | **Bloqueio** (`BLOCKER`) | Marcador de citação `[n]` sem evidência correspondente (índice fora da faixa), ou resposta com evidências disponíveis mas nenhuma citação no texto. | *"A citação [3] no rascunho é inválida pois não há evidência correspondente (total disponível: 2)."* |
+| `CITATION_INVALID` | **Bloqueio** (`BLOCKER`) | Marcador de citação `[n]` sem evidência correspondente (índice fora da faixa), ou resposta com evidências disponíveis mas nenhuma citação no texto. Aceita tanto numeração `[n]` quanto links markdown nomeados `[Nome](url)`. | *"A citação [3] no rascunho é inválida pois não há evidência correspondente (total disponível: 2)."* |
 | `OUT_OF_SCOPE_ADVICE` | **Bloqueio** (`BLOCKER`) | Recomendação de compra/venda de ativos específicos, promessa de rentabilidade ou uso de termos peremptórios proibidos (ex.: *"garantido"*), exceto quando sob negação pedagógica. | *"O rascunho contém orientação financeira fora de escopo ou termo proibido: 'retorno garantido' (promessa de retorno garantido)."* |
 | `ABSTENTION_MISMATCH` | **Bloqueio** (`BLOCKER`) | O contexto possui `abstain_reason` preenchido (ex.: `"fora_de_escopo"`), mas o rascunho apresentou uma resposta afirmativa substantiva em vez de declarar a recusa pedagógica. | *"O contexto indicou motivo de abstenção ('fora_de_escopo'), mas o rascunho forneceu uma resposta substantiva em vez de se abster."* |
 | `CALCULATION_MISSING` | **Bloqueio** (`BLOCKER`) | Pergunta requer cálculo quantitativo, o contexto não possui resultados determinísticos em `calculations`, e o rascunho apresenta resultado aritmético autônomo. | *"A pergunta requer cálculo numérico, mas o contexto não possui resultados determinísticos e o rascunho apresentou resultado autônomo (R$ 0,20)."* |
@@ -30,7 +28,7 @@ Na auditoria da Semana 3 (`artifacts/research/comparison_audit.md`), **8 dos 10 
 O `ValidationAgent` introduz uma camada especializada de pré-processamento estrutural antes da extração factual:
 
 ### 2.1. Sanitização Estrutural
-1. **Marcadores de Citação:** Expressões `[n]`, `[1, 2]` ou `[1-3]` são neutralizadas antes da extração para não serem confundidas com dados numéricos.
+1. **Marcadores de Citação e Links:** Expressões `[n]`, `[1, 2]` ou `[1-3]` são neutralizadas antes da extração para não serem confundidas com dados numéricos. Links markdown nomeados `[Nome da Fonte](url)` também são removidos (apenas o nome da fonte é mantido), evitando que URLs com dígitos gerem falsos positivos.
 2. **Marcadores de Listas Ordenadas:** Padrões no início de linhas ou após pontuação (como `1. `, `2) `, `3 - `) são removidos do fluxo factual.
 3. **Ordinais da Língua Portuguesa:** Termos como `1º` ou `2ª` são explicitamente descartados.
 4. **Passos e Itens:** Expressões como `Passo 1:` ou `item 2` são expurgadas antes da análise factual.
@@ -99,5 +97,5 @@ Para assegurar que o agente não bloqueie respostas legítimas e didáticas, foi
 ## 5. Limitações Conhecidas
 
 1. **Abordagem Léxica e Heurística:** A verificação factual é estritamente determinística e baseada em regras léxicas e canônicas. Ela não realiza inferência semântica profunda (entailment natural) para afirmações que não envolvam números, termos regulatórios proibidos ou marcadores formais.
-2. **Formato de Citação Estrito:** O validador exige que as citações sigam a convenção de colchetes numéricos (`[n]`). Estilos alternativos (como notas de rodapé em parênteses ou links markdown soltos) não são reconhecidos como citações formais de evidência.
+2. **Formato de Citação:** O validador aceita tanto citações numéricas `[n]` quanto links markdown nomeados `[Nome](url)` introduzidos pelo CommunicationAgent. Outros estilos (notas de rodapé em parênteses ou referências em texto corrido sem marcação explícita) não são reconhecidos como citações formais de evidência.
 3. **Escopo de Termos Proibidos:** A detecção de aconselhamento fora de escopo baseia-se em vocabulário curado em pt-BR. Expressões excessivamente elípticas ou metafóricas podem não ser capturadas por regex pura e continuam dependendo do prompt do agente de comunicação.
