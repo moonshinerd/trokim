@@ -38,13 +38,21 @@ O **Trokim** é um assistente financeiro pessoal para Android. Reúne lançament
 - **Privacidade por arquitetura:** API na máquina do usuário, embeddings locais e inferência via Ollama. Provedores de nuvem são opcionais e enviam conteúdo ao serviço escolhido.
 - **Evolução com rastreabilidade:** backend em camadas, provedores de LLM desacoplados, prompts versionados, testes e decisões registradas em ADRs.
 
-**Stack:** Flutter · Dart · Python 3.12+ · FastAPI · Pydantic · SQLite / sqlite-vec · FastEmbed · LiteLLM / Ollama.
+| Camada | Stack e versões |
+| :--- | :--- |
+| Aplicativo | **Flutter 3.50.0** no CI · Dart **≥3.13.0 e <4.0.0** |
+| Backend | Python **≥3.12** · FastAPI **0.162.0** · Pydantic **2.14.2** · Uvicorn **0.54.0** |
+| Dados | SQLite (embutido no ambiente Python) · sqlite-vec **0.1.9** · SQLAlchemy **2.1.8** |
+| IA e recuperação | FastEmbed **0.9.1** · LiteLLM **1.108.0** · Ollama (versão não fixada) |
+| Qualidade | pytest **9.2.0** · Ruff **0.17.3** |
+
+Versões das bibliotecas fixadas em [`api/uv.lock`](api/uv.lock); requisitos dos SDKs em [`api/pyproject.toml`](api/pyproject.toml) e [`mobile/pubspec.yaml`](mobile/pubspec.yaml). O gerenciador **uv** não tem versão fixada no projeto.
 
 [Arquitetura e fluxo de dados](docs/arquitetura/mapa-do-sistema.md) · [Decisões técnicas](docs/adr/index.md) · [Benchmarks reproduzíveis](docs/pesquisa/resultados.md)
 
 ## Execute localmente
 
-**Pré-requisitos:** Python 3.12+, [uv](https://docs.astral.sh/uv/) e, para o app Android, Flutter, JDK e Android SDK nas [versões documentadas](docs/guia-de-uso.md#1-pré-requisitos).
+**Pré-requisitos:** Python **3.12+**, [uv](https://docs.astral.sh/uv/) e, para o app Android, Flutter **3.50.0** (mesma versão do CI), JDK **17** e Android SDK **36**. Veja a [configuração completa](docs/guia-de-uso.md#1-pré-requisitos).
 
 ```bash
 git clone https://github.com/moonshinerd/trokim.git
