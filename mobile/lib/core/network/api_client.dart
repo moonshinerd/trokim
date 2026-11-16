@@ -8,37 +8,89 @@ import '../constants/api_constants.dart';
 class ApiException implements Exception {
   final int statusCode;
 
-  const ApiException(this.statusCode);
+  /// Mensagem de erro devolvida pela API (campo `detail`), quando houver.
+  final String? detail;
+
+  const ApiException(this.statusCode, [this.detail]);
 }
 
 class ApiClient {
-  final String baseUrl;
+  final String? _fixedBaseUrl;
+  final String Function()? _baseUrlProvider;
   final http.Client _client;
   final Duration timeout;
+
+  /// Ler e interpretar um extrato (principalmente PDF) leva mais que um GET.
+  final Duration uploadTimeout;
   final Duration generationTimeout;
 
   /// Nomear a conversa com o LLM local não pode travar o chat.
   final Duration titleTimeout;
   final Set<Completer<void>> _generationAborts = {};
 
+  /// [baseUrlProvider] é consultado a cada chamada, para que o endereço
+  /// editado em Ajustes valha sem recriar o cliente.
   ApiClient({
-    this.baseUrl = ApiConstants.defaultBaseUrl,
+    String? baseUrl,
+    String Function()? baseUrlProvider,
     http.Client? client,
     this.timeout = const Duration(seconds: 15),
+    this.uploadTimeout = const Duration(seconds: 60),
     this.titleTimeout = const Duration(seconds: 40),
     this.generationTimeout = const Duration(
       seconds: ApiConstants.chatGenerateTimeoutSeconds,
     ),
-  }) : _client = client ?? http.Client() {
+  }) : _fixedBaseUrl = baseUrl,
+       _baseUrlProvider = baseUrlProvider,
+       _client = client ?? http.Client() {
     if (generationTimeout <= Duration.zero) {
       throw ArgumentError.value(generationTimeout, 'generationTimeout');
     }
   }
 
+  String get baseUrl =>
+      _baseUrlProvider?.call() ?? _fixedBaseUrl ?? ApiConstants.defaultBaseUrl;
+
   Future<Map<String, dynamic>> getSummary() async {
     final response = await _client
         .get(Uri.parse('$baseUrl${ApiConstants.transactionsSummaryEndpoint}'))
         .timeout(timeout);
+    return _decode(response);
+  }
+
+  Future<List<Map<String, dynamic>>> getTransactions() async {
+    final response = await _client
+        .get(Uri.parse('$baseUrl${ApiConstants.transactionsEndpoint}'))
+        .timeout(timeout);
+    final decoded = _decodeJson(response);
+    if (decoded is! List) {
+      throw const FormatException('Resposta inválida do servidor.');
+    }
+    return [
+      for (final item in decoded)
+        if (item is Map<String, dynamic>)
+          item
+        else
+          throw const FormatException('Resposta inválida do servidor.'),
+    ];
+  }
+
+  /// Envia um extrato (OFX ou PDF) para a API local processar.
+  Future<Map<String, dynamic>> uploadStatement(
+    String filename,
+    List<int> bytes,
+  ) async {
+    final request =
+        http.MultipartRequest(
+            'POST',
+            Uri.parse('$baseUrl${ApiConstants.transactionsUploadEndpoint}'),
+          )
+          ..files.add(
+            http.MultipartFile.fromBytes('file', bytes, filename: filename),
+          );
+    final response = await http.Response.fromStream(
+      await _client.send(request).timeout(uploadTimeout),
+    );
     return _decode(response);
   }
 
@@ -106,11 +158,27 @@ class ApiClient {
     }
   }
 
-  Map<String, dynamic> _decode(http.Response response) {
+  Object? _decodeJson(http.Response response) {
     if (response.statusCode != 200) {
-      throw ApiException(response.statusCode);
+      throw ApiException(response.statusCode, _detailOf(response));
     }
-    final decoded = jsonDecode(utf8.decode(response.bodyBytes));
+    return jsonDecode(utf8.decode(response.bodyBytes));
+  }
+
+  String? _detailOf(http.Response response) {
+    try {
+      final body = jsonDecode(utf8.decode(response.bodyBytes));
+      if (body is Map && body['detail'] is String) {
+        return body['detail'] as String;
+      }
+    } on Object {
+      // Corpo que não é JSON: segue sem detalhe.
+    }
+    return null;
+  }
+
+  Map<String, dynamic> _decode(http.Response response) {
+    final decoded = _decodeJson(response);
     if (decoded is! Map<String, dynamic>) {
       throw const FormatException('Resposta inválida do servidor.');
     }

@@ -22,10 +22,10 @@ Matriz estruturada de riscos e medidas preventivas adotadas pelo projeto **Troki
 Para avaliar empiricamente a eficácia da solução ao longo do roadmap:
 
 1. **Taxa de Importação Correta:**
-   $$\text{Taxa} = \frac{\text{Lançamentos com data, descrição e valor idênticos ao gabarito}}{\text{Total de lançamentos no gabarito sintético}}$$
+   `Taxa = lançamentos com data, descrição e valor idênticos ao gabarito ÷ total de lançamentos no gabarito sintético`
 2. **Precisão Numérica Determinística:**
-   $$\text{Acurácia Numérica} = 100\% \quad (\text{garantida por testes unitários com pytest})$$
+   `Acurácia numérica = 100%` (garantida por testes unitários com pytest)
 3. **Fundamentação do RAG:**
-   $$\text{Taxa de Fundamentação} = \frac{\text{Respostas sustentadas por fonte oficial identificada}}{\text{Total de respostas avaliadas}}$$
+   `Taxa de fundamentação = respostas sustentadas por fonte oficial identificada ÷ total de respostas avaliadas`
 4. **Taxa de Abstenção Correta:**
-   $$\text{Abstenção Correta} = \frac{\text{Consultas sem evidência onde o modelo declarou ausência de dados}}{\text{Total de consultas fora de escopo}}$$
+   `Abstenção correta = consultas sem evidência em que o modelo declarou ausência de dados ÷ total de consultas fora de escopo`

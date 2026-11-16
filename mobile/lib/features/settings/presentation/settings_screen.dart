@@ -9,6 +9,7 @@ import '../../../core/theme/app_theme.dart';
 import '../../../core/widgets/app_motion.dart';
 import '../../../core/widgets/screen_header.dart';
 import '../../../core/widgets/trokim_logo.dart';
+import '../../finance/presentation/finance_controller.dart';
 
 const String appVersion = '0.1.0';
 
@@ -319,16 +320,55 @@ class _ConnectionCard extends StatefulWidget {
 
 class _ConnectionCardState extends State<_ConnectionCard> {
   _Probe _state = _Probe.idle;
+  TextEditingController? _address;
+  String? _addressError;
 
-  Future<void> _test() async {
+  @override
+  void dispose() {
+    _address?.dispose();
+    super.dispose();
+  }
+
+  /// O campo nasce com o endereço salvo, lido uma única vez.
+  TextEditingController _field(SettingsController settings) =>
+      _address ??= TextEditingController(text: settings.apiBaseUrl);
+
+  void _changed(SettingsController settings) {
+    _state = _Probe.idle;
+    // O resumo e os extratos vêm da API: recarrega com o endereço novo.
+    FinanceScope.read(context)?.load();
+    _field(settings).text = settings.apiBaseUrl;
+  }
+
+  void _save(SettingsController settings) {
+    final ok = settings.setApiBaseUrl(_field(settings).text);
+    setState(() {
+      if (ok) {
+        _addressError = null;
+        _changed(settings);
+      } else {
+        _addressError =
+            'Use um endereço http:// ou https://, como '
+            '${ApiConstants.defaultBaseUrl}';
+      }
+    });
+  }
+
+  void _restoreDefault(SettingsController settings) {
+    settings.resetApiBaseUrl();
+    setState(() {
+      _addressError = null;
+      _changed(settings);
+    });
+  }
+
+  Future<void> _test(SettingsController settings) async {
     setState(() => _state = _Probe.loading);
     final client = widget.client ?? http.Client();
     try {
       final res = await client
           .get(
-            Uri.parse(
-              '${ApiConstants.defaultBaseUrl}${ApiConstants.healthEndpoint}',
-            ),
+            Uri.parse('${settings.apiBaseUrl}${ApiConstants.healthEndpoint}'),
           )
           .timeout(const Duration(seconds: 4));
       if (mounted) {
@@ -346,6 +386,7 @@ class _ConnectionCardState extends State<_ConnectionCard> {
   @override
   Widget build(BuildContext context) {
     final c = context.colors;
+    final settings = SettingsScope.of(context);
     final (label, color) = switch (_state) {
       _Probe.idle => ('Não testado', c.muted),
       _Probe.loading => ('Testando…', c.muted),
@@ -361,10 +402,47 @@ class _ConnectionCardState extends State<_ConnectionCard> {
             'Endereço da API',
             style: TextStyle(fontSize: 12.5, color: c.muted),
           ),
-          const SizedBox(height: 4),
-          SelectableText(
-            ApiConstants.defaultBaseUrl,
+          const SizedBox(height: 8),
+          TextField(
+            controller: _field(settings),
+            keyboardType: TextInputType.url,
+            autocorrect: false,
+            enableSuggestions: false,
+            textInputAction: TextInputAction.done,
+            onSubmitted: (_) => _save(settings),
             style: const TextStyle(fontWeight: FontWeight.w700, fontSize: 14.5),
+            decoration: InputDecoration(
+              isDense: true,
+              errorText: _addressError,
+              errorMaxLines: 3,
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(14),
+              ),
+            ),
+          ),
+          const SizedBox(height: 8),
+          Row(
+            children: [
+              FilledButton(
+                onPressed: () => _save(settings),
+                style: FilledButton.styleFrom(
+                  backgroundColor: AppTheme.gold,
+                  foregroundColor: AppTheme.forest,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(14),
+                  ),
+                ),
+                child: const Text(
+                  'Salvar endereço',
+                  style: TextStyle(fontWeight: FontWeight.w800),
+                ),
+              ),
+              const SizedBox(width: 8),
+              TextButton(
+                onPressed: () => _restoreDefault(settings),
+                child: const Text('Restaurar padrão'),
+              ),
+            ],
           ),
           const SizedBox(height: 14),
           Row(
@@ -398,7 +476,9 @@ class _ConnectionCardState extends State<_ConnectionCard> {
                 ),
               ),
               FilledButton(
-                onPressed: _state == _Probe.loading ? null : _test,
+                onPressed: _state == _Probe.loading
+                    ? null
+                    : () => _test(settings),
                 style: FilledButton.styleFrom(
                   backgroundColor: AppTheme.gold,
                   foregroundColor: AppTheme.forest,

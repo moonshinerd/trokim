@@ -22,6 +22,7 @@ Este repositório registra formalmente todas as decisões de arquitetura e tecno
 | [**0012**](0012-mascote-onca-e-arte-de-marca-livre.md) | Mascote Onça-Pintada e Arte de Marca com Licença Livre | <span class="badge-must">Aceita</span> | 13/11/2026 | RNF11, GQ01, GQ03 |
 | [**0013**](0013-preferencias-locais-e-aba-de-ajustes.md) | Preferências Salvas Localmente e Aba de Ajustes | <span class="badge-must">Aceita</span> | 13/11/2026 | RF15, RNF01, RNF10, GQ01, GQ03 |
 | [**0014**](0014-historico-de-conversas-e-titulos.md) | Histórico de Conversas Local e Títulos Gerados pelo LLM | <span class="badge-must">Aceita</span> | 13/11/2026 | RF16, RNF01, GQ01, GQ03, GQ05 |
+| [**0015**](0015-dados-reais-importacao-e-endereco-da-api.md) | Resumo e Extratos com Dados Reais da API, Importação pelo App e Endereço da API Editável | <span class="badge-must">Aceita</span> | 16/11/2026 | RF01, RF02, RF07, RF15, RNF03, RNF10, GQ01, GQ02, GQ03, GQ07 |
 
 - [0006 — Curadoria rastreável e benchmark](0006-curadoria-benchmark.md)
 - [0007 — Banco vetorial local e embeddings densos no RAG](0007-banco-vetorial-embeddings.md)
@@ -32,3 +33,4 @@ Este repositório registra formalmente todas as decisões de arquitetura e tecno
 - [0012 — Mascote onça-pintada e arte livre](0012-mascote-onca-e-arte-de-marca-livre.md)
 - [0013 — Preferências locais e aba de Ajustes](0013-preferencias-locais-e-aba-de-ajustes.md)
 - [0014 — Histórico de conversas e títulos](0014-historico-de-conversas-e-titulos.md)
+- [0015 — Dados reais, importação e endereço da API](0015-dados-reais-importacao-e-endereco-da-api.md)

@@ -26,14 +26,21 @@ Conforme a ementa oficial do Challenge 2, o entregável da **Semana 3 (09/11 a 1
 
 ### Checklist de Cobertura da Entrega 3 (Prazo: Sexta-feira, 13/11/2026)
 
-- [ ] **Prompts Versionados da Semana 3:** Templates estruturados em `api/app/prompts/` cobrindo LLM pura (`prompt_llm_pure_v1.txt`), RAG ingênuo (`prompt_naive_rag_v1.txt`) e Trokim estruturado (`prompt_trokim_grounded_v1.txt`).
-- [ ] **Gabarito Empírico de 30 Perguntas:** Dataset `questions_comparison.json` contendo dúvidas conceituais, cenários cotidianos e armadilhas deliberadas de alucinação financeira.
-- [ ] **Framework de Métricas de Alucinação:** Script `eval_comparison.py` com cálculo de Token-level F1 (SQuAD), Concept Coverage Recall, Factual Inconsistency Rate (%) e Abstention F1.
-- [ ] **Camada de Síntese Generativa Local-First:** Port abstrato `LLMProvider` com adaptadores para Ollama local e Mock para testes determinísticos (ADR 0008).
-- [ ] **Endpoint REST Tipado:** `POST /v1/chat/generate` retornando resposta sintetizada, evidências citadas e status de fundamentação.
-- [ ] **Interface Mobile com Cartões de Evidência:** Módulo no Flutter com visualização nativa de citações, score de confiança e links governamentais clicáveis.
-- [ ] **Relatório Comparativo Formal:** Publicação em `docs/pesquisa/comparacao-llm-rag.md` com tabelas, gráficos de dispersão e análise de casos de alucinação.
-- [ ] **ADR 0008:** Registro formal da decisão de síntese generativa, controle de alucinação e fallback local.
+- [x] **Prompts Versionados da Semana 3:** Templates estruturados em `api/app/prompts/` cobrindo LLM pura (`prompt_llm_pure_v1.txt`), RAG ingênuo (`prompt_naive_rag_v1.txt`) e Trokim estruturado (`prompt_trokim_grounded_v1.txt`).
+- [x] **Gabarito Empírico de 30 Perguntas:** Dataset `questions_comparison.json` contendo dúvidas conceituais, cenários cotidianos e armadilhas deliberadas de alucinação financeira.
+- [x] **Framework de Métricas de Alucinação:** Script `eval_comparison.py` com cálculo de Token-level F1 (SQuAD), Concept Coverage Recall, Factual Inconsistency Rate (%) e Abstention F1.
+- [x] **Camada de Síntese Generativa Local-First:** Port abstrato `LLMProvider` com adaptadores LiteLLM (padrão), Ollama local e Mock para testes determinísticos ([ADR 0009](adr/0009-sintese-generativa-local.md)).
+- [x] **Endpoint REST Tipado:** `POST /v1/chat/generate` retornando resposta sintetizada, evidências citadas e status de fundamentação.
+- [x] **Interface Mobile com Cartões de Evidência:** Módulo no Flutter com visualização nativa de citações, score de confiança e links governamentais clicáveis.
+- [x] **Relatório Comparativo Formal:** Publicação em `docs/pesquisa/comparacao-llm-rag.md` com tabelas, gráficos e análise de casos de alucinação, e resultados auditáveis em `research/rag_benchmark/results/comparison/`.
+- [x] **ADRs 0008 e 0009:** Material comparativo versionado ([0008](adr/0008-material-comparativo-versionado.md)) e síntese generativa local com limites de fundamentação ([0009](adr/0009-sintese-generativa-local.md)).
+
+**Pendências assumidas da Semana 3** (não bloqueiam a entrega, mas não estão concluídas):
+
+- Homologação ponta a ponta do chat generativo em aparelho Android real, com o roteiro de `mobile/VALIDACAO_CHAT_GENERATIVO.md`.
+- Revisão humana independente e cega das respostas do experimento comparativo e repetição com modelos maiores e várias execuções.
+- Persistência em SQLite dos lançamentos importados (hoje ficam na memória da API; [ADR 0015](adr/0015-dados-reais-importacao-e-endereco-da-api.md)).
+- Ata 04 só será criada quando houver reunião de validação efetivamente realizada.
 
 ### Entregas de Interface (fora do checklist da ementa)
 
@@ -97,7 +104,7 @@ Todas as tarefas estão formalizadas no GitHub e vinculadas à **Milestone "Sema
 ### Semana 2 — Base de Conhecimento e Primeiro RAG (Concluída em 06/11/2026)
 - [x] Curadoria de 20 documentos oficiais regulatórios (BCB, CVM, CFPB, ANPD) com catálogo e hashes SHA-256 ([ADR 0006](adr/0006-curadoria-benchmark.md)).
 - [x] Banco vetorial local com `sqlite-vec` (tabela virtual `vec0`) e embeddings FastEmbed multilíngues de 384 dimensões ([ADR 0007](adr/0007-banco-vetorial-embeddings.md)).
-- [x] Busca híbrida densa/léxica com calibração $\alpha = 0,3$ atingindo 98,78% de Recall@3 e 100% de abstenção ética.
+- [x] Busca híbrida densa/léxica com calibração α = 0,3 atingindo 98,78% de Recall@3 e 100% de abstenção ética.
 - [x] Endpoint `POST /v1/chat/ask` tipado e interface conversacional inicial no Flutter.
 - [x] Gerador sintético de extratos OFX e faturas PDF aderente à LGPD em `research/synthetic_data/`.
 

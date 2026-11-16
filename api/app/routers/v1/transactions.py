@@ -54,12 +54,15 @@ async def upload_statement(file: UploadFile = File(...)):
             detail="Formato de arquivo não suportado no MVP. Envie um arquivo .ofx ou .pdf.",
         )
 
+    # Reenviar o mesmo extrato não pode contar os lançamentos duas vezes.
+    ParserService.deduplicate(new_txs, known=_LOCAL_TRANSACTIONS)
     _LOCAL_TRANSACTIONS.extend(new_txs)
     summary = CalculationService.calculate_summary(_LOCAL_TRANSACTIONS)
 
     return {
         "filename": filename,
         "imported_count": len(new_txs),
+        "duplicate_count": sum(1 for tx in new_txs if tx.is_duplicate),
         "total_active_transactions": len(_LOCAL_TRANSACTIONS),
         "summary": summary.model_dump(),
     }

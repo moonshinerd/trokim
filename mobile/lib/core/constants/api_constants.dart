@@ -5,6 +5,18 @@ class ApiConstants {
     defaultValue: 'http://10.0.2.2:8000/v1',
   );
 
+  /// Normaliza o endereço digitado em Ajustes: exige http ou https com
+  /// servidor, sem consulta nem fragmento, e remove espaços e barras finais.
+  /// Devolve `null` quando o endereço é inválido.
+  static String? normalizeBaseUrl(String input) {
+    final text = input.trim();
+    final uri = Uri.tryParse(text);
+    if (uri == null || !uri.hasAuthority || uri.host.isEmpty) return null;
+    if (uri.scheme != 'http' && uri.scheme != 'https') return null;
+    if (uri.hasQuery || uri.hasFragment) return null;
+    return text.replaceAll(RegExp(r'/+$'), '');
+  }
+
   static const String healthEndpoint = '/health';
   static const String transactionsEndpoint = '/transactions';
   static const String transactionsSummaryEndpoint = '/transactions/summary';

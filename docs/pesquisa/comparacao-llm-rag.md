@@ -5,6 +5,8 @@
     sobre **30 casos de desenvolvimento** (não é teste cego), com **auditoria assistida por
     agente** e **sem as respostas brutas versionadas** (ver [Limitações](#7-limitacoes)).
     Os números não provam superioridade geral do Trokim nem ganho de qualidade de vida.
+    Todas as execuções registradas, com gráficos e respostas brutas quando existem, estão em
+    [Histórico de resultados e gráficos](resultados.md).
 
 Este relatório reúne o experimento da Semana 3 (issues #20, #21 e #24): o mesmo conjunto
 de perguntas respondido por três abordagens. O protocolo e o material vêm de
@@ -45,7 +47,7 @@ generativa*. São conjuntos e métricas diferentes e não são comparáveis entr
 | Recuperação | `top_k = 3` |
 | Repetições | 1 (sem sementes variadas) |
 | Corpus | 20 documentos históricos + suplemento exclusivo da comparação (22 fontes) |
-| Script | `research/rag_benchmark/run_comparison.py` (`make comparison-eval`) |
+| Script | `research/rag_benchmark/run_comparison.py` (`make comparison-run`) |
 | Avaliador | `research/rag_benchmark/eval_comparison.py` |
 
 O suplemento (regras do rotativo, prazo e limites do BCB) vale **só para o experimento**:
@@ -73,6 +75,14 @@ Denominador: **30 casos** em todas as abordagens. Latência medida pelo próprio
   (instrução adversária) e **não** se abster em C27 e C30: precisão de 1/1 e revocação de 1/3.
   As outras abordagens não têm política de abstenção.
 
+![Métricas por abordagem na execução publicada (13/11): F1 de tokens, cobertura de conceitos, inconsistência heurística e F1 de abstenção](../assets/comparacao/2026-11-13-qwen2.5-1.5b/fig1-metricas.png)
+
+*Figura 1. Execução `2026-11-13-qwen2.5-1.5b`. Na inconsistência heurística, menor é melhor.*
+
+![Latência média por resposta de cada abordagem na execução publicada](../assets/comparacao/2026-11-13-qwen2.5-1.5b/fig3-latencia.png)
+
+*Figura 2. Latência média por resposta.*
+
 ### Taxa nominal × taxa auditada de alucinação
 
 A auditoria manual (arquivo [`comparison_audit.md`](https://github.com/moonshinerd/trokim/blob/main/artifacts/research/comparison_audit.md))
@@ -87,6 +97,20 @@ separa **sinalização automática** de **alucinação confirmada por revisão**
 Os falsos positivos são, em geral, numerais de listas ordenadas (`1.`, `2.`) ou faixas
 usuais (`1-3 anos`). Na LLM pura foram revisados em profundidade só os 15 casos
 sinalizados; os outros 15 não foram integralmente revisados, então **30,0% é um piso**.
+
+![Casos sinalizados pela heurística, separados em alucinações confirmadas e falsos positivos](../assets/comparacao/2026-11-13-qwen2.5-1.5b/fig2-alucinacao-auditada.png)
+
+*Figura 3. Casos sinalizados pela heurística e o que a revisão confirmou.*
+
+### Reexecução de 16/11/2026
+
+O mesmo experimento foi executado de novo, pela camada LiteLLM do app, com o mesmo modelo,
+gabarito, prompts, corpus e avaliador. Os números mudaram bastante: a inconsistência
+heurística da LLM pura foi de 50,0% para 83,3%, e a ordem entre RAG ingênuo e Trokim
+estruturado trocou na cobertura de conceitos e na inconsistência heurística. O que se
+manteve foi a LLM pura ser a pior abordagem e só o Trokim se abster. Tabelas, gráficos,
+respostas brutas e a leitura completa estão em [Histórico de resultados](resultados.md#3-execucao-2026-11-16-qwen25-15b-reexecucao).
+Essa execução **não** passou por revisão humana.
 
 ## 5. Análise qualitativa por caso
 
@@ -129,10 +153,11 @@ prompt exigia respeitar a ausência de dados (C29 e C30).
 4. **Auditoria assistida por agente**, sujeita a interpretação, e **não cega** à
    abordagem que gerou cada resposta.
 5. **Revisão não exaustiva** dos casos não sinalizados da LLM pura.
-6. **Respostas brutas fora do repositório.** Estão versionados apenas o relatório e a
-   auditoria (`artifacts/research/`); `comparison_results.json` e o relatório JSON ficam
-   locais. Para auditar de forma independente, é preciso publicá-los (pendência) ou
-   reexecutar com `make comparison-eval`.
+6. **Respostas brutas da execução publicada fora do repositório.** Dela estão versionados
+   apenas o relatório e a auditoria (`artifacts/research/`). A reexecução de 16/11 tem as
+   respostas brutas versionadas em
+   `research/rag_benchmark/results/comparison/2026-11-16-qwen2.5-1.5b/`, o que permite
+   auditar de forma independente, mas os números dela diferem dos desta página.
 7. **Corpus datado:** as regras de crédito dependem de vigência e exigem nova conferência.
 
 ## 8. Como reproduzir
@@ -140,9 +165,12 @@ prompt exigia respeitar a ausência de dados (C29 e C30).
 ```bash
 make comparison-validate    # valida gabarito, prompts, fontes e hashes (sem chamar LLM)
 ollama pull qwen2.5:1.5b    # modelo usado nos resultados acima
-cd api && uv run python ../research/rag_benchmark/run_comparison.py \
-  --provider litellm --model ollama/qwen2.5:1.5b
+make comparison-run RUN=2026-11-20-qwen2.5-1.5b MODEL=ollama/qwen2.5:1.5b
+make report-charts          # regenera os gráficos versionados do MkDocs
 ```
+
+Cada execução fica em uma pasta própria, sem sobrescrever as anteriores; o passo a passo
+completo, com o `run.json`, está em [Histórico de resultados](resultados.md#6-como-registrar-uma-nova-execucao).
 
 O benchmark usa a mesma camada de modelos do app (ADR 0009), então aceita qualquer modelo
 do LiteLLM por `--model`. Os resultados de outro modelo ou de outra execução **não** são
@@ -150,7 +178,7 @@ equivalentes aos desta página.
 
 ## 9. Pendências
 
-- Publicar as respostas brutas e o relatório JSON em local durável.
+- Revisão humana dos casos sinalizados da reexecução de 16/11 (as respostas brutas já estão versionadas).
 - Repetir com modelos maiores e várias execuções.
 - Revisão humana independente e cega.
 - Homologação do chat generativo no Android (ver [planejamento](../planejamento.md)).

@@ -1,39 +1,98 @@
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 
 import '../../../core/theme/app_theme.dart';
 import '../../../core/widgets/app_motion.dart';
 import '../../../core/widgets/screen_header.dart';
+import '../../finance/domain/finance_models.dart';
+import '../../finance/presentation/finance_controller.dart';
+
+/// Arquivo escolhido pelo usuário, com leitura adiada dos bytes.
+class PickedStatement {
+  const PickedStatement(this.name, this.readBytes);
+
+  final String name;
+  final Future<List<int>> Function() readBytes;
+}
+
+typedef StatementPicker = Future<PickedStatement?> Function();
+
+/// Abre o seletor de arquivos do sistema.
+///
+/// Não filtra por extensão: o Android não conhece o tipo de `.ofx` e deixa o
+/// arquivo desabilitado no seletor. A extensão é validada depois da escolha
+/// (`FinanceController.importStatement`), com uma mensagem clara.
+Future<PickedStatement?> pickStatementFile() async {
+  final file = await FilePicker.pickFile(
+    dialogTitle: 'Escolha um extrato OFX ou uma fatura PDF',
+  );
+  if (file == null) return null;
+  return PickedStatement(file.name, file.readAsBytes);
+}
 
 class TransactionsScreen extends StatelessWidget {
-  const TransactionsScreen({super.key});
+  const TransactionsScreen({super.key, this.pickFile});
 
-  void _import(BuildContext context) {
-    ScaffoldMessenger.of(context)
+  /// Troca o seletor de arquivos (testes).
+  final StatementPicker? pickFile;
+
+  Future<void> _import(BuildContext context) async {
+    final finance = FinanceScope.of(context);
+    final messenger = ScaffoldMessenger.of(context);
+    if (finance.importing) return;
+
+    void say(String message) => messenger
       ..hideCurrentSnackBar()
-      ..showSnackBar(
-        const SnackBar(
-          content: Text('Seletor de arquivos OFX/PDF em execução local.'),
-        ),
+      ..showSnackBar(SnackBar(content: Text(message)));
+
+    final PickedStatement? picked;
+    try {
+      picked = await (pickFile ?? pickStatementFile)();
+    } on Object {
+      say('Não foi possível abrir o seletor de arquivos.');
+      return;
+    }
+    if (picked == null) return;
+
+    try {
+      final result = await finance.importStatement(
+        picked.name,
+        picked.readBytes,
       );
+      say(
+        '${_plural(result.importedCount, 'transação lida', 'transações lidas')}'
+        ' de ${result.filename}.',
+      );
+    } on ImportFailure catch (e) {
+      say(e.message);
+    }
   }
 
   @override
   Widget build(BuildContext context) {
+    final finance = FinanceScope.of(context);
+    final files = finance.files;
     return Scaffold(
       floatingActionButton: Reveal(
         index: 5,
         child: FloatingActionButton.extended(
-          onPressed: () => _import(context),
+          onPressed: finance.importing ? null : () => _import(context),
           backgroundColor: AppTheme.gold,
           foregroundColor: AppTheme.forest,
           elevation: 2,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(18),
           ),
-          icon: const Icon(Icons.add_rounded),
-          label: const Text(
-            'Importar extrato',
-            style: TextStyle(fontWeight: FontWeight.w700),
+          icon: finance.importing
+              ? const SizedBox(
+                  width: 20,
+                  height: 20,
+                  child: CircularProgressIndicator(strokeWidth: 2.5),
+                )
+              : const Icon(Icons.add_rounded),
+          label: Text(
+            finance.importing ? 'Importando…' : 'Importar extrato',
+            style: const TextStyle(fontWeight: FontWeight.w700),
           ),
         ),
       ),
@@ -60,47 +119,44 @@ class TransactionsScreen extends StatelessWidget {
               padding: EdgeInsets.fromLTRB(20, 20, 20, 10),
               child: Reveal(
                 index: 2,
-                child: Row(
-                  children: [
-                    Text(
-                      'Importados',
-                      style: TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.w800,
-                      ),
-                    ),
-                    SizedBox(width: 10),
-                    _ExampleTag(),
-                  ],
+                child: Text(
+                  'Importados',
+                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.w800),
                 ),
               ),
             ),
-            Padding(
-              padding: EdgeInsets.fromLTRB(20, 0, 20, 10),
-              child: Reveal(
-                index: 3,
-                child: _FileTile(
-                  icon: Icons.account_balance_rounded,
-                  color: context.colors.accent,
-                  name: 'extrato_novembro_sintetico.ofx',
-                  detail: '3 transações importadas • sem duplicatas',
-                  badge: 'OFX',
+            if (files.isEmpty)
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 20),
+                child: Reveal(
+                  index: 3,
+                  child: Text(
+                    finance.status == FinanceStatus.error
+                        ? 'Sem conexão com a API local. Confira o endereço em '
+                              'Ajustes.'
+                        : 'Nenhum arquivo importado ainda.',
+                    style: TextStyle(color: context.colors.muted),
+                  ),
                 ),
               ),
-            ),
-            const Padding(
-              padding: EdgeInsets.fromLTRB(20, 0, 20, 10),
-              child: Reveal(
-                index: 4,
-                child: _FileTile(
-                  icon: Icons.credit_card_rounded,
-                  color: AppTheme.negative,
-                  name: 'fatura_cartao_sintetica.pdf',
-                  detail: '4 transações importadas • 1 duplicata evitada',
-                  badge: 'PDF',
+            for (var i = 0; i < files.length; i++)
+              Padding(
+                padding: const EdgeInsets.fromLTRB(20, 0, 20, 10),
+                child: Reveal(
+                  index: 3 + i,
+                  child: _FileTile(
+                    icon: files[i].kind == 'PDF'
+                        ? Icons.credit_card_rounded
+                        : Icons.account_balance_rounded,
+                    color: files[i].kind == 'PDF'
+                        ? AppTheme.negative
+                        : context.colors.accent,
+                    name: files[i].name,
+                    detail: _detail(files[i]),
+                    badge: files[i].kind,
+                  ),
                 ),
               ),
-            ),
           ],
         ),
       ),
@@ -108,25 +164,18 @@ class TransactionsScreen extends StatelessWidget {
   }
 }
 
-class _ExampleTag extends StatelessWidget {
-  const _ExampleTag();
+String _plural(int n, String one, String many) => '$n ${n == 1 ? one : many}';
 
-  @override
-  Widget build(BuildContext context) => Container(
-    padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
-    decoration: BoxDecoration(
-      color: context.colors.tint,
-      borderRadius: BorderRadius.circular(20),
-    ),
-    child: Text(
-      'dados de exemplo',
-      style: TextStyle(
-        fontSize: 11,
-        fontWeight: FontWeight.w700,
-        color: context.colors.accent,
-      ),
-    ),
+String _detail(ImportedFile file) {
+  final imported = _plural(
+    file.imported,
+    'transação importada',
+    'transações importadas',
   );
+  final dup = file.duplicates == 0
+      ? 'sem duplicatas'
+      : _plural(file.duplicates, 'duplicata evitada', 'duplicatas evitadas');
+  return '$imported • $dup';
 }
 
 class _PrivacyBanner extends StatelessWidget {
@@ -173,7 +222,8 @@ class _PrivacyBanner extends StatelessWidget {
                   ),
                   SizedBox(height: 4),
                   Text(
-                    'Aceita OFX e faturas em PDF. Seus dados ficam em SQLite no aparelho.',
+                    'Aceita OFX e faturas em PDF. O arquivo é lido pela API na sua máquina '
+                    'e os lançamentos ficam na memória dela até ser reiniciada.',
                     style: TextStyle(
                       fontSize: 13,
                       height: 1.4,

@@ -17,7 +17,7 @@ A arquitetura do **Trokim** foi concebida para atender aos requisitos de alta pe
 3. **Mecanismo RAG Híbrido e Banco Vetorial (Semana 2):**
    - Embeddings multilíngues gerados localmente pelo modelo `sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2` (384 dimensões) via **FastEmbed**.
    - Persistência e indexação vetorial nativa em SQLite com a extensão **sqlite-vec** (tabela virtual `vec0`).
-   - Busca híbrida combinando proximidade de cosseno denso com TF-IDF esparso (palavras e n-grams de caracteres), com calibração balanceada ($\alpha = 0,3$).
+   - Busca híbrida combinando proximidade de cosseno denso com TF-IDF esparso (palavras e n-grams de caracteres), com calibração balanceada (α = 0,3).
    - Política ativa de **abstenção ética**: se o score estiver abaixo do limiar ou a consulta abordar temas fora do escopo institucional (apostas, criptoativos ou recomendações especulativas), o agente se abstém.
 4. **Cálculo Determinístico:**
    - A LLM nunca calcula saldos, médias ou limites. Um serviço matemático estrito (`calculation_service.py`) computa os números exatos e os injeta contextualmente.

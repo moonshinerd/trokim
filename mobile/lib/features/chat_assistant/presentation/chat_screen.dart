@@ -31,8 +31,13 @@ class _ChatScreenState extends State<ChatScreen> {
   @override
   void initState() {
     super.initState();
+    final settings = SettingsScope.read(context);
     _chat =
-        widget.controller ?? ChatController(store: PrefsConversationStore());
+        widget.controller ??
+        ChatController(
+          store: PrefsConversationStore(),
+          baseUrlProvider: settings == null ? null : () => settings.apiBaseUrl,
+        );
     if (widget.controller == null) _chat.init();
     _chat.addListener(_scrollToLatest);
   }
