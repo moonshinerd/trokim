@@ -783,6 +783,33 @@
   
   
     <li class="md-nav__item">
+      <a href="../resultados/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Histórico de Resultados e Gráficos
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../../referencias/" class="md-nav__link">
         
   
@@ -1746,6 +1773,33 @@
 
                 
               
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../adr/0015-dados-reais-importacao-e-endereco-da-api/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  0015 – Dados Reais e Endereço da API
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
             </ul>
           </nav>
         
@@ -1902,13 +1956,13 @@
 <p>Para avaliar empiricamente a eficácia da solução ao longo do roadmap:</p>
 <ol>
 <li><strong>Taxa de Importação Correta:</strong>
-   $$\text{Taxa} = \frac{\text{Lançamentos com data, descrição e valor idênticos ao gabarito}}{\text{Total de lançamentos no gabarito sintético}}$$</li>
+   <code>Taxa = lançamentos com data, descrição e valor idênticos ao gabarito ÷ total de lançamentos no gabarito sintético</code></li>
 <li><strong>Precisão Numérica Determinística:</strong>
-   $$\text{Acurácia Numérica} = 100\% \quad (\text{garantida por testes unitários com pytest})$$</li>
+   <code>Acurácia numérica = 100%</code> (garantida por testes unitários com pytest)</li>
 <li><strong>Fundamentação do RAG:</strong>
-   $$\text{Taxa de Fundamentação} = \frac{\text{Respostas sustentadas por fonte oficial identificada}}{\text{Total de respostas avaliadas}}$$</li>
+   <code>Taxa de fundamentação = respostas sustentadas por fonte oficial identificada ÷ total de respostas avaliadas</code></li>
 <li><strong>Taxa de Abstenção Correta:</strong>
-   $$\text{Abstenção Correta} = \frac{\text{Consultas sem evidência onde o modelo declarou ausência de dados}}{\text{Total de consultas fora de escopo}}$$</li>
+   <code>Abstenção correta = consultas sem evidência em que o modelo declarou ausência de dados ÷ total de consultas fora de escopo</code></li>
 </ol>
 
 

@@ -709,6 +709,33 @@
   
   
     <li class="md-nav__item">
+      <a href="../../pesquisa/resultados/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Histórico de Resultados e Gráficos
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../../referencias/" class="md-nav__link">
         
   
@@ -1807,6 +1834,33 @@
 
                 
               
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../adr/0015-dados-reais-importacao-e-endereco-da-api/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  0015 – Dados Reais e Endereço da API
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
             </ul>
           </nav>
         
@@ -1971,7 +2025,7 @@
 <h2 id="1-pauta-da-reuniao">1. Pauta da Reunião<a class="headerlink" href="#1-pauta-da-reuniao" title="Permanent link">&para;</a></h2>
 <ol>
 <li>Validação final dos 20 documentos oficiais curados e catalogados em <code>research/knowledge_base/</code>.</li>
-<li>Avaliação dos resultados empíricos do benchmark RAG (Recall@3, precisão, taxa de abstenção e calibração do $\alpha$).</li>
+<li>Avaliação dos resultados empíricos do benchmark RAG (Recall@3, precisão, taxa de abstenção e calibração do α).</li>
 <li>Homologação da integração do endpoint <code>POST /v1/chat/ask</code> com a interface mobile em Flutter.</li>
 <li>Verificação da massa sintética de dados (OFX e PDF) em conformidade com a LGPD.</li>
 <li>Transição e planejamento da Semana 3 (Comparação LLM pura vs. RAG fundamentado).</li>
@@ -1991,7 +2045,7 @@
 <ul>
 <li>Adotado o modelo <code>sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2</code> (384 dimensões) via FastEmbed local.</li>
 <li>Persistência vetorial em SQLite com a extensão <code>sqlite-vec</code> (tabela virtual <code>vec0</code>), garantindo processamento <em>local-first</em> sem servidores externos.</li>
-<li>Calibração do índice híbrido fixada em $\alpha = 0,3$ (ponderação entre cosseno denso e TF-IDF léxico), atingindo:</li>
+<li>Calibração do índice híbrido fixada em α = 0,3 (ponderação entre cosseno denso e TF-IDF léxico), atingindo:</li>
 <li><strong>Recall@3:</strong> 98,78% (40/41 consultas de teste atendidas no top-3).</li>
 <li><strong>Recuperação Fundamentada:</strong> 95,12%.</li>
 <li><strong>Taxa de Abstenção Ativa:</strong> 100% (20/20 casos fora de escopo corretamente recusados).</li>

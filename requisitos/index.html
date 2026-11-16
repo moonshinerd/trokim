@@ -709,6 +709,33 @@
   
   
     <li class="md-nav__item">
+      <a href="../pesquisa/resultados/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Histórico de Resultados e Gráficos
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../referencias/" class="md-nav__link">
         
   
@@ -1776,6 +1803,33 @@
 
                 
               
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../adr/0015-dados-reais-importacao-e-endereco-da-api/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  0015 – Dados Reais e Endereço da API
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
             </ul>
           </nav>
         
@@ -1937,6 +1991,13 @@
 <td>Inclusão de <strong>RF15</strong> (aba de Ajustes), <strong>RF16</strong> (histórico de conversas com título automático, planejado), <strong>RNF10</strong> (acessibilidade e conforto visual) e <strong>RNF11</strong> (arte de marca com licença livre). Vinculação das ADRs 0009 a 0014.</td>
 <td style="text-align: center;">Equipe Trokim</td>
 </tr>
+<tr>
+<td style="text-align: center;"><strong>v1.3.0</strong></td>
+<td style="text-align: center;">16/11/2026</td>
+<td style="text-align: center;">Semana 3 (<em>Fechamento</em>)</td>
+<td><strong>RF07</strong> passa a consumir <code>/transactions/summary</code>; <strong>RF01</strong> e <strong>RF02</strong> ganham importação pelo app e reenvio sem duplicar totais; <strong>RF15</strong> passa a incluir a edição do endereço da API. Vinculação da ADR 0015.</td>
+<td style="text-align: center;">Equipe Trokim</td>
+</tr>
 </tbody>
 </table>
 <hr />
@@ -2025,7 +2086,7 @@
 <td>O aplicativo móvel deve exibir o resumo financeiro, saldo líquido, métricas de poupança e distribuição por categoria.</td>
 <td style="text-align: center;"><span class="badge-must">Must have</span></td>
 <td style="text-align: center;"><a href="../pesquisa/guiding-questions/">GQ01</a>, <a href="../pesquisa/guiding-questions/">GQ07</a>, <a href="../pesquisa/guiding-questions/">GQ13</a></td>
-<td style="text-align: center;"><a href="../adr/0001-flutter-android/">ADR 0001</a></td>
+<td style="text-align: center;"><a href="../adr/0001-flutter-android/">ADR 0001</a>, <a href="../adr/0015-dados-reais-importacao-e-endereco-da-api/">ADR 0015</a></td>
 <td style="text-align: center;"><span class="badge-must">Implementado</span></td>
 </tr>
 <tr>
@@ -2094,7 +2155,7 @@
 <tr>
 <td style="text-align: center;"><strong>RF15</strong></td>
 <td>Ajustes do aplicativo</td>
-<td>O app deve permitir escolher o tema (sistema, claro ou escuro), reduzir animações, desligar a abertura animada e testar a conexão com a API local, salvando as preferências apenas no aparelho.</td>
+<td>O app deve permitir escolher o tema (sistema, claro ou escuro), reduzir animações, desligar a abertura animada, editar o endereço da API local e testar a conexão, salvando as preferências apenas no aparelho.</td>
 <td style="text-align: center;"><span class="badge-should">Should have</span></td>
 <td style="text-align: center;"><a href="../pesquisa/guiding-questions/">GQ01</a>, <a href="../pesquisa/guiding-questions/">GQ03</a></td>
 <td style="text-align: center;"><a href="../adr/0013-preferencias-locais-e-aba-de-ajustes/">ADR 0013</a></td>
@@ -2210,7 +2271,7 @@
 <tr>
 <td style="text-align: center;"><strong>RNF09</strong></td>
 <td>Metas empíricas do RAG</td>
-<td>O sistema de recuperação deve atingir métricas mínimas auditadas no benchmark: Recall@3 $\ge 90\%$, Precisão $\ge 85\%$ e Abstenção Ética $= 100\%$.</td>
+<td>O sistema de recuperação deve atingir métricas mínimas auditadas no benchmark: Recall@3 ≥ 90%, Precisão ≥ 85% e Abstenção Ética = 100%.</td>
 <td style="text-align: center;"><span class="badge-must">Must have</span></td>
 <td style="text-align: center;"><a href="../pesquisa/guiding-questions/">GQ05</a>, <a href="../pesquisa/guiding-questions/">GQ08</a></td>
 <td style="text-align: center;"><a href="../adr/0006-curadoria-benchmark/">ADR 0006</a>, <a href="../adr/0007-banco-vetorial-embeddings/">ADR 0007</a></td>
@@ -2258,16 +2319,16 @@
 <tr>
 <td style="text-align: center;"><strong>RF01</strong></td>
 <td style="text-align: center;">GQ02, GQ03</td>
-<td style="text-align: center;"><a href="../adr/0005-importacao-local-ofx-pdf/">ADR 0005</a></td>
-<td><code>api/app/services/parser_service.py</code></td>
-<td><code>api/tests/test_parser.py</code></td>
+<td style="text-align: center;"><a href="../adr/0005-importacao-local-ofx-pdf/">ADR 0005</a>, <a href="../adr/0015-dados-reais-importacao-e-endereco-da-api/">ADR 0015</a></td>
+<td><code>api/app/services/parser_service.py</code>, <code>mobile/lib/features/transactions/</code></td>
+<td><code>api/tests/test_parser.py</code>, <code>api/tests/test_transactions_api.py</code>, <code>mobile/test/transactions_screen_test.dart</code></td>
 </tr>
 <tr>
 <td style="text-align: center;"><strong>RF02</strong></td>
 <td style="text-align: center;">GQ02, GQ03</td>
-<td style="text-align: center;"><a href="../adr/0005-importacao-local-ofx-pdf/">ADR 0005</a></td>
-<td><code>api/app/services/parser_service.py</code></td>
-<td><code>api/tests/test_parser.py</code></td>
+<td style="text-align: center;"><a href="../adr/0005-importacao-local-ofx-pdf/">ADR 0005</a>, <a href="../adr/0015-dados-reais-importacao-e-endereco-da-api/">ADR 0015</a></td>
+<td><code>api/app/services/parser_service.py</code>, <code>mobile/lib/features/transactions/</code></td>
+<td><code>api/tests/test_parser.py</code>, <code>api/tests/test_transactions_api.py</code>, <code>mobile/test/transactions_screen_test.dart</code></td>
 </tr>
 <tr>
 <td style="text-align: center;"><strong>RF03</strong></td>
@@ -2300,9 +2361,9 @@
 <tr>
 <td style="text-align: center;"><strong>RF07</strong></td>
 <td style="text-align: center;">GQ01, GQ07, GQ13</td>
-<td style="text-align: center;"><a href="../adr/0001-flutter-android/">ADR 0001</a></td>
-<td><code>mobile/lib/features/</code></td>
-<td>Testes de integração mobile</td>
+<td style="text-align: center;"><a href="../adr/0001-flutter-android/">ADR 0001</a>, <a href="../adr/0015-dados-reais-importacao-e-endereco-da-api/">ADR 0015</a></td>
+<td><code>mobile/lib/features/dashboard/</code>, <code>mobile/lib/features/finance/</code></td>
+<td><code>mobile/test/dashboard_screen_test.dart</code>, <code>mobile/test/finance_test.dart</code></td>
 </tr>
 <tr>
 <td style="text-align: center;"><strong>RF10</strong></td>
@@ -2335,7 +2396,7 @@
 <tr>
 <td style="text-align: center;"><strong>RF15</strong></td>
 <td style="text-align: center;">GQ01, GQ03</td>
-<td style="text-align: center;"><a href="../adr/0013-preferencias-locais-e-aba-de-ajustes/">ADR 0013</a></td>
+<td style="text-align: center;"><a href="../adr/0013-preferencias-locais-e-aba-de-ajustes/">ADR 0013</a>, <a href="../adr/0015-dados-reais-importacao-e-endereco-da-api/">ADR 0015</a></td>
 <td><code>mobile/lib/features/settings/</code>, <code>mobile/lib/core/settings/</code></td>
 <td><code>mobile/test/settings_screen_test.dart</code></td>
 </tr>

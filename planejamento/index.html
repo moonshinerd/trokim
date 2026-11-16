@@ -869,6 +869,33 @@
   
   
     <li class="md-nav__item">
+      <a href="../pesquisa/resultados/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Histórico de Resultados e Gráficos
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../referencias/" class="md-nav__link">
         
   
@@ -1832,6 +1859,33 @@
 
                 
               
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../adr/0015-dados-reais-importacao-e-endereco-da-api/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  0015 – Dados Reais e Endereço da API
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
             </ul>
           </nav>
         
@@ -2087,14 +2141,21 @@
 </blockquote>
 <h3 id="checklist-de-cobertura-da-entrega-3-prazo-sexta-feira-13112026">Checklist de Cobertura da Entrega 3 (Prazo: Sexta-feira, 13/11/2026)<a class="headerlink" href="#checklist-de-cobertura-da-entrega-3-prazo-sexta-feira-13112026" title="Permanent link">&para;</a></h3>
 <ul>
-<li>[ ] <strong>Prompts Versionados da Semana 3:</strong> Templates estruturados em <code>api/app/prompts/</code> cobrindo LLM pura (<code>prompt_llm_pure_v1.txt</code>), RAG ingênuo (<code>prompt_naive_rag_v1.txt</code>) e Trokim estruturado (<code>prompt_trokim_grounded_v1.txt</code>).</li>
-<li>[ ] <strong>Gabarito Empírico de 30 Perguntas:</strong> Dataset <code>questions_comparison.json</code> contendo dúvidas conceituais, cenários cotidianos e armadilhas deliberadas de alucinação financeira.</li>
-<li>[ ] <strong>Framework de Métricas de Alucinação:</strong> Script <code>eval_comparison.py</code> com cálculo de Token-level F1 (SQuAD), Concept Coverage Recall, Factual Inconsistency Rate (%) e Abstention F1.</li>
-<li>[ ] <strong>Camada de Síntese Generativa Local-First:</strong> Port abstrato <code>LLMProvider</code> com adaptadores para Ollama local e Mock para testes determinísticos (ADR 0008).</li>
-<li>[ ] <strong>Endpoint REST Tipado:</strong> <code>POST /v1/chat/generate</code> retornando resposta sintetizada, evidências citadas e status de fundamentação.</li>
-<li>[ ] <strong>Interface Mobile com Cartões de Evidência:</strong> Módulo no Flutter com visualização nativa de citações, score de confiança e links governamentais clicáveis.</li>
-<li>[ ] <strong>Relatório Comparativo Formal:</strong> Publicação em <code>docs/pesquisa/comparacao-llm-rag.md</code> com tabelas, gráficos de dispersão e análise de casos de alucinação.</li>
-<li>[ ] <strong>ADR 0008:</strong> Registro formal da decisão de síntese generativa, controle de alucinação e fallback local.</li>
+<li>[x] <strong>Prompts Versionados da Semana 3:</strong> Templates estruturados em <code>api/app/prompts/</code> cobrindo LLM pura (<code>prompt_llm_pure_v1.txt</code>), RAG ingênuo (<code>prompt_naive_rag_v1.txt</code>) e Trokim estruturado (<code>prompt_trokim_grounded_v1.txt</code>).</li>
+<li>[x] <strong>Gabarito Empírico de 30 Perguntas:</strong> Dataset <code>questions_comparison.json</code> contendo dúvidas conceituais, cenários cotidianos e armadilhas deliberadas de alucinação financeira.</li>
+<li>[x] <strong>Framework de Métricas de Alucinação:</strong> Script <code>eval_comparison.py</code> com cálculo de Token-level F1 (SQuAD), Concept Coverage Recall, Factual Inconsistency Rate (%) e Abstention F1.</li>
+<li>[x] <strong>Camada de Síntese Generativa Local-First:</strong> Port abstrato <code>LLMProvider</code> com adaptadores LiteLLM (padrão), Ollama local e Mock para testes determinísticos (<a href="../adr/0009-sintese-generativa-local/">ADR 0009</a>).</li>
+<li>[x] <strong>Endpoint REST Tipado:</strong> <code>POST /v1/chat/generate</code> retornando resposta sintetizada, evidências citadas e status de fundamentação.</li>
+<li>[x] <strong>Interface Mobile com Cartões de Evidência:</strong> Módulo no Flutter com visualização nativa de citações, score de confiança e links governamentais clicáveis.</li>
+<li>[x] <strong>Relatório Comparativo Formal:</strong> Publicação em <code>docs/pesquisa/comparacao-llm-rag.md</code> com tabelas, gráficos e análise de casos de alucinação, e resultados auditáveis em <code>research/rag_benchmark/results/comparison/</code>.</li>
+<li>[x] <strong>ADRs 0008 e 0009:</strong> Material comparativo versionado (<a href="../adr/0008-material-comparativo-versionado/">0008</a>) e síntese generativa local com limites de fundamentação (<a href="../adr/0009-sintese-generativa-local/">0009</a>).</li>
+</ul>
+<p><strong>Pendências assumidas da Semana 3</strong> (não bloqueiam a entrega, mas não estão concluídas):</p>
+<ul>
+<li>Homologação ponta a ponta do chat generativo em aparelho Android real, com o roteiro de <code>mobile/VALIDACAO_CHAT_GENERATIVO.md</code>.</li>
+<li>Revisão humana independente e cega das respostas do experimento comparativo e repetição com modelos maiores e várias execuções.</li>
+<li>Persistência em SQLite dos lançamentos importados (hoje ficam na memória da API; <a href="../adr/0015-dados-reais-importacao-e-endereco-da-api/">ADR 0015</a>).</li>
+<li>Ata 04 só será criada quando houver reunião de validação efetivamente realizada.</li>
 </ul>
 <h3 id="entregas-de-interface-fora-do-checklist-da-ementa">Entregas de Interface (fora do checklist da ementa)<a class="headerlink" href="#entregas-de-interface-fora-do-checklist-da-ementa" title="Permanent link">&para;</a></h3>
 <p>Redesenho da identidade visual do app e do MkDocs, centralizado no PR #43: paleta Champagne, Tidewater e Fortuna Gold com tema claro/escuro pelo sistema (<a href="https://github.com/moonshinerd/trokim/issues/38">#38</a>), aba de Ajustes (<a href="https://github.com/moonshinerd/trokim/issues/39">#39</a>), abertura com moeda 3D e mascote onça-pintada (<a href="https://github.com/moonshinerd/trokim/issues/40">#40</a>), rolagem sem esticar e toolchain Android (<a href="https://github.com/moonshinerd/trokim/issues/41">#41</a>) e MkDocs repaginado (<a href="https://github.com/moonshinerd/trokim/issues/42">#42</a>). Registradas nas ADRs 0009 a 0012 e nos requisitos RF15, RNF10 e RNF11. O histórico de conversas com título gerado pelo LLM local (RF16, <a href="https://github.com/moonshinerd/trokim/issues/44">#45</a>) está planejado.</p>
@@ -2207,7 +2268,7 @@
 <ul>
 <li>[x] Curadoria de 20 documentos oficiais regulatórios (BCB, CVM, CFPB, ANPD) com catálogo e hashes SHA-256 (<a href="../adr/0006-curadoria-benchmark/">ADR 0006</a>).</li>
 <li>[x] Banco vetorial local com <code>sqlite-vec</code> (tabela virtual <code>vec0</code>) e embeddings FastEmbed multilíngues de 384 dimensões (<a href="../adr/0007-banco-vetorial-embeddings/">ADR 0007</a>).</li>
-<li>[x] Busca híbrida densa/léxica com calibração $\alpha = 0,3$ atingindo 98,78% de Recall@3 e 100% de abstenção ética.</li>
+<li>[x] Busca híbrida densa/léxica com calibração α = 0,3 atingindo 98,78% de Recall@3 e 100% de abstenção ética.</li>
 <li>[x] Endpoint <code>POST /v1/chat/ask</code> tipado e interface conversacional inicial no Flutter.</li>
 <li>[x] Gerador sintético de extratos OFX e faturas PDF aderente à LGPD em <code>research/synthetic_data/</code>.</li>
 </ul>

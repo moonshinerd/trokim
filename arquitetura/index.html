@@ -709,6 +709,33 @@
   
   
     <li class="md-nav__item">
+      <a href="../pesquisa/resultados/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Histórico de Resultados e Gráficos
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../referencias/" class="md-nav__link">
         
   
@@ -1746,6 +1773,33 @@
 
                 
               
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../adr/0015-dados-reais-importacao-e-endereco-da-api/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  0015 – Dados Reais e Endereço da API
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
             </ul>
           </nav>
         
@@ -1854,7 +1908,7 @@
 <li><strong>Mecanismo RAG Híbrido e Banco Vetorial (Semana 2):</strong></li>
 <li>Embeddings multilíngues gerados localmente pelo modelo <code>sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2</code> (384 dimensões) via <strong>FastEmbed</strong>.</li>
 <li>Persistência e indexação vetorial nativa em SQLite com a extensão <strong>sqlite-vec</strong> (tabela virtual <code>vec0</code>).</li>
-<li>Busca híbrida combinando proximidade de cosseno denso com TF-IDF esparso (palavras e n-grams de caracteres), com calibração balanceada ($\alpha = 0,3$).</li>
+<li>Busca híbrida combinando proximidade de cosseno denso com TF-IDF esparso (palavras e n-grams de caracteres), com calibração balanceada (α = 0,3).</li>
 <li>Política ativa de <strong>abstenção ética</strong>: se o score estiver abaixo do limiar ou a consulta abordar temas fora do escopo institucional (apostas, criptoativos ou recomendações especulativas), o agente se abstém.</li>
 <li><strong>Cálculo Determinístico:</strong></li>
 <li>A LLM nunca calcula saldos, médias ou limites. Um serviço matemático estrito (<code>calculation_service.py</code>) computa os números exatos e os injeta contextualmente.</li>
