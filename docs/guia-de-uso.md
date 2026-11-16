@@ -148,3 +148,19 @@ cd mobile
 flutter pub get
 flutter run
 ```
+
+### 8.1. Importar extratos e ver o resumo
+
+Com a API no ar (`make api-run`), abra a aba **Extratos**, toque em **Importar extrato** e escolha
+um arquivo `.ofx` ou `.pdf` (os de teste estão em `research/synthetic_data/`; no emulador, copie o
+arquivo para a pasta Downloads com `adb push`). O app envia o arquivo à API local, que lê os
+lançamentos, marca as duplicatas e calcula os totais. A aba **Resumo** mostra só o que a API
+calculou.
+
+| Resumo | Extratos |
+|---|---|
+| ![Resumo com saldo, receitas, despesas e categorias calculados pela API a partir de extratos sintéticos](assets/app/resumo.png){ width="240" } | ![Lista de arquivos importados, com contagem de transações e duplicatas evitadas](assets/app/extratos.png){ width="240" } |
+
+Para usar a API em outro endereço (por exemplo, um aparelho físico na mesma rede), edite o
+**endereço da API** em **Ajustes** e toque em **Salvar endereço**; **Testar conexão** confere se
+ela responde. Os lançamentos ficam na memória da API e somem quando ela é reiniciada.
