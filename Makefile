@@ -1,4 +1,4 @@
-.PHONY: help setup lint format test docs-serve docs-build api-run mobile-run rag-eval synthetic-data research-test ingest comparison-validate comparison-eval
+.PHONY: help setup lint format test docs-serve docs-build api-run mobile-run rag-eval synthetic-data research-test ingest comparison-validate comparison-eval comparison-run report-charts
 
 RAG_REPORT ?= artifacts/research/current.json
 
@@ -17,6 +17,8 @@ help:
 	@echo "  make synthetic-data      - Gera extratos OFX e faturas sintéticas para testes LGPD"
 	@echo "  make comparison-validate - Valida integridade do material comparativo (Semana 3)"
 	@echo "  make comparison-eval     - Executa o benchmark comparativo das 3 abordagens (Semana 3)"
+	@echo "  make comparison-run RUN=<data>-<modelo> MODEL=<modelo litellm> - Registra uma nova execução versionada"
+	@echo "  make report-charts       - Gera os gráficos versionados do benchmark para o MkDocs"
 
 setup:
 	@test -f api/.env || cp api/.env.example api/.env
@@ -68,3 +70,17 @@ ingest:
 
 synthetic-data:
 	cd api && uv run python ../research/synthetic_data/generate_datasets.py
+
+# Registra uma execução do benchmark comparativo em results/comparison/<RUN>/.
+# Depois crie o run.json (modelo em docs/pesquisa/resultados.md) e rode `make report-charts`.
+comparison-run:
+	@test -n "$(RUN)" -a -n "$(MODEL)" || { echo "Uso: make comparison-run RUN=2026-11-20-qwen2.5-7b MODEL=ollama/qwen2.5:7b"; exit 1; }
+	cd api && uv run python ../research/rag_benchmark/run_comparison.py --provider litellm --model "$(MODEL)" --temperature 0.1 \
+		--output ../research/rag_benchmark/results/comparison/$(RUN)/comparison_results.json \
+		--report-json ../research/rag_benchmark/results/comparison/$(RUN)/comparison_report.json \
+		--report-md ../research/rag_benchmark/results/comparison/$(RUN)/comparison_report.md \
+		--chart-svg ../research/rag_benchmark/results/comparison/$(RUN)/comparison_chart.svg
+
+# Gráficos dos docs: lidos de run.json e dos resultados; matplotlib só é trazido por este comando.
+report-charts:
+	uv run --with matplotlib python research/rag_benchmark/make_report_charts.py

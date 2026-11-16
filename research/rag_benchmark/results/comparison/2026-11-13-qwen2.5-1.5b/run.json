@@ -1,0 +1,63 @@
+{
+  "schema_version": 1,
+  "run_id": "2026-11-13-qwen2.5-1.5b",
+  "date": "2026-11-13",
+  "reference_commit": "8bd00f2",
+  "issue": "#24",
+  "model": "ollama/qwen2.5:1.5b",
+  "provider": "ollama (cliente direto, anterior à camada LiteLLM)",
+  "temperature": 0.1,
+  "top_k": 3,
+  "repetitions": 1,
+  "cases": 30,
+  "corpus": "20 documentos históricos + suplemento exclusivo da comparação (22 fontes)",
+  "raw_responses": null,
+  "report": "artifacts/research/comparison_report.md",
+  "audit": {
+    "file": "artifacts/research/comparison_audit.md",
+    "kind": "revisão manual assistida por agente, não cega à abordagem"
+  },
+  "source_of_numbers": "docs/pesquisa/comparacao-llm-rag.md e artifacts/research/comparison_report.md; as respostas brutas desta execução não foram versionadas",
+  "approaches": {
+    "llm_pura": {
+      "label": "LLM pura",
+      "f1_tokens": 0.156,
+      "concept_coverage": 0.461,
+      "inconsistency_rate": 0.5,
+      "abstention_f1": 0.0,
+      "latency_ms": 2942,
+      "audit": {
+        "flagged": 15,
+        "false_positives": 6,
+        "confirmed": 9
+      }
+    },
+    "rag_ingenuo": {
+      "label": "RAG ingênuo",
+      "f1_tokens": 0.215,
+      "concept_coverage": 0.717,
+      "inconsistency_rate": 0.233,
+      "abstention_f1": 0.0,
+      "latency_ms": 3149,
+      "audit": {
+        "flagged": 7,
+        "false_positives": 5,
+        "confirmed": 4
+      }
+    },
+    "trokim_estruturado": {
+      "label": "Trokim estruturado",
+      "f1_tokens": 0.208,
+      "concept_coverage": 0.778,
+      "inconsistency_rate": 0.345,
+      "abstention_f1": 0.5,
+      "latency_ms": 3203,
+      "audit": {
+        "flagged": 10,
+        "false_positives": 8,
+        "confirmed": 2
+      }
+    }
+  },
+  "notes": "Prompts, gabarito, corpus e avaliador são os mesmos da execução de 16/11; muda a camada de acesso ao modelo."
+}

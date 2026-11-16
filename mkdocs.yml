@@ -78,6 +78,7 @@ nav:
       - Perguntas Norteadoras: pesquisa/guiding-questions.md
       - Matrizes de Risco e Mitigação: pesquisa/matrizes.md
       - Comparação LLM × RAG (Semana 3): pesquisa/comparacao-llm-rag.md
+      - Histórico de Resultados e Gráficos: pesquisa/resultados.md
       - Fontes e Referências: referencias.md
   - Requisitos: requisitos.md
   - Processo: processo/cbl.md
@@ -109,3 +110,4 @@ nav:
       - "0012 – Mascote e Arte Livre": adr/0012-mascote-onca-e-arte-de-marca-livre.md
       - "0013 – Preferências e Ajustes": adr/0013-preferencias-locais-e-aba-de-ajustes.md
       - "0014 – Histórico de Conversas e Títulos": adr/0014-historico-de-conversas-e-titulos.md
+      - "0015 – Dados Reais e Endereço da API": adr/0015-dados-reais-importacao-e-endereco-da-api.md
