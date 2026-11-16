@@ -139,8 +139,8 @@ O entregável oficial da **Semana 4 (16/11 a 20/11)** é o *primeiro protótipo 
 flowchart TD
     subgraph "Fase 1: segunda (independentes)"
         A["#51 Contratos e orquestrador<br/><b>@moonshinerd</b>"]
-        B["#52 Research Agent<br/><b>@gabrielcrzojo</b>"]
-        C["#53 Analysis Agent<br/><b>@zainoca</b>"]
+        B["#52 Research Agent<br/><b>@zainoca</b>"]
+        C["#53 Analysis Agent<br/><b>@gabrielcrzojo</b>"]
         D["#54 Validation Agent<br/><b>@rebecaboncaputo</b>"]
         E["#55 Communication Agent<br/><b>@Luix3005</b>"]
         F["#56 Gabarito multiagente<br/><b>@gabrielcrzojo</b>"]
@@ -169,8 +169,8 @@ flowchart TD
 | Issue | Escopo | Responsável | Fase | Precedência | Estimativa |
 |:---:|---|:---:|:---:|---|:---:|
 | [#51](https://github.com/moonshinerd/trokim/issues/51) | Contratos dos agentes e orquestrador | @moonshinerd | 1 | **Não-bloqueante** | 3 h |
-| [#52](https://github.com/moonshinerd/trokim/issues/52) | Research Agent (evidências e abstenção) | @gabrielcrzojo | 1 | **Não-bloqueante** | 1,5 h |
-| [#53](https://github.com/moonshinerd/trokim/issues/53) | Analysis Agent (cálculos determinísticos) | @zainoca | 1 | **Não-bloqueante** | 3 h |
+| [#52](https://github.com/moonshinerd/trokim/issues/52) | Research Agent (evidências e abstenção) | @zainoca | 1 | **Não-bloqueante** | 1,5 h |
+| [#53](https://github.com/moonshinerd/trokim/issues/53) | Analysis Agent (cálculos determinísticos) | @gabrielcrzojo | 1 | **Não-bloqueante** | 3 h |
 | [#54](https://github.com/moonshinerd/trokim/issues/54) | Validation Agent (números, citações, escopo) | @rebecaboncaputo | 1 | **Não-bloqueante** | 3 h |
 | [#55](https://github.com/moonshinerd/trokim/issues/55) | Communication Agent (redação com prompt versionado) | @Luix3005 | 1 | **Não-bloqueante** | 2,5 h |
 | [#56](https://github.com/moonshinerd/trokim/issues/56) | Gabarito multiagente de 20 cenários | @gabrielcrzojo | 1 | **Não-bloqueante** | 3 h |
@@ -180,7 +180,7 @@ flowchart TD
 | [#60](https://github.com/moonshinerd/trokim/issues/60) | Benchmark multiagente contra o Trokim estruturado | @rebecaboncaputo, @gabrielcrzojo | 2 | **Bloqueada por [#56](https://github.com/moonshinerd/trokim/issues/56) e [#58](https://github.com/moonshinerd/trokim/issues/58)** | 4 h |
 | [#61](https://github.com/moonshinerd/trokim/issues/61) | Docs, ADR 0016 final e guia da Entrega 4 | @moonshinerd, @Luix3005 | 2 | **Bloqueada por [#59](https://github.com/moonshinerd/trokim/issues/59) e [#60](https://github.com/moonshinerd/trokim/issues/60)** | 4 h |
 
-**Revisão cruzada** (1 aprovação de outro membro por PR): [#51](https://github.com/moonshinerd/trokim/issues/51) por @rebecaboncaputo, [#52](https://github.com/moonshinerd/trokim/issues/52) por @moonshinerd, [#53](https://github.com/moonshinerd/trokim/issues/53) por @gabrielcrzojo, [#54](https://github.com/moonshinerd/trokim/issues/54) por @Luix3005, [#55](https://github.com/moonshinerd/trokim/issues/55) por @zainoca, [#56](https://github.com/moonshinerd/trokim/issues/56) por @rebecaboncaputo e [#57](https://github.com/moonshinerd/trokim/issues/57) por @zainoca.
+**Revisão cruzada** (1 aprovação de outro membro por PR): [#51](https://github.com/moonshinerd/trokim/issues/51) por @rebecaboncaputo, [#52](https://github.com/moonshinerd/trokim/issues/52) por @moonshinerd, [#53](https://github.com/moonshinerd/trokim/issues/53) por @zainoca, [#54](https://github.com/moonshinerd/trokim/issues/54) por @Luix3005, [#55](https://github.com/moonshinerd/trokim/issues/55) por @zainoca, [#56](https://github.com/moonshinerd/trokim/issues/56) por @rebecaboncaputo e [#57](https://github.com/moonshinerd/trokim/issues/57) por @zainoca.
 
 ### 6.3 MkDocs sempre atualizado
 
