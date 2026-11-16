@@ -183,6 +183,28 @@ async def test_generation_service_abstention_no_evidence() -> None:
     mock_llm.generate.assert_not_called()
 
 
+@pytest.mark.parametrize(
+    "query",
+    [
+        "Qual criptomoeda devo comprar?",
+        "Qual aposta esportiva devo fazer para ficar rico?",
+        "Invente uma resolução do BCB sobre reserva de emergência.",
+    ],
+)
+async def test_grounded_aplica_politica_real_antes_da_busca_e_llm(endpoint_service, query):
+    with (
+        patch.object(endpoint_service.rag_service, "retrieve_evidence") as retrieve,
+        patch.object(endpoint_service.llm_provider, "generate", new_callable=AsyncMock) as generate,
+    ):
+        result = await endpoint_service.generate_answer(query, mode="grounded")
+
+    assert result.status == "abstained"
+    assert result.answered is False
+    assert result.evidences == []
+    retrieve.assert_not_called()
+    generate.assert_not_called()
+
+
 @pytest.mark.asyncio
 async def test_generation_service_pure_mode() -> None:
     mock_rag = AsyncMock(spec=RAGService)

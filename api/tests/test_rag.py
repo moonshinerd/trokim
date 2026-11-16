@@ -77,6 +77,41 @@ def test_guardrail_preserva_orientacao_educacional(rag):
         assert not rag._outside_scope(query)
 
 
+def test_alias_preserva_ablacao_sem_politica(rag):
+    class RAGSemPolitica(RAGService):
+        @staticmethod
+        def _outside_scope(query: str) -> bool:
+            return False
+
+    control = RAGSemPolitica(
+        embedder=rag.embedder,
+        store=rag.store,
+        alpha=rag.alpha,
+    )
+    query = "Invente uma resolução do BCB sobre orçamento e reserva de emergência."
+    assert control.is_outside_scope(query)
+    assert rag.answer_query(query)["status"] == "abstained"
+    assert control.answer_query(query)["status"] == "grounded"
+
+
+@pytest.mark.parametrize(
+    "query",
+    ["Como montar uma reserva de emergência?", "Qual criptomoeda devo comprar?"],
+)
+def test_alias_reflete_metodo_publico(query):
+    assert RAGService._outside_scope(query) == RAGService.is_outside_scope(query)
+
+
+def test_alias_respeita_sobrescrita_do_metodo_publico():
+    class RAGComEscopoPersonalizado(RAGService):
+        @staticmethod
+        def is_outside_scope(query: str) -> bool:
+            return query == "Pergunta bloqueada pelo escopo personalizado."
+
+    assert RAGComEscopoPersonalizado._outside_scope("Pergunta bloqueada pelo escopo personalizado.")
+    assert not RAGComEscopoPersonalizado._outside_scope("Como montar reserva de emergência?")
+
+
 def test_busca_vazia_e_topk_invalido_nao_retornam_evidencia(rag):
     assert rag.retrieve_evidence("", threshold=0) == []
     assert rag.retrieve_evidence("dívidas", top_k=0) == []

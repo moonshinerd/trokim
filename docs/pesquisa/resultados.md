@@ -124,6 +124,15 @@ O baseline (`results/baseline.json`) é o mesmo recuperador sem a política de e
 abstenção cai para 35,00%, o que mostra que o limiar de similaridade sozinho não basta. O
 valor atual vem de `results/current.json`.
 
+**Verificação de regressão da #52 (16/11/2026):** após expor a política pública de
+escopo e acrescentar as recusas do Research Agent, os snapshots `current.json` e
+`baseline.json` foram regenerados com Python 3.12.16. Os resultados por caso e as
+métricas permaneceram iguais: Recall@3 de 98,78%, resposta fundamentada de 95,12% e
+abstenção de 100% com política ou 35% sem ela. Mudaram apenas os metadados de
+proveniência: código, versão de Python e avaliador, que passou a incluir o arquivo
+da política de domínio no hash do serviço. Os gráficos continuam representando esses valores;
+esta verificação não é uma avaliação do fluxo multiagente nem uma nova execução com LLM.
+
 ![Recall@3 e resposta fundamentada conforme o peso da similaridade densa (alpha)](../assets/comparacao/semana2/fig-calibracao-alpha.png)
 
 Dados da calibração em
