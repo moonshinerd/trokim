@@ -173,7 +173,11 @@ def evaluate(rag: Answerer | None = None, cases_path: Path = QUESTIONS) -> dict:
                     ROOT / "api/app/services" / name
                     for name in ("rag_service.py", "chunking_service.py", "ingestion_service.py")
                 ]
-                + list((ROOT / "api/app/clients").glob("*.py"))
+                # Só os clientes de recuperação: provedores de LLM não afetam este benchmark.
+                + [
+                    ROOT / "api/app/clients" / name
+                    for name in ("fastembed_embeddings.py", "sqlite_vector_store.py")
+                ]
                 + [ROOT / "api/app/core/config.py"]
             ),
             "python": platform.python_version(),

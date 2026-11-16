@@ -1,36 +1,185 @@
 /* ==========================================================================
-   Trokim - Design System & Visual Polish
-   Palette:
-     - #0D47A1 (Azul Profundo - Primária)
-     - #00B4D8 (Azul Turquesa - Destaque / Accent)
-     - #10B981 (Verde Esmeralda - Sucesso / Concluído)
-     - #64748B (Ardósia / Neutro)
+   Trokim - Design System
+   Champagne, Tidewater Green e Fortuna Gold.
+     --tk-forest  #1B3232   --tk-emerald #2F4F4F   --tk-mint #F0DCBC
+     --tk-coin    #DAA520   --tk-paper   #FAEBD7   --tk-ink  #1F3A3A
+   Mesma paleta do aplicativo mobile.
    ========================================================================== */
+
+:root {
+  --tk-forest: #1B3232;
+  --tk-emerald: #2F4F4F;
+  --tk-mint: #F0DCBC;
+  --tk-coin: #DAA520;
+  --tk-paper: #FAEBD7;
+  --tk-ink: #1F3A3A;
+  --tk-line: #E6D2B3;
+  --tk-ease: cubic-bezier(0.2, 0, 0, 1);
+}
 
 :root,
 [data-md-color-scheme="default"] {
-  --md-primary-fg-color:              #0D47A1;
-  --md-primary-fg-color--light:       #1976D2;
-  --md-primary-fg-color--dark:        #0A3478;
-  --md-primary-bg-color:              #FFFFFF;
-  --md-accent-fg-color:               #0284C7;
-  --md-typeset-a-color:               #0284C7;
+  --md-primary-fg-color:        #1B3232;
+  --md-primary-fg-color--light: #3F6666;
+  --md-primary-fg-color--dark:  #142828;
+  --md-primary-bg-color:        #FAEBD7;
+  --md-accent-fg-color:         #B8860B;
+  --md-typeset-a-color:         #1F6B6B;
+  --md-default-bg-color:        #FAEBD7;
+  --md-default-fg-color:        #1F3A3A;
+  --md-default-fg-color--light: #566B66;
+  --md-code-bg-color:           #F0DCBC;
+  --md-footer-bg-color:         #1B3232;
 
-  --md-mermaid-edge-color:            #64748B;
-  --md-mermaid-label-bg-color:        #FFFFFF;
-  --md-mermaid-label-fg-color:        #1E293B;
+  --md-mermaid-edge-color:      #6B7F7A;
+  --md-mermaid-label-bg-color:  #FFF8EE;
+  --md-mermaid-label-fg-color:  #1F3A3A;
 }
 
 [data-md-color-scheme="slate"] {
-  --md-primary-fg-color:              #1E293B;
-  --md-primary-fg-color--light:       #334155;
-  --md-primary-fg-color--dark:        #0F172A;
-  --md-accent-fg-color:               #38BDF8;
-  --md-typeset-a-color:               #38BDF8;
+  --md-primary-fg-color:        #0F1D1D;
+  --md-primary-fg-color--light: #2F4F4F;
+  --md-primary-fg-color--dark:  #0A1414;
+  --md-accent-fg-color:         #DAA520;
+  --md-typeset-a-color:         #E2B53A;
+  --md-default-bg-color:        #0F1D1D;
+  --md-default-fg-color:        #EBDCC4;
+  --md-code-bg-color:           #172929;
+  --md-footer-bg-color:         #0A1414;
 
-  --md-mermaid-edge-color:            #94A3B8;
-  --md-mermaid-label-bg-color:        #1E293B;
-  --md-mermaid-label-fg-color:        #F1F5F9;
+  --md-mermaid-edge-color:      #8FA39B;
+  --md-mermaid-label-bg-color:  #172929;
+  --md-mermaid-label-fg-color:  #EBDCC4;
+}
+
+/* --------------------------------------------------------------------------
+   Tipografia e ritmo
+   -------------------------------------------------------------------------- */
+.md-typeset h1 {
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  color: var(--md-default-fg-color);
+  text-wrap: balance;
+}
+.md-typeset h2 {
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  text-wrap: balance;
+}
+.md-typeset h3 { font-weight: 700; letter-spacing: -0.01em; }
+.md-typeset { font-feature-settings: "ss01", "tnum"; }
+
+/* --------------------------------------------------------------------------
+   Cabeçalho e abas
+   -------------------------------------------------------------------------- */
+.md-header {
+  box-shadow: none;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+.md-header__button.md-logo img,
+.md-header__button.md-logo svg { height: 1.7rem; width: auto; }
+.md-header__title { font-weight: 800; letter-spacing: -0.02em; }
+.md-tabs { border-bottom: 1px solid rgba(255, 255, 255, 0.06); }
+.md-tabs__link { font-weight: 600; opacity: 0.72; transition: opacity 0.2s var(--tk-ease); }
+.md-tabs__link--active, .md-tabs__link:hover { opacity: 1; }
+
+/* --------------------------------------------------------------------------
+   Cartões de destaque (grid cards)
+   -------------------------------------------------------------------------- */
+.md-typeset .grid.cards > ul > li,
+.md-typeset .grid > .card {
+  border: 1px solid var(--tk-line);
+  border-radius: 20px;
+  background: #fff;
+  padding: 1.1rem 1.2rem;
+  transition: transform 0.35s var(--tk-ease), box-shadow 0.35s var(--tk-ease), border-color 0.35s var(--tk-ease);
+}
+.md-typeset .grid.cards > ul > li:hover {
+  transform: translateY(-4px);
+  border-color: var(--tk-emerald);
+  box-shadow: 0 18px 40px -18px rgba(27, 50, 50, 0.35);
+}
+[data-md-color-scheme="slate"] .md-typeset .grid.cards > ul > li {
+  background: #172929;
+  border-color: rgba(255, 255, 255, 0.08);
+}
+.md-typeset .grid.cards > ul > li .twemoji,
+.md-typeset .grid.cards > ul > li .lg { color: var(--tk-emerald); }
+
+/* --------------------------------------------------------------------------
+   Admonitions, código e tabelas
+   -------------------------------------------------------------------------- */
+.md-typeset .admonition, .md-typeset details {
+  border-radius: 16px;
+  border-width: 1px;
+  box-shadow: none;
+}
+.md-typeset code { border-radius: 8px; }
+.md-typeset pre > code { border-radius: 14px; }
+.md-typeset table:not([class]) {
+  font-size: 0.85rem;
+  border: 1px solid var(--tk-line);
+  border-radius: 14px;
+  border-collapse: separate;
+  border-spacing: 0;
+  overflow: hidden;
+  width: 100%;
+  display: table;
+  box-shadow: none;
+  background: #fff;
+}
+.md-typeset table:not([class]) th {
+  background: var(--tk-mint);
+  color: #1B3232;
+  font-weight: 700;
+}
+.md-typeset table:not([class]) tr:hover td { background: rgba(47, 79, 79, 0.06); }
+[data-md-color-scheme="slate"] .md-typeset table:not([class]) {
+  background: #172929;
+  border-color: rgba(255, 255, 255, 0.08);
+}
+[data-md-color-scheme="slate"] .md-typeset table:not([class]) th {
+  background: rgba(218, 165, 32, 0.14);
+  color: #EBDCC4;
+}
+
+/* --------------------------------------------------------------------------
+   Botões (md-button)
+   -------------------------------------------------------------------------- */
+.md-typeset .md-button {
+  border-radius: 14px;
+  font-weight: 700;
+  transition: transform 0.2s var(--tk-ease), box-shadow 0.2s var(--tk-ease);
+}
+.md-typeset .md-button--primary {
+  background: var(--tk-coin);
+  border-color: var(--tk-coin);
+  color: #1B3232;
+}
+.md-typeset .md-button:hover { transform: translateY(-2px); }
+
+/* --------------------------------------------------------------------------
+   Transições suaves entre páginas (navigation.instant)
+   -------------------------------------------------------------------------- */
+@keyframes tk-page-in {
+  from { opacity: 0; transform: translateY(10px); }
+  to   { opacity: 1; transform: none; }
+}
+.md-content__inner { animation: tk-page-in 0.45s var(--tk-ease) both; }
+.md-sidebar { animation: tk-page-in 0.35s var(--tk-ease) both; }
+
+.md-progress { background: var(--tk-coin); height: 3px; }
+
+a, .md-nav__link, .md-tabs__link { transition-property: color, opacity; transition-duration: 0.2s; }
+
+:focus-visible { outline: 2px solid var(--tk-coin); outline-offset: 2px; border-radius: 4px; }
+
+@media (prefers-reduced-motion: reduce) {
+  .md-content__inner, .md-sidebar { animation: none; }
+  .md-typeset .grid.cards > ul > li,
+  .md-typeset .md-button { transition: none; }
+  .md-typeset .grid.cards > ul > li:hover,
+  .md-typeset .md-button:hover { transform: none; }
 }
 
 /* --------------------------------------------------------------------------
@@ -99,18 +248,55 @@
   border: 1px solid rgba(239, 68, 68, 0.4);
 }
 
-/* Tabelas */
-.md-typeset table:not([class]) {
-  font-size: 0.85rem;
-  border-collapse: collapse;
-  width: 100%;
-  display: table;
-}
 
-.md-typeset table:not([class]) th {
-  background-color: rgba(0, 0, 0, 0.04);
+/* --------------------------------------------------------------------------
+   Hero da página inicial
+   -------------------------------------------------------------------------- */
+.md-typeset .tk-hero {
+  position: relative;
+  overflow: hidden;
+  padding: 2.4rem 2rem 2rem;
+  margin: 0 0 1.6rem;
+  border-radius: 28px;
+  color: #fff;
+  background: linear-gradient(135deg, #3F6666 0%, #2F4F4F 55%, #1B3232 100%);
 }
+.md-typeset .tk-hero::after {
+  content: "";
+  position: absolute;
+  right: -70px;
+  top: -70px;
+  width: 260px;
+  height: 260px;
+  border-radius: 50%;
+  border: 30px solid rgba(255, 255, 255, 0.07);
+  pointer-events: none;
+}
+.md-typeset .tk-hero img { display: block; margin-bottom: 1rem; }
+.md-typeset .tk-hero h1 { color: #fff; margin: 0 0 0.6rem; max-width: 18ch; }
+.md-typeset .tk-hero p { max-width: 52ch; color: rgba(255, 255, 255, 0.85); }
+.md-typeset .tk-hero a:not(.md-button) { color: var(--tk-coin); }
+.md-typeset .tk-hero .md-button { color: #fff; border-color: rgba(255, 255, 255, 0.5); }
+.md-typeset .tk-hero .md-button--primary { background: var(--tk-coin); border-color: var(--tk-coin); color: #1B3232; }
 
-[data-md-color-scheme="slate"] .md-typeset table:not([class]) th {
-  background-color: rgba(255, 255, 255, 0.05);
+
+/* Moeda do Trokim flutuando no hero. */
+.md-typeset .tk-hero { padding-right: 15rem; min-height: 19rem; }
+.md-typeset .tk-hero img.tk-coin {
+  position: absolute; right: 1.4rem; top: 50%;
+  width: 12.5rem; height: auto; margin: 0;
+  transform: translateY(-50%);
+  animation: tk-float 6s ease-in-out infinite;
+  filter: drop-shadow(0 18px 30px rgba(0, 0, 0, 0.35));
+}
+@keyframes tk-float {
+  0%, 100% { transform: translateY(-50%) rotate(-3deg); }
+  50% { transform: translateY(calc(-50% - 10px)) rotate(3deg); }
+}
+@media (max-width: 44.9375em) {
+  .md-typeset .tk-hero { padding-right: 2rem; }
+  .md-typeset .tk-hero img.tk-coin { display: none; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .md-typeset .tk-hero img.tk-coin { animation: none; }
 }

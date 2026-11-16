@@ -45,3 +45,8 @@ Catálogo consolidado de referências bibliográficas, materiais institucionais 
 | **[REF14]** | **Mean Absolute Error (MAE)** | Scikit-Learn Metrics | [scikit-learn.org/.../sklearn.metrics.mean_absolute_error.html](https://scikit-learn.org/stable/modules/generated/sklearn.metrics.mean_absolute_error.html) | Mensuração do erro absoluto em reais nas projeções de despesas futuras (GQ09 / GQ11). |
 | **[REF15]** | **Mean Absolute Percentage Error (MAPE)** | Scikit-Learn Metrics | [scikit-learn.org/.../sklearn.metrics.mean_absolute_percentage_error.html](https://scikit-learn.org/stable/modules/generated/sklearn.metrics.mean_absolute_percentage_error.html) | Mensuração do erro relativo percentual em estimativas orçamentárias. |
 | **[REF16]** | **TimeSeriesSplit (Validação Cruzada)** | Scikit-Learn Model Selection | [scikit-learn.org/.../sklearn.model_selection.TimeSeriesSplit.html](https://scikit-learn.org/stable/modules/generated/sklearn.model_selection.TimeSeriesSplit.html) | Divisão temporal sem vazamento de dados do futuro para avaliação de séries financeiras. |
+
+## 5. Créditos de Arte
+
+- **Mascote (onça-pintada):** estilizado a partir do vetor *Jaguar SVG*, de Jordan Irwin (AntumDeluge), publicado em [OpenGameArt](https://opengameart.org/node/98089) sob **CC0 (domínio público)**. Atribuição não é obrigatória; fica aqui por boa prática. O Trokim removeu o cenário, ampliou a área de desenho e recolorou a arte em tons dourados com as manchas vazadas.
+- **Tipografia:** [Plus Jakarta Sans](https://fonts.google.com/specimen/Plus+Jakarta+Sans), licença SIL Open Font License 1.1.

@@ -18,7 +18,7 @@ class OllamaProvider:
         model: str | None = None,
         timeout: float | None = None,
     ) -> None:
-        self.base_url = (base_url or settings.LLM_API_BASE).rstrip("/")
+        self.base_url = (base_url or settings.LLM_API_BASE or "http://localhost:11434").rstrip("/")
         raw_model = model or settings.LLM_MODEL
         # Normaliza caso venha prefixado com "ollama/"
         self.model = raw_model.split("/")[-1] if "/" in raw_model else raw_model
