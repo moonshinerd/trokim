@@ -218,3 +218,69 @@ sequenceDiagram
     API-->>Mobile: Título
     Mobile-->>User: Atualiza o título (uma renomeação manual nunca é sobrescrita)
 ```
+
+---
+
+## 6. Fluxo Multiagente (`POST /v1/agents/ask`)
+
+O sistema multiagente separa as responsabilidades entre agentes especializados com uma trilha de auditoria transparente:
+
+```mermaid
+sequenceDiagram
+    autonumber
+    actor User as Usuário (Android)
+    participant Mobile as App Flutter
+    participant API as Router Agents (/v1/agents/ask)
+    participant Orch as Orchestrator
+    participant Research as Research Agent
+    participant Analysis as Analysis Agent
+    participant Comm as Communication Agent
+    participant Val as Validation Agent
+
+    User->>Mobile: Pergunta sobre finanças / gastos
+    Mobile->>API: POST /v1/agents/ask {message}
+    API->>Orch: run(question, transactions)
+    
+    rect rgb(240, 248, 255)
+        note over Orch,Research: 1. Recuperação de evidências
+        Orch->>Research: run(ctx)
+        alt Fora de escopo ou sem evidência
+            Research-->>Orch: StepStatus.ABSTAINED (abstain_reason)
+            Orch-->>API: MultiAgentResponse (status: abstained, resposta fixa)
+            API-->>Mobile: Resposta de abstenção + trilha
+        else Evidências oficiais encontradas
+            Research-->>Orch: StepStatus.OK (ctx.evidences)
+        end
+    end
+
+    opt Pergunta requer cálculo (needs_analysis)
+        rect rgb(255, 250, 240)
+            note over Orch,Analysis: 2. Análise numérica determinística
+            Orch->>Analysis: run(ctx)
+            Analysis-->>Orch: StepStatus.OK (ctx.calculations, ctx.assumptions)
+        end
+    end
+
+    rect rgb(245, 255, 245)
+        note over Orch,Val: 3. Ciclo de Redação e Validação Defensiva
+        loop Até max_revisions (padrão: 1)
+            Orch->>Comm: run(ctx) (usa LLM)
+            Comm-->>Orch: StepStatus.OK (ctx.draft_answer)
+            Orch->>Val: run(ctx) (determinístico)
+            alt Validação Aprovada
+                Val-->>Orch: StepStatus.OK (sem blockers)
+            else Blocker detectado e há revisão
+                Val-->>Orch: StepStatus.FAILED (ctx.issues com BLOCKER)
+                note over Orch,Comm: Reenvia ao Communication para correção
+            else Blocker persistente ou sem revisão
+                Val-->>Orch: StepStatus.FAILED
+                Orch-->>API: MultiAgentResponse (status: rejected, resposta segura)
+                API-->>Mobile: Rejeição segura + trilha de auditoria
+            end
+        end
+    end
+
+    Orch-->>API: MultiAgentResponse (status: answered, answer, steps, durações)
+    API-->>Mobile: Resposta auditada com trilha dos agentes
+    Mobile-->>User: Exibe resposta com botão "Como cheguei a essa resposta"
+```
