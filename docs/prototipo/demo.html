@@ -1,0 +1,100 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="color-scheme" content="light dark">
+    <title>Protótipo do Trokim</title>
+    <link rel="stylesheet" href="prototipo.css">
+    <script src="prototipo.js" defer></script>
+  </head>
+  <body>
+    <div class="app-shell">
+      <header class="topbar">
+        <a class="brand" href="#resumo" data-screen-link="resumo" aria-label="Trokim, ir para Resumo">
+          <span class="brand-mark" aria-hidden="true">T</span>
+          <span>Trokim</span>
+        </a>
+        <p class="demo-label"><span aria-hidden="true"></span> Protótipo demonstrativo</p>
+      </header>
+
+      <main id="conteudo" tabindex="-1">
+        <section class="screen is-active" id="resumo" aria-labelledby="titulo-resumo">
+          <div class="screen-heading">
+            <p class="eyebrow">Visão financeira</p>
+            <h1 id="titulo-resumo">Seu mês em foco</h1>
+            <p class="subheading">Um retrato simples das suas contas.</p>
+          </div>
+          <article class="balance-card">
+            <p class="card-kicker">Saldo do mês <span class="sample-tag">exemplo</span></p>
+            <p class="balance-value">R$ 2.480,50</p>
+            <div class="balance-meta">
+              <span><span class="dot income"></span>Entradas <strong>R$ 6.200,00</strong></span>
+              <span><span class="dot expense"></span>Saídas <strong>R$ 3.719,50</strong></span>
+            </div>
+            <div class="balance-bar" role="img" aria-label="Distribuição ilustrativa: 62 por cento entradas, 38 por cento saídas"><span></span></div>
+          </article>
+          <div class="section-title"><h2>Para onde foi o dinheiro</h2><span>Este mês</span></div>
+          <div class="category-list">
+            <article class="category-row"><span class="category-icon home" aria-hidden="true">⌂</span><div class="category-info"><div><strong>Moradia</strong><span>R$ 1.450,00</span></div><div class="track"><i style="--share:78%"></i></div></div></article>
+            <article class="category-row"><span class="category-icon food" aria-hidden="true">＋</span><div class="category-info"><div><strong>Alimentação</strong><span>R$ 980,50</span></div><div class="track"><i style="--share:58%"></i></div></div></article>
+            <article class="category-row"><span class="category-icon travel" aria-hidden="true">↗</span><div class="category-info"><div><strong>Transporte</strong><span>R$ 420,00</span></div><div class="track"><i style="--share:32%"></i></div></div></article>
+          </div>
+          <p class="demo-note">Valores ilustrativos. O aplicativo real mostra cálculos feitos a partir dos extratos importados.</p>
+        </section>
+
+        <section class="screen" id="extratos" aria-labelledby="titulo-extratos" hidden>
+          <div class="screen-heading"><p class="eyebrow">Movimentações</p><h1 id="titulo-extratos">Extratos e faturas</h1><p class="subheading">Lançamentos fictícios para demonstrar a lista.</p></div>
+          <div class="privacy-banner"><span class="lock-icon" aria-hidden="true">⌑</span><div><strong>Seus dados sob seu controle</strong><p>O app processa os extratos localmente.</p></div></div>
+          <div class="section-title"><h2>Novembro</h2><span>6 lançamentos</span></div>
+          <div class="transaction-list">
+            <article class="transaction"><span class="merchant-icon market" aria-hidden="true">M</span><div class="transaction-info"><strong>Mercado do Bairro</strong><span>Hoje · Alimentação</span></div><strong class="amount debit">− R$ 86,40</strong></article>
+            <article class="transaction"><span class="merchant-icon income-icon" aria-hidden="true">↙</span><div class="transaction-info"><strong>Salário</strong><span>Ontem · Receita</span></div><strong class="amount credit">+ R$ 3.200,00</strong></article>
+            <article class="transaction"><span class="merchant-icon mobility" aria-hidden="true">↗</span><div class="transaction-info"><strong>Mobilidade urbana</strong><span>14 nov. · Transporte</span></div><strong class="amount debit">− R$ 24,90</strong></article>
+            <article class="transaction"><span class="merchant-icon home-icon" aria-hidden="true">⌂</span><div class="transaction-info"><strong>Conta de energia</strong><span>12 nov. · Moradia</span></div><strong class="amount debit">− R$ 138,70</strong></article>
+            <article class="transaction"><span class="merchant-icon cafe" aria-hidden="true">C</span><div class="transaction-info"><strong>Padaria Central</strong><span>11 nov. · Alimentação</span></div><strong class="amount debit">− R$ 18,50</strong></article>
+          </div>
+          <button class="primary-button" type="button" aria-label="Ação demonstrativa de importar extrato">＋ <span>Importar extrato</span></button>
+          <p class="demo-note">A importação não está ativa neste protótipo.</p>
+        </section>
+
+        <section class="screen" id="assistente" aria-labelledby="titulo-assistente" hidden>
+          <div class="screen-heading assistant-heading"><div><p class="eyebrow">Educação financeira</p><h1 id="titulo-assistente">Assistente</h1><p class="subheading">Respostas explicadas com fontes.</p></div><button class="quiet-button" type="button" aria-label="Ver histórico demonstrativo">☷ <span>Histórico</span></button></div>
+          <div class="history-strip" aria-label="Conversas recentes"><span class="history-current">Como montar uma reserva?</span><span>Orçamento do mês</span></div>
+          <div class="chat-thread" aria-label="Conversa de exemplo">
+            <div class="message user-message"><p>Como posso começar uma reserva de emergência?</p></div>
+            <div class="message assistant-message"><span class="assistant-mark" aria-hidden="true">T</span><div><p>Uma reserva ajuda a lidar com imprevistos. O ideal depende da sua realidade e das despesas essenciais. Comece entendendo seus gastos e escolha um valor que caiba no seu orçamento.</p><p class="citation-line">Essa orientação é educativa e não indica um produto financeiro.</p></div></div>
+          </div>
+          <article class="source-card"><div class="source-heading"><span class="source-number">1</span><div><strong>Banco Central do Brasil</strong><span>Caderno de Educação Financeira · Orçamento</span></div><span class="verified" aria-label="Fonte institucional">✓</span></div><p>O orçamento registra receitas e despesas para compreender hábitos de consumo e planejar as finanças pessoais.</p><a href="https://www.bcb.gov.br/cidadaniafinanceira" target="_blank" rel="noopener noreferrer">Abrir fonte oficial <span aria-hidden="true">↗</span></a></article>
+          <form class="composer" aria-label="Campo demonstrativo de mensagem"><label class="visually-hidden" for="pergunta">Escreva sua pergunta</label><input id="pergunta" type="text" placeholder="Pergunte sobre suas finanças…" disabled><button type="button" disabled aria-label="Enviar mensagem (indisponível)">↑</button></form>
+          <p class="demo-note">Conversa e fonte ilustrativas. O envio de mensagens não está ativo.</p>
+        </section>
+
+        <section class="screen" id="cenarios" aria-labelledby="titulo-cenarios" hidden>
+          <div class="screen-heading"><p class="eyebrow">Planejamento</p><h1 id="titulo-cenarios">E se eu mudasse?</h1><p class="subheading">Compare cenários fictícios mantendo as despesas essenciais.</p></div>
+          <article class="scenario-card"><div class="scenario-top"><div><p class="scenario-label">Cenário A</p><h2>Como está hoje</h2></div><span class="scenario-badge neutral-badge">Base</span></div><div class="scenario-total"><span>Renda mensal</span><strong>R$ 6.000</strong></div><div class="allocation" role="img" aria-label="Despesas fixas 50 por cento, variáveis 30 por cento, reserva 13 por cento e margem 7 por cento"><i class="fixed-segment"></i><i class="variable-segment"></i><i class="saving-segment"></i><i class="margin-segment"></i></div><ul class="scenario-lines"><li><span>Despesas fixas</span><strong>R$ 3.000</strong></li><li><span>Despesas variáveis</span><strong>R$ 1.800</strong></li><li><span>Aporte na reserva</span><strong>R$ 800</strong></li><li><span>Margem livre</span><strong>R$ 400</strong></li></ul></article>
+          <article class="scenario-card featured-scenario"><div class="scenario-top"><div><p class="scenario-label">Cenário B</p><h2>Mais espaço para a reserva</h2></div><span class="scenario-badge">Exemplo</span></div><div class="scenario-total"><span>Renda mensal</span><strong>R$ 6.000</strong></div><div class="allocation" role="img" aria-label="Despesas fixas 50 por cento, variáveis 23 por cento, reserva 20 por cento e margem 7 por cento"><i class="fixed-segment"></i><i class="variable-segment smaller-variable"></i><i class="saving-segment larger-saving"></i><i class="margin-segment"></i></div><ul class="scenario-lines"><li><span>Despesas fixas</span><strong>R$ 3.000</strong></li><li><span>Despesas variáveis</span><strong>R$ 1.400</strong></li><li><span>Aporte na reserva</span><strong>R$ 1.200</strong></li><li><span>Margem livre</span><strong>R$ 400</strong></li></ul></article>
+          <div class="delta-callout"><span class="delta-icon" aria-hidden="true">↗</span><p>O exemplo reserva <strong>R$ 400 a mais</strong> ao reduzir despesas variáveis no mesmo valor.</p></div>
+          <p class="demo-note">Os cenários são estáticos e fictícios; nenhum cálculo ou recomendação é executado.</p>
+        </section>
+
+        <section class="screen" id="ajustes" aria-labelledby="titulo-ajustes" hidden>
+          <div class="screen-heading"><p class="eyebrow">Preferências</p><h1 id="titulo-ajustes">Ajustes</h1><p class="subheading">Aparência, movimento e privacidade.</p></div>
+          <section class="settings-group" aria-labelledby="grupo-aparencia"><h2 id="grupo-aparencia">Aparência</h2><div class="settings-card"><div class="setting-title"><span class="setting-icon" aria-hidden="true">◐</span><div><strong>Tema</strong><p>Segue a preferência do seu aparelho.</p></div></div><div class="theme-options" role="group" aria-label="Prévia das opções de tema"><button type="button" aria-pressed="true">◒ Sistema</button><button type="button" aria-pressed="false">☼ Claro</button><button type="button" aria-pressed="false">☾ Escuro</button></div></div></section>
+          <section class="settings-group" aria-labelledby="grupo-animacoes"><h2 id="grupo-animacoes">Animações</h2><div class="settings-card"><div class="setting-title"><span class="setting-icon" aria-hidden="true">≈</span><div><strong>Reduzir animações</strong><p>Menos movimento nas transições.</p></div><span class="switch" role="img" aria-label="Ativado"><i></i></span></div></div></section>
+          <section class="settings-group" aria-labelledby="grupo-assistente"><h2 id="grupo-assistente">Assistente</h2><div class="settings-card"><div class="setting-title"><span class="setting-icon" aria-hidden="true">✦</span><div><strong>Respostas com IA</strong><p>O modelo explica trechos das fontes.</p></div><span class="switch on" role="img" aria-label="Ativado"><i></i></span></div></div></section>
+          <section class="settings-group" aria-labelledby="grupo-privacidade"><h2 id="grupo-privacidade">Privacidade</h2><div class="settings-card privacy-setting"><span class="setting-icon" aria-hidden="true">⌑</span><p>Seus extratos são processados localmente. Os valores são calculados por código; o assistente explica as fontes.</p></div></section>
+          <p class="demo-note">Preferências nesta tela são apenas ilustrativas e não são salvas.</p>
+        </section>
+      </main>
+
+      <nav class="bottom-nav" aria-label="Navegação principal">
+        <button type="button" class="nav-item is-selected" data-screen="resumo" aria-current="page"><span class="nav-icon" aria-hidden="true">⌂</span><span>Resumo</span></button>
+        <button type="button" class="nav-item" data-screen="extratos"><span class="nav-icon" aria-hidden="true">▤</span><span>Extratos</span></button>
+        <button type="button" class="nav-item" data-screen="assistente"><span class="nav-icon" aria-hidden="true">✦</span><span>Assistente</span></button>
+        <button type="button" class="nav-item" data-screen="cenarios"><span class="nav-icon" aria-hidden="true">◫</span><span>Cenários</span></button>
+        <button type="button" class="nav-item" data-screen="ajustes"><span class="nav-icon" aria-hidden="true">⚙</span><span>Ajustes</span></button>
+      </nav>
+    </div>
+  </body>
+</html>

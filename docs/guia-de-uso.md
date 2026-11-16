@@ -135,6 +135,8 @@ flutter run           # emulador Android; a API fica em http://10.0.2.2:8000/v1
 
 No app, a aba **Ajustes** permite escolher o tema (por padrão segue o claro/escuro do aparelho), reduzir animações, desligar a abertura animada e **testar a conexão** com a API. Para apontar para outro endereço, use `--dart-define=API_BASE_URL=http://<ip>:8000/v1`.
 
+Veja também o [protótipo navegável do aplicativo](prototipo.md), com telas demonstrativas para Resumo, Extratos, Assistente, Cenários e Ajustes.
+
 ---
 
 ## 4. Apresentação Executiva e Demonstração
