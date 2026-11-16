@@ -179,6 +179,7 @@ def evaluate(rag: Answerer | None = None, cases_path: Path = QUESTIONS) -> dict:
                     for name in ("fastembed_embeddings.py", "sqlite_vector_store.py")
                 ]
                 + [ROOT / "api/app/core/config.py"]
+                + [ROOT / "api/app/domain/scope_policy.py"]
             ),
             "python": platform.python_version(),
             "scikit_learn": version("scikit-learn"),

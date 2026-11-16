@@ -169,7 +169,7 @@ flowchart TD
 | Issue | Escopo | Responsável | Fase | Precedência | Estimativa |
 |:---:|---|:---:|:---:|---|:---:|
 | [#51](https://github.com/moonshinerd/trokim/issues/51) | Contratos dos agentes e orquestrador | @moonshinerd | 1 | **Não-bloqueante** | 3 h |
-| [#52](https://github.com/moonshinerd/trokim/issues/52) | Research Agent (evidências e abstenção) | @gabrielcrzojo | 1 | **Não-bloqueante** | 1,5 h |
+| [#52](https://github.com/moonshinerd/trokim/issues/52) | Research Agent (evidências e abstenção) | @gabrielcrzojo | 1 | Contratos da **#51** necessários; dependência atendida | 1,5 h |
 | [#53](https://github.com/moonshinerd/trokim/issues/53) | Analysis Agent (cálculos determinísticos) | @gabrielcrzojo | 1 | **Não-bloqueante** | 3 h |
 | [#54](https://github.com/moonshinerd/trokim/issues/54) | Validation Agent (números, citações, escopo) | @rebecaboncaputo | 1 | **Não-bloqueante** | 3 h |
 | [#55](https://github.com/moonshinerd/trokim/issues/55) | Communication Agent (redação com prompt versionado) | @Luix3005 | 1 | **Não-bloqueante** | 2,5 h |
@@ -181,6 +181,12 @@ flowchart TD
 | [#61](https://github.com/moonshinerd/trokim/issues/61) | Docs, ADR 0016 final e guia da Entrega 4 | @moonshinerd, @Luix3005 | 2 | **Bloqueada por [#59](https://github.com/moonshinerd/trokim/issues/59) e [#60](https://github.com/moonshinerd/trokim/issues/60)** | 4 h |
 
 **Revisão cruzada** (1 aprovação de outro membro por PR): [#51](https://github.com/moonshinerd/trokim/issues/51) por @rebecaboncaputo, [#52](https://github.com/moonshinerd/trokim/issues/52) por @moonshinerd, [#53](https://github.com/moonshinerd/trokim/issues/53) por @zainoca, [#54](https://github.com/moonshinerd/trokim/issues/54) por @Luix3005, [#55](https://github.com/moonshinerd/trokim/issues/55) por @zainoca, [#56](https://github.com/moonshinerd/trokim/issues/56) por @rebecaboncaputo e [#57](https://github.com/moonshinerd/trokim/issues/57) por @zainoca.
+
+O [Research Agent](agentes/research-agent.md) depende dos contratos da #51, apesar da
+classificação inicial de tarefa não bloqueante. Essa dependência foi atendida pela
+PR #65: a #52 usa os modelos e o orquestrador reais, sem duplicá-los nem suspender
+seus testes. Consultas de gastos pessoais mantêm a recusa atual até o alinhamento
+com Analysis e orquestrador na integração (#50/#58).
 
 ### 6.3 MkDocs sempre atualizado
 

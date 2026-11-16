@@ -1,5 +1,3 @@
-import re
-import unicodedata
 from pathlib import Path
 
 from sklearn.feature_extraction.text import TfidfVectorizer
@@ -10,6 +8,7 @@ from app.clients.fastembed_embeddings import get_default_embedder
 from app.clients.sqlite_vector_store import SQLiteVectorStore
 from app.core.config import settings
 from app.domain.models import EvidenceChunk
+from app.domain.scope_policy import is_outside_scope
 from app.models.embedding_model import EmbeddingModel
 from app.models.vector_store import VectorStore
 from app.services.ingestion_service import compute_corpus_hash, ingest
@@ -170,27 +169,12 @@ class RAGService:
 
         return results
 
-    @staticmethod
-    def _outside_scope(query: str) -> bool:
-        """Limita o protótipo a orientação educacional, sem acesso a dados de contas.
+    is_outside_scope = staticmethod(is_outside_scope)
 
-        Regras de intenção conservadoras; não constituem proteção geral contra
-        ataques. Menções educacionais a golpes, senhas ou música são permitidas.
-        """
-        normalized = unicodedata.normalize("NFKD", query).encode("ascii", "ignore").decode().lower()
-        patterns = (
-            r"\b(escreva|crie|faca|conte|componha|gere)\b.*\b(poema|poesia|musica|conto|roteiro|piada)\b",
-            r"\b(ignore|desconsidere|esqueca)\b.*\b(fontes|regras|instrucoes|diretrizes)\b",
-            r"\b(saldo|limite)\b.*\b(minha|meu)\b",
-            r"\b(acesse|consulte|revele|mostre)\b.*\b(conta|senha|cpf|extrato)\b",
-            r"\b(quanto|qual)\b.*\b(tenho|gastei|recebi)\b",
-            r"\b(garanta|garantir)\b.*\b(lucro|retorno|dinheiro)\b",
-            r"\b(diga|indique|escolha|recomende)\b.*\b(acao|cripto|criptomoeda)\b.*\b(comprar|lucro)\b",
-            r"\b(descobrir|roubar|obter|revelar)\b.*\b(senha|cpf)\b",
-            r"\b(bolo|futebol|copa do mundo|remedio|gripe|horoscopo)\b",
-            r"\b(escreva|gere|crie)\b.*\b(codigo|script|programa)\b",
-        )
-        return any(re.search(pattern, normalized) for pattern in patterns)
+    @classmethod
+    def _outside_scope(cls, query: str) -> bool:
+        """Alias de compatibilidade para consumidores e ablações existentes."""
+        return cls.is_outside_scope(query)
 
     def answer_query(self, query: str) -> dict[str, object]:
         """Responde a uma consulta financeira com fundamentação e abstenção ativa."""

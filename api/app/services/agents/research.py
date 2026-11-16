@@ -1,14 +1,12 @@
-import re
-import time
-import unicodedata
+"""Recuperação de evidências e abstenção sem modelo de linguagem (RF18 / GQ05)."""
 
-from app.domain.agents import AgentContext, AgentName, AgentStep, StepStatus
+import re
+import unicodedata
+from time import perf_counter
+
+from app.domain import agents
 from app.services.agents.orchestrator import needs_analysis
 from app.services.rag_service import RAGService
-
-# Expõe is_outside_scope como método público preservando o hash estrito de rag_service.py
-if not hasattr(RAGService, "is_outside_scope"):
-    RAGService.is_outside_scope = staticmethod(RAGService._outside_scope)
 
 STRICTLY_FORBIDDEN_PATTERNS = (
     r"\b(escreva|crie|faca|conte|componha|gere)\b.*\b(poema|poesia|musica|conto|roteiro|piada)\b",
@@ -29,97 +27,55 @@ def _is_strictly_forbidden(query: str) -> bool:
 
 
 class ResearchAgent:
-    """Agente de pesquisa e recuperação de evidências em fontes regulatórias oficiais."""
+    """Aplica a política do RAG e fornece evidências ao fluxo multiagente."""
 
-    def __init__(self, rag_service: RAGService, top_k: int = 3, threshold: float = 0.15) -> None:
-        self.name = AgentName.RESEARCH
+    name = agents.AgentName.RESEARCH
+
+    def __init__(self, rag_service: RAGService) -> None:
         self.rag_service = rag_service
-        self.top_k = top_k
-        self.threshold = threshold
 
-    async def run(self, ctx: AgentContext) -> AgentStep:
-        t0 = time.perf_counter()
+    async def run(self, ctx: agents.AgentContext) -> agents.AgentStep:
+        """Atualiza apenas o resultado da pesquisa e devolve sua trilha de execução."""
+        started = perf_counter()
+        ctx.evidences = []
+        ctx.abstain_reason = None
         query = ctx.question.strip()
 
-        # 1. Checagem de escopo da base oficial
-        if self.rag_service.is_outside_scope(query) or _is_strictly_forbidden(query):
-            # Se for estritamente proibido (ações, cripto, código, poemas, golpes)
-            if _is_strictly_forbidden(query):
-                ctx.abstain_reason = "fora_de_escopo"
-                duration = max(1, int(round((time.perf_counter() - t0) * 1000)))
-                return AgentStep(
-                    agent=self.name,
-                    status=StepStatus.ABSTAINED,
-                    summary="Consulta classificada como fora de escopo institucional.",
-                    duration_ms=duration,
-                    detail={"reason": "fora_de_escopo", "query": query},
-                )
-
-            # Se for pergunta sobre cálculo e lançamentos locais, permite análise
-            if needs_analysis(query) or len(ctx.transactions) > 0:
-                pass
+        # 1. Se for estritamente proibido (apostas, seleção de ativos para compra, código, etc.)
+        if _is_strictly_forbidden(query):
+            ctx.abstain_reason = "fora_de_escopo"
+            summary = "Consulta classificada como fora de escopo institucional."
+        elif self.rag_service.is_outside_scope(query):
+            # Se for fora de escopo do RAG educacional, mas for consulta de cálculo com
+            # lançamentos importados, permite prosseguir para o AnalysisAgent
+            if (needs_analysis(query) or len(ctx.transactions) > 0) and len(ctx.transactions) > 0:
+                summary = "Nenhuma evidência documental necessária; direcionado para análise."
             else:
                 ctx.abstain_reason = "fora_de_escopo"
-                duration = max(1, int(round((time.perf_counter() - t0) * 1000)))
-                return AgentStep(
-                    agent=self.name,
-                    status=StepStatus.ABSTAINED,
-                    summary="Consulta classificada como fora de escopo institucional.",
-                    duration_ms=duration,
-                    detail={"reason": "fora_de_escopo", "query": query},
-                )
+                summary = "Pergunta fora do escopo de orientação financeira educacional."
+        else:
+            ctx.evidences = self.rag_service.retrieve_evidence(query)
+            if ctx.evidences:
+                summary = "Evidências oficiais encontradas para fundamentar a resposta."
+            elif needs_analysis(query) and len(ctx.transactions) > 0:
+                summary = "Nenhuma evidência documental necessária; direcionado para análise."
+            else:
+                ctx.abstain_reason = "sem_evidencia"
+                summary = "Nenhuma evidência oficial atingiu o limiar de relevância."
 
-        # 2. Recuperação de evidências oficiais
-        evidences = self.rag_service.retrieve_evidence(
-            query,
-            top_k=self.top_k,
-            threshold=self.threshold,
-        )
-        duration = max(1, int(round((time.perf_counter() - t0) * 1000)))
+        duration_ms = max(0, int((perf_counter() - started) * 1000))
+        top_k = getattr(self.rag_service, "top_k", 3)
+        threshold = getattr(self.rag_service, "threshold", 0.15)
 
-        if not evidences:
-            if needs_analysis(query) or len(ctx.transactions) > 0:
-                ctx.evidences = []
-                return AgentStep(
-                    agent=self.name,
-                    status=StepStatus.OK,
-                    summary="Nenhuma evidência documental necessária; direcionado para análise.",
-                    duration_ms=duration,
-                    detail={
-                        "top_k": self.top_k,
-                        "threshold": self.threshold,
-                        "scores": [],
-                        "documents": [],
-                    },
-                )
-
-            ctx.abstain_reason = "sem_evidencia"
-            return AgentStep(
-                agent=self.name,
-                status=StepStatus.ABSTAINED,
-                summary="Nenhuma evidência oficial encontrada acima do limiar.",
-                duration_ms=duration,
-                detail={
-                    "top_k": self.top_k,
-                    "threshold": self.threshold,
-                    "scores": [],
-                    "documents": [],
-                },
-            )
-
-        ctx.evidences = evidences
-        scores = [round(e.score, 4) for e in evidences]
-        documents = [e.document_id for e in evidences]
-
-        return AgentStep(
+        return agents.AgentStep(
             agent=self.name,
-            status=StepStatus.OK,
-            summary=f"Recuperadas {len(evidences)} evidências oficiais.",
-            duration_ms=duration,
+            status=agents.StepStatus.ABSTAINED if ctx.abstain_reason else agents.StepStatus.OK,
+            summary=summary,
+            duration_ms=duration_ms,
             detail={
-                "top_k": self.top_k,
-                "threshold": self.threshold,
-                "scores": scores,
-                "documents": documents,
+                "top_k": top_k,
+                "threshold": threshold,
+                "scores": [evidence.score for evidence in ctx.evidences],
+                "documents": [evidence.document_title for evidence in ctx.evidences],
             },
         )

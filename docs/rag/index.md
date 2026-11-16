@@ -71,6 +71,30 @@ flowchart TD
     R -- Sim --> X[Extração do primeiro chunk com título e URL]
 ```
 
+## Política pública de escopo e Research Agent
+
+`RAGService.is_outside_scope(query)` expõe a checagem determinística de escopo para
+o [Research Agent](../agentes/research-agent.md). A regra é uma função pura em
+`app/domain/scope_policy.py`, sem dependências de infraestrutura. `_outside_scope()`
+permanece como alias de compatibilidade e respeita sobrescritas do método público;
+os consumidores antigos e o controle `RetrievalOnlyRAG` continuam usando esse ponto
+de extensão, preservando a ablação sem política.
+
+A política distingue educação de pedidos de ação: perguntas sobre riscos de ações,
+criptoativos e apostas podem passar pela checagem, mas seleção de ativos para compra,
+estratégias de apostas, garantias de rendimento e pedidos de fabricação de fontes
+são recusados pelas regras de intenção. O caso C28 e a versão sem “ignore suas regras”
+devem ser recusados antes da busca, mesmo que existam documentos sobre o tema.
+As regras normalizam acentos, caixa e espaços; não constituem proteção geral contra
+ataques nem reconhecem todas as paráfrases.
+
+O ranking, o limiar e o top-k permanecem os mesmos. `retrieve_evidence()` continua
+sendo apenas recuperação: quem o chama precisa aplicar a política apropriada.
+O Research não usa LLM e separa `fora_de_escopo` de `sem_evidencia`. Sua integração
+usa os contratos da #51, já integrados à `main`. A recusa atual a consultas de gastos pessoais é
+preservada até o alinhamento com o agente de cálculos e o orquestrador (#50/#58).
+Essas decisões e a cobertura de testes estão detalhadas na página do agente.
+
 ## Avaliação empírica
 
 `make test` executa benchmark, testes de research e API. `make research-test` executa
