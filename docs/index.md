@@ -21,7 +21,7 @@ O **Trokim** é um assistente financeiro de código aberto (*open-source*) proje
 
 ---
 
-## Destaques do Projeto (Entregas 1 & 2 Concluídas)
+## Destaques do Projeto (Entregas 1 a 3 Concluídas)
 
 <div class="grid cards" markdown>
 
@@ -36,8 +36,15 @@ O **Trokim** é um assistente financeiro de código aberto (*open-source*) proje
 
     ---
 
-    **98,78%** de Recall@3, **97,56%** de precisão fundamentada e **100% de abstenção ativa** em casos fora de escopo.
+    **98,78%** de Recall@3, **95,12%** de resposta fundamentada e **100% de abstenção ativa** em casos fora de escopo (61 casos da Semana 2).
     [:octicons-arrow-right-24: Ver Métricas e Calibração](rag/index.md)
+
+-   :material-scale-balance:{ .lg .middle } **Comparação LLM × RAG com Gráficos**
+
+    ---
+
+    Três abordagens em 30 casos, com revisão manual e **histórico versionado de execuções**: a fundamentação em evidências reduziu as alucinações confirmadas de 30,0% (piso) para 13,3% e 6,7%.
+    [:octicons-arrow-right-24: Ver Resultados e Gráficos](pesquisa/resultados.md)
 
 -   :material-calculator:{ .lg .middle } **Cálculos 100% Determinísticos**
 
@@ -50,7 +57,7 @@ O **Trokim** é um assistente financeiro de código aberto (*open-source*) proje
 
     ---
 
-    App Android integrado à API local em SQLite + `sqlite-vec`. Extratos OFX e faturas PDF processados no aparelho.
+    App Android integrado à API local: resumo e extratos com os números calculados pelo backend, importação de OFX e PDF, chat com fontes citadas e histórico de conversas.
     [:octicons-arrow-right-24: Ver Guia de Uso](guia-de-uso.md)
 
 </div>
@@ -75,7 +82,7 @@ Pessoas que utilizam múltiplas contas bancárias e cartões de crédito enfrent
 
 ## Princípios Arquiteturais e de Projeto
 
-- **Privacidade Local-First (LGPD):** O processamento de extratos bancários (arquivos OFX e faturas PDF) ocorre no ambiente do próprio usuário, armazenado em banco de dados local SQLite sem exposição de dados sensíveis na nuvem.
+- **Privacidade Local-First (LGPD):** O processamento de extratos bancários (arquivos OFX e faturas PDF) ocorre no ambiente do próprio usuário, sem exposição de dados sensíveis na nuvem: a API roda na máquina do usuário, os lançamentos importados ficam na memória dela e a base de conhecimento fica em SQLite local.
 - **Cálculo Determinístico:** Valores numéricos, totais, saldos e projeções são computados com precisão por código matemático estrito (`calculation_service.py`). Modelos de Linguagem (LLMs) atuam apenas como camada de síntese e explicação pedagógica.
 - **RAG com Fontes Oficiais:** Todas as orientações orçamentárias baseiam-se em referências consagradas de órgãos reguladores (**Banco Central do Brasil**, **CVM** e **CFPB**). Quando não há evidência empírica ou o tema envolve especulação, o agente se abstém ativamente.
 - **Transparência e Rastreabilidade:** Cada requisito e decisão técnica possui vínculo direto com uma *Guiding Question* (GQ) e um registro de decisão arquitetural (*ADR*).
@@ -93,7 +100,9 @@ graph TD
         API --> Parser[Parser OFX & PDF]
         API --> Calc[Serviço de Cálculo Determinístico]
         API --> RAG[Mecanismo RAG Híbrido: FastEmbed + SQLite-Vec]
-        API --> DB[(SQLite Local: Transações e Vetores)]
+        API --> DB[(SQLite Local: vetores e metadados da base)]
+        API --> Gen[Síntese Generativa<br/>LLMProvider: LiteLLM, Ollama local ou mock]
+        Gen --> RAG
     end
 
     subgraph "Base de Conhecimento Regulada"
@@ -114,6 +123,10 @@ graph TD
 - [Requisitos do Sistema e MoSCoW](requisitos.md)
 - [Arquitetura e Mapa do Sistema](arquitetura/mapa-do-sistema.md)
 - [Base RAG e Benchmark da Semana 2](rag/index.md)
+- [Comparação LLM × RAG (Semana 3)](pesquisa/comparacao-llm-rag.md)
+- [Histórico de Resultados e Gráficos](pesquisa/resultados.md)
+- [Guia de Uso](guia-de-uso.md)
+- [Glossário](glossario.md)
 - [Catálogo dos 20 Documentos Oficiais](rag/catalogo.md)
 - [Atas de Reunião da Equipe](atas/index.md)
 - [Decisões Arquiteturais (ADRs)](adr/index.md)

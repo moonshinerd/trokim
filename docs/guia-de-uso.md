@@ -7,7 +7,7 @@ Instruções para configurar, executar e testar o ambiente de desenvolvimento co
 ## 1. Pré-Requisitos
 
 - **Python 3.12+** e gerenciador ultra-rápido [uv](https://docs.astral.sh/uv/) instalado.
-- **Flutter SDK (3.2.0+)** configurado para desenvolvimento Android.
+- **Flutter SDK 3.50.0** (a mesma versão do CI), JDK 17 e Android SDK 36 para desenvolvimento Android.
 - Navegador moderno ou cliente HTTP (como curl, Insomnia ou Postman).
 
 ---
@@ -20,8 +20,12 @@ Clone o repositório e execute a automação inicial:
 # Sincroniza dependências com uv e prepara o ambiente virtual
 make setup
 
-# Executa a bateria de testes automatizados (45 testes unitários e de integração)
+# Executa a bateria de testes automatizados (87 da API e 67 de pesquisa)
 make test
+
+# Lint (ruff) e build estrito da documentação
+make lint
+make docs-build
 
 # Inicia a API FastAPI localmente na porta 8000
 make api-run
@@ -35,41 +39,75 @@ A API estará disponível em:
 
 ---
 
-## 3. Síntese Generativa Local (Qwen 2.5 via Ollama)
+## 3. Síntese Generativa Local (LiteLLM e Ollama)
 
-A camada generativa do Trokim utiliza o modelo **Qwen 2.5** executado localmente via **Ollama**, mantendo conformidade integral com a LGPD e soberania de dados.
+A camada generativa usa a porta `LLMProvider` ([ADR 0009](adr/0009-sintese-generativa-local.md)). O provedor padrão é o **LiteLLM**, que aceita qualquer modelo definido por configuração. Com um modelo local no **Ollama**, nenhum dado sai da sua máquina.
 
-### Configuração do Ollama:
+### Configuração do modelo local
+
 ```bash
-# Baixa e executa o modelo Qwen 2.5 localmente
-ollama run qwen2.5
+# Instala o Ollama (https://ollama.com), sobe o servidor e baixa um modelo leve
+ollama serve
+ollama pull qwen2.5:1.5b
 
-# Opcional: Para ambientes sem GPU ou CI, use o provider mock:
-export LLM_PROVIDER="mock"
+# A API lê api/.env (copie de api/.env.example)
+cp api/.env.example api/.env
 ```
 
-### Exemplos de Requisições HTTP:
+| Variável (`api/.env`) | Função | Padrão |
+|---|---|---|
+| `LLM_PROVIDER` | `litellm` (padrão), `ollama` (cliente direto) ou `mock` (testes e CI) | `litellm` |
+| `LLM_MODEL` | Modelo no formato do LiteLLM, por exemplo `ollama/qwen2.5:1.5b` | `ollama/qwen2.5` |
+| `LLM_API_BASE` | Endereço do servidor do modelo (vazio usa o Ollama local, `http://localhost:11434`) | vazio |
+| `LLM_API_KEY` | Só para modelos de nuvem (uma escolha explícita, fora da premissa local-first) | vazio |
+| `LLM_TIMEOUT` | Tempo limite da geração, em segundos | `120` |
+| `LLM_THINKING` | Raciocínio estendido de modelos que o suportam (desligado: evita respostas vazias) | `false` |
+| `LLM_TITLE_TIMEOUT` | Tempo limite do título da conversa, em segundos | `25` |
+| `LLM_TITLE_MODEL` | Modelo leve só para dar título às conversas (vazio usa `LLM_MODEL`) | `ollama/qwen2.5:1.5b` |
 
-#### Modo Grounded (Fundamentado no RAG com Abstenção Ativa):
+Um modelo grande rodando na CPU leva dezenas de segundos por resposta (o `gemma4:26b` levou cerca de 50 s); para o dia a dia, prefira um modelo menor. Em ambientes sem modelo, use `LLM_PROVIDER=mock`.
+
+### Exemplos de requisições HTTP
+
+#### Modo Grounded (fundamentado no RAG, com abstenção ativa):
 ```bash
 curl -X POST http://127.0.0.1:8000/v1/chat/generate \
   -H "Content-Type: application/json" \
   -d '{"message": "Como funciona o rotativo do cartao de credito?", "mode": "grounded"}'
 ```
 
-#### Modo Pure (Baseline Zero-Shot sem RAG):
+#### Modo Pure (base de comparação, sem RAG):
 ```bash
 curl -X POST http://127.0.0.1:8000/v1/chat/generate \
   -H "Content-Type: application/json" \
   -d '{"message": "Como funciona o rotativo do cartao de credito?", "mode": "pure"}'
 ```
 
-#### Modo Naive (RAG Ingênuo sem Política de Abstenção):
+#### Modo Naive (base de comparação, RAG ingênuo sem política de abstenção):
 ```bash
 curl -X POST http://127.0.0.1:8000/v1/chat/generate \
   -H "Content-Type: application/json" \
   -d '{"message": "Como funciona o rotativo do cartao de credito?", "mode": "naive"}'
 ```
+
+#### Título de uma conversa:
+```bash
+curl -X POST http://127.0.0.1:8000/v1/chat/title \
+  -H "Content-Type: application/json" \
+  -d '{"message": "Como montar uma reserva de emergencia?"}'
+```
+
+Se o modelo estiver indisponível, `/v1/chat/generate` devolve `503` com uma mensagem clara e `/v1/chat/title` devolve as primeiras palavras da pergunta (`source = "fallback"`). No app, o interruptor **Respostas com IA** (em Ajustes) alterna entre `/v1/chat/generate` e a busca extrativa `/v1/chat/ask`.
+
+### Benchmark comparativo e gráficos
+
+```bash
+make comparison-validate                                   # valida gabarito, prompts e fontes (sem chamar o modelo)
+make comparison-run RUN=2026-11-20-qwen2.5-1.5b MODEL=ollama/qwen2.5:1.5b   # registra uma execução versionada
+make report-charts                                         # regenera os gráficos do MkDocs
+```
+
+O passo a passo para registrar uma execução está em [Histórico de Resultados](pesquisa/resultados.md#6-como-registrar-uma-nova-execucao).
 
 ---
 
@@ -84,7 +122,7 @@ DEBUG=false ENVIRONMENT=development make api-run
 # Terminal 2: app (requer Flutter estável, JDK 17 e Android SDK 36)
 cd mobile
 flutter pub get
-flutter test          # 36 testes
+flutter test          # 123 testes
 flutter run           # emulador Android; a API fica em http://10.0.2.2:8000/v1
 ```
 

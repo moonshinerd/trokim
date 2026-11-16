@@ -10,11 +10,11 @@ Este documento reúne a visão consolidada das **Entregas 1, 2 e 3** do projeto 
 |---|:---:|:---:|---|
 | **Base Curada Oficial** | ≥ 20 documentos | **20 documentos oficiais** | [Catálogo de Fontes](rag/catalogo.md) (BCB, CVM, CFPB, ANPD) |
 | **Recuperação RAG (Recall@3)** | ≥ 90% | **98,78%** | Benchmark em `research/rag_benchmark/` (41 consultas) |
-| **Precisão Fundamentada** | ≥ 85% | **97,56%** | Extração exata com citações e URLs canônicas |
+| **Resposta Fundamentada** | ≥ 90% | **95,12%** | Primeiro trecho de documento relevante, com conceitos esperados, título e URL (39 de 41 casos) |
 | **Abstenção Ética Ativa** | 100% | **100,00%** | Zero conselhos em apostas, ações ou especulação |
 | **Latência de Recuperação** | ≤ 50 ms | **12,4 ms** | Testado na CPU local (Mac Apple Silicon) |
 | **Cálculo Determinístico** | 0% de alucinação | **0% de erro numérico** | Serviço Python `calculation_service.py` |
-| **Testes Automatizados** | Passando | **45/45 testes verdes** | CI no GitHub Actions (runners `ubuntu-latest`) |
+| **Testes Automatizados** | Passando | **87 (API), 67 (pesquisa) e 123 (app) verdes** | CI no GitHub Actions (jobs api, research, docs e mobile) |
 
 ---
 

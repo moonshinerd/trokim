@@ -18,11 +18,12 @@ mobile/
 │   │   ├── theme/            # Design System: paleta, claro/escuro, AppColors
 │   │   └── widgets/          # Moeda 3D, mascote, movimento e cabeçalhos
 │   └── features/
-│       ├── dashboard/        # Resumo de receitas, despesas e poupança
-│       ├── transactions/     # Importação e listagem de extratos OFX/PDF
-│       ├── chat_assistant/   # Chat consultivo com RAG oficial
+│       ├── dashboard/        # Resumo calculado pela API (receitas, despesas, poupança e categorias)
+│       ├── transactions/     # Importação por seletor de arquivos e lista de extratos OFX/PDF
+│       ├── finance/          # Modelos, repositório e controlador do resumo e da importação
+│       ├── chat_assistant/   # Chat com resposta fundamentada, fontes clicáveis e histórico de conversas
 │       ├── budget_scenarios/ # Simulador e comparador de cenários
-│       └── settings/         # Aba Ajustes: tema, animações, conexão e privacidade
+│       └── settings/         # Aba Ajustes: tema, animações, respostas com IA, endereço da API e conexão
 ├── assets/
 │   ├── brand/                # Arte do mascote (ver LEIA-ME.md, licença CC0)
 │   └── fonts/                # Plus Jakarta Sans (OFL)

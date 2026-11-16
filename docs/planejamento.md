@@ -10,15 +10,15 @@ O desenvolvimento do **Trokim** segue a metodologia **Challenge Based Learning (
 |:---:|---|---|:---:|:---:|
 | **Semana 1** | Problema, stakeholders, riscos e métricas | Pacote de definição do projeto (cenário, personas, requisitos v1.0.0, riscos, premissas e EQ) | <span class="badge-must">Concluído</span> | 26/10 a 30/10 |
 | **Semana 2** | Base de conhecimento e recuperação | **Base de conhecimento + protótipo de recuperação:** Base curada com 20 documentos-fonte; chunking semântico; embeddings FastEmbed 384d; banco SQLite-Vec; chat Flutter e benchmark (98,78% Recall@3) | <span class="badge-must">Concluído</span> | 02/11 a 06/11 |
-| **Semana 3** | **Comparação LLM x RAG** | **Assistente baseado em evidências + relatório comparativo:** Avaliação empírica estruturada (LLM pura vs. LLM + RAG ingênuo vs. LLM + RAG estruturado do Trokim), métricas de alucinação e síntese generativa | <span class="badge-should">Sprint Ativa</span> | **09/11 a 13/11** |
-| **Semana 4** | Sistema multiagentes | Primeiro protótipo multiagente (Research, Analysis, Validation e Communication Agent) | Previsto | 16/11 a 20/11 |
+| **Semana 3** | **Comparação LLM x RAG** | **Assistente baseado em evidências + relatório comparativo:** Avaliação empírica estruturada (LLM pura vs. LLM + RAG ingênuo vs. LLM + RAG estruturado do Trokim), métricas de alucinação e síntese generativa | <span class="badge-must">Concluído</span> | **09/11 a 13/11** |
+| **Semana 4** | Sistema multiagentes | Primeiro protótipo multiagente (Research, Analysis, Validation e Communication Agent) | <span class="badge-should">Em planejamento</span> | 16/11 a 20/11 |
 | **Semana 5** | Multimodalidade | Assistente multimodal (leitura de faturas PDF, extratos e comprovantes em imagem) | Previsto | 23/11 a 27/11 |
 | **Semana 6** | Integração completa | Aplicação funcional ponta a ponta (Flutter + FastAPI + RAG + Banco Vetorial + Multiagente) | Previsto | 30/11 a 04/12 |
 | **Semana 7** | Testes e refinamento | Apresentação final e entrega consolidada do projeto e repositório | Previsto | 07/12 a 11/12 |
 
 ---
 
-## 2. Detalhamento da Semana 3 (Sprint Ativa — Foco Atual)
+## 2. Detalhamento da Semana 3 (Concluída em 16/11/2026)
 
 Conforme a ementa oficial do Challenge 2, o entregável da **Semana 3 (09/11 a 13/11)** é:
 
@@ -85,17 +85,17 @@ flowchart TD
 
 ## 4. Matriz de Tarefas, Responsabilidades e Issues (Milestone 2)
 
-Todas as tarefas estão formalizadas no GitHub e vinculadas à **Milestone "Semana 3 — Comparação LLM x RAG (Respostas Baseadas em Evidências)"**, com prazo fatal até **13/11/2026**:
+Todas as tarefas estão formalizadas no GitHub e vinculadas à **Milestone "Semana 3 — Comparação LLM x RAG (Respostas Baseadas em Evidências)"**, com prazo original em **13/11/2026**. A milestone foi encerrada em 16/11/2026, com todas as issues fechadas:
 
 | Issue | Escopo / Título no GitHub | Responsável Primário | Tipo de Precedência | Dependência Técnica | Status |
 |:---:|---|:---:|:---:|---|:---:|
-| [#20](https://github.com/moonshinerd/trokim/issues/20) | Curadoria do gabarito comparativo e prompts versionados da semana 3 | @gabrielcrzojo | **Não-bloqueante** | Nenhuma (Início imediato) | Aberta |
-| [#21](https://github.com/moonshinerd/trokim/issues/21) | Framework de avaliação de alucinação e métricas comparativas | @rebecaboncaputo | **Não-bloqueante** | Nenhuma (Início imediato) | Aberta |
-| [#22](https://github.com/moonshinerd/trokim/issues/22) | Interface de auditoria de evidências e comparador de respostas no Flutter | @Luix3005 | **Não-bloqueante** | Nenhuma (Início imediato) | Aberta |
-| [#23](https://github.com/moonshinerd/trokim/issues/23) | Camada de síntese generativa (port LLMProvider, Ollama/Mock e endpoint) | @moonshinerd | **Não-bloqueante** | Nenhuma (Início imediato) | Aberta |
-| [#24](https://github.com/moonshinerd/trokim/issues/24) | Benchmark experimental comparativo (LLM pura vs. Naive RAG vs. Trokim) | @rebecaboncaputo, @moonshinerd | **Bloqueante** | **Bloqueada por #20, #21 e #23** | Aguardando Fase 1 |
-| [#25](https://github.com/moonshinerd/trokim/issues/25) | Integração ponta a ponta do chat generativo fundamentado com o backend | @zainoca, @gabrielcrzojo | **Bloqueante** | **Bloqueada por #22 e #23** | Aguardando Fase 1 |
-| [#26](https://github.com/moonshinerd/trokim/issues/26) | Relatório comparativo LLM x RAG, ADR 0008 e atualização no MkDocs | @moonshinerd, @gabrielcrzojo | **Bloqueante** | **Bloqueada por #24 e #25** | Aguardando Fase 2 |
+| [#20](https://github.com/moonshinerd/trokim/issues/20) | Curadoria do gabarito comparativo e prompts versionados da semana 3 | @gabrielcrzojo | **Não-bloqueante** | Nenhuma (Início imediato) | Concluída |
+| [#21](https://github.com/moonshinerd/trokim/issues/21) | Framework de avaliação de alucinação e métricas comparativas | @rebecaboncaputo | **Não-bloqueante** | Nenhuma (Início imediato) | Concluída |
+| [#22](https://github.com/moonshinerd/trokim/issues/22) | Interface de auditoria de evidências e comparador de respostas no Flutter | @Luix3005 | **Não-bloqueante** | Nenhuma (Início imediato) | Concluída |
+| [#23](https://github.com/moonshinerd/trokim/issues/23) | Camada de síntese generativa (port LLMProvider, Ollama/Mock e endpoint) | @moonshinerd | **Não-bloqueante** | Nenhuma (Início imediato) | Concluída |
+| [#24](https://github.com/moonshinerd/trokim/issues/24) | Benchmark experimental comparativo (LLM pura vs. Naive RAG vs. Trokim) | @rebecaboncaputo, @moonshinerd | **Bloqueante** | **Bloqueada por #20, #21 e #23** | Concluída |
+| [#25](https://github.com/moonshinerd/trokim/issues/25) | Integração ponta a ponta do chat generativo fundamentado com o backend | @zainoca, @gabrielcrzojo | **Bloqueante** | **Bloqueada por #22 e #23** | Concluída |
+| [#26](https://github.com/moonshinerd/trokim/issues/26) | Relatório comparativo LLM x RAG, ADR 0008 e atualização no MkDocs | @moonshinerd, @gabrielcrzojo | **Bloqueante** | **Bloqueada por #24 e #25** | Concluída |
 
 ---
 
