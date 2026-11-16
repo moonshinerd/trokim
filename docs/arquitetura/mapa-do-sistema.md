@@ -21,7 +21,7 @@ graph TD
     end
 
     subgraph "Serviço Backend Local (Python / FastAPI)"
-        APIEntry["Routers v1<br/>(/transactions, /chat, /budgets, /health)"]
+        APIEntry["Routers v1<br/>(/transactions, /chat, /budgets, /health, /agents)"]
         
         Parser["Parser de Documentos<br/>(OFX & PDF)"]
         CalcService["Motor de Cálculo Determinístico<br/>(Totais, Balanço, 50-30-20)"]
@@ -29,7 +29,15 @@ graph TD
         GenService["Serviço de Síntese Generativa<br/>(GenerationService)"]
         TitleSvc["Título de conversa<br/>(TitleService)"]
         
-        DomainCore["Entidades de Domínio Puro<br/>(Transaction, Budget, EvidenceChunk)"]
+        subgraph "Sistema Multiagente (ADR 0016)"
+            Orchestrator["Orquestrador Determinístico"]
+            ResearchAgent["Research Agent<br/>(evidências & escopo)"]
+            AnalysisAgent["Analysis Agent<br/>(cálculos determinísticos)"]
+            CommAgent["Communication Agent<br/>(redação em pt-BR)"]
+            ValidAgent["Validation Agent<br/>(auditoria defensiva)"]
+        end
+        
+        DomainCore["Entidades de Domínio Puro<br/>(Transaction, Budget, EvidenceChunk, MultiAgentResponse)"]
         
         subgraph "Persistência Local (SQLite)"
             Mem[(Memória da API<br/>Lançamentos da sessão)]
@@ -47,6 +55,19 @@ graph TD
         APIEntry --> RAGService
         APIEntry --> GenService
         APIEntry --> TitleSvc
+        APIEntry --> Orchestrator
+        
+        Orchestrator --> ResearchAgent
+        Orchestrator --> AnalysisAgent
+        Orchestrator --> CommAgent
+        Orchestrator --> ValidAgent
+        
+        ResearchAgent --> RAGService
+        AnalysisAgent --> CalcService
+        CommAgent --> LiteLLM
+        CommAgent --> OllamaClient
+        CommAgent --> MockLLM
+        ValidAgent --> DomainCore
         
         Parser --> DomainCore
         CalcService --> DomainCore
