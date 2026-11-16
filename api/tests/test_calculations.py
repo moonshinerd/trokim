@@ -90,3 +90,24 @@ def test_compare_budget_scenarios():
     comp = result["comparison"]
     assert comp["delta_savings"] == 400.0
     assert comp["delta_variable_expenses"] == -400.0
+
+
+def test_months_to_goal():
+    assert CalculationService.months_to_goal(6000.0, 500.0) == 12
+    assert CalculationService.months_to_goal(5000.0, 600.0) == 9  # 5000/600 = 8.33 -> 9
+    assert CalculationService.months_to_goal(0.0, 500.0) == 0
+
+
+def test_category_shares():
+    from app.domain.models import FinancialSummary
+
+    summary = FinancialSummary(
+        total_expenses=1000.0,
+        expenses_by_category={"moradia": 600.0, "alimentacao": 400.0},
+    )
+    shares = CalculationService.category_shares(summary)
+    assert shares["moradia"] == 60.0
+    assert shares["alimentacao"] == 40.0
+
+    empty = FinancialSummary(total_expenses=0.0, expenses_by_category={"lazer": 0.0})
+    assert CalculationService.category_shares(empty) == {"lazer": 0.0}

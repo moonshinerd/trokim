@@ -1,3 +1,4 @@
+import math
 from collections.abc import Sequence
 
 from app.domain.models import (
@@ -14,6 +15,25 @@ class CalculationService:
     Regra de ouro (ADR 0004): A LLM nunca realiza cálculos aritméticos diretamente;
     todos os totais, somas, despesas e projeções são computados com precisão por este serviço.
     """
+
+    @staticmethod
+    def months_to_goal(goal: float, monthly_savings: float) -> int:
+        """Calcula o número de meses necessários para atingir uma meta de poupança (teto)."""
+        if monthly_savings <= 0:
+            raise ValueError("O aporte mensal deve ser estritamente maior que zero.")
+        if goal <= 0:
+            return 0
+        return math.ceil(goal / monthly_savings)
+
+    @staticmethod
+    def category_shares(summary: FinancialSummary) -> dict[str, float]:
+        """Calcula a participação percentual de cada categoria no total de despesas."""
+        if summary.total_expenses <= 0:
+            return {cat: 0.0 for cat in summary.expenses_by_category}
+        return {
+            cat: round((amount / summary.total_expenses) * 100.0, 2)
+            for cat, amount in summary.expenses_by_category.items()
+        }
 
     @staticmethod
     def calculate_summary(transactions: Sequence[Transaction]) -> FinancialSummary:
