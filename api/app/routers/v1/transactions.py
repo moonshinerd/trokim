@@ -13,6 +13,11 @@ router = APIRouter(prefix="/transactions", tags=["Transactions"])
 _LOCAL_TRANSACTIONS: list[Transaction] = []
 
 
+def get_imported_transactions() -> list[Transaction]:
+    """Retorna cópia da lista de lançamentos importados na sessão local."""
+    return list(_LOCAL_TRANSACTIONS)
+
+
 @router.get("", response_model=list[Transaction])
 async def list_transactions():
     return _LOCAL_TRANSACTIONS
