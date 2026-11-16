@@ -10,7 +10,7 @@ O **Validation Agent** (`api/app/services/agents/validation.py`) opera como o au
 | Código | Severidade | Gatilho de Bloqueio | Caso da Semana 3 |
 |---|:---:|---|:---:|
 | `NUMBER_NOT_SUPPORTED` | **BLOCKER** | Grandeza numérica (moeda, percentual, prazo) sem respaldo em `calculations` ou `evidences` | C29, C04, C17 |
-| `CITATION_INVALID` | **BLOCKER** | Citação a `[n]` inexistente ou resposta com evidências oficiais sem nenhuma citação | Heurística RAG |
+| `CITATION_INVALID` | **BLOCKER** | Citação inválida ou ausente (aceita links clicáveis com o nome da fonte `[Nome](url)` e numeração `[n]`) | Heurística RAG |
 | `OUT_OF_SCOPE_ADVICE` | **BLOCKER** | Indicação de ativo financeiro específico, promessa de rentabilidade ou previsão de preço | C27 |
 | `ABSTENTION_MISMATCH` | **BLOCKER** | Texto substantivo emitido quando já existia motivo de abstenção registrado | Política ética |
 | `CALCULATION_MISSING` | **BLOCKER** | Pergunta que demandava cálculo sobre lançamentos sem cálculos gerados pelo sistema | C30 |
@@ -19,7 +19,7 @@ O **Validation Agent** (`api/app/services/agents/validation.py`) opera como o au
 
 Na Semana 3, a heurística de validação apresentava falsos positivos ao confundir numeração de tópicos estruturais com dados factuais. O Validation Agent resolveu isso com filtros estruturais em cascata:
 
-1. **Marcadores de citação:** `[1]`, `[2]` são desconsiderados.
+1. **Marcadores de citação e links:** `[1]`, `[2]` e links Markdown `[Nome da Fonte](url)` são desconsiderados na extração de números, evitando que URLs com dígitos gerem falsos positivos.
 2. **Listas ordenadas:** Numerações de início de linha ou pós-pontuação (`1. `, `2) `, `Passo 1:`) são expurgadas antes da análise factual.
 3. **Identificadores legais:** Menções a normas (`Resolução 4.966`, `Lei 14.181`, `art. 5º`) são preservadas no texto mas ignoradas como grandezas monetárias.
 4. **Anos de calendário:** `2024`, `2025`, `2026` não são tratados como valores de cálculo.

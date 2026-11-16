@@ -13,10 +13,13 @@ void main() {
       expect(AnswerFormat.clean(raw), 'A reserva cobre 3 a 6 meses [1].');
     });
 
-    test('remove URLs soltas e parênteses vazios', () {
+    test('remove URLs soltas e parênteses vazios preservando links markdown', () {
       const raw =
-          'Veja a norma (https://www.bcb.gov.br/x) e também https://cvm.gov.br/y fim.';
-      expect(AnswerFormat.clean(raw), 'Veja a norma e também fim.');
+          'Veja a norma do [Banco Central](https://www.bcb.gov.br/x) e também https://cvm.gov.br/y fim.';
+      expect(
+        AnswerFormat.clean(raw),
+        'Veja a norma do [Banco Central](https://www.bcb.gov.br/x) e também fim.',
+      );
     });
 
     test('não corta quando "Fontes" é a primeira linha', () {
@@ -49,5 +52,29 @@ void main() {
     ]);
     expect(spans[1].style?.fontWeight, FontWeight.w800);
     expect(spans[3].style?.color, Colors.amber);
+  });
+
+  test('spans: link markdown com nome da fonte gera span clicável', () {
+    String? tappedLabel;
+    String? tappedUrl;
+
+    final spans = AnswerFormat.spans(
+      'Conforme diretrizes do [Banco Central do Brasil](https://www.bcb.gov.br/doc).',
+      const TextStyle(fontSize: 14),
+      citationColor: Colors.teal,
+      link: (label, url) {
+        tappedLabel = label;
+        tappedUrl = url;
+        return TextSpan(text: label, style: const TextStyle(color: Colors.teal));
+      },
+    ).cast<TextSpan>();
+
+    expect(spans.map((s) => s.text).toList(), [
+      'Conforme diretrizes do ',
+      'Banco Central do Brasil',
+      '.',
+    ]);
+    expect(tappedLabel, 'Banco Central do Brasil');
+    expect(tappedUrl, 'https://www.bcb.gov.br/doc');
   });
 }
