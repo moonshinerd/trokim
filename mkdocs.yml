@@ -78,6 +78,7 @@ nav:
       - Matrizes de Risco e Mitigação: pesquisa/matrizes.md
       - Comparação LLM × RAG (Semana 3): pesquisa/comparacao-llm-rag.md
       - Histórico de Resultados e Gráficos: pesquisa/resultados.md
+      - Gabarito Multiagente (Semana 4): pesquisa/gabarito-multiagente.md
       - Fontes e Referências: referencias.md
   - Requisitos: requisitos.md
   - Processo: processo/cbl.md
@@ -89,6 +90,13 @@ nav:
   - Arquitetura:
       - Visão Geral: arquitetura/index.md
       - Mapa do Sistema: arquitetura/mapa-do-sistema.md
+  - Agentes (Semana 4):
+      - Visão Geral: agentes/index.md
+      - Orquestrador e Contratos: agentes/orquestrador.md
+      - Research Agent: agentes/research-agent.md
+      - Analysis Agent: agentes/analysis-agent.md
+      - Validation Agent: agentes/validation-agent.md
+      - Communication Agent: agentes/communication-agent.md
   - Base RAG (Semana 2):
       - Mecanismo e Fontes: rag/index.md
       - Catálogo de Fontes: rag/catalogo.md
@@ -110,3 +118,4 @@ nav:
       - "0013 – Preferências e Ajustes": adr/0013-preferencias-locais-e-aba-de-ajustes.md
       - "0014 – Histórico de Conversas e Títulos": adr/0014-historico-de-conversas-e-titulos.md
       - "0015 – Dados Reais e Endereço da API": adr/0015-dados-reais-importacao-e-endereco-da-api.md
+      - "0016 – Arquitetura Multiagente (proposta)": adr/0016-arquitetura-multiagente.md

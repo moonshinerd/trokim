@@ -45,3 +45,12 @@ Registro formal dos alinhamentos, dinâmicas de ideação e deliberações técn
   - Relatório comparativo, histórico versionado de resultados com gráficos e documentação ([#26](https://github.com/moonshinerd/trokim/issues/26)); histórico de conversas ([#44](https://github.com/moonshinerd/trokim/issues/44)) e dados reais no app ([#45](https://github.com/moonshinerd/trokim/issues/45)).
   - Resultado central: a fundamentação em evidências reduziu as alucinações confirmadas de 30,0% (piso) na LLM pura para 13,3% (RAG ingênuo) e 6,7% (Trokim estruturado); uma segunda execução mudou os números, então o ranking entre RAG ingênuo e Trokim não se sustenta ([Histórico de Resultados](../pesquisa/resultados.md)).
 - **Pendências assumidas:** homologação do chat generativo em aparelho Android físico; revisão humana cega e repetição com modelos maiores; persistência dos lançamentos em SQLite. Não houve reunião de validação, então não há Ata 04.
+
+---
+
+### Checkpoint da Semana 4 — Sistema Multiagentes (Planejada em 16/11/2026, entrega em 18/11/2026)
+- **Status:** <span class="badge-should">Sprint Ativa</span>
+- **Planejamento:** épico [#50](https://github.com/moonshinerd/trokim/issues/50) com o contrato de mensagens dos agentes; Fase 1 (segunda 16/11) com as tarefas independentes [#51](https://github.com/moonshinerd/trokim/issues/51) a [#57](https://github.com/moonshinerd/trokim/issues/57) e Fase 2 (quarta 18/11) com as bloqueadas [#58](https://github.com/moonshinerd/trokim/issues/58) a [#61](https://github.com/moonshinerd/trokim/issues/61). Detalhes e grafo de precedência em [Planejamento](../planejamento.md#6-semana-4-sistema-multiagentes-sprint-ativa).
+- **Decisão arquitetural:** [ADR 0016](../adr/0016-arquitetura-multiagente.md) (proposta).
+- **Registro:** não houve reunião de planejamento registrada em ata; a ata só será criada se houver reunião de validação de fato.
+
