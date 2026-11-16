@@ -1232,6 +1232,17 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#6-fluxo-multiagente-post-v1agentsask" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        6. Fluxo Multiagente (<code>POST /v1/agents/ask</code>)
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     
   
@@ -2230,6 +2241,17 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#6-fluxo-multiagente-post-v1agentsask" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        6. Fluxo Multiagente (<code>POST /v1/agents/ask</code>)
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     
   
@@ -2444,6 +2466,66 @@
     end
     API--&gt;&gt;Mobile: Título
     Mobile--&gt;&gt;User: Atualiza o título (uma renomeação manual nunca é sobrescrita)</code></pre>
+<hr />
+<h2 id="6-fluxo-multiagente-post-v1agentsask">6. Fluxo Multiagente (<code>POST /v1/agents/ask</code>)<a class="headerlink" href="#6-fluxo-multiagente-post-v1agentsask" title="Permanent link">&para;</a></h2>
+<p>O sistema multiagente separa as responsabilidades entre agentes especializados com uma trilha de auditoria transparente:</p>
+<pre class="mermaid"><code>sequenceDiagram
+    autonumber
+    actor User as Usuário (Android)
+    participant Mobile as App Flutter
+    participant API as Router Agents (/v1/agents/ask)
+    participant Orch as Orchestrator
+    participant Research as Research Agent
+    participant Analysis as Analysis Agent
+    participant Comm as Communication Agent
+    participant Val as Validation Agent
+
+    User-&gt;&gt;Mobile: Pergunta sobre finanças / gastos
+    Mobile-&gt;&gt;API: POST /v1/agents/ask {message}
+    API-&gt;&gt;Orch: run(question, transactions)
+
+    rect rgb(240, 248, 255)
+        note over Orch,Research: 1. Recuperação de evidências
+        Orch-&gt;&gt;Research: run(ctx)
+        alt Fora de escopo ou sem evidência
+            Research--&gt;&gt;Orch: StepStatus.ABSTAINED (abstain_reason)
+            Orch--&gt;&gt;API: MultiAgentResponse (status: abstained, resposta fixa)
+            API--&gt;&gt;Mobile: Resposta de abstenção + trilha
+        else Evidências oficiais encontradas
+            Research--&gt;&gt;Orch: StepStatus.OK (ctx.evidences)
+        end
+    end
+
+    opt Pergunta requer cálculo (needs_analysis)
+        rect rgb(255, 250, 240)
+            note over Orch,Analysis: 2. Análise numérica determinística
+            Orch-&gt;&gt;Analysis: run(ctx)
+            Analysis--&gt;&gt;Orch: StepStatus.OK (ctx.calculations, ctx.assumptions)
+        end
+    end
+
+    rect rgb(245, 255, 245)
+        note over Orch,Val: 3. Ciclo de Redação e Validação Defensiva
+        loop Até max_revisions (padrão: 1)
+            Orch-&gt;&gt;Comm: run(ctx) (usa LLM)
+            Comm--&gt;&gt;Orch: StepStatus.OK (ctx.draft_answer)
+            Orch-&gt;&gt;Val: run(ctx) (determinístico)
+            alt Validação Aprovada
+                Val--&gt;&gt;Orch: StepStatus.OK (sem blockers)
+            else Blocker detectado e há revisão
+                Val--&gt;&gt;Orch: StepStatus.FAILED (ctx.issues com BLOCKER)
+                note over Orch,Comm: Reenvia ao Communication para correção
+            else Blocker persistente ou sem revisão
+                Val--&gt;&gt;Orch: StepStatus.FAILED
+                Orch--&gt;&gt;API: MultiAgentResponse (status: rejected, resposta segura)
+                API--&gt;&gt;Mobile: Rejeição segura + trilha de auditoria
+            end
+        end
+    end
+
+    Orch--&gt;&gt;API: MultiAgentResponse (status: answered, answer, steps, durações)
+    API--&gt;&gt;Mobile: Resposta auditada com trilha dos agentes
+    Mobile--&gt;&gt;User: Exibe resposta com botão "Como cheguei a essa resposta"</code></pre>
 
 
 

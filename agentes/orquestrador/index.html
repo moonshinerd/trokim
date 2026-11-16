@@ -1293,10 +1293,10 @@
       <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
         
           <li class="md-nav__item">
-  <a href="#regras" class="md-nav__link">
+  <a href="#regras-de-execucao" class="md-nav__link">
     <span class="md-ellipsis">
       <span class="md-typeset">
-        Regras
+        Regras de Execução
       </span>
     </span>
   </a>
@@ -1304,10 +1304,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#como-funciona-na-pratica" class="md-nav__link">
+  <a href="#regras-de-deteccao-numerica-needs_analysis" class="md-nav__link">
     <span class="md-ellipsis">
       <span class="md-typeset">
-        Como funciona na prática
+        Regras de Detecção Numérica (<code>needs_analysis</code>)
       </span>
     </span>
   </a>
@@ -1315,10 +1315,32 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#testes" class="md-nav__link">
+  <a href="#mensagens-fixas-do-sistema" class="md-nav__link">
     <span class="md-ellipsis">
       <span class="md-typeset">
-        Testes
+        Mensagens Fixas do Sistema
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#exemplo-de-trilha-de-auditoria-agentstep" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Exemplo de Trilha de Auditoria (<code>AgentStep</code>)
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#testes-automatizados" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Testes Automatizados
       </span>
     </span>
   </a>
@@ -2165,10 +2187,10 @@
       <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
         
           <li class="md-nav__item">
-  <a href="#regras" class="md-nav__link">
+  <a href="#regras-de-execucao" class="md-nav__link">
     <span class="md-ellipsis">
       <span class="md-typeset">
-        Regras
+        Regras de Execução
       </span>
     </span>
   </a>
@@ -2176,10 +2198,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#como-funciona-na-pratica" class="md-nav__link">
+  <a href="#regras-de-deteccao-numerica-needs_analysis" class="md-nav__link">
     <span class="md-ellipsis">
       <span class="md-typeset">
-        Como funciona na prática
+        Regras de Detecção Numérica (<code>needs_analysis</code>)
       </span>
     </span>
   </a>
@@ -2187,10 +2209,32 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#testes" class="md-nav__link">
+  <a href="#mensagens-fixas-do-sistema" class="md-nav__link">
     <span class="md-ellipsis">
       <span class="md-typeset">
-        Testes
+        Mensagens Fixas do Sistema
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#exemplo-de-trilha-de-auditoria-agentstep" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Exemplo de Trilha de Auditoria (<code>AgentStep</code>)
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#testes-automatizados" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Testes Automatizados
       </span>
     </span>
   </a>
@@ -2230,26 +2274,90 @@
 
 
 <h1 id="orquestrador-e-contratos">Orquestrador e Contratos<a class="headerlink" href="#orquestrador-e-contratos" title="Permanent link">&para;</a></h1>
-<div class="admonition info">
-<p class="admonition-title">Status: Planejado</p>
-<p>Issue <a href="https://github.com/moonshinerd/trokim/issues/51">#51</a>. Esta página é preenchida no mesmo PR da implementação (regra: o MkDocs nunca fica defasado).</p>
+<div class="admonition success">
+<p class="admonition-title">Status: Implementado</p>
+<p>Implementado na issue <a href="https://github.com/moonshinerd/trokim/issues/51">#51</a>. O contrato de mensagens é estrito e a orquestração segue um fluxo linear defensivo com revisão única em caso de bloqueio.</p>
 </div>
-<p>Coordena os quatro agentes e monta a trilha. Código previsto: <code>api/app/domain/agents.py</code> (contrato),
-<code>api/app/services/agents/base.py</code> (protocolo <code>Agent</code>) e <code>api/app/services/agents/orchestrator.py</code>.</p>
-<h2 id="regras">Regras<a class="headerlink" href="#regras" title="Permanent link">&para;</a></h2>
+<p>Coordena os quatro agentes especializados e constrói a trilha de auditoria (<code>steps</code>). O código está estruturado em:</p>
+<ul>
+<li><code>api/app/domain/agents.py</code>: contrato puro de domínio (Pydantic v2), sem dependências de frameworks externos ou rede.</li>
+<li><code>api/app/services/agents/base.py</code>: protocolo assíncrono <code>Agent</code>.</li>
+<li><code>api/app/services/agents/orchestrator.py</code>: classe <code>Orchestrator</code> e função de roteamento <code>needs_analysis</code>.</li>
+</ul>
+<h2 id="regras-de-execucao">Regras de Execução<a class="headerlink" href="#regras-de-execucao" title="Permanent link">&para;</a></h2>
 <ol>
-<li><strong>Research.</strong> Se <code>abstain_reason</code> vier preenchido, encerra com <code>abstained</code> e uma resposta fixa, sem chamar o LLM.</li>
-<li><strong>Analysis</strong> só roda se a pergunta pede números (regra por palavras-chave); senão o passo é <code>skipped</code>.</li>
-<li><strong>Communication</strong> escreve o rascunho a partir de <code>evidences</code> e <code>calculations</code>.</li>
-<li><strong>Validation</strong> confere o rascunho. Com bloqueio e revisão disponível (<code>max_revisions</code>, padrão 1), volta ao Communication com os problemas; persistindo o bloqueio, encerra com <code>rejected</code> e uma mensagem segura.</li>
-<li>Cada passo vira um <code>AgentStep</code> com a duração medida; uma falha inesperada vira <code>failed</code> e a resposta <code>rejected</code>.</li>
+<li><strong>Research Agent (Primeira Linha de Defesa):</strong> Recupera evidências institucionais. Se <code>abstain_reason</code> for preenchido (fora de escopo ou sem evidência suficiente), o orquestrador encerra a execução com status <code>abstained</code> e devolve a mensagem fixa de abstenção imediatamente, sem acionar o LLM.</li>
+<li><strong>Analysis Agent (Cálculo Determinístico):</strong> É executado somente se a pergunta demandar números ou raciocínio orçamentário sobre extratos (<code>needs_analysis</code>). Caso contrário, o passo é marcado como <code>skipped</code>.</li>
+<li><strong>Communication Agent (Redação em pt-BR):</strong> Elabora o rascunho de resposta (<code>draft_answer</code>) ancorando-se estritamente nas evidências numeradas e nos cálculos realizados.</li>
+<li><strong>Validation Agent (Guarda Defensivo):</strong> Audita o rascunho. Caso encontre problemas com severidade <code>blocker</code> e ainda haja tentativas disponíveis (<code>max_revisions = 1</code>), o orquestrador reenvia o contexto para revisão do Communication Agent. Caso o bloqueio persista ou se esgotem as revisões, encerra com status <code>rejected</code> e uma mensagem fixa de segurança, sem inventar conteúdo.</li>
+<li><strong>Trilha de Auditoria e Resiliência:</strong> Cada etapa registra um <code>AgentStep</code> com status, duração em milissegundos e sumário. Qualquer falha inesperada em um agente é capturada de forma defensiva, convertida em <code>failed</code> na trilha e resulta em <code>rejected</code> seguro para o usuário final.</li>
 </ol>
-<h2 id="como-funciona-na-pratica">Como funciona na prática<a class="headerlink" href="#como-funciona-na-pratica" title="Permanent link">&para;</a></h2>
-<p><em>(A preencher na implementação: fluxo real, regras de <code>needs_analysis</code>, mensagens fixas e exemplos de trilha.)</em></p>
-<h2 id="testes">Testes<a class="headerlink" href="#testes" title="Permanent link">&para;</a></h2>
-<p><em>(A preencher: arquivos de teste e o que cobrem.)</em></p>
+<h2 id="regras-de-deteccao-numerica-needs_analysis">Regras de Detecção Numérica (<code>needs_analysis</code>)<a class="headerlink" href="#regras-de-deteccao-numerica-needs_analysis" title="Permanent link">&para;</a></h2>
+<p>A função <code>needs_analysis(question)</code> normaliza acentuações e avalia a presença de palavras-chave orçamentárias:</p>
+<ul>
+<li>Saldo, receitas, despesas, gastei, gasto, gastos.</li>
+<li>Categoria, categorias, poupança, poupar, meta, metas, meses.</li>
+<li>Cenário, cenários, projeção, projeções, quanto, orçamento, guardar, economizar.</li>
+</ul>
+<p>Perguntas conceituais puras (ex.: <em>"O que é o FGC?"</em> ou <em>"Explique a regra 50/30/20"</em>) pulam a etapa de análise com status <code>skipped</code>.</p>
+<h2 id="mensagens-fixas-do-sistema">Mensagens Fixas do Sistema<a class="headerlink" href="#mensagens-fixas-do-sistema" title="Permanent link">&para;</a></h2>
+<ul>
+<li><strong>Abstenção (<code>ABSTAINED</code>):</strong><blockquote>
+<p><em>"O Trokim não possui evidências suficientes nas diretrizes oficiais (Banco Central do Brasil, CVM, CFPB ou ANPD) para responder a essa consulta com segurança. Para sua proteção financeira, recomendamos consultar canais oficiais regulamentados."</em></p>
+</blockquote>
+</li>
+<li><strong>Rejeição Segura (<code>REJECTED</code>):</strong><blockquote>
+<p><em>"A resposta preliminar gerada pelo assistente não passou pelas regras de validação e segurança do Trokim (conformidade com cálculos auditáveis e diretrizes oficiais). Por segurança financeira, a resposta foi retida."</em></p>
+</blockquote>
+</li>
+</ul>
+<h2 id="exemplo-de-trilha-de-auditoria-agentstep">Exemplo de Trilha de Auditoria (<code>AgentStep</code>)<a class="headerlink" href="#exemplo-de-trilha-de-auditoria-agentstep" title="Permanent link">&para;</a></h2>
+<div class="language-json highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="p">[</span>
+</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="w">  </span><span class="p">{</span>
+</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="w">    </span><span class="nt">"agent"</span><span class="p">:</span><span class="w"> </span><span class="s2">"research"</span><span class="p">,</span>
+</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="w">    </span><span class="nt">"status"</span><span class="p">:</span><span class="w"> </span><span class="s2">"ok"</span><span class="p">,</span>
+</span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="w">    </span><span class="nt">"summary"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Recuperação concluída"</span><span class="p">,</span>
+</span><span id="__span-0-6"><a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="w">    </span><span class="nt">"duration_ms"</span><span class="p">:</span><span class="w"> </span><span class="mi">12</span><span class="p">,</span>
+</span><span id="__span-0-7"><a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="w">    </span><span class="nt">"detail"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nt">"count"</span><span class="p">:</span><span class="w"> </span><span class="mi">2</span><span class="w"> </span><span class="p">}</span>
+</span><span id="__span-0-8"><a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="w">  </span><span class="p">},</span>
+</span><span id="__span-0-9"><a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="w">  </span><span class="p">{</span>
+</span><span id="__span-0-10"><a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="w">    </span><span class="nt">"agent"</span><span class="p">:</span><span class="w"> </span><span class="s2">"analysis"</span><span class="p">,</span>
+</span><span id="__span-0-11"><a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a><span class="w">    </span><span class="nt">"status"</span><span class="p">:</span><span class="w"> </span><span class="s2">"ok"</span><span class="p">,</span>
+</span><span id="__span-0-12"><a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a><span class="w">    </span><span class="nt">"summary"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Cálculo determinístico finalizado"</span><span class="p">,</span>
+</span><span id="__span-0-13"><a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a><span class="w">    </span><span class="nt">"duration_ms"</span><span class="p">:</span><span class="w"> </span><span class="mi">8</span><span class="p">,</span>
+</span><span id="__span-0-14"><a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a><span class="w">    </span><span class="nt">"detail"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nt">"calculations_count"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="p">}</span>
+</span><span id="__span-0-15"><a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a><span class="w">  </span><span class="p">},</span>
+</span><span id="__span-0-16"><a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a><span class="w">  </span><span class="p">{</span>
+</span><span id="__span-0-17"><a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a><span class="w">    </span><span class="nt">"agent"</span><span class="p">:</span><span class="w"> </span><span class="s2">"communication"</span><span class="p">,</span>
+</span><span id="__span-0-18"><a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a><span class="w">    </span><span class="nt">"status"</span><span class="p">:</span><span class="w"> </span><span class="s2">"ok"</span><span class="p">,</span>
+</span><span id="__span-0-19"><a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a><span class="w">    </span><span class="nt">"summary"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Rascunho elaborado em pt-BR"</span><span class="p">,</span>
+</span><span id="__span-0-20"><a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a><span class="w">    </span><span class="nt">"duration_ms"</span><span class="p">:</span><span class="w"> </span><span class="mi">420</span><span class="p">,</span>
+</span><span id="__span-0-21"><a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a><span class="w">    </span><span class="nt">"detail"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nt">"attempt"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="nt">"model"</span><span class="p">:</span><span class="w"> </span><span class="s2">"ollama/qwen2.5:1.5b"</span><span class="w"> </span><span class="p">}</span>
+</span><span id="__span-0-22"><a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a><span class="w">  </span><span class="p">},</span>
+</span><span id="__span-0-23"><a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a><span class="w">  </span><span class="p">{</span>
+</span><span id="__span-0-24"><a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a><span class="w">    </span><span class="nt">"agent"</span><span class="p">:</span><span class="w"> </span><span class="s2">"validation"</span><span class="p">,</span>
+</span><span id="__span-0-25"><a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a><span class="w">    </span><span class="nt">"status"</span><span class="p">:</span><span class="w"> </span><span class="s2">"ok"</span><span class="p">,</span>
+</span><span id="__span-0-26"><a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a><span class="w">    </span><span class="nt">"summary"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Validação concluída sem bloqueios"</span><span class="p">,</span>
+</span><span id="__span-0-27"><a id="__codelineno-0-27" name="__codelineno-0-27" href="#__codelineno-0-27"></a><span class="w">    </span><span class="nt">"duration_ms"</span><span class="p">:</span><span class="w"> </span><span class="mi">14</span><span class="p">,</span>
+</span><span id="__span-0-28"><a id="__codelineno-0-28" name="__codelineno-0-28" href="#__codelineno-0-28"></a><span class="w">    </span><span class="nt">"detail"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nt">"issues_count"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="p">}</span>
+</span><span id="__span-0-29"><a id="__codelineno-0-29" name="__codelineno-0-29" href="#__codelineno-0-29"></a><span class="w">  </span><span class="p">}</span>
+</span><span id="__span-0-30"><a id="__codelineno-0-30" name="__codelineno-0-30" href="#__codelineno-0-30"></a><span class="p">]</span>
+</span></code></pre></div>
+<h2 id="testes-automatizados">Testes Automatizados<a class="headerlink" href="#testes-automatizados" title="Permanent link">&para;</a></h2>
+<p>O comportamento do orquestrador é coberto sem dependência de modelo de IA nem rede externa em <code>api/tests/test_orchestrator.py</code>:</p>
+<ul>
+<li>Detecção de intenção numérica em <code>needs_analysis</code> (perguntas numéricas vs. conceituais).</li>
+<li>Curto-circuito de abstenção no Research (não aciona Communication nem Analysis).</li>
+<li>Passo <code>skipped</code> no Analysis quando a pergunta não pede cálculos.</li>
+<li>Ativação do Analysis e propagação de cálculos no contexto.</li>
+<li>Ciclo de revisão: blocker na 1ª validação e aprovação na 2ª validação.</li>
+<li>Bloqueio persistente convertendo resposta em <code>rejected</code> com mensagem segura.</li>
+<li>Captura resiliente de exceção em agente (passo <code>failed</code> e resposta <code>rejected</code>).</li>
+</ul>
 <h2 id="limitacoes">Limitações<a class="headerlink" href="#limitacoes" title="Permanent link">&para;</a></h2>
-<p><em>(A preencher.)</em></p>
+<ul>
+<li>O orquestrador atual segue um grafo linear determinístico com no máximo 1 ciclo de revisão. Não há suporte a branching complexo ou chamadas paralelas, o que é intencional para manter rastreabilidade estrita e latência previsível.</li>
+</ul>
 
 
 
