@@ -139,11 +139,11 @@ O entregável oficial da **Semana 4 (16/11 a 20/11)** é o *primeiro protótipo 
 flowchart TD
     subgraph "Fase 1: segunda (independentes)"
         A["#51 Contratos e orquestrador<br/><b>@moonshinerd</b>"]
-        B["#52 Research Agent<br/><b>@zainoca</b>"]
+        B["#52 Research Agent<br/><b>@gabrielcrzojo</b>"]
         C["#53 Analysis Agent<br/><b>@gabrielcrzojo</b>"]
         D["#54 Validation Agent<br/><b>@rebecaboncaputo</b>"]
         E["#55 Communication Agent<br/><b>@Luix3005</b>"]
-        F["#56 Gabarito multiagente<br/><b>@gabrielcrzojo</b>"]
+        F["#56 Gabarito multiagente<br/><b>@zainoca</b>"]
         G["#57 Protótipo no MkDocs (opcional)<br/><b>@Luix3005</b>"]
     end
     subgraph "Fase 2: quarta (bloqueadas)"
@@ -169,11 +169,11 @@ flowchart TD
 | Issue | Escopo | Responsável | Fase | Precedência | Estimativa |
 |:---:|---|:---:|:---:|---|:---:|
 | [#51](https://github.com/moonshinerd/trokim/issues/51) | Contratos dos agentes e orquestrador | @moonshinerd | 1 | **Não-bloqueante** | 3 h |
-| [#52](https://github.com/moonshinerd/trokim/issues/52) | Research Agent (evidências e abstenção) | @zainoca | 1 | **Não-bloqueante** | 1,5 h |
+| [#52](https://github.com/moonshinerd/trokim/issues/52) | Research Agent (evidências e abstenção) | @gabrielcrzojo | 1 | **Não-bloqueante** | 1,5 h |
 | [#53](https://github.com/moonshinerd/trokim/issues/53) | Analysis Agent (cálculos determinísticos) | @gabrielcrzojo | 1 | **Não-bloqueante** | 3 h |
 | [#54](https://github.com/moonshinerd/trokim/issues/54) | Validation Agent (números, citações, escopo) | @rebecaboncaputo | 1 | **Não-bloqueante** | 3 h |
 | [#55](https://github.com/moonshinerd/trokim/issues/55) | Communication Agent (redação com prompt versionado) | @Luix3005 | 1 | **Não-bloqueante** | 2,5 h |
-| [#56](https://github.com/moonshinerd/trokim/issues/56) | Gabarito multiagente de 20 cenários | @gabrielcrzojo | 1 | **Não-bloqueante** | 3 h |
+| [#56](https://github.com/moonshinerd/trokim/issues/56) | Gabarito multiagente de 20 cenários | @zainoca | 1 | **Não-bloqueante** | 3 h |
 | [#57](https://github.com/moonshinerd/trokim/issues/57) | Protótipo visual do app no MkDocs (opcional) | @Luix3005 | 1 | **Não-bloqueante**, P2 | 4 h |
 | [#58](https://github.com/moonshinerd/trokim/issues/58) | Endpoint `POST /v1/agents/ask` e integração | @moonshinerd, @gabrielcrzojo | 2 | **Bloqueada por [#51](https://github.com/moonshinerd/trokim/issues/51) a [#55](https://github.com/moonshinerd/trokim/issues/55)** | 3 h |
 | [#59](https://github.com/moonshinerd/trokim/issues/59) | Mobile: modo multiagente e trilha dos agentes | @zainoca, @Luix3005 | 2 | **Bloqueada por [#58](https://github.com/moonshinerd/trokim/issues/58)** | 4 h |
