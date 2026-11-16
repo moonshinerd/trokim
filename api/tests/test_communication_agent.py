@@ -55,7 +55,9 @@ async def test_communication_agent_normal_run():
     assert ctx.draft_answer == (
         "Deve cobrir de 3 a 6 meses de despesas básicas. [1]\n"
         "Despesa média mensal (avg_expense): 2000.0 reais [Fonte auditável: Extrato de Outubro]\n"
-        "Falta o dado: Considerando apenas lançamentos de débito confirmados?"
+        "Premissas e limitações:\n"
+        "- Considerando apenas lançamentos de débito confirmados.\n"
+        "Você pode esclarecer essas premissas ou fornecer os dados indicados?"
     )
     assert ctx.model == "mock-model"
     assert "model" in step.detail
@@ -188,7 +190,8 @@ async def test_conteudo_nao_literal_vira_fallback_com_premissas_exatas():
 
     assert "O orçamento registra receitas e despesas. [1]" in ctx.draft_answer
     assert "Saldo (balance): 12,30 BRL [Fonte auditável: CalculationService]" in ctx.draft_answer
-    assert "Falta o dado: Falta informar o período do orçamento?" in ctx.draft_answer
+    assert "- Falta informar o período do orçamento." in ctx.draft_answer
+    assert "fornecer os dados indicados?" in ctx.draft_answer
     assert "Organize seus gastos" not in ctx.draft_answer
     assert "Banco Central do Brasil" in prompts[0]
     assert "12,30 BRL" in prompts[0]
@@ -246,3 +249,109 @@ def test_communication_agent_formatters_empty():
     assert "Nenhuma limitação" in CommunicationAgent._format_assumptions([])
     assert CommunicationAgent._format_revision_notes([], 0) == ""
     assert CommunicationAgent._format_revision_notes([], 1) == ""
+
+
+@pytest.mark.asyncio
+@pytest.mark.parametrize("number", ["0", "1", "2", "3", "6", "12", "20", "30", "50", "888.777.555"])
+async def test_constantes_sem_lastro_nao_contornam_bloqueio(number):
+    from app.services.agents.validation import ValidationAgent
+
+    provider = AsyncMock()
+    provider.generate.return_value = LLMResponse(
+        content=f"Guarde R$ {number} por mês.", model="mock"
+    )
+    ctx = AgentContext(question="Como organizar o orçamento?")
+    await CommunicationAgent(provider).run(ctx)
+    step = await ValidationAgent().run(ctx)
+    assert step.status == StepStatus.FAILED
+    assert any(issue.code == "DRAFT_NOT_GROUNDED" for issue in ctx.issues)
+
+
+@pytest.mark.asyncio
+@pytest.mark.parametrize("number", ["-123.45 BRL", "123.45%"])
+async def test_sinal_e_unidade_trocados_nao_tem_lastro(number):
+    provider = AsyncMock()
+    provider.generate.return_value = LLMResponse(content=f"Seu saldo é {number}.", model="mock")
+    ctx = AgentContext(
+        question="Qual o saldo?",
+        calculations=[
+            CalculationResult(
+                key="balance", label="Saldo", value=123.45, unit="BRL", source="Sistema"
+            )
+        ],
+    )
+    await CommunicationAgent(provider).run(ctx)
+    assert any(issue.code == "DRAFT_NOT_GROUNDED" for issue in ctx.issues)
+    assert number not in ctx.draft_answer
+
+
+@pytest.mark.asyncio
+async def test_premissa_confirmada_e_preservada_sem_virar_dado_ausente():
+    provider = AsyncMock()
+    provider.generate.return_value = LLMResponse(content="Confira o orçamento.", model="mock")
+    assumption = "Cálculos baseados em lançamentos importados, sem duplicatas."
+    ctx = AgentContext(question="Como organizar o orçamento?", assumptions=[assumption])
+    await CommunicationAgent(provider).run(ctx)
+    assert f"- {assumption}" in ctx.draft_answer
+    assert "Falta o dado" not in ctx.draft_answer
+
+
+@pytest.mark.asyncio
+async def test_mesmo_formato_de_evidencia_e_calculo_no_prompt_e_na_validacao():
+    evidence = EvidenceChunk(
+        id="ev",
+        document_title="Caderno",
+        section="Orçamento",
+        content="Registre receitas.\n\n  Registre   despesas.",
+        source_name="BCB",
+        score=0.9,
+    )
+    calculation = CalculationResult(
+        key="balance", label="Saldo mensal", value=123.45, unit="BRL", source="Sistema"
+    )
+    content = (
+        "Registre receitas. [1]\nRegistre despesas. [1]\n"
+        "Saldo mensal (balance): 123.45 BRL [Fonte auditável: Sistema]"
+    )
+    provider = AsyncMock()
+    provider.generate.return_value = LLMResponse(content=content, model="mock")
+    ctx = AgentContext(
+        question="Como organizar o orçamento?", evidences=[evidence], calculations=[calculation]
+    )
+    step = await CommunicationAgent(provider).run(ctx)
+    assert step.detail["draft_guard"] == "accepted"
+    prompt = provider.generate.call_args.kwargs["prompt"]
+    assert "Registre receitas. [1] Registre despesas. [1]" in prompt
+    assert "- Saldo mensal (balance): 123.45 BRL [Fonte auditável: Sistema]" in prompt
+
+
+@pytest.mark.asyncio
+async def test_revisao_literal_remove_bloqueio_da_tentativa_anterior():
+    from app.services.agents.validation import ValidationAgent
+
+    provider = AsyncMock()
+    provider.generate.side_effect = [
+        LLMResponse(content="Guarde R$ 50.", model="mock"),
+        LLMResponse(content="Registre receitas e despesas. [1]", model="mock"),
+    ]
+    ctx = AgentContext(
+        question="Como organizar o orçamento?",
+        evidences=[
+            EvidenceChunk(
+                id="ev",
+                document_title="Caderno",
+                section="Orçamento",
+                content="Registre receitas e despesas.",
+                source_name="BCB",
+                score=0.9,
+            )
+        ],
+    )
+    agent = CommunicationAgent(provider)
+    validator = ValidationAgent()
+    await agent.run(ctx)
+    assert (await validator.run(ctx)).status == StepStatus.FAILED
+    await agent.run(ctx)
+    assert (await validator.run(ctx)).status == StepStatus.OK
+    assert not ctx.issues
+    assert ctx.attempt == 2
