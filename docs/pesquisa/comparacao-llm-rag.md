@@ -98,6 +98,9 @@ Os falsos positivos são, em geral, numerais de listas ordenadas (`1.`, `2.`) ou
 usuais (`1-3 anos`). Na LLM pura foram revisados em profundidade só os 15 casos
 sinalizados; os outros 15 não foram integralmente revisados, então **30,0% é um piso**.
 
+!!! info "Evolução na Semana 4 (Validation Agent)"
+    Na Semana 4, o [Validation Agent](../agentes/validation-agent.md) incorporou essas lições diretamente no backend da API. Ao expurgar marcadores estruturais (listas ordenadas, identificadores de normas e marcadores de citação) antes da checagem numérica, a taxa de falsos positivos caiu para **0% em rascunhos válidos**, barrando preventivamente as regressões dos casos C27 (`OUT_OF_SCOPE_ADVICE`), C29 (`NUMBER_NOT_SUPPORTED`) e C30 (`CALCULATION_MISSING`).
+
 ![Casos sinalizados pela heurística, separados em alucinações confirmadas e falsos positivos](../assets/comparacao/2026-11-13-qwen2.5-1.5b/fig2-alucinacao-auditada.png)
 
 *Figura 3. Casos sinalizados pela heurística e o que a revisão confirmou.*

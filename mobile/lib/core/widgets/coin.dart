@@ -279,7 +279,6 @@ class CoinPainter extends CustomPainter {
       } else {
         canvas.rotate(-theta);
         canvas.translate(0, radius);
-        canvas.rotate(math.pi);
       }
       // gravado: sombra escura deslocada + luz.
       final shade = TextPainter(

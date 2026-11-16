@@ -90,6 +90,13 @@ curl -X POST http://127.0.0.1:8000/v1/chat/generate \
   -d '{"message": "Como funciona o rotativo do cartao de credito?", "mode": "naive"}'
 ```
 
+#### Sistema Multiagente (quatro agentes com cálculos determinísticos e trilha de auditoria):
+```bash
+curl -X POST http://127.0.0.1:8000/v1/agents/ask \
+  -H "Content-Type: application/json" \
+  -d '{"message": "Como montar uma reserva de emergencia e quanto tempo leva com meus gastos?"}'
+```
+
 #### Título de uma conversa:
 ```bash
 curl -X POST http://127.0.0.1:8000/v1/chat/title \

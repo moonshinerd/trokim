@@ -9,7 +9,7 @@ Modelos de linguagem generativa (LLMs) são excelentes para interpretar intenç�
 
 ## Decisão
 Estabelecer uma divisão estrita de responsabilidades:
-1. **Cálculos Matemáticos Determinísticos:** Desenvolvidos inteiramente em código Python puro (`api/app/services/calculation_service.py`), garantindo 100% de precisão numérica, auditabilidade e cobertura por testes automatizados (pytest).
+1. **Cálculos Matemáticos Determinísticos:** Desenvolvidos inteiramente em código Python puro (`api/app/services/calculation_service.py`), garantindo 100% de precisão numérica, auditabilidade e cobertura por testes automatizados (pytest). Na Semana 4, o serviço é expandido com `months_to_goal` (prazo teto para metas) e `category_shares` (distribuição percentual de despesas), encapsulados pelo [Analysis Agent](../agentes/analysis-agent.md).
 2. **Síntese e Diálogo com LLM:** A LLM recebe os valores numéricos já calculados de forma determinística como parâmetros de contexto e apenas gera a explicação em linguagem natural para o usuário, sendo expressamente proibida no system prompt de tentar recalcular ou inventar números.
 
 ## Alternativas Consideradas
