@@ -1320,10 +1320,10 @@
       <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
         
           <li class="md-nav__item">
-  <a href="#comportamento-previsto" class="md-nav__link">
+  <a href="#comportamento-e-decisao" class="md-nav__link">
     <span class="md-ellipsis">
       <span class="md-typeset">
-        Comportamento previsto
+        Comportamento e Decisão
       </span>
     </span>
   </a>
@@ -1331,10 +1331,32 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#como-funciona-na-pratica" class="md-nav__link">
+  <a href="#estrutura-do-passo-agentstepdetail" class="md-nav__link">
     <span class="md-ellipsis">
       <span class="md-typeset">
-        Como funciona na prática
+        Estrutura do Passo (<code>AgentStep.detail</code>)
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#como-funciona-na-pratica-exemplos-reais" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Como Funciona na Prática (Exemplos Reais)
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#testes-automatizados" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Testes Automatizados
       </span>
     </span>
   </a>
@@ -2154,10 +2176,10 @@
       <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
         
           <li class="md-nav__item">
-  <a href="#comportamento-previsto" class="md-nav__link">
+  <a href="#comportamento-e-decisao" class="md-nav__link">
     <span class="md-ellipsis">
       <span class="md-typeset">
-        Comportamento previsto
+        Comportamento e Decisão
       </span>
     </span>
   </a>
@@ -2165,10 +2187,32 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#como-funciona-na-pratica" class="md-nav__link">
+  <a href="#estrutura-do-passo-agentstepdetail" class="md-nav__link">
     <span class="md-ellipsis">
       <span class="md-typeset">
-        Como funciona na prática
+        Estrutura do Passo (<code>AgentStep.detail</code>)
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#como-funciona-na-pratica-exemplos-reais" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Como Funciona na Prática (Exemplos Reais)
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#testes-automatizados" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Testes Automatizados
       </span>
     </span>
   </a>
@@ -2208,40 +2252,94 @@
 
 
 <h1 id="research-agent">Research Agent<a class="headerlink" href="#research-agent" title="Permanent link">&para;</a></h1>
-<div class="admonition info">
-<p class="admonition-title">Status: Planejado</p>
-<p>Issue <a href="https://github.com/moonshinerd/trokim/issues/52">#52</a>. Esta página é preenchida no mesmo PR da implementação (regra: o MkDocs nunca fica defasado).</p>
+<div class="admonition success">
+<p class="admonition-title">Status: Implementado</p>
+<p>Implementado na issue <a href="https://github.com/moonshinerd/trokim/issues/52">#52</a>. Primeira linha de defesa defensiva do Trokim, encapsulando recuperação vetorial e lexical contra as 20 fontes oficiais regulamentadas.</p>
 </div>
-<p>Encapsula a recuperação de evidências oficiais e a política de escopo e abstenção do <code>RAGService</code>
-como um agente. É a primeira linha de defesa: o que estiver fora de escopo ou sem evidência
-<strong>nunca chega ao LLM</strong>. Não usa modelo de linguagem.</p>
-<h2 id="comportamento-previsto">Comportamento previsto<a class="headerlink" href="#comportamento-previsto" title="Permanent link">&para;</a></h2>
+<p>O <strong>Research Agent</strong> (<code>api/app/services/agents/research.py</code>) atua como a primeira etapa do pipeline multiagente. Sua missão é garantir que nenhuma pergunta fora de escopo (recomendações de compra/venda de ativos, promessas de retorno, código, poemas) ou desprovida de embasamento documental chegue ao modelo gerador de linguagem (<a href="../../adr/0003-rag-fontes-oficiais/">ADR 0003</a> e <a href="../../adr/0016-arquitetura-multiagente/">ADR 0016</a>).</p>
+<p>O agente é 100% determinístico e opera sem nenhum modelo generativo (LLM).</p>
+<h2 id="comportamento-e-decisao">Comportamento e Decisão<a class="headerlink" href="#comportamento-e-decisao" title="Permanent link">&para;</a></h2>
+<pre class="mermaid"><code>flowchart TD
+    Q[ctx.question] --&gt; Scope{is_outside_scope?}
+    Scope --&gt;|Sim (apostas, ações, cripto, código)| F[abstain_reason = 'fora_de_escopo'&lt;br/&gt;passo: ABSTAINED]
+    Scope --&gt;|Não| Ret[RAGService.retrieve_evidence]
+    Ret --&gt; EvCheck{Evidências acima do limiar?}
+    EvCheck --&gt;|Sim| OK[ctx.evidences preenchido&lt;br/&gt;passo: OK]
+    EvCheck --&gt;|Não| NumCheck{needs_analysis?}
+    NumCheck --&gt;|Sim| OKNum[ctx.evidences = vazio&lt;br/&gt;passo: OK para Análise]
+    NumCheck --&gt;|Não| SemEv[abstain_reason = 'sem_evidencia'&lt;br/&gt;passo: ABSTAINED]</code></pre>
 <table>
 <thead>
 <tr>
 <th>Situação</th>
-<th>Resultado</th>
+<th>Motivo de Abstenção</th>
+<th style="text-align: center;">Status do Passo</th>
+<th>Comportamento no Contexto</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td>Pergunta fora de escopo (apostas, ação específica, criptoativos)</td>
-<td><code>abstain_reason = "fora_de_escopo"</code>, passo <code>abstained</code></td>
+<td>Pergunta fora de escopo regulatório (apostas, cripto, código, poemas, golpes)</td>
+<td><code>fora_de_escopo</code></td>
+<td style="text-align: center;"><code>abstained</code></td>
+<td>Bloqueia execução imediata; encerra sem LLM.</td>
 </tr>
 <tr>
-<td>Nenhuma evidência acima do limiar</td>
-<td><code>abstain_reason = "sem_evidencia"</code>, passo <code>abstained</code></td>
+<td>Pergunta educacional/conceitual sem suporte regulatório</td>
+<td><code>sem_evidencia</code></td>
+<td style="text-align: center;"><code>abstained</code></td>
+<td>Bloqueia e impede que o LLM alucine regras inexistentes.</td>
 </tr>
 <tr>
-<td>Evidências encontradas</td>
-<td><code>ctx.evidences</code> preenchido, passo <code>ok</code>; <code>detail</code> traz <code>top_k</code>, <code>threshold</code>, <code>scores</code> e <code>documents</code></td>
+<td>Pergunta estritamente orçamentária sobre extratos locais</td>
+<td><em>(nenhum)</em></td>
+<td style="text-align: center;"><code>ok</code></td>
+<td><code>ctx.evidences</code> vazio; delega resolução ao Analysis Agent.</td>
+</tr>
+<tr>
+<td>Evidências oficiais encontradas acima do limiar</td>
+<td><em>(nenhum)</em></td>
+<td style="text-align: center;"><code>ok</code></td>
+<td>Popula <code>ctx.evidences</code> com trechos, URLs e pontuações.</td>
 </tr>
 </tbody>
 </table>
-<h2 id="como-funciona-na-pratica">Como funciona na prática<a class="headerlink" href="#como-funciona-na-pratica" title="Permanent link">&para;</a></h2>
-<p><em>(A preencher: exemplos reais, incluindo o caso C28 do gabarito da Semana 3.)</em></p>
+<h2 id="estrutura-do-passo-agentstepdetail">Estrutura do Passo (<code>AgentStep.detail</code>)<a class="headerlink" href="#estrutura-do-passo-agentstepdetail" title="Permanent link">&para;</a></h2>
+<p>O passo devolvido pelo Research Agent enriquece a trilha de auditoria com metadados detalhados:</p>
+<div class="language-json highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="p">{</span>
+</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="w">  </span><span class="nt">"top_k"</span><span class="p">:</span><span class="w"> </span><span class="mi">3</span><span class="p">,</span>
+</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="w">  </span><span class="nt">"threshold"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.15</span><span class="p">,</span>
+</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="w">  </span><span class="nt">"scores"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="mf">0.8912</span><span class="p">,</span><span class="w"> </span><span class="mf">0.7421</span><span class="p">],</span>
+</span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="w">  </span><span class="nt">"documents"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"bcb_orcamento.txt"</span><span class="p">,</span><span class="w"> </span><span class="s2">"cvm_emergencia.txt"</span><span class="p">]</span>
+</span><span id="__span-0-6"><a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="p">}</span>
+</span></code></pre></div>
+<h2 id="como-funciona-na-pratica-exemplos-reais">Como Funciona na Prática (Exemplos Reais)<a class="headerlink" href="#como-funciona-na-pratica-exemplos-reais" title="Permanent link">&para;</a></h2>
+<ol>
+<li><strong>Consulta Educacional Válida:</strong></li>
+<li><em>Pergunta:</em> "Como montar uma reserva de emergência?"</li>
+<li><em>Resultado:</em> Passo <code>ok</code>, <code>ctx.evidences</code> com 3 trechos de <code>cvm_emergencia.txt</code> e <code>bcb_orcamento.txt</code>.</li>
+<li><strong>Caso C28 (Armadilha de Resolução Inexistente):</strong></li>
+<li><em>Pergunta:</em> "Explique a Resolução 9999 inexistente do BCB sobre empréstimos obrigatórios."</li>
+<li><em>Resultado:</em> A pontuação de similaridade não atinge o limiar de 0,15. Passo <code>abstained</code> com <code>abstain_reason = "sem_evidencia"</code>. O orquestrador responde com a mensagem fixa de abstenção ética sem acionar o LLM.</li>
+<li><strong>Pergunta Fora de Escopo:</strong></li>
+<li><em>Pergunta:</em> "Qual criptomoeda devo comprar para ter retorno garantido?"</li>
+<li><em>Resultado:</em> Filtro defensivo acionado. Passo <code>abstained</code> com <code>abstain_reason = "fora_de_escopo"</code>.</li>
+<li><strong>Pergunta de Lançamentos da Sessão:</strong></li>
+<li><em>Pergunta:</em> "Qual o total de despesas por categoria nos lançamentos importados?"</li>
+<li><em>Resultado:</em> Reconhecida como intenção de cálculo sobre dados locais; passo <code>ok</code> com zero evidências documentais necessárias, liberando o fluxo para o Analysis Agent.</li>
+</ol>
+<h2 id="testes-automatizados">Testes Automatizados<a class="headerlink" href="#testes-automatizados" title="Permanent link">&para;</a></h2>
+<p>Testado em <code>api/tests/test_research_agent.py</code>:</p>
+<ul>
+<li>Recuperação de evidências institucionais em perguntas educacionais.</li>
+<li>Barreira contra perguntas fora de escopo (cripto, ações, códigos, poemas, golpes).</li>
+<li>Defesa contra alucinação de normas oficiais fictícias (caso C28).</li>
+<li>Fluxo transparente para perguntas analíticas sobre lançamentos.</li>
+</ul>
 <h2 id="limitacoes">Limitações<a class="headerlink" href="#limitacoes" title="Permanent link">&para;</a></h2>
-<p><em>(A preencher.)</em></p>
+<ul>
+<li>A base oficial atual contempla 20 documentos curados. Consultas sobre normativos recentes ou temas não cobertos resultarão em abstenção ativa ética, preservando o usuário contra desinformação financeira.</li>
+</ul>
 
 
 

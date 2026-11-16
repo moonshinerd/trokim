@@ -2478,7 +2478,10 @@ da Entrega 3:</p>
 <li>Utiliza <code>prompt_trokim_grounded_v1.txt</code>.</li>
 <li>Recupera evidências oficiais via <code>RAGService</code>.</li>
 <li><strong>Abstenção Ativa:</strong> Se a pergunta violar o escopo institucional ou os trechos não atingirem
-     o limiar de similaridade, o sistema retorna abstenção determinística sem acionar o LLM.</li>
+     o limiar de similaridade, o sistema retorna abstenção determinística sem acionar o LLM.
+     A verificação de escopo é exposta publicamente pelo método <code>RAGService.is_outside_scope</code>
+     (com alias <code>_outside_scope</code> para compatibilidade), sendo consumida diretamente pelo
+     <a href="../agentes/research-agent/">Research Agent</a> da arquitetura multiagente.</li>
 <li>Restringe o modelo exclusivamente ao conteúdo das fontes citadas, proibindo cálculos financeiros
      próprios ou recomendações de investimento especulativo.</li>
 <li><strong><code>pure</code> (LLM Zero-Shot):</strong></li>
