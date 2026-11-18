@@ -199,3 +199,56 @@ async def test_detector_sabe_que_a_conta_do_bb_e_pessoal_pelos_documentos_do_nub
             )
         ).json()
     assert insp["has_conflict"] is True and insp["detected_owner"] == "pessoal"
+
+
+def test_pix_do_bb_traz_data_hora_e_nome_no_memo():
+    (tx,) = _parse(
+        B("DEBIT", "20260605", "-42.00", "p1", "Pix - Enviado", "05/06 14:23 PADARIA EXEMPLO LTDA")
+    ).transactions
+    assert tx.nature == N.PIX_OUT
+    assert tx.merchant == "PADARIA EXEMPLO LTDA"
+    assert tx.counterparty_doc is None
+    assert tx.counterparty_kind == CounterpartyKind.COMPANY  # "LTDA" no nome
+    assert "14:23" not in tx.description and "14:23" not in (tx.merchant or "")
+
+
+def test_pix_do_bb_com_documento_identifica_empresa_ou_pessoa():
+    (empresa,) = _parse(
+        B(
+            "DEBIT",
+            "20260605",
+            "-10.00",
+            "p1",
+            "Pix - Enviado",
+            f"05/06 14:23 {CNPJ_EMPRESA} LOJA EXEMPLO",
+        )
+    ).transactions
+    assert empresa.counterparty_kind == CounterpartyKind.COMPANY
+    assert empresa.counterparty_doc == CNPJ_EMPRESA
+    (pessoa,) = _parse(
+        B(
+            "CREDIT",
+            "20260606",
+            "10.00",
+            "p2",
+            "Pix - Recebido",
+            "06/06 09:00 12345678909 MARIA EXEMPLO",
+        )
+    ).transactions
+    assert pessoa.nature == N.PIX_IN and pessoa.counterparty_kind == CounterpartyKind.PERSON
+    assert "12345678909" not in pessoa.description
+
+
+def test_pagto_cartao_credito_do_bb_e_pagamento_de_fatura():
+    (tx,) = _parse(B("DEBIT", "20260610", "-800.00", "c1", "Pagto cartão crédito", "")).transactions
+    assert tx.nature == N.CARD_PAYMENT
+    assert CalculationService.calculate_summary([tx]).total_expenses == 0
+
+
+def test_pix_sem_documento_de_nome_sem_marca_de_empresa_e_tratado_como_pessoa():
+    (tx,) = _parse(
+        B("DEBIT", "20260605", "-30.00", "p1", "Pix - Enviado", "05/06 14:23 JOAO DA SILVA SAURO")
+    ).transactions
+    assert tx.counterparty_kind == CounterpartyKind.PERSON
+    resumo = CalculationService.calculate_summary([tx])
+    assert resumo.top_merchants == [{"merchant": "Pix para pessoas", "total": 30.0}]

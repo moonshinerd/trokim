@@ -284,9 +284,32 @@ class NubankProfile:
         return ParsedMemo(text or "Transação sem descrição", TransactionNature.OTHER)
 
 
+# Pix do BB: "DD/MM HH:MM [documento] NOME" (o documento só aparece em alguns).
+_BB_PIX_MEMO = re.compile(
+    r"^\d{2}/\d{2}\s+\d{2}:\d{2}\s+(?:(?P<doc>\d{11}|\d{14})\s+)?(?P<name>.+)$"
+)
 _BB_MEMO = re.compile(
     r"^(?P<bank>\d{1,4})\s+(?P<branch>\d{3,5})\s+(?P<doc>\d{11}|\d{14})\s+(?P<name>.+)$"
 )
+
+
+_EMPRESA = re.compile(
+    r"\b(ltda|eireli|mei|me|epp|s/?a|cia|comercio|servicos|restaurante|padaria|mercado|"
+    r"farmacia|loja|bar|cafe|posto|supermercado|lanchonete|pizzaria|clinica|hotel|"
+    r"escola|academia|oficina|auto|tecnologia|sistemas|distribuidora)\b"
+)
+
+
+def guess_counterparty_kind(name: str | None) -> CounterpartyKind | None:
+    """Palpite para Pix sem documento (como no BB): marca de empresa no nome vira empresa e o
+    resto vira pessoa. Só serve para agrupar nomes de pessoas no ranking."""
+    if not name:
+        return None
+    return (
+        CounterpartyKind.COMPANY
+        if _EMPRESA.search(normalize_text(name))
+        else CounterpartyKind.PERSON
+    )
 
 
 class BancoDoBrasilProfile:
@@ -310,13 +333,18 @@ class BancoDoBrasilProfile:
         kind_text = re.sub(r"\s+", " ", payee or "").strip()
         norm = normalize_text(kind_text)
         memo_text = re.sub(r"\s+", " ", memo or "").strip()
-        counterparty = _BB_MEMO.match(memo_text)
+        counterparty = _BB_MEMO.match(memo_text) or _BB_PIX_MEMO.match(memo_text)
         who = doc = None
         who_kind = None
         if counterparty:
             who = counterparty.group("name").strip()
             doc = normalize_doc(counterparty.group("doc"))
-            who_kind = CounterpartyKind.COMPANY if doc_is_company(doc) else CounterpartyKind.PERSON
+            if doc:
+                who_kind = (
+                    CounterpartyKind.COMPANY if doc_is_company(doc) else CounterpartyKind.PERSON
+                )
+            else:
+                who_kind = guess_counterparty_kind(who)
         incoming = tx_type == TransactionType.CREDIT
 
         def transfer(prefix: str) -> ParsedMemo:

@@ -77,6 +77,9 @@ void main() {
 
     await tester.tap(find.text('Nubank'));
     await tester.pumpAndSettle();
+    await tester.tap(find.text('Pessoa física'));
+    await tester.pumpAndSettle();
+    expect(find.text('Qual conta do Nubank?'), findsNothing);
     expect(find.text('O que você quer importar?'), findsOneWidget);
 
     await tester.tap(find.text('Fatura do cartão'));
@@ -115,6 +118,8 @@ void main() {
     await tester.pumpAndSettle();
     await tester.tap(find.text('Nubank'));
     await tester.pumpAndSettle();
+    await tester.tap(find.text('Pessoa física'));
+    await tester.pumpAndSettle();
     await tester.tap(find.text('Extrato da conta'));
     await tester.pumpAndSettle();
     expect(find.text('Passo 1 de 4'), findsOneWidget);
@@ -128,6 +133,8 @@ void main() {
     await tester.tap(find.text('Importar extrato'));
     await tester.pumpAndSettle();
     await tester.tap(find.text('Nubank'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Pessoa física'));
     await tester.pumpAndSettle();
     await h.tapAsync(tester, find.text('Pular tutorial'));
     expect(find.text('Pronto!'), findsOneWidget);
@@ -168,6 +175,8 @@ void main() {
     await tester.tap(find.text('Importar extrato'));
     await tester.pumpAndSettle();
     await tester.tap(find.text('Nubank'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Pessoa física'));
     await tester.pumpAndSettle();
     await tester.tap(find.text('Fatura do cartão'));
     await tester.pumpAndSettle();
@@ -217,6 +226,8 @@ void main() {
     await tester.tap(find.text('Importar extrato'));
     await tester.pumpAndSettle();
     await tester.tap(find.text('Nubank'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Pessoa física'));
     await tester.pumpAndSettle();
     await tester.tap(find.text('Fatura do cartão'));
     await tester.pumpAndSettle();

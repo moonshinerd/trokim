@@ -107,37 +107,74 @@ List<GuideStep> _nubankBusinessGuide(
   ],
 };
 
-/// Passo a passo da fatura do cartão Ourocard do Banco do Brasil.
+/// Passo a passo do Banco do Brasil: fatura do cartão Ourocard (PDF, app do cartão) e extrato da
+/// conta corrente (OFX "Money 2000+", app do banco).
 ///
-/// O BB só oferece PDF (não existe OFX). Dá para compartilhar o arquivo direto com
-/// o Trokim pela lista de aplicativos.
-List<GuideStep> bbGuide() => const [
-  GuideStep(
-    icon: Icons.credit_card_rounded,
-    title: 'Abra as faturas',
-    description: 'No app do BB, na página inicial, toque em Ver faturas.',
-  ),
-  GuideStep(
-    icon: Icons.receipt_long_rounded,
-    title: 'Escolha a fatura',
-    description: 'Selecione o mês. Dá para usar faturas fechadas, inclusive as já pagas.',
-  ),
-  GuideStep(
-    icon: Icons.ios_share_rounded,
-    title: 'Salve ou compartilhe',
-    description:
-        'Toque em Salvar ou Compartilhar. O BB entrega a fatura sempre em PDF '
-        '(não existe OFX).',
-  ),
-  GuideStep(
-    icon: Icons.share_rounded,
-    title: 'Compartilhe direto com o Trokim',
-    description:
-        'Na lista de aplicativos, escolha o Trokim: o arquivo chega aqui sem '
-        'precisar procurar na pasta de downloads. Se preferir, salve o PDF e '
-        'escolha o arquivo no passo seguinte.',
-  ),
-];
+/// A fatura do BB só existe em PDF. Nos dois casos dá para compartilhar o arquivo direto com o
+/// Trokim pela lista de aplicativos.
+List<GuideStep> bbGuide(NubankStatementKind kind) => switch (kind) {
+  NubankStatementKind.card => const [
+    GuideStep(
+      icon: Icons.credit_card_rounded,
+      title: 'Abra as faturas',
+      description: 'No app Ourocard, na página inicial, toque em Ver faturas.',
+    ),
+    GuideStep(
+      icon: Icons.receipt_long_rounded,
+      title: 'Escolha a fatura',
+      description:
+          'Selecione o mês. Dá para usar faturas fechadas, inclusive as já '
+          'pagas.',
+    ),
+    GuideStep(
+      icon: Icons.ios_share_rounded,
+      title: 'Salve ou compartilhe',
+      description:
+          'Toque em Salvar ou Compartilhar. A fatura do cartão sai sempre em '
+          'PDF (não existe OFX).',
+    ),
+    GuideStep(
+      icon: Icons.share_rounded,
+      title: 'Compartilhe direto com o Trokim',
+      description:
+          'Na lista de aplicativos, escolha o Trokim: o arquivo chega aqui sem '
+          'procurar na pasta de downloads. Se preferir, salve o PDF e escolha '
+          'o arquivo no passo seguinte.',
+    ),
+  ],
+  NubankStatementKind.account => const [
+    GuideStep(
+      icon: Icons.account_balance_rounded,
+      title: 'Abra o extrato',
+      description: 'No app do BB, na página inicial, toque em Extrato.',
+    ),
+    GuideStep(
+      icon: Icons.download_rounded,
+      title: 'Baixe o extrato',
+      description: 'Toque em Download extrato.',
+    ),
+    GuideStep(
+      icon: Icons.calendar_month_rounded,
+      title: 'Escolha o mês e o ano',
+      description: 'Selecione o período que você quer importar e avance.',
+    ),
+    GuideStep(
+      icon: Icons.description_rounded,
+      title: 'Escolha o tipo OFX',
+      description:
+          'Selecione o tipo OFX (Money 2000+) e avance. O PDF não serve para o '
+          'Trokim ler a conta.',
+    ),
+    GuideStep(
+      icon: Icons.share_rounded,
+      title: 'Compartilhe com o Trokim',
+      description:
+          'O BB oferece enviar o arquivo para um aplicativo: escolha o Trokim. '
+          'Se preferir, salve no dispositivo e escolha o arquivo no passo '
+          'seguinte.',
+    ),
+  ],
+};
 
 List<GuideStep> _nubankPersonalGuide(
   NubankStatementKind kind,

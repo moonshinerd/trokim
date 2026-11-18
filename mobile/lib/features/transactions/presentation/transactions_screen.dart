@@ -6,8 +6,10 @@ import '../../../core/theme/app_theme.dart';
 import '../../../core/widgets/app_motion.dart';
 import '../../../core/widgets/screen_header.dart';
 import '../../finance/domain/finance_models.dart';
+import '../../finance/domain/library_models.dart';
 import '../../finance/presentation/finance_controller.dart';
 import '../../import_guide/presentation/import_flow_screen.dart';
+import 'statement_widgets.dart';
 
 /// Arquivo escolhido pelo usuário, com leitura adiada dos bytes.
 class PickedStatement {
@@ -99,6 +101,8 @@ class TransactionsScreen extends StatelessWidget {
                 child: _PrivacyBanner(onImport: () => _import(context)),
               ),
             ),
+            const CoverageNotice(),
+            const ShortcutsSection(),
             const Padding(
               padding: EdgeInsets.fromLTRB(20, 20, 20, 10),
               child: Reveal(
@@ -138,9 +142,19 @@ class TransactionsScreen extends StatelessWidget {
                     name: files[i].name,
                     detail: _detail(files[i]),
                     badge: files[i].kind,
+                    statement: finance.statements.byFilename(files[i].name),
+                    account:
+                        finance.statements.byFilename(files[i].name) == null
+                        ? null
+                        : accountLine(
+                            finance.statements,
+                            finance.statements.byFilename(files[i].name)!,
+                            finance.accounts,
+                          ),
                   ),
                 ),
               ),
+            const AccountsSection(),
           ],
         ),
       ),
@@ -231,6 +245,8 @@ class _FileTile extends StatelessWidget {
     required this.name,
     required this.detail,
     required this.badge,
+    this.statement,
+    this.account,
   });
 
   final IconData icon;
@@ -238,10 +254,12 @@ class _FileTile extends StatelessWidget {
   final String name;
   final String detail;
   final String badge;
+  final StatementInfo? statement;
+  final String? account;
 
   @override
   Widget build(BuildContext context) {
-    return Container(
+    final tile = Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
         color: context.colors.surface,
@@ -274,6 +292,16 @@ class _FileTile extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(height: 3),
+                if (account != null && account!.isNotEmpty)
+                  Text(
+                    account!,
+                    style: TextStyle(color: context.colors.ink, fontSize: 12),
+                  ),
+                if (statement != null)
+                  Text(
+                    statementLine(statement!),
+                    style: TextStyle(color: context.colors.muted, fontSize: 12),
+                  ),
                 Text(
                   detail,
                   style: TextStyle(color: context.colors.muted, fontSize: 12),
@@ -282,22 +310,43 @@ class _FileTile extends StatelessWidget {
             ),
           ),
           const SizedBox(width: 8),
-          Container(
-            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-            decoration: BoxDecoration(
-              color: context.colors.bg,
-              borderRadius: BorderRadius.circular(10),
-            ),
-            child: Text(
-              badge,
-              style: const TextStyle(
-                fontWeight: FontWeight.w800,
-                fontSize: 11,
-                letterSpacing: 0.5,
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.end,
+            children: [
+              Container(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 10,
+                  vertical: 5,
+                ),
+                decoration: BoxDecoration(
+                  color: context.colors.bg,
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                child: Text(
+                  badge,
+                  style: const TextStyle(
+                    fontWeight: FontWeight.w800,
+                    fontSize: 11,
+                    letterSpacing: 0.5,
+                  ),
+                ),
               ),
-            ),
+              if (statement != null) ...[
+                const SizedBox(height: 6),
+                StatusPill(statement: statement!),
+              ],
+            ],
           ),
         ],
+      ),
+    );
+    if (statement == null) return tile;
+    return Material(
+      color: Colors.transparent,
+      child: InkWell(
+        borderRadius: BorderRadius.circular(AppTheme.radius),
+        onTap: () => showStatementSheet(context, statement!),
+        child: tile,
       ),
     );
   }

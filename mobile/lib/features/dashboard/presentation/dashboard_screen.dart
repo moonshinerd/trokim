@@ -6,6 +6,8 @@ import '../../../core/widgets/app_motion.dart';
 import '../../../core/widgets/screen_header.dart';
 import '../../../core/widgets/coin.dart';
 import '../../finance/domain/finance_models.dart';
+import '../../installments/presentation/installments_screen.dart';
+import '../../transactions/presentation/statement_widgets.dart';
 import '../../finance/presentation/finance_controller.dart';
 
 final _brl = NumberFormat.currency(locale: 'pt_BR', symbol: 'R\$');
@@ -96,7 +98,7 @@ class DashboardScreen extends StatelessWidget {
         padding: EdgeInsets.symmetric(vertical: 64),
         child: Center(child: CircularProgressIndicator()),
       );
-    } else if (summary.isEmpty) {
+    } else if (summary.isEmpty && finance.ownerFilter == 'todas') {
       content = const _MessageCard(
         icon: Icons.inbox_rounded,
         title: 'Nenhum extrato importado ainda',
@@ -124,10 +126,69 @@ class DashboardScreen extends StatelessWidget {
                       'Resumo determinístico das suas contas, no aparelho.',
                 ),
               ),
+              if (summary != null && finance.status != FinanceStatus.error)
+                const _Filters(),
+              if (summary != null && finance.status != FinanceStatus.error)
+                const CoverageNotice(),
               content,
             ],
           ),
         ),
+      ),
+    );
+  }
+}
+
+/// Filtro por dono da conta (quando há mais de um) e visão de gastos × caixa.
+class _Filters extends StatelessWidget {
+  const _Filters();
+
+  @override
+  Widget build(BuildContext context) {
+    final finance = FinanceScope.of(context);
+    final c = context.colors;
+    final cash = finance.view == 'caixa';
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(20, 12, 20, 0),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          if (finance.hasSeveralOwners)
+            Wrap(
+              spacing: 8,
+              children: [
+                for (final option in const [
+                  ('todas', 'Tudo'),
+                  ('pessoal', 'Pessoal'),
+                  ('empresa', 'Empresas'),
+                ])
+                  ChoiceChip(
+                    label: Text(option.$2),
+                    selected: finance.ownerFilter == option.$1,
+                    onSelected: (_) => finance.setOwnerFilter(option.$1),
+                  ),
+              ],
+            ),
+          const SizedBox(height: 8),
+          SegmentedButton<String>(
+            segments: const [
+              ButtonSegment(value: 'competencia', label: Text('Gastos')),
+              ButtonSegment(value: 'caixa', label: Text('Caixa')),
+            ],
+            selected: {finance.view},
+            showSelectedIcon: false,
+            onSelectionChanged: (value) => finance.setView(value.first),
+          ),
+          const SizedBox(height: 6),
+          Text(
+            cash
+                ? 'Caixa: só o que entrou e saiu das contas. As compras do '
+                      'cartão aparecem quando você paga a fatura.'
+                : 'Gastos: o que você gastou, quando gastou (compras do cartão '
+                      'contam na data da compra; pagar a fatura não conta de novo).',
+            style: TextStyle(color: c.muted, fontSize: 12, height: 1.35),
+          ),
+        ],
       ),
     );
   }
@@ -219,6 +280,27 @@ class _SummaryContent extends StatelessWidget {
               ),
             ),
         ],
+        if (summary.byAccount.length > 1) ...[
+          Padding(
+            padding: const EdgeInsets.fromLTRB(20, 24, 20, 12),
+            child: Align(
+              alignment: Alignment.centerLeft,
+              child: Semantics(
+                header: true,
+                child: Text(
+                  'Por conta',
+                  style: Theme.of(context).textTheme.titleLarge,
+                ),
+              ),
+            ),
+          ),
+          for (final account in summary.byAccount)
+            Padding(
+              padding: const EdgeInsets.fromLTRB(20, 0, 20, 8),
+              child: _AccountRow(account: account),
+            ),
+        ],
+        const _InstallmentsCard(),
         if (summary.excludedCount > 0)
           Padding(
             padding: const EdgeInsets.fromLTRB(20, 16, 20, 0),
@@ -249,6 +331,123 @@ class _SummaryContent extends StatelessWidget {
             ),
           ),
       ],
+    );
+  }
+}
+
+class _AccountRow extends StatelessWidget {
+  const _AccountRow({required this.account});
+  final AccountTotals account;
+
+  @override
+  Widget build(BuildContext context) {
+    final c = context.colors;
+    return Semantics(
+      label:
+          '${account.label}: receitas ${_brl.format(account.income)}, '
+          'despesas ${_brl.format(account.expenses)}',
+      child: ExcludeSemantics(
+        child: Container(
+          padding: const EdgeInsets.all(14),
+          decoration: BoxDecoration(
+            color: c.surface,
+            borderRadius: BorderRadius.circular(AppTheme.radius),
+            border: Border.all(color: c.line),
+          ),
+          child: Row(
+            children: [
+              Icon(
+                account.isCard
+                    ? Icons.credit_card_rounded
+                    : Icons.account_balance_rounded,
+                color: c.accent,
+              ),
+              const SizedBox(width: 12),
+              Expanded(
+                child: Text(
+                  account.label,
+                  style: const TextStyle(fontWeight: FontWeight.w700),
+                ),
+              ),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.end,
+                children: [
+                  Text(
+                    '+ ${_brl.format(account.income)}',
+                    style: TextStyle(color: c.muted, fontSize: 13),
+                  ),
+                  Text(
+                    '− ${_brl.format(account.expenses)}',
+                    style: const TextStyle(fontWeight: FontWeight.w800),
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+/// Resumo dos parcelamentos dos cartões, com atalho para a tela de controle.
+class _InstallmentsCard extends StatelessWidget {
+  const _InstallmentsCard();
+
+  @override
+  Widget build(BuildContext context) {
+    final data = FinanceScope.of(context).installments;
+    if (data.isEmpty || data.activeCount == 0) return const SizedBox.shrink();
+    final c = context.colors;
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(20, 24, 20, 0),
+      child: Semantics(
+        button: true,
+        label:
+            'Parcelamentos: ${_brl.format(data.totalRemaining)} ainda a pagar '
+            'em ${data.activeCount} compras',
+        child: ExcludeSemantics(
+          child: Material(
+            color: c.tint,
+            borderRadius: BorderRadius.circular(AppTheme.radius),
+            child: InkWell(
+              borderRadius: BorderRadius.circular(AppTheme.radius),
+              onTap: () => Navigator.of(context).push(
+                MaterialPageRoute<void>(
+                  builder: (_) => const InstallmentsScreen(),
+                ),
+              ),
+              child: Padding(
+                padding: const EdgeInsets.all(16),
+                child: Row(
+                  children: [
+                    Icon(Icons.credit_score_rounded, color: c.accent, size: 28),
+                    const SizedBox(width: 14),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          const Text(
+                            'Parcelamentos',
+                            style: TextStyle(fontWeight: FontWeight.w800),
+                          ),
+                          Text(
+                            '${_brl.format(data.totalRemaining)} ainda a pagar · '
+                            '${data.activeCount} '
+                            '${data.activeCount == 1 ? 'compra' : 'compras'}',
+                            style: TextStyle(color: c.muted),
+                          ),
+                        ],
+                      ),
+                    ),
+                    Icon(Icons.chevron_right_rounded, color: c.muted),
+                  ],
+                ),
+              ),
+            ),
+          ),
+        ),
+      ),
     );
   }
 }
