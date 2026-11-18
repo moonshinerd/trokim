@@ -8,7 +8,7 @@ from app.domain.models import (
     StatementStatus,
 )
 from app.services.library_service import Library
-from app.services.parser_service import ParserService
+from app.services.parser_service import OfxParseResult, ParserService
 from app.services.statement_service import (
     account_key,
     infer_status,
@@ -24,7 +24,9 @@ def bank_code(raw: str | None) -> str | None:
 
 
 def institution_label(institution: str | None) -> str:
-    return {"nubank": "Nubank"}.get(institution or "", (institution or "Banco").title())
+    return {"nubank": "Nubank", "bb": "Banco do Brasil"}.get(
+        institution or "", (institution or "Banco").title()
+    )
 
 
 def account_label(account: Account) -> str:
@@ -33,7 +35,11 @@ def account_label(account: Account) -> str:
     base = institution_label(account.institution)
     if account.owner == AccountOwner.BUSINESS:
         base += " Empresas"
-    return f"{base} · {'cartão' if account.kind == AccountKind.CARD else 'conta'}"
+    kind = "cartão" if account.kind == AccountKind.CARD else "conta"
+    # Cartões do BB: o final identifica qual cartão é (o usuário pode ter mais de um).
+    if account.acct_id.startswith("ourocard-"):
+        return f"{base} · {kind} final {account.acct_id.split('-', 1)[1]}"
+    return f"{base} · {kind}"
 
 
 class ImportService:
@@ -44,7 +50,18 @@ class ImportService:
         filename: str,
         owner: AccountOwner | None = None,
     ) -> dict[str, object]:
-        parsed = ParserService.parse_ofx_detailed(content, filename)
+        return ImportService.import_parsed(
+            library, ParserService.parse_ofx_detailed(content, filename), filename, owner
+        )
+
+    @staticmethod
+    def import_parsed(
+        library: Library,
+        parsed: OfxParseResult,
+        filename: str,
+        owner: AccountOwner | None = None,
+    ) -> dict[str, object]:
+        """Importa um arquivo já lido (OFX ou um PDF de perfil conhecido)."""
         meta = parsed.meta
         txs = parsed.transactions
         kind = AccountKind(meta.kind) if meta and meta.kind else None
@@ -135,6 +152,7 @@ class ImportService:
             "txs": txs,
             "account": account,
             "statement": statement,
+            "reconciled": parsed.reconciled,
             "auto_transfers": auto_transfers,
             "suggestion_count": len(TransferService.suggestions(library)),
         }

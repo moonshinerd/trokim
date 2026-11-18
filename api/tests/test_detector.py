@@ -1,5 +1,6 @@
 import pytest
 
+from tests.bb_samples import pdf_de_linhas
 from tests.helpers_api import cliente, enviar
 from tests.nubank_samples import (
     CARTAO_PF,
@@ -333,5 +334,7 @@ async def test_parametros_invalidos_e_arquivo_que_nao_e_ofx():
         arquivo = extrato_conta([])
         assert (await inspecionar(c, arquivo, owner="xyz")).status_code == 400
         assert (await inspecionar(c, arquivo, expect_kind="xyz")).status_code == 400
-        pdf = (await inspecionar(c, b"%PDF", "fatura.pdf")).json()
+        assert (await inspecionar(c, b"%PDF", "fatura.pdf")).status_code == 400
+        sem_perfil = pdf_de_linhas(["EXTRATO QUALQUER", "05/11 LOJA -R$ 10,00"])
+        pdf = (await inspecionar(c, sem_perfil, "fatura.pdf")).json()
     assert pdf["warnings"] == [] and pdf["institution"] is None

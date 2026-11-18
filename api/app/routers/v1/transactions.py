@@ -15,6 +15,7 @@ from app.services.detector_service import detect
 from app.services.import_service import ImportService, account_label
 from app.services.library_service import LIBRARY
 from app.services.parser_service import ParserService
+from app.services.pdf_profiles import parse_pdf_statement
 
 router = APIRouter(prefix="/transactions", tags=["Transactions"])
 
@@ -89,7 +90,25 @@ async def inspect_statement(
 ):
     """Analisa o arquivo sem importar: banco, tipo, período, dono provável e avisos."""
     filename = file.filename or "arquivo_desconhecido"
-    if not filename.lower().endswith(".ofx"):
+    lower = filename.lower()
+    content = await file.read()
+    parsed = None
+    if lower.endswith(".ofx"):
+        try:
+            parsed = ParserService.parse_ofx_detailed(content, filename)
+        except Exception as e:
+            raise HTTPException(
+                status_code=400, detail=f"Erro ao processar arquivo OFX: {str(e)}"
+            ) from e
+    elif lower.endswith(".pdf"):
+        try:
+            parsed = parse_pdf_statement(content, filename)
+        except Exception as e:
+            raise HTTPException(
+                status_code=400, detail=f"Erro ao processar arquivo PDF: {str(e)}"
+            ) from e
+    if parsed is None:
+        # PDF sem perfil conhecido (ou outro formato): sem o que detectar.
         return {
             "filename": filename,
             "institution": None,
@@ -98,12 +117,6 @@ async def inspect_statement(
             "has_conflict": False,
             "needs_owner": False,
         }
-    try:
-        parsed = ParserService.parse_ofx_detailed(await file.read(), filename)
-    except Exception as e:
-        raise HTTPException(
-            status_code=400, detail=f"Erro ao processar arquivo OFX: {str(e)}"
-        ) from e
     return detect(LIBRARY, parsed, filename, _parse_owner(owner), _parse_kind(expect_kind))
 
 
@@ -119,9 +132,23 @@ async def upload_statement(
     account_owner = _parse_owner(owner)
     expected = _parse_kind(expect_kind)
 
-    if filename.lower().endswith(".ofx") and not confirmed:
+    lower = filename.lower()
+    pdf_profile = None
+    if lower.endswith(".pdf"):
         try:
-            parsed = ParserService.parse_ofx_detailed(content, filename)
+            pdf_profile = parse_pdf_statement(content, filename)
+        except Exception as e:
+            raise HTTPException(
+                status_code=400, detail=f"Erro ao processar arquivo PDF: {str(e)}"
+            ) from e
+
+    if (lower.endswith(".ofx") or pdf_profile is not None) and not confirmed:
+        try:
+            parsed = (
+                pdf_profile
+                if pdf_profile is not None
+                else ParserService.parse_ofx_detailed(content, filename)
+            )
         except Exception as e:
             raise HTTPException(
                 status_code=400, detail=f"Erro ao processar arquivo OFX: {str(e)}"
@@ -134,9 +161,12 @@ async def upload_statement(
                 detail=f"{first['message']} Confirme para importar mesmo assim.",
             )
 
-    if filename.lower().endswith(".ofx"):
+    if lower.endswith(".ofx") or pdf_profile is not None:
         try:
-            result = ImportService.import_ofx(LIBRARY, content, filename, account_owner)
+            if pdf_profile is not None:
+                result = ImportService.import_parsed(LIBRARY, pdf_profile, filename, account_owner)
+            else:
+                result = ImportService.import_ofx(LIBRARY, content, filename, account_owner)
         except Exception as e:
             raise HTTPException(
                 status_code=400, detail=f"Erro ao processar arquivo OFX: {str(e)}"
@@ -148,6 +178,7 @@ async def upload_statement(
             "ledger_balance": result["ledger_balance"],
             "outcome": result["outcome"],
             "delta": result["delta"],
+            "reconciled": result["reconciled"],
             "account": {
                 **result["account"].model_dump(mode="json"),  # type: ignore[attr-defined]
                 "display_label": account_label(result["account"]),  # type: ignore[arg-type]
@@ -157,7 +188,7 @@ async def upload_statement(
             "auto_transfers": result["auto_transfers"],
             "transfer_suggestions": result["suggestion_count"],
         }
-    elif filename.lower().endswith(".pdf"):
+    elif lower.endswith(".pdf"):
         try:
             reader = PdfReader(io.BytesIO(content))
             extracted_text = ""
@@ -177,6 +208,7 @@ async def upload_statement(
             "ledger_balance": None,
             "outcome": "novo",
             "delta": 0,
+            "reconciled": None,
             "account": None,
             "statement": None,
             "auto_transfers": 0,

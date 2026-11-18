@@ -29,6 +29,8 @@ class ConfirmedTransfer:
     debit_uid: str
     credit_uid: str
     identities: list[Identity] = field(default_factory=list)
+    # ``transferencia`` (entre contas próprias) ou ``pagamento_fatura`` (a saída paga um cartão).
+    kind: str = "transferencia"
 
 
 @dataclass

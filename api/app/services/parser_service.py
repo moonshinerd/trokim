@@ -28,6 +28,8 @@ class OfxParseResult:
     kind: str | None = None
     ledger_balance: float | None = None
     meta: OfxMeta | None = None
+    # PDF: o total do arquivo fecha com a soma dos lançamentos? (``None`` = sem como saber)
+    reconciled: bool | None = None
 
 
 class ParserService:

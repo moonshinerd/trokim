@@ -87,40 +87,83 @@ def _eligible(tx: Transaction) -> bool:
     return not tx.is_duplicate and tx.nature in _MOVEMENT_NATURES
 
 
+_PAYMENT_WINDOW_DAYS = 3
+
+
+def _is_card_account(library: Library, tx: Transaction) -> bool:
+    account = library.accounts.get(tx.account_id)
+    return account is not None and account.kind == AccountKind.CARD
+
+
 class TransferService:
     @staticmethod
     def suggestions(library: Library) -> list[dict[str, object]]:
-        txs = [t for t in library.transactions if _eligible(t)]
-        debits = [t for t in txs if t.type == TransactionType.DEBIT]
-        credits = [t for t in txs if t.type == TransactionType.CREDIT]
-        by_amount: dict[float, list[Transaction]] = defaultdict(list)
-        for credit in credits:
-            by_amount[round(credit.amount, 2)].append(credit)
+        """Pares saída × entrada em contas diferentes.
 
-        candidates: dict[str, list[Transaction]] = {}
+        Dois tipos: ``transferencia`` (entre contas do usuário, até 1 dia de diferença) e
+        ``pagamento_fatura`` (a saída de uma conta paga o cartão de outro banco: a entrada é o
+        "pagamento recebido" da fatura, até 3 dias de diferença).
+        """
+        txs = [t for t in library.transactions if _eligible(t)]
+        debits = [
+            t for t in txs if t.type == TransactionType.DEBIT and not _is_card_account(library, t)
+        ]
+        transfer_credits = [t for t in txs if t.type == TransactionType.CREDIT]
+        payment_credits = [
+            t
+            for t in library.transactions
+            if not t.is_duplicate
+            and t.type == TransactionType.CREDIT
+            and t.nature == TransactionNature.CARD_PAYMENT
+            and _is_card_account(library, t)
+        ]
+        by_amount: dict[tuple[str, float], list[Transaction]] = defaultdict(list)
+        for credit in transfer_credits:
+            by_amount[("transferencia", round(credit.amount, 2))].append(credit)
+        for credit in payment_credits:
+            by_amount[("pagamento_fatura", round(credit.amount, 2))].append(credit)
+        windows = {"transferencia": 1, "pagamento_fatura": _PAYMENT_WINDOW_DAYS}
+
+        candidates: dict[str, list[tuple[str, Transaction]]] = {}
         reverse: dict[str, list[Transaction]] = defaultdict(list)
         for debit in debits:
-            options = [
-                c
-                for c in by_amount.get(round(debit.amount, 2), [])
-                if c.account_id != debit.account_id
-                and abs((debit.date - c.date).days) <= 1
-                and pair_id(debit.uid, c.uid) not in library.rejected_pairs
-                and pair_id(debit.uid, c.uid) not in library.confirmed
-            ]
+            options: list[tuple[str, Transaction]] = []
+            for kind, window in windows.items():
+                for c in by_amount.get((kind, round(debit.amount, 2)), []):
+                    pid = pair_id(debit.uid, c.uid)
+                    if (
+                        c.account_id != debit.account_id
+                        and abs((debit.date - c.date).days) <= window
+                        and pid not in library.rejected_pairs
+                        and pid not in library.confirmed
+                    ):
+                        options.append((kind, c))
             if options:
                 candidates[debit.uid] = options
-                for option in options:
+                for _, option in options:
                     reverse[option.uid].append(debit)
 
         result: list[dict[str, object]] = []
         for debit in debits:
-            for credit in candidates.get(debit.uid, []):
+            for kind, credit in candidates.get(debit.uid, []):
                 unique = len(candidates[debit.uid]) == 1 and len(reverse[credit.uid]) == 1
                 same_day = debit.date == credit.date
+                if kind == "pagamento_fatura":
+                    reason = (
+                        "O valor bate com o pagamento da fatura do cartão, saindo desta conta."
+                        if unique
+                        else "Há mais de uma combinação possível para este valor."
+                    )
+                elif unique and same_day:
+                    reason = "Mesmo valor e mesma data, saída numa conta e entrada na outra."
+                elif unique:
+                    reason = "Mesmo valor em contas diferentes com até 1 dia de diferença."
+                else:
+                    reason = "Há mais de uma combinação possível para este valor."
                 result.append(
                     {
                         "id": pair_id(debit.uid, credit.uid),
+                        "kind": kind,
                         "debit_uid": debit.uid,
                         "credit_uid": credit.uid,
                         "amount": round(debit.amount, 2),
@@ -129,13 +172,7 @@ class TransferService:
                         "from_account": debit.account_id,
                         "to_account": credit.account_id,
                         "confidence": "alta" if unique else "media",
-                        "reason": (
-                            "Mesmo valor e mesma data, saída numa conta e entrada na outra."
-                            if unique and same_day
-                            else "Mesmo valor em contas diferentes com até 1 dia de diferença."
-                            if unique
-                            else "Há mais de uma combinação possível para este valor."
-                        ),
+                        "reason": reason,
                     }
                 )
         result.sort(key=lambda s: (s["confidence"] != "alta", str(s["debit_date"])))
@@ -158,14 +195,24 @@ class TransferService:
                 tx.nature, tx.category = nature, category
         library.own_marks.clear()
 
-        def mark(tx: Transaction) -> None:
+        def mark(
+            tx: Transaction, nature: TransactionNature = TransactionNature.INTERNAL_TRANSFER
+        ) -> None:
             if tx.uid not in library.own_marks:
                 library.own_marks[tx.uid] = (tx.nature, tx.category)
-            tx.nature = TransactionNature.INTERNAL_TRANSFER
+            tx.nature = nature
             tx.category = TransactionCategory.OTHER
 
         paired: set[str] = set()
         for transfer in library.confirmed.values():
+            if transfer.kind == "pagamento_fatura":
+                # A entrada já é o "pagamento recebido" do cartão; só a saída muda.
+                debit = by_uid.get(transfer.debit_uid)
+                if debit:
+                    mark(debit, TransactionNature.CARD_PAYMENT)
+                    paired.add(transfer.debit_uid)
+                paired.add(transfer.credit_uid)
+                continue
             for uid in (transfer.debit_uid, transfer.credit_uid):
                 tx = by_uid.get(uid)
                 if tx:
@@ -195,13 +242,22 @@ class TransferService:
         if debit.account_id == credit.account_id:
             raise ValueError("A saída e a entrada precisam ser de contas diferentes.")
         pid = pair_id(debit_uid, credit_uid)
+        is_payment = credit.nature == TransactionNature.CARD_PAYMENT and _is_card_account(
+            library, credit
+        )
         identities: list[Identity] = []
-        # O destino da saída é dono da conta que recebeu, e a origem da entrada é dono da
-        # conta que enviou: ambos são "você".
-        for tx in (debit, credit):
-            if tx.merchant and len(normalize_text(tx.merchant)) >= _MIN_NAME:
-                identities.append(Identity(normalize_text(tx.merchant), tx.counterparty_doc))
-        library.confirmed[pid] = ConfirmedTransfer(debit_uid, credit_uid, identities)
+        if not is_payment:
+            # O destino da saída é dono da conta que recebeu, e a origem da entrada é dono da
+            # conta que enviou: ambos são "você".
+            for tx in (debit, credit):
+                if tx.merchant and len(normalize_text(tx.merchant)) >= _MIN_NAME:
+                    identities.append(Identity(normalize_text(tx.merchant), tx.counterparty_doc))
+        library.confirmed[pid] = ConfirmedTransfer(
+            debit_uid,
+            credit_uid,
+            identities,
+            kind="pagamento_fatura" if is_payment else "transferencia",
+        )
         library.rejected_pairs.discard(pid)
         auto = TransferService.recompute(library)
         return {"id": pid, "auto_marked": auto, "learned": len(identities)}
@@ -270,6 +326,7 @@ class TransferService:
                 {
                     "id": pid,
                     "kind": "confirmada",
+                    "transfer_kind": transfer.kind,
                     "amount": round(debit.amount, 2),
                     "debit_date": debit.date.isoformat(),
                     "credit_date": credit.date.isoformat(),

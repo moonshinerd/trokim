@@ -1,3 +1,5 @@
+import 'library_models.dart';
+
 /// Resumo financeiro calculado pela API (`/transactions/summary`).
 ///
 /// O app só exibe estes números: somas, saldo e taxa de poupança são
@@ -12,6 +14,9 @@ class FinancialSummary {
     required this.transactionCount,
     this.excludedCount = 0,
     this.topMerchants = const [],
+    this.view = 'competencia',
+    this.owner = 'todas',
+    this.byAccount = const [],
   });
 
   final double totalIncome;
@@ -31,6 +36,13 @@ class FinancialSummary {
 
   /// Estabelecimentos com mais gastos, do maior para o menor.
   final List<MerchantTotal> topMerchants;
+
+  /// `competencia` (gastos quando acontecem) ou `caixa` (o que passou pelas contas).
+  final String view;
+
+  /// `todas`, `pessoal` ou `empresa`.
+  final String owner;
+  final List<AccountTotals> byAccount;
 
   bool get isEmpty => transactionCount == 0;
 
@@ -62,8 +74,50 @@ class FinancialSummary {
           ? json['excluded_count'] as int
           : 0,
       topMerchants: _merchants(json['top_merchants']),
+      view: json['view'] is String ? json['view'] as String : 'competencia',
+      owner: json['owner'] is String ? json['owner'] as String : 'todas',
+      byAccount: _accounts(json['by_account']),
     );
   }
+}
+
+/// Receitas e despesas de uma conta ou cartão (calculadas pela API).
+class AccountTotals {
+  const AccountTotals({
+    required this.label,
+    required this.income,
+    required this.expenses,
+    required this.count,
+    this.owner,
+    this.kind,
+  });
+
+  final String label;
+  final AccountOwner? owner;
+  final String? kind;
+  final double income;
+  final double expenses;
+  final int count;
+
+  bool get isCard => kind == 'cartao';
+}
+
+List<AccountTotals> _accounts(Object? raw) {
+  if (raw is! List) return const [];
+  return [
+    for (final item in raw)
+      if (item is Map && item['income'] is num && item['expenses'] is num)
+        AccountTotals(
+          label: item['label'] is String
+              ? item['label'] as String
+              : '${item['account_id']}',
+          owner: AccountOwner.fromApi(item['owner']),
+          kind: item['kind'] as String?,
+          income: (item['income'] as num).toDouble(),
+          expenses: (item['expenses'] as num).toDouble(),
+          count: item['count'] is int ? item['count'] as int : 0,
+        ),
+  ];
 }
 
 /// Total gasto em um estabelecimento (calculado pela API).
@@ -145,6 +199,12 @@ class ImportResult {
     this.kind,
     this.uncategorizedCount = 0,
     this.excludedCount = 0,
+    this.outcome = 'novo',
+    this.delta = 0,
+    this.account,
+    this.statement,
+    this.autoTransfers = 0,
+    this.transferSuggestions = 0,
   });
 
   final String filename;
@@ -160,6 +220,20 @@ class ImportResult {
 
   /// Movimentações fora dos totais neste arquivo.
   final int excludedCount;
+
+  /// `novo`, `atualizado` (mesmo período, conteúdo diferente) ou `repetido`.
+  final String outcome;
+
+  /// Quantos lançamentos a atualização acrescentou (ou tirou).
+  final int delta;
+  final AccountInfo? account;
+  final StatementInfo? statement;
+
+  /// Transferências entre contas suas reconhecidas sozinhas neste arquivo.
+  final int autoTransfers;
+
+  /// Possíveis transferências entre contas que aguardam confirmação.
+  final int transferSuggestions;
 
   String? get institutionLabel => switch (institution) {
     'nubank' => 'Nubank',
@@ -203,6 +277,20 @@ class ImportResult {
           ? json['uncategorized_count'] as int
           : 0,
       excludedCount: excluded,
+      outcome: json['outcome'] is String ? json['outcome'] as String : 'novo',
+      delta: json['delta'] is int ? json['delta'] as int : 0,
+      account: json['account'] is Map<String, dynamic>
+          ? AccountInfo.fromJson(json['account'] as Map<String, dynamic>)
+          : null,
+      statement: json['statement'] is Map<String, dynamic>
+          ? StatementInfo.fromJson(json['statement'] as Map<String, dynamic>)
+          : null,
+      autoTransfers: json['auto_transfers'] is int
+          ? json['auto_transfers'] as int
+          : 0,
+      transferSuggestions: json['transfer_suggestions'] is int
+          ? json['transfer_suggestions'] as int
+          : 0,
     );
   }
 }

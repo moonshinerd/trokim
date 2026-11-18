@@ -51,12 +51,115 @@ class ApiClient {
   String get baseUrl =>
       _baseUrlProvider?.call() ?? _fixedBaseUrl ?? ApiConstants.defaultBaseUrl;
 
-  Future<Map<String, dynamic>> getSummary() async {
-    final response = await _client
-        .get(Uri.parse('$baseUrl${ApiConstants.transactionsSummaryEndpoint}'))
-        .timeout(timeout);
+  /// [owner]: `todas`, `pessoal` ou `empresa`. [view]: `competencia` ou `caixa`.
+  Future<Map<String, dynamic>> getSummary({
+    String owner = 'todas',
+    String view = 'competencia',
+  }) async {
+    final uri = Uri.parse('$baseUrl${ApiConstants.transactionsSummaryEndpoint}')
+        .replace(queryParameters: {'owner': owner, 'view': view});
+    final response = await _client.get(uri).timeout(timeout);
     return _decode(response);
   }
+
+  Future<Map<String, dynamic>> _getMap(String endpoint) async => _decode(
+    await _client.get(Uri.parse('$baseUrl$endpoint')).timeout(timeout),
+  );
+
+  Future<List<Map<String, dynamic>>> _getList(String endpoint) async {
+    final decoded = _decodeJson(
+      await _client.get(Uri.parse('$baseUrl$endpoint')).timeout(timeout),
+    );
+    if (decoded is! List) {
+      throw const FormatException('Resposta inválida do servidor.');
+    }
+    return [
+      for (final item in decoded)
+        if (item is Map<String, dynamic>)
+          item
+        else
+          throw const FormatException('Resposta inválida do servidor.'),
+    ];
+  }
+
+  Future<Map<String, dynamic>> _sendJson(
+    String method,
+    String endpoint,
+    Map<String, Object?> body,
+  ) async {
+    final request = http.Request(method, Uri.parse('$baseUrl$endpoint'))
+      ..headers['Content-Type'] = 'application/json'
+      ..body = jsonEncode(body);
+    final response = await http.Response.fromStream(
+      await _client.send(request).timeout(timeout),
+    );
+    return _decode(response);
+  }
+
+  Future<Map<String, dynamic>> getStatements() =>
+      _getMap(ApiConstants.statementsEndpoint);
+
+  Future<Map<String, dynamic>> getInstallments() =>
+      _getMap(ApiConstants.installmentsEndpoint);
+
+  Future<List<Map<String, dynamic>>> getAccounts() =>
+      _getList(ApiConstants.accountsEndpoint);
+
+  Future<List<Map<String, dynamic>>> getTransferSuggestions() =>
+      _getList('${ApiConstants.transfersEndpoint}/suggestions');
+
+  Future<List<Map<String, dynamic>>> getTransfers() =>
+      _getList(ApiConstants.transfersEndpoint);
+
+  Future<Map<String, dynamic>> patchAccount(
+    String id, {
+    String? owner,
+    String? label,
+  }) => _sendJson('PATCH', '${ApiConstants.accountsEndpoint}/$id', {
+    'owner': ?owner,
+    'label': ?label,
+  });
+
+  Future<Map<String, dynamic>> patchStatement(
+    String id, {
+    bool? closed,
+    DateTime? periodStart,
+    DateTime? periodEnd,
+  }) => _sendJson('PATCH', '${ApiConstants.statementsEndpoint}/$id', {
+    'closed': ?closed,
+    if (periodStart != null) 'period_start': _isoDate(periodStart),
+    if (periodEnd != null) 'period_end': _isoDate(periodEnd),
+  });
+
+  Future<Map<String, dynamic>> confirmTransfer(
+    String debitUid,
+    String creditUid,
+  ) => _sendJson('POST', '${ApiConstants.transfersEndpoint}/confirm', {
+    'debit_uid': debitUid,
+    'credit_uid': creditUid,
+  });
+
+  Future<Map<String, dynamic>> rejectTransfer(
+    String debitUid,
+    String creditUid,
+  ) => _sendJson('POST', '${ApiConstants.transfersEndpoint}/reject', {
+    'debit_uid': debitUid,
+    'credit_uid': creditUid,
+  });
+
+  Future<Map<String, dynamic>> undoTransfer(String id) =>
+      _sendJson('POST', '${ApiConstants.transfersEndpoint}/undo', {'id': id});
+
+  Future<Map<String, dynamic>> unmarkTransfer(String uid) => _sendJson(
+    'POST',
+    '${ApiConstants.transfersEndpoint}/unmark',
+    {'uid': uid},
+  );
+
+  static String _isoDate(DateTime day) =>
+      '${day.year.toString().padLeft(4, '0')}-'
+      '${day.month.toString().padLeft(2, '0')}-'
+      '${day.day.toString().padLeft(2, '0')}';
 
   Future<List<Map<String, dynamic>>> getTransactions() async {
     final response = await _client
@@ -76,18 +179,55 @@ class ApiClient {
   }
 
   /// Envia um extrato (OFX ou PDF) para a API local processar.
+  ///
+  /// [owner] (`pessoal` ou `empresa`) e [expectKind] (`conta` ou `cartao`) vêm do que o usuário
+  /// escolheu. [confirmed] importa mesmo quando o detector avisa de um conflito (a API devolve
+  /// 409 sem ele).
   Future<Map<String, dynamic>> uploadStatement(
     String filename,
-    List<int> bytes,
-  ) async {
+    List<int> bytes, {
+    String? owner,
+    String? expectKind,
+    bool confirmed = false,
+  }) => _multipart(
+    ApiConstants.transactionsUploadEndpoint,
+    filename,
+    bytes,
+    owner: owner,
+    expectKind: expectKind,
+    confirmed: confirmed,
+  );
+
+  /// Analisa o arquivo sem importar: banco, tipo, período, dono provável e avisos.
+  Future<Map<String, dynamic>> inspectStatement(
+    String filename,
+    List<int> bytes, {
+    String? owner,
+    String? expectKind,
+  }) => _multipart(
+    ApiConstants.transactionsInspectEndpoint,
+    filename,
+    bytes,
+    owner: owner,
+    expectKind: expectKind,
+  );
+
+  Future<Map<String, dynamic>> _multipart(
+    String endpoint,
+    String filename,
+    List<int> bytes, {
+    String? owner,
+    String? expectKind,
+    bool confirmed = false,
+  }) async {
     final request =
-        http.MultipartRequest(
-            'POST',
-            Uri.parse('$baseUrl${ApiConstants.transactionsUploadEndpoint}'),
-          )
+        http.MultipartRequest('POST', Uri.parse('$baseUrl$endpoint'))
           ..files.add(
             http.MultipartFile.fromBytes('file', bytes, filename: filename),
           );
+    if (owner != null) request.fields['owner'] = owner;
+    if (expectKind != null) request.fields['expect_kind'] = expectKind;
+    if (confirmed) request.fields['confirmed'] = 'true';
     final response = await http.Response.fromStream(
       await _client.send(request).timeout(uploadTimeout),
     );
