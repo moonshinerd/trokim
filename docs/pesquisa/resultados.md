@@ -182,3 +182,87 @@ os empatados em Recall@3.
 | Gerador dos gráficos | `research/rag_benchmark/make_report_charts.py` (`make report-charts`) |
 | Verificação automática | `research/test_run_registry.py` (`make research-test`) |
 | Gabarito, prompts e manifesto | [ADR 0008](../adr/0008-material-comparativo-versionado.md) e `research/rag_benchmark/COMPARACAO.md` |
+
+
+## Semana 4: protocolo do benchmark multiagente (#60)
+
+!!! warning "Execução real e revisão humana pendentes"
+    O executor e as métricas foram ampliados. Ainda não há uma execução real
+    multiagente publicada nesta página. Testes com `mock` verificam a integração e
+    não demonstram melhoria de qualidade. A hipótese sobre C27, C29 e C30 permanece aberta.
+
+A avaliação separa os **30 casos históricos**, executados nas quatro abordagens,
+dos **20 cenários novos**, executados apenas nos agentes. Não se somam esses
+conjuntos para calcular as métricas históricas nem se alteram as execuções antigas.
+O conjunto novo tem quatro categorias, descritas no [gabarito](gabarito-multiagente.md).
+
+Para executar, com Ollama ativo, o modelo instalado e o ambiente da API configurado:
+
+```bash
+make comparison-run RUN=2026-11-18-qwen2.5-1.5b-multiagente MODEL=ollama/qwen2.5:1.5b
+make report-charts
+make research-test
+make docs-build
+```
+
+O comando usa temperatura 0,1, top-k 3, limite de 300 tokens por geração e o mesmo
+corpus unificado de 22 fontes. Os agentes reais são chamados em processo, sem HTTP.
+O Research usa a recuperação do comparador para manter corpus, alpha 0,3 e limiar
+0,15 iguais aos da abordagem estruturada. Essa configuração experimental inclui o
+suplemento documental que não integra o corpus padrão da API.
+
+Em C29, o agente recebe lançamentos sintéticos equivalentes aos totais fornecidos
+pelo gerador histórico. C30 continua sem lançamentos: os números do enunciado não
+são convertidos em extrato. O ledger novo não é fornecido aos 30 casos antigos.
+
+O diretório da execução recebe `comparison_results.json` (respostas, cálculos,
+evidências, rascunhos e trilha de todas as tentativas), `comparison_report.json`,
+`comparison_report.md`, `comparison_chart.svg`, `audit_pending.json` e `run.json`.
+O registro guarda o commit completo e indica se havia mudanças locais. Um registro
+com mudanças locais precisa ser reproduzido após o commit para permitir rastreabilidade
+exata. Registros completos exigem modelo real, 30+20 casos e identificador novo;
+`mock`, execuções parciais e sobrescrita de resultados publicados são recusados.
+
+### Métricas e denominadores
+
+| Métrica | Regra |
+|---|---|
+| Métricas históricas | Mesmos 30 casos e avaliador, com a quarta abordagem |
+| Acerto numérico | Números esperados reproduzidos com unidade / números esperados; uma recusa perde esses acertos |
+| Bloqueio de Validation | Casos livres com pelo menos um bloqueio / 20; uma revisão bem-sucedida ainda conta como bloqueio ocorrido |
+| Bloqueios corretos livres | Revisão humana dos rascunhos; permanece sem valor enquanto não revisada |
+| Recusa segura | Recusa nas quatro perguntas livres que exigem segurança (M16–M18 e M20) |
+| Bloqueios controlados corretos | Rejeição com o código principal esperado / cinco rascunhos adversariais |
+| Tempo por agente | Média nos casos novos em que executou; revisões somadas por caso e passos pulados excluídos |
+
+O acerto numérico exige sinal e unidade, aceita formatos monetários pt-BR ou `BRL`
+e tolerância absoluta de 0,005. A presença do valor no texto não comprova sua
+associação à grandeza correta. As afirmações proibidas em linguagem natural e os
+possíveis erros lexicais exigem leitura humana, sem transformar instruções do
+gabarito em provas de erro. Falha de modelo ou de outro agente interrompe a
+execução; não conta como recusa segura.
+
+As cores históricas são preservadas; a quarta abordagem usa o cinza neutro da
+paleta. `make report-charts` mantém os gráficos anteriores e acrescenta, nas
+execuções novas, `fig4-falhas-por-caso.png` (sinalizações históricas),
+`fig5-acerto-numerico.png` e `fig6-latencia-agentes.png`. Valores não aplicáveis
+aparecem como traço. O painel entre execuções continua comparando as três
+abordagens presentes em todo o histórico.
+
+### Revisão e publicação
+
+O formulário de auditoria começa com `reviewer: null` e `confirmed: null`.
+Revisar os sinalizados, todos os bloqueios livres, C27, C29, C30 e as cinco
+armadilhas, consultando também as respostas brutas e os rascunhos. Registrar a
+pessoa revisora, a confirmação ou falso positivo, a justificativa e se cada
+bloqueio foi correto. O executor não atribui uma revisão humana automaticamente.
+O formulário preenchido deve ser versionado e os totais auditados reconciliados
+com o relatório e o registro antes da publicação.
+
+Após a execução real e a revisão, adicionar uma linha à tabela de execuções,
+incorporar os gráficos gerados nesta página, registrar os resultados por categoria
+no gabarito e escrever a conclusão sobre a hipótese. Até lá, a #60 permanece
+incompleta. A conclusão deve reconhecer uma execução, modelo de 1,5 B e a variação
+entre execuções observada na Semana 3.
+
+Rastreabilidade: **RNF06, RNF08; GQ04, GQ05, GQ11; ADR 0008 e ADR 0016**.

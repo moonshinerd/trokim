@@ -40,6 +40,7 @@ METHODS = {
         "aliases": {"trokim_estruturado", "trokim_grounded", "grounded"},
     },
 }
+METHODS["multiagente"] = {"label": "Multiagente", "aliases": {"multiagente"}}
 METHOD_ALIASES = {
     alias: method for method, config in METHODS.items() for alias in config["aliases"]
 }
@@ -325,10 +326,17 @@ def predicted_abstention(response: dict[str, Any]) -> bool:
             raise ValueError("answered deve ser booleano.")
         signals.append(not response["answered"])
     if "status" in response:
-        valid_statuses = {"grounded", "abstained", "pure_baseline", "naive_rag"}
+        valid_statuses = {
+            "grounded",
+            "abstained",
+            "pure_baseline",
+            "naive_rag",
+            "answered",
+            "rejected",
+        }
         if response["status"] not in valid_statuses:
             raise ValueError(f"Status de resposta inválido: {response['status']}")
-        signals.append(response["status"] == "abstained")
+        signals.append(response["status"] in {"abstained", "rejected"})
     if not signals:
         raise ValueError("Resposta precisa de status, answered ou abstained.")
     if any(signal != signals[0] for signal in signals[1:]):
@@ -463,7 +471,13 @@ def evaluate_comparison(
         raise ValueError(f"IDs de resultado divergentes; ausentes={missing}, extras={extra}.")
 
     methods_report = {}
-    for method, config in METHODS.items():
+    active_methods = (
+        list(METHODS)
+        if any("multiagente" in row for row in responses_by_case.values())
+        else list(METHODS)[:3]
+    )
+    for method in active_methods:
+        config = METHODS[method]
         token_scores: list[float] = []
         concept_scores: list[float] = []
         expected_abstentions: list[bool] = []
@@ -573,8 +587,7 @@ def render_markdown(report: dict[str, Any]) -> str:
         ),
         "|---|---:|---:|---:|---:|---:|",
     ]
-    for method in METHODS:
-        metrics = report["methods"][method]
+    for metrics in report["methods"].values():
 
         def percent(value: float | None) -> str:
             return "—" if value is None else f"{value:.1%}"

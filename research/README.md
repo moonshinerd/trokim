@@ -170,3 +170,27 @@ RF05/RF06: base oficial, referências e avaliação da recuperação. RNF06: mas
 minimização e testes sem dados financeiros reais. GQ05/GQ08/GQ11: fundamentação, limite
 explicável de resposta e critérios de privacidade. As issues #8 e #3 acrescentam banco
 vetorial, ingestão e contrato tipado do endpoint; síntese generativa permanece fora do escopo.
+
+
+## Benchmark multiagente (#60)
+
+`make comparison-run RUN=<data>-<modelo>-multiagente MODEL=ollama/qwen2.5:1.5b`
+compara quatro abordagens nos 30 casos históricos e avalia os 20 cenários novos
+em bloco separado. A execução completa grava automaticamente `run.json`, respostas,
+relatórios e um formulário de revisão pendente, sem sobrescrever o histórico.
+Os cinco ensaios de validação adversarial são separados da geração livre.
+
+Para verificar a integração sem modelo real, use saídas locais novas:
+
+```bash
+cd api
+uv run python ../research/rag_benchmark/run_comparison.py --multiagent --provider mock \
+  --output ../artifacts/research/ensaio-mock/respostas.json \
+  --report-json ../artifacts/research/ensaio-mock/relatorio.json \
+  --report-md ../artifacts/research/ensaio-mock/relatorio.md \
+  --chart-svg ../artifacts/research/ensaio-mock/comparacao.svg
+```
+
+Esse ensaio depende dos embeddings locais, mas não de Ollama. Não use seus números
+como evidência de qualidade nem o registre como execução real. A metodologia,
+limitações e etapas de revisão/publicação estão em `docs/pesquisa/resultados.md`.

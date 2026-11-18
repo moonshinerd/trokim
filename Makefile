@@ -72,10 +72,10 @@ synthetic-data:
 	cd api && uv run python ../research/synthetic_data/generate_datasets.py
 
 # Registra uma execução do benchmark comparativo em results/comparison/<RUN>/.
-# Depois crie o run.json (modelo em docs/pesquisa/resultados.md) e rode `make report-charts`.
+# O runner grava run.json e o formulário de auditoria; depois rode `make report-charts`.
 comparison-run:
 	@test -n "$(RUN)" -a -n "$(MODEL)" || { echo "Uso: make comparison-run RUN=2026-11-20-qwen2.5-7b MODEL=ollama/qwen2.5:7b"; exit 1; }
-	cd api && uv run python ../research/rag_benchmark/run_comparison.py --provider litellm --model "$(MODEL)" --temperature 0.1 \
+	cd api && uv run python ../research/rag_benchmark/run_comparison.py --provider litellm --model "$(MODEL)" --temperature 0.1 --multiagent --run-id "$(RUN)" \
 		--output ../research/rag_benchmark/results/comparison/$(RUN)/comparison_results.json \
 		--report-json ../research/rag_benchmark/results/comparison/$(RUN)/comparison_report.json \
 		--report-md ../research/rag_benchmark/results/comparison/$(RUN)/comparison_report.md \

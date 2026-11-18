@@ -10,6 +10,7 @@ from __future__ import annotations
 import argparse
 import asyncio
 import json
+import re
 import sys
 import time
 from datetime import UTC, datetime
@@ -335,6 +336,7 @@ async def run_benchmark(
     llm: LLMProvider,
     retriever: UnifiedCorpusRetriever,
     temperature: float = 0.1,
+    include_multiagent: bool = False,
 ) -> dict[str, Any]:
     """Executa as 3 abordagens sobre todos os casos de teste e mede tempos."""
     results_cases: list[dict[str, Any]] = []
@@ -355,6 +357,12 @@ async def run_benchmark(
         # 3. Trokim Estruturado
         grounded_res = await execute_case_grounded(case, retriever, llm, temperature=temperature)
 
+        multi_res = None
+        if include_multiagent:
+            from multiagent_benchmark import execute_multiagent
+
+            multi_res = await execute_multiagent(case, llm, retriever, temperature)
+
         results_cases.append(
             {
                 "id": case_id,
@@ -365,13 +373,14 @@ async def run_benchmark(
                     "llm_pura": pure_res,
                     "rag_ingenuo": naive_res,
                     "trokim_estruturado": grounded_res,
+                    **({"multiagente": multi_res} if include_multiagent else {}),
                 },
             }
         )
 
     # Agrega metadados e latências médias
     mean_latencies = {}
-    for method in ("llm_pura", "rag_ingenuo", "trokim_estruturado"):
+    for method in results_cases[0]["responses"] if results_cases else []:
         lats = [c["responses"][method]["latency_ms"] for c in results_cases]
         mean_latencies[method] = round(sum(lats) / len(lats), 2) if lats else 0.0
 
@@ -391,10 +400,13 @@ async def run_benchmark(
 def generate_svg_chart(report: dict[str, Any], output_path: Path) -> None:
     """Gera gráfico SVG profissional comparando as métricas das 3 abordagens."""
     methods = [
-        ("llm_pura", "LLM Pura", "#f87171"),
-        ("rag_ingenuo", "Naive RAG", "#fbbf24"),
-        ("trokim_estruturado", "Trokim Estruturado", "#34d399"),
+        ("llm_pura", "LLM Pura", "#2a78d6"),
+        ("rag_ingenuo", "Naive RAG", "#eb6834"),
+        ("trokim_estruturado", "Trokim Estruturado", "#1baf7a"),
+        ("multiagente", "Multiagente", "#52514e"),
     ]
+
+    methods = [m for m in methods if m[0] in report["methods"]]
 
     metric_keys = [
         ("factual_inconsistency_rate", "Inconsistência (Alucinação)", True),
@@ -419,7 +431,7 @@ def generate_svg_chart(report: dict[str, Any], output_path: Path) -> None:
         'style="background:#0f172a; font-family:system-ui,-apple-system,sans-serif;">',
         "  <!-- Header -->",
         '  <text x="50" y="45" fill="#f8fafc" font-size="20" font-weight="700">'
-        "Trokim — Benchmark Comparativo Semana 3 (Issue #24)</text>",
+        "Trokim — Benchmark Comparativo</text>",
         '  <text x="50" y="68" fill="#94a3b8" font-size="13">'
         "Avaliação empírica: Redução de Alucinações, Fidelidade e Abstenção (Qwen 2.5)</text>",
         "",
@@ -444,7 +456,7 @@ def generate_svg_chart(report: dict[str, Any], output_path: Path) -> None:
             val = report["methods"][method_id].get(m_key)
             val_pct = (val or 0.0) * 100.0
             b_height = (val_pct / 100.0) * plot_height
-            b_x = c_x + (b_idx - 1) * (bar_width + 4) - bar_width / 2
+            b_x = c_x + (b_idx - (len(methods) - 1) / 2) * (bar_width + 4) - bar_width / 2
             b_y = margin_top + plot_height - b_height
 
             # Barra
@@ -470,7 +482,7 @@ def generate_svg_chart(report: dict[str, Any], output_path: Path) -> None:
     svg_lines.append("  <!-- Legenda -->")
     svg_lines.append(f'  <g transform="translate({margin_left}, {leg_y})">')
     for idx, (_, label, color) in enumerate(methods):
-        lx = idx * 220 + 80
+        lx = idx * (chart_width / len(methods)) + 10
         svg_lines.append(
             f'    <rect x="{lx}" y="0" width="14" height="14" rx="3" fill="{color}" />'
         )
@@ -492,7 +504,7 @@ def generate_svg_chart(report: dict[str, Any], output_path: Path) -> None:
         'font-size="11" font-weight="600" letter-spacing="1">LATÊNCIA MÉDIA POR REQUISIÇÃO</text>'
     )
 
-    card_col_w = chart_width / 3
+    card_col_w = chart_width / len(methods)
     for idx, (m_id, m_label, color) in enumerate(methods):
         col_x = margin_left + idx * card_col_w + 20
         lat_val = report["methods"][m_id].get("latency_mean_ms")
@@ -540,9 +552,43 @@ def main(argv: list[str] | None = None) -> int:
         "--timeout", type=float, default=120.0, help="Timeout em segundos para o LLM."
     )
     parser.add_argument("--limit", type=int, default=None, help="Limita o número de casos.")
+    parser.add_argument(
+        "--multiagent",
+        action="store_true",
+        help="Acrescenta agentes nos 30 casos e os 20 cenários novos em bloco separado.",
+    )
+    parser.add_argument(
+        "--run-id", help="Registra execução real e completa; exige --multiagent, sem --limit."
+    )
     args = parser.parse_args(argv)
 
     try:
+        if args.limit is not None and args.limit <= 0:
+            raise ValueError("O limite de casos deve ser positivo.")
+        if args.multiagent and (args.report_json.parent / "audit_pending.json").exists():
+            raise FileExistsError("Auditoria existente; escolha outro diretório de saída.")
+        if args.run_id:
+            if not args.multiagent or args.limit is not None or args.provider == "mock":
+                raise ValueError("Registro exige --multiagent, modelo real e execução completa.")
+            if not re.fullmatch(r"\d{4}-\d{2}-\d{2}-[a-zA-Z0-9_.-]+", args.run_id):
+                raise ValueError(
+                    "run-id deve começar pela data e conter apenas letras, números, ponto ou hífen."
+                )
+            expected_dir = BASE / "results/comparison" / args.run_id
+            outputs = [args.output, args.report_json, args.report_md, args.chart_svg]
+            if any(p.resolve().parent != expected_dir.resolve() for p in outputs):
+                raise ValueError(
+                    "Arquivos de execução devem ficar em results/comparison/<run-id>/."
+                )
+            if any(p.exists() for p in outputs) or (expected_dir / "run.json").exists():
+                raise FileExistsError(
+                    "Execução já existe; use outro identificador para preservar o histórico."
+                )
+        multi_cases = []
+        if args.multiagent:
+            from multiagent_benchmark import load_multiagent_cases
+
+            multi_cases = load_multiagent_cases()
         cases = load_cases(args.cases)
         if args.limit:
             cases = cases[: args.limit]
@@ -568,8 +614,34 @@ def main(argv: list[str] | None = None) -> int:
         retriever = UnifiedCorpusRetriever()
 
         raw_results = asyncio.run(
-            run_benchmark(cases, llm, retriever, temperature=args.temperature)
+            run_benchmark(
+                cases,
+                llm,
+                retriever,
+                temperature=args.temperature,
+                include_multiagent=args.multiagent,
+            )
         )
+
+        if args.multiagent:
+            from multiagent_benchmark import run_multiagent_cases
+
+            selected = multi_cases[: args.limit] if args.limit else multi_cases
+            raw_results["multiagent"] = asyncio.run(
+                run_multiagent_cases(selected, llm, retriever, args.temperature)
+            )
+            raw_results["schema_version"] = 2
+            raw_results["description"] = (
+                "Comparação de quatro abordagens em 30 casos "
+                "e bloco multiagente de 20 cenários (#60)"
+            )
+            raw_results["parameters"] = {
+                "top_k": 3,
+                "threshold": 0.15,
+                "alpha": 0.3,
+                "max_tokens": 300,
+                "temperature": args.temperature,
+            }
 
         args.output.parent.mkdir(parents=True, exist_ok=True)
         args.output.write_text(
@@ -584,6 +656,12 @@ def main(argv: list[str] | None = None) -> int:
         }
         report = evaluate_comparison(cases, raw_results, sources=raw_sources)
 
+        if args.multiagent:
+            from multiagent_benchmark import evaluate_multiagent
+
+            report["multiagent"] = evaluate_multiagent(selected, raw_results["multiagent"])
+            report["schema_version"] = 2
+
         args.report_json.parent.mkdir(parents=True, exist_ok=True)
         args.report_json.write_text(
             json.dumps(report, ensure_ascii=False, indent=2) + "\n", encoding="utf-8"
@@ -591,6 +669,10 @@ def main(argv: list[str] | None = None) -> int:
         print(f"Relatório JSON salvo em: {args.report_json}")
 
         md_content = render_markdown(report)
+        if args.multiagent:
+            from multiagent_benchmark import render_multiagent_markdown
+
+            md_content += render_multiagent_markdown(report["multiagent"])
         args.report_md.parent.mkdir(parents=True, exist_ok=True)
         args.report_md.write_text(md_content, encoding="utf-8")
         print(f"Relatório Markdown salvo em: {args.report_md}")
@@ -598,6 +680,15 @@ def main(argv: list[str] | None = None) -> int:
         # Gráfico comparativo em SVG
         generate_svg_chart(report, args.chart_svg)
         print(f"Gráfico comparativo SVG gerado em: {args.chart_svg}")
+
+        if args.multiagent:
+            from multiagent_benchmark import write_audit_template
+
+            write_audit_template(report, args.report_json.parent / "audit_pending.json")
+        if args.run_id:
+            from multiagent_benchmark import write_run_registry
+
+            write_run_registry(args, raw_results, report)
 
         print("\n" + "=" * 60)
         print("RESUMO COMPARATIVO — SEMANA 3")

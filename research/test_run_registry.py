@@ -52,10 +52,19 @@ def test_run_json_completo_e_consistente(path):
     assert run["run_id"] == path.parent.name
     assert run["run_id"].startswith(run["date"]), "o id da execução começa pela data"
     assert run["cases"] == 30
-    assert list(run["approaches"]) == APPROACHES
+    expected = APPROACHES + (["multiagente"] if run["schema_version"] == 2 else [])
+    assert list(run["approaches"]) == expected
+    if run["schema_version"] == 2:
+        assert run["multiagent_cases"] == 20
+        assert run["multiagent"]["case_count"] == 20
+        assert (ROOT / run["audit_pending"]).is_file()
+        assert len(run["reference_commit"]) == 40
     for key, info in run["approaches"].items():
         for metric in METRICS:
-            assert 0 <= info[metric] <= 1, f"{key}.{metric} fora de [0, 1]"
+            if info[metric] is None:
+                assert run["schema_version"] == 2 and metric == "inconsistency_rate"
+            else:
+                assert 0 <= info[metric] <= 1, f"{key}.{metric} fora de [0, 1]"
         assert info["latency_ms"] > 0
         audit = info.get("audit")
         if run["audit"]:
@@ -89,6 +98,12 @@ def test_graficos_da_execucao_existem_e_estao_na_pagina(path):
     figures = ["fig1-metricas.png", "fig3-latencia.png"]
     if run["audit"]:
         figures.append("fig2-alucinacao-auditada.png")
+    if run["schema_version"] == 2:
+        figures += [
+            "fig4-falhas-por-caso.png",
+            "fig5-acerto-numerico.png",
+            "fig6-latencia-agentes.png",
+        ]
     page = PAGE.read_text(encoding="utf-8")
     for name in figures:
         assert (ASSETS / run["run_id"] / name).stat().st_size > 1000, name

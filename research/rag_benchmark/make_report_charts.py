@@ -90,7 +90,14 @@ def load_runs() -> list[dict]:
     return runs
 
 
+def run_styles(run):
+    keys = list(run["approaches"])
+    palette = dict(zip(KEYS + ["multiagente"], COLORS + ["#52514e"], strict=True))
+    return keys, [run["approaches"][k]["label"] for k in keys], [palette[k] for k in keys]
+
+
 def fig_metrics(run: dict, out: Path) -> None:
+    KEYS, LABELS, COLORS = run_styles(run)
     approaches = run["approaches"]
     series = {
         "F1 de tokens": [approaches[k]["f1_tokens"] for k in KEYS],
@@ -103,16 +110,16 @@ def fig_metrics(run: dict, out: Path) -> None:
     names = list(series)
     fig, ax = plt.subplots(figsize=(6.8, 3.5), facecolor=SURFACE)
     style(ax)
-    width = 0.24
+    width = 0.8 / len(KEYS)
     for i, (label, color) in enumerate(zip(LABELS, COLORS, strict=True)):
-        xs = [g + (i - 1) * (width + 0.03) for g in range(len(names))]
-        values = [100 * series[name][i] for name in names]
+        xs = [g + (i - (len(KEYS) - 1) / 2) * (width + 0.03) for g in range(len(names))]
+        values = [100 * (series[name][i] or 0) for name in names]
         bars = ax.bar(xs, values, width, color=color, label=label, edgecolor=SURFACE)
-        for bar, value in zip(bars, values, strict=True):
+        for bar, value, name in zip(bars, values, names, strict=True):
             ax.text(
                 bar.get_x() + bar.get_width() / 2,
                 value + 1.2,
-                pct(value),
+                pct(value) if series[name][i] is not None else "—",
                 ha="center",
                 va="bottom",
                 fontsize=7.5,
@@ -127,6 +134,7 @@ def fig_metrics(run: dict, out: Path) -> None:
 
 def fig_audit(run: dict, out: Path) -> None:
     """Alucinações confirmadas pela revisão, separadas do que a heurística sinalizou."""
+    KEYS, LABELS, COLORS = run_styles(run)
     audit = [run["approaches"][k]["audit"] for k in KEYS]
     cases = run["cases"]
     fig, ax = plt.subplots(figsize=(6.8, 3.4), facecolor=SURFACE)
@@ -182,7 +190,7 @@ def fig_audit(run: dict, out: Path) -> None:
             color=INK,
             fontweight="bold",
         )
-    ax.set_xticks(range(3), LABELS)
+    ax.set_xticks(range(len(KEYS)), LABELS)
     ax.set_ylim(0, max(tops) + 4)
     ax.set_yticks(range(0, max(tops) + 1, 5))
     ax.set_ylabel(f"Casos (de {cases})", color=INK_2, fontsize=8.5)
@@ -221,6 +229,7 @@ def fig_audit(run: dict, out: Path) -> None:
 
 
 def fig_latency(run: dict, out: Path) -> None:
+    KEYS, LABELS, COLORS = run_styles(run)
     values = [run["approaches"][k]["latency_ms"] for k in KEYS]
     fig, ax = plt.subplots(figsize=(6.8, 1.9), facecolor=SURFACE)
     style(ax, grid_axis="x")
@@ -260,7 +269,10 @@ def fig_across_runs(runs: list[dict], out: Path) -> None:
         for j, run in enumerate(runs):
             xs = [g + (j - (len(runs) - 1) / 2) * (width + 0.03) for g in range(3)]
             for x, key, color in zip(xs, KEYS, COLORS, strict=True):
-                value = 100 * run["approaches"][key][metric]
+                raw = run["approaches"][key][metric]
+                if raw is None:
+                    continue
+                value = 100 * raw
                 ax.bar(
                     x,
                     value,
@@ -405,6 +417,61 @@ def fig_alpha(out: Path) -> None:
     save(fig, out / "fig-calibracao-alpha.png")
 
 
+def fig_multiagent(run: dict, out: Path) -> None:
+    """Novos painéis: sinalizações por caso, números e etapas executadas."""
+    report = json.loads((run["_dir"] / "comparison_report.json").read_text(encoding="utf-8"))
+    keys, labels, colors = run_styles(run)
+    fig, ax = plt.subplots(figsize=(9, 2.5), facecolor=SURFACE)
+    details = [report["methods"][key]["case_details"] for key in keys]
+    values = [[int(bool(d["factual_inconsistencies"])) for d in group] for group in details]
+    ax.imshow(values, cmap="Greys", vmin=0, vmax=1, aspect="auto")
+    ax.set_yticks(range(len(labels)), labels)
+    ax.set_xticks(range(len(details[0])), [d["id"] for d in details[0]], rotation=90)
+    ax.tick_params(labelsize=8)
+    ax.set_title(
+        "Sinalização heurística por caso (escuro = sinalizado; sem confirmação humana)", fontsize=9
+    )
+    save(fig, out / "fig4-falhas-por-caso.png")
+
+    multi = report["multiagent"]
+    groups = [
+        (name, data)
+        for name, data in multi["categories"].items()
+        if data["numeric_accuracy"] is not None
+    ]
+    fig, ax = plt.subplots(figsize=(6.8, 2.7), facecolor=SURFACE)
+    style(ax)
+    for i, (_, data) in enumerate(groups):
+        value = data["numeric_accuracy"] * 100
+        ax.bar(i, value, color="#52514e")
+        ax.text(i, value + 1, pct(value), ha="center", fontsize=9)
+    ax.set_xticks(range(len(groups)), [name for name, _ in groups])
+    ax.set_ylim(0, 110)
+    ax.set_ylabel("Números reproduzidos com unidade (%)")
+    ax.set_title("Abstenções contam como números não reproduzidos", fontsize=9)
+    save(fig, out / "fig5-acerto-numerico.png")
+
+    latencies = multi["latency_per_agent"]
+    fig, ax = plt.subplots(figsize=(6.8, 2.7), facecolor=SURFACE)
+    style(ax)
+    for i, (_, data) in enumerate(latencies.items()):
+        value = data["mean_ms"]
+        ax.bar(i, value, color="#52514e")
+        ax.text(
+            i,
+            value,
+            f"{value:.0f} ms\nn={data['executed_cases']}",
+            ha="center",
+            va="bottom",
+            fontsize=8,
+        )
+    ax.set_xticks(range(len(latencies)), list(latencies))
+    ax.set_ylim(0, max((d["mean_ms"] for d in latencies.values()), default=1) * 1.4 or 1)
+    ax.set_ylabel("Tempo médio (ms)")
+    ax.set_title("Somente casos executados; revisões somadas por agente", fontsize=9)
+    save(fig, out / "fig6-latencia-agentes.png")
+
+
 def main() -> None:
     plt.rcParams["font.family"] = "DejaVu Sans"
     runs = load_runs()
@@ -414,6 +481,8 @@ def main() -> None:
         fig_latency(run, out)
         if run.get("audit"):
             fig_audit(run, out)
+        if "multiagent" in run:
+            fig_multiagent(run, out)
     if len(runs) > 1:
         fig_across_runs(runs, OUT_DIR / "entre-execucoes")
     fig_week2_targets(OUT_DIR / "semana2")

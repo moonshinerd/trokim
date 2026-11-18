@@ -192,3 +192,14 @@ equivalentes aos desta página.
 - Repetir com modelos maiores e várias execuções.
 - Revisão humana independente e cega.
 - Homologação do chat generativo no Android (ver [planejamento](../planejamento.md)).
+
+
+## Ampliação multiagente — issue #60
+
+O comparador oferece uma quarta abordagem que chama o orquestrador e os agentes
+reais em processo. A comparação histórica mantém seus 30 casos; os 20 cenários
+novos são avaliados separadamente, incluindo números, bloqueios, recusas seguras
+e tempos por agente. Os ensaios com rascunhos adversariais não são misturados às
+respostas geradas pelo modelo. Os resultados anteriores desta página permanecem
+inalterados. A execução real multiagente e sua revisão humana estão pendentes;
+consulte o [protocolo no histórico de resultados](resultados.md#semana-4-protocolo-do-benchmark-multiagente-60).
