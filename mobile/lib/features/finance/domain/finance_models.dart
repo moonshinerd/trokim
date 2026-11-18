@@ -239,11 +239,7 @@ class ImportResult {
   /// PDF: o total do arquivo fecha com a soma dos lançamentos (`null` = sem como saber).
   final bool? reconciled;
 
-  String? get institutionLabel => switch (institution) {
-    'nubank' => 'Nubank',
-    final other? => other,
-    null => null,
-  };
+  String? get institutionLabel => institutionName(institution);
 
   String? get kindLabel => switch (kind) {
     'cartao' => 'fatura do cartão',
@@ -317,3 +313,12 @@ int _count(Map<String, dynamic> json, String key) {
   }
   return value;
 }
+
+/// Nome do banco para exibir a partir do identificador da API (`nubank`, `bb`).
+/// Identificador desconhecido volta como veio.
+String? institutionName(String? id) => switch (id) {
+  'nubank' => 'Nubank',
+  'bb' => 'Banco do Brasil',
+  final other? => other,
+  null => null,
+};

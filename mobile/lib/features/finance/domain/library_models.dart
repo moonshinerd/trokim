@@ -4,6 +4,8 @@
 /// são decididos no backend (ADR 0017 e ADR 0018).
 library;
 
+import 'finance_models.dart' show institutionName;
+
 DateTime? _date(Object? value) {
   if (value is! String) return null;
   return DateTime.tryParse(value);
@@ -280,8 +282,7 @@ class Inspection {
   /// Há algo que o usuário precisa decidir antes de importar.
   bool get needsDecision => hasConflict || needsOwner || attention.isNotEmpty;
 
-  String? get institutionLabel =>
-      institution == 'nubank' ? 'Nubank' : institution;
+  String? get institutionLabel => institutionName(institution);
 
   String? get kindLabel => switch (kind) {
     'cartao' => 'fatura do cartão',
