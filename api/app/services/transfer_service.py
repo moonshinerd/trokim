@@ -312,6 +312,10 @@ class TransferService:
         if uid not in TransferService._by_uid(library):
             raise LookupError("Lançamento não encontrado.")
         library.not_own.add(uid)
+        # A outra ponta da mesma transferência automática também deixa de contar como própria.
+        for tx, partner, _code, _other in TransferService._automatic_pairs(library):
+            if partner is not None and uid in (tx.uid, partner.uid):
+                library.not_own.update({tx.uid, partner.uid})
         # Se fazia parte de um par confirmado, o par inteiro é desfeito.
         for pid, transfer in list(library.confirmed.items()):
             if uid in (transfer.debit_uid, transfer.credit_uid):
@@ -319,14 +323,52 @@ class TransferService:
         return TransferService.recompute(library)
 
     @staticmethod
-    def automatic_list(library: Library) -> list[dict[str, object]]:
-        """Lançamentos marcados sozinhos como transferência entre contas próprias."""
-        items: list[dict[str, object]] = []
-        for tx in library.transactions:
-            reason = library.own_reasons.get(tx.uid)
-            if reason is None or tx.is_duplicate:
+    def _automatic_pairs(
+        library: Library,
+    ) -> list[tuple[Transaction, Transaction | None, str, str]]:
+        """Agrupa as pontas de uma mesma transferência marcada sozinha.
+
+        Quando as duas contas mostram a conta da contraparte (Nubank com Nubank), cada ponta é
+        ligada por conta própria; sem agrupar, a mesma transferência apareceria duas vezes.
+        Devolve ``(ponta, outra ponta ou None, motivo, conta ligada)``, com a saída primeiro.
+        """
+        marked = [
+            tx
+            for tx in library.transactions
+            if tx.uid in library.own_reasons and not tx.is_duplicate
+        ]
+        # Saídas antes das entradas: o item fica com o id da saída quando houver as duas.
+        marked.sort(key=lambda tx: tx.type != TransactionType.DEBIT)
+        used: set[str] = set()
+        pairs: list[tuple[Transaction, Transaction | None, str, str]] = []
+        for tx in marked:
+            if tx.uid in used:
                 continue
-            code, other_id = reason
+            used.add(tx.uid)
+            code, other_id = library.own_reasons[tx.uid]
+            partner = next(
+                (
+                    c
+                    for c in marked
+                    if c.uid not in used
+                    and c.account_id == other_id
+                    and c.type != tx.type
+                    and library.own_reasons[c.uid][1] == tx.account_id
+                    and round(c.amount, 2) == round(tx.amount, 2)
+                    and abs((c.date - tx.date).days) <= 1
+                ),
+                None,
+            )
+            if partner is not None:
+                used.add(partner.uid)
+            pairs.append((tx, partner, code, other_id))
+        return pairs
+
+    @staticmethod
+    def automatic_list(library: Library) -> list[dict[str, object]]:
+        """Transferências entre contas próprias marcadas sozinhas (uma por par de pontas)."""
+        items: list[dict[str, object]] = []
+        for tx, partner, code, other_id in TransferService._automatic_pairs(library):
             outgoing = tx.type == TransactionType.DEBIT
             items.append(
                 {
@@ -336,9 +378,10 @@ class TransferService:
                     "date": tx.date.isoformat(),
                     "from_account": tx.account_id if outgoing else other_id,
                     "to_account": other_id if outgoing else tx.account_id,
+                    "both_sides": partner is not None,
                     "reason": (
                         "A conta de destino é uma conta sua que você importou."
-                        if code == "conta_destino"
+                        if code == "conta_destino" or partner is not None
                         else "É a outra ponta de uma transferência ligada pela conta de destino."
                     ),
                 }

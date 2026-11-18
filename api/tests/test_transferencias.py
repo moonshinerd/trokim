@@ -315,9 +315,13 @@ async def test_pix_para_outra_conta_importada_e_marcado_sozinho(primeiro):
         assert resumo["excluded_count"] == 2
         assert (await c.get("/v1/transfers/suggestions")).json() == []
         automaticas = (await c.get("/v1/transfers")).json()
-    assert len(automaticas) == 2
-    assert {a["kind"] for a in automaticas} == {"automatica"}
-    assert {a["amount"] for a in automaticas} == {308.76}
+    # As duas pontas (saída na PF e entrada na PJ) são a mesma transferência: um item só.
+    assert len(automaticas) == 1
+    assert automaticas[0]["kind"] == "automatica"
+    assert automaticas[0]["amount"] == 308.76
+    assert automaticas[0]["both_sides"] is True
+    assert automaticas[0]["from_account"] == "nubank:0000000-0"
+    assert automaticas[0]["to_account"] == "nubank:1111111-1"
 
 
 @pytest.mark.asyncio
@@ -367,6 +371,18 @@ async def test_usuario_desfaz_a_marcacao_automatica_e_ela_continua_desfeita():
         depois = (await c.get("/v1/transactions/summary")).json()
         assert depois["total_expenses"] + depois["total_income"] > 0
         assert (await c.post("/v1/transfers/unmark", json={"uid": "nada"})).status_code == 404
+
+
+@pytest.mark.asyncio
+async def test_desfazer_a_transferencia_automatica_desmarca_as_duas_pontas():
+    async with cliente() as c:
+        await _importar_par_com_conta(c)
+        uid = (await c.get("/v1/transfers")).json()[0]["id"]
+        await c.post("/v1/transfers/unmark", json={"uid": uid})
+        resumo = (await c.get("/v1/transactions/summary")).json()
+        assert (await c.get("/v1/transfers")).json() == []
+    assert resumo["excluded_count"] == 0
+    assert resumo["total_expenses"] == 308.76 and resumo["total_income"] == 308.76
 
 
 @pytest.mark.asyncio

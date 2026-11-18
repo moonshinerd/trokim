@@ -132,7 +132,9 @@ async def test_pix_do_nubank_para_a_conta_do_bb_liga_as_duas_pontas():
     assert resumo["total_expenses"] == 0 and resumo["total_income"] == 0
     assert resumo["excluded_count"] == 2
     assert {i["kind"] for i in itens} == {"automatica"}
-    assert len(itens) == 2
+    # As duas pontas são a mesma transferência: um item só, com as duas pontas.
+    assert len(itens) == 1
+    assert itens[0]["both_sides"] is True
 
 
 @pytest.mark.asyncio
