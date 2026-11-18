@@ -150,8 +150,102 @@ void main() {
     expect(find.text('Validação'), findsOneWidget);
     expect(find.text('Fontes oficiais localizadas.\n4 ms'), findsOneWidget);
     expect(find.text('Saldo do período'), findsOneWidget);
-    expect(find.text('125.5 R\$'), findsOneWidget);
+    expect(find.text('R\$ 125,50'), findsOneWidget);
     expect(tester.takeException(), isNull);
+  });
+
+  http.Response agentReply(
+    String status, {
+    String stepStatus = 'abstained',
+    List<Map<String, Object>> issues = const [],
+  }) => http.Response.bytes(
+    utf8.encode(
+      jsonEncode({
+        'query': question,
+        'status': status,
+        'answer': 'Resposta de teste.',
+        'evidences': [],
+        'calculations': [],
+        'validation_issues': issues,
+        'total_ms': 3,
+        'steps': [
+          {
+            'agent': status == 'rejected' ? 'validation' : 'research',
+            'status': stepStatus,
+            'summary': 'Resumo da etapa.',
+            'duration_ms': 3,
+          },
+        ],
+      }),
+    ),
+    200,
+  );
+
+  testWidgets('trilha explica abstenção em linguagem simples', (tester) async {
+    await openChat(
+      tester,
+      (_) async => agentReply('abstained'),
+      multiAgent: true,
+    );
+    await sendQuestion(tester);
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Como cheguei a essa resposta'));
+    await tester.pumpAndSettle();
+    expect(
+      find.text(
+        'Não encontrei informações suficientes para responder com segurança.',
+      ),
+      findsOneWidget,
+    );
+    expect(
+      tester.widget<Icon>(find.byIcon(Icons.info_outline)).semanticLabel,
+      'Etapa sem informações suficientes',
+    );
+  });
+
+  testWidgets('trilha explica rejeição e mostra o aviso de validação', (
+    tester,
+  ) async {
+    await openChat(
+      tester,
+      (_) async => agentReply(
+        'rejected',
+        stepStatus: 'failed',
+        issues: [
+          {
+            'code': 'NUMBER_NOT_SUPPORTED',
+            'severity': 'blocker',
+            'message': 'Um número da resposta não tem fonte.',
+          },
+        ],
+      ),
+      multiAgent: true,
+    );
+    await sendQuestion(tester);
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Como cheguei a essa resposta'));
+    await tester.pumpAndSettle();
+    expect(
+      find.text(
+        'A resposta passou por uma checagem de segurança e não foi aprovada.',
+      ),
+      findsOneWidget,
+    );
+    expect(find.text('Um número da resposta não tem fonte.'), findsOneWidget);
+  });
+
+  testWidgets('falha de rede no modo multiagente mostra erro amigável', (
+    tester,
+  ) async {
+    await openChat(
+      tester,
+      (_) async => throw const SocketException('sem rede'),
+      multiAgent: true,
+    );
+    await sendQuestion(tester);
+    await tester.pumpAndSettle();
+    expect(find.textContaining('Não foi possível conectar'), findsWidgets);
+    expect(find.text('Como cheguei a essa resposta'), findsNothing);
   });
 
   testWidgets(

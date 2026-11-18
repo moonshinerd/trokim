@@ -276,6 +276,7 @@ class _ChatScreenState extends State<ChatScreen> {
     showModalBottomSheet<void>(
       context: context,
       isScrollControlled: true,
+      showDragHandle: true,
       sheetAnimationStyle: Motion.reduced(context)
           ? AnimationStyle.noAnimation
           : null,
@@ -562,6 +563,8 @@ class _AgentTraceSheet extends StatelessWidget {
         .whereType<Map>();
     final issues = (trace['validation_issues'] as List? ?? const [])
         .whereType<Map>();
+    final evidences = (trace['evidences'] as List? ?? const [])
+        .whereType<Map>();
     final status = trace['status'];
     final c = context.colors;
     String agentName(Object? key) => switch (key) {
@@ -608,8 +611,13 @@ class _AgentTraceSheet extends StatelessWidget {
                     'skipped' => Icons.remove_circle_outline,
                     _ => Icons.error_outline,
                   },
-                  color: step['status'] == 'ok' ? Colors.green : c.muted,
-                  semanticLabel: 'Estado ${step['status']}',
+                  color: step['status'] == 'ok' ? c.ink : c.muted,
+                  semanticLabel: switch (step['status']) {
+                    'ok' => 'Etapa concluída',
+                    'abstained' => 'Etapa sem informações suficientes',
+                    'skipped' => 'Etapa não necessária',
+                    _ => 'Etapa com falha',
+                  },
                 ),
                 title: Text(agentName(step['agent'])),
                 subtitle: Text('${step['summary']}\n${step['duration_ms']} ms'),
@@ -626,11 +634,30 @@ class _AgentTraceSheet extends StatelessWidget {
                 ),
               ],
             ],
+            if (evidences.isNotEmpty) ...[
+              const SizedBox(height: 8),
+              Text('Fontes', style: Theme.of(context).textTheme.titleMedium),
+              for (final item in evidences)
+                ListTile(
+                  dense: true,
+                  contentPadding: EdgeInsets.zero,
+                  leading: const Icon(Icons.menu_book_outlined),
+                  title: Text('${item['document_title']}'),
+                  subtitle: Text('${item['source_name']}'),
+                ),
+            ],
             for (final issue in issues)
               ListTile(
                 dense: true,
                 contentPadding: EdgeInsets.zero,
-                leading: const Icon(Icons.info_outline),
+                leading: Icon(
+                  issue['severity'] == 'blocker'
+                      ? Icons.block
+                      : Icons.warning_amber_outlined,
+                  semanticLabel: issue['severity'] == 'blocker'
+                      ? 'Problema que impediu a resposta'
+                      : 'Aviso',
+                ),
                 title: Text('${issue['message']}'),
               ),
             Text(
@@ -646,12 +673,17 @@ class _AgentTraceSheet extends StatelessWidget {
 
 String _calculationText(Map item) {
   final unit = item['unit'];
-  final suffix = unit == 'BRL'
-      ? ' R\$'
-      : unit == null
-      ? ''
-      : ' $unit';
-  return '${item['value']}$suffix';
+  final value = item['value'];
+  if (unit == 'BRL' && value is num) {
+    final fixed = value.toStringAsFixed(2).replaceAll('.', ',');
+    final parts = fixed.split(',');
+    final int = parts[0].replaceAllMapped(
+      RegExp(r'\B(?=(\d{3})+(?!\d))'),
+      (_) => '.',
+    );
+    return 'R\$ $int,${parts[1]}';
+  }
+  return unit == null ? '$value' : '$value $unit';
 }
 
 /// Título da conversa na barra: "Assistente" numa conversa nova; depois, o

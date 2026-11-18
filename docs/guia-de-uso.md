@@ -144,7 +144,7 @@ selecionado em **Respostas com IA**.
 
 Nas respostas multiagente, toque em **Como cheguei a essa resposta** para abrir
 a linha do tempo de Pesquisa, Análise, Comunicação e Validação, com estado,
-resumo e duração. O painel também lista os cálculos e avisos da validação; os
+resumo e duração. O painel também lista os cálculos (em reais, no formato brasileiro), as fontes consultadas e os avisos da validação; os
 cartões de evidência aparecem junto à resposta. Abstenções e respostas retidas
 explicam em linguagem simples por que não foram fornecidas orientações.
 
