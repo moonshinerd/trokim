@@ -50,6 +50,9 @@ class Library:
     own_reasons: dict[str, tuple[str, str]] = field(default_factory=dict)
     # Lançamentos que o usuário disse que NÃO são transferência entre contas próprias.
     not_own: set[str] = field(default_factory=set)
+    # Categoria escolhida pelo usuário para um estabelecimento (chave: nome normalizado).
+    # Vale para os lançamentos já importados e para os próximos arquivos.
+    category_rules: dict[str, TransactionCategory] = field(default_factory=dict)
 
     def identities(self) -> list[Identity]:
         found: list[Identity] = []
@@ -68,6 +71,7 @@ class Library:
         self.own_marks.clear()
         self.own_reasons.clear()
         self.not_own.clear()
+        self.category_rules.clear()
 
 
 LIBRARY = Library()

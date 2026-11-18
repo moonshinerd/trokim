@@ -2,6 +2,7 @@ import io
 from typing import Annotated, Literal
 
 from fastapi import APIRouter, File, Form, HTTPException, Query, UploadFile
+from pydantic import BaseModel
 from pypdf import PdfReader
 
 from app.domain.models import (
@@ -9,8 +10,10 @@ from app.domain.models import (
     AccountOwner,
     FinancialSummary,
     Transaction,
+    TransactionCategory,
 )
 from app.services.calculation_service import CalculationService
+from app.services.categorization_service import CategoryRuleService
 from app.services.detector_service import detect
 from app.services.import_service import ImportService, account_label
 from app.services.library_service import LIBRARY
@@ -202,6 +205,7 @@ async def upload_statement(
         # Reenviar o mesmo extrato não pode contar os lançamentos duas vezes.
         ParserService.deduplicate(new_txs, known=_LOCAL_TRANSACTIONS)
         _LOCAL_TRANSACTIONS.extend(new_txs)
+        CategoryRuleService.apply(LIBRARY, new_txs)
         extra = {
             "institution": None,
             "kind": None,
@@ -237,6 +241,40 @@ async def upload_statement(
         ),
         "summary": summary.model_dump(),
     }
+
+
+class CategoryBody(BaseModel):
+    category: TransactionCategory
+    # Aplica a todos os lançamentos do mesmo estabelecimento e aos próximos arquivos.
+    apply_to_merchant: bool = True
+
+
+@router.patch("/{uid}/category")
+async def set_transaction_category(uid: str, body: CategoryBody) -> dict[str, object]:
+    """O usuário corrige a categoria; por padrão, a escolha vira regra do estabelecimento."""
+    try:
+        return CategoryRuleService.set_category(
+            LIBRARY, uid, body.category, apply_to_merchant=body.apply_to_merchant
+        )
+    except LookupError as exc:
+        raise HTTPException(status_code=404, detail=str(exc)) from exc
+    except ValueError as exc:
+        raise HTTPException(status_code=400, detail=str(exc)) from exc
+
+
+@router.get("/category-rules")
+async def list_category_rules() -> list[dict[str, str]]:
+    return CategoryRuleService.rules(LIBRARY)
+
+
+@router.delete("/category-rules/{merchant}")
+async def delete_category_rule(merchant: str) -> dict[str, str]:
+    """Remove a regra: os lançamentos mantêm a categoria atual; os próximos não a seguem."""
+    try:
+        CategoryRuleService.remove_rule(LIBRARY, merchant)
+    except LookupError as exc:
+        raise HTTPException(status_code=404, detail=str(exc)) from exc
+    return {"message": "Regra removida."}
 
 
 @router.delete("/clear")

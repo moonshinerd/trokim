@@ -7,6 +7,7 @@ from app.domain.models import (
     Statement,
     StatementStatus,
 )
+from app.services.categorization_service import CategoryRuleService
 from app.services.library_service import Library
 from app.services.parser_service import OfxParseResult, ParserService
 from app.services.statement_service import (
@@ -142,6 +143,8 @@ class ImportService:
         library.statements[sid] = statement
 
         TransferService.recompute(library)
+        # Categorias que o usuário já ensinou valem também para os arquivos novos.
+        CategoryRuleService.apply(library, txs)
         auto_transfers = sum(1 for tx in txs if tx.uid in library.own_marks and not tx.is_duplicate)
         return {
             "outcome": outcome,
