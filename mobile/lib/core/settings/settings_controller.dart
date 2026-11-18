@@ -10,6 +10,7 @@ class SettingsController extends ChangeNotifier {
       _reduceMotion = _prefs?.getBool(_kReduce) ?? false,
       _showSplash = _prefs?.getBool(_kSplash) ?? true,
       _generativeChat = _prefs?.getBool(_kGenerative) ?? true,
+      _multiAgent = _prefs?.getBool(_kMultiAgent) ?? false,
       _apiBaseUrl = _decodeUrl(_prefs?.getString(_kApiUrl));
 
   /// Sem persistência (testes).
@@ -19,12 +20,14 @@ class SettingsController extends ChangeNotifier {
       _reduceMotion = false,
       _showSplash = true,
       _generativeChat = true,
+      _multiAgent = false,
       _apiBaseUrl = ApiConstants.defaultBaseUrl;
 
   static const _kTheme = 'theme_mode';
   static const _kReduce = 'reduce_motion';
   static const _kSplash = 'show_splash';
   static const _kGenerative = 'generative_chat';
+  static const _kMultiAgent = 'multi_agent';
   static const _kApiUrl = 'api_base_url';
 
   final SharedPreferences? _prefs;
@@ -32,6 +35,7 @@ class SettingsController extends ChangeNotifier {
   bool _reduceMotion;
   bool _showSplash;
   bool _generativeChat;
+  bool _multiAgent;
   String _apiBaseUrl;
 
   static Future<SettingsController> load() async =>
@@ -44,6 +48,7 @@ class SettingsController extends ChangeNotifier {
 
   /// Respostas redigidas pelo LLM local (padrão). Desligado: busca extrativa.
   bool get generativeChat => _generativeChat;
+  bool get multiAgent => _multiAgent;
 
   /// Endereço da API local (já normalizado). Padrão: o do emulador Android.
   String get apiBaseUrl => _apiBaseUrl;
@@ -66,6 +71,13 @@ class SettingsController extends ChangeNotifier {
     if (value == _generativeChat) return;
     _generativeChat = value;
     _prefs?.setBool(_kGenerative, value);
+    notifyListeners();
+  }
+
+  void setMultiAgent(bool value) {
+    if (value == _multiAgent) return;
+    _multiAgent = value;
+    _prefs?.setBool(_kMultiAgent, value);
     notifyListeners();
   }
 

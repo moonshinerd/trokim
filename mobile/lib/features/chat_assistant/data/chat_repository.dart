@@ -5,6 +5,7 @@ import 'package:http/http.dart' as http;
 
 import '../../../core/network/api_client.dart';
 import '../domain/chat_models.dart';
+import '../../agents/domain/multi_agent_models.dart';
 
 class ChatException implements Exception {
   final String message;
@@ -73,6 +74,36 @@ class ChatRepository {
     } on TypeError {
       throw const ChatException(
         'O assistente enviou uma resposta inválida. Tente novamente.',
+      );
+    }
+  }
+
+  Future<MultiAgentResponse> askAgents(String message) async {
+    try {
+      return MultiAgentResponse.fromJson(await _apiClient.askAgents(message));
+    } on TimeoutException {
+      throw const ChatException(
+        'Os agentes demoraram para responder. Tente novamente.',
+      );
+    } on SocketException {
+      throw const ChatException(
+        'Não foi possível conectar ao assistente. Verifique a conexão e se a API está disponível.',
+      );
+    } on http.ClientException {
+      throw const ChatException(
+        'Não foi possível conectar ao assistente. Verifique a conexão e se a API está disponível.',
+      );
+    } on ApiException {
+      throw const ChatException(
+        'O assistente multiagente está indisponível no momento. Tente novamente.',
+      );
+    } on FormatException {
+      throw const ChatException(
+        'Os agentes enviaram uma resposta inválida. Tente novamente.',
+      );
+    } on TypeError {
+      throw const ChatException(
+        'Os agentes enviaram uma resposta inválida. Tente novamente.',
       );
     }
   }

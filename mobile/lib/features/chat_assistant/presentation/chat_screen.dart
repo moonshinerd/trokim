@@ -82,6 +82,7 @@ class _ChatScreenState extends State<ChatScreen> {
     // O controlador criado aqui segue a opção de Ajustes (IA ou extrativo).
     if (widget.controller == null) {
       _chat.generative = SettingsScope.of(context).generativeChat;
+      _chat.multiAgent = SettingsScope.of(context).multiAgent;
     }
     return Scaffold(
       appBar: AppBar(
@@ -197,6 +198,9 @@ class _ChatScreenState extends State<ChatScreen> {
                           ? _chat.retry
                           : null,
                       auditMode: _auditMode,
+                      onShowTrace: message.agentTrace == null
+                          ? null
+                          : () => _showAgentTrace(message.agentTrace!),
                       onQuickQuestion: (question) {
                         _textController.text = question;
                         _textController.selection = TextSelection.collapsed(
@@ -267,6 +271,18 @@ class _ChatScreenState extends State<ChatScreen> {
       ),
     );
   }
+
+  void _showAgentTrace(Map<String, dynamic> trace) {
+    showModalBottomSheet<void>(
+      context: context,
+      isScrollControlled: true,
+      showDragHandle: true,
+      sheetAnimationStyle: Motion.reduced(context)
+          ? AnimationStyle.noAnimation
+          : null,
+      builder: (context) => _AgentTraceSheet(trace: trace),
+    );
+  }
 }
 
 class _MessageBubble extends StatefulWidget {
@@ -275,6 +291,7 @@ class _MessageBubble extends StatefulWidget {
     required this.maxWidth,
     this.onRetry,
     required this.auditMode,
+    this.onShowTrace,
     this.onQuickQuestion,
   });
 
@@ -282,6 +299,7 @@ class _MessageBubble extends StatefulWidget {
   final double maxWidth;
   final VoidCallback? onRetry;
   final bool auditMode;
+  final VoidCallback? onShowTrace;
   final ValueChanged<String>? onQuickQuestion;
 
   @override
@@ -312,6 +330,7 @@ class _MessageBubbleState extends State<_MessageBubble> {
   double get maxWidth => widget.maxWidth;
   VoidCallback? get onRetry => widget.onRetry;
   bool get auditMode => widget.auditMode;
+  VoidCallback? get onShowTrace => widget.onShowTrace;
   ValueChanged<String>? get onQuickQuestion => widget.onQuickQuestion;
 
   @override
@@ -366,6 +385,15 @@ class _MessageBubbleState extends State<_MessageBubble> {
                 const SizedBox(height: 8),
               ],
               _MessageText(message: message, onSource: _goToSource),
+              if (onShowTrace != null)
+                Align(
+                  alignment: Alignment.centerLeft,
+                  child: TextButton.icon(
+                    onPressed: onShowTrace,
+                    icon: const Icon(Icons.account_tree_outlined, size: 17),
+                    label: const Text('Como cheguei a essa resposta'),
+                  ),
+                ),
               if (message.isAbstained)
                 Padding(
                   padding: const EdgeInsets.only(top: 10),
@@ -522,6 +550,140 @@ class _AuditRow extends StatelessWidget {
       ),
     ],
   );
+}
+
+class _AgentTraceSheet extends StatelessWidget {
+  const _AgentTraceSheet({required this.trace});
+  final Map<String, dynamic> trace;
+
+  @override
+  Widget build(BuildContext context) {
+    final steps = (trace['steps'] as List? ?? const []).whereType<Map>();
+    final calculations = (trace['calculations'] as List? ?? const [])
+        .whereType<Map>();
+    final issues = (trace['validation_issues'] as List? ?? const [])
+        .whereType<Map>();
+    final evidences = (trace['evidences'] as List? ?? const [])
+        .whereType<Map>();
+    final status = trace['status'];
+    final c = context.colors;
+    String agentName(Object? key) => switch (key) {
+      'research' => 'Pesquisa',
+      'analysis' => 'Análise',
+      'communication' => 'Comunicação',
+      'validation' => 'Validação',
+      _ => 'Etapa',
+    };
+    return SafeArea(
+      child: SingleChildScrollView(
+        padding: const EdgeInsets.all(20),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Text(
+              'Como cheguei a essa resposta',
+              style: Theme.of(context).textTheme.titleLarge,
+            ),
+            const SizedBox(height: 12),
+            if (status == 'abstained' || status == 'rejected')
+              Container(
+                width: double.infinity,
+                padding: const EdgeInsets.all(12),
+                decoration: BoxDecoration(
+                  color: c.tint,
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                child: Text(
+                  status == 'abstained'
+                      ? 'Não encontrei informações suficientes para responder com segurança.'
+                      : 'A resposta passou por uma checagem de segurança e não foi aprovada.',
+                  style: TextStyle(color: c.ink),
+                ),
+              ),
+            for (final step in steps)
+              ListTile(
+                contentPadding: EdgeInsets.zero,
+                leading: Icon(
+                  switch (step['status']) {
+                    'ok' => Icons.check_circle_outline,
+                    'abstained' => Icons.info_outline,
+                    'skipped' => Icons.remove_circle_outline,
+                    _ => Icons.error_outline,
+                  },
+                  color: step['status'] == 'ok' ? c.ink : c.muted,
+                  semanticLabel: switch (step['status']) {
+                    'ok' => 'Etapa concluída',
+                    'abstained' => 'Etapa sem informações suficientes',
+                    'skipped' => 'Etapa não necessária',
+                    _ => 'Etapa com falha',
+                  },
+                ),
+                title: Text(agentName(step['agent'])),
+                subtitle: Text('${step['summary']}\n${step['duration_ms']} ms'),
+              ),
+            if (calculations.isNotEmpty) ...[
+              const SizedBox(height: 8),
+              Text('Cálculos', style: Theme.of(context).textTheme.titleMedium),
+              for (final item in calculations) ...[
+                ListTile(
+                  dense: true,
+                  contentPadding: EdgeInsets.zero,
+                  title: Text('${item['label']}'),
+                  subtitle: Text(_calculationText(item)),
+                ),
+              ],
+            ],
+            if (evidences.isNotEmpty) ...[
+              const SizedBox(height: 8),
+              Text('Fontes', style: Theme.of(context).textTheme.titleMedium),
+              for (final item in evidences)
+                ListTile(
+                  dense: true,
+                  contentPadding: EdgeInsets.zero,
+                  leading: const Icon(Icons.menu_book_outlined),
+                  title: Text('${item['document_title']}'),
+                  subtitle: Text('${item['source_name']}'),
+                ),
+            ],
+            for (final issue in issues)
+              ListTile(
+                dense: true,
+                contentPadding: EdgeInsets.zero,
+                leading: Icon(
+                  issue['severity'] == 'blocker'
+                      ? Icons.block
+                      : Icons.warning_amber_outlined,
+                  semanticLabel: issue['severity'] == 'blocker'
+                      ? 'Problema que impediu a resposta'
+                      : 'Aviso',
+                ),
+                title: Text('${issue['message']}'),
+              ),
+            Text(
+              'Tempo total: ${trace['total_ms']} ms',
+              style: TextStyle(color: c.muted, fontSize: 12),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+String _calculationText(Map item) {
+  final unit = item['unit'];
+  final value = item['value'];
+  if (unit == 'BRL' && value is num) {
+    final fixed = value.toStringAsFixed(2).replaceAll('.', ',');
+    final parts = fixed.split(',');
+    final int = parts[0].replaceAllMapped(
+      RegExp(r'\B(?=(\d{3})+(?!\d))'),
+      (_) => '.',
+    );
+    return 'R\$ $int,${parts[1]}';
+  }
+  return unit == null ? '$value' : '$value $unit';
 }
 
 /// Título da conversa na barra: "Assistente" numa conversa nova; depois, o

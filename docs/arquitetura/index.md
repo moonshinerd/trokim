@@ -30,6 +30,7 @@ A arquitetura do **Trokim** foi concebida para atender aos requisitos de alta pe
 6. **Sistema Multiagente Determinístico e Auditável (Semana 4, [ADR 0016](../adr/0016-arquitetura-multiagente.md)):**
    - Orquestrador determinístico coordenando quatro agentes especializados: `ResearchAgent` (recuperação de evidências e verificação de escopo), `AnalysisAgent` (cálculos matemáticos determinísticos sem LLM), `CommunicationAgent` (redação pedagógica ancorada em fontes oficiais) e `ValidationAgent` (auditoria defensiva factual contra alucinações).
    - Exposição via endpoint HTTP `POST /v1/agents/ask` devolvendo `MultiAgentResponse` com a trilha de auditoria (`steps`) detalhando o papel e tempo de execução de cada agente.
+   - No app, o modo multiagente é opcional em Ajustes; modelos Dart validam o contrato e a resposta oferece uma trilha acessível com etapas, cálculos, evidências e explicações de abstenção/rejeição.
 
 ---
 
