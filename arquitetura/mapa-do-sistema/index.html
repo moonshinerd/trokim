@@ -22,7 +22,7 @@
       
       
       <link rel="icon" href="../../assets/icon.png">
-      <meta name="generator" content="zensical-0.1.1">
+      <meta name="generator" content="zensical-0.1.2">
     
     
       
@@ -2326,14 +2326,17 @@
         DesignSystem["Design System&lt;br/&gt;(Tema claro/escuro, movimento, mascote)"]
         Settings["Ajustes locais&lt;br/&gt;(shared_preferences)"]
         History["Histórico de conversas&lt;br/&gt;(no aparelho)"]
+        AgentTrace["Modo multiagente opcional&lt;br/&gt;(modelos Dart e trilha por resposta)"]
         FlutterApp --&gt; StateManagement
         FlutterApp --&gt; DesignSystem
         FlutterApp --&gt; Settings
         FlutterApp --&gt; History
+        FlutterApp --&gt; AgentTrace
     end
 
     subgraph "Serviço Backend Local (Python / FastAPI)"
         APIEntry["Routers v1&lt;br/&gt;(/transactions, /chat, /budgets, /health, /agents)"]
+        AgentAsk["POST /v1/agents/ask&lt;br/&gt;(MultiAgentResponse)"]
 
         Parser["Parser de Documentos&lt;br/&gt;(OFX &amp; PDF)"]
         CalcService["Motor de Cálculo Determinístico&lt;br/&gt;(Totais, Balanço, 50-30-20)"]
@@ -2368,6 +2371,8 @@
         APIEntry --&gt; GenService
         APIEntry --&gt; TitleSvc
         APIEntry --&gt; Orchestrator
+        AgentTrace -. "habilitado em Ajustes" .-&gt; AgentAsk
+        AgentAsk --&gt; Orchestrator
 
         Orchestrator --&gt; ResearchAgent
         Orchestrator --&gt; AnalysisAgent

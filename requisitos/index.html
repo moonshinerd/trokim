@@ -22,7 +22,7 @@
       
       
       <link rel="icon" href="../assets/icon.png">
-      <meta name="generator" content="zensical-0.1.1">
+      <meta name="generator" content="zensical-0.1.2">
     
     
       
@@ -2341,10 +2341,10 @@
 <td style="text-align: center;">Equipe Trokim</td>
 </tr>
 <tr>
-<td style="text-align: center;"><strong>v1.4.0</strong></td>
-<td style="text-align: center;">16/11/2026</td>
-<td style="text-align: center;">Semana 4 (<em>Planejamento</em>)</td>
-<td>Inclusão, como <strong>planejados</strong>, de <strong>RF18</strong> (orquestração multiagente com trilha), <strong>RF19</strong> (validação determinística antes de responder), <strong>RF20</strong> (análise determinística de perguntas numéricas) e <strong>RF21</strong> (trilha dos agentes no app). Vinculação da ADR 0016 (proposta).</td>
+<td style="text-align: center;"><strong>v1.5.0</strong></td>
+<td style="text-align: center;">18/11/2026</td>
+<td style="text-align: center;">Semana 4 (<em>Implementação</em>)</td>
+<td>Implementação no app do modo multiagente experimental, modelos Dart estritos e trilha por resposta (RF21).</td>
 <td style="text-align: center;">Equipe Trokim</td>
 </tr>
 </tbody>
@@ -2562,7 +2562,7 @@
 <td style="text-align: center;"><span class="badge-should">Should have</span></td>
 <td style="text-align: center;"><a href="../pesquisa/guiding-questions/">GQ01</a>, <a href="../pesquisa/guiding-questions/">GQ10</a></td>
 <td style="text-align: center;"><a href="../adr/0016-arquitetura-multiagente/">ADR 0016</a></td>
-<td style="text-align: center;"><span class="badge-should">Planejado</span></td>
+<td style="text-align: center;"><span class="badge-must">Implementado</span></td>
 </tr>
 </tbody>
 </table>
@@ -2824,8 +2824,8 @@
 <td style="text-align: center;"><strong>RF21</strong></td>
 <td style="text-align: center;">GQ01, GQ10</td>
 <td style="text-align: center;"><a href="../adr/0016-arquitetura-multiagente/">ADR 0016</a></td>
-<td><code>mobile/lib/features/agents/</code></td>
-<td><code>mobile/test/</code> (a definir na implementação)</td>
+<td><code>mobile/lib/features/agents/</code>, <code>mobile/lib/features/chat_assistant/</code>, <code>mobile/lib/core/settings/</code></td>
+<td><code>mobile/test/multi_agent_models_test.dart</code>, <code>mobile/test/agents_chat_test.dart</code>, <code>mobile/test/chat_screen_test.dart</code></td>
 </tr>
 <tr>
 <td style="text-align: center;"><strong>RF14</strong></td>

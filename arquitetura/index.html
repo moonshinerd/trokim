@@ -22,7 +22,7 @@
       
       
       <link rel="icon" href="../assets/icon.png">
-      <meta name="generator" content="zensical-0.1.1">
+      <meta name="generator" content="zensical-0.1.2">
     
     
       
@@ -2256,6 +2256,7 @@
 <li><strong>Sistema Multiagente Determinístico e Auditável (Semana 4, <a href="../adr/0016-arquitetura-multiagente/">ADR 0016</a>):</strong></li>
 <li>Orquestrador determinístico coordenando quatro agentes especializados: <code>ResearchAgent</code> (recuperação de evidências e verificação de escopo), <code>AnalysisAgent</code> (cálculos matemáticos determinísticos sem LLM), <code>CommunicationAgent</code> (redação pedagógica ancorada em fontes oficiais) e <code>ValidationAgent</code> (auditoria defensiva factual contra alucinações).</li>
 <li>Exposição via endpoint HTTP <code>POST /v1/agents/ask</code> devolvendo <code>MultiAgentResponse</code> com a trilha de auditoria (<code>steps</code>) detalhando o papel e tempo de execução de cada agente.</li>
+<li>No app, o modo multiagente é opcional em Ajustes; modelos Dart validam o contrato e a resposta oferece uma trilha acessível com etapas, cálculos, evidências e explicações de abstenção/rejeição.</li>
 </ol>
 <hr />
 <h2 id="camadas-do-backend-api">Camadas do Backend (<code>api/</code>)<a class="headerlink" href="#camadas-do-backend-api" title="Permanent link">&para;</a></h2>

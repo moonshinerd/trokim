@@ -22,7 +22,7 @@
       
       
       <link rel="icon" href="../assets/icon.png">
-      <meta name="generator" content="zensical-0.1.1">
+      <meta name="generator" content="zensical-0.1.2">
     
     
       
@@ -781,6 +781,23 @@
       </span>
     </span>
   </a>
+  
+    <nav class="md-nav" aria-label="3.1. Aplicativo Mobile no Emulador">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#modo-multiagente-experimental" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Modo multiagente experimental
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
   
 </li>
         
@@ -2517,6 +2534,23 @@
     </span>
   </a>
   
+    <nav class="md-nav" aria-label="3.1. Aplicativo Mobile no Emulador">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#modo-multiagente-experimental" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Modo multiagente experimental
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
         
           <li class="md-nav__item">
@@ -2751,6 +2785,21 @@
 </span><span id="__span-8-8"><a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a>flutter<span class="w"> </span>run<span class="w">           </span><span class="c1"># emulador Android; a API fica em http://10.0.2.2:8000/v1</span>
 </span></code></pre></div>
 <p>No app, a aba <strong>Ajustes</strong> permite escolher o tema (por padrão segue o claro/escuro do aparelho), reduzir animações, desligar a abertura animada e <strong>testar a conexão</strong> com a API. Para apontar para outro endereço, use <code>--dart-define=API_BASE_URL=http://&lt;ip&gt;:8000/v1</code>.</p>
+<h3 id="modo-multiagente-experimental">Modo multiagente experimental<a class="headerlink" href="#modo-multiagente-experimental" title="Permanent link">&para;</a></h3>
+<p>Em <strong>Ajustes → Assistente</strong>, ative <strong>Modo multiagente (experimental)</strong>. A opção
+fica salva apenas no aparelho e, quando ligada, direciona as próximas perguntas
+ao endpoint <code>POST /v1/agents/ask</code>. Desligada, o chat segue o modo de resposta
+selecionado em <strong>Respostas com IA</strong>.</p>
+<p>Nas respostas multiagente, toque em <strong>Como cheguei a essa resposta</strong> para abrir
+a linha do tempo de Pesquisa, Análise, Comunicação e Validação, com estado,
+resumo e duração. O painel também lista os cálculos (em reais, no formato brasileiro), as fontes consultadas e os avisos da validação; os
+cartões de evidência aparecem junto à resposta. Abstenções e respostas retidas
+explicam em linguagem simples por que não foram fornecidas orientações.</p>
+<p>Para conferir o fluxo, use dados sintéticos, ligue o modo, envie uma pergunta
+com evidência no corpus e abra a trilha:</p>
+<p><img alt="Trilha multiagente aberta no app Android com resposta fundamentada em dados sintéticos" src="../assets/app/modo-multiagente-trilha.png" /></p>
+<p><em>Captura no emulador Android conectado à API local; consulta sintética sobre
+reserva de emergência.</em></p>
 <p>Veja também o <a href="../prototipo/">protótipo navegável do aplicativo</a>, com telas demonstrativas para Resumo, Extratos, Assistente, Cenários e Ajustes.</p>
 <hr />
 <h2 id="4-apresentacao-executiva-e-demonstracao">4. Apresentação Executiva e Demonstração<a class="headerlink" href="#4-apresentacao-executiva-e-demonstracao" title="Permanent link">&para;</a></h2>
