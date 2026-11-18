@@ -6,12 +6,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:http/http.dart' as http;
-import 'package:http/testing.dart';
 import 'package:trokim/core/network/api_client.dart';
 import 'package:trokim/core/theme/app_theme.dart';
 import 'package:trokim/features/chat_assistant/data/chat_repository.dart';
 import 'package:trokim/features/chat_assistant/presentation/chat_controller.dart';
 import 'package:trokim/features/chat_assistant/presentation/chat_screen.dart';
+
+import 'support/abortable_client.dart';
 
 const question = 'Como montar uma reserva de emergência?';
 const answer = 'Priorize baixo risco e liquidez diária.';
@@ -50,12 +51,16 @@ http.Response reply({
 
 Future<void> openChat(
   WidgetTester tester,
-  Future<http.Response> Function(http.Request) handler,
-) async {
+  Future<http.Response> Function(http.Request) handler, {
+  bool multiAgent = false,
+}) async {
   final repository = ChatRepository(
-    apiClient: ApiClient(client: MockClient(handler)),
+    apiClient: ApiClient(client: abortableClient(handler)),
   );
-  final controller = ChatController(repository: repository);
+  final controller = ChatController(
+    repository: repository,
+    multiAgent: multiAgent,
+  );
   addTearDown(repository.close);
   addTearDown(controller.dispose);
   await tester.pumpWidget(
@@ -72,6 +77,83 @@ Future<void> sendQuestion(WidgetTester tester) async {
 }
 
 void main() {
+  testWidgets('abre trilha e exibe cálculos da resposta multiagente', (
+    tester,
+  ) async {
+    await openChat(
+      tester,
+      (_) async => http.Response.bytes(
+        utf8.encode(
+          jsonEncode({
+            'query': question,
+            'status': 'answered',
+            'answer': answer,
+            'model': 'qwen2.5',
+            'evidences': [
+              {
+                'id': 'bcb-1',
+                'source_name': 'BCB',
+                'document_title': 'Caderno',
+                'section': 'Planejamento',
+                'content': 'Organize o orçamento.',
+                'score': 0.9,
+              },
+            ],
+            'calculations': [
+              {
+                'key': 'saldo',
+                'label': 'Saldo do período',
+                'value': 125.5,
+                'unit': 'BRL',
+                'source': 'CalculationService',
+              },
+            ],
+            'validation_issues': [],
+            'total_ms': 15,
+            'steps': [
+              {
+                'agent': 'research',
+                'status': 'ok',
+                'summary': 'Fontes oficiais localizadas.',
+                'duration_ms': 4,
+              },
+              {
+                'agent': 'analysis',
+                'status': 'skipped',
+                'summary': 'Sem cálculo nesta pergunta.',
+                'duration_ms': 0,
+              },
+              {
+                'agent': 'communication',
+                'status': 'ok',
+                'summary': 'Resposta redigida.',
+                'duration_ms': 7,
+              },
+              {
+                'agent': 'validation',
+                'status': 'ok',
+                'summary': 'Resposta conferida.',
+                'duration_ms': 4,
+              },
+            ],
+          }),
+        ),
+        200,
+      ),
+      multiAgent: true,
+    );
+    await sendQuestion(tester);
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Como cheguei a essa resposta'));
+    await tester.pumpAndSettle();
+    expect(find.text('Pesquisa'), findsOneWidget);
+    expect(find.text('Validação'), findsOneWidget);
+    expect(find.text('Fontes oficiais localizadas.\n4 ms'), findsOneWidget);
+    expect(find.text('Saldo do período'), findsOneWidget);
+    expect(find.text('125.5 R\$'), findsOneWidget);
+    expect(tester.takeException(), isNull);
+  });
+
   testWidgets(
     'preserva boas-vindas e mostra pergunta, resposta e card oficial',
     (tester) async {

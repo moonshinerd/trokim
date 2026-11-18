@@ -135,6 +135,27 @@ flutter run           # emulador Android; a API fica em http://10.0.2.2:8000/v1
 
 No app, a aba **Ajustes** permite escolher o tema (por padrão segue o claro/escuro do aparelho), reduzir animações, desligar a abertura animada e **testar a conexão** com a API. Para apontar para outro endereço, use `--dart-define=API_BASE_URL=http://<ip>:8000/v1`.
 
+### Modo multiagente experimental
+
+Em **Ajustes → Assistente**, ative **Modo multiagente (experimental)**. A opção
+fica salva apenas no aparelho e, quando ligada, direciona as próximas perguntas
+ao endpoint `POST /v1/agents/ask`. Desligada, o chat segue o modo de resposta
+selecionado em **Respostas com IA**.
+
+Nas respostas multiagente, toque em **Como cheguei a essa resposta** para abrir
+a linha do tempo de Pesquisa, Análise, Comunicação e Validação, com estado,
+resumo e duração. O painel também lista os cálculos e avisos da validação; os
+cartões de evidência aparecem junto à resposta. Abstenções e respostas retidas
+explicam em linguagem simples por que não foram fornecidas orientações.
+
+Para conferir o fluxo, use dados sintéticos, ligue o modo, envie uma pergunta
+com evidência no corpus e abra a trilha:
+
+![Trilha multiagente aberta no app Android com resposta fundamentada em dados sintéticos](assets/app/modo-multiagente-trilha.png)
+
+*Captura no emulador Android conectado à API local; consulta sintética sobre
+reserva de emergência.*
+
 ---
 
 ## 4. Apresentação Executiva e Demonstração

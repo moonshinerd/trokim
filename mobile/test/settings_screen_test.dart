@@ -36,6 +36,18 @@ Future<void> _scrollTo(WidgetTester tester, String text) async {
 }
 
 void main() {
+  test('modo multiagente começa desligado e persiste no aparelho', () async {
+    SharedPreferences.setMockInitialValues({});
+    final settings = await SettingsController.load();
+    expect(settings.multiAgent, isFalse);
+    settings.setMultiAgent(true);
+    settings.dispose();
+
+    final restored = await SettingsController.load();
+    expect(restored.multiAgent, isTrue);
+    restored.dispose();
+  });
+
   testWidgets('segue o sistema por padrão e permite fixar o tema escuro', (
     tester,
   ) async {

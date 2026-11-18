@@ -67,11 +67,22 @@ class SettingsScreen extends StatelessWidget {
               _Section(
                 index: 3,
                 title: 'Assistente',
-                child: _SwitchRow(
-                  title: 'Respostas com IA (LLM local)',
-                  subtitle: 'O modelo de linguagem redige a resposta com base nas fontes oficiais. Desligado, o assistente só recupera os trechos, de forma mais rápida.',
-                  value: settings.generativeChat,
-                  onChanged: settings.setGenerativeChat,
+                child: Column(
+                  children: [
+                    _SwitchRow(
+                      title: 'Respostas com IA (LLM local)',
+                      subtitle: 'O modelo de linguagem redige a resposta com base nas fontes oficiais. Desligado, o assistente só recupera os trechos, de forma mais rápida.',
+                      value: settings.generativeChat,
+                      onChanged: settings.setGenerativeChat,
+                    ),
+                    Divider(height: 1, color: context.colors.line),
+                    _SwitchRow(
+                      title: 'Modo multiagente (experimental)',
+                      subtitle: 'Mostra as etapas, cálculos e evidências usados em cada resposta.',
+                      value: settings.multiAgent,
+                      onChanged: settings.setMultiAgent,
+                    ),
+                  ],
                 ),
               ),
               _Section(

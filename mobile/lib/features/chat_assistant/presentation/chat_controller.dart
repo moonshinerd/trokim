@@ -7,6 +7,7 @@ import '../data/chat_repository.dart';
 import '../data/conversation_store.dart';
 import '../domain/chat_models.dart';
 import '../domain/conversation.dart';
+import '../../agents/domain/multi_agent_models.dart';
 
 const String welcomeText =
     'Olá! Sou o assistente do Trokim. Posso esclarecer dúvidas sobre organização financeira, reserva de emergência e metas com base nas diretrizes oficiais do Banco Central, CVM e CFPB.';
@@ -30,6 +31,7 @@ class ChatController extends ChangeNotifier {
 
   /// Usa o LLM local (`/chat/generate`) em vez da busca extrativa.
   bool generative;
+  bool multiAgent;
 
   final List<ChatMessage> _messages = [_welcome()];
   List<Conversation> _conversations = [];
@@ -44,6 +46,7 @@ class ChatController extends ChangeNotifier {
     ChatRepository? repository,
     ConversationStore? store,
     this.generative = true,
+    this.multiAgent = false,
     String Function()? baseUrlProvider,
   }) : _repository =
            repository ??
@@ -162,15 +165,67 @@ class ChatController extends ChangeNotifier {
     notifyListeners();
     ChatMessage? answer;
     try {
-      final reply = await _repository.ask(question, generative: generative);
-      if (_isDisposed) return;
-      answer = ChatMessage(
-        isUser: false,
-        text: reply.answer,
-        evidences: reply.evidences,
-        status: reply.status,
-        model: reply.model,
-      );
+      if (multiAgent) {
+        final reply = await _repository.askAgents(question);
+        if (_isDisposed) return;
+        answer = ChatMessage(
+          isUser: false,
+          text: reply.answer,
+          evidences: reply.evidences,
+          model: reply.model,
+          status: reply.status == MultiAgentStatus.abstained
+              ? AssistantStatus.abstained
+              : null,
+          agentTrace: {
+            'query': reply.query,
+            'status': reply.status.name,
+            'answer': reply.answer,
+            'model': reply.model,
+            'evidences': reply.evidences.map((e) => e.toJson()).toList(),
+            'steps': reply.steps
+                .map(
+                  (s) => {
+                    'agent': s.agent.name,
+                    'status': s.status.name,
+                    'summary': s.summary,
+                    'duration_ms': s.durationMs,
+                  },
+                )
+                .toList(),
+            'calculations': reply.calculations
+                .map(
+                  (c) => {
+                    'key': c.key,
+                    'label': c.label,
+                    'value': c.value,
+                    'unit': c.unit,
+                    'source': c.source,
+                  },
+                )
+                .toList(),
+            'validation_issues': reply.validationIssues
+                .map(
+                  (i) => {
+                    'code': i.code,
+                    'severity': i.severity.name,
+                    'message': i.message,
+                  },
+                )
+                .toList(),
+            'total_ms': reply.totalMs,
+          },
+        );
+      } else {
+        final reply = await _repository.ask(question, generative: generative);
+        if (_isDisposed) return;
+        answer = ChatMessage(
+          isUser: false,
+          text: reply.answer,
+          evidences: reply.evidences,
+          status: reply.status,
+          model: reply.model,
+        );
+      }
       _messages.add(answer);
     } catch (error) {
       if (_isDisposed) return;

@@ -22,8 +22,9 @@ mobile/
 │       ├── transactions/     # Importação por seletor de arquivos e lista de extratos OFX/PDF
 │       ├── finance/          # Modelos, repositório e controlador do resumo e da importação
 │       ├── chat_assistant/   # Chat com resposta fundamentada, fontes clicáveis e histórico de conversas
+│       ├── agents/           # Contratos Dart estritos para resposta e trilha multiagente
 │       ├── budget_scenarios/ # Simulador e comparador de cenários
-│       └── settings/         # Aba Ajustes: tema, animações, respostas com IA, endereço da API e conexão
+│       └── settings/         # Aba Ajustes: tema, animações, modo multiagente, endereço da API e conexão
 ├── assets/
 │   ├── brand/                # Arte do mascote (ver LEIA-ME.md, licença CC0)
 │   └── fonts/                # Plus Jakarta Sans (OFL)
@@ -72,6 +73,12 @@ disponível na API, mas não é usado pelo fluxo normal do chat.
 
 As evidências preservam instituição, título, seção, trecho, relevância e URL;
 `document_id` e `source_url` podem estar ausentes ou nulos no cliente.
+
+O modo **Multiagente (experimental)** fica em Ajustes, desligado por padrão e
+salvo no aparelho. Ligado, o chat usa `POST /v1/agents/ask`; cada resposta traz
+trilha tipada dos agentes, duração, cálculos e validações. O botão **Como
+cheguei a essa resposta** abre as etapas e explica abstenções/rejeições em
+linguagem simples. Desligado, o fluxo configurado de chat continua igual.
 
 ### Timeout da geração
 
@@ -179,6 +186,9 @@ Os testes usam `MockClient`, sem backend ativo nem rede. Cobrem conversão de
 respostas, metadados opcionais, erros HTTP/conexão/timeout, concorrência e ciclo
 de vida do controlador, cartões expansíveis, abertura de URL, comparação de
 auditoria, abstenção, perguntas rápidas, carregamento e nova tentativa.
+O fluxo multiagente também cobre resposta aprovada, abstenção, rejeição,
+payload inválido, falha de rede, exibição da trilha e persistência do
+interruptor em Ajustes.
 Testes e análise podem ser executados sem instalar plataformas ou aceitar
 licenças do SDK. O build do APK exige:
 

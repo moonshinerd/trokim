@@ -124,16 +124,32 @@ class ApiClient {
   }
 
   Future<Map<String, dynamic>> generateAssistant(String message) async {
+    return _postAbortable(ApiConstants.chatGenerateEndpoint, {
+      'message': message,
+      'mode': 'grounded',
+    }, 'Tempo limite da geração excedido.');
+  }
+
+  Future<Map<String, dynamic>> askAgents(String message) async =>
+      _postAbortable(ApiConstants.agentsAskEndpoint, {
+        'message': message,
+      }, 'Tempo limite dos agentes excedido.');
+
+  Future<Map<String, dynamic>> _postAbortable(
+    String endpoint,
+    Map<String, Object> payload,
+    String timeoutMessage,
+  ) async {
     final abort = Completer<void>();
     _generationAborts.add(abort);
     final request =
         http.AbortableRequest(
             'POST',
-            Uri.parse('$baseUrl${ApiConstants.chatGenerateEndpoint}'),
+            Uri.parse('$baseUrl$endpoint'),
             abortTrigger: abort.future,
           )
           ..headers['Content-Type'] = 'application/json'
-          ..body = jsonEncode({'message': message, 'mode': 'grounded'});
+          ..body = jsonEncode(payload);
     var timedOut = false;
     final timer = Timer(generationTimeout, () {
       timedOut = true;
@@ -146,10 +162,7 @@ class ApiClient {
       return _decode(response);
     } on http.RequestAbortedException {
       if (timedOut) {
-        throw TimeoutException(
-          'Tempo limite da geração excedido.',
-          generationTimeout,
-        );
+        throw TimeoutException(timeoutMessage, generationTimeout);
       }
       rethrow;
     } finally {

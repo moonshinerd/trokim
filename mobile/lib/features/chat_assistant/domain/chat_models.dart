@@ -133,6 +133,7 @@ class ChatMessage {
 
   /// Modelo que gerou a resposta (ex.: `ollama/qwen2.5`), se houver.
   final String? model;
+  final Map<String, dynamic>? agentTrace;
 
   bool get isAbstained => status == AssistantStatus.abstained;
 
@@ -143,6 +144,7 @@ class ChatMessage {
     this.isError = false,
     this.status,
     this.model,
+    this.agentTrace,
   }) : evidences = List.unmodifiable(evidences);
 
   /// Lê uma mensagem guardada no aparelho (formato próprio do histórico).
@@ -159,6 +161,7 @@ class ChatMessage {
       _ => null,
     },
     model: json['model'] as String?,
+    agentTrace: (json['agent_trace'] as Map?)?.cast<String, dynamic>(),
   );
 
   Map<String, dynamic> toJson() => {
@@ -168,5 +171,6 @@ class ChatMessage {
     'is_error': isError,
     'status': status?.name,
     'model': model,
+    'agent_trace': agentTrace,
   };
 }

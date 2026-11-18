@@ -14,14 +14,17 @@ graph TD
         DesignSystem["Design System<br/>(Tema claro/escuro, movimento, mascote)"]
         Settings["Ajustes locais<br/>(shared_preferences)"]
         History["Histórico de conversas<br/>(no aparelho)"]
+        AgentTrace["Modo multiagente opcional<br/>(modelos Dart e trilha por resposta)"]
         FlutterApp --> StateManagement
         FlutterApp --> DesignSystem
         FlutterApp --> Settings
         FlutterApp --> History
+        FlutterApp --> AgentTrace
     end
 
     subgraph "Serviço Backend Local (Python / FastAPI)"
         APIEntry["Routers v1<br/>(/transactions, /chat, /budgets, /health, /agents)"]
+        AgentAsk["POST /v1/agents/ask<br/>(MultiAgentResponse)"]
         
         Parser["Parser de Documentos<br/>(OFX & PDF)"]
         CalcService["Motor de Cálculo Determinístico<br/>(Totais, Balanço, 50-30-20)"]
@@ -56,6 +59,8 @@ graph TD
         APIEntry --> GenService
         APIEntry --> TitleSvc
         APIEntry --> Orchestrator
+        AgentTrace -. "habilitado em Ajustes" .-> AgentAsk
+        AgentAsk --> Orchestrator
         
         Orchestrator --> ResearchAgent
         Orchestrator --> AnalysisAgent
