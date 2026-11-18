@@ -69,3 +69,6 @@ Thumbs.db
 
 # Relatórios locais e artefatos do CI
 /artifacts/research/
+
+# Arquivos de trabalho de imagens; recursos publicados ficam em docs/assets/.
+/generated_images/

@@ -1,3 +1,4 @@
+import re
 from datetime import date
 
 import pytest
@@ -28,18 +29,18 @@ class GroundedMockLLM(MockLLMProvider):
         parts = []
         if context_chunks:
             primary = context_chunks[0]
-            url = primary.source_url or "https://www.bcb.gov.br"
-            parts.append(
-                f"Segundo diretrizes do [{primary.source_name}]({url}), "
-                "é recomendável manter o planejamento financeiro em dia [1]."
+            parts.append(re.sub(r"([.!?])(?=\s|$)", r"\1 [1]", primary.content.strip()))
+        if "CÁLCULOS DO SISTEMA (DETERMINÍSTICOS):" in prompt:
+            calculation_section = prompt.split("CÁLCULOS DO SISTEMA (DETERMINÍSTICOS):", 1)[
+                1
+            ].split("\n\nPREMISSAS", 1)[0]
+            parts.extend(
+                line[2:].strip()
+                for line in calculation_section.splitlines()
+                if line.startswith("- ")
             )
-        if "4000" in prompt or "3500" in prompt or "net_balance" in prompt:
-            val = "4.000,00" if "4000" in prompt else "3.500,00"
-            parts.append(f"Seu saldo líquido atual é R$ {val}.")
-        elif not context_chunks:
-            parts.append("Consultas aos lançamentos registradas com sucesso.")
 
-        content = " ".join(parts)
+        content = "\n".join(parts)
         return LLMResponse(
             content=content,
             model="grounded-mock",
@@ -122,7 +123,7 @@ def test_pergunta_so_de_evidencia(test_setup):
     assert AgentName.VALIDATION in step_agents
 
 
-def test_pergunta_so_de_calculo_com_transacoes(test_setup):
+def test_pergunta_de_saldo_pessoal_abstem_mesmo_com_transacoes(test_setup):
     client, _, _ = test_setup
     # Popula transações na sessão local
     _LOCAL_TRANSACTIONS.extend(
@@ -154,11 +155,15 @@ def test_pergunta_so_de_calculo_com_transacoes(test_setup):
     )
     assert resp.status_code == 200
     data = resp.json()
-    assert data["status"] == MultiAgentStatus.ANSWERED
-    # Verifica que cálculos determinísticos foram computados
-    calcs = {c["key"]: c["value"] for c in data["calculations"]}
-    assert "net_balance" in calcs
-    assert calcs["net_balance"] == 3500.0
+    # A integração de perguntas pessoais com cálculos segue pendente (#58).
+    # A presença de transações não deve contornar a política de escopo do Research.
+    assert data["status"] == MultiAgentStatus.ABSTAINED
+    assert data["calculations"] == []
+    assert data["evidences"] == []
+    assert data["model"] is None
+    assert len(data["steps"]) == 1
+    assert data["steps"][0]["agent"] == AgentName.RESEARCH
+    assert data["steps"][0]["status"] == StepStatus.ABSTAINED
 
 
 def test_pergunta_combinada_evidencia_e_calculo(test_setup):

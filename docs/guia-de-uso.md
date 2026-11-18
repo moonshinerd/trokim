@@ -156,6 +156,8 @@ com evidência no corpus e abra a trilha:
 *Captura no emulador Android conectado à API local; consulta sintética sobre
 reserva de emergência.*
 
+Veja também o [protótipo navegável do aplicativo](prototipo.md), com telas demonstrativas para Resumo, Extratos, Assistente, Cenários e Ajustes.
+
 ---
 
 ## 4. Apresentação Executiva e Demonstração

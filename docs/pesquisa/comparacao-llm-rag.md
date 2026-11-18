@@ -105,6 +105,13 @@ sinalizados; os outros 15 não foram integralmente revisados, então **30,0% é 
 
 *Figura 3. Casos sinalizados pela heurística e o que a revisão confirmou.*
 
+!!! info "Evolução das heurísticas no ValidationAgent (Semana 4 / Issue #54)"
+    Para a arquitetura multiagente, as heurísticas lexicais de `eval_comparison.py` foram refinadas e integradas diretamente na API no [Validation Agent](../agentes/validation-agent.md):
+
+    1. **Eliminação dos falsos positivos estruturais:** Marcadores de listas ordenadas (`1.`, `2)`) e citações `[n]` são pré-filtrados antes da validação de fatos numéricos, eliminando os 8 falsos positivos observados no Trokim estruturado.
+    2. **Suporte nativo a faixas temporais:** Prazos como `1-3 anos` ou `3 a 5 anos` são decompostos em limites canônicos, alinhando-se às fontes regulatórias sem gerar falsos bloqueios.
+    3. **Regras puras especializadas:** O agente implementa checagens determinísticas para `CITATION_INVALID`, `OUT_OF_SCOPE_ADVICE`, `ABSTENTION_MISMATCH` e `CALCULATION_MISSING`, prevenindo em tempo de execução os desvios observados em C27, C29 e C30.
+
 ### Reexecução de 16/11/2026
 
 O mesmo experimento foi executado de novo, pela camada LiteLLM do app, com o mesmo modelo,
