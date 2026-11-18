@@ -1,0 +1,316 @@
+{
+  "schema_version": 1,
+  "description": "Extrato sintético fixo do gabarito multiagente; nenhum dado real.",
+  "transactions": [
+    {
+      "id": "LM-001",
+      "account_id": "SINTETICO-MULTIAGENTE",
+      "description": "Salário fictício",
+      "amount": 5000.0,
+      "date": "2026-08-05",
+      "type": "credit",
+      "category": "renda",
+      "is_duplicate": false
+    },
+    {
+      "id": "LM-002",
+      "account_id": "SINTETICO-MULTIAGENTE",
+      "description": "Aluguel fictício",
+      "amount": 1500.0,
+      "date": "2026-08-06",
+      "type": "debit",
+      "category": "moradia",
+      "is_duplicate": false
+    },
+    {
+      "id": "LM-003",
+      "account_id": "SINTETICO-MULTIAGENTE",
+      "description": "Supermercado fictício A",
+      "amount": 620.4,
+      "date": "2026-08-08",
+      "type": "debit",
+      "category": "alimentacao",
+      "is_duplicate": false
+    },
+    {
+      "id": "LM-004",
+      "account_id": "SINTETICO-MULTIAGENTE",
+      "description": "Supermercado fictício B",
+      "amount": 410.3,
+      "date": "2026-08-15",
+      "type": "debit",
+      "category": "alimentacao",
+      "is_duplicate": false
+    },
+    {
+      "id": "LM-005",
+      "account_id": "SINTETICO-MULTIAGENTE",
+      "description": "Passe de transporte fictício",
+      "amount": 220.0,
+      "date": "2026-08-10",
+      "type": "debit",
+      "category": "transporte",
+      "is_duplicate": false
+    },
+    {
+      "id": "LM-006",
+      "account_id": "SINTETICO-MULTIAGENTE",
+      "description": "Farmácia fictícia",
+      "amount": 135.9,
+      "date": "2026-08-12",
+      "type": "debit",
+      "category": "saude",
+      "is_duplicate": false
+    },
+    {
+      "id": "LM-007",
+      "account_id": "SINTETICO-MULTIAGENTE",
+      "description": "Cinema fictício",
+      "amount": 90.0,
+      "date": "2026-08-18",
+      "type": "debit",
+      "category": "lazer",
+      "is_duplicate": false
+    },
+    {
+      "id": "LM-008",
+      "account_id": "SINTETICO-MULTIAGENTE",
+      "description": "Internet fictícia",
+      "amount": 119.9,
+      "date": "2026-08-20",
+      "type": "debit",
+      "category": "servicos",
+      "is_duplicate": false
+    },
+    {
+      "id": "LM-009",
+      "account_id": "SINTETICO-MULTIAGENTE",
+      "description": "Curso online fictício",
+      "amount": 180.0,
+      "date": "2026-08-22",
+      "type": "debit",
+      "category": "educacao",
+      "is_duplicate": false
+    },
+    {
+      "id": "LM-010",
+      "account_id": "SINTETICO-MULTIAGENTE",
+      "description": "Supermercado fictício A",
+      "amount": 620.4,
+      "date": "2026-08-08",
+      "type": "debit",
+      "category": "alimentacao",
+      "is_duplicate": true
+    },
+    {
+      "id": "LM-011",
+      "account_id": "SINTETICO-MULTIAGENTE",
+      "description": "Salário fictício",
+      "amount": 5000.0,
+      "date": "2026-09-05",
+      "type": "credit",
+      "category": "renda",
+      "is_duplicate": false
+    },
+    {
+      "id": "LM-012",
+      "account_id": "SINTETICO-MULTIAGENTE",
+      "description": "Trabalho avulso fictício",
+      "amount": 800.0,
+      "date": "2026-09-14",
+      "type": "credit",
+      "category": "renda",
+      "is_duplicate": false
+    },
+    {
+      "id": "LM-013",
+      "account_id": "SINTETICO-MULTIAGENTE",
+      "description": "Aluguel fictício",
+      "amount": 1500.0,
+      "date": "2026-09-06",
+      "type": "debit",
+      "category": "moradia",
+      "is_duplicate": false
+    },
+    {
+      "id": "LM-014",
+      "account_id": "SINTETICO-MULTIAGENTE",
+      "description": "Supermercado fictício A",
+      "amount": 598.7,
+      "date": "2026-09-09",
+      "type": "debit",
+      "category": "alimentacao",
+      "is_duplicate": false
+    },
+    {
+      "id": "LM-015",
+      "account_id": "SINTETICO-MULTIAGENTE",
+      "description": "Restaurante fictício",
+      "amount": 145.5,
+      "date": "2026-09-16",
+      "type": "debit",
+      "category": "alimentacao",
+      "is_duplicate": false
+    },
+    {
+      "id": "LM-016",
+      "account_id": "SINTETICO-MULTIAGENTE",
+      "description": "Passe de transporte fictício",
+      "amount": 220.0,
+      "date": "2026-09-10",
+      "type": "debit",
+      "category": "transporte",
+      "is_duplicate": false
+    },
+    {
+      "id": "LM-017",
+      "account_id": "SINTETICO-MULTIAGENTE",
+      "description": "Consulta fictícia",
+      "amount": 250.0,
+      "date": "2026-09-13",
+      "type": "debit",
+      "category": "saude",
+      "is_duplicate": false
+    },
+    {
+      "id": "LM-018",
+      "account_id": "SINTETICO-MULTIAGENTE",
+      "description": "Show fictício",
+      "amount": 210.0,
+      "date": "2026-09-19",
+      "type": "debit",
+      "category": "lazer",
+      "is_duplicate": false
+    },
+    {
+      "id": "LM-019",
+      "account_id": "SINTETICO-MULTIAGENTE",
+      "description": "Internet fictícia",
+      "amount": 119.9,
+      "date": "2026-09-20",
+      "type": "debit",
+      "category": "servicos",
+      "is_duplicate": false
+    },
+    {
+      "id": "LM-020",
+      "account_id": "SINTETICO-MULTIAGENTE",
+      "description": "Curso online fictício",
+      "amount": 180.0,
+      "date": "2026-09-22",
+      "type": "debit",
+      "category": "educacao",
+      "is_duplicate": false
+    },
+    {
+      "id": "LM-021",
+      "account_id": "SINTETICO-MULTIAGENTE",
+      "description": "Supermercado fictício A",
+      "amount": 598.7,
+      "date": "2026-09-09",
+      "type": "debit",
+      "category": "alimentacao",
+      "is_duplicate": true
+    },
+    {
+      "id": "LM-022",
+      "account_id": "SINTETICO-MULTIAGENTE",
+      "description": "Salário fictício",
+      "amount": 5000.0,
+      "date": "2026-10-05",
+      "type": "credit",
+      "category": "renda",
+      "is_duplicate": false
+    },
+    {
+      "id": "LM-023",
+      "account_id": "SINTETICO-MULTIAGENTE",
+      "description": "Aluguel fictício",
+      "amount": 1500.0,
+      "date": "2026-10-06",
+      "type": "debit",
+      "category": "moradia",
+      "is_duplicate": false
+    },
+    {
+      "id": "LM-024",
+      "account_id": "SINTETICO-MULTIAGENTE",
+      "description": "Supermercado fictício A",
+      "amount": 655.1,
+      "date": "2026-10-07",
+      "type": "debit",
+      "category": "alimentacao",
+      "is_duplicate": false
+    },
+    {
+      "id": "LM-025",
+      "account_id": "SINTETICO-MULTIAGENTE",
+      "description": "Supermercado fictício B",
+      "amount": 372.0,
+      "date": "2026-10-17",
+      "type": "debit",
+      "category": "alimentacao",
+      "is_duplicate": false
+    },
+    {
+      "id": "LM-026",
+      "account_id": "SINTETICO-MULTIAGENTE",
+      "description": "Passe de transporte fictício",
+      "amount": 220.0,
+      "date": "2026-10-10",
+      "type": "debit",
+      "category": "transporte",
+      "is_duplicate": false
+    },
+    {
+      "id": "LM-027",
+      "account_id": "SINTETICO-MULTIAGENTE",
+      "description": "Farmácia fictícia",
+      "amount": 88.6,
+      "date": "2026-10-11",
+      "type": "debit",
+      "category": "saude",
+      "is_duplicate": false
+    },
+    {
+      "id": "LM-028",
+      "account_id": "SINTETICO-MULTIAGENTE",
+      "description": "Streaming fictício",
+      "amount": 55.9,
+      "date": "2026-10-21",
+      "type": "debit",
+      "category": "lazer",
+      "is_duplicate": false
+    },
+    {
+      "id": "LM-029",
+      "account_id": "SINTETICO-MULTIAGENTE",
+      "description": "Internet fictícia",
+      "amount": 119.9,
+      "date": "2026-10-20",
+      "type": "debit",
+      "category": "servicos",
+      "is_duplicate": false
+    },
+    {
+      "id": "LM-030",
+      "account_id": "SINTETICO-MULTIAGENTE",
+      "description": "Curso online fictício",
+      "amount": 180.0,
+      "date": "2026-10-22",
+      "type": "debit",
+      "category": "educacao",
+      "is_duplicate": false
+    },
+    {
+      "id": "LM-031",
+      "account_id": "SINTETICO-MULTIAGENTE",
+      "description": "Farmácia fictícia",
+      "amount": 88.6,
+      "date": "2026-10-11",
+      "type": "debit",
+      "category": "saude",
+      "is_duplicate": true
+    }
+  ]
+}

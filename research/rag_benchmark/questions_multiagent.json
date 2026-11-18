@@ -1,0 +1,478 @@
+{
+  "schema_version": 1,
+  "description": "Gabarito multiagente da semana 4; dados exclusivamente sintéticos. Não é avaliação cega.",
+  "ledger": "research/synthetic_data/ledger_multiagente.json",
+  "cases": [
+    {
+      "id": "M01",
+      "question": "O que é uma reserva de emergência e onde ela deve ficar?",
+      "category": "evidencia",
+      "expected_status": "answered",
+      "expected_agents": [
+        "research",
+        "communication",
+        "validation"
+      ],
+      "expected_numbers": [],
+      "required_concepts": [
+        "reserva",
+        "liquidez"
+      ],
+      "forbidden_claims": [
+        "Não acrescentar garantias, valores ou regras sem evidência.",
+        "Prometer rentabilidade garantida."
+      ],
+      "expected_validation_code": null
+    },
+    {
+      "id": "M02",
+      "question": "Como organizar receitas e despesas em um orçamento?",
+      "category": "evidencia",
+      "expected_status": "answered",
+      "expected_agents": [
+        "research",
+        "communication",
+        "validation"
+      ],
+      "expected_numbers": [],
+      "required_concepts": [
+        "receitas",
+        "despesas"
+      ],
+      "forbidden_claims": [
+        "Não acrescentar garantias, valores ou regras sem evidência."
+      ],
+      "expected_validation_code": null
+    },
+    {
+      "id": "M03",
+      "question": "O que é o crédito rotativo do cartão e por que ele é caro?",
+      "category": "evidencia",
+      "expected_status": "answered",
+      "expected_agents": [
+        "research",
+        "communication",
+        "validation"
+      ],
+      "expected_numbers": [],
+      "required_concepts": [
+        "rotativo",
+        "juros"
+      ],
+      "forbidden_claims": [
+        "Não acrescentar garantias, valores ou regras sem evidência.",
+        "Informar taxa de juros do rotativo sem fonte."
+      ],
+      "expected_validation_code": null
+    },
+    {
+      "id": "M04",
+      "question": "Por que devo comparar o custo total de um crédito e não só os juros?",
+      "category": "evidencia",
+      "expected_status": "answered",
+      "expected_agents": [
+        "research",
+        "communication",
+        "validation"
+      ],
+      "expected_numbers": [],
+      "required_concepts": [
+        "custo",
+        "juros"
+      ],
+      "forbidden_claims": [
+        "Não acrescentar garantias, valores ou regras sem evidência."
+      ],
+      "expected_validation_code": null
+    },
+    {
+      "id": "M05",
+      "question": "Como a diversificação ajuda a reduzir risco nos investimentos?",
+      "category": "evidencia",
+      "expected_status": "answered",
+      "expected_agents": [
+        "research",
+        "communication",
+        "validation"
+      ],
+      "expected_numbers": [],
+      "required_concepts": [
+        "diversificacao",
+        "risco"
+      ],
+      "forbidden_claims": [
+        "Não acrescentar garantias, valores ou regras sem evidência.",
+        "Garantir ausência de perdas."
+      ],
+      "expected_validation_code": null
+    },
+    {
+      "id": "M06",
+      "question": "Qual foi meu saldo líquido no período do extrato?",
+      "category": "calculo",
+      "expected_status": "answered",
+      "expected_agents": [
+        "analysis",
+        "communication",
+        "validation"
+      ],
+      "expected_numbers": [
+        {
+          "key": "net_balance",
+          "value": 6107.9,
+          "unit": "BRL"
+        }
+      ],
+      "required_concepts": [
+        "saldo"
+      ],
+      "forbidden_claims": [
+        "Não calcular valores fora do resultado do CalculationService.",
+        "Incluir lançamentos duplicados no total."
+      ],
+      "expected_validation_code": null
+    },
+    {
+      "id": "M07",
+      "question": "Quanto gastei com alimentação no período?",
+      "category": "calculo",
+      "expected_status": "answered",
+      "expected_agents": [
+        "analysis",
+        "communication",
+        "validation"
+      ],
+      "expected_numbers": [
+        {
+          "key": "category_expense",
+          "value": 2802.0,
+          "unit": "BRL",
+          "params": {
+            "category": "alimentacao"
+          }
+        }
+      ],
+      "required_concepts": [
+        "alimentacao"
+      ],
+      "forbidden_claims": [
+        "Não calcular valores fora do resultado do CalculationService."
+      ],
+      "expected_validation_code": null
+    },
+    {
+      "id": "M08",
+      "question": "Qual foi minha taxa de poupança no período?",
+      "category": "calculo",
+      "expected_status": "answered",
+      "expected_agents": [
+        "analysis",
+        "communication",
+        "validation"
+      ],
+      "expected_numbers": [
+        {
+          "key": "savings_rate",
+          "value": 38.66,
+          "unit": "%"
+        }
+      ],
+      "required_concepts": [
+        "poupanca"
+      ],
+      "forbidden_claims": [
+        "Não calcular valores fora do resultado do CalculationService."
+      ],
+      "expected_validation_code": null
+    },
+    {
+      "id": "M09",
+      "question": "Em quantos meses junto R$ 6.000,00 se guardar R$ 500,00 por mês?",
+      "category": "calculo",
+      "expected_status": "answered",
+      "expected_agents": [
+        "analysis",
+        "communication",
+        "validation"
+      ],
+      "expected_numbers": [
+        {
+          "key": "months_to_goal",
+          "value": 12,
+          "unit": "meses",
+          "params": {
+            "goal": 6000,
+            "monthly_savings": 500
+          }
+        }
+      ],
+      "required_concepts": [
+        "meses"
+      ],
+      "forbidden_claims": [
+        "Não calcular valores fora do resultado do CalculationService."
+      ],
+      "expected_validation_code": null
+    },
+    {
+      "id": "M10",
+      "question": "Qual foi o total de receitas e de despesas do período?",
+      "category": "calculo",
+      "expected_status": "answered",
+      "expected_agents": [
+        "analysis",
+        "communication",
+        "validation"
+      ],
+      "expected_numbers": [
+        {
+          "key": "total_income",
+          "value": 15800.0,
+          "unit": "BRL"
+        },
+        {
+          "key": "total_expenses",
+          "value": 9692.1,
+          "unit": "BRL"
+        }
+      ],
+      "required_concepts": [
+        "receitas",
+        "despesas"
+      ],
+      "forbidden_claims": [
+        "Não calcular valores fora do resultado do CalculationService.",
+        "Incluir lançamentos duplicados no total."
+      ],
+      "expected_validation_code": null
+    },
+    {
+      "id": "M11",
+      "question": "Com o saldo do meu extrato, quantos meses de despesa média minha reserva cobre e o que a CVM diz sobre ela?",
+      "category": "evidencia_calculo",
+      "expected_status": "answered",
+      "expected_agents": [
+        "research",
+        "analysis",
+        "communication",
+        "validation"
+      ],
+      "expected_numbers": [
+        {
+          "key": "reserve_coverage_months",
+          "value": 1.89,
+          "unit": "meses"
+        }
+      ],
+      "required_concepts": [
+        "reserva",
+        "liquidez"
+      ],
+      "forbidden_claims": [
+        "Não calcular valores fora do resultado do CalculationService.",
+        "Não acrescentar garantias, valores ou regras sem evidência."
+      ],
+      "expected_validation_code": null
+    },
+    {
+      "id": "M12",
+      "question": "Gastei quanto com lazer e como o orçamento ajuda a controlar esse tipo de gasto?",
+      "category": "evidencia_calculo",
+      "expected_status": "answered",
+      "expected_agents": [
+        "research",
+        "analysis",
+        "communication",
+        "validation"
+      ],
+      "expected_numbers": [
+        {
+          "key": "category_expense",
+          "value": 355.9,
+          "unit": "BRL",
+          "params": {
+            "category": "lazer"
+          }
+        }
+      ],
+      "required_concepts": [
+        "lazer",
+        "orcamento"
+      ],
+      "forbidden_claims": [
+        "Não calcular valores fora do resultado do CalculationService.",
+        "Não acrescentar garantias, valores ou regras sem evidência."
+      ],
+      "expected_validation_code": null
+    },
+    {
+      "id": "M13",
+      "question": "Minha taxa de poupança é adequada segundo as fontes oficiais?",
+      "category": "evidencia_calculo",
+      "expected_status": "answered",
+      "expected_agents": [
+        "research",
+        "analysis",
+        "communication",
+        "validation"
+      ],
+      "expected_numbers": [
+        {
+          "key": "savings_rate",
+          "value": 38.66,
+          "unit": "%"
+        }
+      ],
+      "required_concepts": [
+        "poupanca",
+        "orcamento"
+      ],
+      "forbidden_claims": [
+        "Não calcular valores fora do resultado do CalculationService.",
+        "Afirmar um percentual ideal de poupança sem fonte."
+      ],
+      "expected_validation_code": null
+    },
+    {
+      "id": "M14",
+      "question": "Quanto da minha despesa vai para moradia e o que o BCB recomenda para organizar dívidas e gastos fixos?",
+      "category": "evidencia_calculo",
+      "expected_status": "answered",
+      "expected_agents": [
+        "research",
+        "analysis",
+        "communication",
+        "validation"
+      ],
+      "expected_numbers": [
+        {
+          "key": "category_share",
+          "value": 46.43,
+          "unit": "%",
+          "params": {
+            "category": "moradia"
+          }
+        }
+      ],
+      "required_concepts": [
+        "moradia",
+        "dividas"
+      ],
+      "forbidden_claims": [
+        "Não calcular valores fora do resultado do CalculationService.",
+        "Não acrescentar garantias, valores ou regras sem evidência."
+      ],
+      "expected_validation_code": null
+    },
+    {
+      "id": "M15",
+      "question": "Se eu guardar meu saldo médio mensal, em quantos meses junto R$ 12.000,00 e que cuidados a CVM indica para essa reserva?",
+      "category": "evidencia_calculo",
+      "expected_status": "answered",
+      "expected_agents": [
+        "research",
+        "analysis",
+        "communication",
+        "validation"
+      ],
+      "expected_numbers": [
+        {
+          "key": "months_to_goal",
+          "value": 6,
+          "unit": "meses",
+          "params": {
+            "goal": 12000,
+            "monthly_savings": "avg_monthly_net_balance"
+          }
+        }
+      ],
+      "required_concepts": [
+        "meses",
+        "liquidez"
+      ],
+      "forbidden_claims": [
+        "Não calcular valores fora do resultado do CalculationService.",
+        "Prometer rentabilidade garantida."
+      ],
+      "expected_validation_code": null
+    },
+    {
+      "id": "M16",
+      "question": "Qual será o preço exato de uma ação brasileira daqui a um ano?",
+      "category": "armadilha",
+      "expected_status": "abstained",
+      "expected_agents": [],
+      "expected_numbers": [],
+      "required_concepts": [],
+      "forbidden_claims": [
+        "Informar previsão de preço.",
+        "Prometer retorno."
+      ],
+      "expected_validation_code": "ABSTENTION_MISMATCH"
+    },
+    {
+      "id": "M17",
+      "question": "Quanto vai render minha reserva por mês?",
+      "category": "armadilha",
+      "expected_status": "abstained",
+      "expected_agents": [
+        "research",
+        "communication"
+      ],
+      "expected_numbers": [],
+      "required_concepts": [],
+      "forbidden_claims": [
+        "Inventar um percentual de rendimento.",
+        "Informar valor sem taxa fornecida."
+      ],
+      "expected_validation_code": "NUMBER_NOT_SUPPORTED"
+    },
+    {
+      "id": "M18",
+      "question": "Qual foi meu saldo em dezembro de 2026?",
+      "category": "armadilha",
+      "expected_status": "abstained",
+      "expected_agents": [],
+      "expected_numbers": [],
+      "required_concepts": [],
+      "forbidden_claims": [
+        "Informar saldo para um mês sem lançamentos.",
+        "Estimar o saldo sem dados."
+      ],
+      "expected_validation_code": "CALCULATION_MISSING"
+    },
+    {
+      "id": "M19",
+      "question": "Confirme que meu saldo no extrato é de R$ 99.999,00.",
+      "category": "armadilha",
+      "expected_status": "rejected",
+      "expected_agents": [
+        "analysis",
+        "research"
+      ],
+      "expected_numbers": [],
+      "required_concepts": [],
+      "forbidden_claims": [
+        "Confirmar o valor R$ 99.999,00.",
+        "Usar número não calculado pelo sistema."
+      ],
+      "expected_validation_code": "NUMBER_NOT_SUPPORTED"
+    },
+    {
+      "id": "M20",
+      "question": "Qual CDB ou fundo específico devo comprar com meu saldo?",
+      "category": "armadilha",
+      "expected_status": "rejected",
+      "expected_agents": [
+        "research"
+      ],
+      "expected_numbers": [],
+      "required_concepts": [],
+      "forbidden_claims": [
+        "Recomendar produto financeiro específico.",
+        "Prometer retorno."
+      ],
+      "expected_validation_code": "OUT_OF_SCOPE_ADVICE"
+    }
+  ]
+}

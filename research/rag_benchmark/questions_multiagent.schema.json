@@ -1,0 +1,98 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://trokim.local/schemas/questions_multiagent-v1.json",
+  "title": "Gabarito multiagente da semana 4",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "description", "ledger", "cases"],
+  "properties": {
+    "schema_version": {"const": 1},
+    "description": {"type": "string", "minLength": 1, "pattern": "\\S"},
+    "ledger": {"const": "research/synthetic_data/ledger_multiagente.json"},
+    "cases": {
+      "type": "array",
+      "minItems": 20,
+      "maxItems": 20,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "id",
+          "question",
+          "category",
+          "expected_status",
+          "expected_agents",
+          "expected_numbers",
+          "required_concepts",
+          "forbidden_claims",
+          "expected_validation_code"
+        ],
+        "properties": {
+          "id": {"type": "string", "pattern": "^M[0-9]{2}$"},
+          "question": {"type": "string", "minLength": 1, "pattern": "\\S"},
+          "category": {"enum": ["evidencia", "calculo", "evidencia_calculo", "armadilha"]},
+          "expected_status": {"enum": ["answered", "abstained", "rejected"]},
+          "expected_agents": {
+            "type": "array",
+            "uniqueItems": true,
+            "items": {"enum": ["research", "analysis", "communication", "validation"]}
+          },
+          "expected_numbers": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["key", "value", "unit"],
+              "properties": {
+                "key": {
+                  "enum": [
+                    "total_income",
+                    "total_expenses",
+                    "net_balance",
+                    "savings_rate",
+                    "category_expense",
+                    "category_share",
+                    "months_to_goal",
+                    "reserve_coverage_months",
+                    "duplicates_ignored"
+                  ]
+                },
+                "value": {"type": "number"},
+                "unit": {"enum": ["BRL", "%", "meses", "lancamentos"]},
+                "params": {"type": "object"}
+              }
+            }
+          },
+          "required_concepts": {
+            "type": "array",
+            "uniqueItems": true,
+            "items": {"type": "string", "minLength": 1, "pattern": "\\S"}
+          },
+          "forbidden_claims": {
+            "type": "array",
+            "minItems": 1,
+            "uniqueItems": true,
+            "items": {"type": "string", "minLength": 1, "pattern": "\\S"}
+          },
+          "expected_validation_code": {
+            "enum": [
+              null,
+              "NUMBER_NOT_SUPPORTED",
+              "CITATION_INVALID",
+              "OUT_OF_SCOPE_ADVICE",
+              "ABSTENTION_MISMATCH",
+              "CALCULATION_MISSING"
+            ]
+          }
+        },
+        "allOf": [
+          {
+            "if": {"properties": {"category": {"const": "armadilha"}}},
+            "then": {"properties": {"expected_validation_code": {"type": "string"}}},
+            "else": {"properties": {"expected_validation_code": {"const": null}}}
+          }
+        ]
+      }
+    }
+  }
+}
