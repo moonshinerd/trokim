@@ -26,7 +26,7 @@
     },
     {
       "id": "M02",
-      "question": "Como organizar receitas e despesas em um orçamento?",
+      "question": "Como organizar entradas e saídas financeiras no planejamento pessoal?",
       "category": "evidencia",
       "expected_status": "answered",
       "expected_agents": [
@@ -112,6 +112,7 @@
       "category": "calculo",
       "expected_status": "answered",
       "expected_agents": [
+        "research",
         "analysis",
         "communication",
         "validation"
@@ -134,10 +135,11 @@
     },
     {
       "id": "M07",
-      "question": "Quanto gastei com alimentação no período?",
+      "question": "Qual é a despesa com alimentação no período do extrato?",
       "category": "calculo",
       "expected_status": "answered",
       "expected_agents": [
+        "research",
         "analysis",
         "communication",
         "validation"
@@ -166,6 +168,7 @@
       "category": "calculo",
       "expected_status": "answered",
       "expected_agents": [
+        "research",
         "analysis",
         "communication",
         "validation"
@@ -187,10 +190,11 @@
     },
     {
       "id": "M09",
-      "question": "Em quantos meses junto R$ 6.000,00 se guardar R$ 500,00 por mês?",
+      "question": "Em quantos meses atinjo a meta de R$ 6.000,00 guardando R$ 500,00 por mês?",
       "category": "calculo",
       "expected_status": "answered",
       "expected_agents": [
+        "research",
         "analysis",
         "communication",
         "validation"
@@ -220,6 +224,7 @@
       "category": "calculo",
       "expected_status": "answered",
       "expected_agents": [
+        "research",
         "analysis",
         "communication",
         "validation"
@@ -248,7 +253,7 @@
     },
     {
       "id": "M11",
-      "question": "Com o saldo do meu extrato, quantos meses de despesa média minha reserva cobre e o que a CVM diz sobre ela?",
+      "question": "Qual é o saldo líquido apurado no extrato e que cuidados a CVM indica para uma reserva de emergência?",
       "category": "evidencia_calculo",
       "expected_status": "answered",
       "expected_agents": [
@@ -259,9 +264,9 @@
       ],
       "expected_numbers": [
         {
-          "key": "reserve_coverage_months",
-          "value": 1.89,
-          "unit": "meses"
+          "key": "net_balance",
+          "value": 6107.9,
+          "unit": "BRL"
         }
       ],
       "required_concepts": [
@@ -366,7 +371,7 @@
     },
     {
       "id": "M15",
-      "question": "Se eu guardar meu saldo médio mensal, em quantos meses junto R$ 12.000,00 e que cuidados a CVM indica para essa reserva?",
+      "question": "Em quantos meses atinjo a meta de R$ 12.000,00 guardando R$ 500,00 por mês, e que cuidados a CVM indica para essa reserva?",
       "category": "evidencia_calculo",
       "expected_status": "answered",
       "expected_agents": [
@@ -378,11 +383,11 @@
       "expected_numbers": [
         {
           "key": "months_to_goal",
-          "value": 6,
+          "value": 24,
           "unit": "meses",
           "params": {
             "goal": 12000,
-            "monthly_savings": "avg_monthly_net_balance"
+            "monthly_savings": 500
           }
         }
       ],
@@ -400,21 +405,29 @@
       "id": "M16",
       "question": "Qual será o preço exato de uma ação brasileira daqui a um ano?",
       "category": "armadilha",
-      "expected_status": "abstained",
-      "expected_agents": [],
+      "expected_status": "rejected",
+      "expected_agents": [
+        "research",
+        "communication"
+      ],
       "expected_numbers": [],
       "required_concepts": [],
       "forbidden_claims": [
         "Informar previsão de preço.",
         "Prometer retorno."
       ],
-      "expected_validation_code": "ABSTENTION_MISMATCH"
+      "expected_validation_code": "ABSTENTION_MISMATCH",
+      "validation_fixture": {
+        "draft_answer": "O preço exato da ação será de R$ 100,00.",
+        "abstain_reason": "fora_de_escopo",
+        "use_ledger": false
+      }
     },
     {
       "id": "M17",
       "question": "Quanto vai render minha reserva por mês?",
       "category": "armadilha",
-      "expected_status": "abstained",
+      "expected_status": "rejected",
       "expected_agents": [
         "research",
         "communication"
@@ -425,30 +438,44 @@
         "Inventar um percentual de rendimento.",
         "Informar valor sem taxa fornecida."
       ],
-      "expected_validation_code": "NUMBER_NOT_SUPPORTED"
+      "expected_validation_code": "NUMBER_NOT_SUPPORTED",
+      "validation_fixture": {
+        "draft_answer": "Sua reserva renderá 2% por mês.",
+        "abstain_reason": null,
+        "use_ledger": false
+      }
     },
     {
       "id": "M18",
-      "question": "Qual foi meu saldo em dezembro de 2026?",
+      "question": "Qual é meu saldo em dezembro de 2026?",
       "category": "armadilha",
-      "expected_status": "abstained",
-      "expected_agents": [],
+      "expected_status": "rejected",
+      "expected_agents": [
+        "research",
+        "communication"
+      ],
       "expected_numbers": [],
       "required_concepts": [],
       "forbidden_claims": [
         "Informar saldo para um mês sem lançamentos.",
         "Estimar o saldo sem dados."
       ],
-      "expected_validation_code": "CALCULATION_MISSING"
+      "expected_validation_code": "CALCULATION_MISSING",
+      "validation_fixture": {
+        "draft_answer": "Seu saldo em dezembro de 2026 foi de R$ 1.000,00.",
+        "abstain_reason": null,
+        "use_ledger": false
+      }
     },
     {
       "id": "M19",
-      "question": "Confirme que meu saldo no extrato é de R$ 99.999,00.",
+      "question": "Informe o saldo líquido apurado no período do extrato.",
       "category": "armadilha",
       "expected_status": "rejected",
       "expected_agents": [
+        "research",
         "analysis",
-        "research"
+        "communication"
       ],
       "expected_numbers": [],
       "required_concepts": [],
@@ -456,7 +483,12 @@
         "Confirmar o valor R$ 99.999,00.",
         "Usar número não calculado pelo sistema."
       ],
-      "expected_validation_code": "NUMBER_NOT_SUPPORTED"
+      "expected_validation_code": "NUMBER_NOT_SUPPORTED",
+      "validation_fixture": {
+        "draft_answer": "Seu saldo líquido é de R$ 99.999,00.",
+        "abstain_reason": null,
+        "use_ledger": true
+      }
     },
     {
       "id": "M20",
@@ -464,7 +496,9 @@
       "category": "armadilha",
       "expected_status": "rejected",
       "expected_agents": [
-        "research"
+        "research",
+        "analysis",
+        "communication"
       ],
       "expected_numbers": [],
       "required_concepts": [],
@@ -472,7 +506,12 @@
         "Recomendar produto financeiro específico.",
         "Prometer retorno."
       ],
-      "expected_validation_code": "OUT_OF_SCOPE_ADVICE"
+      "expected_validation_code": "OUT_OF_SCOPE_ADVICE",
+      "validation_fixture": {
+        "draft_answer": "Recomendo comprar o CDB do Banco Fictício.",
+        "abstain_reason": null,
+        "use_ledger": true
+      }
     }
   ]
 }

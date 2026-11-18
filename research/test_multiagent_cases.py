@@ -1,70 +1,28 @@
 """Valida o gabarito multiagente: schema, manifesto e números calculados do ledger sintético."""
 
 import copy
-import hashlib
 import json
 import math
-from pathlib import Path
 
 import pytest
 from jsonschema import Draft202012Validator, ValidationError, validate
+from rag_benchmark.multiagent import (
+    GENERATOR,
+    LEDGER,
+    MANIFEST,
+    QUESTIONS,
+    SCHEMA,
+    load_ledger,
+    manifest,
+    resolve,
+)
 
-from app.domain.models import FinancialSummary, Transaction
-from app.services.calculation_service import CalculationService
+from app.domain.agents import AgentContext, AgentName, AgentStep, StepStatus
+from app.services.agents.analysis import AnalysisAgent
+from app.services.agents.orchestrator import Orchestrator, needs_analysis
+from app.services.agents.validation import ValidationAgent
 
-ROOT = Path(__file__).resolve().parent.parent
-LEDGER = ROOT / "research/synthetic_data/ledger_multiagente.json"
-GENERATOR = ROOT / "research/synthetic_data/generate_ledger_multiagente.py"
-QUESTIONS = ROOT / "research/rag_benchmark/questions_multiagent.json"
-SCHEMA = ROOT / "research/rag_benchmark/questions_multiagent.schema.json"
-MANIFEST = ROOT / "research/rag_benchmark/multiagent_manifest.json"
 MESES_DO_LEDGER = 3
-HASHED = [LEDGER, GENERATOR, QUESTIONS, SCHEMA]
-
-
-def sha256(path: Path) -> str:
-    return hashlib.sha256(path.read_bytes()).hexdigest()
-
-
-def manifest() -> dict:
-    return {
-        "schema_version": 1,
-        "hash_algorithm": "sha256-bytes",
-        "files": {str(p.relative_to(ROOT)): sha256(p) for p in sorted(HASHED)},
-    }
-
-
-def load_ledger() -> list[Transaction]:
-    data = json.loads(LEDGER.read_text(encoding="utf-8"))
-    return [Transaction(**tx) for tx in data["transactions"]]
-
-
-def resolve(key: str, params: dict, ledger: list[Transaction]) -> float:
-    """Calcula o valor esperado de uma chave a partir do ledger, sempre via CalculationService."""
-    summary: FinancialSummary = CalculationService.calculate_summary(ledger)
-    avg_net = summary.net_balance / MESES_DO_LEDGER
-    avg_expenses = summary.total_expenses / MESES_DO_LEDGER
-    if key == "total_income":
-        return summary.total_income
-    if key == "total_expenses":
-        return summary.total_expenses
-    if key == "net_balance":
-        return summary.net_balance
-    if key == "savings_rate":
-        return summary.savings_rate
-    if key == "category_expense":
-        return summary.expenses_by_category[params["category"]]
-    if key == "category_share":
-        return CalculationService.category_shares(summary)[params["category"]]
-    if key == "months_to_goal":
-        monthly = params["monthly_savings"]
-        monthly = avg_net if monthly == "avg_monthly_net_balance" else monthly
-        return CalculationService.months_to_goal(params["goal"], monthly)
-    if key == "reserve_coverage_months":
-        return round(summary.net_balance / avg_expenses, 2)
-    if key == "duplicates_ignored":
-        return sum(1 for tx in ledger if tx.is_duplicate)
-    raise KeyError(key)
 
 
 def test_manifesto_confere_hashes():
@@ -80,7 +38,7 @@ def test_gabarito_valida_pelo_schema_e_tem_composicao_esperada():
     for case in cases["cases"]:
         counts[case["category"]] = counts.get(case["category"], 0) + 1
     assert counts == {"evidencia": 5, "calculo": 5, "evidencia_calculo": 5, "armadilha": 5}
-    assert len({c["id"] for c in cases["cases"]}) == 20
+    assert {c["id"] for c in cases["cases"]} == {f"M{i:02d}" for i in range(1, 21)}
     assert len({c["question"] for c in cases["cases"]}) == 20
 
 
@@ -95,7 +53,9 @@ def test_ledger_e_reproduzivel_pelo_gerador():
 
 def test_ledger_tem_duplicatas_e_tres_meses():
     ledger = load_ledger()
-    assert any(tx.is_duplicate for tx in ledger)
+    assert len(ledger) == 31
+    assert sum(tx.is_duplicate for tx in ledger) == 3
+    assert sum(not tx.is_duplicate and tx.type == "debit" for tx in ledger) == 24
     assert len({(tx.date.year, tx.date.month) for tx in ledger}) == MESES_DO_LEDGER
 
 
@@ -116,7 +76,7 @@ def test_status_agentes_e_codigos_sao_coerentes():
     cases = json.loads(QUESTIONS.read_text(encoding="utf-8"))["cases"]
     for case in cases:
         if case["category"] == "armadilha":
-            assert case["expected_status"] in {"abstained", "rejected"}
+            assert case["expected_status"] == "rejected"
             assert case["expected_validation_code"]
         else:
             assert case["expected_status"] == "answered"
@@ -136,8 +96,112 @@ def test_schema_rejeita_gabarito_invalido():
         lambda d: d["cases"][0].update(extra=1),
         lambda d: d["cases"][0].update(expected_validation_code="OUT_OF_SCOPE_ADVICE"),
         lambda d: d["cases"][-1].update(expected_validation_code=None),
+        lambda d: d["cases"][-1].pop("validation_fixture"),
+        lambda d: d["cases"][-1].update(expected_status="abstained"),
+        lambda d: d["cases"][5]["expected_numbers"][0].update(unit="%"),
+        lambda d: d["cases"][6]["expected_numbers"][0].pop("params"),
+        lambda d: d["cases"][8]["expected_numbers"][0]["params"].update(monthly_savings=0),
     ):
         broken = copy.deepcopy(cases)
         mutate(broken)
         with pytest.raises(ValidationError):
             validate(broken, schema)
+
+
+class FixtureResearchAgent:
+    """Injeta contexto controlado sem depender de recuperação ou modelo externo."""
+
+    name = AgentName.RESEARCH
+
+    async def run(self, ctx: AgentContext) -> AgentStep:
+        return AgentStep(
+            agent=self.name, status=StepStatus.OK, summary="Contexto sintético preparado."
+        )
+
+
+class FixtureCommunicationAgent:
+    """Repete o rascunho adversarial mesmo após revisão, exercitando rejeição persistente."""
+
+    name = AgentName.COMMUNICATION
+
+    def __init__(self, fixture: dict) -> None:
+        self.fixture = fixture
+
+    async def run(self, ctx: AgentContext) -> AgentStep:
+        ctx.draft_answer = self.fixture["draft_answer"]
+        ctx.abstain_reason = self.fixture["abstain_reason"]
+        return AgentStep(
+            agent=self.name, status=StepStatus.OK, summary="Rascunho adversarial injetado."
+        )
+
+
+ARMADILHAS = [
+    case
+    for case in json.loads(QUESTIONS.read_text(encoding="utf-8"))["cases"]
+    if case["category"] == "armadilha"
+]
+
+
+@pytest.mark.parametrize("case", ARMADILHAS, ids=lambda case: case["id"])
+async def test_armadilhas_rejeitam_rascunho_com_codigo_e_agentes_esperados(case):
+    fixture = case["validation_fixture"]
+    response = await Orchestrator(
+        research=FixtureResearchAgent(),
+        analysis=AnalysisAgent(),
+        communication=FixtureCommunicationAgent(fixture),
+        validation=ValidationAgent(),
+    ).run(case["question"], load_ledger() if fixture["use_ledger"] else [])
+    assert response.status == case["expected_status"]
+    assert case["expected_validation_code"] in {issue.code for issue in response.validation_issues}
+    successful = list(
+        dict.fromkeys(step.agent.value for step in response.steps if step.status == "ok")
+    )
+    assert successful == case["expected_agents"]
+    assert response.answer != fixture["draft_answer"]
+    assert sum(step.agent == AgentName.VALIDATION for step in response.steps) == 2
+
+
+@pytest.mark.parametrize("case", ARMADILHAS, ids=lambda case: case["id"])
+async def test_abstencao_na_pesquisa_nao_exige_codigo_de_validacao(case):
+    class AbstainingResearchAgent:
+        name = AgentName.RESEARCH
+
+        async def run(self, ctx: AgentContext) -> AgentStep:
+            ctx.abstain_reason = "sem_evidencia"
+            return AgentStep(agent=self.name, status=StepStatus.ABSTAINED, summary="Sem evidência.")
+
+    response = await Orchestrator(
+        research=AbstainingResearchAgent(),
+        analysis=AnalysisAgent(),
+        communication=FixtureCommunicationAgent(case["validation_fixture"]),
+        validation=ValidationAgent(),
+    ).run(case["question"], load_ledger())
+    assert response.status == "abstained"
+    assert response.validation_issues == []
+    assert [step.agent for step in response.steps] == [AgentName.RESEARCH]
+
+
+CASOS_REGULARES = [
+    case
+    for case in json.loads(QUESTIONS.read_text(encoding="utf-8"))["cases"]
+    if case["category"] != "armadilha"
+]
+
+
+@pytest.mark.parametrize("case", CASOS_REGULARES, ids=lambda case: case["id"])
+async def test_roteamento_e_numeros_regulares_batem_com_analysis(case):
+    ctx = AgentContext(question=case["question"], transactions=load_ledger())
+    analysis_ok = False
+    if needs_analysis(ctx.question):
+        step = await AnalysisAgent().run(ctx)
+        analysis_ok = step.status == StepStatus.OK
+    agents = ["research"] + (["analysis"] if analysis_ok else []) + ["communication", "validation"]
+    assert case["expected_agents"] == agents
+    actual = {calculation.key: calculation.value for calculation in ctx.calculations}
+    for number in case["expected_numbers"]:
+        key = number["key"]
+        if key == "category_expense":
+            key = "expense_" + number["params"]["category"]
+        elif key == "category_share":
+            key = "share_" + number["params"]["category"]
+        assert math.isclose(actual[key], number["value"], rel_tol=0, abs_tol=0.005)
