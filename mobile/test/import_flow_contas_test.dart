@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter_test/flutter_test.dart';
 import 'package:http/http.dart' as http;
+import 'package:trokim/core/format.dart';
 import 'package:trokim/features/import_guide/presentation/import_flow_screen.dart';
 import 'package:trokim/features/transactions/presentation/transactions_screen.dart';
 
@@ -40,7 +41,7 @@ void main() {
       expect(find.text('Passo 1 de 4'), findsOneWidget);
       expect(find.text('Abra as faturas'), findsOneWidget);
       await _passos(tester, 2);
-      expect(find.textContaining('sempre em PDF'), findsNothing);
+      expect(find.text('Salve ou compartilhe'), findsOneWidget);
       expect(find.textContaining('não existe OFX'), findsOneWidget);
       await _passos(tester, 1);
       expect(find.text('Compartilhe direto com o Trokim'), findsOneWidget);
@@ -544,7 +545,7 @@ void main() {
       await tester.tap(find.text('Revisar agora'));
       await tester.pumpAndSettle();
       expect(find.text('Para confirmar'), findsOneWidget);
-      expect(find.text('R\$ 308,76'), findsOneWidget);
+      expect(find.text(brl.format(308.76)), findsOneWidget);
     });
   });
 }
