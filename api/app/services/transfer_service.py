@@ -19,7 +19,7 @@ from app.domain.models import (
     TransactionType,
 )
 from app.services.library_service import ConfirmedTransfer, Identity, Library
-from app.services.statement_profiles import normalize_text
+from app.services.statement_profiles import doc_is_company, normalize_text
 
 _MOVEMENT_NATURES = {TransactionNature.PIX_OUT, TransactionNature.PIX_IN, TransactionNature.OTHER}
 _MIN_NAME = 8
@@ -57,7 +57,7 @@ def matches_identity(tx: Transaction, identities: list[Identity]) -> bool:
             identity.doc and tx.counterparty_doc and identity.doc == tx.counterparty_doc
         )
         name_equal = name_matches(tx.merchant, identity.name_norm)
-        is_company_doc = bool(identity.doc and "/" in identity.doc)
+        is_company_doc = doc_is_company(identity.doc)
         if doc_equal and (is_company_doc or name_equal):
             return True
         if not identity.doc and name_equal:
@@ -194,6 +194,7 @@ class TransferService:
             if tx:
                 tx.nature, tx.category = nature, category
         library.own_marks.clear()
+        library.own_reasons.clear()
 
         def mark(
             tx: Transaction, nature: TransactionNature = TransactionNature.INTERNAL_TRANSFER
@@ -220,14 +221,44 @@ class TransferService:
                     paired.add(uid)
         identities = library.identities()
         extra = 0
+        linked: list[tuple[Transaction, str]] = []
         for tx in library.transactions:
             if tx.uid in paired or tx.is_duplicate or tx.uid in library.not_own:
                 continue
             is_pix = tx.nature in {TransactionNature.PIX_OUT, TransactionNature.PIX_IN}
-            if (is_pix and linked_account(library, tx) is not None) or matches_identity(
-                tx, identities
-            ):
+            other = linked_account(library, tx) if is_pix else None
+            if other is not None:
                 mark(tx)
+                library.own_reasons[tx.uid] = ("conta_destino", other.id)
+                linked.append((tx, other.id))
+                extra += 1
+            elif matches_identity(tx, identities):
+                mark(tx)
+                extra += 1
+        # Um banco que não mostra a conta da contraparte (como o BB) só é ligado pela outra
+        # ponta: a saída/entrada de mesmo valor, até 1 dia de diferença, na conta citada.
+        for tx, other_id in linked:
+            wanted = (
+                TransactionType.CREDIT
+                if tx.type == TransactionType.DEBIT
+                else TransactionType.DEBIT
+            )
+            options = [
+                c
+                for c in library.transactions
+                if c.account_id == other_id
+                and c.type == wanted
+                and not c.is_duplicate
+                and c.uid not in library.not_own
+                and c.uid not in library.own_marks
+                and c.uid not in paired
+                and c.nature in _MOVEMENT_NATURES
+                and round(c.amount, 2) == round(tx.amount, 2)
+                and abs((c.date - tx.date).days) <= 1
+            ]
+            if len(options) == 1:
+                mark(options[0])
+                library.own_reasons[options[0].uid] = ("contraparte", tx.account_id)
                 extra += 1
         return extra
 
@@ -289,17 +320,13 @@ class TransferService:
 
     @staticmethod
     def automatic_list(library: Library) -> list[dict[str, object]]:
-        """Pix marcados sozinhos porque a conta de destino é outra conta do usuário."""
-        confirmed_uids = {
-            uid for t in library.confirmed.values() for uid in (t.debit_uid, t.credit_uid)
-        }
+        """Lançamentos marcados sozinhos como transferência entre contas próprias."""
         items: list[dict[str, object]] = []
         for tx in library.transactions:
-            if tx.uid in confirmed_uids or tx.uid not in library.own_marks or tx.is_duplicate:
+            reason = library.own_reasons.get(tx.uid)
+            if reason is None or tx.is_duplicate:
                 continue
-            other = linked_account(library, tx)
-            if other is None:
-                continue
+            code, other_id = reason
             outgoing = tx.type == TransactionType.DEBIT
             items.append(
                 {
@@ -307,9 +334,13 @@ class TransferService:
                     "kind": "automatica",
                     "amount": round(tx.amount, 2),
                     "date": tx.date.isoformat(),
-                    "from_account": tx.account_id if outgoing else other.id,
-                    "to_account": other.id if outgoing else tx.account_id,
-                    "reason": "A conta de destino é uma conta sua que você importou.",
+                    "from_account": tx.account_id if outgoing else other_id,
+                    "to_account": other_id if outgoing else tx.account_id,
+                    "reason": (
+                        "A conta de destino é uma conta sua que você importou."
+                        if code == "conta_destino"
+                        else "É a outra ponta de uma transferência ligada pela conta de destino."
+                    ),
                 }
             )
         return items

@@ -11,6 +11,8 @@ Cenário (todos com a data de geração em 18/11/2026):
 - ``<uuid>-2026-10-01-2026-10-31.ofx``: extrato Empresas de outubro (nome no padrão do Nubank).
 - ``fatura_ourocard_bb_sintetica.pdf``: fatura do cartão Ourocard do Banco do Brasil (PDF, único
   formato que o banco oferece), paga por Pix saindo da conta pessoal do Nubank.
+- ``Extrato conta corrente - 102026.ofx``: conta corrente do Banco do Brasil (OFX "Money 2000+",
+  ISO-8859-1), com o Pix que chega da conta pessoal do Nubank.
 - Os dois extratos têm Pix entre as duas contas (o texto traz a conta de destino, como no OFX real).
 """
 
@@ -157,6 +159,10 @@ PIX_RECEBIDO_PESSOA = (
     "Transferência recebida pelo Pix - Maria Exemplo da Silva - •••.123.456-•• - "
     "NU PAGAMENTOS S.A. (0260) Agência: 1 Conta: 0000000-0"
 )
+PIX_P_BB_CONTA = (
+    "Transferência enviada pelo Pix - Maria Exemplo da Silva - •••.345.678-•• - "
+    "BANCO DO BRASIL S.A. (0001) Agência: 2895 Conta: 70182-3"
+)
 PIX_P_BB = (
     "Transferência enviada pelo Pix - BANCO DO BRASIL S.A. - 00.000.000/0001-91 - "
     "BANCO DO BRASIL S.A. (0001) Agência: 1 Conta: 9-9"
@@ -209,6 +215,55 @@ def fatura_bb_pdf() -> bytes:
     )
 
 
+def extrato_bb_ofx() -> bytes:
+    """Conta corrente do BB no layout real: ``NAME`` é o tipo e ``MEMO`` a contraparte."""
+
+    def lanc(tipo: str, data: str, valor: str, fitid: str, nome: str, memo: str) -> str:
+        return (
+            f"<STMTTRN><TRNTYPE>{tipo}</TRNTYPE><DTPOSTED>{data}000000[-3:BRT]</DTPOSTED>"
+            f"<TRNAMT>{valor}</TRNAMT><FITID>{fitid}</FITID><CHECKNUM>{fitid[-9:]}</CHECKNUM>"
+            f"<NAME>{nome}</NAME><MEMO>{memo}</MEMO></STMTTRN>"
+        )
+
+    itens = "".join(
+        [
+            lanc(
+                "CREDIT",
+                "20261020",
+                "300.00",
+                "202610200300001",
+                "Pix - Recebido",
+                "260 0001 12345678909 MARIA EXEMPLO DA SILVA",
+            ),
+            lanc(
+                "CREDIT",
+                "20261030",
+                "662.33",
+                "202610300662330",
+                "TED-Crédito em Conta",
+                "341 0350 59938217000190 EMPRESA EXEMPLO LTDA",
+            ),
+        ]
+    )
+    texto = (
+        "OFXHEADER:100\nDATA:OFXSGML\nVERSION:102\nSECURITY:NONE\nENCODING:USASCII\n"
+        "CHARSET:1252\nCOMPRESSION:NONE\nOLDFILEUID:NONE\nNEWFILEUID:NONE\n\n"
+        "<OFX><SIGNONMSGSRSV1><SONRS><STATUS><CODE>0</CODE><SEVERITY>INFO</SEVERITY></STATUS>"
+        "<DTSERVER>20261118120000[-3:BRT]</DTSERVER><LANGUAGE>POR</LANGUAGE>"
+        "<FI><ORG>Banco do Brasil</ORG><FID>1</FID></FI></SONRS></SIGNONMSGSRSV1>"
+        "<BANKMSGSRSV1><STMTTRNRS><TRNUID>1</TRNUID><STATUS><CODE>0</CODE>"
+        "<SEVERITY>INFO</SEVERITY></STATUS><STMTRS><CURDEF>BRL</CURDEF>"
+        "<BANKACCTFROM><BANKID>1</BANKID><BRANCHID>2895-9</BRANCHID><ACCTID>70182-3</ACCTID>"
+        "<ACCTTYPE>CHECKING</ACCTTYPE></BANKACCTFROM><BANKTRANLIST>"
+        "<DTSTART>20260818000000[-3:BRT]</DTSTART><DTEND>20261031000000[-3:BRT]</DTEND>"
+        + itens
+        + "</BANKTRANLIST><LEDGERBAL><BALAMT>962.33</BALAMT>"
+        "<DTASOF>20261031000000[-3:BRT]</DTASOF></LEDGERBAL></STMTRS></STMTTRNRS>"
+        "</BANKMSGSRSV1></OFX>"
+    )
+    return texto.encode("cp1252")
+
+
 def cenario() -> dict[str, bytes]:
     d = lancamento
     return {
@@ -253,6 +308,7 @@ def cenario() -> dict[str, bytes]:
                 d("CREDIT", "20261008", "295.02", "p3", PIX_RECEBIDO_EMPRESA),
                 d("DEBIT", "20261010", "-60.00", "p4", "Compra no débito - PADARIA PÃO QUENTE"),
                 d("DEBIT", "20261013", "-750.00", "p6", PIX_P_BB),
+                d("DEBIT", "20261020", "-300.00", "p7", PIX_P_BB_CONTA),
                 d("DEBIT", "20261015", "-250.00", "p5", "Pagamento de fatura"),
             ],
             saldo="1250.00",
@@ -281,6 +337,7 @@ def cenario() -> dict[str, bytes]:
             gerado=GERADO,
         ),
         "fatura_ourocard_bb_sintetica.pdf": fatura_bb_pdf(),
+        "Extrato conta corrente - 102026.ofx": extrato_bb_ofx(),
         # Arquivos antigos de demonstração (período fechado), mantidos por compatibilidade.
         "fatura_nubank_sintetica.ofx": FATURA_PADRAO,
         "extrato_nubank_sintetico.ofx": EXTRATO_PADRAO,

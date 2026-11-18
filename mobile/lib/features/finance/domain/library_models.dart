@@ -341,9 +341,14 @@ class TransferSuggestion {
     required this.toLabel,
     required this.confidence,
     required this.reason,
+    this.kind = 'transferencia',
   });
 
   final String id;
+
+  /// `transferencia` (entre contas suas) ou `pagamento_fatura` (a saída paga o cartão de
+  /// outro banco).
+  final String kind;
   final String debitUid;
   final String creditUid;
   final double amount;
@@ -357,6 +362,7 @@ class TransferSuggestion {
   final String reason;
 
   bool get isHigh => confidence == 'alta';
+  bool get isCardPayment => kind == 'pagamento_fatura';
 
   factory TransferSuggestion.fromJson(Map<String, dynamic> json) {
     final debit = _date(json['debit_date']);
@@ -366,6 +372,7 @@ class TransferSuggestion {
     }
     return TransferSuggestion(
       id: _string(json, 'id'),
+      kind: json['kind'] is String ? json['kind'] as String : 'transferencia',
       debitUid: _string(json, 'debit_uid'),
       creditUid: _string(json, 'credit_uid'),
       amount: _double(json, 'amount'),
@@ -393,7 +400,11 @@ class OwnTransfer {
     required this.date,
     required this.fromLabel,
     required this.toLabel,
+    this.cardPayment = false,
   });
+
+  /// Pagamento de fatura de cartão (e não transferência entre contas).
+  final bool cardPayment;
 
   /// Para as automáticas é o identificador do lançamento; para as confirmadas, do par.
   final String id;
@@ -411,6 +422,7 @@ class OwnTransfer {
     return OwnTransfer(
       id: _string(json, 'id'),
       automatic: json['kind'] == 'automatica',
+      cardPayment: json['transfer_kind'] == 'pagamento_fatura',
       amount: _double(json, 'amount'),
       date: date,
       fromLabel: json['from_label'] is String

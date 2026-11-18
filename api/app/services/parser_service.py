@@ -68,7 +68,7 @@ class ParserService:
                 tx_date = item.date.date() if isinstance(item.date, datetime) else item.date
 
                 if profile and detection:
-                    parsed = profile.parse(memo, tx_type, detection.kind)
+                    parsed = profile.parse(memo, tx_type, detection.kind, (item.payee or None))
                     description = parsed.description
                     category = CategorizationService.categorize(
                         parsed.merchant or parsed.description,

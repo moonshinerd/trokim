@@ -45,6 +45,9 @@ class Library:
     own_marks: dict[str, tuple[TransactionNature, TransactionCategory]] = field(
         default_factory=dict
     )
+    # Por que o lançamento foi marcado sozinho: ``conta_destino`` (o Pix cita uma conta sua) ou
+    # ``contraparte`` (a outra ponta de uma transferência ligada pela conta de destino).
+    own_reasons: dict[str, tuple[str, str]] = field(default_factory=dict)
     # Lançamentos que o usuário disse que NÃO são transferência entre contas próprias.
     not_own: set[str] = field(default_factory=set)
 
@@ -63,6 +66,7 @@ class Library:
         self.rejected_pairs.clear()
         self.confirmed.clear()
         self.own_marks.clear()
+        self.own_reasons.clear()
         self.not_own.clear()
 
 

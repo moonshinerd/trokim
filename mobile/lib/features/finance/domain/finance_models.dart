@@ -205,6 +205,7 @@ class ImportResult {
     this.statement,
     this.autoTransfers = 0,
     this.transferSuggestions = 0,
+    this.reconciled,
   });
 
   final String filename;
@@ -234,6 +235,9 @@ class ImportResult {
 
   /// Possíveis transferências entre contas que aguardam confirmação.
   final int transferSuggestions;
+
+  /// PDF: o total do arquivo fecha com a soma dos lançamentos (`null` = sem como saber).
+  final bool? reconciled;
 
   String? get institutionLabel => switch (institution) {
     'nubank' => 'Nubank',
@@ -291,6 +295,9 @@ class ImportResult {
       transferSuggestions: json['transfer_suggestions'] is int
           ? json['transfer_suggestions'] as int
           : 0,
+      reconciled: json['reconciled'] is bool
+          ? json['reconciled'] as bool
+          : null,
     );
   }
 }

@@ -29,6 +29,26 @@ _NUMERO_LOJA = re.compile(r"\s+\d{1,6}$")
 _SUFIXOS_LOJA = re.compile(r"\s*-\s*NuPay\s*$|\s+NuPay\s*$", re.IGNORECASE)
 
 
+def normalize_doc(raw: str | None) -> str | None:
+    """CNPJ vira só dígitos (formatado ou não); CPF mascarado fica como está.
+
+    Assim o CNPJ de um Pix do Nubank ("11.111.111/0001-11") é o mesmo do extrato do BB
+    ("11111111000111").
+    """
+    if not raw:
+        return None
+    digits = re.sub(r"\D", "", raw)
+    if len(digits) == 14:
+        return digits
+    if "•" in raw or "*" in raw:
+        return raw.strip()
+    return digits or None
+
+
+def doc_is_company(doc: str | None) -> bool:
+    return bool(doc) and len(re.sub(r"\D", "", doc or "")) == 14
+
+
 def normalize_text(value: str) -> str:
     """Minúsculas, sem acento e com espaços colapsados (para comparar textos)."""
     decomposed = unicodedata.normalize("NFKD", value)
@@ -74,6 +94,8 @@ def detect_statement(text: str) -> Detection | None:
     codes = {fid.group(1).strip() if fid else "", bank_id.group(1).strip() if bank_id else ""}
     if "nu pagamentos" in org_text or "nubank" in org_text or codes & {"260", "0260"}:
         return Detection("nubank", kind)
+    if "banco do brasil" in org_text or codes & {"1", "001", "0001"}:
+        return Detection("bb", kind)
     return None
 
 
@@ -163,9 +185,9 @@ def _counterparty(
     cnpj = _CNPJ.search(rest)
     cpf = _CPF_MASCARADO.search(rest)
     if cnpj:
-        kind, doc = CounterpartyKind.COMPANY, cnpj.group(0)
+        kind, doc = CounterpartyKind.COMPANY, normalize_doc(cnpj.group(0))
     elif cpf:
-        kind, doc = CounterpartyKind.PERSON, cpf.group(0)
+        kind, doc = CounterpartyKind.PERSON, normalize_doc(cpf.group(0))
     account = None
     destino = _CONTA_DESTINO.search(rest)
     if destino:
@@ -181,7 +203,13 @@ class NubankProfile:
     name = "nubank"
 
     @classmethod
-    def parse(cls, memo: str, tx_type: TransactionType, kind: StatementKind) -> ParsedMemo:
+    def parse(
+        cls,
+        memo: str,
+        tx_type: TransactionType,
+        kind: StatementKind,
+        payee: str | None = None,
+    ) -> ParsedMemo:
         text = re.sub(r"\s+", " ", memo or "").strip()
         norm = normalize_text(text)
         parts = [p.strip() for p in text.split(" - ")]
@@ -256,4 +284,75 @@ class NubankProfile:
         return ParsedMemo(text or "Transação sem descrição", TransactionNature.OTHER)
 
 
-PROFILES = {"nubank": NubankProfile}
+_BB_MEMO = re.compile(
+    r"^(?P<bank>\d{1,4})\s+(?P<branch>\d{3,5})\s+(?P<doc>\d{11}|\d{14})\s+(?P<name>.+)$"
+)
+
+
+class BancoDoBrasilProfile:
+    """Conta corrente do Banco do Brasil (OFX "Money 2000+").
+
+    O ``NAME`` traz o tipo ("TED-Crédito em Conta", "Pix - Recebido"...) e o ``MEMO`` traz,
+    quando há contraparte, o banco, a agência, o documento (CPF ou CNPJ **sem máscara**) e o
+    nome. O documento só é guardado internamente; nunca sai pela API.
+    """
+
+    name = "bb"
+
+    @classmethod
+    def parse(
+        cls,
+        memo: str,
+        tx_type: TransactionType,
+        kind: StatementKind,
+        payee: str | None = None,
+    ) -> ParsedMemo:
+        kind_text = re.sub(r"\s+", " ", payee or "").strip()
+        norm = normalize_text(kind_text)
+        memo_text = re.sub(r"\s+", " ", memo or "").strip()
+        counterparty = _BB_MEMO.match(memo_text)
+        who = doc = None
+        who_kind = None
+        if counterparty:
+            who = counterparty.group("name").strip()
+            doc = normalize_doc(counterparty.group("doc"))
+            who_kind = CounterpartyKind.COMPANY if doc_is_company(doc) else CounterpartyKind.PERSON
+        incoming = tx_type == TransactionType.CREDIT
+
+        def transfer(prefix: str) -> ParsedMemo:
+            nature = TransactionNature.PIX_IN if incoming else TransactionNature.PIX_OUT
+            label = prefix + (f" - {who}" if who else "")
+            return ParsedMemo(label, nature, who, who_kind, doc)
+
+        if "fatura" in norm or "ourocard" in norm or "cartao" in norm and "pag" in norm:
+            return ParsedMemo("Pagamento da fatura", TransactionNature.CARD_PAYMENT)
+        if norm.startswith(("ted", "doc", "pix", "transferencia", "tev")):
+            return transfer("Pix" if norm.startswith("pix") else "Transferência")
+        if "resgate" in norm:
+            return ParsedMemo(kind_text, TransactionNature.INVESTMENT_REDEEM)
+        if norm.startswith(("aplicacao", "bb rende", "investimento")):
+            return ParsedMemo(kind_text, TransactionNature.INVESTMENT_APPLY)
+        if re.match(r"(juros|iof|multa|encargos)\b", norm):
+            return ParsedMemo(kind_text or memo_text, TransactionNature.INTEREST)
+        if norm.startswith(("tarifa", "cesta", "pacote", "anuidade")):
+            return ParsedMemo(kind_text or memo_text, TransactionNature.FEE)
+        if norm.startswith(("compra", "pagto", "pagamento", "debito", "saque")):
+            store = who or memo_text or kind_text
+            return ParsedMemo(
+                f"{kind_text} - {store}" if store and store != kind_text else kind_text,
+                TransactionNature.PURCHASE if not incoming else TransactionNature.OTHER,
+                merchant=store or None,
+                counterparty_kind=who_kind,
+                counterparty_doc=doc,
+            )
+        text = kind_text or memo_text or "Transação sem descrição"
+        return ParsedMemo(
+            text,
+            TransactionNature.OTHER,
+            merchant=who,
+            counterparty_kind=who_kind,
+            counterparty_doc=doc,
+        )
+
+
+PROFILES = {"nubank": NubankProfile, "bb": BancoDoBrasilProfile}

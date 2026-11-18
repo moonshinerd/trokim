@@ -21,6 +21,7 @@ from datetime import date
 from app.domain.models import AccountKind, AccountOwner, Transaction, TransactionNature
 from app.services.library_service import Library
 from app.services.parser_service import OfxParseResult
+from app.services.statement_profiles import doc_is_company
 from app.services.statement_service import account_key, infer_status
 
 _PF_NOME = re.compile(r"^NU_\d+_\d{2}[A-Z]{3}\d{4}_\d{2}[A-Z]{3}\d{4}\.ofx$", re.IGNORECASE)
@@ -55,7 +56,9 @@ def _holder_signal(library: Library, link_key: str | None) -> Signal | None:
     for tx in library.transactions:
         if tx.counterparty_account != link_key or not tx.counterparty_doc:
             continue
-        kinds.add(AccountOwner.BUSINESS if "/" in tx.counterparty_doc else AccountOwner.PERSONAL)
+        kinds.add(
+            AccountOwner.BUSINESS if doc_is_company(tx.counterparty_doc) else AccountOwner.PERSONAL
+        )
     if len(kinds) != 1:
         return None
     owner = next(iter(kinds))
