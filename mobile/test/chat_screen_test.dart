@@ -248,6 +248,25 @@ void main() {
     expect(find.text('Como cheguei a essa resposta'), findsNothing);
   });
 
+  testWidgets('tentar novamente refaz a consulta multiagente após falha', (
+    tester,
+  ) async {
+    var calls = 0;
+    await openChat(tester, (_) async {
+      calls++;
+      if (calls == 1) throw const SocketException('sem rede');
+      return agentReply('abstained');
+    }, multiAgent: true);
+    await sendQuestion(tester);
+    await tester.pumpAndSettle();
+    expect(find.text('Tentar novamente'), findsOneWidget);
+    await tester.tap(find.text('Tentar novamente'));
+    await tester.pumpAndSettle();
+    expect(calls, 2);
+    expect(find.text('Tentar novamente'), findsNothing);
+    expect(find.text('Como cheguei a essa resposta'), findsOneWidget);
+  });
+
   testWidgets(
     'preserva boas-vindas e mostra pergunta, resposta e card oficial',
     (tester) async {
