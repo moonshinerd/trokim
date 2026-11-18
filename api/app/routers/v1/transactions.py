@@ -34,10 +34,19 @@ async def upload_statement(file: UploadFile = File(...)):
     content = await file.read()
 
     new_txs: list[Transaction] = []
+    institution: str | None = None
+    kind: str | None = None
+    ledger_balance: float | None = None
 
     if filename.lower().endswith(".ofx"):
         try:
-            new_txs = ParserService.parse_ofx(content, filename=filename)
+            parsed = ParserService.parse_ofx_detailed(content, filename=filename)
+            new_txs = parsed.transactions
+            institution, kind, ledger_balance = (
+                parsed.institution,
+                parsed.kind,
+                parsed.ledger_balance,
+            )
         except Exception as e:
             raise HTTPException(
                 status_code=400, detail=f"Erro ao processar arquivo OFX: {str(e)}"
@@ -69,6 +78,16 @@ async def upload_statement(file: UploadFile = File(...)):
         "imported_count": len(new_txs),
         "duplicate_count": sum(1 for tx in new_txs if tx.is_duplicate),
         "total_active_transactions": len(_LOCAL_TRANSACTIONS),
+        "institution": institution,
+        "kind": kind,
+        "ledger_balance": ledger_balance,
+        "by_nature": {
+            nature: sum(1 for tx in new_txs if tx.nature.value == nature and not tx.is_duplicate)
+            for nature in sorted({tx.nature.value for tx in new_txs})
+        },
+        "uncategorized_count": sum(
+            1 for tx in new_txs if tx.category.value == "outros" and tx.counts_in_totals
+        ),
         "summary": summary.model_dump(),
     }
 

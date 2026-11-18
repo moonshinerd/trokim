@@ -5,6 +5,7 @@ from app.domain.models import (
     BudgetScenario,
     FinancialSummary,
     Transaction,
+    TransactionNature,
     TransactionType,
 )
 
@@ -40,28 +41,42 @@ class CalculationService:
         total_income = 0.0
         total_expenses = 0.0
         by_category: dict[str, float] = {}
+        by_merchant: dict[str, float] = {}
+        excluded = 0
 
         for tx in transactions:
             if tx.is_duplicate:
                 continue
+            if not tx.counts_in_totals:
+                excluded += 1
+                continue
 
             category_name = tx.category.value if hasattr(tx.category, "value") else str(tx.category)
 
-            if tx.type == TransactionType.CREDIT:
+            if tx.type == TransactionType.CREDIT and tx.nature == TransactionNature.REFUND:
+                # Estorno abate a despesa; não é renda.
+                total_expenses -= tx.amount
+                if tx.category.value != "renda":
+                    by_category[category_name] = by_category.get(category_name, 0.0) - tx.amount
+                if tx.merchant:
+                    by_merchant[tx.merchant] = by_merchant.get(tx.merchant, 0.0) - tx.amount
+            elif tx.type == TransactionType.CREDIT:
                 total_income += tx.amount
             elif tx.type == TransactionType.DEBIT:
                 total_expenses += tx.amount
                 by_category[category_name] = by_category.get(category_name, 0.0) + tx.amount
+                if tx.merchant:
+                    by_merchant[tx.merchant] = by_merchant.get(tx.merchant, 0.0) + tx.amount
 
         total_income = round(total_income, 2)
-        total_expenses = round(total_expenses, 2)
+        total_expenses = round(max(total_expenses, 0.0), 2)
         net_balance = round(total_income - total_expenses, 2)
 
         savings_rate = 0.0
         if total_income > 0:
             savings_rate = round((net_balance / total_income) * 100.0, 2)
 
-        rounded_categories = {k: round(v, 2) for k, v in by_category.items()}
+        rounded_categories = {k: round(v, 2) for k, v in by_category.items() if v > 0}
 
         return FinancialSummary(
             total_income=total_income,
@@ -70,6 +85,12 @@ class CalculationService:
             savings_rate=savings_rate,
             expenses_by_category=rounded_categories,
             transaction_count=len(transactions),
+            excluded_count=excluded,
+            top_merchants=[
+                {"merchant": name, "total": round(total, 2)}
+                for name, total in sorted(by_merchant.items(), key=lambda kv: -kv[1])[:5]
+                if total > 0
+            ],
         )
 
     @staticmethod

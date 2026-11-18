@@ -232,3 +232,28 @@ calculou.
 Para usar a API em outro endereço (por exemplo, um aparelho físico na mesma rede), edite o
 **endereço da API** em **Ajustes** e toque em **Salvar endereço**; **Testar conexão** confere se
 ela responde. Os lançamentos ficam na memória da API e somem quando ela é reiniciada.
+
+### 8.2. Importar do Nubank (conta e cartão)
+
+O Trokim reconhece o OFX do Nubank pelo conteúdo do arquivo (não pelo nome) e trata cada tipo:
+
+- **Fatura do cartão:** *Cartão de crédito → Acessar fatura →* escolha o mês *→* ícone de
+  compartilhar (seta saindo de uma caixa) *→* **OFX**. A fatura aberta não tem PDF; peça sempre o
+  OFX. O arquivo chega por e-mail.
+- **Extrato da conta:** tela inicial *→ Saldo em conta →* três pontinhos *→ Pedir extrato →*
+  escolha mês e ano. O e-mail traz OFX, PDF e CSV; use o **OFX**.
+
+O que o Trokim faz com esses arquivos:
+
+| Situação | Tratamento |
+|---|---|
+| Pagamento da fatura, resgate/aplicação, valor adicionado por cartão | Ficam **fora** dos totais (não são receita nem despesa), sem contagem dobrada com a fatura |
+| Estorno | **Abate** a despesa, em vez de virar receita |
+| Pix | Só o nome e o tipo (pessoa ou empresa) aparecem; CPF, banco, agência e conta são descartados |
+| `Parcela 3/10` | Vira parcela 3 de 10 |
+| Reenviar o mesmo arquivo | Não altera os totais (deduplicação pelo identificador do banco) |
+
+A resposta de `POST /v1/transactions/upload` informa `institution`, `kind` (`cartao` ou
+`conta`), `by_nature`, `uncategorized_count` e `ledger_balance` (saldo declarado no arquivo, só
+para consulta). Arquivos de exemplo sintéticos, no mesmo formato, saem de
+`python research/synthetic_data/generate_nubank_datasets.py`.
