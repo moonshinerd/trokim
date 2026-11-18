@@ -20,7 +20,7 @@ Clone o repositório e execute a automação inicial:
 # Sincroniza dependências com uv e prepara o ambiente virtual
 make setup
 
-# Executa a bateria de testes automatizados (375 da API e 67 de pesquisa)
+# Executa a bateria de testes automatizados (375 da API e 109 de pesquisa)
 make test
 
 # Lint (ruff) e build estrito da documentação
