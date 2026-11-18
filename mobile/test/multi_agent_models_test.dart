@@ -68,6 +68,26 @@ Map<String, dynamic> response({String status = 'answered'}) => {
 };
 
 void main() {
+  test('aceita resposta aprovada fundamentada apenas em cálculos', () {
+    final raw = response()
+      ..['evidences'] = []
+      ..['calculations'] = [
+        {
+          'key': 'net',
+          'label': 'Saldo líquido',
+          'value': 125.5,
+          'unit': 'BRL',
+          'source': 'CalculationService',
+        },
+      ];
+
+    final result = MultiAgentResponse.fromJson(raw);
+
+    expect(result.status, MultiAgentStatus.answered);
+    expect(result.evidences, isEmpty);
+    expect(result.calculations.single.value, 125.5);
+  });
+
   test('lê resposta aprovada, trilha, cálculo e evidência', () {
     final result = MultiAgentResponse.fromJson(response());
     expect(result.status, MultiAgentStatus.answered);
@@ -103,7 +123,11 @@ void main() {
       throwsFormatException,
     );
     expect(
-      () => MultiAgentResponse.fromJson({...response(), 'evidences': []}),
+      () => MultiAgentResponse.fromJson({
+        ...response(),
+        'evidences': [],
+        'calculations': [],
+      }),
       throwsFormatException,
     );
     expect(

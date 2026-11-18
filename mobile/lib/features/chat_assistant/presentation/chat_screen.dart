@@ -276,6 +276,9 @@ class _ChatScreenState extends State<ChatScreen> {
     showModalBottomSheet<void>(
       context: context,
       isScrollControlled: true,
+      sheetAnimationStyle: Motion.reduced(context)
+          ? AnimationStyle.noAnimation
+          : null,
       builder: (context) => _AgentTraceSheet(trace: trace),
     );
   }

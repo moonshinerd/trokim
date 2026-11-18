@@ -116,8 +116,12 @@ final class MultiAgentResponse {
         json['answered'] != (status == MultiAgentStatus.answered)) {
       throw const FormatException('Status e resposta divergentes.');
     }
-    if (status == MultiAgentStatus.answered && evidences.isEmpty) {
-      throw const FormatException('Resposta aprovada sem evidências.');
+    if (status == MultiAgentStatus.answered &&
+        evidences.isEmpty &&
+        calculations.isEmpty) {
+      throw const FormatException(
+        'Resposta aprovada sem evidências nem cálculos.',
+      );
     }
     if (status == MultiAgentStatus.answered &&
         (!steps.any(
