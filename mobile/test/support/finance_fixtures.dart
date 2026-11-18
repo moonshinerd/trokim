@@ -72,6 +72,9 @@ class FakeFinanceApi {
   Object? suggestions = const <Object>[];
   Object? transfers = const <Object>[];
 
+  /// Resumo conforme os filtros pedidos (`owner`, `view`); `null` usa [summary].
+  Object? Function(http.Request request)? onSummary;
+
   /// Resposta à correção de categoria (`PATCH /transactions/{uid}/category`).
   http.Response Function(http.Request request)? onCategory;
 
@@ -130,7 +133,7 @@ class FakeFinanceApi {
       return onAction?.call(request) ?? jsonResponse({});
     }
     if (request.method == 'GET' && path.endsWith('/transactions/summary')) {
-      return jsonResponse(summary);
+      return jsonResponse(onSummary?.call(request) ?? summary);
     }
     if (request.method == 'GET' && path.endsWith('/transactions')) {
       return jsonResponse(transactions);
