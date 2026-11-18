@@ -15,18 +15,21 @@ graph TD
         Settings["Ajustes locais<br/>(shared_preferences)"]
         History["Histórico de conversas<br/>(no aparelho)"]
         AgentTrace["Modo multiagente opcional<br/>(modelos Dart e trilha por resposta)"]
+        ShareIntent["Receber arquivo por Compartilhar<br/>(MainActivity + canal)"]
         FlutterApp --> StateManagement
         FlutterApp --> DesignSystem
         FlutterApp --> Settings
         FlutterApp --> History
         FlutterApp --> AgentTrace
+        ShareIntent --> FlutterApp
     end
 
     subgraph "Serviço Backend Local (Python / FastAPI)"
-        APIEntry["Routers v1<br/>(/transactions, /chat, /budgets, /health, /agents)"]
+        APIEntry["Routers v1<br/>(/transactions, /accounts, /statements, /installments,<br/>/transfers, /chat, /budgets, /health, /agents)"]
         AgentAsk["POST /v1/agents/ask<br/>(MultiAgentResponse)"]
         
-        Parser["Parser de Documentos<br/>(OFX & PDF)"]
+        Parser["Parser de Documentos<br/>(OFX & PDF, perfis Nubank e BB)"]
+        Library["Biblioteca local<br/>(contas, períodos, detector,<br/>transferências, parcelas, regras de categoria)"]
         CalcService["Motor de Cálculo Determinístico<br/>(Totais, Balanço, 50-30-20)"]
         RAGService["Mecanismo RAG Híbrido<br/>(Dense + Sparse TF-IDF)"]
         GenService["Serviço de Síntese Generativa<br/>(GenerationService)"]
@@ -54,6 +57,9 @@ graph TD
         end
         
         APIEntry --> Parser
+        APIEntry --> Library
+        Library --> Parser
+        Library --> DomainCore
         APIEntry --> CalcService
         APIEntry --> RAGService
         APIEntry --> GenService
@@ -102,7 +108,7 @@ graph TD
 
 ## 2. Fluxo de Importação de Extratos e Resumo
 
-Pagamento de fatura, resgates e transferências próprias ficam fora dos totais e o estorno abate a despesa ([ADR 0017](../adr/0017-perfis-de-banco-e-natureza-do-lancamento.md)). Os lançamentos importados ficam na **memória da API** (somem ao reiniciá-la, [ADR 0015](../adr/0015-dados-reais-importacao-e-endereco-da-api.md)). O app só exibe o que o backend calculou.
+Pagamento de fatura, resgates e transferências próprias ficam fora dos totais e o estorno abate a despesa ([ADR 0017](../adr/0017-perfis-de-banco-e-natureza-do-lancamento.md)). Contas, situação do período, transferências entre contas próprias, parcelamentos e regras de categoria seguem a [ADR 0018](../adr/0018-contas-periodos-transferencias-e-visoes.md). Os lançamentos importados ficam na **memória da API** (somem ao reiniciá-la, [ADR 0015](../adr/0015-dados-reais-importacao-e-endereco-da-api.md)). O app só exibe o que o backend calculou.
 
 ```mermaid
 sequenceDiagram
@@ -114,13 +120,16 @@ sequenceDiagram
     participant Calc as Calculation Service
     participant Mem as Memória da API
 
-    User->>Mobile: Escolhe o banco (ou pula) e um arquivo .ofx ou .pdf (seletor do sistema)
-    Mobile->>API: POST /v1/transactions/upload (multipart)
+    User->>Mobile: Escolhe banco, dono e tipo (ou pula) e um arquivo .ofx ou .pdf (seletor ou Compartilhar)
+    Mobile->>API: POST /v1/transactions/inspect (sem gravar)
+    API-->>Mobile: Banco, tipo, período, dono provável e avisos (arquivo no lugar errado)
+    Mobile->>API: POST /v1/transactions/upload (multipart, dono e confirmação)
     API->>Parser: parse_ofx ou parse_pdf_text
     Parser->>Parser: Detecta o banco, classifica a natureza, limpa o estabelecimento e marca duplicatas (FITID)
     API->>API: Compara com os já importados (data, descrição, valor e tipo)
     API->>Mem: Guarda os lançamentos (duplicatas marcadas ficam fora dos totais)
-    API-->>Mobile: filename, imported_count, duplicate_count, institution, kind, by_nature
+    API->>API: Conta e período (substitui o mesmo período), transferências próprias e regras de categoria
+    API-->>Mobile: filename, imported_count, institution, kind, outcome, statement, auto_transfers, transfer_suggestions
     Mobile->>API: GET /v1/transactions/summary
     API->>Calc: calculate_summary(lançamentos)
     Calc-->>API: Receitas, despesas, saldo, taxa de poupança e categorias

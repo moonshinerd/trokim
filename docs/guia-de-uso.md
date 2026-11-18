@@ -20,7 +20,7 @@ Clone o repositório e execute a automação inicial:
 # Sincroniza dependências com uv e prepara o ambiente virtual
 make setup
 
-# Executa a bateria de testes automatizados (87 da API e 67 de pesquisa)
+# Executa a bateria de testes automatizados (375 da API e 67 de pesquisa)
 make test
 
 # Lint (ruff) e build estrito da documentação
@@ -277,3 +277,99 @@ A resposta de `POST /v1/transactions/upload` informa `institution`, `kind` (`car
 `conta`), `by_nature`, `uncategorized_count` e `ledger_balance` (saldo declarado no arquivo, só
 para consulta). Arquivos de exemplo sintéticos, no mesmo formato, saem de
 `python research/synthetic_data/generate_nubank_datasets.py`.
+
+### 8.3. Várias contas: Nubank Empresas e Banco do Brasil
+
+O OFX não diz se a conta é pessoal ou da empresa. Antes de importar, o app pede à API uma análise
+do arquivo (`POST /v1/transactions/inspect`, que não grava nada): banco, tipo, período e dono
+provável. Quando a API não consegue decidir, o app pergunta **uma vez** e lembra; quando o arquivo
+parece estar no lugar errado (pessoal × Empresas, conta × cartão ou já importado noutra conta), ele
+avisa e deixa escolher entre importar mesmo assim ou trocar o arquivo.
+
+- **Nubank Empresas:** o arquivo que baixa direto no celular é sempre PDF; o **OFX só vem por
+  e-mail**, e o tutorial avisa disso.
+- **Banco do Brasil, cartão Ourocard:** a fatura só existe em **PDF**. O Trokim lê o sinal
+  invertido do banco, as parcelas `PARC NN/MM`, as categorias do próprio banco e o final do
+  cartão, e confere a soma dos lançamentos com o total da fatura.
+- **Banco do Brasil, conta corrente:** extrato em **OFX** (tipo "Money 2000+"), onde o campo
+  `NAME` é o tipo do lançamento e `MEMO` a contraparte.
+
+Na aba **Extratos**, a seção **Contas** lista cada conta e cartão com o dono, que pode ser trocado a
+qualquer momento.
+
+| Banco | Dono da conta | Fatura do BB |
+|---|---|---|
+| ![Escolha do banco: Nubank, Banco do Brasil ou outro, com o atalho Já tenho o arquivo](assets/app/importacao-banco.png){ width="200" } | ![Pergunta se a conta é pessoal ou da empresa, com o banco e o tipo detectados](assets/app/importacao-dono.png){ width="200" } | ![Resumo da fatura Ourocard: total conferido, fatura fechada e uma possível transferência para revisar](assets/app/importacao-bb.png){ width="200" } |
+
+### 8.4. Fatura aberta, fechada e extrato parcial
+
+O período sai do próprio arquivo. Uma fatura baixada antes de fechar fica **aberta** e só traz os
+lançamentos até aquele dia; o resumo da importação pergunta **"Ela já fechou?"** e permite
+**Configurar período**. Reimportar o arquivo do mesmo período **substitui** os lançamentos dele, sem
+somar de novo ("Atualizei o arquivo deste período"). Enquanto houver arquivo aberto ou um mês sem
+arquivo, o Resumo e Extratos mostram o aviso **Valores parciais**; no Resumo, o aviso segue o filtro
+de dono. Tocar na situação de um arquivo em Extratos abre a folha para marcá-lo como fechado (ou
+reabri-lo) e ajustar o período.
+
+| Fatura aberta | Extratos |
+|---|---|
+| ![Resumo da importação de uma fatura aberta, com a pergunta se já fechou e o atalho Categorizar agora](assets/app/importacao-fatura-aberta.png){ width="240" } | ![Extratos com o aviso de valores parciais e os atalhos de transferências e parcelamentos](assets/app/extratos-contas.png){ width="240" } |
+
+### 8.5. Transferências entre suas contas
+
+O Pix da conta pessoal para a conta da empresa é saída numa conta e entrada na outra: não é gasto
+nem receita. O Trokim tira esse dinheiro dos totais assim:
+
+- **Reconhecida sozinha:** o Pix cita a conta de destino e ela é uma conta que você importou. A
+  transferência aparece **uma vez**, com as duas pontas.
+- **Para confirmar:** sem a conta no texto, o app sugere pares de mesmo valor e data próxima;
+  **Confirmar** tira dos totais e **Não são** descarta a sugestão.
+- **Pagamento de fatura de outro banco:** o Pix que paga a fatura do BB a partir do Nubank vira
+  pagamento de fatura, e a fatura não conta duas vezes.
+- **Desfazer** devolve o valor aos totais.
+
+### 8.6. Parcelamentos
+
+A mesma compra parcelada é reconhecida entre faturas. A tela **Parcelamentos** (atalho em Extratos
+e card no Resumo) mostra quanto ainda falta pagar, a parcela atual de cada compra e quanto já está
+comprometido em cada um dos próximos meses.
+
+| Transferências | Parcelamentos |
+|---|---|
+| ![Pagamento de fatura de outro banco para confirmar e transferências já reconhecidas, cada uma uma vez](assets/app/transferencias.png){ width="240" } | ![Total a pagar, projeção dos próximos meses e parcelas em andamento](assets/app/parcelamentos.png){ width="240" } |
+
+### 8.7. Gastos ou caixa, por dono
+
+O Resumo tem dois filtros:
+
+- **Tudo, Pessoal, Empresas:** aparece quando há contas de mais de um dono.
+- **Gastos × Caixa:** em **Gastos** (competência), a compra do cartão conta na data da compra e
+  pagar a fatura não conta de novo. Em **Caixa**, só conta o que entrou e saiu das contas: o
+  pagamento da fatura aparece no lugar das compras.
+
+A seção **Por conta** mostra entradas e saídas de cada conta. Os números vêm prontos da API
+(`GET /v1/transactions/summary?owner=…&view=…`).
+
+### 8.8. Corrigir categorias
+
+Gastos que as regras locais não reconhecem ficam em **Outros**. Toque em qualquer categoria do
+Resumo, ou em **Categorizar agora** no resumo da importação, para abrir **Categorias dos gastos**.
+Ao escolher a categoria de um gasto, a opção **Usar para tudo de …** (ligada por padrão) aplica a
+escolha a todos os lançamentos do mesmo estabelecimento e aos próximos arquivos. Desligada, muda só
+aquele lançamento. Pagamento de fatura, investimentos e transferências entre suas contas não têm
+categoria. A LLM não participa: a regra é sua e fica na API local
+(`PATCH /v1/transactions/{uid}/category`, `GET` e `DELETE /v1/transactions/category-rules`).
+
+| Resumo com filtros | Gastos sem categoria | Escolha da categoria |
+|---|---|---|
+| ![Resumo com os filtros Tudo, Pessoal e Empresas e a alternância Gastos e Caixa](assets/app/resumo-filtros.png){ width="200" } | ![Lista dos gastos sem categoria](assets/app/categorias.png){ width="200" } | ![Folha de escolha da categoria com a opção de usar para todo o estabelecimento](assets/app/categorias-folha.png){ width="200" } |
+
+### 8.9. Receber o arquivo por "Compartilhar" (Android)
+
+No app do banco, no e-mail ou no gerenciador de arquivos, toque em **Compartilhar** (ou **Abrir
+com**) e escolha o **Trokim**. O app abre a aba Extratos e vai direto para a leitura do arquivo, sem
+passar pelo seletor. Vale para `.ofx` e `.pdf`; o arquivo é lido no aparelho e enviado só para a sua
+API local.
+
+As capturas desta seção usam o cenário sintético completo
+(`python research/synthetic_data/generate_nubank_datasets.py`), com dados fictícios.
