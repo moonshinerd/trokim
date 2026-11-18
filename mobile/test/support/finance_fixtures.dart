@@ -72,6 +72,9 @@ class FakeFinanceApi {
   Object? suggestions = const <Object>[];
   Object? transfers = const <Object>[];
 
+  /// Resposta à correção de categoria (`PATCH /transactions/{uid}/category`).
+  http.Response Function(http.Request request)? onCategory;
+
   /// Respostas às ações (PATCH/POST); `null` usa uma resposta vazia de sucesso.
   http.Response Function(http.Request request)? onAction;
 
@@ -113,6 +116,12 @@ class FakeFinanceApi {
     }
     if (request.method == 'GET' && path.endsWith('/transfers')) {
       return jsonResponse(transfers);
+    }
+    if (request.method == 'PATCH' &&
+        path.contains('/transactions/') &&
+        path.endsWith('/category')) {
+      return onCategory?.call(request) ??
+          jsonResponse({'updated': 1, 'rule': false, 'merchant': null});
     }
     if ((request.method == 'PATCH' || request.method == 'POST') &&
         (path.contains('/statements/') ||

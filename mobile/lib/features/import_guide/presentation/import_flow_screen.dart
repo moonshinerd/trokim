@@ -4,6 +4,7 @@ import '../../../core/format.dart';
 import '../../../core/settings/settings_controller.dart';
 import '../../../core/theme/app_theme.dart';
 import '../../../core/widgets/app_motion.dart';
+import '../../categories/presentation/category_review_screen.dart';
 import '../../finance/domain/finance_models.dart';
 import '../../finance/domain/library_models.dart';
 import '../../finance/presentation/finance_controller.dart';
@@ -879,13 +880,28 @@ class _SummaryStep extends StatelessWidget {
                 '${_plural(result.excludedCount, 'movimentação fora dos totais', 'movimentações fora dos totais')}'
                 ' (pagamento de fatura, resgates e transferências próprias)',
           ),
-        if (result.uncategorizedCount > 0)
+        if (result.uncategorizedCount > 0) ...[
           _SummaryLine(
             icon: Icons.category_outlined,
             text:
                 '${_plural(result.uncategorizedCount, 'gasto sem categoria', 'gastos sem categoria')}'
                 ' (aparecem como "Outros" no Resumo)',
           ),
+          Align(
+            alignment: Alignment.centerLeft,
+            child: Padding(
+              padding: const EdgeInsets.only(left: 28),
+              child: TextButton(
+                onPressed: () => Navigator.of(context).push(
+                  MaterialPageRoute<void>(
+                    builder: (_) => const CategoryReviewScreen(),
+                  ),
+                ),
+                child: const Text('Categorizar agora'),
+              ),
+            ),
+          ),
+        ],
         if (result.autoTransfers > 0)
           _SummaryLine(
             icon: Icons.sync_alt_rounded,

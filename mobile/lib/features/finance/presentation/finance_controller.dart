@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/widgets.dart';
 
 import '../../../core/network/api_client.dart';
+import '../../categories/domain/ledger_entry.dart';
 import '../data/finance_repository.dart';
 import '../domain/finance_models.dart';
 import '../domain/library_models.dart';
@@ -258,6 +259,24 @@ class FinanceController extends ChangeNotifier {
   Future<void> rejectTransfer(TransferSuggestion item) async {
     await _repository.rejectTransfer(item);
     await load();
+  }
+
+  /// Lançamentos importados (para revisar categorias). Lança se a API falhar.
+  Future<List<LedgerEntry>> fetchEntries() => _repository.fetchEntries();
+
+  /// Corrige a categoria e recarrega o resumo. Lança se a API recusar.
+  Future<CategoryChange> setCategory(
+    LedgerEntry entry,
+    String category, {
+    bool applyToMerchant = true,
+  }) async {
+    final change = await _repository.setCategory(
+      entry.uid,
+      category,
+      applyToMerchant: applyToMerchant,
+    );
+    await load();
+    return change;
   }
 
   Future<void> undoTransfer(OwnTransfer item) async {

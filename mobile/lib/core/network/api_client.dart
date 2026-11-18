@@ -156,6 +156,18 @@ class ApiClient {
     {'uid': uid},
   );
 
+  /// Corrige a categoria de um lançamento. Com [applyToMerchant], a escolha vale para todos
+  /// os lançamentos do mesmo estabelecimento e para os próximos arquivos.
+  Future<Map<String, dynamic>> setTransactionCategory(
+    String uid,
+    String category, {
+    bool applyToMerchant = true,
+  }) => _sendJson(
+    'PATCH',
+    '${ApiConstants.transactionsEndpoint}/${Uri.encodeComponent(uid)}/category',
+    {'category': category, 'apply_to_merchant': applyToMerchant},
+  );
+
   static String _isoDate(DateTime day) =>
       '${day.year.toString().padLeft(4, '0')}-'
       '${day.month.toString().padLeft(2, '0')}-'

@@ -5,6 +5,8 @@ import '../../../core/theme/app_theme.dart';
 import '../../../core/widgets/app_motion.dart';
 import '../../../core/widgets/screen_header.dart';
 import '../../../core/widgets/coin.dart';
+import '../../categories/domain/categories.dart';
+import '../../categories/presentation/category_review_screen.dart';
 import '../../finance/domain/finance_models.dart';
 import '../../installments/presentation/installments_screen.dart';
 import '../../transactions/presentation/statement_widgets.dart';
@@ -13,64 +15,18 @@ import '../../finance/presentation/finance_controller.dart';
 final _brl = NumberFormat.currency(locale: 'pt_BR', symbol: 'R\$');
 
 class _Category {
-  const _Category(this.name, this.amount, this.icon, this.color);
-  final String name;
+  const _Category(this.info, this.amount);
+  final CategoryInfo info;
   final double amount;
-  final IconData icon;
-  final Color color;
+
+  String get name => info.name;
+  IconData get icon => info.icon;
+  Color get color => info.color;
 }
 
 /// Nome, ícone e cor de cada categoria devolvida pela API.
-_Category _categoryFor(String key, double amount) => switch (key) {
-  'moradia' => _Category(
-    'Moradia',
-    amount,
-    Icons.home_rounded,
-    const Color(0xFF2F6FB0),
-  ),
-  'alimentacao' => _Category(
-    'Alimentação',
-    amount,
-    Icons.restaurant_rounded,
-    const Color(0xFFE9892F),
-  ),
-  'transporte' => _Category(
-    'Transporte',
-    amount,
-    Icons.directions_car_rounded,
-    AppTheme.positive,
-  ),
-  'lazer' => _Category(
-    'Lazer e bem-estar',
-    amount,
-    Icons.spa_rounded,
-    const Color(0xFF8B5CF6),
-  ),
-  'saude' => _Category(
-    'Saúde',
-    amount,
-    Icons.favorite_rounded,
-    const Color(0xFFD64F6B),
-  ),
-  'educacao' => _Category(
-    'Educação',
-    amount,
-    Icons.school_rounded,
-    const Color(0xFF0E8F8F),
-  ),
-  'servicos' => _Category(
-    'Serviços',
-    amount,
-    Icons.receipt_rounded,
-    const Color(0xFF6B7A90),
-  ),
-  _ => _Category(
-    'Outros',
-    amount,
-    Icons.category_rounded,
-    const Color(0xFF8A8F98),
-  ),
-};
+_Category _categoryFor(String key, double amount) =>
+    _Category(categoryInfo(key), amount);
 
 /// Resumo do mês. Os números vêm de `/transactions/summary`; o app apenas
 /// exibe o que o backend calculou.
@@ -806,10 +762,30 @@ class _CategoryTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    return Semantics(
+      button: true,
+      hint: 'Ver e corrigir os gastos desta categoria',
+      child: Material(
+        color: context.colors.surface,
+        borderRadius: BorderRadius.circular(AppTheme.radius),
+        child: InkWell(
+          borderRadius: BorderRadius.circular(AppTheme.radius),
+          onTap: () => Navigator.of(context).push(
+            MaterialPageRoute<void>(
+              builder: (_) =>
+                  CategoryReviewScreen(initialFilter: category.info.key),
+            ),
+          ),
+          child: _tileBody(context),
+        ),
+      ),
+    );
+  }
+
+  Widget _tileBody(BuildContext context) {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: context.colors.surface,
         borderRadius: BorderRadius.circular(AppTheme.radius),
         border: Border.all(color: context.colors.line),
       ),

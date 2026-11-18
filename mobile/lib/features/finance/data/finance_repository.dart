@@ -1,4 +1,5 @@
 import '../../../core/network/api_client.dart';
+import '../../categories/domain/ledger_entry.dart';
 import '../domain/finance_models.dart';
 import '../domain/library_models.dart';
 
@@ -31,6 +32,24 @@ class FinanceRepository {
   Future<List<ImportedFile>> fetchImportedFiles() => _run(
     (client) async =>
         ImportedFile.fromTransactions(await client.getTransactions()),
+  );
+
+  Future<List<LedgerEntry>> fetchEntries() => _run(
+    (client) async => LedgerEntry.listFromJson(await client.getTransactions()),
+  );
+
+  Future<CategoryChange> setCategory(
+    String uid,
+    String category, {
+    bool applyToMerchant = true,
+  }) => _run(
+    (client) async => CategoryChange.fromJson(
+      await client.setTransactionCategory(
+        uid,
+        category,
+        applyToMerchant: applyToMerchant,
+      ),
+    ),
   );
 
   Future<StatementsData> fetchStatements() => _run(
