@@ -6,11 +6,20 @@ CABECALHO_CARTAO = (
 )
 CABECALHO_CONTA = CABECALHO_CARTAO.replace("USASCII", "UTF-8").replace("1252", "NONE")
 
-_FI = (
-    "<OFX><SIGNONMSGSRSV1><SONRS><STATUS><CODE>0</CODE><SEVERITY>INFO</SEVERITY></STATUS>"
-    "<DTSERVER>20261210120000[0:GMT]</DTSERVER><LANGUAGE>POR</LANGUAGE>"
-    "<FI><ORG>NU PAGAMENTOS S.A.</ORG><FID>260</FID></FI></SONRS></SIGNONMSGSRSV1>"
-)
+
+def _fi(gerado: str | None) -> str:
+    server = f"<DTSERVER>{gerado}120000[0:GMT]</DTSERVER>" if gerado else ""
+    return (
+        "<OFX><SIGNONMSGSRSV1><SONRS><STATUS><CODE>0</CODE><SEVERITY>INFO</SEVERITY></STATUS>"
+        f"{server}<LANGUAGE>POR</LANGUAGE>"
+        "<FI><ORG>NU PAGAMENTOS S.A.</ORG><FID>260</FID></FI></SONRS></SIGNONMSGSRSV1>"
+    )
+
+
+CARTAO_PF = "11111111-2222-3333-4444-555555555555"
+CARTAO_PJ = "99999999-8888-7777-6666-555555555555"
+CONTA_PF = "0000000-0"
+CONTA_PJ = "1111111-1"
 
 
 def lancamento(tipo: str, data: str, valor: str, fitid: str, memo: str) -> str:
@@ -20,34 +29,48 @@ def lancamento(tipo: str, data: str, valor: str, fitid: str, memo: str) -> str:
     )
 
 
-def fatura_cartao(lancamentos: list[str], saldo: str = "-250.00") -> bytes:
+def fatura_cartao(
+    lancamentos: list[str],
+    saldo: str = "-250.00",
+    acct: str = CARTAO_PF,
+    inicio: str = "20261103",
+    fim: str = "20261110",
+    gerado: str | None = "20261210",
+) -> bytes:
     corpo = (
-        _FI + "<CREDITCARDMSGSRSV1><CCSTMTTRNRS><TRNUID>1001</TRNUID>"
+        _fi(gerado) + "<CREDITCARDMSGSRSV1><CCSTMTTRNRS><TRNUID>1001</TRNUID>"
         "<STATUS><CODE>0</CODE><SEVERITY>INFO</SEVERITY></STATUS><CCSTMTRS><CURDEF>BRL</CURDEF>"
-        "<CCACCTFROM><ACCTID>11111111-2222-3333-4444-555555555555</ACCTID></CCACCTFROM>"
-        "<BANKTRANLIST><DTSTART>20261103000000[-3:BRT]</DTSTART>"
-        "<DTEND>20261110000000[-3:BRT]</DTEND>"
+        f"<CCACCTFROM><ACCTID>{acct}</ACCTID></CCACCTFROM>"
+        f"<BANKTRANLIST><DTSTART>{inicio}000000[-3:BRT]</DTSTART>"
+        f"<DTEND>{fim}000000[-3:BRT]</DTEND>"
         + "".join(lancamentos)
         + "</BANKTRANLIST><LEDGERBAL><BALAMT>"
         + saldo
-        + "</BALAMT><DTASOF>20261110000000[-3:BRT]</DTASOF></LEDGERBAL>"
+        + f"</BALAMT><DTASOF>{fim}000000[-3:BRT]</DTASOF></LEDGERBAL>"
         "</CCSTMTRS></CCSTMTTRNRS></CREDITCARDMSGSRSV1></OFX>"
     )
     return (CABECALHO_CARTAO + corpo).encode("utf-8")
 
 
-def extrato_conta(lancamentos: list[str], saldo: str = "1000.00") -> bytes:
+def extrato_conta(
+    lancamentos: list[str],
+    saldo: str = "1000.00",
+    acct: str = CONTA_PF,
+    inicio: str = "20261001",
+    fim: str = "20261031",
+    gerado: str | None = "20261210",
+) -> bytes:
     corpo = (
-        _FI + "<BANKMSGSRSV1><STMTTRNRS><TRNUID>1</TRNUID>"
+        _fi(gerado) + "<BANKMSGSRSV1><STMTTRNRS><TRNUID>1</TRNUID>"
         "<STATUS><CODE>0</CODE><SEVERITY>INFO</SEVERITY></STATUS><STMTRS><CURDEF>BRL</CURDEF>"
-        "<BANKACCTFROM><BANKID>0260</BANKID><BRANCHID>1</BRANCHID><ACCTID>0000000-0</ACCTID>"
+        f"<BANKACCTFROM><BANKID>0260</BANKID><BRANCHID>1</BRANCHID><ACCTID>{acct}</ACCTID>"
         "<ACCTTYPE>CHECKING</ACCTTYPE></BANKACCTFROM>"
-        "<BANKTRANLIST><DTSTART>20261001000000[-3:BRT]</DTSTART>"
-        "<DTEND>20261031000000[-3:BRT]</DTEND>"
+        f"<BANKTRANLIST><DTSTART>{inicio}000000[-3:BRT]</DTSTART>"
+        f"<DTEND>{fim}000000[-3:BRT]</DTEND>"
         + "".join(lancamentos)
         + "</BANKTRANLIST><LEDGERBAL><BALAMT>"
         + saldo
-        + "</BALAMT><DTASOF>20261031000000[-3:BRT]</DTASOF></LEDGERBAL>"
+        + f"</BALAMT><DTASOF>{fim}000000[-3:BRT]</DTASOF></LEDGERBAL>"
         "</STMTRS></STMTTRNRS></BANKMSGSRSV1></OFX>"
     )
     return (CABECALHO_CONTA + corpo).encode("utf-8")

@@ -14,8 +14,10 @@ from app.domain.models import (
 from app.services.categorization_service import CategorizationService
 from app.services.statement_profiles import (
     PROFILES,
+    OfxMeta,
     decode_ofx,
     detect_statement,
+    parse_ofx_meta,
 )
 
 
@@ -25,6 +27,7 @@ class OfxParseResult:
     institution: str | None = None
     kind: str | None = None
     ledger_balance: float | None = None
+    meta: OfxMeta | None = None
 
 
 class ParserService:
@@ -44,6 +47,7 @@ class ParserService:
     ) -> "OfxParseResult":
         text = decode_ofx(file_content)
         detection = detect_statement(text)
+        meta = parse_ofx_meta(text)
         ofx = OfxParser.parse(io.BytesIO(text.encode("utf-8")))
 
         account_id = "default_account"
@@ -73,6 +77,8 @@ class ParserService:
                         "nature": parsed.nature,
                         "merchant": parsed.merchant,
                         "counterparty_kind": parsed.counterparty_kind,
+                        "counterparty_doc": parsed.counterparty_doc,
+                        "counterparty_account": parsed.counterparty_account,
                         "installment_number": parsed.installment_number,
                         "installment_total": parsed.installment_total,
                         "institution": detection.institution,
@@ -104,6 +110,7 @@ class ParserService:
             institution=detection.institution if detection else None,
             kind=detection.kind if detection else None,
             ledger_balance=balance,
+            meta=meta,
         )
 
     _PDF_LINE = re.compile(

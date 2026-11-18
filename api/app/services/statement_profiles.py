@@ -8,12 +8,16 @@ conta), a natureza do lançamento e o estabelecimento normalizado.
 import re
 import unicodedata
 from dataclasses import dataclass
+from datetime import date
 from typing import Literal
 
 from app.domain.models import CounterpartyKind, TransactionNature, TransactionType
 
 StatementKind = Literal["cartao", "conta"]
 
+_CONTA_DESTINO = re.compile(
+    r"\((\d{4})\)\s*Ag[êe]ncia:\s*\d+\s*Conta:\s*([\d.]+-?\d?)", re.IGNORECASE
+)
 _CNPJ = re.compile(r"\d{2}\.\d{3}\.\d{3}/\d{4}-\d{2}")
 _CPF_MASCARADO = re.compile(r"[•*\d]{3}\.\d{3}\.\d{3}-[•*\d]{2}|[•*]{3}\.\d{3}\.\d{3}-[•*]{2}")
 _PARCELA = re.compile(r"\s*-?\s*Parcela\s+(\d+)\s*/\s*(\d+)\s*$", re.IGNORECASE)
@@ -74,11 +78,56 @@ def detect_statement(text: str) -> Detection | None:
 
 
 @dataclass(frozen=True)
+class OfxMeta:
+    """Metadados do arquivo: conta, período e quando foi gerado."""
+
+    kind: StatementKind | None
+    bank_id: str | None
+    acct_id: str | None
+    period_start: date | None
+    period_end: date | None
+    generated_at: date | None
+
+
+def _first_date(text: str, tag: str) -> date | None:
+    match = re.search(rf"<{tag}>\s*(\d{{8}})", text)
+    if not match:
+        return None
+    raw = match.group(1)
+    try:
+        return date(int(raw[:4]), int(raw[4:6]), int(raw[6:8]))
+    except ValueError:
+        return None
+
+
+def parse_ofx_meta(text: str) -> OfxMeta:
+    """Lê tipo, conta e período do OFX, mesmo de bancos sem perfil."""
+    upper = text.upper()
+    kind: StatementKind | None = None
+    if "<CCSTMTRS>" in upper or "<CREDITCARDMSGSRSV1>" in upper:
+        kind = "cartao"
+    elif "<STMTRS>" in upper or "<BANKMSGSRSV1>" in upper:
+        kind = "conta"
+    acct = re.search(r"<ACCTID>([^<\r\n]*)", text)
+    bank = re.search(r"<BANKID>([^<\r\n]*)", text) or re.search(r"<FID>([^<\r\n]*)", text)
+    return OfxMeta(
+        kind=kind,
+        bank_id=bank.group(1).strip() if bank else None,
+        acct_id=acct.group(1).strip() if acct else None,
+        period_start=_first_date(text, "DTSTART"),
+        period_end=_first_date(text, "DTEND"),
+        generated_at=_first_date(text, "DTSERVER"),
+    )
+
+
+@dataclass(frozen=True)
 class ParsedMemo:
     description: str
     nature: TransactionNature
     merchant: str | None = None
     counterparty_kind: CounterpartyKind | None = None
+    counterparty_doc: str | None = None
+    counterparty_account: str | None = None
     installment_number: int | None = None
     installment_total: int | None = None
 
@@ -97,18 +146,33 @@ def _split_parcela(text: str) -> tuple[str, int | None, int | None]:
     return text, None, None
 
 
-def _counterparty(parts: list[str]) -> tuple[str | None, CounterpartyKind | None]:
-    """Nome e tipo da contraparte de um Pix; descarta documento, banco e conta."""
+def _counterparty(
+    parts: list[str],
+) -> tuple[str | None, CounterpartyKind | None, str | None, str | None]:
+    """Nome, tipo, documento e conta da contraparte de um Pix; banco e conta são descartados.
+
+    O documento (CNPJ ou CPF mascarado) só é guardado internamente, para reconhecer as
+    próprias contas do usuário; ele nunca é exposto.
+    """
     if not parts:
-        return None, None
+        return None, None, None, None
     name = re.sub(r"\s*\([^)]*\)\s*$", "", parts[0]).strip()
     rest = " ".join(parts[1:])
     kind = None
-    if _CNPJ.search(rest):
-        kind = CounterpartyKind.COMPANY
-    elif _CPF_MASCARADO.search(rest):
-        kind = CounterpartyKind.PERSON
-    return (name or None), kind
+    doc = None
+    cnpj = _CNPJ.search(rest)
+    cpf = _CPF_MASCARADO.search(rest)
+    if cnpj:
+        kind, doc = CounterpartyKind.COMPANY, cnpj.group(0)
+    elif cpf:
+        kind, doc = CounterpartyKind.PERSON, cpf.group(0)
+    account = None
+    destino = _CONTA_DESTINO.search(rest)
+    if destino:
+        digits = re.sub(r"\D", "", destino.group(2))
+        if digits:
+            account = f"{destino.group(1)}:{digits}"
+    return (name or None), kind, doc, account
 
 
 class NubankProfile:
@@ -134,9 +198,9 @@ class NubankProfile:
                 store or None,
             )
         if head.startswith("estorno") or head.startswith("reembolso"):
-            who, who_kind = _counterparty(parts[1:])
+            who, who_kind, who_doc, who_acct = _counterparty(parts[1:])
             label = parts[0] + (f" - {who}" if who else "")
-            return ParsedMemo(label, TransactionNature.REFUND, who, who_kind)
+            return ParsedMemo(label, TransactionNature.REFUND, who, who_kind, who_doc, who_acct)
 
         if head.startswith("pagamento de fatura"):
             return ParsedMemo("Pagamento da fatura", TransactionNature.CARD_PAYMENT)
@@ -150,15 +214,15 @@ class NubankProfile:
             return ParsedMemo(parts[0], TransactionNature.INTERNAL_TRANSFER)
 
         if head.startswith("transferencia enviada pelo pix"):
-            who, who_kind = _counterparty(parts[1:])
+            who, who_kind, who_doc, who_acct = _counterparty(parts[1:])
             label = "Pix enviado" + (f" - {who}" if who else "")
-            return ParsedMemo(label, TransactionNature.PIX_OUT, who, who_kind)
+            return ParsedMemo(label, TransactionNature.PIX_OUT, who, who_kind, who_doc, who_acct)
         if head.startswith("transferencia recebida pelo pix") or head.startswith(
             "transferencia recebida"
         ):
-            who, who_kind = _counterparty(parts[1:])
+            who, who_kind, who_doc, who_acct = _counterparty(parts[1:])
             label = "Pix recebido" + (f" - {who}" if who else "")
-            return ParsedMemo(label, TransactionNature.PIX_IN, who, who_kind)
+            return ParsedMemo(label, TransactionNature.PIX_IN, who, who_kind, who_doc, who_acct)
 
         if head.startswith("compra no debito") or head.startswith("pix no credito"):
             store_raw = " - ".join(parts[1:]) if len(parts) > 1 else parts[0]
@@ -168,10 +232,9 @@ class NubankProfile:
             return ParsedMemo(
                 f"{prefix} - {store}" if store else prefix,
                 TransactionNature.PURCHASE,
-                store or None,
-                None,
-                number,
-                total,
+                merchant=store or None,
+                installment_number=number,
+                installment_total=total,
             )
 
         if re.match(r"(juros|multa|encargos|iof)\b", head):
@@ -184,7 +247,11 @@ class NubankProfile:
             store_raw, number, total = _split_parcela(text)
             store = _clean_merchant(store_raw)
             return ParsedMemo(
-                store or text, TransactionNature.PURCHASE, store or None, None, number, total
+                store or text,
+                TransactionNature.PURCHASE,
+                merchant=store or None,
+                installment_number=number,
+                installment_total=total,
             )
         return ParsedMemo(text or "Transação sem descrição", TransactionNature.OTHER)
 
