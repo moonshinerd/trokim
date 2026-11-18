@@ -173,10 +173,11 @@ class ShortcutsSection extends StatelessWidget {
             _ShortcutTile(
               icon: Icons.swap_horiz_rounded,
               title: 'Transferências entre suas contas',
-              subtitle: pending > 0
-                  ? '$pending ${pending == 1 ? 'para confirmar' : 'para confirmar'}'
-                        '${handled > 0 ? ' · $handled já tratadas' : ''}'
-                  : '$handled ${handled == 1 ? 'já tratada' : 'já tratadas'}',
+              subtitle: [
+                if (pending > 0) '$pending para confirmar',
+                if (handled > 0)
+                  '$handled ${handled == 1 ? 'já tratada' : 'já tratadas'}',
+              ].join(' · '),
               highlight: pending > 0,
               onTap: () => Navigator.of(context).push(
                 MaterialPageRoute<void>(
@@ -272,16 +273,24 @@ class _ShortcutTile extends StatelessWidget {
 
 /// Avisos de cobertura: arquivos ainda abertos e períodos sem arquivo.
 class CoverageNotice extends StatelessWidget {
-  const CoverageNotice({super.key});
+  const CoverageNotice({super.key, this.followOwnerFilter = false});
+
+  /// No Resumo, só avisa das contas do filtro de dono escolhido (Pessoal ou Empresas).
+  final bool followOwnerFilter;
 
   @override
   Widget build(BuildContext context) {
     final finance = FinanceScope.of(context);
-    final open = finance.incompleteStatements;
+    bool shown(String accountId) =>
+        !followOwnerFilter || finance.matchesOwnerFilter(accountId);
+    final open = finance.incompleteStatements
+        .where((s) => shown(s.accountId))
+        .toList();
     final gaps = <String>[
-      for (final entry in finance.statements.coverage.values)
-        for (final gap in entry.gaps)
-          '${entry.label}: faltam arquivos de ${shortDate(gap.from)} a ${shortDate(gap.to)}',
+      for (final entry in finance.statements.coverage.entries)
+        if (shown(entry.key))
+          for (final gap in entry.value.gaps)
+            '${entry.value.label}: faltam arquivos de ${shortDate(gap.from)} a ${shortDate(gap.to)}',
     ];
     if (open.isEmpty && gaps.isEmpty) return const SizedBox.shrink();
     final c = context.colors;
@@ -373,8 +382,20 @@ class AccountsSection extends StatelessWidget {
                     ),
                     PopupMenuButton<AccountOwner>(
                       tooltip: 'Dono da conta',
-                      onSelected: (owner) =>
-                          finance.setAccountOwner(account.id, owner),
+                      onSelected: (owner) async {
+                        final messenger = ScaffoldMessenger.of(context);
+                        try {
+                          await finance.setAccountOwner(account.id, owner);
+                        } on Object {
+                          messenger.showSnackBar(
+                            const SnackBar(
+                              content: Text(
+                                'Não foi possível trocar o dono. Tente novamente.',
+                              ),
+                            ),
+                          );
+                        }
+                      },
                       itemBuilder: (_) => [
                         for (final owner in AccountOwner.values)
                           CheckedPopupMenuItem(

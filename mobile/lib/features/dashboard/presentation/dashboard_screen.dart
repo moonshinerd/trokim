@@ -85,7 +85,7 @@ class DashboardScreen extends StatelessWidget {
               if (summary != null && finance.status != FinanceStatus.error)
                 const _Filters(),
               if (summary != null && finance.status != FinanceStatus.error)
-                const CoverageNotice(),
+                const CoverageNotice(followOwnerFilter: true),
               content,
             ],
           ),

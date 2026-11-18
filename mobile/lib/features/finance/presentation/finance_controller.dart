@@ -72,6 +72,15 @@ class FinanceController extends ChangeNotifier {
   List<StatementInfo> get incompleteStatements =>
       _statements.statements.where((s) => s.status.isIncomplete).toList();
 
+  /// A conta entra no filtro de dono atual do Resumo (`todas` aceita qualquer conta).
+  bool matchesOwnerFilter(String accountId) {
+    if (_owner == 'todas') return true;
+    for (final account in _accounts) {
+      if (account.id == accountId) return account.owner?.api == _owner;
+    }
+    return false;
+  }
+
   /// Carrega resumo e arquivos. Chamadas simultâneas compartilham a mesma
   /// requisição. Falhas viram [FinanceStatus.error]; nunca lançam.
   Future<void> load() => _loading ??= _load().whenComplete(() {
