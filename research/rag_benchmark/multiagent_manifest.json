@@ -1,0 +1,11 @@
+{
+  "schema_version": 1,
+  "hash_algorithm": "sha256-bytes",
+  "files": {
+    "research/rag_benchmark/multiagent.py": "440702c104f78ccc4f87720f3268d1cf42538d05763c94387ff6a81d98ccde89",
+    "research/rag_benchmark/questions_multiagent.json": "e46e4964439c4cf7599878db29ffd602d4c6905ee115162d7520172e7683e1d7",
+    "research/rag_benchmark/questions_multiagent.schema.json": "9281338a231a327459559537b65e29b324e5612b07dcfc688e502841df376c44",
+    "research/synthetic_data/generate_ledger_multiagente.py": "cda0609029bbb7ef1f4f7583a15788cba0bf2700498ac08fd6d520c5968d56c2",
+    "research/synthetic_data/ledger_multiagente.json": "3910b49c1239989813e52a994bbbbf833d294d449394c5f126444f81b738d3d9"
+  }
+}

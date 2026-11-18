@@ -124,7 +124,8 @@ graph LR
 | **RNF01** | GQ03, GQ06 | [ADR 0002](adr/0002-fastapi-sqlite-local.md), [0005](adr/0005-importacao-local-ofx-pdf.md) | `api/app/db/database.py` | `api/tests/test_health.py` |
 | **RNF02** | GQ04, GQ11 | [ADR 0004](adr/0004-calculos-deterministicos.md) | `api/app/services/calculation_service.py` | `api/tests/test_calculations.py` |
 | **RNF07** | GQ03, GQ10 | [ADR 0002](adr/0002-fastapi-sqlite-local.md), [0007](adr/0007-banco-vetorial-embeddings.md) | `api/app/models/vector_store.py` | `api/tests/test_vector_store.py` |
-| **RNF08** | GQ05, GQ08 | [ADR 0006](adr/0006-curadoria-benchmark.md) | `research/rag_benchmark/eval_rag.py` | `make test`, `eval_rag.py` |
+| **RNF06** | GQ02, GQ03, GQ04, GQ05, GQ11 | [ADR 0005](adr/0005-importacao-local-ofx-pdf.md), [0008](adr/0008-material-comparativo-versionado.md) | `research/synthetic_data/generate_ledger_multiagente.py`, `ledger_multiagente.json` | `research/test_multiagent_cases.py` (reprodução, duplicatas e números determinísticos) |
+| **RNF08** | GQ05, GQ08, GQ11 | [ADR 0006](adr/0006-curadoria-benchmark.md), [0008](adr/0008-material-comparativo-versionado.md) | `research/rag_benchmark/eval_rag.py`, `research/rag_benchmark/multiagent.py`, [gabarito multiagente](pesquisa/gabarito-multiagente.md) | `make research-test`, `research/test_multiagent_cases.py` |
 | **RNF09** | GQ05, GQ08 | [ADR 0006](adr/0006-curadoria-benchmark.md), [0007](adr/0007-banco-vetorial-embeddings.md) | `research/rag_benchmark/` | CI GitHub Actions / Runner Mac |
 | **RNF10** | GQ01, GQ07 | [ADR 0011](adr/0011-identidade-visual-e-tema-do-sistema.md), [0013](adr/0013-preferencias-locais-e-aba-de-ajustes.md) | `mobile/lib/core/theme/app_theme.dart`, `mobile/lib/core/widgets/app_motion.dart` | `mobile/test/splash_gate_test.dart`, `mobile/test/settings_screen_test.dart` |
 | **RNF11** | GQ01, GQ03 | [ADR 0012](adr/0012-mascote-onca-e-arte-de-marca-livre.md) | `mobile/assets/brand/`, `docs/referencias.md` | Revisão no PR |

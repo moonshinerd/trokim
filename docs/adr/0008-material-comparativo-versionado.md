@@ -29,3 +29,7 @@ A #20 prepara insumos reproduzíveis, sem executar provedores ou alterar a API.
 A #24 deve controlar modelo, parâmetros e recuperação, registrar resultados brutos e
 avaliar os critérios separadamente. Os casos são de desenvolvimento, não teste cego.
 Atualizar hashes exige revisão de conteúdo e não substitui conferência das fontes.
+
+## Adendo — Gabarito Multiagente (Semana 4)
+
+O gabarito multiagente de 20 cenários (`research/rag_benchmark/questions_multiagent.json`, issue [#56](https://github.com/moonshinerd/trokim/issues/56)) constitui um conjunto isolado e independente, munido de extrato sintético próprio (`ledger_multiagente.json`), JSON Schema específico e manifesto de hashes dedicado (`multiagent_manifest.json`). Ele avalia a arquitetura de quatro agentes da Semana 4 ([ADR 0016](0016-arquitetura-multiagente.md)) e não altera nem substitui o material comparativo da Semana 3.
