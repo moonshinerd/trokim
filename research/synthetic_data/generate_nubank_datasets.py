@@ -6,7 +6,6 @@ no tutorial do app e na validação do perfil Nubank. Uso: ``python generate_nub
 
 from pathlib import Path
 
-
 CABECALHO_CARTAO = (
     "OFXHEADER:100\nDATA:OFXSGML\nVERSION:102\nSECURITY:NONE\nENCODING:USASCII\n"
     "CHARSET:1252\nCOMPRESSION:NONE\nOLDFILEUID:NONE\nNEWFILEUID:NONE\n\n"

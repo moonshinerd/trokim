@@ -188,6 +188,29 @@ void main() {
     expect(find.text('Pronto!'), findsOneWidget);
   });
 
+  testWidgets('com o tutorial desligado em Ajustes, abre o seletor direto', (
+    tester,
+  ) async {
+    final h = _Harness(tutorial: false);
+    h.api.onUpload = (_) => jsonResponse(_upload());
+    await h.open(tester);
+    await h.tapAsync(tester, find.text('Importar extrato'));
+    expect(find.text('De qual banco é o arquivo?'), findsNothing);
+    expect(find.text('Pronto!'), findsOneWidget);
+    expect(h.api.count('POST', '/transactions/upload'), 1);
+  });
+
+  testWidgets('cancelar o seletor com o tutorial desligado fecha o fluxo', (
+    tester,
+  ) async {
+    final h = _Harness(tutorial: false, picker: () async => null);
+    await h.open(tester);
+    await h.tapAsync(tester, find.text('Importar extrato'));
+    expect(find.text('Importar extrato'), findsOneWidget); // FAB, não a AppBar
+    expect(find.text('Extratos e faturas'), findsOneWidget);
+    expect(h.api.count('POST', '/transactions/upload'), 0);
+  });
+
   testWidgets('voltar no tutorial retorna ao passo anterior', (tester) async {
     final h = _Harness();
     await h.open(tester);
