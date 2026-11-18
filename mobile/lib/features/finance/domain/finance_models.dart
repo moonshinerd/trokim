@@ -10,6 +10,8 @@ class FinancialSummary {
     required this.savingsRatePercent,
     required this.expensesByCategory,
     required this.transactionCount,
+    this.excludedCount = 0,
+    this.topMerchants = const [],
   });
 
   final double totalIncome;
@@ -22,6 +24,13 @@ class FinancialSummary {
   /// Despesas por categoria (`moradia`, `alimentacao`, ...), em reais.
   final Map<String, double> expensesByCategory;
   final int transactionCount;
+
+  /// Movimentações fora dos totais (pagamento de fatura, resgates e
+  /// transferências próprias), para não contar o mesmo dinheiro duas vezes.
+  final int excludedCount;
+
+  /// Estabelecimentos com mais gastos, do maior para o menor.
+  final List<MerchantTotal> topMerchants;
 
   bool get isEmpty => transactionCount == 0;
 
@@ -49,8 +58,32 @@ class FinancialSummary {
       savingsRatePercent: _number(json, 'savings_rate'),
       expensesByCategory: byCategory,
       transactionCount: _count(json, 'transaction_count'),
+      excludedCount: json['excluded_count'] is int
+          ? json['excluded_count'] as int
+          : 0,
+      topMerchants: _merchants(json['top_merchants']),
     );
   }
+}
+
+/// Total gasto em um estabelecimento (calculado pela API).
+class MerchantTotal {
+  const MerchantTotal(this.merchant, this.total);
+
+  final String merchant;
+  final double total;
+}
+
+List<MerchantTotal> _merchants(Object? raw) {
+  if (raw is! List) return const [];
+  return [
+    for (final item in raw)
+      if (item is Map && item['merchant'] is String && item['total'] is num)
+        MerchantTotal(
+          item['merchant'] as String,
+          (item['total'] as num).toDouble(),
+        ),
+  ];
 }
 
 /// Arquivo importado, reconstruído a partir de `source_file` das transações
@@ -104,19 +137,72 @@ class ImportedFile {
 
 /// Resposta de `POST /transactions/upload`.
 class ImportResult {
-  const ImportResult({required this.filename, required this.importedCount});
+  const ImportResult({
+    required this.filename,
+    required this.importedCount,
+    this.duplicateCount = 0,
+    this.institution,
+    this.kind,
+    this.uncategorizedCount = 0,
+    this.excludedCount = 0,
+  });
 
   final String filename;
   final int importedCount;
+  final int duplicateCount;
+
+  /// Banco detectado pelo conteúdo do arquivo (ex.: `nubank`), se reconhecido.
+  final String? institution;
+
+  /// `cartao` ou `conta`, quando o banco foi reconhecido.
+  final String? kind;
+  final int uncategorizedCount;
+
+  /// Movimentações fora dos totais neste arquivo.
+  final int excludedCount;
+
+  String? get institutionLabel => switch (institution) {
+    'nubank' => 'Nubank',
+    final other? => other,
+    null => null,
+  };
+
+  String? get kindLabel => switch (kind) {
+    'cartao' => 'fatura do cartão',
+    'conta' => 'extrato da conta',
+    _ => null,
+  };
 
   factory ImportResult.fromJson(Map<String, dynamic> json) {
     final filename = json['filename'];
     if (filename is! String) {
       throw const FormatException('Resposta de importação inválida.');
     }
+    final byNature = json['by_nature'];
+    var excluded = 0;
+    if (byNature is Map) {
+      for (final key in const [
+        'pagamento_fatura',
+        'resgate_investimento',
+        'aplicacao_investimento',
+        'transferencia_propria',
+      ]) {
+        final value = byNature[key];
+        if (value is int) excluded += value;
+      }
+    }
     return ImportResult(
       filename: filename,
       importedCount: _count(json, 'imported_count'),
+      duplicateCount: json['duplicate_count'] is int
+          ? json['duplicate_count'] as int
+          : 0,
+      institution: json['institution'] as String?,
+      kind: json['kind'] as String?,
+      uncategorizedCount: json['uncategorized_count'] is int
+          ? json['uncategorized_count'] as int
+          : 0,
+      excludedCount: excluded,
     );
   }
 }

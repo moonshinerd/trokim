@@ -3,6 +3,7 @@ from collections.abc import Sequence
 
 from app.domain.models import (
     BudgetScenario,
+    CounterpartyKind,
     FinancialSummary,
     Transaction,
     TransactionNature,
@@ -52,21 +53,27 @@ class CalculationService:
                 continue
 
             category_name = tx.category.value if hasattr(tx.category, "value") else str(tx.category)
+            # Pix para pessoas físicas não entra pelo nome: vira um grupo só.
+            merchant_name = (
+                "Pix para pessoas"
+                if tx.counterparty_kind == CounterpartyKind.PERSON
+                else tx.merchant
+            )
 
             if tx.type == TransactionType.CREDIT and tx.nature == TransactionNature.REFUND:
                 # Estorno abate a despesa; não é renda.
                 total_expenses -= tx.amount
                 if tx.category.value != "renda":
                     by_category[category_name] = by_category.get(category_name, 0.0) - tx.amount
-                if tx.merchant:
-                    by_merchant[tx.merchant] = by_merchant.get(tx.merchant, 0.0) - tx.amount
+                if merchant_name:
+                    by_merchant[merchant_name] = by_merchant.get(merchant_name, 0.0) - tx.amount
             elif tx.type == TransactionType.CREDIT:
                 total_income += tx.amount
             elif tx.type == TransactionType.DEBIT:
                 total_expenses += tx.amount
                 by_category[category_name] = by_category.get(category_name, 0.0) + tx.amount
-                if tx.merchant:
-                    by_merchant[tx.merchant] = by_merchant.get(tx.merchant, 0.0) + tx.amount
+                if merchant_name:
+                    by_merchant[merchant_name] = by_merchant.get(merchant_name, 0.0) + tx.amount
 
         total_income = round(total_income, 2)
         total_expenses = round(max(total_expenses, 0.0), 2)

@@ -1,11 +1,13 @@
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 
+import '../../../core/settings/settings_controller.dart';
 import '../../../core/theme/app_theme.dart';
 import '../../../core/widgets/app_motion.dart';
 import '../../../core/widgets/screen_header.dart';
 import '../../finance/domain/finance_models.dart';
 import '../../finance/presentation/finance_controller.dart';
+import '../../import_guide/presentation/import_flow_screen.dart';
 
 /// Arquivo escolhido pelo usuário, com leitura adiada dos bytes.
 class PickedStatement {
@@ -36,36 +38,18 @@ class TransactionsScreen extends StatelessWidget {
   /// Troca o seletor de arquivos (testes).
   final StatementPicker? pickFile;
 
+  /// Abre o fluxo guiado de importação. Com o tutorial desligado em Ajustes,
+  /// o fluxo já abre o seletor de arquivos.
   Future<void> _import(BuildContext context) async {
     final finance = FinanceScope.of(context);
-    final messenger = ScaffoldMessenger.of(context);
     if (finance.importing) return;
-
-    void say(String message) => messenger
-      ..hideCurrentSnackBar()
-      ..showSnackBar(SnackBar(content: Text(message)));
-
-    final PickedStatement? picked;
-    try {
-      picked = await (pickFile ?? pickStatementFile)();
-    } on Object {
-      say('Não foi possível abrir o seletor de arquivos.');
-      return;
-    }
-    if (picked == null) return;
-
-    try {
-      final result = await finance.importStatement(
-        picked.name,
-        picked.readBytes,
-      );
-      say(
-        '${_plural(result.importedCount, 'transação lida', 'transações lidas')}'
-        ' de ${result.filename}.',
-      );
-    } on ImportFailure catch (e) {
-      say(e.message);
-    }
+    final tutorial = SettingsScope.maybeOf(context)?.showImportTutorial ?? true;
+    await Navigator.of(context).push(
+      MaterialPageRoute<ImportResult?>(
+        builder: (_) =>
+            ImportFlowScreen(pickFile: pickFile, startAtPicker: !tutorial),
+      ),
+    );
   }
 
   @override

@@ -21,6 +21,7 @@ _PARCELA_SIMPLES = re.compile(r"\s*-?\s*(\d{1,2})\s*/\s*(\d{1,2})\s*$")
 _PREFIXOS_LOJA = re.compile(
     r"^(?:EBW\s*\*\s*|MP\s*\*\s*|PAG\s*\*\s*|PG\s*\*\s*|IFD\s*\*\s*|Mp\s+)", re.IGNORECASE
 )
+_NUMERO_LOJA = re.compile(r"\s+\d{1,6}$")
 _SUFIXOS_LOJA = re.compile(r"\s*-\s*NuPay\s*$|\s+NuPay\s*$", re.IGNORECASE)
 
 
@@ -85,6 +86,7 @@ class ParsedMemo:
 def _clean_merchant(raw: str) -> str:
     name = _PREFIXOS_LOJA.sub("", raw.strip())
     name = _SUFIXOS_LOJA.sub("", name)
+    name = _NUMERO_LOJA.sub("", name)  # "DROGASIL 123" -> "DROGASIL"
     return re.sub(r"\s+", " ", name).strip(" -*")
 
 

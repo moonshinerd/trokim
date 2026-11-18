@@ -77,6 +77,17 @@ def test_estorno_com_mesmo_fitid_da_compra_nao_e_duplicata():
     assert estorno.type == TransactionType.CREDIT
 
 
+def test_numero_da_loja_sai_do_nome_do_estabelecimento():
+    txs = ParserService.parse_ofx(FATURA_PADRAO, "f.ofx")
+    assert any(t.merchant == "DROGASIL" for t in txs)
+
+
+def test_estorno_abate_o_estabelecimento_no_ranking():
+    resumo = CalculationService.calculate_summary(ParserService.parse_ofx(FATURA_PADRAO, "f.ofx"))
+    nomes = [m["merchant"] for m in resumo.top_merchants]
+    assert "99Food" not in nomes  # compra e estorno se anulam
+
+
 def test_totais_do_cartao_ignoram_pagamento_e_abatem_estorno():
     resumo = CalculationService.calculate_summary(ParserService.parse_ofx(FATURA_PADRAO, "f.ofx"))
     # compras: 23,90 + 32,34 + 89,90 + 45,00 + 53,48 = 244,62; estorno de 53,48
@@ -94,6 +105,14 @@ def test_pix_remove_documento_banco_agencia_e_conta():
     assert empresa.counterparty_kind == CounterpartyKind.COMPANY
     pessoa = next(t for t in txs if t.merchant == "Maria Exemplo da Silva")
     assert pessoa.counterparty_kind == CounterpartyKind.PERSON
+
+
+def test_pix_para_pessoa_nao_expoe_o_nome_no_ranking():
+    resumo = CalculationService.calculate_summary(ParserService.parse_ofx(EXTRATO_PADRAO, "e.ofx"))
+    nomes = {m["merchant"] for m in resumo.top_merchants}
+    assert "Pix para pessoas" in nomes
+    assert "Maria Exemplo da Silva" not in nomes
+    assert "EMPRESA FICTICIA LTDA." in nomes
 
 
 def test_conta_naturezas_e_totais_sem_movimentacoes_internas():

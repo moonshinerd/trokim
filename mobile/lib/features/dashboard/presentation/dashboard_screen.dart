@@ -194,9 +194,114 @@ class _SummaryContent extends StatelessWidget {
               ),
             ),
           ),
+        if (summary.topMerchants.isNotEmpty) ...[
+          Padding(
+            padding: const EdgeInsets.fromLTRB(20, 24, 20, 12),
+            child: Align(
+              alignment: Alignment.centerLeft,
+              child: Semantics(
+                header: true,
+                child: Text(
+                  'Onde você mais gastou',
+                  style: Theme.of(context).textTheme.titleLarge,
+                ),
+              ),
+            ),
+          ),
+          for (final item in summary.topMerchants)
+            Padding(
+              padding: const EdgeInsets.fromLTRB(20, 0, 20, 8),
+              child: _MerchantRow(
+                merchant: item,
+                share: summary.topMerchants.first.total <= 0
+                    ? 0
+                    : item.total / summary.topMerchants.first.total,
+              ),
+            ),
+        ],
+        if (summary.excludedCount > 0)
+          Padding(
+            padding: const EdgeInsets.fromLTRB(20, 16, 20, 0),
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Icon(
+                  Icons.info_outline_rounded,
+                  size: 18,
+                  color: context.colors.muted,
+                ),
+                const SizedBox(width: 8),
+                Expanded(
+                  child: Text(
+                    '${summary.excludedCount} '
+                    '${summary.excludedCount == 1 ? 'movimentação ficou' : 'movimentações ficaram'}'
+                    ' fora dos totais (pagamento de fatura, resgates e '
+                    'transferências entre suas contas), para não contar o mesmo '
+                    'dinheiro duas vezes.',
+                    style: TextStyle(
+                      color: context.colors.muted,
+                      fontSize: 13,
+                      height: 1.4,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
       ],
     );
   }
+}
+
+class _MerchantRow extends StatelessWidget {
+  const _MerchantRow({required this.merchant, required this.share});
+  final MerchantTotal merchant;
+  final double share;
+
+  @override
+  Widget build(BuildContext context) => Semantics(
+    label: '${merchant.merchant}, ${_brl.format(merchant.total)}',
+    child: ExcludeSemantics(
+      child: Row(
+        children: [
+          Expanded(
+            flex: 7,
+            child: Text(
+              merchant.merchant,
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+              style: const TextStyle(fontWeight: FontWeight.w600),
+            ),
+          ),
+          const SizedBox(width: 12),
+          Expanded(
+            flex: 3,
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(6),
+              child: LinearProgressIndicator(
+                value: share.clamp(0.0, 1.0),
+                minHeight: 8,
+                backgroundColor: context.colors.line,
+                valueColor: AlwaysStoppedAnimation(context.colors.accent),
+              ),
+            ),
+          ),
+          const SizedBox(width: 12),
+          SizedBox(
+            width: 92,
+            child: Text(
+              _brl.format(merchant.total),
+              textAlign: TextAlign.end,
+              style: const TextStyle(
+                fontWeight: FontWeight.w800,
+                fontFeatures: [FontFeature.tabularFigures()],
+              ),
+            ),
+          ),
+        ],
+      ),
+    ),
+  );
 }
 
 class _MessageCard extends StatelessWidget {

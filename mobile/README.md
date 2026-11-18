@@ -23,6 +23,7 @@ mobile/
 │       ├── finance/          # Modelos, repositório e controlador do resumo e da importação
 │       ├── chat_assistant/   # Chat com resposta fundamentada, fontes clicáveis e histórico de conversas
 │       ├── agents/           # Contratos Dart estritos para resposta e trilha multiagente
+│       ├── import_guide/     # Fluxo guiado de importação (banco, tutorial do Nubank com pular, resumo)
 │       ├── budget_scenarios/ # Simulador e comparador de cenários
 │       └── settings/         # Aba Ajustes: tema, animações, modo multiagente, endereço da API e conexão
 ├── assets/
@@ -79,6 +80,17 @@ salvo no aparelho. Ligado, o chat usa `POST /v1/agents/ask`; cada resposta traz
 trilha tipada dos agentes, duração, cálculos e validações. O botão **Como
 cheguei a essa resposta** abre as etapas e explica abstenções/rejeições em
 linguagem simples. Desligado, o fluxo configurado de chat continua igual.
+
+### Importação guiada (Nubank)
+
+**Extratos → Importar extrato** abre `features/import_guide/`: escolha do banco, tipo (fatura do
+cartão ou extrato da conta), tutorial passo a passo e resumo. Em toda tela há **Pular tutorial**,
+e **Já tenho o arquivo** vai direto ao seletor. **Não mostrar este tutorial de novo** (e o
+interruptor **Tutorial ao importar extratos** em Ajustes) controla `showImportTutorial`, salvo no
+aparelho; desligado, o app abre o seletor na hora. O resumo mostra o banco detectado pela API,
+lançamentos lidos, repetidos ignorados, movimentações fora dos totais e gastos sem categoria. O
+Resumo ganha **Onde você mais gastou**, calculado pela API. Testes:
+`test/import_flow_test.dart` e `test/nubank_summary_test.dart`.
 
 ### Timeout da geração
 

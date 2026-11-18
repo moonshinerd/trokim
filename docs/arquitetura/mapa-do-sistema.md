@@ -102,7 +102,7 @@ graph TD
 
 ## 2. Fluxo de Importação de Extratos e Resumo
 
-Os lançamentos importados ficam na **memória da API** (somem ao reiniciá-la, [ADR 0015](../adr/0015-dados-reais-importacao-e-endereco-da-api.md)). O app só exibe o que o backend calculou.
+Pagamento de fatura, resgates e transferências próprias ficam fora dos totais e o estorno abate a despesa ([ADR 0017](../adr/0017-perfis-de-banco-e-natureza-do-lancamento.md)). Os lançamentos importados ficam na **memória da API** (somem ao reiniciá-la, [ADR 0015](../adr/0015-dados-reais-importacao-e-endereco-da-api.md)). O app só exibe o que o backend calculou.
 
 ```mermaid
 sequenceDiagram
@@ -114,13 +114,13 @@ sequenceDiagram
     participant Calc as Calculation Service
     participant Mem as Memória da API
 
-    User->>Mobile: Escolhe um arquivo .ofx ou .pdf (seletor do sistema)
+    User->>Mobile: Escolhe o banco (ou pula) e um arquivo .ofx ou .pdf (seletor do sistema)
     Mobile->>API: POST /v1/transactions/upload (multipart)
     API->>Parser: parse_ofx ou parse_pdf_text
-    Parser->>Parser: Extrai os lançamentos e marca duplicatas do arquivo
+    Parser->>Parser: Detecta o banco, classifica a natureza, limpa o estabelecimento e marca duplicatas (FITID)
     API->>API: Compara com os já importados (data, descrição, valor e tipo)
     API->>Mem: Guarda os lançamentos (duplicatas marcadas ficam fora dos totais)
-    API-->>Mobile: filename, imported_count, duplicate_count
+    API-->>Mobile: filename, imported_count, duplicate_count, institution, kind, by_nature
     Mobile->>API: GET /v1/transactions/summary
     API->>Calc: calculate_summary(lançamentos)
     Calc-->>API: Receitas, despesas, saldo, taxa de poupança e categorias

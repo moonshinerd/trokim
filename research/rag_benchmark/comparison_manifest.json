@@ -6,7 +6,7 @@
     "api/app/prompts/prompt_llm_pure_v1.txt": "db45799661a9f987285422818d4d4049d192394a4d93d79f13c197e69a6f17d8",
     "api/app/prompts/prompt_naive_rag_v1.txt": "539af69d703882cb9de1e4adc08098b5fbde87db489ee47ae0ff2e06ee224ccb",
     "api/app/prompts/prompt_trokim_grounded_v1.txt": "fb6202075d74b0ee07ba2aad9052dea0d885a68265a1eacd78e3fa4ccf1cb4bf",
-    "api/app/services/calculation_service.py": "7be9a0cd54157137fa5b3710e4625c1a2ee87f50c0dce16c9c9e49abf3f26338",
+    "api/app/services/calculation_service.py": "40ae3e60d0c144fc7fb47f72b54aa1459013dba861d51301d12cdfd908a7a2de",
     "research/knowledge_base/anpd_necessidade.txt": "9fccb394d061e89419040ffd48882b4a06c1db4c638adfaa605ec6a7d252eb3a",
     "research/knowledge_base/anpd_retencao.txt": "0285eaca4320c63bec4370aab4399a993e45f06dbf40c34d3cfaea57b680c8a9",
     "research/knowledge_base/anpd_seguranca.txt": "3ec505fe9ded3e61f5e6064f6bd235fec4855eb99e19ac969b1c3926458cc2c6",

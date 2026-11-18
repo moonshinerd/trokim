@@ -59,7 +59,7 @@ FATURA_PADRAO = fatura_cartao(
         lancamento("DEBIT", "20261104", "-32.34", "a2", "Pix no Crédito - LOJA EXEMPLO"),
         lancamento("DEBIT", "20261105", "-89.90", "a3", "Mercado Livre - Parcela 3/10"),
         lancamento("DEBIT", "20261106", "-45.00", "a4", "DROGASIL 123"),
-        lancamento("DEBIT", "20261107", "-53.48", "a5", "99Food - Pedido"),
+        lancamento("DEBIT", "20261107", "-53.48", "a5", "99Food"),
         lancamento("CREDIT", "20261108", "53.48", "a5", "99Food - Estorno"),
         lancamento("CREDIT", "20261109", "500.00", "a6", "Pagamento recebido"),
     ]

@@ -243,6 +243,18 @@ O Trokim reconhece o OFX do Nubank pelo conteúdo do arquivo (não pelo nome) e 
 - **Extrato da conta:** tela inicial *→ Saldo em conta →* três pontinhos *→ Pedir extrato →*
   escolha mês e ano. O e-mail traz OFX, PDF e CSV; use o **OFX**.
 
+No app, o caminho é **Extratos → Importar extrato**. O fluxo é guiado, mas **nunca obriga**: em qualquer
+tela dá para **Pular tutorial** ou tocar em **Já tenho o arquivo** para ir direto ao seletor. No
+último passo, **Não mostrar este tutorial de novo** desliga o passo a passo (e **Ajustes → Tutorial
+ao importar extratos** o reativa); com ele desligado, **Importar extrato** abre o seletor de arquivos
+na hora. Ao terminar, o app mostra o que detectou (banco e tipo), quantos lançamentos leu, quantos
+repetidos ignorou, quantas movimentações ficaram fora dos totais e quantos gastos ficaram sem
+categoria.
+
+| Banco | Passo a passo (cartão) | Último passo |
+|---|---|---|
+| ![Escolha do banco, com Nubank, Outro banco e o atalho Já tenho o arquivo](assets/app/importacao-banco.png){ width="200" } | ![Primeiro passo do tutorial do cartão, com indicador de progresso e opção de pular](assets/app/importacao-tutorial.png){ width="200" } | ![Último passo do tutorial, com a opção de não mostrar de novo](assets/app/importacao-tutorial-final.png){ width="200" } |
+
 O que o Trokim faz com esses arquivos:
 
 | Situação | Tratamento |
@@ -252,6 +264,14 @@ O que o Trokim faz com esses arquivos:
 | Pix | Só o nome e o tipo (pessoa ou empresa) aparecem; CPF, banco, agência e conta são descartados |
 | `Parcela 3/10` | Vira parcela 3 de 10 |
 | Reenviar o mesmo arquivo | Não altera os totais (deduplicação pelo identificador do banco) |
+
+Depois da importação, o **Resumo** ganha **Onde você mais gastou** (maiores estabelecimentos, com Pix
+para pessoas agrupados e sem nomes) e o aviso de quantas movimentações ficaram fora dos totais. Tudo
+vem calculado pela API.
+
+| Resumo da importação | Resumo com estabelecimentos |
+|---|---|
+| ![Resumo da importação: banco detectado, lançamentos lidos, movimentações fora dos totais e gastos sem categoria](assets/app/importacao-resumo.png){ width="240" } | ![Resumo com categorias, onde você mais gastou e o aviso de movimentações fora dos totais](assets/app/resumo-estabelecimentos.png){ width="240" } |
 
 A resposta de `POST /v1/transactions/upload` informa `institution`, `kind` (`cartao` ou
 `conta`), `by_nature`, `uncategorized_count` e `ledger_balance` (saldo declarado no arquivo, só

@@ -72,6 +72,17 @@ void main() {
     expect(settings.generativeChat, isFalse);
   });
 
+  testWidgets('o tutorial de importação vem ligado e pode ser desligado', (
+    tester,
+  ) async {
+    final settings = await openSettings(tester);
+    expect(settings.showImportTutorial, isTrue);
+    await _scrollTo(tester, 'Tutorial ao importar extratos');
+    await tester.tap(find.text('Tutorial ao importar extratos'));
+    await tester.pumpAndSettle();
+    expect(settings.showImportTutorial, isFalse);
+  });
+
   testWidgets('alterna animações e abertura', (tester) async {
     final settings = await openSettings(tester);
     expect(settings.reduceMotion, isFalse);
