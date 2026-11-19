@@ -19,6 +19,8 @@ RUN uv sync --no-dev
 
 # Copia código da aplicação e base de conhecimento
 COPY api/app ./app
+COPY api/migrations ./migrations
+COPY api/alembic.ini ./alembic.ini
 COPY research/knowledge_base /srv/research/knowledge_base
 
 EXPOSE 8000
