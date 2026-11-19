@@ -17,6 +17,7 @@ from app.services.statement_profiles import (
     OfxMeta,
     decode_ofx,
     detect_statement,
+    doc_is_company,
     parse_ofx_meta,
 )
 
@@ -74,6 +75,9 @@ class ParserService:
                         parsed.merchant or parsed.description,
                         tx_type=tx_type,
                         nature=parsed.nature,
+                        cnpj=parsed.counterparty_doc
+                        if doc_is_company(parsed.counterparty_doc)
+                        else None,
                     )
                     extra = {
                         "nature": parsed.nature,

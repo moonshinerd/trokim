@@ -1,4 +1,4 @@
-.PHONY: help setup lint format test docs-serve docs-build api-run mobile-run rag-eval synthetic-data research-test ingest comparison-validate comparison-eval comparison-run report-charts
+.PHONY: help setup lint format test docs-serve docs-build api-run mobile-run rag-eval synthetic-data research-test ingest comparison-validate comparison-eval comparison-run multiagent-run report-charts cnpj-download cnpj-index
 
 RAG_REPORT ?= artifacts/research/current.json
 
@@ -18,7 +18,11 @@ help:
 	@echo "  make comparison-validate - Valida integridade do material comparativo (Semana 3)"
 	@echo "  make comparison-eval     - Executa o benchmark comparativo das 3 abordagens (Semana 3)"
 	@echo "  make comparison-run RUN=<data>-<modelo> MODEL=<modelo litellm> - Registra uma nova execução versionada"
+	@echo "  make comparison-run ... MULTIAGENT=1 - Inclui a abordagem multiagente (Semana 4)"
+	@echo "  make multiagent-run RUN=<data>-<modelo> MODEL=<modelo> - 20 cenários multiagente"
 	@echo "  make report-charts       - Gera os gráficos versionados do benchmark para o MkDocs"
+	@echo "  make cnpj-download MES=2026-11 - Baixa os dados abertos do CNPJ (fora do repositório)"
+	@echo "  make cnpj-index MES=2026-11    - Gera o índice CNPJ -> categoria e o dicionário de redes"
 
 setup:
 	@test -f api/.env || cp api/.env.example api/.env
@@ -79,8 +83,25 @@ comparison-run:
 		--output ../research/rag_benchmark/results/comparison/$(RUN)/comparison_results.json \
 		--report-json ../research/rag_benchmark/results/comparison/$(RUN)/comparison_report.json \
 		--report-md ../research/rag_benchmark/results/comparison/$(RUN)/comparison_report.md \
-		--chart-svg ../research/rag_benchmark/results/comparison/$(RUN)/comparison_chart.svg
+		--chart-svg ../research/rag_benchmark/results/comparison/$(RUN)/comparison_chart.svg \
+		$(if $(MULTIAGENT),--multiagent)
+
+# Os 20 cenários multiagente da Semana 4 (#60), com o extrato sintético.
+multiagent-run:
+	@test -n "$(RUN)" -a -n "$(MODEL)" || { echo "Uso: make multiagent-run RUN=2026-11-18-qwen2.5-1.5b MODEL=ollama/qwen2.5:1.5b"; exit 1; }
+	cd api && uv run python ../research/rag_benchmark/run_multiagent.py --model "$(MODEL)" --temperature 0.1 \
+		--output-dir ../research/rag_benchmark/results/multiagent/$(RUN)
 
 # Gráficos dos docs: lidos de run.json e dos resultados; matplotlib só é trazido por este comando.
 report-charts:
 	uv run --with matplotlib python research/rag_benchmark/make_report_charts.py
+
+# Categorização por atividade (ADR 0020): dados abertos do CNPJ, baixados uma vez, fora do git.
+MES ?= 2026-11
+CNPJ_ORIGEM ?= $(HOME)/dados/receita-cnpj/$(MES)
+
+cnpj-download:
+	research/cnpj/baixar.sh $(MES) "$(CNPJ_ORIGEM)"
+
+cnpj-index:
+	cd api && uv run python ../research/cnpj/gerar_indice_cnpj.py --origem "$(CNPJ_ORIGEM)"

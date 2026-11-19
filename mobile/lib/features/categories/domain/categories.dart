@@ -49,6 +49,12 @@ const expenseCategories = <CategoryInfo>[
     Icons.receipt_rounded,
     Color(0xFF6B7A90),
   ),
+  CategoryInfo(
+    'impostos',
+    'Impostos e taxas',
+    Icons.account_balance_rounded,
+    Color(0xFFB0712F),
+  ),
   _other,
 ];
 
