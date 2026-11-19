@@ -44,11 +44,13 @@ class CommunicationAgent:
         llm_provider: LLMProvider,
         prompt_path: Path | None = None,
         temperature: float | None = None,
+        max_tokens: int | None = None,
     ) -> None:
         self.name: AgentName = AgentName.COMMUNICATION
         self.llm_provider = llm_provider
         self.prompt_path = prompt_path or DEFAULT_PROMPT_PATH
         self.temperature = temperature if temperature is not None else settings.LLM_TEMPERATURE
+        self.max_tokens = max_tokens if max_tokens is not None else settings.LLM_MAX_TOKENS
         self._load_template()
 
     def _load_template(self) -> None:
@@ -220,6 +222,7 @@ class CommunicationAgent:
                 prompt=prompt,
                 context_chunks=ctx.evidences or None,
                 temperature=self.temperature,
+                max_tokens=self.max_tokens,
             )
         except Exception as exc:
             duration = max(1, int(round((time.perf_counter() - t0) * 1000)))

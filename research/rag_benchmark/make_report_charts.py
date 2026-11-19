@@ -10,9 +10,10 @@ Cada execução da comparação mora em `results/comparison/<run_id>/` com um `r
 e a comparação entre execuções para `docs/assets/comparacao/entre-execucoes/`. Para
 registrar uma nova execução, veja `docs/pesquisa/resultados.md`.
 
-Cores: três primeiras posições da paleta categórica validada (azul, laranja, verde-água),
-sempre com o valor escrito em cada barra, porque o verde-água tem contraste baixo sobre
-o branco.
+Cores: quatro primeiras posições da paleta categórica validada (azul, laranja, verde-água e
+amarelo, este para o multiagente da Semana 4), sempre com o valor escrito em cada barra,
+porque verde-água e amarelo têm contraste baixo sobre o branco. Os cenários multiagente
+(`results/multiagent/<run_id>/`) ganham dois gráficos na pasta da execução de mesmo id.
 """
 
 from __future__ import annotations
@@ -33,11 +34,21 @@ SURFACE = "#ffffff"
 INK = "#0b0b0b"
 INK_2 = "#52514e"
 GRID = "#e4e3df"
-BLUE, ORANGE, AQUA = "#2a78d6", "#eb6834", "#1baf7a"
+BLUE, ORANGE, AQUA, YELLOW = "#2a78d6", "#eb6834", "#1baf7a", "#eda100"
 
 KEYS = ["llm_pura", "rag_ingenuo", "trokim_estruturado"]
 LABELS = ["LLM pura", "RAG ingênuo", "Trokim estruturado"]
 COLORS = [BLUE, ORANGE, AQUA]
+# A cor segue a abordagem, nunca a posição (o multiagente é sempre amarelo).
+ALL_KEYS = [*KEYS, "multiagente"]
+LABEL_OF = dict(zip(ALL_KEYS, [*LABELS, "Multiagente"], strict=True))
+COLOR_OF = dict(zip(ALL_KEYS, [*COLORS, YELLOW], strict=True))
+REFERENCE_MODEL = "ollama/qwen2.5:1.5b"  # variação entre execuções: só o mesmo modelo
+
+
+def run_keys(run: dict) -> list[str]:
+    return [k for k in ALL_KEYS if k in run["approaches"]]
+
 
 # Metas da Entrega 2 (docs/rag/index.md).
 WEEK2_TARGETS = {"recall_at_3": 0.90, "grounded_accuracy": 0.90, "abstention_accuracy": 1.00}
@@ -92,20 +103,23 @@ def load_runs() -> list[dict]:
 
 def fig_metrics(run: dict, out: Path) -> None:
     approaches = run["approaches"]
+    keys = run_keys(run)
     series = {
-        "F1 de tokens": [approaches[k]["f1_tokens"] for k in KEYS],
-        "Cobertura de\nconceitos": [approaches[k]["concept_coverage"] for k in KEYS],
+        "F1 de tokens": [approaches[k]["f1_tokens"] for k in keys],
+        "Cobertura de\nconceitos": [approaches[k]["concept_coverage"] for k in keys],
         "Inconsistência\n(heurística; menor\né melhor)": [
-            approaches[k]["inconsistency_rate"] for k in KEYS
+            approaches[k]["inconsistency_rate"] for k in keys
         ],
-        "F1 de abstenção": [approaches[k]["abstention_f1"] for k in KEYS],
+        "F1 de abstenção": [approaches[k]["abstention_f1"] for k in keys],
     }
     names = list(series)
-    fig, ax = plt.subplots(figsize=(6.8, 3.5), facecolor=SURFACE)
+    fig, ax = plt.subplots(figsize=(6.8 if len(keys) <= 3 else 7.6, 3.5), facecolor=SURFACE)
     style(ax)
-    width = 0.24
-    for i, (label, color) in enumerate(zip(LABELS, COLORS, strict=True)):
-        xs = [g + (i - 1) * (width + 0.03) for g in range(len(names))]
+    width = 0.24 if len(keys) <= 3 else 0.19
+    labels = [LABEL_OF[k] for k in keys]
+    colors = [COLOR_OF[k] for k in keys]
+    for i, (label, color) in enumerate(zip(labels, colors, strict=True)):
+        xs = [g + (i - (len(keys) - 1) / 2) * (width + 0.03) for g in range(len(names))]
         values = [100 * series[name][i] for name in names]
         bars = ax.bar(xs, values, width, color=color, label=label, edgecolor=SURFACE)
         for bar, value in zip(bars, values, strict=True):
@@ -115,24 +129,25 @@ def fig_metrics(run: dict, out: Path) -> None:
                 pct(value),
                 ha="center",
                 va="bottom",
-                fontsize=7.5,
+                fontsize=7.5 if len(keys) <= 3 else 6.5,
                 color=INK,
             )
     ax.set_xticks(range(len(names)), names)
     ax.set_ylim(0, 100)
     ax.set_yticks(range(0, 101, 20), [f"{v}%" for v in range(0, 101, 20)])
-    legend_top(ax, ncol=3)
+    legend_top(ax, ncol=len(keys))
     save(fig, out / "fig1-metricas.png")
 
 
 def fig_audit(run: dict, out: Path) -> None:
     """Alucinações confirmadas pela revisão, separadas do que a heurística sinalizou."""
-    audit = [run["approaches"][k]["audit"] for k in KEYS]
+    keys = [k for k in run_keys(run) if run["approaches"][k].get("audit")]
+    audit = [run["approaches"][k]["audit"] for k in keys]
     cases = run["cases"]
     fig, ax = plt.subplots(figsize=(6.8, 3.4), facecolor=SURFACE)
     style(ax)
     tops = []
-    for i, (info, color) in enumerate(zip(audit, COLORS, strict=True)):
+    for i, (info, color) in enumerate(zip(audit, [COLOR_OF[k] for k in keys], strict=True)):
         confirmed_flagged = info["flagged"] - info["false_positives"]
         missed = info["confirmed"] - confirmed_flagged  # confirmadas que a heurística não viu
         false_pos = info["false_positives"]
@@ -182,7 +197,7 @@ def fig_audit(run: dict, out: Path) -> None:
             color=INK,
             fontweight="bold",
         )
-    ax.set_xticks(range(3), LABELS)
+    ax.set_xticks(range(len(keys)), [LABEL_OF[k] for k in keys])
     ax.set_ylim(0, max(tops) + 4)
     ax.set_yticks(range(0, max(tops) + 1, 5))
     ax.set_ylabel(f"Casos (de {cases})", color=INK_2, fontsize=8.5)
@@ -221,24 +236,26 @@ def fig_audit(run: dict, out: Path) -> None:
 
 
 def fig_latency(run: dict, out: Path) -> None:
-    values = [run["approaches"][k]["latency_ms"] for k in KEYS]
-    fig, ax = plt.subplots(figsize=(6.8, 1.9), facecolor=SURFACE)
+    keys = run_keys(run)
+    values = [run["approaches"][k]["latency_ms"] for k in keys]
+    fig, ax = plt.subplots(figsize=(6.8, 0.55 * len(keys) + 0.25), facecolor=SURFACE)
     style(ax, grid_axis="x")
-    ypos = list(range(len(LABELS)))[::-1]
-    for y, value, color in zip(ypos, values, COLORS, strict=True):
+    ypos = list(range(len(keys)))[::-1]
+    for y, value, color in zip(ypos, values, [COLOR_OF[k] for k in keys], strict=True):
         ax.barh(y, value, 0.5, color=color, edgecolor=SURFACE)
         ax.text(
-            value + 40,
+            value + max(values) * 0.01,
             y,
             f"{value:,} ms".replace(",", "."),
             va="center",
             fontsize=8.5,
             color=INK,
         )
-    ax.set_yticks(ypos, LABELS)
+    ax.set_yticks(ypos, [LABEL_OF[k] for k in keys])
     ax.set_xlim(0, max(values) * 1.25)
+    where = "modelo na nuvem" if not run["model"].startswith("ollama/") else "execução local"
     ax.set_xlabel(
-        f"Latência média por resposta (ms); {run['model']}, execução local",
+        f"Latência média por resposta (ms); {run['model']}, {where}",
         color=INK_2,
         fontsize=8.5,
     )
@@ -253,7 +270,7 @@ def fig_across_runs(runs: list[dict], out: Path) -> None:
         ("f1_tokens", "F1 de tokens"),
     ]
     fig, axes = plt.subplots(1, 3, figsize=(7.4, 3.2), facecolor=SURFACE, sharey=True)
-    width = 0.34
+    width = min(0.34, 0.8 / len(runs))
     hatches = ["", "///", "xxx", "..."]
     for ax, (metric, title) in zip(axes, panels, strict=True):
         style(ax)
@@ -298,6 +315,95 @@ def fig_across_runs(runs: list[dict], out: Path) -> None:
         bbox_to_anchor=(0.06, 0.96),
     )
     save(fig, out / "fig-variacao-entre-execucoes.png")
+
+
+SCENARIO_NAMES = {
+    "evidencia": "Evidência",
+    "calculo": "Cálculo",
+    "evidencia_calculo": "Evidência\n+ cálculo",
+    "armadilha": "Armadilha\n(livre)",
+}
+
+
+def fig_scenarios(report: dict, out: Path) -> None:
+    """Desfecho dos 20 cenários por categoria (respondida, abstenção, rejeição)."""
+    by_category = report["free"]["by_category"]
+    categories = list(SCENARIO_NAMES)
+    outcomes = [
+        ("answered", "Respondida", BLUE),
+        ("abstained", "Abstenção (Research)", ORANGE),
+        ("rejected", "Retida (Validation)", AQUA),
+    ]
+    fig, ax = plt.subplots(figsize=(6.8, 3.2), facecolor=SURFACE)
+    style(ax)
+    for x, category in enumerate(categories):
+        bottom = 0
+        for key, _, color in outcomes:
+            count = by_category[category][key]
+            if count:
+                ax.bar(x, count, 0.5, bottom=bottom, color=color, edgecolor=SURFACE, linewidth=2)
+                ax.text(
+                    x,
+                    bottom + count / 2,
+                    str(count),
+                    ha="center",
+                    va="center",
+                    fontsize=9,
+                    color=INK,
+                    fontweight="bold",
+                    bbox={"facecolor": SURFACE, "edgecolor": "none", "pad": 1.0},
+                )
+                bottom += count
+        row = by_category[category]
+        note = f"esperado: {row['status_ok']}/{row['cases']}"
+        if row["numbers_expected"]:
+            note += f"\nnúmeros: {row['numbers_reproduced']}/{row['numbers_expected']}"
+        ax.text(x, bottom + 0.15, note, ha="center", va="bottom", fontsize=7.5, color=INK_2)
+    ax.set_xticks(range(len(categories)), [SCENARIO_NAMES[c] for c in categories])
+    ax.set_ylim(0, 7.2)
+    ax.set_yticks(range(0, 6))
+    ax.set_ylabel("Cenários (de 5)", color=INK_2, fontsize=8.5)
+    handles = [plt.Rectangle((0, 0), 1, 1, color=c, label=label) for _, label, c in outcomes]
+    ax.legend(
+        handles=handles,
+        ncol=3,
+        frameon=False,
+        fontsize=8,
+        labelcolor=INK_2,
+        loc="lower left",
+        bbox_to_anchor=(0, 1.0),
+    )
+    save(fig, out / "fig4-multiagente-cenarios.png")
+
+
+def fig_agent_latency(report: dict, run_id: str, out: Path) -> None:
+    """Latência média de cada agente quando ele roda (passos pulados não entram)."""
+    names = {
+        "research": "Research",
+        "analysis": "Analysis",
+        "communication": "Communication",
+        "validation": "Validation",
+    }
+    latency = report["free"]["latency_by_agent_ms"]
+    agents = [a for a in names if latency.get(a) is not None]
+    values = [latency[a] for a in agents]
+    fig, ax = plt.subplots(figsize=(6.8, 0.5 * len(agents) + 0.4), facecolor=SURFACE)
+    style(ax, grid_axis="x")
+    ypos = list(range(len(agents)))[::-1]
+    for y, value in zip(ypos, values, strict=True):
+        ax.barh(y, value, 0.5, color=YELLOW, edgecolor=SURFACE)
+        ax.text(
+            value + max(values) * 0.01,
+            y,
+            f"{value:,.0f} ms".replace(",", "."),
+            va="center",
+            fontsize=8.5,
+            color=INK,
+        )
+    ax.set_yticks(ypos, [names[a] for a in agents])
+    ax.set_xlim(0, max(values) * 1.25)
+    ax.set_xlabel(f"Latência média por passo (ms); execução {run_id}", color=INK_2, fontsize=8.5)
+    save(fig, out / "fig5-latencia-por-agente.png")
 
 
 def fig_week2_targets(out: Path) -> None:
@@ -414,8 +520,14 @@ def main() -> None:
         fig_latency(run, out)
         if run.get("audit"):
             fig_audit(run, out)
-    if len(runs) > 1:
-        fig_across_runs(runs, OUT_DIR / "entre-execucoes")
+    same_model = [run for run in runs if run["model"] == REFERENCE_MODEL]
+    if len(same_model) > 1:
+        fig_across_runs(same_model, OUT_DIR / "entre-execucoes")
+    for path in sorted(RESULTS.glob("multiagent/*/multiagent_report.json")):
+        report = json.loads(path.read_text(encoding="utf-8"))
+        out = OUT_DIR / path.parent.name
+        fig_scenarios(report, out)
+        fig_agent_latency(report, path.parent.name, out)
     fig_week2_targets(OUT_DIR / "semana2")
     fig_alpha(OUT_DIR / "semana2")
 

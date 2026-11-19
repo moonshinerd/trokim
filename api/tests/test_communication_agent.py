@@ -355,3 +355,22 @@ async def test_revisao_literal_remove_bloqueio_da_tentativa_anterior():
     assert (await validator.run(ctx)).status == StepStatus.OK
     assert not ctx.issues
     assert ctx.attempt == 2
+
+
+async def test_redacao_tem_teto_de_tokens():
+    """Sem teto, modelos pequenos geram até estourar o tempo limite (benchmark da #60)."""
+    from app.core.config import settings
+
+    captured: dict = {}
+
+    class CapturingLLM:
+        async def generate(self, prompt: str, **kwargs) -> LLMResponse:
+            captured.update(kwargs)
+            return LLMResponse(content="Resposta.", model="mock")
+
+    await CommunicationAgent(llm_provider=CapturingLLM()).run(AgentContext(question="Q"))
+    assert captured["max_tokens"] == settings.LLM_MAX_TOKENS
+    await CommunicationAgent(llm_provider=CapturingLLM(), max_tokens=123).run(
+        AgentContext(question="Q")
+    )
+    assert captured["max_tokens"] == 123
