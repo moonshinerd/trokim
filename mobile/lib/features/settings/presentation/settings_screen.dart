@@ -82,6 +82,13 @@ class SettingsScreen extends StatelessWidget {
                       value: settings.multiAgent,
                       onChanged: settings.setMultiAgent,
                     ),
+                    Divider(height: 1, color: context.colors.line),
+                    _SwitchRow(
+                      title: 'Tutorial ao importar extratos',
+                      subtitle: 'Mostra o passo a passo para baixar o arquivo do seu banco. Desligado, o app abre direto o seletor de arquivos.',
+                      value: settings.showImportTutorial,
+                      onChanged: settings.setShowImportTutorial,
+                    ),
                   ],
                 ),
               ),

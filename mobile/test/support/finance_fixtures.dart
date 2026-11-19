@@ -56,6 +56,31 @@ class FakeFinanceApi {
   /// Se definido, responde ao envio de arquivo (padrão: sucesso).
   http.Response Function(http.Request request)? onUpload;
 
+  /// Se definido, responde à inspeção do arquivo (padrão: sem avisos, banco desconhecido).
+  http.Response Function(http.Request request)? onInspect;
+
+  /// Respostas dos recursos novos (padrão: vazios).
+  Object? statements = const {'statements': [], 'coverage': {}};
+  Object? installments = const {
+    'plans': [],
+    'active_count': 0,
+    'finished_count': 0,
+    'total_remaining': 0,
+    'monthly_projection': [],
+  };
+  Object? accounts = const <Object>[];
+  Object? suggestions = const <Object>[];
+  Object? transfers = const <Object>[];
+
+  /// Resumo conforme os filtros pedidos (`owner`, `view`); `null` usa [summary].
+  Object? Function(http.Request request)? onSummary;
+
+  /// Resposta à correção de categoria (`PATCH /transactions/{uid}/category`).
+  http.Response Function(http.Request request)? onCategory;
+
+  /// Respostas às ações (PATCH/POST); `null` usa uma resposta vazia de sucesso.
+  http.Response Function(http.Request request)? onAction;
+
   /// Se verdadeiro, qualquer chamada falha como se a API estivesse fora.
   bool offline = false;
 
@@ -69,8 +94,46 @@ class FakeFinanceApi {
     requests.add(request);
     if (offline) throw http.ClientException('sem conexão');
     final path = request.url.path;
+    if (request.method == 'POST' && path.endsWith('/transactions/inspect')) {
+      return onInspect?.call(request) ??
+          jsonResponse({
+            'filename': 'arquivo.ofx',
+            'institution': null,
+            'kind': null,
+            'warnings': [],
+            'has_conflict': false,
+            'needs_owner': false,
+          });
+    }
+    if (request.method == 'GET' && path.endsWith('/statements')) {
+      return jsonResponse(statements);
+    }
+    if (request.method == 'GET' && path.endsWith('/installments')) {
+      return jsonResponse(installments);
+    }
+    if (request.method == 'GET' && path.endsWith('/accounts')) {
+      return jsonResponse(accounts);
+    }
+    if (request.method == 'GET' && path.endsWith('/transfers/suggestions')) {
+      return jsonResponse(suggestions);
+    }
+    if (request.method == 'GET' && path.endsWith('/transfers')) {
+      return jsonResponse(transfers);
+    }
+    if (request.method == 'PATCH' &&
+        path.contains('/transactions/') &&
+        path.endsWith('/category')) {
+      return onCategory?.call(request) ??
+          jsonResponse({'updated': 1, 'rule': false, 'merchant': null});
+    }
+    if ((request.method == 'PATCH' || request.method == 'POST') &&
+        (path.contains('/statements/') ||
+            path.contains('/accounts/') ||
+            path.contains('/transfers/'))) {
+      return onAction?.call(request) ?? jsonResponse({});
+    }
     if (request.method == 'GET' && path.endsWith('/transactions/summary')) {
-      return jsonResponse(summary);
+      return jsonResponse(onSummary?.call(request) ?? summary);
     }
     if (request.method == 'GET' && path.endsWith('/transactions')) {
       return jsonResponse(transactions);

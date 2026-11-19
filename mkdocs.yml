@@ -120,3 +120,5 @@ nav:
       - "0014 – Histórico de Conversas e Títulos": adr/0014-historico-de-conversas-e-titulos.md
       - "0015 – Dados Reais e Endereço da API": adr/0015-dados-reais-importacao-e-endereco-da-api.md
       - "0016 – Arquitetura Multiagente (proposta)": adr/0016-arquitetura-multiagente.md
+      - "0017 – Perfis de Banco e Natureza": adr/0017-perfis-de-banco-e-natureza-do-lancamento.md
+      - "0018 – Contas, Períodos e Transferências": adr/0018-contas-periodos-transferencias-e-visoes.md

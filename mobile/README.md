@@ -15,6 +15,7 @@ mobile/
 │   │   ├── constants/        # URLs da API e constantes
 │   │   ├── network/          # Cliente HTTP REST
 │   │   ├── settings/         # Preferências locais (SettingsController/Scope)
+│   │   ├── sharing/          # Arquivo recebido por "Compartilhar" (canal com o MainActivity)
 │   │   ├── theme/            # Design System: paleta, claro/escuro, AppColors
 │   │   └── widgets/          # Moeda 3D, mascote, movimento e cabeçalhos
 │   └── features/
@@ -23,6 +24,10 @@ mobile/
 │       ├── finance/          # Modelos, repositório e controlador do resumo e da importação
 │       ├── chat_assistant/   # Chat com resposta fundamentada, fontes clicáveis e histórico de conversas
 │       ├── agents/           # Contratos Dart estritos para resposta e trilha multiagente
+│       ├── import_guide/     # Fluxo guiado de importação (banco, dono, tipo, tutoriais, detector e resumo)
+│       ├── categories/       # Revisão das categorias dos gastos (regra por estabelecimento)
+│       ├── transfers/        # Transferências entre contas próprias (sugestões, confirmar, desfazer)
+│       ├── installments/     # Parcelamentos e projeção mensal
 │       ├── budget_scenarios/ # Simulador e comparador de cenários
 │       └── settings/         # Aba Ajustes: tema, animações, modo multiagente, endereço da API e conexão
 ├── assets/
@@ -79,6 +84,38 @@ salvo no aparelho. Ligado, o chat usa `POST /v1/agents/ask`; cada resposta traz
 trilha tipada dos agentes, duração, cálculos e validações. O botão **Como
 cheguei a essa resposta** abre as etapas e explica abstenções/rejeições em
 linguagem simples. Desligado, o fluxo configurado de chat continua igual.
+
+### Importação guiada (Nubank)
+
+**Extratos → Importar extrato** abre `features/import_guide/`: escolha do banco, tipo (fatura do
+cartão ou extrato da conta), tutorial passo a passo e resumo. Em toda tela há **Pular tutorial**,
+e **Já tenho o arquivo** vai direto ao seletor. **Não mostrar este tutorial de novo** (e o
+interruptor **Tutorial ao importar extratos** em Ajustes) controla `showImportTutorial`, salvo no
+aparelho; desligado, o app abre o seletor na hora. O resumo mostra o banco detectado pela API,
+lançamentos lidos, repetidos ignorados, movimentações fora dos totais e gastos sem categoria. O
+Resumo ganha **Onde você mais gastou**, calculado pela API. Testes:
+`test/import_flow_test.dart` e `test/nubank_summary_test.dart`.
+
+### Várias contas, Banco do Brasil e categorias (ADR 0018)
+
+- **Bancos e donos:** Nubank (pessoal e Empresas) e Banco do Brasil (fatura Ourocard em PDF e
+  conta em OFX), cada um com seu tutorial. Antes de importar, o app pede à API a análise do
+  arquivo (`/transactions/inspect`) e só pergunta o dono ou mostra um aviso quando é preciso.
+- **Situação do período:** o resumo da importação mostra se a fatura está aberta ou fechada (ou o
+  extrato parcial) e permite confirmar ou configurar o período; em Extratos, cada arquivo tem a
+  situação e uma folha para ajustá-la, além de avisos de lacunas e a lista de contas com dono
+  editável.
+- **Transferências e parcelamentos:** telas próprias, abertas pelos atalhos de Extratos e pelo
+  resumo da importação. O Resumo filtra por dono (Tudo, Pessoal, Empresas), alterna Gastos e
+  Caixa e mostra o total por conta.
+- **Categorias:** tocar numa categoria do Resumo, ou em **Categorizar agora** no resumo da
+  importação, abre `features/categories/`. A escolha vale para o estabelecimento todo e para os
+  próximos arquivos (a API guarda a regra).
+- **Compartilhar:** no Android, OFX e PDF enviados por "Compartilhar" ou "Abrir com" abrem o
+  fluxo com o arquivo já escolhido (`MainActivity.kt` e `lib/core/sharing/`).
+
+Testes: `test/import_flow_contas_test.dart`, `test/library_screens_test.dart`,
+`test/category_review_test.dart` e `test/shared_file_test.dart`.
 
 ### Timeout da geração
 

@@ -3,6 +3,8 @@ import 'package:flutter/services.dart';
 
 import 'core/network/api_client.dart';
 import 'core/settings/settings_controller.dart';
+import 'core/sharing/shared_file_listener.dart';
+import 'core/sharing/shared_file_receiver.dart';
 import 'core/theme/app_theme.dart';
 import 'core/widgets/app_motion.dart';
 import 'core/widgets/coin.dart';
@@ -31,18 +33,24 @@ Future<void> main() async {
       controller: settings,
       child: FinanceScope(
         controller: finance,
-        child: TrokimApp(firstLoad: firstLoad),
+        child: TrokimApp(
+          firstLoad: firstLoad,
+          sharedFiles: SharedFileReceiver(),
+        ),
       ),
     ),
   );
 }
 
 class TrokimApp extends StatelessWidget {
-  const TrokimApp({super.key, this.firstLoad});
+  const TrokimApp({super.key, this.firstLoad, this.sharedFiles});
 
   /// Carregamento inicial dos dados; a abertura só termina quando ele acaba
   /// (ou depois de um tempo máximo, se a API não responder).
   final Future<void>? firstLoad;
+
+  /// Extratos recebidos por "Compartilhar" (Android).
+  final SharedFileReceiver? sharedFiles;
 
   @override
   Widget build(BuildContext context) {
@@ -68,13 +76,19 @@ class TrokimApp extends StatelessWidget {
           child: child!,
         );
       },
-      home: SplashGate(ready: firstLoad, child: const MainNavigationScreen()),
+      home: SplashGate(
+        ready: firstLoad,
+        child: MainNavigationScreen(sharedFiles: sharedFiles),
+      ),
     );
   }
 }
 
 class MainNavigationScreen extends StatefulWidget {
-  const MainNavigationScreen({super.key});
+  const MainNavigationScreen({super.key, this.sharedFiles});
+
+  /// Com um receptor, um extrato compartilhado abre a aba Extratos e o fluxo de importação.
+  final SharedFileReceiver? sharedFiles;
 
   @override
   State<MainNavigationScreen> createState() => _MainNavigationScreenState();
@@ -144,7 +158,7 @@ class _MainNavigationScreenState extends State<MainNavigationScreen>
       parent: _transition,
       curve: Motion.emphasized,
     );
-    return Scaffold(
+    final scaffold = Scaffold(
       body: FadeTransition(
         opacity: curved,
         child: SlideTransition(
@@ -160,6 +174,13 @@ class _MainNavigationScreenState extends State<MainNavigationScreen>
         destinations: _destinations,
         onSelected: _select,
       ),
+    );
+    final receiver = widget.sharedFiles;
+    if (receiver == null) return scaffold;
+    return SharedFileListener(
+      receiver: receiver,
+      onFile: () => _select(1),
+      child: scaffold,
     );
   }
 }

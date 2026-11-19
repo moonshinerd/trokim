@@ -1,7 +1,9 @@
 import '../../../core/network/api_client.dart';
+import '../../categories/domain/ledger_entry.dart';
 import '../domain/finance_models.dart';
+import '../domain/library_models.dart';
 
-/// Acesso às transações e ao resumo da API local.
+/// Acesso às transações, arquivos, parcelamentos e transferências da API local.
 class FinanceRepository {
   /// [newClient] cria um cliente por operação, que é fechado ao final; assim
   /// o endereço da API editado em Ajustes vale na chamada seguinte.
@@ -18,8 +20,13 @@ class FinanceRepository {
     }
   }
 
-  Future<FinancialSummary> fetchSummary() => _run(
-    (client) async => FinancialSummary.fromJson(await client.getSummary()),
+  Future<FinancialSummary> fetchSummary({
+    String owner = 'todas',
+    String view = 'competencia',
+  }) => _run(
+    (client) async => FinancialSummary.fromJson(
+      await client.getSummary(owner: owner, view: view),
+    ),
   );
 
   Future<List<ImportedFile>> fetchImportedFiles() => _run(
@@ -27,10 +34,116 @@ class FinanceRepository {
         ImportedFile.fromTransactions(await client.getTransactions()),
   );
 
-  Future<ImportResult> uploadStatement(String filename, List<int> bytes) =>
-      _run(
-        (client) async => ImportResult.fromJson(
-          await client.uploadStatement(filename, bytes),
-        ),
-      );
+  Future<List<LedgerEntry>> fetchEntries() => _run(
+    (client) async => LedgerEntry.listFromJson(await client.getTransactions()),
+  );
+
+  Future<CategoryChange> setCategory(
+    String uid,
+    String category, {
+    bool applyToMerchant = true,
+  }) => _run(
+    (client) async => CategoryChange.fromJson(
+      await client.setTransactionCategory(
+        uid,
+        category,
+        applyToMerchant: applyToMerchant,
+      ),
+    ),
+  );
+
+  Future<StatementsData> fetchStatements() => _run(
+    (client) async => StatementsData.fromJson(await client.getStatements()),
+  );
+
+  Future<InstallmentsData> fetchInstallments() => _run(
+    (client) async => InstallmentsData.fromJson(await client.getInstallments()),
+  );
+
+  Future<List<AccountInfo>> fetchAccounts() => _run(
+    (client) async => [
+      for (final item in await client.getAccounts()) AccountInfo.fromJson(item),
+    ],
+  );
+
+  Future<List<TransferSuggestion>> fetchTransferSuggestions() => _run(
+    (client) async => [
+      for (final item in await client.getTransferSuggestions())
+        TransferSuggestion.fromJson(item),
+    ],
+  );
+
+  Future<List<OwnTransfer>> fetchTransfers() => _run(
+    (client) async => [
+      for (final item in await client.getTransfers())
+        OwnTransfer.fromJson(item),
+    ],
+  );
+
+  Future<ImportResult> uploadStatement(
+    String filename,
+    List<int> bytes, {
+    AccountOwner? owner,
+    String? expectKind,
+    bool confirmed = false,
+  }) => _run(
+    (client) async => ImportResult.fromJson(
+      await client.uploadStatement(
+        filename,
+        bytes,
+        owner: owner?.api,
+        expectKind: expectKind,
+        confirmed: confirmed,
+      ),
+    ),
+  );
+
+  Future<Inspection> inspectStatement(
+    String filename,
+    List<int> bytes, {
+    AccountOwner? owner,
+    String? expectKind,
+  }) => _run(
+    (client) async => Inspection.fromJson(
+      await client.inspectStatement(
+        filename,
+        bytes,
+        owner: owner?.api,
+        expectKind: expectKind,
+      ),
+    ),
+  );
+
+  Future<AccountInfo> setAccountOwner(String id, AccountOwner owner) => _run(
+    (client) async =>
+        AccountInfo.fromJson(await client.patchAccount(id, owner: owner.api)),
+  );
+
+  Future<StatementInfo> patchStatement(
+    String id, {
+    bool? closed,
+    DateTime? periodStart,
+    DateTime? periodEnd,
+  }) => _run(
+    (client) async => StatementInfo.fromJson(
+      await client.patchStatement(
+        id,
+        closed: closed,
+        periodStart: periodStart,
+        periodEnd: periodEnd,
+      ),
+    ),
+  );
+
+  Future<void> confirmTransfer(TransferSuggestion item) =>
+      _run((client) => client.confirmTransfer(item.debitUid, item.creditUid));
+
+  Future<void> rejectTransfer(TransferSuggestion item) =>
+      _run((client) => client.rejectTransfer(item.debitUid, item.creditUid));
+
+  Future<void> undoTransfer(OwnTransfer item) => _run(
+    (client) => item.automatic
+        ? client.unmarkTransfer(item.id)
+        : client.undoTransfer(item.id),
+  );
 }

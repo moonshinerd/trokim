@@ -87,3 +87,38 @@ async def test_formato_nao_suportado_devolve_400_com_mensagem():
         resposta = await _enviar(client, nome="extrato.txt", conteudo=b"qualquer coisa")
         assert resposta.status_code == 400
         assert ".ofx" in resposta.json()["detail"]
+
+
+@pytest.mark.asyncio
+async def test_upload_nubank_cartao_informa_banco_tipo_e_exclui_pagamento():
+    from tests.nubank_samples import FATURA_PADRAO
+
+    async with _cliente() as client:
+        resposta = await _enviar(client, "Nubank_2026-12-10.ofx", FATURA_PADRAO)
+        corpo = resposta.json()
+        assert resposta.status_code == 200
+        assert corpo["institution"] == "nubank"
+        assert corpo["kind"] == "cartao"
+        assert corpo["ledger_balance"] == -250.0
+        assert corpo["by_nature"]["pagamento_fatura"] == 1
+        assert corpo["summary"]["excluded_count"] == 1
+        assert corpo["summary"]["total_income"] == 0
+
+
+@pytest.mark.asyncio
+async def test_reenvio_do_mesmo_arquivo_nubank_nao_altera_totais():
+    from tests.nubank_samples import EXTRATO_PADRAO
+
+    async with _cliente() as client:
+        primeiro = (await _enviar(client, "e.ofx", EXTRATO_PADRAO)).json()
+        segundo = (await _enviar(client, "e.ofx", EXTRATO_PADRAO)).json()
+        assert segundo["duplicate_count"] == segundo["imported_count"]
+        assert segundo["summary"]["total_expenses"] == primeiro["summary"]["total_expenses"]
+        assert segundo["summary"]["total_income"] == primeiro["summary"]["total_income"]
+
+
+@pytest.mark.asyncio
+async def test_upload_de_arquivo_invalido_e_formato_nao_suportado():
+    async with _cliente() as client:
+        assert (await _enviar(client, "x.ofx", b"lixo")).status_code == 400
+        assert (await _enviar(client, "x.csv", b"a,b")).status_code == 400

@@ -11,6 +11,7 @@ class SettingsController extends ChangeNotifier {
       _showSplash = _prefs?.getBool(_kSplash) ?? true,
       _generativeChat = _prefs?.getBool(_kGenerative) ?? true,
       _multiAgent = _prefs?.getBool(_kMultiAgent) ?? false,
+      _importTutorial = _prefs?.getBool(_kImportTutorial) ?? true,
       _apiBaseUrl = _decodeUrl(_prefs?.getString(_kApiUrl));
 
   /// Sem persistência (testes).
@@ -21,6 +22,7 @@ class SettingsController extends ChangeNotifier {
       _showSplash = true,
       _generativeChat = true,
       _multiAgent = false,
+      _importTutorial = true,
       _apiBaseUrl = ApiConstants.defaultBaseUrl;
 
   static const _kTheme = 'theme_mode';
@@ -28,6 +30,7 @@ class SettingsController extends ChangeNotifier {
   static const _kSplash = 'show_splash';
   static const _kGenerative = 'generative_chat';
   static const _kMultiAgent = 'multi_agent';
+  static const _kImportTutorial = 'import_tutorial';
   static const _kApiUrl = 'api_base_url';
 
   final SharedPreferences? _prefs;
@@ -36,6 +39,7 @@ class SettingsController extends ChangeNotifier {
   bool _showSplash;
   bool _generativeChat;
   bool _multiAgent;
+  bool _importTutorial;
   String _apiBaseUrl;
 
   static Future<SettingsController> load() async =>
@@ -49,6 +53,10 @@ class SettingsController extends ChangeNotifier {
   /// Respostas redigidas pelo LLM local (padrão). Desligado: busca extrativa.
   bool get generativeChat => _generativeChat;
   bool get multiAgent => _multiAgent;
+
+  /// Mostra o tutorial guiado ao importar um extrato (padrão). Desligado, o
+  /// app abre direto o seletor de arquivos.
+  bool get showImportTutorial => _importTutorial;
 
   /// Endereço da API local (já normalizado). Padrão: o do emulador Android.
   String get apiBaseUrl => _apiBaseUrl;
@@ -78,6 +86,13 @@ class SettingsController extends ChangeNotifier {
     if (value == _multiAgent) return;
     _multiAgent = value;
     _prefs?.setBool(_kMultiAgent, value);
+    notifyListeners();
+  }
+
+  void setShowImportTutorial(bool value) {
+    if (value == _importTutorial) return;
+    _importTutorial = value;
+    _prefs?.setBool(_kImportTutorial, value);
     notifyListeners();
   }
 

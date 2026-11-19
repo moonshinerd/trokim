@@ -10,8 +10,11 @@ Future<void> _open(
   WidgetTester tester,
   FinanceController finance, {
   StatementPicker? picker,
+  bool tutorial = false,
 }) async {
-  final settings = SettingsController.memory()..setReduceMotion(true);
+  final settings = SettingsController.memory()
+    ..setReduceMotion(true)
+    ..setShowImportTutorial(tutorial);
   addTearDown(settings.dispose);
   addTearDown(finance.dispose);
   await tester.pumpWidget(
@@ -90,7 +93,11 @@ void main() {
     await tester.pump(const Duration(milliseconds: 300));
 
     expect(api.count('POST', '/transactions/upload'), 1);
-    expect(find.text('2 transações lidas de novo.ofx.'), findsOneWidget);
+    await tester.pumpAndSettle();
+    expect(find.text('Pronto!'), findsOneWidget);
+    expect(find.text('2 lançamentos lidos'), findsOneWidget);
+    await tester.tap(find.text('Concluir'));
+    await tester.pumpAndSettle();
     expect(find.text('novo.ofx'), findsOneWidget);
   });
 
@@ -117,11 +124,13 @@ void main() {
     await tester.pump();
     await tester.pump(const Duration(milliseconds: 300));
 
+    await tester.pumpAndSettle();
+    expect(find.text('Não deu para importar'), findsOneWidget);
     expect(
       find.text('Erro ao processar arquivo OFX: arquivo vazio'),
       findsOneWidget,
     );
-    expect(find.text('Nenhum arquivo importado ainda.'), findsOneWidget);
+    expect(find.text('Escolher outro arquivo'), findsOneWidget);
   });
 
   testWidgets('cancelar o seletor não chama a API', (tester) async {

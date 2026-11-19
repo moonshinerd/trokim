@@ -26,6 +26,29 @@
                 <action android:name="android.intent.action.MAIN"/>
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
+            <!-- Extrato OFX ou fatura PDF enviados por "Compartilhar" de outro app
+                 (app do banco, e-mail, arquivos). O MainActivity lê o arquivo e o entrega
+                 ao fluxo de importação. -->
+            <intent-filter>
+                <action android:name="android.intent.action.SEND"/>
+                <category android:name="android.intent.category.DEFAULT"/>
+                <data android:mimeType="application/pdf"/>
+                <data android:mimeType="application/x-ofx"/>
+                <data android:mimeType="application/ofx"/>
+                <data android:mimeType="application/vnd.intu.qfx"/>
+                <data android:mimeType="application/octet-stream"/>
+            </intent-filter>
+            <!-- "Abrir com" o Trokim a partir do gerenciador de arquivos. -->
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW"/>
+                <category android:name="android.intent.category.DEFAULT"/>
+                <data android:scheme="content"/>
+                <data android:mimeType="application/pdf"/>
+                <data android:mimeType="application/x-ofx"/>
+                <data android:mimeType="application/ofx"/>
+                <data android:mimeType="application/vnd.intu.qfx"/>
+                <data android:mimeType="application/octet-stream"/>
+            </intent-filter>
         </activity>
         <!-- Don't delete the meta-data below.
              This is used by the Flutter tool to generate GeneratedPluginRegistrant.java -->
