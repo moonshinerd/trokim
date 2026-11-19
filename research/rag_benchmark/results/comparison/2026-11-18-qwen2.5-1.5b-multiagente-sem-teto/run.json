@@ -1,0 +1,68 @@
+{
+  "schema_version": 1,
+  "run_id": "2026-11-18-qwen2.5-1.5b-multiagente-sem-teto",
+  "date": "2026-11-18",
+  "reference_commit": "233566e",
+  "issue": "#60",
+  "model": "ollama/qwen2.5:1.5b",
+  "provider": "litellm (mesma camada do app), Ollama da máquina ailab",
+  "temperature": 0.1,
+  "top_k": 3,
+  "repetitions": 1,
+  "cases": 30,
+  "corpus": "20 documentos históricos + suplemento exclusivo da comparação (22 fontes)",
+  "raw_responses": "research/rag_benchmark/results/comparison/2026-11-18-qwen2.5-1.5b-multiagente-sem-teto/comparison_results.json",
+  "report": "research/rag_benchmark/results/comparison/2026-11-18-qwen2.5-1.5b-multiagente-sem-teto/comparison_report.md",
+  "audit": null,
+  "source_of_numbers": "comparison_report.json gerado por run_comparison.py --multiagent (avaliador com a correção dos marcadores de citação); sem revisão humana dos casos sinalizados",
+  "approaches": {
+    "llm_pura": {
+      "label": "LLM pura",
+      "f1_tokens": 0.1426,
+      "concept_coverage": 0.45,
+      "inconsistency_rate": 0.4333,
+      "abstention_f1": 0.0,
+      "latency_ms": 3084,
+      "audit": null
+    },
+    "rag_ingenuo": {
+      "label": "RAG ingênuo",
+      "f1_tokens": 0.1962,
+      "concept_coverage": 0.6833,
+      "inconsistency_rate": 0.4333,
+      "abstention_f1": 0.0,
+      "latency_ms": 2577,
+      "audit": null
+    },
+    "trokim_estruturado": {
+      "label": "Trokim estruturado",
+      "f1_tokens": 0.21,
+      "concept_coverage": 0.7,
+      "inconsistency_rate": 0.3103,
+      "abstention_f1": 0.5,
+      "latency_ms": 1749,
+      "audit": null
+    },
+    "multiagente": {
+      "label": "Multiagente",
+      "f1_tokens": 0.1239,
+      "concept_coverage": 0.4944,
+      "inconsistency_rate": 0.5333,
+      "abstention_f1": 0.3333,
+      "latency_ms": 36570,
+      "audit": null
+    }
+  },
+  "notes": "Primeira tentativa da Semana 4, mantida no histórico porque achou um defeito: o código é o do commit de referência, mas sem o teto de tokens (max_tokens) na redação do Communication Agent. O modelo gerou até estourar o tempo limite de 120 s em 8 dos 30 casos e em 9 dos 20 cenários. Os relatórios foram refeitos com o avaliador atual (marcadores [n] ignorados; cenários com --reavaliar) a partir das respostas brutas originais, que não foram alteradas. A execução 2026-11-18-qwen2.5-1.5b-multiagente repete o protocolo com o teto.",
+  "multiagent_scenarios": {
+    "report": "research/rag_benchmark/results/multiagent/2026-11-18-qwen2.5-1.5b-multiagente-sem-teto/multiagent_report.md",
+    "cases": 20,
+    "status_ok": 10,
+    "numbers_expected": 11,
+    "numbers_reproduced": 5,
+    "validation_block_rate": 0.2,
+    "traps_safe": 4,
+    "injected_blocked": 5,
+    "latency_mean_ms": 64040.5
+  }
+}

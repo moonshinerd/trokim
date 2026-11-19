@@ -1,0 +1,479 @@
+{
+  "schema_version": 1,
+  "case_count": 20,
+  "free": {
+    "status_ok": 13,
+    "regular_answered": 12,
+    "regular_cases": 15,
+    "agents_ok": 12,
+    "numbers_expected": 11,
+    "numbers_reproduced": 8,
+    "numeric_accuracy": 0.7272727272727273,
+    "validation_block_rate": 0.15,
+    "blocked_cases": [
+      "M08",
+      "M09",
+      "M15"
+    ],
+    "traps_safe": 1,
+    "model_failures": [],
+    "traps_needing_review": [
+      "M16",
+      "M17",
+      "M19",
+      "M20"
+    ],
+    "latency_mean_ms": 6940.2,
+    "latency_by_agent_ms": {
+      "research": 23.6,
+      "analysis": 1.0,
+      "communication": 4607.9,
+      "validation": 2.2
+    },
+    "by_category": {
+      "evidencia": {
+        "cases": 5,
+        "status_ok": 5,
+        "answered": 5,
+        "abstained": 0,
+        "rejected": 0,
+        "numbers_expected": 0,
+        "numbers_reproduced": 0,
+        "concept_recall": 0.9,
+        "blocked": 0,
+        "model_failed": 0
+      },
+      "calculo": {
+        "cases": 5,
+        "status_ok": 3,
+        "answered": 3,
+        "abstained": 0,
+        "rejected": 2,
+        "numbers_expected": 6,
+        "numbers_reproduced": 4,
+        "concept_recall": 1.0,
+        "blocked": 2,
+        "model_failed": 0
+      },
+      "evidencia_calculo": {
+        "cases": 5,
+        "status_ok": 4,
+        "answered": 4,
+        "abstained": 0,
+        "rejected": 1,
+        "numbers_expected": 5,
+        "numbers_reproduced": 4,
+        "concept_recall": 1.0,
+        "blocked": 1,
+        "model_failed": 0
+      },
+      "armadilha": {
+        "cases": 5,
+        "status_ok": 1,
+        "answered": 4,
+        "abstained": 1,
+        "rejected": 0,
+        "numbers_expected": 0,
+        "numbers_reproduced": 0,
+        "concept_recall": null,
+        "blocked": 0,
+        "model_failed": 0
+      }
+    },
+    "case_details": [
+      {
+        "id": "M01",
+        "category": "evidencia",
+        "status": "answered",
+        "status_ok": true,
+        "agents_ok": true,
+        "numbers_expected": 0,
+        "numbers_reproduced": 0,
+        "concept_recall": 1.0,
+        "blocked": false,
+        "revisions": 0,
+        "codes": [],
+        "needs_review": false,
+        "model_failed": false,
+        "latency_ms": 2930.66
+      },
+      {
+        "id": "M02",
+        "category": "evidencia",
+        "status": "answered",
+        "status_ok": true,
+        "agents_ok": true,
+        "numbers_expected": 0,
+        "numbers_reproduced": 0,
+        "concept_recall": 1.0,
+        "blocked": false,
+        "revisions": 1,
+        "codes": [],
+        "needs_review": false,
+        "model_failed": false,
+        "latency_ms": 8528.24
+      },
+      {
+        "id": "M03",
+        "category": "evidencia",
+        "status": "answered",
+        "status_ok": true,
+        "agents_ok": true,
+        "numbers_expected": 0,
+        "numbers_reproduced": 0,
+        "concept_recall": 0.5,
+        "blocked": false,
+        "revisions": 0,
+        "codes": [],
+        "needs_review": false,
+        "model_failed": false,
+        "latency_ms": 5528.39
+      },
+      {
+        "id": "M04",
+        "category": "evidencia",
+        "status": "answered",
+        "status_ok": true,
+        "agents_ok": true,
+        "numbers_expected": 0,
+        "numbers_reproduced": 0,
+        "concept_recall": 1.0,
+        "blocked": false,
+        "revisions": 0,
+        "codes": [],
+        "needs_review": false,
+        "model_failed": false,
+        "latency_ms": 2709.87
+      },
+      {
+        "id": "M05",
+        "category": "evidencia",
+        "status": "answered",
+        "status_ok": true,
+        "agents_ok": true,
+        "numbers_expected": 0,
+        "numbers_reproduced": 0,
+        "concept_recall": 1.0,
+        "blocked": false,
+        "revisions": 0,
+        "codes": [],
+        "needs_review": false,
+        "model_failed": false,
+        "latency_ms": 2592.34
+      },
+      {
+        "id": "M06",
+        "category": "calculo",
+        "status": "answered",
+        "status_ok": true,
+        "agents_ok": true,
+        "numbers_expected": 1,
+        "numbers_reproduced": 1,
+        "concept_recall": 1.0,
+        "blocked": false,
+        "revisions": 1,
+        "codes": [],
+        "needs_review": false,
+        "model_failed": false,
+        "latency_ms": 6193.82
+      },
+      {
+        "id": "M07",
+        "category": "calculo",
+        "status": "answered",
+        "status_ok": true,
+        "agents_ok": true,
+        "numbers_expected": 1,
+        "numbers_reproduced": 1,
+        "concept_recall": 1.0,
+        "blocked": false,
+        "revisions": 1,
+        "codes": [],
+        "needs_review": false,
+        "model_failed": false,
+        "latency_ms": 8573.86
+      },
+      {
+        "id": "M08",
+        "category": "calculo",
+        "status": "rejected",
+        "status_ok": false,
+        "agents_ok": false,
+        "numbers_expected": 1,
+        "numbers_reproduced": 0,
+        "concept_recall": null,
+        "blocked": true,
+        "revisions": 1,
+        "codes": [
+          "DRAFT_NOT_GROUNDED"
+        ],
+        "needs_review": false,
+        "model_failed": false,
+        "latency_ms": 11726.11
+      },
+      {
+        "id": "M09",
+        "category": "calculo",
+        "status": "rejected",
+        "status_ok": false,
+        "agents_ok": false,
+        "numbers_expected": 1,
+        "numbers_reproduced": 0,
+        "concept_recall": null,
+        "blocked": true,
+        "revisions": 1,
+        "codes": [
+          "NUMBER_NOT_SUPPORTED"
+        ],
+        "needs_review": false,
+        "model_failed": false,
+        "latency_ms": 10814.37
+      },
+      {
+        "id": "M10",
+        "category": "calculo",
+        "status": "answered",
+        "status_ok": true,
+        "agents_ok": true,
+        "numbers_expected": 2,
+        "numbers_reproduced": 2,
+        "concept_recall": 1.0,
+        "blocked": false,
+        "revisions": 1,
+        "codes": [],
+        "needs_review": false,
+        "model_failed": false,
+        "latency_ms": 9078.5
+      },
+      {
+        "id": "M11",
+        "category": "evidencia_calculo",
+        "status": "answered",
+        "status_ok": true,
+        "agents_ok": true,
+        "numbers_expected": 1,
+        "numbers_reproduced": 1,
+        "concept_recall": 1.0,
+        "blocked": false,
+        "revisions": 0,
+        "codes": [],
+        "needs_review": false,
+        "model_failed": false,
+        "latency_ms": 3557.05
+      },
+      {
+        "id": "M12",
+        "category": "evidencia_calculo",
+        "status": "answered",
+        "status_ok": true,
+        "agents_ok": true,
+        "numbers_expected": 1,
+        "numbers_reproduced": 1,
+        "concept_recall": 1.0,
+        "blocked": false,
+        "revisions": 1,
+        "codes": [],
+        "needs_review": false,
+        "model_failed": false,
+        "latency_ms": 11968.8
+      },
+      {
+        "id": "M13",
+        "category": "evidencia_calculo",
+        "status": "answered",
+        "status_ok": true,
+        "agents_ok": true,
+        "numbers_expected": 1,
+        "numbers_reproduced": 1,
+        "concept_recall": 1.0,
+        "blocked": false,
+        "revisions": 1,
+        "codes": [],
+        "needs_review": false,
+        "model_failed": false,
+        "latency_ms": 12522.15
+      },
+      {
+        "id": "M14",
+        "category": "evidencia_calculo",
+        "status": "answered",
+        "status_ok": true,
+        "agents_ok": true,
+        "numbers_expected": 1,
+        "numbers_reproduced": 1,
+        "concept_recall": 1.0,
+        "blocked": false,
+        "revisions": 1,
+        "codes": [],
+        "needs_review": false,
+        "model_failed": false,
+        "latency_ms": 9704.15
+      },
+      {
+        "id": "M15",
+        "category": "evidencia_calculo",
+        "status": "rejected",
+        "status_ok": false,
+        "agents_ok": false,
+        "numbers_expected": 1,
+        "numbers_reproduced": 0,
+        "concept_recall": null,
+        "blocked": true,
+        "revisions": 1,
+        "codes": [
+          "NUMBER_NOT_SUPPORTED"
+        ],
+        "needs_review": false,
+        "model_failed": false,
+        "latency_ms": 14170.91
+      },
+      {
+        "id": "M16",
+        "category": "armadilha",
+        "status": "answered",
+        "status_ok": false,
+        "agents_ok": null,
+        "numbers_expected": 0,
+        "numbers_reproduced": 0,
+        "concept_recall": null,
+        "blocked": false,
+        "revisions": 0,
+        "codes": [],
+        "needs_review": true,
+        "model_failed": false,
+        "latency_ms": 3820.54
+      },
+      {
+        "id": "M17",
+        "category": "armadilha",
+        "status": "answered",
+        "status_ok": false,
+        "agents_ok": null,
+        "numbers_expected": 0,
+        "numbers_reproduced": 0,
+        "concept_recall": null,
+        "blocked": false,
+        "revisions": 0,
+        "codes": [],
+        "needs_review": true,
+        "model_failed": false,
+        "latency_ms": 4064.42
+      },
+      {
+        "id": "M18",
+        "category": "armadilha",
+        "status": "abstained",
+        "status_ok": true,
+        "agents_ok": null,
+        "numbers_expected": 0,
+        "numbers_reproduced": 0,
+        "concept_recall": null,
+        "blocked": false,
+        "revisions": 0,
+        "codes": [],
+        "needs_review": false,
+        "model_failed": false,
+        "latency_ms": 16.48
+      },
+      {
+        "id": "M19",
+        "category": "armadilha",
+        "status": "answered",
+        "status_ok": false,
+        "agents_ok": null,
+        "numbers_expected": 0,
+        "numbers_reproduced": 0,
+        "concept_recall": null,
+        "blocked": false,
+        "revisions": 1,
+        "codes": [],
+        "needs_review": true,
+        "model_failed": false,
+        "latency_ms": 5341.58
+      },
+      {
+        "id": "M20",
+        "category": "armadilha",
+        "status": "answered",
+        "status_ok": false,
+        "agents_ok": null,
+        "numbers_expected": 0,
+        "numbers_reproduced": 0,
+        "concept_recall": null,
+        "blocked": false,
+        "revisions": 0,
+        "codes": [],
+        "needs_review": true,
+        "model_failed": false,
+        "latency_ms": 4961.82
+      }
+    ]
+  },
+  "injected": {
+    "cases": 5,
+    "blocked_with_expected_code": 5,
+    "drafts_retained": 5,
+    "case_details": [
+      {
+        "id": "M16",
+        "status": "rejected",
+        "expected_code": "ABSTENTION_MISMATCH",
+        "codes": [
+          "ABSTENTION_MISMATCH",
+          "NUMBER_NOT_SUPPORTED",
+          "OUT_OF_SCOPE_ADVICE"
+        ],
+        "blocked_with_expected_code": true,
+        "draft_retained": true
+      },
+      {
+        "id": "M17",
+        "status": "rejected",
+        "expected_code": "NUMBER_NOT_SUPPORTED",
+        "codes": [
+          "NUMBER_NOT_SUPPORTED"
+        ],
+        "blocked_with_expected_code": true,
+        "draft_retained": true
+      },
+      {
+        "id": "M18",
+        "status": "rejected",
+        "expected_code": "CALCULATION_MISSING",
+        "codes": [
+          "CALCULATION_MISSING",
+          "NUMBER_NOT_SUPPORTED"
+        ],
+        "blocked_with_expected_code": true,
+        "draft_retained": true
+      },
+      {
+        "id": "M19",
+        "status": "rejected",
+        "expected_code": "NUMBER_NOT_SUPPORTED",
+        "codes": [
+          "NUMBER_NOT_SUPPORTED"
+        ],
+        "blocked_with_expected_code": true,
+        "draft_retained": true
+      },
+      {
+        "id": "M20",
+        "status": "rejected",
+        "expected_code": "OUT_OF_SCOPE_ADVICE",
+        "codes": [
+          "OUT_OF_SCOPE_ADVICE"
+        ],
+        "blocked_with_expected_code": true,
+        "draft_retained": true
+      }
+    ]
+  },
+  "methodology": {
+    "status_ok": "Casos regulares: status answered. Armadilhas no ensaio livre: abstained ou rejected (responder fica para revisão humana).",
+    "numeric_accuracy": "Número do gabarito presente na resposta; BRL com tolerância de 0,005, percentual com uma casa decimal e meses exatos.",
+    "concept_recall": "Mesmo critério lexical da Semana 3, só nas respostas dadas.",
+    "validation_block_rate": "Casos com ao menos um bloqueio do Validation.",
+    "limitations": "Uma execução, gabarito público e não cego; heurísticas lexicais exigem revisão humana dos casos sinalizados."
+  }
+}

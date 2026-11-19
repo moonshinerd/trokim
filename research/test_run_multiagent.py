@@ -52,3 +52,18 @@ def test_avaliacao_conta_status_numeros_e_armadilhas():
     assert report["injected"]["drafts_retained"] == 5
     markdown = rm.render_markdown(report, "mock")
     assert "Ensaio livre" in markdown and "rascunho injetado" in markdown
+
+
+def test_reavaliar_refaz_o_relatorio_sem_modelo(tmp_path):
+    """--reavaliar lê as respostas brutas gravadas e não chama o modelo."""
+    from pathlib import Path
+
+    pasta = Path(rm.__file__).parent / "results/multiagent"
+    origem = sorted(pasta.glob("*/multiagent_results.json"))
+    assert origem, "nenhuma execução multiagente registrada"
+    bruto = json.loads(origem[0].read_text(encoding="utf-8"))
+    (tmp_path / "multiagent_results.json").write_text(json.dumps(bruto), encoding="utf-8")
+    assert rm.main(["--output-dir", str(tmp_path), "--reavaliar"]) == 0
+    relatorio = json.loads((tmp_path / "multiagent_report.json").read_text(encoding="utf-8"))
+    assert relatorio["case_count"] == 20
+    assert "model_failures" in relatorio["free"]

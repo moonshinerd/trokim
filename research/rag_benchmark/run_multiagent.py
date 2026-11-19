@@ -375,23 +375,45 @@ def render_markdown(report: dict[str, Any], model: str) -> str:
     return "\n".join(lines)
 
 
+def write_report(out: Path, report: dict[str, Any], model: str) -> str:
+    (out / "multiagent_report.json").write_text(
+        json.dumps(report, ensure_ascii=False, indent=2) + "\n", encoding="utf-8"
+    )
+    markdown = render_markdown(report, model)
+    (out / "multiagent_report.md").write_text(markdown, encoding="utf-8")
+    return markdown
+
+
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--model", required=True, help="Modelo no formato do LiteLLM.")
+    parser.add_argument("--model", help="Modelo no formato do LiteLLM.")
     parser.add_argument("--temperature", type=float, default=0.1)
     parser.add_argument("--timeout", type=float, default=120.0)
     parser.add_argument("--output-dir", type=Path, required=True)
+    parser.add_argument(
+        "--reavaliar",
+        action="store_true",
+        help="Só refaz o relatório a partir do multiagent_results.json já gravado (sem modelo).",
+    )
     args = parser.parse_args(argv)
+    out = args.output_dir
+    cases = json.loads(QUESTIONS.read_text(encoding="utf-8"))["cases"]
+
+    if args.reavaliar:
+        raw = json.loads((out / "multiagent_results.json").read_text(encoding="utf-8"))
+        report = evaluate(cases, raw["free"], raw["injected"])
+        print(write_report(out, report, raw["model"]))
+        return 0
+    if not args.model:
+        parser.error("--model é obrigatório, exceto com --reavaliar")
 
     from app.clients.litellm_provider import LiteLLMProvider
 
     llm = LiteLLMProvider(model=args.model, timeout=args.timeout)
-    cases = json.loads(QUESTIONS.read_text(encoding="utf-8"))["cases"]
     free = asyncio.run(run_free(cases, llm, args.temperature))
     injected = asyncio.run(run_injected([c for c in cases if c["category"] == "armadilha"]))
     report = evaluate(cases, free, injected)
 
-    out = args.output_dir
     out.mkdir(parents=True, exist_ok=True)
     raw = {
         "schema_version": 1,
@@ -404,12 +426,7 @@ def main(argv: list[str] | None = None) -> int:
     (out / "multiagent_results.json").write_text(
         json.dumps(raw, ensure_ascii=False, indent=2) + "\n", encoding="utf-8"
     )
-    (out / "multiagent_report.json").write_text(
-        json.dumps(report, ensure_ascii=False, indent=2) + "\n", encoding="utf-8"
-    )
-    markdown = render_markdown(report, args.model)
-    (out / "multiagent_report.md").write_text(markdown, encoding="utf-8")
-    print(markdown)
+    print(write_report(out, report, args.model))
     return 0
 
 

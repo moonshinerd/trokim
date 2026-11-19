@@ -1,0 +1,68 @@
+{
+  "schema_version": 1,
+  "run_id": "2026-11-18-qwen2.5-1.5b-multiagente",
+  "date": "2026-11-18",
+  "reference_commit": "233566e",
+  "issue": "#60",
+  "model": "ollama/qwen2.5:1.5b",
+  "provider": "litellm (mesma camada do app), Ollama da máquina ailab",
+  "temperature": 0.1,
+  "top_k": 3,
+  "repetitions": 1,
+  "cases": 30,
+  "corpus": "20 documentos históricos + suplemento exclusivo da comparação (22 fontes)",
+  "raw_responses": "research/rag_benchmark/results/comparison/2026-11-18-qwen2.5-1.5b-multiagente/comparison_results.json",
+  "report": "research/rag_benchmark/results/comparison/2026-11-18-qwen2.5-1.5b-multiagente/comparison_report.md",
+  "audit": null,
+  "source_of_numbers": "comparison_report.json gerado por run_comparison.py --multiagent (avaliador com a correção dos marcadores de citação); sem revisão humana dos casos sinalizados",
+  "approaches": {
+    "llm_pura": {
+      "label": "LLM pura",
+      "f1_tokens": 0.1398,
+      "concept_coverage": 0.4667,
+      "inconsistency_rate": 0.5333,
+      "abstention_f1": 0.0,
+      "latency_ms": 1969,
+      "audit": null
+    },
+    "rag_ingenuo": {
+      "label": "RAG ingênuo",
+      "f1_tokens": 0.1996,
+      "concept_coverage": 0.6778,
+      "inconsistency_rate": 0.3,
+      "abstention_f1": 0.0,
+      "latency_ms": 1684,
+      "audit": null
+    },
+    "trokim_estruturado": {
+      "label": "Trokim estruturado",
+      "f1_tokens": 0.1847,
+      "concept_coverage": 0.6944,
+      "inconsistency_rate": 0.3448,
+      "abstention_f1": 0.5,
+      "latency_ms": 1512,
+      "audit": null
+    },
+    "multiagente": {
+      "label": "Multiagente",
+      "f1_tokens": 0.1213,
+      "concept_coverage": 0.6278,
+      "inconsistency_rate": 0.45,
+      "abstention_f1": 0.3077,
+      "latency_ms": 3522,
+      "audit": null
+    }
+  },
+  "notes": "Mesmos prompts, gabarito, corpus e avaliador das execuções anteriores, mais a abordagem multiagente (orquestrador em processo, Research no corpus unificado) e o teto de 500 tokens na redação do Communication. Uma primeira tentativa sem o teto teve metade dos cenários com tempo limite estourado e foi descartada.",
+  "multiagent_scenarios": {
+    "report": "research/rag_benchmark/results/multiagent/2026-11-18-qwen2.5-1.5b-multiagente/multiagent_report.md",
+    "cases": 20,
+    "status_ok": 13,
+    "numbers_expected": 11,
+    "numbers_reproduced": 7,
+    "validation_block_rate": 0.45,
+    "traps_safe": 4,
+    "injected_blocked": 5,
+    "latency_mean_ms": 4267.0
+  }
+}

@@ -1,0 +1,68 @@
+{
+  "schema_version": 1,
+  "run_id": "2026-11-18-gpt-6-luna-multiagente",
+  "date": "2026-11-18",
+  "reference_commit": "233566e",
+  "issue": "#60",
+  "model": "openrouter/openai/gpt-6-luna",
+  "provider": "litellm (mesma camada do app), OpenRouter",
+  "temperature": 0.1,
+  "top_k": 3,
+  "repetitions": 1,
+  "cases": 30,
+  "corpus": "20 documentos históricos + suplemento exclusivo da comparação (22 fontes)",
+  "raw_responses": "research/rag_benchmark/results/comparison/2026-11-18-gpt-6-luna-multiagente/comparison_results.json",
+  "report": "research/rag_benchmark/results/comparison/2026-11-18-gpt-6-luna-multiagente/comparison_report.md",
+  "audit": null,
+  "source_of_numbers": "comparison_report.json gerado por run_comparison.py --multiagent (avaliador com a correção dos marcadores de citação); sem revisão humana dos casos sinalizados",
+  "approaches": {
+    "llm_pura": {
+      "label": "LLM pura",
+      "f1_tokens": 0.1986,
+      "concept_coverage": 0.65,
+      "inconsistency_rate": 0.1667,
+      "abstention_f1": 0.0,
+      "latency_ms": 2888,
+      "audit": null
+    },
+    "rag_ingenuo": {
+      "label": "RAG ingênuo",
+      "f1_tokens": 0.311,
+      "concept_coverage": 0.75,
+      "inconsistency_rate": 0.1667,
+      "abstention_f1": 0.0,
+      "latency_ms": 2014,
+      "audit": null
+    },
+    "trokim_estruturado": {
+      "label": "Trokim estruturado",
+      "f1_tokens": 0.264,
+      "concept_coverage": 0.7556,
+      "inconsistency_rate": 0.1379,
+      "abstention_f1": 0.5,
+      "latency_ms": 2550,
+      "audit": null
+    },
+    "multiagente": {
+      "label": "Multiagente",
+      "f1_tokens": 0.1171,
+      "concept_coverage": 0.8833,
+      "inconsistency_rate": 0.3571,
+      "abstention_f1": 0.8,
+      "latency_ms": 3663,
+      "audit": null
+    }
+  },
+  "notes": "Mesmo protocolo da execução 2026-11-18-qwen2.5-1.5b-multiagente, trocando só o modelo, para separar o efeito do fluxo multiagente do tamanho do modelo. Modelo de nuvem com perguntas e fontes públicas e extrato sintético; nenhum dado real.",
+  "multiagent_scenarios": {
+    "report": "research/rag_benchmark/results/multiagent/2026-11-18-gpt-6-luna-multiagente/multiagent_report.md",
+    "cases": 20,
+    "status_ok": 13,
+    "numbers_expected": 11,
+    "numbers_reproduced": 8,
+    "validation_block_rate": 0.15,
+    "traps_safe": 1,
+    "injected_blocked": 5,
+    "latency_mean_ms": 6940.2
+  }
+}
