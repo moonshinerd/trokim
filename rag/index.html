@@ -1177,6 +1177,33 @@
 
                 
               
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../arquitetura/categorias/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Categorias dos Gastos
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
             </ul>
           </nav>
         
@@ -2200,7 +2227,7 @@
   <span class="md-ellipsis">
     
   
-  0016 – Arquitetura Multiagente (proposta)
+  0016 – Arquitetura Multiagente
 
     
   </span>
@@ -2255,6 +2282,60 @@
     
   
   0018 – Contas, Períodos e Transferências
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../adr/0019-orm-e-migracoes-numeradas/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  0019 – ORM e Migrações Numeradas
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../adr/0020-categorizacao-por-cnae/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  0020 – Categorização por CNAE
 
     
   </span>
@@ -2469,7 +2550,11 @@ forma um único chunk. IDs seguem <code>&lt;arquivo&gt;_&lt;n&gt;</code>, começ
 FastEmbed instalado, gera vetores multilíngues de <strong>384 dimensões</strong>, normalizados.
 SQLite com extensão <strong>sqlite-vec</strong> usa tabela virtual <code>vec0</code> e distância de cosseno;
 a similaridade é <code>1 - distância</code>, equivalente ao produto interno de vetores unitários.
-A escolha mantém o armazenamento local-first da ADR 0002.</p>
+A escolha mantém o armazenamento local-first da ADR 0002. Desde a Semana 4, as tabelas de
+metadados e de chunks são modelos SQLAlchemy e o esquema vem de migrações Alembic numeradas,
+inclusive a <code>vec0</code> com a dimensão dos embeddings
+(<a href="../adr/0019-orm-e-migracoes-numeradas/">ADR 0019</a>); o benchmark da Semana 2 deu os mesmos
+resultados depois da mudança.</p>
 <p>A busca híbrida usa <code>alpha * cosseno_denso + (1 - alpha) * cosseno_tfidf</code>.
 O componente lexical mantém TF-IDF de palavras (1–2 gramas) e caracteres (3–5), pesos
 0,5/0,5, normalização de acentos e stopwords portuguesas. Ambos indexam título, seção

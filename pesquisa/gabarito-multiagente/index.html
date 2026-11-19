@@ -933,6 +933,17 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#integracao-com-o-benchmark-60" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Integração com o benchmark (#60)
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     
   
@@ -1294,6 +1305,33 @@
     
   
   Mapa do Sistema
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../arquitetura/categorias/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Categorias dos Gastos
 
     
   </span>
@@ -2177,7 +2215,7 @@
   <span class="md-ellipsis">
     
   
-  0016 – Arquitetura Multiagente (proposta)
+  0016 – Arquitetura Multiagente
 
     
   </span>
@@ -2232,6 +2270,60 @@
     
   
   0018 – Contas, Períodos e Transferências
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../adr/0019-orm-e-migracoes-numeradas/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  0019 – ORM e Migrações Numeradas
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../adr/0020-categorizacao-por-cnae/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  0020 – Categorização por CNAE
 
     
   </span>
@@ -2370,6 +2462,17 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#integracao-com-o-benchmark-60" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Integração com o benchmark (#60)
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     
   
@@ -2394,7 +2497,7 @@
 <h1 id="gabarito-multiagente-semana-4">Gabarito multiagente (Semana 4)<a class="headerlink" href="#gabarito-multiagente-semana-4" title="Permanent link">&para;</a></h1>
 <div class="admonition success">
 <p class="admonition-title">Status: Implementado</p>
-<p>A issue <a href="https://github.com/moonshinerd/trokim/issues/56">#56</a> entrega os insumos e testes determinísticos. A execução comparativa com modelos e suas métricas pertence à <a href="https://github.com/moonshinerd/trokim/issues/60">#60</a>.</p>
+<p>A issue <a href="https://github.com/moonshinerd/trokim/issues/56">#56</a> entrega os insumos e testes determinísticos. A execução com modelos (<a href="https://github.com/moonshinerd/trokim/issues/60">#60</a>) está no <a href="../resultados/#9-semana-4-os-20-cenarios-multiagente">Histórico de resultados, seção 9</a>: o Validation barrou os 5 rascunhos injetados com o código esperado nos três ensaios, e o acerto numérico no ensaio livre foi de 7 de 11 com o Qwen 2.5 de 1,5 B e 8 de 11 com o GPT-6 Luna.</p>
 </div>
 <p>São <strong>20 cenários</strong>, com dados exclusivamente sintéticos, separados do conjunto de 30 casos da Semana 3 (<a href="../../adr/0008-material-comparativo-versionado/">ADR 0008</a>). Este material é público e de desenvolvimento; não constitui teste cego.</p>
 <h2 id="composicao-e-contrato">Composição e contrato<a class="headerlink" href="#composicao-e-contrato" title="Permanent link">&para;</a></h2>
@@ -2767,9 +2870,9 @@
 </span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>uv<span class="w"> </span>run<span class="w"> </span>python<span class="w"> </span>../research/rag_benchmark/multiagent.py<span class="w"> </span>--write-expected-numbers<span class="w"> </span>--write-manifest
 </span></code></pre></div>
 <p>Esse comando recalcula os valores pelo serviço antes de gravar os hashes; não execute a regeneração para simplesmente encobrir uma divergência inesperada. Os testes não atualizam o material automaticamente.</p>
-<p><code>make research-test</code> inclui o benchmark de recuperação existente e a validação comparativa da Semana 3. Esta PR prepara insumos, sem publicar uma execução multiagente ou novas métricas de desempenho; os totais acima descrevem a massa sintética. Gráficos e histórico de resultados multiagentes serão produzidos pela #60.</p>
+<p><code>make research-test</code> inclui o benchmark de recuperação existente e a validação comparativa da Semana 3. Os totais acima descrevem a massa sintética. Para rodar os cenários com um modelo: <code>make multiagent-run RUN=&lt;id&gt; MODEL=&lt;modelo&gt;</code>; os relatórios ficam em <code>research/rag_benchmark/results/multiagent/&lt;id&gt;/</code> e os gráficos saem com <code>make report-charts</code>.</p>
 <h2 id="limites-da-validacao">Limites da validação<a class="headerlink" href="#limites-da-validacao" title="Permanent link">&para;</a></h2>
-<p>Os testes conferem schema, composição, reprodução do ledger, integridade, números e comportamento real de rejeição/revisão nas armadilhas. Também confrontam o roteamento e os resultados numéricos regulares com o Analysis real. Não executam síntese por LLM nem certificam que todas as respostas regulares serão <code>answered</code>: a pesquisa pode se abster antes do cálculo se não encontrar evidência, inclusive nas perguntas puramente numéricas. Conceitos e afirmações proibidas serão pontuados pelo benchmark da #60.</p>
+<p>Os testes conferem schema, composição, reprodução do ledger, integridade, números e comportamento real de rejeição/revisão nas armadilhas. Também confrontam o roteamento e os resultados numéricos regulares com o Analysis real. Não executam síntese por LLM nem certificam que todas as respostas regulares serão <code>answered</code>: a pesquisa pode se abster antes do cálculo se não encontrar evidência, inclusive nas perguntas puramente numéricas. O benchmark da #60 mede a cobertura de conceitos; as afirmações proibidas ainda dependem de revisão humana.</p>
 <h2 id="rastreabilidade">Rastreabilidade<a class="headerlink" href="#rastreabilidade" title="Permanent link">&para;</a></h2>
 <ul>
 <li><strong>RNF06:</strong> massa exclusivamente sintética, gerador e teste de reprodução.</li>
@@ -2778,6 +2881,24 @@
 <li><strong>GQ05:</strong> evidências, abstenção segura e retenção de rascunhos inválidos.</li>
 <li><a href="../../requisitos/">Matriz de requisitos</a>, <a href="../../adr/0004-calculos-deterministicos/">ADR 0004</a>, <a href="../../adr/0008-material-comparativo-versionado/">ADR 0008</a>, <a href="../../adr/0016-arquitetura-multiagente/">ADR 0016</a> e <a href="../../agentes/validation-agent/">Validation Agent</a>.</li>
 </ul>
+<h2 id="integracao-com-o-benchmark-60">Integração com o benchmark (#60)<a class="headerlink" href="#integracao-com-o-benchmark-60" title="Permanent link">&para;</a></h2>
+<p>O runner aceita <code>--multiagent</code>: executa os 30 casos históricos com quatro
+abordagens e os 20 cenários desta página em bloco separado. Usa os agentes reais
+com modelo, temperatura e corpus comuns ao comparador. Os campos de gabarito e
+os rascunhos adversariais nunca são incluídos nos prompts de geração livre.</p>
+<p>Os cinco ensaios controlados continuam separados: Research e Communication
+controlados, Analysis, Orchestrator e Validation reais. Seu resultado mede a
+rejeição de uma violação conhecida, não a frequência com que o modelo inventa
+informações. Uma abstenção antecipada no fluxo livre não exige código de Validation.</p>
+<p>M16–M18 não recebem o ledger no ensaio livre, conforme <code>use_ledger</code>; M19 e M20
+recebem. A pergunta livre de M19 solicita legitimamente o saldo, e somente o
+rascunho injetado contém o valor inventado. Por isso M19 não entra no denominador
+de recusa segura; permanece na revisão obrigatória e no ensaio controlado.</p>
+<p>O relatório separa números reproduzidos, cobertura de conceitos, estados de
+resposta e tempos por categoria. A comparação exata dos agentes e status do
+gabarito regular é diagnóstica; os status adversariais não são impostos às
+perguntas livres. Os resultados por categoria estão na
+<a href="../resultados/#9-semana-4-os-20-cenarios-multiagente">seção 9 do histórico de resultados</a>.</p>
 
 
 

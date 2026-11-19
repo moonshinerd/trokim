@@ -1251,6 +1251,33 @@
 
                 
               
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="./categorias/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Categorias dos Gastos
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
             </ul>
           </nav>
         
@@ -2122,7 +2149,7 @@
   <span class="md-ellipsis">
     
   
-  0016 – Arquitetura Multiagente (proposta)
+  0016 – Arquitetura Multiagente
 
     
   </span>
@@ -2177,6 +2204,60 @@
     
   
   0018 – Contas, Períodos e Transferências
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../adr/0019-orm-e-migracoes-numeradas/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  0019 – ORM e Migrações Numeradas
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../adr/0020-categorizacao-por-cnae/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  0020 – Categorização por CNAE
 
     
   </span>
@@ -2294,7 +2375,7 @@
 <li><strong>Camada Backend (FastAPI / Python 3.12+):</strong></li>
 <li>Construída com FastAPI pela alta performance assíncrona e tipagem robusta com Pydantic v2.</li>
 <li>Gerenciamento de dependências ultra-rápido com <code>uv</code>.</li>
-<li>Banco de dados embutido <strong>SQLite</strong> garantindo funcionamento 100% <em>local-first</em> sem necessidade de servidores externos.</li>
+<li>Banco de dados embutido <strong>SQLite</strong> garantindo funcionamento 100% <em>local-first</em> sem necessidade de servidores externos. As tabelas são modelos SQLAlchemy e o esquema evolui por migrações Alembic numeradas, aplicadas ao abrir cada banco (<a href="../adr/0019-orm-e-migracoes-numeradas/">ADR 0019</a>). Os lançamentos importados ainda ficam em memória na API; a persistência deles em SQLite é pendência da Semana 5.</li>
 <li><strong>Mecanismo RAG Híbrido e Banco Vetorial (Semana 2):</strong></li>
 <li>Embeddings multilíngues gerados localmente pelo modelo <code>sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2</code> (384 dimensões) via <strong>FastEmbed</strong>.</li>
 <li>Persistência e indexação vetorial nativa em SQLite com a extensão <strong>sqlite-vec</strong> (tabela virtual <code>vec0</code>).</li>
@@ -2311,6 +2392,10 @@
 <li>Orquestrador determinístico coordenando quatro agentes especializados: <code>ResearchAgent</code> (recuperação de evidências e verificação de escopo), <code>AnalysisAgent</code> (cálculos matemáticos determinísticos sem LLM), <code>CommunicationAgent</code> (redação pedagógica ancorada em fontes oficiais) e <code>ValidationAgent</code> (auditoria defensiva factual contra alucinações).</li>
 <li>Exposição via endpoint HTTP <code>POST /v1/agents/ask</code> devolvendo <code>MultiAgentResponse</code> com a trilha de auditoria (<code>steps</code>) detalhando o papel e tempo de execução de cada agente.</li>
 <li>No app, o modo multiagente é opcional em Ajustes; modelos Dart validam o contrato e a resposta oferece uma trilha acessível com etapas, cálculos, evidências e explicações de abstenção/rejeição.</li>
+<li>O Communication chama o modelo com teto de tokens (<code>LLM_MAX_TOKENS</code>); o desempenho medido está no <a href="../pesquisa/resultados/#8-semana-4-multiagente-nos-30-casos-da-comparacao">Histórico de Resultados</a>.</li>
+<li><strong>Categorização pela atividade econômica (Semana 4, <a href="../adr/0020-categorizacao-por-cnae/">ADR 0020</a>):</strong></li>
+<li>Regras por palavra, dicionário de 746 redes e o CNAE do recebedor, consultado num índice local de CNPJs montado com os dados abertos da Receita Federal (<a href="categorias/">Categorias</a>).</li>
+<li>O índice vai versionado comprimido (<code>api/app/data/cnpj_categorias.xz</code>, 14 MB) e é descomprimido por <code>make build</code> ou no primeiro uso; <code>make cnpj-atualizar</code> baixa o mês novo da Receita, com aviso de tamanho e confirmação.</li>
 </ol>
 <hr />
 <h2 id="camadas-do-backend-api">Camadas do Backend (<code>api/</code>)<a class="headerlink" href="#camadas-do-backend-api" title="Permanent link">&para;</a></h2>
@@ -2318,7 +2403,7 @@
 <div class="language-text highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>routers/ (HTTP fino, esquemas Pydantic: /transactions, /chat/ask, /chat/generate, /chat/title, /budgets, /agents/ask)
 </span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>   │
 </span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>   ▼
-</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>services/ (Regras de negócio: CalculationService, ParserService, RAGService, GenerationService, TitleService, Orchestrator e agentes)
+</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>services/ (Regras de negócio: CalculationService, ParserService, CategorizationService, RAGService, GenerationService, TitleService, Orchestrator e agentes)
 </span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>   │
 </span><span id="__span-0-6"><a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>   ▼
 </span><span id="__span-0-7"><a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>domain/   (Entidades de negócio puras: Transaction, Budget, EvidenceChunk, MultiAgentResponse)
@@ -2326,7 +2411,7 @@
 </span><span id="__span-0-9"><a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>   │
 </span><span id="__span-0-10"><a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>clients/  (Adaptadores de persistência e LLM: SQLiteVectorStore, FastEmbed, LiteLLMProvider, OllamaProvider, MockLLMProvider)
 </span></code></pre></div>
-<p>Essa estrutura garante que a evolução do sistema nas semanas seguintes (Semana 4: multiagentes; Semana 5: multimodalidade; Semana 6: integração) ocorra sem acoplamento indevido.</p>
+<p>Essa estrutura permitiu acrescentar os agentes na Semana 4 sem mexer nas camadas existentes e deve receber da mesma forma a multimodalidade (Semana 5) e a integração completa (Semana 6).</p>
 
 
 

@@ -1177,6 +1177,33 @@
 
                 
               
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../arquitetura/categorias/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Categorias dos Gastos
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
             </ul>
           </nav>
         
@@ -2166,7 +2193,7 @@
   <span class="md-ellipsis">
     
   
-  0016 – Arquitetura Multiagente (proposta)
+  0016 – Arquitetura Multiagente
 
     
   </span>
@@ -2221,6 +2248,60 @@
     
   
   0018 – Contas, Períodos e Transferências
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../adr/0019-orm-e-migracoes-numeradas/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  0019 – ORM e Migrações Numeradas
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../adr/0020-categorizacao-por-cnae/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  0020 – Categorização por CNAE
 
     
   </span>
@@ -2552,8 +2633,13 @@ o benchmark da Semana 2 (<code>make rag-eval</code>) e <code>make docs-build</co
 testes de integração usam Research, RAG e orquestrador reais, com os demais agentes
 falsos da #51. Verificam resposta com evidências, interrupção antes de Communication
 nos dois motivos de abstenção e rejeição segura quando a busca falha.
-Resultados históricos não representam uma medição deste agente; desempenho do fluxo
-multiagente será avaliado na <a href="https://github.com/moonshinerd/trokim/issues/60">issue #60</a>.</p>
+Resultados históricos não representam uma medição deste agente. No benchmark do fluxo
+multiagente (<a href="https://github.com/moonshinerd/trokim/issues/60">#60</a>,
+<a href="../../pesquisa/resultados/#8-semana-4-multiagente-nos-30-casos-da-comparacao">Histórico de resultados</a>),
+o Research acertou a abstenção do C28 com os dois modelos, mas a política de escopo <strong>não
+reconhece o C27</strong> (prever o preço exato de uma ação): a pergunta segue com trechos sobre liquidez
+em vez de ser recusada. Ampliar a política para previsões de preço é trabalho pendente. O
+Research leva cerca de 25 ms por pergunta.</p>
 <h2 id="rastreabilidade">Rastreabilidade<a class="headerlink" href="#rastreabilidade" title="Permanent link">&para;</a></h2>
 <p>RF18 → GQ05; <a href="../../adr/0003-rag-fontes-oficiais/">ADR 0003</a>,
 <a href="../../adr/0007-banco-vetorial-embeddings/">ADR 0007</a> e

@@ -1177,6 +1177,33 @@
 
                 
               
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../arquitetura/categorias/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Categorias dos Gastos
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
             </ul>
           </nav>
         
@@ -2133,7 +2160,7 @@
   <span class="md-ellipsis">
     
   
-  0016 – Arquitetura Multiagente (proposta)
+  0016 – Arquitetura Multiagente
 
     
   </span>
@@ -2188,6 +2215,60 @@
     
   
   0018 – Contas, Períodos e Transferências
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../0019-orm-e-migracoes-numeradas/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  0019 – ORM e Migrações Numeradas
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../0020-categorizacao-por-cnae/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  0020 – Categorização por CNAE
 
     
   </span>
@@ -2331,6 +2412,8 @@ chave de API). Modelo padrão
 384 dimensões e vetores normalizados, de modo que similaridade de cosseno se
 reduz a produto interno.</p>
 <p>Persistência vetorial com <code>sqlite-vec</code> (tabela virtual <code>vec0</code>) em arquivo SQLite
+(nota de 18/11/2026: o esquema passou a ser criado por migrações Alembic e as tabelas comuns
+por modelos SQLAlchemy, sem mudar a decisão; ver <a href="../0019-orm-e-migracoes-numeradas/">ADR 0019</a>)
 em <code>api/data/vector_store.db</code>, coerente com o SQLite embutido da ADR 0002. Uma
 tabela de metadados guarda por chunk: <code>document_id</code>, fonte, URL, título, seção e
 conteúdo.</p>

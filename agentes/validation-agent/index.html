@@ -1177,6 +1177,33 @@
 
                 
               
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../arquitetura/categorias/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Categorias dos Gastos
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
             </ul>
           </nav>
         
@@ -1504,6 +1531,17 @@
     <span class="md-ellipsis">
       <span class="md-typeset">
         Caso C30 — Cálculo sem Resultado Determinístico
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#resultado-medido-no-benchmark-60" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Resultado medido no benchmark (#60)
       </span>
     </span>
   </a>
@@ -2233,7 +2271,7 @@
   <span class="md-ellipsis">
     
   
-  0016 – Arquitetura Multiagente (proposta)
+  0016 – Arquitetura Multiagente
 
     
   </span>
@@ -2288,6 +2326,60 @@
     
   
   0018 – Contas, Períodos e Transferências
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../adr/0019-orm-e-migracoes-numeradas/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  0019 – ORM e Migrações Numeradas
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../adr/0020-categorizacao-por-cnae/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  0020 – Categorização por CNAE
 
     
   </span>
@@ -2438,6 +2530,17 @@
     <span class="md-ellipsis">
       <span class="md-typeset">
         Caso C30 — Cálculo sem Resultado Determinístico
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#resultado-medido-no-benchmark-60" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Resultado medido no benchmark (#60)
       </span>
     </span>
   </a>
@@ -2596,6 +2699,20 @@
 <li><strong>Cenário:</strong> Pergunta numérica com fixture <code>sem_resultado</code> (<em>"calcule o saldo de receitas de R$ 0,10 e R$ 0,20 menos despesa de R$ 0,10"</em>).</li>
 <li><strong>Comportamento no Benchmark:</strong> O modelo desobedeceu à restrição arquitetural e calculou autonomamente a aritmética (<code>0,20</code>).</li>
 <li><strong>Detecção do Agente:</strong> A pergunta contém intenção de cálculo (<code>calcule o saldo</code>), <code>ctx.calculations</code> está vazio e o rascunho apresentou valor numérico próprio. O agente bloqueia a saída emitindo <code>CALCULATION_MISSING</code> (<code>BLOCKER</code>).</li>
+</ul>
+<h3 id="resultado-medido-no-benchmark-60">Resultado medido no benchmark (#60)<a class="headerlink" href="#resultado-medido-no-benchmark-60" title="Permanent link">&para;</a></h3>
+<p>Os casos acima descrevem o que o agente detecta quando recebe aquele rascunho. No fluxo completo,
+medido nos 30 casos e nos 20 cenários (<a href="../../pesquisa/resultados/#8-semana-4-multiagente-nos-30-casos-da-comparacao">Histórico de resultados</a>):</p>
+<ul>
+<li>os 5 rascunhos inválidos injetados nas armadilhas foram barrados com o código esperado, em
+  todas as execuções;</li>
+<li>o C30 foi retido com <code>CALCULATION_MISSING</code> com os dois modelos;</li>
+<li>o C29 passou sem bloqueio e com os totais do sistema quando o fluxo recebeu os lançamentos
+  sintéticos (execuções de 19/11);</li>
+<li>o C27 <strong>não</strong> foi barrado: o Research não se absteve, e o Communication trocou o texto do
+  modelo por trechos literais sobre liquidez, que não disparam <code>OUT_OF_SCOPE_ADVICE</code>;</li>
+<li>parte dos bloqueios em casos regulares vem de formato (por exemplo, "R$ 6,000" com milhar em
+  inglês lido como R$ 6).</li>
 </ul>
 <h3 id="casos-c04-e-c17-valores-inventados-pela-llm-pura">Casos C04 e C17 — Valores Inventados pela LLM Pura<a class="headerlink" href="#casos-c04-e-c17-valores-inventados-pela-llm-pura" title="Permanent link">&para;</a></h3>
 <ul>

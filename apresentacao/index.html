@@ -622,10 +622,21 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#4-rastreabilidade-das-entregas" class="md-nav__link">
+  <a href="#4-sistema-multiagente-semana-4" class="md-nav__link">
     <span class="md-ellipsis">
       <span class="md-typeset">
-        4. Rastreabilidade das Entregas
+        4. Sistema multiagente (Semana 4)
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#5-rastreabilidade-das-entregas" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        5. Rastreabilidade das Entregas
       </span>
     </span>
   </a>
@@ -1258,6 +1269,33 @@
     
   
   Mapa do Sistema
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../arquitetura/categorias/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Categorias dos Gastos
 
     
   </span>
@@ -2141,7 +2179,7 @@
   <span class="md-ellipsis">
     
   
-  0016 – Arquitetura Multiagente (proposta)
+  0016 – Arquitetura Multiagente
 
     
   </span>
@@ -2196,6 +2234,60 @@
     
   
   0018 – Contas, Períodos e Transferências
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../adr/0019-orm-e-migracoes-numeradas/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  0019 – ORM e Migrações Numeradas
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../adr/0020-categorizacao-por-cnae/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  0020 – Categorização por CNAE
 
     
   </span>
@@ -2291,10 +2383,21 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#4-rastreabilidade-das-entregas" class="md-nav__link">
+  <a href="#4-sistema-multiagente-semana-4" class="md-nav__link">
     <span class="md-ellipsis">
       <span class="md-typeset">
-        4. Rastreabilidade das Entregas
+        4. Sistema multiagente (Semana 4)
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#5-rastreabilidade-das-entregas" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        5. Rastreabilidade das Entregas
       </span>
     </span>
   </a>
@@ -2323,7 +2426,7 @@
 
 
 <h1 id="apresentacao-executiva-e-demonstracao-interativa">Apresentação Executiva e Demonstração Interativa<a class="headerlink" href="#apresentacao-executiva-e-demonstracao-interativa" title="Permanent link">&para;</a></h1>
-<p>Este documento reúne a visão consolidada das <strong>Entregas 1, 2 e 3</strong> do projeto <strong>Trokim</strong>, no âmbito do <strong>Challenge 2 (TIC-IA 2026 — Big Idea: Qualidade de Vida)</strong>.</p>
+<p>Este documento reúne a visão consolidada das <strong>Entregas 1 a 4</strong> do projeto <strong>Trokim</strong>, no âmbito do <strong>Challenge 2 (TIC-IA 2026 — Big Idea: Qualidade de Vida)</strong>.</p>
 <hr />
 <h2 id="1-painel-executivo-de-resultados">1. Painel Executivo de Resultados<a class="headerlink" href="#1-painel-executivo-de-resultados" title="Permanent link">&para;</a></h2>
 <table>
@@ -2375,7 +2478,7 @@
 <tr>
 <td><strong>Testes Automatizados</strong></td>
 <td style="text-align: center;">Passando</td>
-<td style="text-align: center;"><strong>87 (API), 67 (pesquisa) e 123 (app) verdes</strong></td>
+<td style="text-align: center;"><strong>418 (API), 161 (pesquisa) e 238 (app) verdes</strong></td>
 <td>CI no GitHub Actions (jobs api, research, docs e mobile)</td>
 </tr>
 </tbody>
@@ -2535,11 +2638,33 @@ execução, em 16/11, mudou a ordem entre RAG ingênuo e Trokim em várias métr
 que se sustenta é a vantagem de fundamentar a resposta em evidências sobre a LLM pura, e não
 um ranking entre as duas abordagens com RAG. Veja a <a href="../pesquisa/resultados/#4-variacao-entre-as-duas-execucoes">variação entre execuções</a>.</p>
 <hr />
-<h2 id="4-rastreabilidade-das-entregas">4. Rastreabilidade das Entregas<a class="headerlink" href="#4-rastreabilidade-das-entregas" title="Permanent link">&para;</a></h2>
+<h2 id="4-sistema-multiagente-semana-4">4. Sistema multiagente (Semana 4)<a class="headerlink" href="#4-sistema-multiagente-semana-4" title="Permanent link">&para;</a></h2>
+<p>A pergunta passa por quatro agentes: o <strong>Research</strong> recupera as evidências (ou se abstém), o
+<strong>Analysis</strong> faz os cálculos com o motor determinístico, o <strong>Communication</strong> redige a resposta só
+com o que recebeu e o <strong>Validation</strong> barra número sem suporte, cálculo ausente e conselho fora de
+escopo (<a href="../agentes/">Agentes</a>, <a href="../adr/0016-arquitetura-multiagente/">ADR 0016</a>).</p>
+<p>O benchmark rodou o fluxo como quarta abordagem nos mesmos 30 casos e em 20 cenários próprios,
+com o Qwen 2.5 de 1,5 B local e com o GPT-6 Luna pelo OpenRouter
+(<a href="../pesquisa/resultados/#8-semana-4-multiagente-nos-30-casos-da-comparacao">Histórico de Resultados</a>):</p>
+<ul>
+<li>os 5 rascunhos inválidos injetados nas armadilhas foram barrados com o código esperado em
+  todas as execuções, e o C30 (cálculo sem resultado do sistema) foi retido;</li>
+<li>o C29 (explicar o saldo sintético) saiu com os números do sistema nos dois modelos;</li>
+<li>o C27 (preço futuro de uma ação) continua respondido: a política de escopo não reconhece
+  previsões de preço;</li>
+<li>quase toda resposta é o rascunho seguro com frases literais das fontes, o que evita número
+  inventado mas deixa o texto pouco natural.</li>
+</ul>
+<p>Na mesma entrega, a categorização dos lançamentos passou a usar a atividade econômica (CNAE) da
+loja, num índice local de 22 milhões de CNPJs: nos extratos reais de um integrante, processados
+só no computador dele, a parte categorizada foi de 56% para 67%
+(<a href="../adr/0020-categorizacao-por-cnae/">ADR 0020</a>).</p>
+<hr />
+<h2 id="5-rastreabilidade-das-entregas">5. Rastreabilidade das Entregas<a class="headerlink" href="#5-rastreabilidade-das-entregas" title="Permanent link">&para;</a></h2>
 <pre class="mermaid"><code>flowchart LR
     E1["Entrega 1: Concepção&lt;br/&gt;• EQ + 10 GQs&lt;br/&gt;• C4 Model + MoSCoW&lt;br/&gt;• ADRs 0001 a 0005"] --&gt; E2["Entrega 2: RAG &amp; Benchmark&lt;br/&gt;• 20 Docs Oficiais&lt;br/&gt;• SQLite-Vec + FastEmbed&lt;br/&gt;• Benchmark 98.78%&lt;br/&gt;• Chat Flutter Android"]
     E2 --&gt; E3["Entrega 3: Comparação LLM&lt;br/&gt;• Relatório Comparativo&lt;br/&gt;• LLM Pura vs RAG Estruturado&lt;br/&gt;• Métricas de Alucinação"]
-    E3 --&gt; E4["Entrega 4: Multiagentes&lt;br/&gt;• Research Agent&lt;br/&gt;• Analysis Agent&lt;br/&gt;• Validation Agent"]</code></pre>
+    E3 --&gt; E4["Entrega 4: Multiagentes&lt;br/&gt;• Research, Analysis,&lt;br/&gt;Communication e Validation&lt;br/&gt;• Benchmark multiagente&lt;br/&gt;• Categorização por CNAE"]</code></pre>
 <ul>
 <li><a href="../atas/ata01/">Acessar a Ata 01 (Semana 1)</a></li>
 <li><a href="../atas/ata02/">Acessar a Ata 02 (Semana 2)</a></li>

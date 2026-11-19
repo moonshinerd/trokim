@@ -1177,6 +1177,33 @@
 
                 
               
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../arquitetura/categorias/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Categorias dos Gastos
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
             </ul>
           </nav>
         
@@ -1605,6 +1632,17 @@
     <span class="md-ellipsis">
       <span class="md-typeset">
         Conceitos de Inteligência Artificial e Arquitetura
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#conceitos-de-extratos-e-categorizacao" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Conceitos de Extratos e Categorização
       </span>
     </span>
   </a>
@@ -2119,7 +2157,7 @@
   <span class="md-ellipsis">
     
   
-  0016 – Arquitetura Multiagente (proposta)
+  0016 – Arquitetura Multiagente
 
     
   </span>
@@ -2174,6 +2212,60 @@
     
   
   0018 – Contas, Períodos e Transferências
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../adr/0019-orm-e-migracoes-numeradas/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  0019 – ORM e Migrações Numeradas
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../adr/0020-categorizacao-por-cnae/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  0020 – Categorização por CNAE
 
     
   </span>
@@ -2257,6 +2349,17 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#conceitos-de-extratos-e-categorizacao" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Conceitos de Extratos e Categorização
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     
   
@@ -2305,6 +2408,21 @@
 <li><strong>Inconsistência factual (heurística):</strong> Sinalização automática de número sem suporte na fonte, frase proibida ou negação contraditória. Gera falsos positivos e negativos e exige revisão humana.</li>
 <li><strong>Taxa auditada:</strong> Proporção de casos com alucinação confirmada pela revisão manual. É a medida principal de alucinação, e um piso quando nem todos os casos foram revisados.</li>
 <li><strong>Execução (run):</strong> Registro versionado de uma rodada do benchmark, com data, commit, modelo, parâmetros e métricas (<code>run.json</code>). Ver <a href="../pesquisa/resultados/">Histórico de Resultados</a>.</li>
+<li><strong>Agente:</strong> Componente com um papel único no fluxo multiagente (Research, Analysis, Communication ou Validation). Recebe o contexto compartilhado, faz a sua parte e devolve um passo da trilha (<a href="../adr/0016-arquitetura-multiagente/">ADR 0016</a>).</li>
+<li><strong>Orquestrador:</strong> Código determinístico que chama os agentes em ordem, decide quando pular o Analysis, quando abster e quando pedir revisão, e monta a resposta final (<a href="../agentes/orquestrador/">Orquestrador e Contratos</a>).</li>
+<li><strong>Trilha (dos agentes):</strong> Lista de passos devolvida com cada resposta multiagente: agente, estado (<code>ok</code>, <code>skipped</code>, <code>abstained</code> ou <code>failed</code>), resumo e duração. O app a mostra em "Como cheguei a essa resposta".</li>
+<li><strong>Bloqueio (Validation):</strong> Problema grave encontrado pelo Validation no rascunho (por exemplo <code>NUMBER_NOT_SUPPORTED</code>). Gera uma revisão do Communication; se persistir, a resposta é <strong>rejeitada</strong> e o rascunho fica retido.</li>
+<li><strong>Rejeição segura:</strong> Desfecho <code>rejected</code> do fluxo multiagente: em vez do rascunho bloqueado, o usuário recebe uma mensagem fixa, sem conteúdo inventado.</li>
+<li><strong>Migração numerada:</strong> Revisão do esquema do banco em <code>api/migrations/&lt;banco&gt;/versions/</code> (<code>001_...</code>, <code>002_...</code>), aplicada em ordem pelo Alembic ao abrir o banco (<a href="../adr/0019-orm-e-migracoes-numeradas/">ADR 0019</a>).</li>
+</ul>
+<hr />
+<h2 id="conceitos-de-extratos-e-categorizacao">Conceitos de Extratos e Categorização<a class="headerlink" href="#conceitos-de-extratos-e-categorizacao" title="Permanent link">&para;</a></h2>
+<ul>
+<li><strong>Natureza do lançamento:</strong> Separa gasto real de movimentação de dinheiro (compra, Pix, pagamento de fatura, transferência própria, investimento) (<a href="../adr/0017-perfis-de-banco-e-natureza-do-lancamento/">ADR 0017</a>).</li>
+<li><strong>CNAE:</strong> Classificação Nacional de Atividades Econômicas (IBGE). Cada empresa tem uma atividade principal no cadastro do CNPJ; o Trokim converte essa atividade em categoria de gasto quando o extrato traz o CNPJ do recebedor (<a href="../adr/0020-categorizacao-por-cnae/">ADR 0020</a>).</li>
+<li><strong>Índice CNPJ:</strong> Arquivo local, gerado dos dados abertos da Receita Federal, que liga a raiz do CNPJ (8 dígitos) à categoria da atividade da empresa. Vai no repositório comprimido (14 MB) e é descomprimido localmente por <code>make build</code> ou pela API no primeiro uso; <code>make cnpj-atualizar</code> o refaz com um mês novo.</li>
+<li><strong>Dicionário de redes:</strong> Nomes fantasia de empresas com muitos estabelecimentos ativos, com a categoria da atividade. Reconhece redes regionais pelo nome, mesmo sem CNPJ no extrato.</li>
+<li><strong>Conjunto de validação (holdout):</strong> Casos rotulados escritos sem olhar as regras e sem ajuste depois da medição, para estimar o acerto da categorização em textos novos.</li>
 </ul>
 
 

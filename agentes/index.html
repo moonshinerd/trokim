@@ -12,7 +12,7 @@
       
       
       
-        <link rel="prev" href="../arquitetura/mapa-do-sistema/">
+        <link rel="prev" href="../arquitetura/categorias/">
       
       
         <link rel="next" href="./orquestrador/">
@@ -1177,6 +1177,33 @@
 
                 
               
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../arquitetura/categorias/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Categorias dos Gastos
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
             </ul>
           </nav>
         
@@ -2205,7 +2232,7 @@
   <span class="md-ellipsis">
     
   
-  0016 – Arquitetura Multiagente (proposta)
+  0016 – Arquitetura Multiagente
 
     
   </span>
@@ -2260,6 +2287,60 @@
     
   
   0018 – Contas, Períodos e Transferências
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../adr/0019-orm-e-migracoes-numeradas/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  0019 – ORM e Migrações Numeradas
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../adr/0020-categorizacao-por-cnae/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  0020 – Categorização por CNAE
 
     
   </span>
@@ -2653,9 +2734,13 @@ independente antes de qualquer resposta sair. Só o agente de comunicação usa 
 </tbody>
 </table>
 <h2 id="avaliacao">Avaliação<a class="headerlink" href="#avaliacao" title="Permanent link">&para;</a></h2>
-<p>O benchmark do sistema multiagente contra o Trokim estruturado entra no
-<a href="../pesquisa/resultados/">Histórico de Resultados</a> como uma nova execução (issue <a href="https://github.com/moonshinerd/trokim/issues/60">#60</a>), com o
-<a href="../pesquisa/gabarito-multiagente/">gabarito multiagente</a> (issue <a href="https://github.com/moonshinerd/trokim/issues/56">#56</a>).</p>
+<p>O sistema multiagente foi medido como quarta abordagem nos 30 casos da comparação e nos 20
+cenários do <a href="../pesquisa/gabarito-multiagente/">gabarito multiagente</a> (issues
+<a href="https://github.com/moonshinerd/trokim/issues/56">#56</a> e <a href="https://github.com/moonshinerd/trokim/issues/60">#60</a>),
+com o Qwen 2.5 de 1,5 B local e o GPT-6 Luna. Os números, os gráficos e a comparação com o
+Trokim estruturado estão no <a href="../pesquisa/resultados/#8-semana-4-multiagente-nos-30-casos-da-comparacao">Histórico de Resultados</a>.
+Em resumo: os rascunhos inválidos injetados foram todos barrados, o C30 foi retido, o C29 saiu
+com os números do sistema (protocolo corrigido de 19/11) e o C27 continua respondido, porque a política de escopo do Research não reconhece previsões de preço.</p>
 
 
 

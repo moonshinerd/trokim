@@ -1177,6 +1177,33 @@
 
                 
               
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../arquitetura/categorias/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Categorias dos Gastos
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
             </ul>
           </nav>
         
@@ -1469,6 +1496,28 @@
     <span class="md-ellipsis">
       <span class="md-typeset">
         Validação manual com Qwen 2.5 1.5B
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#teto-de-tokens" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Teto de tokens
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#o-que-o-benchmark-mostrou" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        O que o benchmark mostrou
       </span>
     </span>
   </a>
@@ -2155,7 +2204,7 @@
   <span class="md-ellipsis">
     
   
-  0016 – Arquitetura Multiagente (proposta)
+  0016 – Arquitetura Multiagente
 
     
   </span>
@@ -2210,6 +2259,60 @@
     
   
   0018 – Contas, Períodos e Transferências
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../adr/0019-orm-e-migracoes-numeradas/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  0019 – ORM e Migrações Numeradas
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../adr/0020-categorizacao-por-cnae/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  0020 – Categorização por CNAE
 
     
   </span>
@@ -2298,6 +2401,28 @@
     <span class="md-ellipsis">
       <span class="md-typeset">
         Validação manual com Qwen 2.5 1.5B
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#teto-de-tokens" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Teto de tokens
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#o-que-o-benchmark-mostrou" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        O que o benchmark mostrou
       </span>
     </span>
   </a>
@@ -2408,6 +2533,22 @@
 </table>
 <p>O JSON histórico contém recortes das entradas, não um contexto integral reproduzível: em C05, <code>evidence.quote</code> guarda somente as duas primeiras frases do trecho; em C29, os cálculos não registram todos os campos de <code>CalculationResult</code>. As saídas históricas foram preservadas e não representam uma reexecução após as correções da proteção.</p>
 <p>C29 usa exclusivamente valores sintéticos. A amostra representa uma execução, não uma estimativa estatística nem uma nova rodada do benchmark; por isso, não altera o histórico de resultados ou os gráficos.</p>
+<h2 id="teto-de-tokens">Teto de tokens<a class="headerlink" href="#teto-de-tokens" title="Permanent link">&para;</a></h2>
+<p>O agente chama o modelo com <code>max_tokens</code> igual a <code>LLM_MAX_TOKENS</code> (500 por padrão, no
+<code>api/.env</code>). Sem esse teto, o Qwen 2.5 de 1,5 B às vezes gerava até estourar o tempo limite de
+120 s: no benchmark da <a href="https://github.com/moonshinerd/trokim/issues/60">#60</a> isso aconteceu em
+8 dos 30 casos e em 9 dos 20 cenários, e o <code>/v1/agents/ask</code> teria o mesmo problema. O teste
+<code>test_redacao_tem_teto_de_tokens</code> cobre o padrão e o valor passado no construtor. No
+benchmark, o agente usa 300 tokens, o mesmo orçamento das outras abordagens.</p>
+<h2 id="o-que-o-benchmark-mostrou">O que o benchmark mostrou<a class="headerlink" href="#o-que-o-benchmark-mostrou" title="Permanent link">&para;</a></h2>
+<p>Como a proteção só aceita frases literais das evidências e linhas exatas dos cálculos, quase toda
+resposta do fluxo multiagente é o rascunho seguro montado com os trechos, e não o texto do modelo
+(27 de 28 respostas com o GPT-6 Luna e todas com o Qwen em 18/11; 26 de 28 e todas as 23 em
+19/11). Isso evita
+números inventados, mas deixa a resposta pouco natural e o F1 de tokens baixo. O benchmark guarda,
+em cada tentativa, a resposta original do modelo (<code>llm_responses</code>) e o rascunho enviado ao
+Validation (<code>drafts</code>), o que permite ver o que foi trocado. Aceitar paráfrase com citação
+verificada é o próximo passo (<a href="../../pesquisa/resultados/#8-semana-4-multiagente-nos-30-casos-da-comparacao">Histórico de resultados</a>).</p>
 <h2 id="limitacoes">Limitações<a class="headerlink" href="#limitacoes" title="Permanent link">&para;</a></h2>
 <p>Um modelo pequeno pode inventar conteúdo, parafrasear, omitir citações ou alterar números apesar do prompt. A checagem reduz esse risco ao rejeitar formatos que não consegue validar literalmente, mas pode produzir respostas pouco naturais ou incompletas. Os trechos usados na execução são resumos editoriais da base de conhecimento; consulte as fontes originais no <a href="../../rag/catalogo/">catálogo do RAG</a>.</p>
 <h2 id="testes-automatizados">Testes automatizados<a class="headerlink" href="#testes-automatizados" title="Permanent link">&para;</a></h2>

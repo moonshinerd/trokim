@@ -929,6 +929,17 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#ampliacao-multiagente-issue-60" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Ampliação multiagente — issue #60
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     
   
@@ -1344,6 +1355,33 @@
     
   
   Mapa do Sistema
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../arquitetura/categorias/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Categorias dos Gastos
 
     
   </span>
@@ -2227,7 +2265,7 @@
   <span class="md-ellipsis">
     
   
-  0016 – Arquitetura Multiagente (proposta)
+  0016 – Arquitetura Multiagente
 
     
   </span>
@@ -2282,6 +2320,60 @@
     
   
   0018 – Contas, Períodos e Transferências
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../adr/0019-orm-e-migracoes-numeradas/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  0019 – ORM e Migrações Numeradas
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../adr/0020-categorizacao-por-cnae/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  0020 – Categorização por CNAE
 
     
   </span>
@@ -2464,6 +2556,17 @@
     <span class="md-ellipsis">
       <span class="md-typeset">
         9. Pendências
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ampliacao-multiagente-issue-60" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Ampliação multiagente — issue #60
       </span>
     </span>
   </a>
@@ -2693,7 +2796,7 @@ usuais (<code>1-3 anos</code>). Na LLM pura foram revisados em profundidade só 
 sinalizados; os outros 15 não foram integralmente revisados, então <strong>30,0% é um piso</strong>.</p>
 <div class="admonition info">
 <p class="admonition-title">Evolução na Semana 4 (Validation Agent)</p>
-<p>Na Semana 4, o <a href="../../agentes/validation-agent/">Validation Agent</a> incorporou essas lições diretamente no backend da API. Ao expurgar marcadores estruturais (listas ordenadas, identificadores de normas e marcadores de citação) antes da checagem numérica, a taxa de falsos positivos caiu para <strong>0% em rascunhos válidos</strong>, barrando preventivamente as regressões dos casos C27 (<code>OUT_OF_SCOPE_ADVICE</code>), C29 (<code>NUMBER_NOT_SUPPORTED</code>) e C30 (<code>CALCULATION_MISSING</code>).</p>
+<p>Na Semana 4, o <a href="../../agentes/validation-agent/">Validation Agent</a> incorporou essas lições diretamente no backend da API. Ao expurgar marcadores estruturais (listas ordenadas, identificadores de normas e marcadores de citação) antes da checagem numérica, a taxa de falsos positivos caiu para <strong>0% em rascunhos válidos</strong> nos testes da API. Medido com modelo nos 30 casos (<a href="https://github.com/moonshinerd/trokim/issues/60">#60</a>), o fluxo multiagente <strong>resolveu o C30</strong> (retido com <code>CALCULATION_MISSING</code> com o Qwen e com o GPT-6 Luna), mas <strong>não o C27</strong>, que a política de escopo não reconhece. O C29 só ficou comparável com o protocolo corrigido de 19/11, em que o multiagente recebe os mesmos totais e responde com os números do sistema. Ver <a href="../resultados/#8-semana-4-multiagente-nos-30-casos-da-comparacao">Histórico de resultados, seção 8</a>.</p>
 </div>
 <p><img alt="Casos sinalizados pela heurística, separados em alucinações confirmadas e falsos positivos" src="../../assets/comparacao/2026-11-13-qwen2.5-1.5b/fig2-alucinacao-auditada.png" /></p>
 <p><em>Figura 3. Casos sinalizados pela heurística e o que a revisão confirmou.</em></p>
@@ -2703,7 +2806,7 @@ sinalizados; os outros 15 não foram integralmente revisados, então <strong>30,
 <ol>
 <li><strong>Eliminação dos falsos positivos estruturais:</strong> Marcadores de listas ordenadas (<code>1.</code>, <code>2)</code>) e citações <code>[n]</code> são pré-filtrados antes da validação de fatos numéricos, eliminando os 8 falsos positivos observados no Trokim estruturado.</li>
 <li><strong>Suporte nativo a faixas temporais:</strong> Prazos como <code>1-3 anos</code> ou <code>3 a 5 anos</code> são decompostos em limites canônicos, alinhando-se às fontes regulatórias sem gerar falsos bloqueios.</li>
-<li><strong>Regras puras especializadas:</strong> O agente implementa checagens determinísticas para <code>CITATION_INVALID</code>, <code>OUT_OF_SCOPE_ADVICE</code>, <code>ABSTENTION_MISMATCH</code> e <code>CALCULATION_MISSING</code>, prevenindo em tempo de execução os desvios observados em C27, C29 e C30.</li>
+<li><strong>Regras puras especializadas:</strong> O agente implementa checagens determinísticas para <code>CITATION_INVALID</code>, <code>OUT_OF_SCOPE_ADVICE</code>, <code>ABSTENTION_MISMATCH</code> e <code>CALCULATION_MISSING</code>, voltadas aos desvios observados em C27, C29 e C30 (o efeito medido está na seção 8 do histórico).</li>
 </ol>
 </div>
 <h3 id="reexecucao-de-16112026">Reexecução de 16/11/2026<a class="headerlink" href="#reexecucao-de-16112026" title="Permanent link">&para;</a></h3>
@@ -2833,10 +2936,19 @@ equivalentes aos desta página.</p>
 <h2 id="9-pendencias">9. Pendências<a class="headerlink" href="#9-pendencias" title="Permanent link">&para;</a></h2>
 <ul>
 <li>Revisão humana dos casos sinalizados da reexecução de 16/11 (as respostas brutas já estão versionadas).</li>
-<li>Repetir com modelos maiores e várias execuções.</li>
+<li>Repetir com várias execuções por modelo (em 18/11 e 19/11 houve duas com o Qwen e duas com o GPT-6 Luna, já com o multiagente; ver <a href="../resultados/#8-semana-4-multiagente-nos-30-casos-da-comparacao">seção 8 do histórico</a>).</li>
 <li>Revisão humana independente e cega.</li>
 <li>Homologação do chat generativo no Android (ver <a href="../../planejamento/">planejamento</a>).</li>
 </ul>
+<h2 id="ampliacao-multiagente-issue-60">Ampliação multiagente — issue #60<a class="headerlink" href="#ampliacao-multiagente-issue-60" title="Permanent link">&para;</a></h2>
+<p>O comparador oferece uma quarta abordagem que chama o orquestrador e os agentes
+reais em processo. A comparação histórica mantém seus 30 casos; os 20 cenários
+novos são avaliados separadamente, incluindo números, bloqueios, recusas seguras
+e tempos por agente. Os ensaios com rascunhos adversariais não são misturados às
+respostas geradas pelo modelo. Os resultados anteriores desta página permanecem
+inalterados. O protocolo, as execuções e a leitura estão nas
+<a href="../resultados/#8-semana-4-multiagente-nos-30-casos-da-comparacao">seções 8 e 9 do histórico de resultados</a>;
+a revisão humana dos casos sinalizados está pendente (<code>audit_pending.json</code> de cada execução).</p>
 
 
 

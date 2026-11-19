@@ -1547,6 +1547,33 @@
 
                 
               
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../arquitetura/categorias/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Categorias dos Gastos
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
             </ul>
           </nav>
         
@@ -2418,7 +2445,7 @@
   <span class="md-ellipsis">
     
   
-  0016 – Arquitetura Multiagente (proposta)
+  0016 – Arquitetura Multiagente
 
     
   </span>
@@ -2473,6 +2500,60 @@
     
   
   0018 – Contas, Períodos e Transferências
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../adr/0019-orm-e-migracoes-numeradas/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  0019 – ORM e Migrações Numeradas
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../adr/0020-categorizacao-por-cnae/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  0020 – Categorização por CNAE
 
     
   </span>
@@ -2888,10 +2969,10 @@
 <hr />
 <h2 id="2-configuracao-do-backend-e-dependencias">2. Configuração do Backend e Dependências<a class="headerlink" href="#2-configuracao-do-backend-e-dependencias" title="Permanent link">&para;</a></h2>
 <p>Clone o repositório e execute a automação inicial:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Sincroniza dependências com uv e prepara o ambiente virtual</span>
-</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>make<span class="w"> </span>setup
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Prepara a aplicação: dependências (uv) e índice CNPJ descomprimido</span>
+</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>make<span class="w"> </span>build
 </span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
-</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c1"># Executa a bateria de testes automatizados (375 da API e 109 de pesquisa)</span>
+</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c1"># Executa a bateria de testes automatizados (418 da API e 161 de pesquisa)</span>
 </span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>make<span class="w"> </span><span class="nb">test</span>
 </span><span id="__span-0-6"><a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>
 </span><span id="__span-0-7"><a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="c1"># Lint (ruff) e build estrito da documentação</span>
@@ -2952,6 +3033,11 @@
 <td><code>120</code></td>
 </tr>
 <tr>
+<td><code>LLM_MAX_TOKENS</code></td>
+<td>Teto de tokens da redação do Communication Agent (multiagente)</td>
+<td><code>500</code></td>
+</tr>
+<tr>
 <td><code>LLM_THINKING</code></td>
 <td>Raciocínio estendido de modelos que o suportam (desligado: evita respostas vazias)</td>
 <td><code>false</code></td>
@@ -2998,9 +3084,14 @@
 <p>Se o modelo estiver indisponível, <code>/v1/chat/generate</code> devolve <code>503</code> com uma mensagem clara e <code>/v1/chat/title</code> devolve as primeiras palavras da pergunta (<code>source = "fallback"</code>). No app, o interruptor <strong>Respostas com IA</strong> (em Ajustes) alterna entre <code>/v1/chat/generate</code> e a busca extrativa <code>/v1/chat/ask</code>.</p>
 <h3 id="benchmark-comparativo-e-graficos">Benchmark comparativo e gráficos<a class="headerlink" href="#benchmark-comparativo-e-graficos" title="Permanent link">&para;</a></h3>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>make<span class="w"> </span>comparison-validate<span class="w">                                   </span><span class="c1"># valida gabarito, prompts e fontes (sem chamar o modelo)</span>
-</span><span id="__span-7-2"><a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>make<span class="w"> </span>comparison-run<span class="w"> </span><span class="nv">RUN</span><span class="o">=</span><span class="m">2026</span>-11-20-qwen2.5-1.5b<span class="w"> </span><span class="nv">MODEL</span><span class="o">=</span>ollama/qwen2.5:1.5b<span class="w">   </span><span class="c1"># registra uma execução versionada</span>
+</span><span id="__span-7-2"><a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>make<span class="w"> </span>comparison-run<span class="w"> </span><span class="nv">RUN</span><span class="o">=</span><span class="m">2026</span>-11-20-qwen2.5-1.5b<span class="w"> </span><span class="nv">MODEL</span><span class="o">=</span>ollama/qwen2.5:1.5b<span class="w">   </span><span class="c1"># execução completa e registrada</span>
 </span><span id="__span-7-3"><a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>make<span class="w"> </span>report-charts<span class="w">                                         </span><span class="c1"># regenera os gráficos do MkDocs</span>
 </span></code></pre></div>
+<p>O <code>comparison-run</code> roda as quatro abordagens (LLM pura, RAG ingênuo, Trokim estruturado e
+multiagente) nos 30 casos e os 20 cenários multiagente, e grava sozinho o <code>run.json</code> e os
+formulários de revisão humana (<code>audit_pending.json</code>). Ele recusa um <code>RUN</code> já usado: uma execução
+publicada nunca é sobrescrita. Para um modelo de nuvem pelo LiteLLM, exporte a chave do provedor
+antes (por exemplo, <code>LLM_API_KEY</code> para <code>openrouter/...</code>) e use só perguntas e dados sintéticos.</p>
 <p>O passo a passo para registrar uma execução está em <a href="../pesquisa/resultados/#6-como-registrar-uma-nova-execucao">Histórico de Resultados</a>.</p>
 <hr />
 <h2 id="31-aplicativo-mobile-no-emulador">3.1. Aplicativo Mobile no Emulador<a class="headerlink" href="#31-aplicativo-mobile-no-emulador" title="Permanent link">&para;</a></h2>
@@ -3011,7 +3102,7 @@
 </span><span id="__span-8-4"><a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="c1"># Terminal 2: app (requer Flutter estável, JDK 17 e Android SDK 36)</span>
 </span><span id="__span-8-5"><a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a><span class="nb">cd</span><span class="w"> </span>mobile
 </span><span id="__span-8-6"><a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a>flutter<span class="w"> </span>pub<span class="w"> </span>get
-</span><span id="__span-8-7"><a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a>flutter<span class="w"> </span><span class="nb">test</span><span class="w">          </span><span class="c1"># 123 testes</span>
+</span><span id="__span-8-7"><a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a>flutter<span class="w"> </span><span class="nb">test</span><span class="w">          </span><span class="c1"># 238 testes</span>
 </span><span id="__span-8-8"><a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a>flutter<span class="w"> </span>run<span class="w">           </span><span class="c1"># emulador Android; a API fica em http://10.0.2.2:8000/v1</span>
 </span></code></pre></div>
 <p>No app, a aba <strong>Ajustes</strong> permite escolher o tema (por padrão segue o claro/escuro do aparelho), reduzir animações, desligar a abertura animada e <strong>testar a conexão</strong> com a API. Para apontar para outro endereço, use <code>--dart-define=API_BASE_URL=http://&lt;ip&gt;:8000/v1</code>.</p>
@@ -3274,6 +3365,23 @@ escolha a todos os lançamentos do mesmo estabelecimento e aos próximos arquivo
 aquele lançamento. Pagamento de fatura, investimentos e transferências entre suas contas não têm
 categoria. A LLM não participa: a regra é sua e fica na API local
 (<code>PATCH /v1/transactions/{uid}/category</code>, <code>GET</code> e <code>DELETE /v1/transactions/category-rules</code>).</p>
+<p>Antes de cair em <strong>Outros</strong>, a API tenta, nesta ordem: as regras por palavra (marcas e termos no
+formato de vários bancos e adquirentes, inclusive <strong>Impostos e taxas</strong> para DARF, DAS, IPVA e
+IPTU), o <strong>dicionário de redes</strong> gerado dos dados abertos do CNPJ e, quando o banco traz o CNPJ do
+recebedor (Pix do Nubank), a <strong>atividade econômica (CNAE)</strong> da empresa. As convenções e as medições
+estão em <a href="../arquitetura/categorias/">Categorias</a>.</p>
+<p>O índice CNPJ → categoria vem no repositório, comprimido (14 MB), e é consultado só na sua
+máquina. <code>make build</code> o descomprime em <code>api/data/cnpj/</code>; a API também faz isso sozinha no
+primeiro uso. Para atualizar com o mês mais recente da Receita Federal:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-13-1"><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>make<span class="w"> </span>cnpj-atualizar<span class="w">               </span><span class="c1"># mostra o aviso e pede para digitar SIM</span>
+</span><span id="__span-13-2"><a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a>make<span class="w"> </span>cnpj-atualizar<span class="w"> </span><span class="nv">CONFIRMAR</span><span class="o">=</span>sim<span class="w"> </span><span class="c1"># sem perguntar (CI, scripts)</span>
+</span><span id="__span-13-3"><a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a>make<span class="w"> </span>cnpj-atualizar<span class="w"> </span><span class="nv">MANTER_DOWNLOAD</span><span class="o">=</span><span class="m">1</span><span class="w"> </span><span class="nv">MES</span><span class="o">=</span><span class="m">2026</span>-11<span class="w"> </span><span class="nv">CNPJ_BASE</span><span class="o">=</span>/outro/disco
+</span></code></pre></div>
+<p>Antes de começar, ele mostra quanto vai baixar (cerca de 5 GB), o espaço livre no disco, o tempo
+esperado (de 1 a 3 horas de download e cerca de 40 minutos de geração), a memória (até 1,5 GB) e
+os arquivos versionados que vai substituir. No fim, apaga os arquivos baixados. Se o índice já é do
+mês mais recente, não faz nada. Depois, confira com <code>git diff --stat api/app/data</code>, rode
+<code>make test</code> e registre o mês na <a href="../adr/0020-categorizacao-por-cnae/">ADR 0020</a>.</p>
 <table>
 <thead>
 <tr>

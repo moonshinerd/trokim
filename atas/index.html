@@ -1301,6 +1301,33 @@
 
                 
               
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../arquitetura/categorias/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Categorias dos Gastos
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
             </ul>
           </nav>
         
@@ -2172,7 +2199,7 @@
   <span class="md-ellipsis">
     
   
-  0016 – Arquitetura Multiagente (proposta)
+  0016 – Arquitetura Multiagente
 
     
   </span>
@@ -2227,6 +2254,60 @@
     
   
   0018 – Contas, Períodos e Transferências
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../adr/0019-orm-e-migracoes-numeradas/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  0019 – ORM e Migrações Numeradas
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../adr/0020-categorizacao-por-cnae/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  0020 – Categorização por CNAE
 
     
   </span>
@@ -2455,10 +2536,14 @@
 <hr />
 <h3 id="checkpoint-da-semana-4-sistema-multiagentes-planejada-em-16112026-entrega-em-18112026">Checkpoint da Semana 4 — Sistema Multiagentes (Planejada em 16/11/2026, entrega em 18/11/2026)<a class="headerlink" href="#checkpoint-da-semana-4-sistema-multiagentes-planejada-em-16112026-entrega-em-18112026" title="Permanent link">&para;</a></h3>
 <ul>
-<li><strong>Status:</strong> <span class="badge-should">Sprint Ativa</span></li>
-<li><strong>Planejamento:</strong> épico <a href="https://github.com/moonshinerd/trokim/issues/50">#50</a> com o contrato de mensagens dos agentes; Fase 1 (segunda 16/11) com as tarefas independentes <a href="https://github.com/moonshinerd/trokim/issues/51">#51</a> a <a href="https://github.com/moonshinerd/trokim/issues/57">#57</a> e Fase 2 (quarta 18/11) com as bloqueadas <a href="https://github.com/moonshinerd/trokim/issues/58">#58</a> a <a href="https://github.com/moonshinerd/trokim/issues/61">#61</a>. Detalhes e grafo de precedência em <a href="../planejamento/#6-semana-4-sistema-multiagentes-sprint-ativa">Planejamento</a>.</li>
-<li><strong>Decisão arquitetural:</strong> <a href="../adr/0016-arquitetura-multiagente/">ADR 0016</a> (proposta).</li>
-<li><strong>Registro:</strong> não houve reunião de planejamento registrada em ata; a ata só será criada se houver reunião de validação de fato.</li>
+<li><strong>Status:</strong> <span class="badge-must">Concluído</span> (com pendências assumidas, listadas abaixo)</li>
+<li><strong>Planejamento:</strong> épico <a href="https://github.com/moonshinerd/trokim/issues/50">#50</a> com o contrato de mensagens dos agentes; Fase 1 (segunda 16/11) com as tarefas independentes <a href="https://github.com/moonshinerd/trokim/issues/51">#51</a> a <a href="https://github.com/moonshinerd/trokim/issues/57">#57</a> e Fase 2 (quarta 18/11) com as bloqueadas <a href="https://github.com/moonshinerd/trokim/issues/58">#58</a> a <a href="https://github.com/moonshinerd/trokim/issues/61">#61</a>. Detalhes e grafo de precedência em <a href="../planejamento/#6-semana-4-sistema-multiagentes-concluida">Planejamento</a>.</li>
+<li><strong>Decisões arquiteturais:</strong> <a href="../adr/0016-arquitetura-multiagente/">ADR 0016</a> (aceita), <a href="../adr/0019-orm-e-migracoes-numeradas/">ADR 0019</a> (ORM e migrações numeradas) e <a href="../adr/0020-categorizacao-por-cnae/">ADR 0020</a> (categorização pela atividade econômica).</li>
+<li><strong>Resultados Consolidados:</strong></li>
+<li>Quatro agentes com contrato de mensagens, orquestrador e endpoint <code>POST /v1/agents/ask</code> (<a href="https://github.com/moonshinerd/trokim/issues/51">#51</a> a <a href="https://github.com/moonshinerd/trokim/issues/58">#58</a>); conversa multiagente no app (<a href="https://github.com/moonshinerd/trokim/issues/59">#59</a>).</li>
+<li>Benchmark do multiagente como quarta abordagem nos 30 casos e em 20 cenários próprios, em execuções versionadas com os dois modelos (Qwen 2.5 de 1,5 B local e GPT-6 Luna pelo OpenRouter) (<a href="https://github.com/moonshinerd/trokim/issues/60">#60</a>, <a href="../pesquisa/resultados/">Histórico de Resultados</a>). Os 5 rascunhos inválidos injetados foram barrados em todas as execuções, o C30 foi retido e o C29 saiu com os números do sistema; o C27 continua respondido.</li>
+<li>Importação de várias contas e categorização por formatos de vários bancos e pela atividade econômica das lojas (<a href="https://github.com/moonshinerd/trokim/issues/80">#80</a>).</li>
+<li><strong>Pendências assumidas:</strong> revisão humana dos casos sinalizados (formulários <code>audit_pending.json</code> de cada execução); política de escopo para previsões de preço (C27); persistência dos lançamentos em SQLite; homologação em aparelho Android físico. Não houve reunião de validação, então não há ata desta semana.</li>
 </ul>
 
 
