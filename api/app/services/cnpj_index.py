@@ -1,6 +1,6 @@
 """Índice local CNPJ → categoria, gerado dos dados abertos da Receita Federal (ADR 0020).
 
-O índice é opcional e fica fora do git (`api/data/cnpj/`, ~110 MB): `make cnpj-index` o gera a
+O índice é opcional e fica fora do git (`api/data/cnpj/`, ~130 MB): `make cnpj-index` o gera a
 partir dos arquivos de Estabelecimentos baixados uma vez. São dois vetores do mesmo tamanho:
 ``raizes.npy`` (raiz do CNPJ, 8 dígitos, ordenada) e ``categorias.npy`` (posição da categoria
 em :data:`CODES`). Os arquivos são abertos por memory-map: a consulta lê só as páginas da

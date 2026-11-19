@@ -31,6 +31,11 @@ def _zips(pasta: Path) -> None:
         _linha(22222222, 1, "1", "FABRICA", "02", "2512800"),
         # Baixada: não entra.
         _linha(33333333, 1, "1", "LOJA FECHADA", "08", "4781400"),
+        # Rede cuja matriz é escritório (CNAE 7020) e as lojas são mercados: no índice vale a
+        # matriz ("outros"); no dicionário, a atividade mais comum das lojas.
+        _linha(55555555, 1, "1", "SUPER EXEMPLO", "02", "7020400"),
+        _linha(55555555, 2, "2", "SUPER EXEMPLO", "02", "4711302"),
+        _linha(55555555, 3, "2", "SUPER EXEMPLO", "02", "4711302"),
         # Rede com nome só genérico: entra no índice, não no dicionário.
         _linha(44444444, 1, "1", "FARMACIA", "02", "4771701"),
         _linha(44444444, 2, "2", "FARMACIA", "02", "4771701"),
@@ -61,11 +66,14 @@ def test_gera_indice_e_marcas_sem_genericos_nem_baixadas(tmp_path):
     assert saida == 0
     raizes = np.load(indice / "raizes.npy")
     categorias = np.load(indice / "categorias.npy")
-    assert raizes.tolist() == [11111111, 22222222, 44444444]
+    assert raizes.tolist() == [11111111, 22222222, 44444444, 55555555]
     nomes = [gerador.CODES[c].value for c in categorias]
-    assert nomes == ["alimentacao", "outros", "saude"]
+    assert nomes == ["alimentacao", "outros", "saude", "outros"]
     dados = json.loads(marcas.read_text(encoding="utf-8"))
-    assert dados["marcas"] == {"mercados exemplar": "alimentacao"}
+    assert dados["marcas"] == {
+        "mercados exemplar": "alimentacao",
+        "super exemplo": "alimentacao",
+    }
 
 
 def test_nome_valido_recusa_termos_genericos():
@@ -74,3 +82,6 @@ def test_nome_valido_recusa_termos_genericos():
     assert not gerador.nome_valido("farmacia")
     assert not gerador.nome_valido("posto central")
     assert not gerador.nome_valido("abc")
+    assert not gerador.nome_valido("avenida")
+    assert not gerador.nome_valido("diretoria regional de alagoas")
+    assert not gerador.nome_valido("condominio residencial multifamiliar")

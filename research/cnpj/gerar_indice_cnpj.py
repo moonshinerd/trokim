@@ -9,9 +9,12 @@ Saídas:
   empresa ativa e a categoria da atividade principal da matriz (CNAE → ``cnae_categories``).
 - ``api/app/data/marcas_cnpj.json`` (versionado): nomes fantasia de **redes** (raiz com muitos
   estabelecimentos ativos sob o mesmo nome) e a categoria. MEI e empresário individual não
-  entram: têm um estabelecimento só, e o nome deles costuma ser o de uma pessoa.
+  entram: têm um estabelecimento só, e o nome deles costuma ser o de uma pessoa. A categoria de
+  uma rede é a da atividade **mais comum entre as suas lojas** com aquele nome, e não a da
+  matriz: em muitas redes a matriz é escritório ou holding (um supermercado com matriz
+  "administração" cairia em serviços).
 
-Uso, na pasta ``api/`` (lê os zips em fluxo, sem descompactar; pico de memória ~0,5 GB):
+Uso, na pasta ``api/`` (lê os zips em fluxo, sem descompactar; pico de memória ~1,5 GB):
 
     uv run python ../research/cnpj/gerar_indice_cnpj.py --origem ~/dados/receita-cnpj/2026-11
 """
@@ -56,7 +59,23 @@ GENERICAS = set(
     laboratorio hospital academia oficina transportes transporte distribuidora ltda sa me epp
     eireli cia companhia grupo rede express prime premium top plus mais super mega novo nova
     sao santa santo bom boa vida casa sul norte leste oeste central popular moda store shop
+    avenida master leader opcao noroeste happy princesa furacao evolua cativa indigo ampla light
+    riodoce multiloja terreno residencial condominio loteamento logistico atendimento integracao
+    horizonte regional caixa smart tem tudo multifamiliar garage
     """.split()
+)
+# Nomes de unidades de órgãos e empresas (não identificam uma rede onde se gasta).
+INSTITUCIONAIS = (
+    "diretoria",
+    "coordenacao",
+    "departamento",
+    "secretaria",
+    "superintendencia",
+    "gerencia",
+    "escritorio",
+    "unidade",
+    "agencia",
+    "loja de atendimento",
 )
 
 
@@ -66,7 +85,7 @@ def normalizar(nome: str) -> str:
 
 def nome_valido(nome: str) -> bool:
     tokens = nome.split()
-    if not tokens or len(nome) < 4:
+    if not tokens or len(nome) < 4 or nome.startswith(INSTITUCIONAIS):
         return False
     significativos = [t for t in tokens if t not in GENERICAS and not t.isdigit() and len(t) > 2]
     if not significativos:
@@ -108,7 +127,7 @@ def primeira_passada(zips: list[Path]) -> tuple[np.ndarray, np.ndarray, np.ndarr
 
 
 def segunda_passada(zips: list[Path], redes: set[int]) -> Counter:
-    """Contagem de (raiz, nome fantasia normalizado) só nas redes."""
+    """Contagem de (raiz, nome fantasia normalizado, categoria da loja) só nas redes."""
     contagem: Counter = Counter()
     t0 = time.time()
     for n, row in enumerate(linhas(zips), 1):
@@ -116,7 +135,8 @@ def segunda_passada(zips: list[Path], redes: set[int]) -> Counter:
             continue
         raiz = int(row[CNPJ_BASICO])
         if raiz in redes:
-            contagem[(raiz, normalizar(row[NOME_FANTASIA]))] += 1
+            codigo = CODE_OF[category_for_cnae(row[CNAE_PRINCIPAL])]
+            contagem[(raiz, normalizar(row[NOME_FANTASIA]), codigo)] += 1
         if n % 5_000_000 == 0:
             print(f"  2ª passada: {n / 1e6:.0f} mi linhas, {time.time() - t0:.0f} s", flush=True)
     return contagem
@@ -158,20 +178,15 @@ def main(argv: list[str] | None = None) -> int:
 
     print("2ª passada: nomes fantasia das redes")
     contagem = segunda_passada(zips, redes)
-    # Só as redes viram dicionário (o índice inteiro como dict passaria de 2 GB).
-    redes_arr = np.array(sorted(redes), dtype=np.uint32)
-    pos = np.searchsorted(raizes, redes_arr)
-    achou = pos < len(raizes)
-    achou[achou] = raizes[pos[achou]] == redes_arr[achou]
-    categoria_da_raiz = dict(
-        zip(redes_arr[achou].tolist(), categorias[pos[achou]].tolist(), strict=True)
-    )
+    # Por (raiz, nome): total de lojas ativas e a categoria mais comum entre elas.
+    por_rede: dict[tuple[int, str], Counter] = defaultdict(Counter)
+    for (raiz, nome, codigo), n in contagem.items():
+        por_rede[(raiz, nome)][codigo] += n
+    del contagem
     por_nome: dict[str, set[int]] = defaultdict(set)
-    for (raiz, nome), n in contagem.items():
-        if n >= args.min_filiais and nome_valido(nome):
-            codigo = categoria_da_raiz.get(raiz)
-            if codigo is not None:
-                por_nome[nome].add(codigo)
+    for (_raiz, nome), categorias_lojas in por_rede.items():
+        if sum(categorias_lojas.values()) >= args.min_filiais and nome_valido(nome):
+            por_nome[nome].add(categorias_lojas.most_common(1)[0][0])
     marcas = {
         nome: CODES[next(iter(codigos))].value
         for nome, codigos in sorted(por_nome.items())
@@ -186,8 +201,9 @@ def main(argv: list[str] | None = None) -> int:
                 "referencia": args.origem.expanduser().name,
                 "criterio": (
                     f"nome fantasia com {args.min_filiais}+ estabelecimentos ativos da mesma "
-                    "raiz; categoria pela atividade principal (CNAE) da matriz; nomes com "
-                    "mais de uma categoria entre redes e nomes genéricos ficam de fora"
+                    "raiz; categoria pela atividade principal (CNAE) mais comum entre essas "
+                    "lojas; nomes com mais de uma categoria entre redes, nomes genéricos e "
+                    "unidades de órgãos ficam de fora"
                 ),
                 "total": len(marcas),
                 "marcas": marcas,
