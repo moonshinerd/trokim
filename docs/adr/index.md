@@ -23,9 +23,11 @@ Este repositório registra formalmente todas as decisões de arquitetura e tecno
 | [**0013**](0013-preferencias-locais-e-aba-de-ajustes.md) | Preferências Salvas Localmente e Aba de Ajustes | <span class="badge-must">Aceita</span> | 13/11/2026 | RF15, RNF01, RNF10, GQ01, GQ03 |
 | [**0014**](0014-historico-de-conversas-e-titulos.md) | Histórico de Conversas Local e Títulos Gerados pelo LLM | <span class="badge-must">Aceita</span> | 13/11/2026 | RF16, RNF01, GQ01, GQ03, GQ05 |
 | [**0015**](0015-dados-reais-importacao-e-endereco-da-api.md) | Resumo e Extratos com Dados Reais da API, Importação pelo App e Endereço da API Editável | <span class="badge-must">Aceita</span> | 16/11/2026 | RF01, RF02, RF07, RF15, RNF03, RNF10, GQ01, GQ02, GQ03, GQ07 |
-| [**0016**](0016-arquitetura-multiagente.md) | Arquitetura Multiagente: Research, Analysis, Communication e Validation | <span class="badge-should">Proposta</span> | 16/11/2026 | RF18, RF19, RF20, RF21, GQ01, GQ05, GQ10, GQ11 |
+| [**0016**](0016-arquitetura-multiagente.md) | Arquitetura Multiagente: Research, Analysis, Communication e Validation | <span class="badge-must">Aceita</span> | 18/11/2026 | RF18, RF19, RF20, RF21, GQ01, GQ05, GQ10, GQ11 |
 | [**0017**](0017-perfis-de-banco-e-natureza-do-lancamento.md) | Perfis de Banco, Natureza do Lançamento e Privacidade dos Pix | <span class="badge-must">Aceita</span> | 18/11/2026 | RF01, RF02, RF09, GQ02, GQ03 |
 | [**0018**](0018-contas-periodos-transferencias-e-visoes.md) | Contas, Períodos, Transferências entre Contas Próprias e Visões de Caixa e Competência | <span class="badge-must">Aceita</span> | 18/11/2026 | RF01, RF02, RF09, RF22 a RF26, GQ02, GQ03, GQ07, GQ09, GQ13 |
+| [**0019**](0019-orm-e-migracoes-numeradas.md) | ORM (SQLAlchemy) e Migrações Numeradas (Alembic) nos Bancos SQLite | <span class="badge-must">Aceita</span> | 18/11/2026 | RF12, RNF01, RNF05, RNF07, GQ03, GQ06 |
+| [**0020**](0020-categorizacao-por-cnae.md) | Categorização por Atividade Econômica (CNAE) com Dados Abertos do CNPJ | <span class="badge-must">Aceita</span> | 18/11/2026 | RF09, RNF01, GQ03, GQ07, GQ11 |
 
 - [0006 — Curadoria rastreável e benchmark](0006-curadoria-benchmark.md)
 - [0007 — Banco vetorial local e embeddings densos no RAG](0007-banco-vetorial-embeddings.md)
@@ -40,3 +42,5 @@ Este repositório registra formalmente todas as decisões de arquitetura e tecno
 - [0016 — Arquitetura multiagente](0016-arquitetura-multiagente.md)
 - [0017 — Perfis de banco e natureza do lançamento](0017-perfis-de-banco-e-natureza-do-lancamento.md)
 - [0018 — Contas, períodos, transferências e visões](0018-contas-periodos-transferencias-e-visoes.md)
+- [0019 — ORM e migrações numeradas](0019-orm-e-migracoes-numeradas.md)
+- [0020 — Categorização por CNAE com dados abertos do CNPJ](0020-categorizacao-por-cnae.md)

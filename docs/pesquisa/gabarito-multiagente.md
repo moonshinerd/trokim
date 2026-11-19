@@ -1,7 +1,7 @@
 # Gabarito multiagente (Semana 4)
 
 !!! success "Status: Implementado"
-    A issue [#56](https://github.com/moonshinerd/trokim/issues/56) entrega os insumos e testes determinísticos. A execução comparativa com modelos e suas métricas pertence à [#60](https://github.com/moonshinerd/trokim/issues/60).
+    A issue [#56](https://github.com/moonshinerd/trokim/issues/56) entrega os insumos e testes determinísticos. A execução com modelos ([#60](https://github.com/moonshinerd/trokim/issues/60)) está no [Histórico de resultados, seção 9](resultados.md#9-semana-4-os-20-cenarios-multiagente): o Validation barrou os 5 rascunhos injetados com o código esperado nos três ensaios, e o acerto numérico no ensaio livre foi de 7 de 11 com o Qwen 2.5 de 1,5 B e 8 de 11 com o GPT-6 Luna.
 
 São **20 cenários**, com dados exclusivamente sintéticos, separados do conjunto de 30 casos da Semana 3 ([ADR 0008](../adr/0008-material-comparativo-versionado.md)). Este material é público e de desenvolvimento; não constitui teste cego.
 
@@ -129,11 +129,11 @@ uv run python ../research/rag_benchmark/multiagent.py --write-expected-numbers -
 
 Esse comando recalcula os valores pelo serviço antes de gravar os hashes; não execute a regeneração para simplesmente encobrir uma divergência inesperada. Os testes não atualizam o material automaticamente.
 
-`make research-test` inclui o benchmark de recuperação existente e a validação comparativa da Semana 3. Esta PR prepara insumos, sem publicar uma execução multiagente ou novas métricas de desempenho; os totais acima descrevem a massa sintética. Gráficos e histórico de resultados multiagentes serão produzidos pela #60.
+`make research-test` inclui o benchmark de recuperação existente e a validação comparativa da Semana 3. Os totais acima descrevem a massa sintética. Para rodar os cenários com um modelo: `make multiagent-run RUN=<id> MODEL=<modelo>`; os relatórios ficam em `research/rag_benchmark/results/multiagent/<id>/` e os gráficos saem com `make report-charts`.
 
 ## Limites da validação
 
-Os testes conferem schema, composição, reprodução do ledger, integridade, números e comportamento real de rejeição/revisão nas armadilhas. Também confrontam o roteamento e os resultados numéricos regulares com o Analysis real. Não executam síntese por LLM nem certificam que todas as respostas regulares serão `answered`: a pesquisa pode se abster antes do cálculo se não encontrar evidência, inclusive nas perguntas puramente numéricas. Conceitos e afirmações proibidas serão pontuados pelo benchmark da #60.
+Os testes conferem schema, composição, reprodução do ledger, integridade, números e comportamento real de rejeição/revisão nas armadilhas. Também confrontam o roteamento e os resultados numéricos regulares com o Analysis real. Não executam síntese por LLM nem certificam que todas as respostas regulares serão `answered`: a pesquisa pode se abster antes do cálculo se não encontrar evidência, inclusive nas perguntas puramente numéricas. O benchmark da #60 mede a cobertura de conceitos; as afirmações proibidas ainda dependem de revisão humana.
 
 ## Rastreabilidade
 

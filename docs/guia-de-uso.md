@@ -20,7 +20,7 @@ Clone o repositório e execute a automação inicial:
 # Sincroniza dependências com uv e prepara o ambiente virtual
 make setup
 
-# Executa a bateria de testes automatizados (375 da API e 109 de pesquisa)
+# Executa a bateria de testes automatizados (411 da API e 128 de pesquisa)
 make test
 
 # Lint (ruff) e build estrito da documentação
@@ -61,6 +61,7 @@ cp api/.env.example api/.env
 | `LLM_API_BASE` | Endereço do servidor do modelo (vazio usa o Ollama local, `http://localhost:11434`) | vazio |
 | `LLM_API_KEY` | Só para modelos de nuvem (uma escolha explícita, fora da premissa local-first) | vazio |
 | `LLM_TIMEOUT` | Tempo limite da geração, em segundos | `120` |
+| `LLM_MAX_TOKENS` | Teto de tokens da redação do Communication Agent (multiagente) | `500` |
 | `LLM_THINKING` | Raciocínio estendido de modelos que o suportam (desligado: evita respostas vazias) | `false` |
 | `LLM_TITLE_TIMEOUT` | Tempo limite do título da conversa, em segundos | `25` |
 | `LLM_TITLE_MODEL` | Modelo leve só para dar título às conversas (vazio usa `LLM_MODEL`) | `ollama/qwen2.5:1.5b` |
@@ -129,7 +130,7 @@ DEBUG=false ENVIRONMENT=development make api-run
 # Terminal 2: app (requer Flutter estável, JDK 17 e Android SDK 36)
 cd mobile
 flutter pub get
-flutter test          # 123 testes
+flutter test          # 238 testes
 flutter run           # emulador Android; a API fica em http://10.0.2.2:8000/v1
 ```
 
@@ -359,6 +360,22 @@ escolha a todos os lançamentos do mesmo estabelecimento e aos próximos arquivo
 aquele lançamento. Pagamento de fatura, investimentos e transferências entre suas contas não têm
 categoria. A LLM não participa: a regra é sua e fica na API local
 (`PATCH /v1/transactions/{uid}/category`, `GET` e `DELETE /v1/transactions/category-rules`).
+
+Antes de cair em **Outros**, a API tenta, nesta ordem: as regras por palavra (marcas e termos no
+formato de vários bancos e adquirentes, inclusive **Impostos e taxas** para DARF, DAS, IPVA e
+IPTU), o **dicionário de redes** gerado dos dados abertos do CNPJ e, quando o banco traz o CNPJ do
+recebedor (Pix do Nubank), a **atividade econômica (CNAE)** da empresa. As convenções e as medições
+estão em [Categorias](arquitetura/categorias.md).
+
+O índice CNPJ → categoria é opcional e fica só na sua máquina. Para gerá-lo (download único de
+cerca de 5 GB, fora do repositório; o índice ocupa uns 130 MB em `api/data/cnpj/`):
+
+```bash
+make cnpj-download MES=2026-11   # Estabelecimentos e CNAEs da Receita Federal
+make cnpj-index MES=2026-11      # índice local e dicionário de redes
+```
+
+Sem o índice, tudo funciona igual, só sem essa etapa.
 
 | Resumo com filtros | Gastos sem categoria | Escolha da categoria |
 |---|---|---|

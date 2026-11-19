@@ -99,7 +99,7 @@ usuais (`1-3 anos`). Na LLM pura foram revisados em profundidade só os 15 casos
 sinalizados; os outros 15 não foram integralmente revisados, então **30,0% é um piso**.
 
 !!! info "Evolução na Semana 4 (Validation Agent)"
-    Na Semana 4, o [Validation Agent](../agentes/validation-agent.md) incorporou essas lições diretamente no backend da API. Ao expurgar marcadores estruturais (listas ordenadas, identificadores de normas e marcadores de citação) antes da checagem numérica, a taxa de falsos positivos caiu para **0% em rascunhos válidos**, barrando preventivamente as regressões dos casos C27 (`OUT_OF_SCOPE_ADVICE`), C29 (`NUMBER_NOT_SUPPORTED`) e C30 (`CALCULATION_MISSING`).
+    Na Semana 4, o [Validation Agent](../agentes/validation-agent.md) incorporou essas lições diretamente no backend da API. Ao expurgar marcadores estruturais (listas ordenadas, identificadores de normas e marcadores de citação) antes da checagem numérica, a taxa de falsos positivos caiu para **0% em rascunhos válidos** nos testes da API. Medido com modelo nos 30 casos ([#60](https://github.com/moonshinerd/trokim/issues/60)), o fluxo multiagente **resolveu o C30** (retido com `CALCULATION_MISSING` com o Qwen e com o GPT-6 Luna), mas **não o C27**, que a política de escopo não reconhece, e o C29 não é comparável porque o multiagente não recebe os resultados determinísticos dos prompts. Ver [Histórico de resultados, seção 8](resultados.md#8-semana-4-multiagente-nos-30-casos-da-comparacao).
 
 ![Casos sinalizados pela heurística, separados em alucinações confirmadas e falsos positivos](../assets/comparacao/2026-11-13-qwen2.5-1.5b/fig2-alucinacao-auditada.png)
 
@@ -110,7 +110,7 @@ sinalizados; os outros 15 não foram integralmente revisados, então **30,0% é 
 
     1. **Eliminação dos falsos positivos estruturais:** Marcadores de listas ordenadas (`1.`, `2)`) e citações `[n]` são pré-filtrados antes da validação de fatos numéricos, eliminando os 8 falsos positivos observados no Trokim estruturado.
     2. **Suporte nativo a faixas temporais:** Prazos como `1-3 anos` ou `3 a 5 anos` são decompostos em limites canônicos, alinhando-se às fontes regulatórias sem gerar falsos bloqueios.
-    3. **Regras puras especializadas:** O agente implementa checagens determinísticas para `CITATION_INVALID`, `OUT_OF_SCOPE_ADVICE`, `ABSTENTION_MISMATCH` e `CALCULATION_MISSING`, prevenindo em tempo de execução os desvios observados em C27, C29 e C30.
+    3. **Regras puras especializadas:** O agente implementa checagens determinísticas para `CITATION_INVALID`, `OUT_OF_SCOPE_ADVICE`, `ABSTENTION_MISMATCH` e `CALCULATION_MISSING`, voltadas aos desvios observados em C27, C29 e C30 (o efeito medido está na seção 8 do histórico).
 
 ### Reexecução de 16/11/2026
 
@@ -189,6 +189,6 @@ equivalentes aos desta página.
 ## 9. Pendências
 
 - Revisão humana dos casos sinalizados da reexecução de 16/11 (as respostas brutas já estão versionadas).
-- Repetir com modelos maiores e várias execuções.
+- Repetir com várias execuções por modelo (em 18/11 houve uma com o Qwen e uma com o GPT-6 Luna, já com o multiagente; ver [seção 8 do histórico](resultados.md#8-semana-4-multiagente-nos-30-casos-da-comparacao)).
 - Revisão humana independente e cega.
 - Homologação do chat generativo no Android (ver [planejamento](../planejamento.md)).

@@ -11,8 +11,8 @@ O desenvolvimento do **Trokim** segue a metodologia **Challenge Based Learning (
 | **Semana 1** | Problema, stakeholders, riscos e métricas | Pacote de definição do projeto (cenário, personas, requisitos v1.0.0, riscos, premissas e EQ) | <span class="badge-must">Concluído</span> | 26/10 a 30/10 |
 | **Semana 2** | Base de conhecimento e recuperação | **Base de conhecimento + protótipo de recuperação:** Base curada com 20 documentos-fonte; chunking semântico; embeddings FastEmbed 384d; banco SQLite-Vec; chat Flutter e benchmark (98,78% Recall@3) | <span class="badge-must">Concluído</span> | 02/11 a 06/11 |
 | **Semana 3** | **Comparação LLM x RAG** | **Assistente baseado em evidências + relatório comparativo:** Avaliação empírica estruturada (LLM pura vs. LLM + RAG ingênuo vs. LLM + RAG estruturado do Trokim), métricas de alucinação e síntese generativa | <span class="badge-must">Concluído</span> | **09/11 a 13/11** |
-| **Semana 4** | Sistema multiagentes | Primeiro protótipo multiagente (Research, Analysis, Validation e Communication Agent) | <span class="badge-should">Sprint Ativa</span> | 16/11 a 20/11 |
-| **Semana 5** | Multimodalidade | Assistente multimodal (leitura de faturas PDF, extratos e comprovantes em imagem) | Previsto | 23/11 a 27/11 |
+| **Semana 4** | Sistema multiagentes | Primeiro protótipo multiagente (Research, Analysis, Validation e Communication Agent) | <span class="badge-must">Concluída</span> | 16/11 a 20/11 |
+| **Semana 5** | Multimodalidade | Assistente multimodal (leitura de faturas PDF, extratos e comprovantes em imagem) | <span class="badge-should">Em planejamento</span> | 23/11 a 27/11 |
 | **Semana 6** | Integração completa | Aplicação funcional ponta a ponta (Flutter + FastAPI + RAG + Banco Vetorial + Multiagente) | Previsto | 30/11 a 04/12 |
 | **Semana 7** | Testes e refinamento | Apresentação final e entrega consolidada do projeto e repositório | Previsto | 07/12 a 11/12 |
 
@@ -121,7 +121,7 @@ Todas as tarefas estão formalizadas no GitHub e vinculadas à **Milestone "Sema
 
 ---
 
-## 6. Semana 4 — Sistema Multiagentes (Sprint Ativa)
+## 6. Semana 4 — Sistema Multiagentes (Concluída)
 
 O entregável oficial da **Semana 4 (16/11 a 20/11)** é o *primeiro protótipo multiagente* (Research, Analysis, Validation e Communication Agent). A equipe entrega na **quarta-feira, 18/11/2026**. Todas as tarefas estão na milestone **"Semana 4 — Sistema Multiagentes (Primeiro Protótipo)"**, com o épico [#50](https://github.com/moonshinerd/trokim/issues/50) e o contrato de mensagens dos agentes; a decisão arquitetural está na [ADR 0016](adr/0016-arquitetura-multiagente.md) e a especificação, em [Agentes](agentes/index.md).
 
@@ -205,3 +205,23 @@ Cada issue exige a atualização do MkDocs **no mesmo PR**, e o PR não é merge
 | [#59](https://github.com/moonshinerd/trokim/issues/59) | [Guia de Uso](guia-de-uso.md) (seção do app), `mobile/README.md` |
 | [#60](https://github.com/moonshinerd/trokim/issues/60) | [Histórico de Resultados](pesquisa/resultados.md) (nova execução e gráficos), [Gabarito Multiagente](pesquisa/gabarito-multiagente.md) |
 | [#61](https://github.com/moonshinerd/trokim/issues/61) | **Varredura final de todo o MkDocs**: ADR 0016 aceita, requisitos, planejamento, glossário, apresentação e atas |
+
+### 6.4 Situação ao fim da semana (18/11)
+
+Todas as issues da milestone foram fechadas. As da Fase 1 e as #58 e #59 entraram nos PRs de cada
+responsável; o PR da Entrega 4 fecha as restantes:
+
+| Issue | Situação |
+|:---:|---|
+| [#51](https://github.com/moonshinerd/trokim/issues/51) a [#59](https://github.com/moonshinerd/trokim/issues/59) | Concluídas e mergeadas |
+| [#60](https://github.com/moonshinerd/trokim/issues/60) | Concluída: multiagente como quarta abordagem nos 30 casos e os 20 cenários, em duas execuções versionadas ([Histórico de Resultados](pesquisa/resultados.md)) |
+| [#61](https://github.com/moonshinerd/trokim/issues/61) | Concluída: ADR 0016 aceita, varredura do MkDocs e guia "Entrega 4" |
+| [#80](https://github.com/moonshinerd/trokim/issues/80) | Concluída: importação de várias contas (PR #81) e categorização por formatos de vários bancos e por atividade econômica ([ADR 0020](adr/0020-categorizacao-por-cnae.md)) |
+| [#50](https://github.com/moonshinerd/trokim/issues/50) | Épico encerrado com a milestone |
+
+Na mesma entrega, os bancos SQLite passaram a usar ORM e migrações numeradas
+([ADR 0019](adr/0019-orm-e-migracoes-numeradas.md)).
+
+**Semana 5 (em planejamento):** multimodalidade (comprovantes e faturas em imagem). As issues
+serão abertas depois da revisão do MkDocs do início da semana, como pede o `AGENTS.md`.
+
