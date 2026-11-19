@@ -41,15 +41,18 @@ class ComparisonRAG:
 
 
 class ComparisonLLM:
-    """Usa o mesmo orçamento de geração das três abordagens históricas."""
+    """Preserva as gerações originais com o orçamento das abordagens históricas."""
 
     def __init__(self, provider):
         self.provider = provider
+        self.responses = []
 
     async def generate(self, prompt, **kwargs):
         if kwargs.get("max_tokens") is None:
             kwargs["max_tokens"] = 300
-        return await self.provider.generate(prompt, **kwargs)
+        response = await self.provider.generate(prompt, **kwargs)
+        self.responses.append(response.model_dump(mode="json"))
+        return response
 
 
 class RecordedCommunication:
@@ -118,9 +121,8 @@ def legacy_transactions(case):
 
 
 async def execute_multiagent(case, llm, retriever, temperature=0.1, transactions=None):
-    communication = RecordedCommunication(
-        CommunicationAgent(ComparisonLLM(llm), temperature=temperature)
-    )
+    recorded_llm = ComparisonLLM(llm)
+    communication = RecordedCommunication(CommunicationAgent(recorded_llm, temperature=temperature))
     response = await Orchestrator(
         ResearchAgent(ComparisonRAG(retriever)), AnalysisAgent(), communication, ValidationAgent()
     ).run(
@@ -139,6 +141,7 @@ async def execute_multiagent(case, llm, retriever, temperature=0.1, transactions
         answered=data["status"] == "answered",
         abstained=data["status"] != "answered",
         drafts=communication.drafts,
+        llm_responses=recorded_llm.responses,
     )
     return data
 

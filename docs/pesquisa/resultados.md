@@ -216,8 +216,14 @@ pelo gerador histórico. C30 continua sem lançamentos: os números do enunciado
 são convertidos em extrato. O ledger novo não é fornecido aos 30 casos antigos.
 
 O diretório da execução recebe `comparison_results.json` (respostas, cálculos,
-evidências, rascunhos e trilha de todas as tentativas), `comparison_report.json`,
+evidências, respostas originais do modelo, rascunhos e trilha de todas as tentativas), `comparison_report.json`,
 `comparison_report.md`, `comparison_chart.svg`, `audit_pending.json` e `run.json`.
+`llm_responses` preserva, em ordem de tentativa, o conteúdo original e os metadados
+do provedor antes da substituição pelo Communication Agent. `drafts` registra
+o texto efetivamente enviado à Validation; comparar os dois permite auditar
+bloqueios mesmo quando o texto original foi substituído. Se o fluxo se abstém
+antes de chamar o modelo, `llm_responses` fica vazio.
+
 O registro guarda o commit completo e indica se havia mudanças locais. Um registro
 com mudanças locais precisa ser reproduzido após o commit para permitir rastreabilidade
 exata. Registros completos exigem modelo real, 30+20 casos e identificador novo;
@@ -253,7 +259,8 @@ abordagens presentes em todo o histórico.
 
 O formulário de auditoria começa com `reviewer: null` e `confirmed: null`.
 Revisar os sinalizados, todos os bloqueios livres, C27, C29, C30 e as cinco
-armadilhas, consultando também as respostas brutas e os rascunhos. Registrar a
+armadilhas, consultando as gerações originais em `llm_responses`, os rascunhos em `drafts`
+e a trilha de validação de cada tentativa. Registrar a
 pessoa revisora, a confirmação ou falso positivo, a justificativa e se cada
 bloqueio foi correto. O executor não atribui uma revisão humana automaticamente.
 O formulário preenchido deve ser versionado e os totais auditados reconciliados

@@ -14,6 +14,7 @@ import run_comparison as runner  # noqa: E402
 
 from app.clients.mock_llm import MockLLMProvider  # noqa: E402
 from app.domain.models import EvidenceChunk  # noqa: E402
+from app.models.llm_provider import LLMResponse  # noqa: E402
 from app.services.calculation_service import CalculationService  # noqa: E402
 
 
@@ -113,6 +114,7 @@ async def test_recusa_perde_acerto_numerico_e_nao_inventa_confirmacao():
             "controlled_validation": [],
         },
     )
+    assert response["llm_responses"] == []
     assert report["numeric_accuracy"] == 0
     assert report["validation_executed_cases"] == 0
     assert report["blocked_cases"] == 0
@@ -180,3 +182,33 @@ def test_auditoria_existente_impede_regenerar_respostas(tmp_path):
     assert runner.main(["--multiagent", "--report-json", str(tmp_path / "report.json")]) == 2
     assert path.read_text() == "Revisão em andamento"
     assert not (tmp_path / "report.json").exists()
+
+
+async def test_preserva_respostas_originais_de_cada_tentativa_antes_da_substituicao():
+    originals = ["  Seu saldo é R$ 99999.\n", "Seu saldo é R$ 88888."]
+
+    class InventedLLM:
+        def __init__(self):
+            self.responses = []
+
+        async def generate(self, *args, **kwargs):
+            response = LLMResponse(
+                content=originals[len(self.responses)],
+                model="teste",
+                prompt_tokens=10,
+                completion_tokens=8,
+                raw={"fixture": True},
+            )
+            self.responses.append(response.model_dump(mode="json"))
+            return response
+
+    llm = InventedLLM()
+    response = await benchmark.execute_multiagent(
+        {"id": "M01", "question": "Como organizar meu orçamento?"}, llm, Retriever()
+    )
+    saved = json.loads(json.dumps(response))
+    assert saved["status"] == "rejected"
+    assert len(saved["llm_responses"]) == len(saved["drafts"]) == 2
+    assert saved["llm_responses"] == llm.responses
+    assert [r["content"] for r in saved["llm_responses"]] == originals
+    assert all("99999" not in d["answer"] and "88888" not in d["answer"] for d in saved["drafts"])
