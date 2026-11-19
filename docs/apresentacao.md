@@ -14,7 +14,7 @@ Este documento reúne a visão consolidada das **Entregas 1, 2 e 3** do projeto 
 | **Abstenção Ética Ativa** | 100% | **100,00%** | Zero conselhos em apostas, ações ou especulação |
 | **Latência de Recuperação** | ≤ 50 ms | **12,4 ms** | Testado na CPU local (Mac Apple Silicon) |
 | **Cálculo Determinístico** | 0% de alucinação | **0% de erro numérico** | Serviço Python `calculation_service.py` |
-| **Testes Automatizados** | Passando | **411 (API), 128 (pesquisa) e 238 (app) verdes** | CI no GitHub Actions (jobs api, research, docs e mobile) |
+| **Testes Automatizados** | Passando | **418 (API), 131 (pesquisa) e 238 (app) verdes** | CI no GitHub Actions (jobs api, research, docs e mobile) |
 
 ---
 

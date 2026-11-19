@@ -1,0 +1,8 @@
+{
+ "fonte": "Receita Federal, Dados Abertos do CNPJ (Estabelecimentos)",
+ "referencia": "2026-11",
+ "empresas_ativas": 27316212,
+ "empresas_com_categoria": 22020479,
+ "pacote_sha256": "f3b7688445cb2b0983e1ba868ab56c3596ecb9081e1ccfa2769adcf09ea97f78",
+ "formato": "xz de: cabeçalho TROKIM-CNPJ-1, quantidade (uint32), diferenças entre raízes ordenadas (uint32) e posição da categoria (uint8)"
+}

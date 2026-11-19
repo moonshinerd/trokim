@@ -5,8 +5,11 @@ uma vez para uma pasta fora do repositório. Ver ``docs/adr/0020-categorizacao-p
 
 Saídas:
 
-- ``api/data/cnpj/raizes.npy`` e ``categorias.npy`` (fora do git): raiz do CNPJ de cada
-  empresa ativa e a categoria da atividade principal da matriz (CNAE → ``cnae_categories``).
+- ``api/app/data/cnpj_categorias.xz`` e ``cnpj_categorias.json`` (versionados): o pacote do
+  índice, com a raiz do CNPJ de cada empresa ativa que tem categoria e a categoria da atividade
+  principal da matriz (CNAE → ``cnae_categories``), e o manifesto com mês, contagem e hash.
+- ``api/data/cnpj/raizes.npy`` e ``categorias.npy`` (fora do git): o índice de consulta,
+  descomprimido do pacote.
 - ``api/app/data/marcas_cnpj.json`` (versionado): nomes fantasia de **redes** (raiz com muitos
   estabelecimentos ativos sob o mesmo nome) e a categoria. MEI e empresário individual não
   entram: têm um estabelecimento só, e o nome deles costuma ser o de uma pessoa. A categoria de
@@ -40,7 +43,13 @@ sys.path.insert(0, str(ROOT / "api"))
 
 from app.domain.models import TransactionCategory  # noqa: E402
 from app.services.cnae_categories import category_for_cnae  # noqa: E402
-from app.services.cnpj_index import CODES  # noqa: E402
+from app.services.cnpj_index import (  # noqa: E402
+    CODES,
+    PACK_FILE,
+    ensure_unpacked,
+    pack,
+    sha256_file,
+)
 from app.services.statement_profiles import normalize_text  # noqa: E402
 
 # Layout de Estabelecimentos (dicionário de dados da Receita).
@@ -148,6 +157,7 @@ def main(argv: list[str] | None = None) -> int:
         "--origem", type=Path, required=True, help="Pasta com Estabelecimentos*.zip"
     )
     parser.add_argument("--indice", type=Path, default=ROOT / "api/data/cnpj")
+    parser.add_argument("--pacote", type=Path, default=PACK_FILE)
     parser.add_argument("--marcas", type=Path, default=ROOT / "api/app/data/marcas_cnpj.json")
     parser.add_argument(
         "--min-filiais", type=int, default=20, help="Estabelecimentos ativos da rede com o nome"
@@ -165,11 +175,32 @@ def main(argv: list[str] | None = None) -> int:
     raizes, categorias = raizes[ordem], categorias[ordem]
     unicas = np.concatenate(([True], raizes[1:] != raizes[:-1]))  # uma matriz por raiz
     raizes, categorias = raizes[unicas], categorias[unicas]
-    args.indice.mkdir(parents=True, exist_ok=True)
-    np.save(args.indice / "raizes.npy", raizes)
-    np.save(args.indice / "categorias.npy", categorias)
-    tamanho = sum(p.stat().st_size for p in args.indice.glob("*.npy")) / 2**20
-    print(f"Índice: {len(raizes):,} empresas ativas, {tamanho:.0f} MB em {args.indice}")
+    com_categoria = pack(raizes, categorias, args.pacote)
+    ensure_unpacked(args.indice, args.pacote)
+    tamanho = args.pacote.stat().st_size / 2**20
+    args.pacote.with_suffix(".json").write_text(
+        json.dumps(
+            {
+                "fonte": "Receita Federal, Dados Abertos do CNPJ (Estabelecimentos)",
+                "referencia": args.origem.expanduser().name,
+                "empresas_ativas": int(len(raizes)),
+                "empresas_com_categoria": com_categoria,
+                "pacote_sha256": sha256_file(args.pacote),
+                "formato": (
+                    "xz de: cabeçalho TROKIM-CNPJ-1, quantidade (uint32), diferenças entre "
+                    "raízes ordenadas (uint32) e posição da categoria (uint8)"
+                ),
+            },
+            ensure_ascii=False,
+            indent=1,
+        )
+        + "\n",
+        encoding="utf-8",
+    )
+    print(
+        f"Índice: {len(raizes):,} empresas ativas, {com_categoria:,} com categoria; "
+        f"pacote de {tamanho:.1f} MB em {args.pacote}"
+    )
 
     valores, contagens = np.unique(ativos, return_counts=True)
     redes = set(valores[contagens >= args.min_filiais].tolist())

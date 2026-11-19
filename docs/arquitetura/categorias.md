@@ -31,7 +31,8 @@ são gasto nem renda ([ADR 0017](../adr/0017-perfis-de-banco-e-natureza-do-lanca
 3. **Dicionário de redes**: nomes fantasia de empresas com 20 ou mais estabelecimentos ativos,
    com a categoria da atividade econômica ([ADR 0020](../adr/0020-categorizacao-por-cnae.md)).
 4. **Atividade da empresa (CNAE)** pelo CNPJ do recebedor, quando o banco o informa (Pix do
-   Nubank) e o índice local existe. Só para saídas, e nunca por CPF.
+   Nubank), pelo índice local gerado dos dados abertos da Receita. Só para saídas, e nunca por
+   CPF.
 5. **Categoria do próprio banco**, quando o arquivo traz e nada acima decidiu (fatura Ourocard do
    BB em PDF).
 6. Entrada sem regra vira **Renda**; o resto fica em **Outros**.

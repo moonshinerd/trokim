@@ -42,7 +42,7 @@ Terminologia técnica e conceitos de domínio adotados no **Trokim**.
 
 - **Natureza do lançamento:** Separa gasto real de movimentação de dinheiro (compra, Pix, pagamento de fatura, transferência própria, investimento) ([ADR 0017](adr/0017-perfis-de-banco-e-natureza-do-lancamento.md)).
 - **CNAE:** Classificação Nacional de Atividades Econômicas (IBGE). Cada empresa tem uma atividade principal no cadastro do CNPJ; o Trokim converte essa atividade em categoria de gasto quando o extrato traz o CNPJ do recebedor ([ADR 0020](adr/0020-categorizacao-por-cnae.md)).
-- **Índice CNPJ:** Arquivo local, gerado dos dados abertos da Receita Federal, que liga a raiz do CNPJ (8 dígitos) à categoria da atividade da empresa. Fica fora do git e é opcional.
+- **Índice CNPJ:** Arquivo local, gerado dos dados abertos da Receita Federal, que liga a raiz do CNPJ (8 dígitos) à categoria da atividade da empresa. Vai no repositório comprimido (14 MB) e é descomprimido localmente por `make build` ou pela API no primeiro uso; `make cnpj-atualizar` o refaz com um mês novo.
 - **Dicionário de redes:** Nomes fantasia de empresas com muitos estabelecimentos ativos, com a categoria da atividade. Reconhece redes regionais pelo nome, mesmo sem CNPJ no extrato.
 - **Conjunto de validação (holdout):** Casos rotulados escritos sem olhar as regras e sem ajuste depois da medição, para estimar o acerto da categorização em textos novos.
 

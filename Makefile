@@ -1,9 +1,10 @@
-.PHONY: help setup lint format test docs-serve docs-build api-run mobile-run rag-eval synthetic-data research-test ingest comparison-validate comparison-eval comparison-run multiagent-run report-charts cnpj-download cnpj-index
+.PHONY: help setup lint format test docs-serve docs-build api-run mobile-run rag-eval synthetic-data research-test ingest comparison-validate comparison-eval comparison-run multiagent-run report-charts build cnpj-indice cnpj-atualizar cnpj-download cnpj-index
 
 RAG_REPORT ?= artifacts/research/current.json
 
 help:
 	@echo "Comandos disponíveis no repositório Trokim:"
+	@echo "  make build               - Prepara a aplicação: dependências e índice CNPJ descomprimido"
 	@echo "  make setup               - Cria api/.env e instala dependências locais (uv)"
 	@echo "  make lint                - Checagem estática com ruff na api e research"
 	@echo "  make format              - Auto-formatação com ruff"
@@ -21,8 +22,11 @@ help:
 	@echo "  make comparison-run ... MULTIAGENT=1 - Inclui a abordagem multiagente (Semana 4)"
 	@echo "  make multiagent-run RUN=<data>-<modelo> MODEL=<modelo> - 20 cenários multiagente"
 	@echo "  make report-charts       - Gera os gráficos versionados do benchmark para o MkDocs"
-	@echo "  make cnpj-download MES=2026-11 - Baixa os dados abertos do CNPJ (fora do repositório)"
-	@echo "  make cnpj-index MES=2026-11    - Gera o índice CNPJ -> categoria e o dicionário de redes"
+	@echo "  make cnpj-indice         - Descomprime o índice CNPJ versionado em api/data/cnpj (rápido)"
+	@echo "  make cnpj-atualizar      - Baixa o mês mais recente da Receita (~5 GB), refaz o índice e o"
+	@echo "                             dicionário e apaga o download (pede confirmação; CONFIRMAR=sim,"
+	@echo "                             MES=AAAA-MM, MANTER_DOWNLOAD=1, FORCAR=1, CNPJ_BASE=<pasta>)"
+	@echo "  make cnpj-download / cnpj-index MES=AAAA-MM - Passos avulsos do cnpj-atualizar"
 
 setup:
 	@test -f api/.env || cp api/.env.example api/.env
@@ -30,6 +34,13 @@ setup:
 	@if command -v flutter >/dev/null 2>&1; then \
 		cd mobile && flutter pub get; \
 	fi
+	@$(MAKE) -s cnpj-indice
+
+# Prepara tudo para rodar: dependências e o índice CNPJ descomprimido do pacote versionado.
+build: setup
+
+cnpj-indice:
+	cd api && uv run python -m app.services.cnpj_index
 
 lint:
 	cd api && uv run ruff check . && uv run ruff format --check .
@@ -60,7 +71,7 @@ docs-serve:
 docs-build:
 	uvx zensical build --strict
 
-api-run:
+api-run: cnpj-indice
 	cd api && uv run uvicorn app.main:app --reload --host 127.0.0.1 --port 8000
 
 mobile-run:
@@ -97,11 +108,19 @@ report-charts:
 	uv run --with matplotlib python research/rag_benchmark/make_report_charts.py
 
 # Categorização por atividade (ADR 0020): dados abertos do CNPJ, baixados uma vez, fora do git.
-MES ?= 2026-11
-CNPJ_ORIGEM ?= $(HOME)/dados/receita-cnpj/$(MES)
+MES ?=
+CNPJ_BASE ?= $(HOME)/dados/receita-cnpj
+CNPJ_ORIGEM ?= $(CNPJ_BASE)/$(MES)
+
+cnpj-atualizar:
+	cd api && uv run python ../research/cnpj/atualizar.py --base "$(CNPJ_BASE)" \
+		$(if $(MES),--mes $(MES)) $(if $(filter sim SIM,$(CONFIRMAR)),--sim) \
+		$(if $(MANTER_DOWNLOAD),--manter-download) $(if $(FORCAR),--forcar)
 
 cnpj-download:
+	@test -n "$(MES)" || { echo "Uso: make cnpj-download MES=2026-11"; exit 1; }
 	research/cnpj/baixar.sh $(MES) "$(CNPJ_ORIGEM)"
 
 cnpj-index:
+	@test -n "$(MES)" || { echo "Uso: make cnpj-index MES=2026-11"; exit 1; }
 	cd api && uv run python ../research/cnpj/gerar_indice_cnpj.py --origem "$(CNPJ_ORIGEM)"

@@ -49,6 +49,7 @@ def _zips(pasta: Path) -> None:
 
 def test_gera_indice_e_marcas_sem_genericos_nem_baixadas(tmp_path):
     origem, indice, marcas = tmp_path / "origem", tmp_path / "indice", tmp_path / "marcas.json"
+    pacote = tmp_path / "pacote.xz"
     origem.mkdir()
     _zips(origem)
     saida = gerador.main(
@@ -59,6 +60,8 @@ def test_gera_indice_e_marcas_sem_genericos_nem_baixadas(tmp_path):
             str(indice),
             "--marcas",
             str(marcas),
+            "--pacote",
+            str(pacote),
             "--min-filiais",
             "3",
         ]
@@ -66,9 +69,14 @@ def test_gera_indice_e_marcas_sem_genericos_nem_baixadas(tmp_path):
     assert saida == 0
     raizes = np.load(indice / "raizes.npy")
     categorias = np.load(indice / "categorias.npy")
-    assert raizes.tolist() == [11111111, 22222222, 44444444, 55555555]
+    # Só as empresas com categoria entram (indústria e escritório ficam de fora).
+    assert raizes.tolist() == [11111111, 44444444]
     nomes = [gerador.CODES[c].value for c in categorias]
-    assert nomes == ["alimentacao", "outros", "saude", "outros"]
+    assert nomes == ["alimentacao", "saude"]
+    manifesto = json.loads(pacote.with_suffix(".json").read_text(encoding="utf-8"))
+    assert manifesto["empresas_ativas"] == 4
+    assert manifesto["empresas_com_categoria"] == 2
+    assert manifesto["referencia"] == "origem"
     dados = json.loads(marcas.read_text(encoding="utf-8"))
     assert dados["marcas"] == {
         "mercados exemplar": "alimentacao",

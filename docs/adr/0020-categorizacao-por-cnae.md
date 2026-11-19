@@ -26,12 +26,23 @@ recebedor: nos extratos de teste do desenvolvedor, 36 de 64 débitos.
    (subclasse, classe, grupo ou divisão; vale o mais longo), com as mesmas convenções das regras
    por palavra ([Categorias](../arquitetura/categorias.md)). Indústria, atacado e agro ficam em
    "Outros": não dizem nada sobre o gasto de uma pessoa.
-2. **Índice CNPJ → categoria, local e opcional.** `make cnpj-download` baixa os arquivos de
-   Estabelecimentos e a tabela de CNAEs (Empresas e Sócios não, porque trazem nomes de pessoas)
-   para uma pasta fora do repositório. `make cnpj-index` gera `api/data/cnpj/raizes.npy` e
-   `categorias.npy`: a raiz do CNPJ de cada empresa ativa e a categoria da atividade da matriz.
-   A API abre os arquivos por memory-map, sem carregá-los na RAM. **O índice não vai para o git**
-   (é grande e muda todo mês); sem ele, nada muda.
+2. **Índice CNPJ → categoria, local, versionado comprimido.** A raiz do CNPJ de cada empresa
+   ativa com categoria e a categoria da atividade da matriz. Em duas formas:
+    - **Pacote no git**, `api/app/data/cnpj_categorias.xz` (14,2 MB) e o manifesto
+      `cnpj_categorias.json` (mês, contagens e hash): as raízes ordenadas guardadas como diferença
+      para a anterior (99,9% cabem em um byte) e comprimidas com xz. As empresas em "Outros" não
+      entram, porque a consulta já as trata como sem categoria.
+    - **Índice de consulta**, `api/data/cnpj/raizes.npy` e `categorias.npy` (105 MB, fora do
+      git), aberto por memory-map, sem carregar na RAM. `make build` (e `make setup` e
+      `make api-run`) o descomprime em cerca de 1 s, e a API faz o mesmo no primeiro uso se ele
+      faltar ou se o pacote mudar (`origem.json` guarda o hash do pacote). Assim quem clona o
+      repositório, o CI e a imagem Docker já têm a etapa, sem baixar nada.
+
+   O índice de 130 MB em `.npy` não cabia no git: o GitHub recusa arquivos acima de 100 MB, e o
+   Git LFS gastaria a cota a cada atualização e a cada clone. `make cnpj-atualizar` refaz o
+   pacote com o mês mais recente: avisa o tamanho do download, o espaço livre, o tempo e a
+   memória, pede confirmação, baixa os Estabelecimentos e a tabela de CNAEs (Empresas e Sócios
+   não, porque trazem nomes de pessoas), gera e apaga os arquivos baixados.
 3. **Dicionário de redes, versionado** em `api/app/data/marcas_cnpj.json`: nome fantasia usado por
    20 ou mais estabelecimentos ativos da mesma raiz, com a categoria da **atividade mais comum
    entre essas lojas**. A atividade da matriz não serve aqui: em muitas redes a matriz é
@@ -62,17 +73,20 @@ recebedor: nos extratos de teste do desenvolvedor, 36 de 64 débitos.
   informe o CNPJ. No BB, que não informa, só o dicionário de redes ajuda.
 - A atividade cadastrada pode não ser o que a pessoa comprou (um posto que vende café, uma
   farmácia que vende chocolate). A correção pelo usuário continua sendo a palavra final.
-- O índice precisa ser refeito quando a Receita publica um novo mês. Isso é opcional: empresas
-  novas só ficam sem categoria até a próxima geração.
-- Download de cerca de 5 GB uma vez (17,5 GB de CSV, lidos direto dos zips). A geração leva cerca
-  de 30 minutos e usa até 1,5 GB de RAM; o índice ocupa 130 MB em disco (27,3 milhões de empresas
-  ativas) e quase nada de RAM na API, por memory-map.
+- O índice envelhece: empresas abertas depois do mês de referência ficam sem categoria até a
+  próxima atualização. Atualizar não precisa ser todo mês; cada atualização acrescenta uns 15 MB
+  ao histórico do repositório.
+- Atualizar baixa cerca de 5 GB (17,5 GB de CSV, lidos direto dos zips), leva de 1 a 3 horas de
+  download e cerca de 40 minutos de geração, com até 1,5 GB de RAM. Na API, o índice ocupa 105 MB
+  em disco e quase nada de RAM, por memory-map.
+- Nos testes automatizados, o índice real fica desligado por padrão (um CNPJ inventado poderia
+  coincidir com o de uma empresa real); um teste marcado usa o índice versionado.
 
 ## Resultados
 
 Medidos nos conjuntos versionados (`api/tests/data/`) e nos extratos reais do desenvolvedor, só
-localmente, com o índice de novembro de 2026 (27,3 milhões de empresas ativas) e 746 redes no
-dicionário. Detalhes em [Categorias](../arquitetura/categorias.md).
+localmente, com o índice de novembro de 2026 (27,3 milhões de empresas ativas, 22,0 milhões com
+categoria) e 746 redes no dicionário. Detalhes em [Categorias](../arquitetura/categorias.md).
 
 | Medida | Antes | Depois |
 |---|---:|---:|

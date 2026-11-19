@@ -106,10 +106,12 @@ trokim/
 ## 5. Comandos Rápidos
 
 ```bash
+make build        # Prepara a aplicação: dependências e índice CNPJ descomprimido
 make setup        # Configura ambiente virtual uv e dependências
 make test         # Executa bateria de testes na api e research
 make lint         # Executa ruff para checagem estática
 make format       # Aplica auto-formatação
 make docs-serve   # Inicia servidor local de documentação Zensical
 make api-run      # Inicia backend FastAPI (:8000)
+make cnpj-atualizar  # Atualiza o índice CNPJ com o mês novo da Receita (~5 GB; pede confirmação)
 ```

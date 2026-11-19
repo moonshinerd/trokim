@@ -23,6 +23,9 @@ COPY api/migrations ./migrations
 COPY api/alembic.ini ./alembic.ini
 COPY research/knowledge_base /srv/research/knowledge_base
 
+# Descomprime o índice CNPJ versionado (ADR 0020); a API refaz sozinha se o pacote mudar.
+RUN uv run python -m app.services.cnpj_index
+
 EXPOSE 8000
 
 CMD ["uv", "run", "uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000"]

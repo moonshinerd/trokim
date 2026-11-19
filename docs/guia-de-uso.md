@@ -17,10 +17,10 @@ Instruções para configurar, executar e testar o ambiente de desenvolvimento co
 Clone o repositório e execute a automação inicial:
 
 ```bash
-# Sincroniza dependências com uv e prepara o ambiente virtual
-make setup
+# Prepara a aplicação: dependências (uv) e índice CNPJ descomprimido
+make build
 
-# Executa a bateria de testes automatizados (411 da API e 128 de pesquisa)
+# Executa a bateria de testes automatizados (418 da API e 131 de pesquisa)
 make test
 
 # Lint (ruff) e build estrito da documentação
@@ -367,15 +367,21 @@ IPTU), o **dicionário de redes** gerado dos dados abertos do CNPJ e, quando o b
 recebedor (Pix do Nubank), a **atividade econômica (CNAE)** da empresa. As convenções e as medições
 estão em [Categorias](arquitetura/categorias.md).
 
-O índice CNPJ → categoria é opcional e fica só na sua máquina. Para gerá-lo (download único de
-cerca de 5 GB, fora do repositório; o índice ocupa uns 130 MB em `api/data/cnpj/`):
+O índice CNPJ → categoria vem no repositório, comprimido (14 MB), e é consultado só na sua
+máquina. `make build` o descomprime em `api/data/cnpj/`; a API também faz isso sozinha no
+primeiro uso. Para atualizar com o mês mais recente da Receita Federal:
 
 ```bash
-make cnpj-download MES=2026-11   # Estabelecimentos e CNAEs da Receita Federal
-make cnpj-index MES=2026-11      # índice local e dicionário de redes
+make cnpj-atualizar               # mostra o aviso e pede para digitar SIM
+make cnpj-atualizar CONFIRMAR=sim # sem perguntar (CI, scripts)
+make cnpj-atualizar MANTER_DOWNLOAD=1 MES=2026-11 CNPJ_BASE=/outro/disco
 ```
 
-Sem o índice, tudo funciona igual, só sem essa etapa.
+Antes de começar, ele mostra quanto vai baixar (cerca de 5 GB), o espaço livre no disco, o tempo
+esperado (de 1 a 3 horas de download e cerca de 40 minutos de geração), a memória (até 1,5 GB) e
+os arquivos versionados que vai substituir. No fim, apaga os arquivos baixados. Se o índice já é do
+mês mais recente, não faz nada. Depois, confira com `git diff --stat api/app/data`, rode
+`make test` e registre o mês na [ADR 0020](adr/0020-categorizacao-por-cnae.md).
 
 | Resumo com filtros | Gastos sem categoria | Escolha da categoria |
 |---|---|---|
