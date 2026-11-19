@@ -1,0 +1,71 @@
+{
+  "schema_version": 1,
+  "run_id": "2026-11-19-qwen2.5-1.5b-multiagente",
+  "date": "2026-11-19",
+  "reference_commit": "5fa95170bed8925e96b584c334a76751b5098ac6",
+  "working_tree_dirty": true,
+  "issue": "#60",
+  "model": "ollama/qwen2.5:1.5b",
+  "provider": "litellm (mesma camada do app)",
+  "temperature": 0.1,
+  "top_k": 3,
+  "max_tokens": 300,
+  "repetitions": 1,
+  "cases": 30,
+  "corpus": "20 documentos históricos + suplemento exclusivo da comparação (22 fontes)",
+  "raw_responses": "research/rag_benchmark/results/comparison/2026-11-19-qwen2.5-1.5b-multiagente/comparison_results.json",
+  "report": "research/rag_benchmark/results/comparison/2026-11-19-qwen2.5-1.5b-multiagente/comparison_report.md",
+  "audit": null,
+  "audit_pending": "research/rag_benchmark/results/comparison/2026-11-19-qwen2.5-1.5b-multiagente/audit_pending.json",
+  "source_of_numbers": "comparison_report.json gerado pelo runner; sinalizações sem confirmação humana",
+  "approaches": {
+    "llm_pura": {
+      "label": "LLM pura",
+      "f1_tokens": 0.1538,
+      "concept_coverage": 0.45,
+      "inconsistency_rate": 0.5,
+      "abstention_f1": 0.0,
+      "latency_ms": 1926,
+      "audit": null
+    },
+    "rag_ingenuo": {
+      "label": "RAG ingênuo",
+      "f1_tokens": 0.2003,
+      "concept_coverage": 0.65,
+      "inconsistency_rate": 0.3,
+      "abstention_f1": 0.0,
+      "latency_ms": 1806,
+      "audit": null
+    },
+    "trokim_estruturado": {
+      "label": "Trokim estruturado",
+      "f1_tokens": 0.1986,
+      "concept_coverage": 0.6944,
+      "inconsistency_rate": 0.3103,
+      "abstention_f1": 0.5,
+      "latency_ms": 1721,
+      "audit": null
+    },
+    "multiagente": {
+      "label": "Multiagente",
+      "f1_tokens": 0.1179,
+      "concept_coverage": 0.7278,
+      "inconsistency_rate": 0.4348,
+      "abstention_f1": 0.4,
+      "latency_ms": 2943,
+      "audit": null
+    }
+  },
+  "notes": "Primeira execução com o protocolo integrado do PR #85 (C29 com os totais do sistema, M16 a M18 sem extrato, 300 tokens e corpus unificado também nos cenários). Mesmo modelo da execução 2026-11-18-qwen2.5-1.5b-multiagente.",
+  "multiagent_scenarios": {
+    "report": "research/rag_benchmark/results/multiagent/2026-11-19-qwen2.5-1.5b-multiagente/multiagent_report.md",
+    "cases": 20,
+    "status_ok": 12,
+    "numbers_expected": 11,
+    "numbers_reproduced": 7,
+    "validation_block_rate": 0.4,
+    "traps_safe": 2,
+    "injected_blocked": 5,
+    "latency_mean_ms": 3480.3
+  }
+}

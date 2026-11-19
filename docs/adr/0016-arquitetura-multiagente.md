@@ -86,18 +86,22 @@ O contrato do épico foi implementado sem mudanças de campos. O que a implement
 
 ## Resultados medidos
 
-Benchmark da [#60](https://github.com/moonshinerd/trokim/issues/60), uma execução por modelo
+Benchmark da [#60](https://github.com/moonshinerd/trokim/issues/60), com duas rodadas por modelo
+(18/11 e 19/11; a de 19/11 com o protocolo corrigido do PR #85)
 ([Histórico de resultados, seções 8 e 9](../pesquisa/resultados.md#8-semana-4-multiagente-nos-30-casos-da-comparacao)):
 
-- **Validation:** barrou os 5 rascunhos inválidos injetados com o código esperado, nos três
-  ensaios; o C30 (cálculo sem resultado do sistema) passou a ser retido com os dois modelos.
+- **Validation:** barrou os 5 rascunhos inválidos injetados com o código esperado em todas as
+  execuções; o C30 (cálculo sem resultado do sistema) passou a ser retido com os dois modelos.
+- **C29:** com o protocolo corrigido, o fluxo recebe os mesmos totais das outras abordagens e
+  responde com os números do `CalculationService` (saldo de R$ 0,20) nos dois modelos.
 - **Não resolvido:** o C27 (prever preço de ação) ainda é respondido, com trechos irrelevantes,
   porque a política de escopo do Research não reconhece a pergunta.
 - **Redação extrativa:** o Communication só aceita frases literais das evidências e linhas exatas
-  dos cálculos; na prática, 27 de 28 respostas com o GPT-6 Luna e todas as 20 com o Qwen foram o
-  rascunho seguro montado com os trechos, e não texto do modelo. Isso eleva a cobertura de
-  conceitos com o modelo maior (88% contra 76% do Trokim estruturado), mas baixa o F1 de tokens e,
-  com o modelo pequeno, faz o Validation reter 9 dos 30 casos.
+  dos cálculos; na prática, quase todas as respostas foram o rascunho seguro montado com os trechos, e não
+  texto do modelo (em 19/11, 26 de 28 com o GPT-6 Luna e todas as 23 com o Qwen). Isso eleva a
+  cobertura de conceitos (89% contra 74% do Trokim estruturado com o Luna, 73% contra 69% com o
+  Qwen), mas baixa o F1 de tokens e, com o modelo pequeno, faz o Validation reter de 6 a 9 dos 30
+  casos.
 - **Defeito encontrado e corrigido:** sem teto de tokens, o Qwen gerava até estourar o tempo
   limite (8 dos 30 casos, 9 dos 20 cenários). O Communication passou a usar `LLM_MAX_TOKENS`.
 - **Próximo passo:** aceitar paráfrase com citação verificada, em vez de só frases literais, e

@@ -27,7 +27,7 @@ A engenharia de requisitos do **Trokim** segue duas frentes fundamentais:
 2. **Priorização MoSCoW:**
    - <span class="badge-must">Must have</span>: Mandatórios para o fluxo de valor do MVP e integridade do assistente (importação OFX/PDF, cálculos determinísticos com zero alucinação, RAG oficial com abstenção ativa, banco vetorial local e privacidade LGPD).
    - <span class="badge-should">Should have</span>: Funcionalidades essenciais para a experiência de uso (comparação de cenários de orçamento, categorização assistida e baixa latência de recuperação).
-   - <span class="badge-could">Could have</span>: Funcionalidades de alto valor agregado previstas para as semanas 4 e 5 (assistente multimodal com visão em comprovantes e orquestração multiagentes).
+   - <span class="badge-could">Could have</span>: Funcionalidades de alto valor agregado previstas para as semanas 4 e 5 (assistente multimodal com visão em comprovantes e orquestração multiagentes; na Semana 4, a orquestração multiagente passou a Must have, nos RF18 a RF20).
    - **Won't have (nesta release)**: Conexões bancárias em nuvem via Open Finance ou agregação de credenciais bancárias (descartadas pela [ADR 0005](adr/0005-importacao-local-ofx-pdf.md)).
 
 ---

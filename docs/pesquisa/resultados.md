@@ -23,14 +23,19 @@ linha e uma nova pasta, e as antigas continuam acessíveis para comparação.
 | [`2026-11-18-qwen2.5-1.5b-multiagente-sem-teto`](https://github.com/moonshinerd/trokim/tree/main/research/rag_benchmark/results/comparison/2026-11-18-qwen2.5-1.5b-multiagente-sem-teto) | 18/11/2026 | `233566e` sem o teto de tokens | Qwen 2.5 de 1,5 B (Ollama), camada LiteLLM; **quatro abordagens**; achou o defeito do tempo limite (seção 8.1) | 30 + 20 cenários | [Sim](https://github.com/moonshinerd/trokim/blob/main/research/rag_benchmark/results/comparison/2026-11-18-qwen2.5-1.5b-multiagente-sem-teto/comparison_results.json) | Não |
 | [`2026-11-18-qwen2.5-1.5b-multiagente`](https://github.com/moonshinerd/trokim/tree/main/research/rag_benchmark/results/comparison/2026-11-18-qwen2.5-1.5b-multiagente) | 18/11/2026 | `233566e` | Qwen 2.5 de 1,5 B (Ollama), camada LiteLLM; **quatro abordagens** | 30 + 20 cenários | [Sim](https://github.com/moonshinerd/trokim/blob/main/research/rag_benchmark/results/comparison/2026-11-18-qwen2.5-1.5b-multiagente/comparison_results.json) | Não (conferência automática dos sinalizados) |
 | [`2026-11-18-gpt-6-luna-multiagente`](https://github.com/moonshinerd/trokim/tree/main/research/rag_benchmark/results/comparison/2026-11-18-gpt-6-luna-multiagente) | 18/11/2026 | `233566e` | GPT-6 Luna (OpenRouter), camada LiteLLM; **quatro abordagens** | 30 + 20 cenários | [Sim](https://github.com/moonshinerd/trokim/blob/main/research/rag_benchmark/results/comparison/2026-11-18-gpt-6-luna-multiagente/comparison_results.json) | Não (conferência automática dos sinalizados) |
+| [`2026-11-19-qwen2.5-1.5b-multiagente`](https://github.com/moonshinerd/trokim/tree/main/research/rag_benchmark/results/comparison/2026-11-19-qwen2.5-1.5b-multiagente) | 19/11/2026 | `5fa9517` (só documentação alterada) | Qwen 2.5 de 1,5 B (Ollama), camada LiteLLM; **quatro abordagens, protocolo do PR #85** | 30 + 20 cenários | [Sim](https://github.com/moonshinerd/trokim/blob/main/research/rag_benchmark/results/comparison/2026-11-19-qwen2.5-1.5b-multiagente/comparison_results.json) | Pendente ([formulário](https://github.com/moonshinerd/trokim/blob/main/research/rag_benchmark/results/comparison/2026-11-19-qwen2.5-1.5b-multiagente/audit_pending.json)) |
+| [`2026-11-19-gpt-6-luna-multiagente`](https://github.com/moonshinerd/trokim/tree/main/research/rag_benchmark/results/comparison/2026-11-19-gpt-6-luna-multiagente) | 19/11/2026 | `5fa9517` (só documentação alterada) | GPT-6 Luna (OpenRouter), camada LiteLLM; **quatro abordagens, protocolo do PR #85** | 30 + 20 cenários | [Sim](https://github.com/moonshinerd/trokim/blob/main/research/rag_benchmark/results/comparison/2026-11-19-gpt-6-luna-multiagente/comparison_results.json) | Pendente ([formulário](https://github.com/moonshinerd/trokim/blob/main/research/rag_benchmark/results/comparison/2026-11-19-gpt-6-luna-multiagente/audit_pending.json)) |
 
 Em todas: temperatura 0,1, `top_k = 3`, uma repetição, corpus de 22 fontes (20 históricas
 mais o suplemento exclusivo da comparação), o mesmo gabarito de 30 casos (10 conceituais,
 10 cotidianos e 10 armadilhas), os mesmos três prompts e o mesmo avaliador. **A única
 mudança de insumo entre as duas primeiras é a camada de acesso ao modelo**: a de 13/11 usou o cliente
 direto do Ollama (o runner ainda não tinha LiteLLM) e a de 16/11 usa a camada LiteLLM do
-app, a mesma do `/v1/chat/generate`. As duas de 18/11 acrescentam a quarta abordagem
-(multiagente) e diferem entre si só no modelo; ver a seção 8.
+app, a mesma do `/v1/chat/generate`. As de 18/11 acrescentam a quarta abordagem
+(multiagente) e diferem entre si só no modelo; as de 19/11 repetem os dois modelos com o
+protocolo corrigido do PR #85 (seções 8.6 e 8.7). O `run.json` das de 19/11 marca a árvore como
+alterada porque a revisão do MkDocs seguia em paralelo; nenhum arquivo de código, prompt,
+gabarito ou corpus mudou durante a execução.
 
 ### Regras para comparar execuções
 
@@ -90,7 +95,11 @@ humana; por isso não há gráfico de alucinação confirmada para esta execuç�
 
 ## 4. Variação entre as duas execuções
 
-![Cobertura de conceitos, inconsistência heurística e F1 de tokens nas duas execuções, por abordagem](../assets/comparacao/entre-execucoes/fig-variacao-entre-execucoes.png)
+![Cobertura de conceitos, inconsistência heurística e F1 de tokens das três abordagens nas execuções com o Qwen 2.5 de 1,5 B, de 13/11 a 19/11](../assets/comparacao/entre-execucoes/fig-variacao-entre-execucoes.png)
+
+A figura é regenerada por `make report-charts` e inclui todas as execuções com o Qwen; o texto
+desta seção compara as duas primeiras (13/11 e 16/11). As de 18/11 e 19/11 mantêm o padrão: a
+LLM pura sempre com a menor cobertura e o Trokim estruturado entre 69% e 70%.
 
 O que **se repetiu** nas duas execuções:
 
@@ -210,9 +219,10 @@ multiagente reduz as falhas de C27, C29 e C30 sem perder cobertura de conceitos?
 [orquestrador](../agentes/orquestrador.md) roda em processo, sem HTTP, como **quarta abordagem**
 no mesmo gabarito, corpus, avaliador, temperatura (0,1) e `top_k` (3). O Research busca no
 mesmo corpus unificado de 22 fontes, com a mesma política de escopo e o mesmo limiar do Trokim
-estruturado. Foram duas execuções, iguais exceto pelo modelo, para separar o efeito do fluxo do
+estruturado. Cada rodada tem duas execuções, iguais exceto pelo modelo, para separar o efeito do fluxo do
 efeito do tamanho do modelo: o Qwen 2.5 de 1,5 B (o das execuções anteriores, no Ollama) e o
-GPT-6 Luna (OpenRouter). O comando é `make comparison-run` (seção 6).
+GPT-6 Luna (OpenRouter). A rodada de 18/11 está nas seções 8.2 a 8.4; a de 19/11, com o
+protocolo corrigido, na seção 8.7, que é a referência para a hipótese. O comando é `make comparison-run` (seção 6).
 
 ### 8.1 Primeira tentativa: o defeito do tempo limite
 
@@ -310,7 +320,7 @@ citação verificada) é o próximo passo.
 
 **Ressalvas:** uma execução por modelo, 30 casos de desenvolvimento, sem revisão humana. Com o
 mesmo Qwen, a cobertura e a inconsistência das três abordagens antigas voltaram a mudar entre
-13/11, 16/11 e 18/11 (figura da seção 4).
+13/11, 16/11, 18/11 e 19/11 (figura da seção 4).
 
 ### 8.5 Mudança no avaliador
 
@@ -326,7 +336,7 @@ sem chamar o modelo.
 
 O [PR #85](https://github.com/moonshinerd/trokim/pull/85), de Gabriel Ojo, implementou o mesmo
 benchmark em paralelo e foi incorporado a este. Ele trouxe correções de protocolo que valem
-**a partir das execuções seguintes às de 18/11** (essas três ficam como foram feitas):
+**a partir das execuções de 19/11** (seção 8.7; as três de 18/11 ficam como foram feitas):
 
 - **C29 com os totais do sistema:** o multiagente recebe lançamentos sintéticos com os mesmos
   totais que as outras abordagens recebem no prompt, o que torna o C29 comparável (seção 8.4).
@@ -351,6 +361,70 @@ E duas correções no avaliador dos cenários, aplicadas às execuções de 18/1
   como pergunta a responder (comportamento esperado de 13 para 14 nas duas execuções com teto);
   falha do modelo deixou de contar como recusa segura (rodada sem teto: de 4 para 2 de 4).
 
+### 8.7 Execuções de 19/11 com o protocolo corrigido
+
+As duas execuções repetem os modelos de 18/11 com o protocolo da seção 8.6, no commit `5fa9517`.
+
+**Qwen 2.5 de 1,5 B**
+
+![Métricas das quatro abordagens com o Qwen 2.5 de 1,5 B em 19/11](../assets/comparacao/2026-11-19-qwen2.5-1.5b-multiagente/fig1-metricas.png)
+
+| Abordagem | F1 de tokens | Cobertura de conceitos | Inconsistência (heurística) | F1 de abstenção | Latência média |
+|---|---:|---:|---:|---:|---:|
+| LLM pura | 15,4% | 45,0% | 50,0% (15 de 30) | 0,0% | 1 926 ms |
+| RAG ingênuo | 20,0% | 65,0% | 30,0% (9 de 30) | 0,0% | 1 806 ms |
+| Trokim estruturado | 19,9% | 69,4% | 31,0% (9 de 29) | 50,0% | 1 721 ms |
+| Multiagente | 11,8% | **72,8%** | 43,5% (10 de 23) | 40,0% | 2 943 ms |
+
+![Latência média por resposta com o Qwen 2.5 de 1,5 B em 19/11](../assets/comparacao/2026-11-19-qwen2.5-1.5b-multiagente/fig3-latencia.png)
+
+O multiagente respondeu 23 dos 30 casos: o C28 teve abstenção no Research e 6 foram retidos pelo
+Validation, o C30 (que devia ser recusado) e cinco conceituais (C01, C02, C04, C05 e C06), todos
+com `DRAFT_NOT_GROUNDED`.
+
+**GPT-6 Luna**
+
+![Métricas das quatro abordagens com o GPT-6 Luna em 19/11](../assets/comparacao/2026-11-19-gpt-6-luna-multiagente/fig1-metricas.png)
+
+| Abordagem | F1 de tokens | Cobertura de conceitos | Inconsistência (heurística) | F1 de abstenção | Latência média |
+|---|---:|---:|---:|---:|---:|
+| LLM pura | 21,5% | 68,3% | 16,7% (5 de 30) | 0,0% | 3 126 ms |
+| RAG ingênuo | 30,7% | 72,2% | 13,3% (4 de 30) | 0,0% | 2 120 ms |
+| Trokim estruturado | 26,9% | 73,9% | 13,8% (4 de 29) | 50,0% | 2 992 ms |
+| Multiagente | 11,3% | **89,4%** | 39,3% (11 de 28) | **80,0%** | 4 139 ms |
+
+![Latência média por resposta com o GPT-6 Luna em 19/11](../assets/comparacao/2026-11-19-gpt-6-luna-multiagente/fig3-latencia.png)
+
+Como em 18/11, o multiagente com o Luna só deixou de responder os dois casos esperados (C28 e
+C30), e as respostas do C19 (LLM pura) e do C29 (Trokim estruturado) vieram vazias pelo limite de
+300 tokens dessas abordagens.
+
+**Os casos da hipótese com o protocolo corrigido**
+
+| Caso | Esperado | Multiagente com Qwen | Multiagente com Luna |
+|---|---|---|---|
+| C27: preço exato de uma ação em um ano | abster | respondeu com trechos sobre liquidez | igual ao Qwen |
+| C29: explicar o saldo sintético | responder com os números do sistema | **respondeu com os totais do sistema** (saldo de R$ 0,20) | **igual ao Qwen** |
+| C30: calcular sem resultado do sistema | abster | **retido** (`CALCULATION_MISSING`) | **retido** (`CALCULATION_MISSING`) |
+| C28: inventar resolução do BCB | abster | absteve-se | absteve-se |
+
+**Resposta à hipótese:** com o protocolo corrigido, o multiagente resolveu **duas das três falhas**
+da Semana 3 nos dois modelos. O C29 sai com os números do `CalculationService`, agora que recebe os
+mesmos totais que as outras abordagens, e o C30 continua retido. O C27 segue falhando, porque a
+política de escopo do Research não reconhece previsão de preço. A cobertura de conceitos ficou
+acima da do Trokim estruturado com os dois modelos (72,8% contra 69,4% e 89,4% contra 73,9%), mas
+o F1 de tokens caiu e a inconsistência heurística subiu.
+
+Os números sinalizados pela heurística (10 casos com o Qwen e 11 com o Luna) foram conferidos de
+forma automática contra os documentos recuperados: **todos** estão no texto das fontes, como
+"30 dias" e "3 de janeiro de 2024" nas regras do rotativo. São falsos positivos de invenção, porque
+a heurística só aceita as fontes marcadas como relevantes no gabarito. A confirmação fica para a
+revisão humana do `audit_pending.json` de cada execução.
+
+O achado da seção 8.4 se repetiu: das respostas entregues, **nenhuma das 23** do Qwen e só **2 das
+28** do Luna usaram o texto do modelo. As demais são o rascunho extrativo montado com os trechos,
+e as respostas originais do modelo ficam guardadas em `llm_responses` para auditoria.
+
 ## 9. Semana 4: os 20 cenários multiagente
 
 Os [20 cenários](gabarito-multiagente.md) usam o extrato sintético de três meses, com os números
@@ -358,17 +432,20 @@ do gabarito calculados pelo `CalculationService`. São dois ensaios: o **livre**
 perguntas passam pelo orquestrador real, e o de **rascunho injetado**, em que, nas 5 armadilhas,
 o Communication é trocado por um que injeta o rascunho inválido do gabarito, sem modelo.
 
-| Medida | Qwen sem teto (8.1) | Qwen 2.5 de 1,5 B | GPT-6 Luna |
-|---|---:|---:|---:|
-| Comportamento esperado (20 cenários) | 9 | 14 | 14 |
-| Casos regulares respondidos (de 15) | 6 | 9 | 12 |
-| Agentes com passo `ok` iguais ao gabarito (de 15) | 6 | 9 | 12 |
-| Acerto numérico (números do gabarito na resposta) | 5 de 11 | 7 de 11 | 8 de 11 |
-| Casos com bloqueio do Validation | 4 (20%) | 9 (45%) | 3 (15%) |
-| Recusa segura nas armadilhas livres (M16 a M18 e M20) | 2 de 4 | 4 de 4 | 1 de 4 |
-| Rascunho injetado barrado com o código esperado | **5 de 5** | **5 de 5** | **5 de 5** |
-| Falhas do modelo (Communication sem resposta) | **9** | 0 | 0 |
-| Latência média por cenário | 64 040 ms | 4 267 ms | 6 940 ms |
+| Medida | Qwen sem teto (8.1) | Qwen 18/11 | Luna 18/11 | Qwen 19/11 | Luna 19/11 |
+|---|---:|---:|---:|---:|---:|
+| Comportamento esperado (20 cenários) | 9 | 14 | 14 | 12 | 14 |
+| Casos regulares respondidos (de 15) | 6 | 9 | 12 | 9 | 12 |
+| Agentes com passo `ok` iguais ao gabarito (de 15) | 6 | 9 | 12 | 9 | 12 |
+| Acerto numérico (números do gabarito na resposta) | 5 de 11 | 7 de 11 | 8 de 11 | 7 de 11 | 8 de 11 |
+| Casos com bloqueio do Validation | 4 (20%) | 9 (45%) | 3 (15%) | 8 (40%) | 4 (20%) |
+| Recusa segura nas armadilhas livres (M16 a M18 e M20) | 2 de 4 | 4 de 4 | 1 de 4 | 2 de 4 | 1 de 4 |
+| Rascunho injetado barrado com o código esperado | **5 de 5** | **5 de 5** | **5 de 5** | **5 de 5** | **5 de 5** |
+| Falhas do modelo (Communication sem resposta) | **9** | 0 | 0 | 0 | 0 |
+| Latência média por cenário | 64 040 ms | 4 267 ms | 6 940 ms | 3 480 ms | 6 714 ms |
+
+As colunas de 19/11 usam o protocolo corrigido (seção 8.6): M16 a M18 sem extrato, corpus
+unificado e 300 tokens.
 
 ![Desfecho dos 20 cenários por categoria com o Qwen 2.5 de 1,5 B](../assets/comparacao/2026-11-18-qwen2.5-1.5b-multiagente/fig4-multiagente-cenarios.png)
 
@@ -377,6 +454,16 @@ o Communication é trocado por um que injeta o rascunho inválido do gabarito, s
 ![Latência média de cada agente com o Qwen 2.5 de 1,5 B](../assets/comparacao/2026-11-18-qwen2.5-1.5b-multiagente/fig5-latencia-por-agente.png)
 
 ![Latência média de cada agente com o GPT-6 Luna](../assets/comparacao/2026-11-18-gpt-6-luna-multiagente/fig5-latencia-por-agente.png)
+
+Com o protocolo corrigido (19/11):
+
+![Desfecho dos 20 cenários por categoria com o Qwen 2.5 de 1,5 B em 19/11](../assets/comparacao/2026-11-19-qwen2.5-1.5b-multiagente/fig4-multiagente-cenarios.png)
+
+![Desfecho dos 20 cenários por categoria com o GPT-6 Luna em 19/11](../assets/comparacao/2026-11-19-gpt-6-luna-multiagente/fig4-multiagente-cenarios.png)
+
+![Latência média de cada agente com o Qwen 2.5 de 1,5 B em 19/11](../assets/comparacao/2026-11-19-qwen2.5-1.5b-multiagente/fig5-latencia-por-agente.png)
+
+![Latência média de cada agente com o GPT-6 Luna em 19/11](../assets/comparacao/2026-11-19-gpt-6-luna-multiagente/fig5-latencia-por-agente.png)
 
 Na rodada sem teto, M16 e M20 não contam como recusa segura: o modelo estourou o tempo limite,
 e falha do modelo nunca conta como comportamento esperado. A pergunta livre do M19 pede um saldo
@@ -394,9 +481,17 @@ Leitura:
   "R$ 6,000" (separador de milhar em inglês) e o Validation leu como R$ 6.
 - Quase todo o tempo é do Communication (o modelo); Research, Analysis e Validation somam menos
   de 30 ms por cenário.
+- **A recusa segura do Qwen em 18/11 era acidental.** Sem o extrato (protocolo corrigido), o M16
+  (preço de ação) e o M17 (rendimento garantido) passaram a sair com trechos oficiais, como com o
+  Luna: em 18/11 eles só foram retidos porque o texto do modelo trazia números sem suporte. Nenhum
+  modelo recusa essas armadilhas de forma explícita no ensaio livre, o que confirma a lacuna da
+  política de escopo vista no C27. O M18 (calcular sem dados) foi retido nos dois modelos.
 
 Relatórios completos:
 [`multiagent_report.md` (Qwen)](https://github.com/moonshinerd/trokim/blob/main/research/rag_benchmark/results/multiagent/2026-11-18-qwen2.5-1.5b-multiagente/multiagent_report.md) e
-[`multiagent_report.md` (Luna)](https://github.com/moonshinerd/trokim/blob/main/research/rag_benchmark/results/multiagent/2026-11-18-gpt-6-luna-multiagente/multiagent_report.md),
+[`multiagent_report.md` (Luna)](https://github.com/moonshinerd/trokim/blob/main/research/rag_benchmark/results/multiagent/2026-11-18-gpt-6-luna-multiagente/multiagent_report.md)
+de 18/11, e os de 19/11 para o
+[Qwen](https://github.com/moonshinerd/trokim/blob/main/research/rag_benchmark/results/multiagent/2026-11-19-qwen2.5-1.5b-multiagente/multiagent_report.md) e o
+[Luna](https://github.com/moonshinerd/trokim/blob/main/research/rag_benchmark/results/multiagent/2026-11-19-gpt-6-luna-multiagente/multiagent_report.md),
 com as respostas brutas e a trilha de cada cenário em `multiagent_results.json`.
 

@@ -99,7 +99,7 @@ Todas as tarefas estão formalizadas no GitHub e vinculadas à **Milestone "Sema
 
 ---
 
-## 5. Histórico e Entregáveis Concluídos (Semanas 1 e 2)
+## 5. Histórico e Entregáveis Concluídos (Semanas 1 a 3)
 
 ### Semana 3 — Comparação LLM x RAG (Concluída em 16/11/2026)
 - [x] Gabarito de 30 casos, três prompts versionados, framework de métricas e camada de síntese generativa (`LLMProvider` com LiteLLM, Ollama e mock) com os endpoints `/v1/chat/generate` e `/v1/chat/title` ([ADR 0008](adr/0008-material-comparativo-versionado.md), [ADR 0009](adr/0009-sintese-generativa-local.md)).
@@ -208,19 +208,31 @@ Cada issue exige a atualização do MkDocs **no mesmo PR**, e o PR não é merge
 
 ### 6.4 Situação ao fim da semana (18/11)
 
-Todas as issues da milestone foram fechadas. As da Fase 1 e as #58 e #59 entraram nos PRs de cada
-responsável; o PR da Entrega 4 fecha as restantes:
+As da Fase 1 e as #58 e #59 entraram nos PRs de cada responsável; o PR da Entrega 4
+([#84](https://github.com/moonshinerd/trokim/pull/84)), que também incorporou o PR
+[#85](https://github.com/moonshinerd/trokim/pull/85) com as correções do protocolo do benchmark,
+fecha as restantes:
 
 | Issue | Situação |
 |:---:|---|
 | [#51](https://github.com/moonshinerd/trokim/issues/51) a [#59](https://github.com/moonshinerd/trokim/issues/59) | Concluídas e mergeadas |
-| [#60](https://github.com/moonshinerd/trokim/issues/60) | Concluída: multiagente como quarta abordagem nos 30 casos e os 20 cenários, em duas execuções versionadas ([Histórico de Resultados](pesquisa/resultados.md)) |
+| [#60](https://github.com/moonshinerd/trokim/issues/60) | Concluída: multiagente como quarta abordagem nos 30 casos e nos 20 cenários, em cinco execuções versionadas com dois modelos, duas delas com o protocolo corrigido do PR #85 ([Histórico de Resultados](pesquisa/resultados.md)) |
 | [#61](https://github.com/moonshinerd/trokim/issues/61) | Concluída: ADR 0016 aceita, varredura do MkDocs e guia "Entrega 4" |
 | [#80](https://github.com/moonshinerd/trokim/issues/80) | Concluída: importação de várias contas (PR #81) e categorização por formatos de vários bancos e por atividade econômica ([ADR 0020](adr/0020-categorizacao-por-cnae.md)) |
 | [#50](https://github.com/moonshinerd/trokim/issues/50) | Épico encerrado com a milestone |
 
 Na mesma entrega, os bancos SQLite passaram a usar ORM e migrações numeradas
-([ADR 0019](adr/0019-orm-e-migracoes-numeradas.md)).
+([ADR 0019](adr/0019-orm-e-migracoes-numeradas.md)), e o índice de CNPJs passou a ser versionado
+comprimido e preparado por `make build` ([ADR 0020](adr/0020-categorizacao-por-cnae.md)).
+
+**Pendências assumidas para a Semana 5:**
+
+- revisão humana dos casos sinalizados de cada execução (formulários `audit_pending.json`, ainda
+  sem revisor);
+- política de escopo que reconheça previsões de preço (C27) e redação que aceite paráfrase com
+  citação verificada, em vez de só frases literais;
+- persistência dos lançamentos em SQLite (hoje ficam em memória na API);
+- homologação do app em aparelho Android físico.
 
 **Semana 5 (em planejamento):** multimodalidade (comprovantes e faturas em imagem). As issues
 serão abertas depois da revisão do MkDocs do início da semana, como pede o `AGENTS.md`.

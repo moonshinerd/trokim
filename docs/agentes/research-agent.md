@@ -122,8 +122,13 @@ o benchmark da Semana 2 (`make rag-eval`) e `make docs-build` em modo estrito. O
 testes de integração usam Research, RAG e orquestrador reais, com os demais agentes
 falsos da #51. Verificam resposta com evidências, interrupção antes de Communication
 nos dois motivos de abstenção e rejeição segura quando a busca falha.
-Resultados históricos não representam uma medição deste agente; desempenho do fluxo
-multiagente será avaliado na [issue #60](https://github.com/moonshinerd/trokim/issues/60).
+Resultados históricos não representam uma medição deste agente. No benchmark do fluxo
+multiagente ([#60](https://github.com/moonshinerd/trokim/issues/60),
+[Histórico de resultados](../pesquisa/resultados.md#8-semana-4-multiagente-nos-30-casos-da-comparacao)),
+o Research acertou a abstenção do C28 com os dois modelos, mas a política de escopo **não
+reconhece o C27** (prever o preço exato de uma ação): a pergunta segue com trechos sobre liquidez
+em vez de ser recusada. Ampliar a política para previsões de preço é trabalho pendente. O
+Research leva cerca de 25 ms por pergunta.
 
 ## Rastreabilidade
 

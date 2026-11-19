@@ -1,0 +1,74 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 920 540" width="100%" height="100%" style="background:#0f172a; font-family:system-ui,-apple-system,sans-serif;">
+  <!-- Header -->
+  <text x="50" y="45" fill="#f8fafc" font-size="20" font-weight="700">Trokim — Benchmark Comparativo Semana 3 (Issue #24)</text>
+  <text x="50" y="68" fill="#94a3b8" font-size="13">Avaliação empírica: Redução de Alucinações, Fidelidade e Abstenção (Qwen 2.5)</text>
+
+  <!-- Grid Lines (0% a 100%) -->
+  <line x1="60" y1="330.0" x2="880" y2="330.0" stroke="#334155" stroke-dasharray="4" />
+  <text x="50" y="334.0" fill="#64748b" font-size="11" text-anchor="end">0%</text>
+  <line x1="60" y1="282.0" x2="880" y2="282.0" stroke="#334155" stroke-dasharray="4" />
+  <text x="50" y="286.0" fill="#64748b" font-size="11" text-anchor="end">20%</text>
+  <line x1="60" y1="234.0" x2="880" y2="234.0" stroke="#334155" stroke-dasharray="4" />
+  <text x="50" y="238.0" fill="#64748b" font-size="11" text-anchor="end">40%</text>
+  <line x1="60" y1="186.0" x2="880" y2="186.0" stroke="#334155" stroke-dasharray="4" />
+  <text x="50" y="190.0" fill="#64748b" font-size="11" text-anchor="end">60%</text>
+  <line x1="60" y1="138.0" x2="880" y2="138.0" stroke="#334155" stroke-dasharray="4" />
+  <text x="50" y="142.0" fill="#64748b" font-size="11" text-anchor="end">80%</text>
+  <line x1="60" y1="90.0" x2="880" y2="90.0" stroke="#334155" stroke-dasharray="4" />
+  <text x="50" y="94.0" fill="#64748b" font-size="11" text-anchor="end">100%</text>
+  <!-- Clusters de Barras -->
+  <rect x="96.5" y="210.0" width="30" height="120.0" rx="4" fill="#f87171" />
+  <text x="111.5" y="204.0" fill="#f87171" font-size="11" font-weight="600" text-anchor="middle">50.0%</text>
+  <rect x="130.5" y="258.0" width="30" height="72.0" rx="4" fill="#fbbf24" />
+  <text x="145.5" y="252.0" fill="#fbbf24" font-size="11" font-weight="600" text-anchor="middle">30.0%</text>
+  <rect x="164.5" y="255.5" width="30" height="74.5" rx="4" fill="#34d399" />
+  <text x="179.5" y="249.5" fill="#34d399" font-size="11" font-weight="600" text-anchor="middle">31.0%</text>
+  <rect x="198.5" y="225.7" width="30" height="104.3" rx="4" fill="#a78bfa" />
+  <text x="213.5" y="219.7" fill="#a78bfa" font-size="11" font-weight="600" text-anchor="middle">43.5%</text>
+  <text x="162.5" y="355" fill="#cbd5e1" font-size="12" font-weight="600" text-anchor="middle">Inconsistência (Alucinação)</text>
+  <rect x="301.5" y="293.1" width="30" height="36.9" rx="4" fill="#f87171" />
+  <text x="316.5" y="287.1" fill="#f87171" font-size="11" font-weight="600" text-anchor="middle">15.4%</text>
+  <rect x="335.5" y="281.9" width="30" height="48.1" rx="4" fill="#fbbf24" />
+  <text x="350.5" y="275.9" fill="#fbbf24" font-size="11" font-weight="600" text-anchor="middle">20.0%</text>
+  <rect x="369.5" y="282.3" width="30" height="47.7" rx="4" fill="#34d399" />
+  <text x="384.5" y="276.3" fill="#34d399" font-size="11" font-weight="600" text-anchor="middle">19.9%</text>
+  <rect x="403.5" y="301.7" width="30" height="28.3" rx="4" fill="#a78bfa" />
+  <text x="418.5" y="295.7" fill="#a78bfa" font-size="11" font-weight="600" text-anchor="middle">11.8%</text>
+  <text x="367.5" y="355" fill="#cbd5e1" font-size="12" font-weight="600" text-anchor="middle">SQuAD F1 (Tokens)</text>
+  <rect x="506.5" y="222.0" width="30" height="108.0" rx="4" fill="#f87171" />
+  <text x="521.5" y="216.0" fill="#f87171" font-size="11" font-weight="600" text-anchor="middle">45.0%</text>
+  <rect x="540.5" y="174.0" width="30" height="156.0" rx="4" fill="#fbbf24" />
+  <text x="555.5" y="168.0" fill="#fbbf24" font-size="11" font-weight="600" text-anchor="middle">65.0%</text>
+  <rect x="574.5" y="163.3" width="30" height="166.7" rx="4" fill="#34d399" />
+  <text x="589.5" y="157.3" fill="#34d399" font-size="11" font-weight="600" text-anchor="middle">69.4%</text>
+  <rect x="608.5" y="155.3" width="30" height="174.7" rx="4" fill="#a78bfa" />
+  <text x="623.5" y="149.3" fill="#a78bfa" font-size="11" font-weight="600" text-anchor="middle">72.8%</text>
+  <text x="572.5" y="355" fill="#cbd5e1" font-size="12" font-weight="600" text-anchor="middle">Concept Coverage Recall</text>
+  <rect x="711.5" y="330.0" width="30" height="0.0" rx="4" fill="#f87171" />
+  <text x="726.5" y="324.0" fill="#f87171" font-size="11" font-weight="600" text-anchor="middle">0.0%</text>
+  <rect x="745.5" y="330.0" width="30" height="0.0" rx="4" fill="#fbbf24" />
+  <text x="760.5" y="324.0" fill="#fbbf24" font-size="11" font-weight="600" text-anchor="middle">0.0%</text>
+  <rect x="779.5" y="210.0" width="30" height="120.0" rx="4" fill="#34d399" />
+  <text x="794.5" y="204.0" fill="#34d399" font-size="11" font-weight="600" text-anchor="middle">50.0%</text>
+  <rect x="813.5" y="234.0" width="30" height="96.0" rx="4" fill="#a78bfa" />
+  <text x="828.5" y="228.0" fill="#a78bfa" font-size="11" font-weight="600" text-anchor="middle">40.0%</text>
+  <text x="777.5" y="355" fill="#cbd5e1" font-size="12" font-weight="600" text-anchor="middle">Abstenção Ativa (F1)</text>
+  <!-- Legenda -->
+  <g transform="translate(60, 388)">
+    <rect x="40" y="0" width="14" height="14" rx="3" fill="#f87171" />
+    <text x="62" y="12" fill="#e2e8f0" font-size="13" font-weight="500">LLM Pura</text>
+    <rect x="210" y="0" width="14" height="14" rx="3" fill="#fbbf24" />
+    <text x="232" y="12" fill="#e2e8f0" font-size="13" font-weight="500">Naive RAG</text>
+    <rect x="380" y="0" width="14" height="14" rx="3" fill="#34d399" />
+    <text x="402" y="12" fill="#e2e8f0" font-size="13" font-weight="500">Trokim Estruturado</text>
+    <rect x="550" y="0" width="14" height="14" rx="3" fill="#a78bfa" />
+    <text x="572" y="12" fill="#e2e8f0" font-size="13" font-weight="500">Multiagente</text>
+  </g>
+  <!-- Painel de Latência -->
+  <rect x="60" y="424" width="820" height="76" rx="8" fill="#1e293b" stroke="#334155" />
+  <text x="80" y="450" fill="#94a3b8" font-size="11" font-weight="600" letter-spacing="1">LATÊNCIA MÉDIA POR REQUISIÇÃO</text>
+  <text x="80.0" y="478" fill="#f87171" font-size="18" font-weight="700">1926 ms <tspan fill="#94a3b8" font-size="12" font-weight="400">(LLM Pura)</tspan></text>
+  <text x="285.0" y="478" fill="#fbbf24" font-size="18" font-weight="700">1806 ms <tspan fill="#94a3b8" font-size="12" font-weight="400">(Naive RAG)</tspan></text>
+  <text x="490.0" y="478" fill="#34d399" font-size="18" font-weight="700">1721 ms <tspan fill="#94a3b8" font-size="12" font-weight="400">(Trokim Estruturado)</tspan></text>
+  <text x="695.0" y="478" fill="#a78bfa" font-size="18" font-weight="700">2943 ms <tspan fill="#94a3b8" font-size="12" font-weight="400">(Multiagente)</tspan></text>
+</svg>

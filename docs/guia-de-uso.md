@@ -20,7 +20,7 @@ Clone o repositório e execute a automação inicial:
 # Prepara a aplicação: dependências (uv) e índice CNPJ descomprimido
 make build
 
-# Executa a bateria de testes automatizados (418 da API e 131 de pesquisa)
+# Executa a bateria de testes automatizados (418 da API e 161 de pesquisa)
 make test
 
 # Lint (ruff) e build estrito da documentação
@@ -111,9 +111,15 @@ Se o modelo estiver indisponível, `/v1/chat/generate` devolve `503` com uma men
 
 ```bash
 make comparison-validate                                   # valida gabarito, prompts e fontes (sem chamar o modelo)
-make comparison-run RUN=2026-11-20-qwen2.5-1.5b MODEL=ollama/qwen2.5:1.5b   # registra uma execução versionada
+make comparison-run RUN=2026-11-20-qwen2.5-1.5b MODEL=ollama/qwen2.5:1.5b   # execução completa e registrada
 make report-charts                                         # regenera os gráficos do MkDocs
 ```
+
+O `comparison-run` roda as quatro abordagens (LLM pura, RAG ingênuo, Trokim estruturado e
+multiagente) nos 30 casos e os 20 cenários multiagente, e grava sozinho o `run.json` e os
+formulários de revisão humana (`audit_pending.json`). Ele recusa um `RUN` já usado: uma execução
+publicada nunca é sobrescrita. Para um modelo de nuvem pelo LiteLLM, exporte a chave do provedor
+antes (por exemplo, `LLM_API_KEY` para `openrouter/...`) e use só perguntas e dados sintéticos.
 
 O passo a passo para registrar uma execução está em [Histórico de Resultados](pesquisa/resultados.md#6-como-registrar-uma-nova-execucao).
 

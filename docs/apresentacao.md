@@ -1,6 +1,6 @@
 # Apresentação Executiva e Demonstração Interativa
 
-Este documento reúne a visão consolidada das **Entregas 1, 2 e 3** do projeto **Trokim**, no âmbito do **Challenge 2 (TIC-IA 2026 — Big Idea: Qualidade de Vida)**.
+Este documento reúne a visão consolidada das **Entregas 1 a 4** do projeto **Trokim**, no âmbito do **Challenge 2 (TIC-IA 2026 — Big Idea: Qualidade de Vida)**.
 
 ---
 
@@ -14,7 +14,7 @@ Este documento reúne a visão consolidada das **Entregas 1, 2 e 3** do projeto 
 | **Abstenção Ética Ativa** | 100% | **100,00%** | Zero conselhos em apostas, ações ou especulação |
 | **Latência de Recuperação** | ≤ 50 ms | **12,4 ms** | Testado na CPU local (Mac Apple Silicon) |
 | **Cálculo Determinístico** | 0% de alucinação | **0% de erro numérico** | Serviço Python `calculation_service.py` |
-| **Testes Automatizados** | Passando | **418 (API), 131 (pesquisa) e 238 (app) verdes** | CI no GitHub Actions (jobs api, research, docs e mobile) |
+| **Testes Automatizados** | Passando | **418 (API), 161 (pesquisa) e 238 (app) verdes** | CI no GitHub Actions (jobs api, research, docs e mobile) |
 
 ---
 
@@ -67,13 +67,39 @@ um ranking entre as duas abordagens com RAG. Veja a [variação entre execuçõe
 
 ---
 
-## 4. Rastreabilidade das Entregas
+## 4. Sistema multiagente (Semana 4)
+
+A pergunta passa por quatro agentes: o **Research** recupera as evidências (ou se abstém), o
+**Analysis** faz os cálculos com o motor determinístico, o **Communication** redige a resposta só
+com o que recebeu e o **Validation** barra número sem suporte, cálculo ausente e conselho fora de
+escopo ([Agentes](agentes/index.md), [ADR 0016](adr/0016-arquitetura-multiagente.md)).
+
+O benchmark rodou o fluxo como quarta abordagem nos mesmos 30 casos e em 20 cenários próprios,
+com o Qwen 2.5 de 1,5 B local e com o GPT-6 Luna pelo OpenRouter
+([Histórico de Resultados](pesquisa/resultados.md#8-semana-4-multiagente-nos-30-casos-da-comparacao)):
+
+- os 5 rascunhos inválidos injetados nas armadilhas foram barrados com o código esperado em
+  todas as execuções, e o C30 (cálculo sem resultado do sistema) foi retido;
+- o C29 (explicar o saldo sintético) saiu com os números do sistema nos dois modelos;
+- o C27 (preço futuro de uma ação) continua respondido: a política de escopo não reconhece
+  previsões de preço;
+- quase toda resposta é o rascunho seguro com frases literais das fontes, o que evita número
+  inventado mas deixa o texto pouco natural.
+
+Na mesma entrega, a categorização dos lançamentos passou a usar a atividade econômica (CNAE) da
+loja, num índice local de 22 milhões de CNPJs: nos extratos reais de um integrante, processados
+só no computador dele, a parte categorizada foi de 56% para 67%
+([ADR 0020](adr/0020-categorizacao-por-cnae.md)).
+
+---
+
+## 5. Rastreabilidade das Entregas
 
 ```mermaid
 flowchart LR
     E1["Entrega 1: Concepção<br/>• EQ + 10 GQs<br/>• C4 Model + MoSCoW<br/>• ADRs 0001 a 0005"] --> E2["Entrega 2: RAG & Benchmark<br/>• 20 Docs Oficiais<br/>• SQLite-Vec + FastEmbed<br/>• Benchmark 98.78%<br/>• Chat Flutter Android"]
     E2 --> E3["Entrega 3: Comparação LLM<br/>• Relatório Comparativo<br/>• LLM Pura vs RAG Estruturado<br/>• Métricas de Alucinação"]
-    E3 --> E4["Entrega 4: Multiagentes<br/>• Research Agent<br/>• Analysis Agent<br/>• Validation Agent"]
+    E3 --> E4["Entrega 4: Multiagentes<br/>• Research, Analysis,<br/>Communication e Validation<br/>• Benchmark multiagente<br/>• Categorização por CNAE"]
 ```
 
 - [Acessar a Ata 01 (Semana 1)](atas/ata01.md)
