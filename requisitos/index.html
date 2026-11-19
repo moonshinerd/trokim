@@ -2165,6 +2165,60 @@
 
                 
               
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../adr/0017-perfis-de-banco-e-natureza-do-lancamento/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  0017 – Perfis de Banco e Natureza
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../adr/0018-contas-periodos-transferencias-e-visoes/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  0018 – Contas, Períodos e Transferências
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
             </ul>
           </nav>
         
@@ -2347,6 +2401,13 @@
 <td>Implementação no app do modo multiagente experimental, modelos Dart estritos e trilha por resposta (RF21).</td>
 <td style="text-align: center;">Equipe Trokim</td>
 </tr>
+<tr>
+<td style="text-align: center;"><strong>v1.6.0</strong></td>
+<td style="text-align: center;">18/11/2026</td>
+<td style="text-align: center;">Semana 4 (<em>Importação de várias contas</em>)</td>
+<td><strong>RF01</strong> e <strong>RF02</strong> ganham os perfis do Banco do Brasil (conta em OFX e fatura Ourocard em PDF); <strong>RF09</strong> passa a implementado com o ajuste de categoria no app e regras por estabelecimento; inclusão de <strong>RF22</strong> (contas e situação do período), <strong>RF23</strong> (parcelamentos), <strong>RF24</strong> (transferências entre contas próprias), <strong>RF25</strong> (visões de caixa e competência por dono) e <strong>RF26</strong> (receber arquivo por "Compartilhar"). Vinculação da ADR 0018.</td>
+<td style="text-align: center;">Equipe Trokim</td>
+</tr>
 </tbody>
 </table>
 <hr />
@@ -2378,7 +2439,7 @@
 <tr>
 <td style="text-align: center;"><strong>RF01</strong></td>
 <td>Importação de extratos OFX</td>
-<td>O sistema deve ler e extrair transações financeiras de extratos bancários em formato <code>.ofx</code>.</td>
+<td>O sistema deve ler e extrair transações financeiras de extratos bancários em formato <code>.ofx</code>, com perfil por banco (Nubank: conta e cartão, pessoal e Empresas; Banco do Brasil: conta corrente), natureza do lançamento e remoção de dados pessoais da contraparte.</td>
 <td style="text-align: center;"><span class="badge-must">Must have</span></td>
 <td style="text-align: center;"><a href="../pesquisa/guiding-questions/">GQ02</a>, <a href="../pesquisa/guiding-questions/">GQ03</a></td>
 <td style="text-align: center;"><a href="../adr/0005-importacao-local-ofx-pdf/">ADR 0005</a></td>
@@ -2387,7 +2448,7 @@
 <tr>
 <td style="text-align: center;"><strong>RF02</strong></td>
 <td>Importação de faturas PDF</td>
-<td>O sistema deve extrair texto, datas e valores de faturas de cartão de crédito em formato <code>.pdf</code>.</td>
+<td>O sistema deve extrair texto, datas e valores de faturas de cartão de crédito em formato <code>.pdf</code>, com acentos, milhar, sinal, parcelas e ano corretos, e perfil próprio para a fatura Ourocard do Banco do Brasil (conferida com o total da fatura).</td>
 <td style="text-align: center;"><span class="badge-must">Must have</span></td>
 <td style="text-align: center;"><a href="../pesquisa/guiding-questions/">GQ02</a>, <a href="../pesquisa/guiding-questions/">GQ03</a></td>
 <td style="text-align: center;"><a href="../adr/0005-importacao-local-ofx-pdf/">ADR 0005</a></td>
@@ -2450,11 +2511,11 @@
 <tr>
 <td style="text-align: center;"><strong>RF09</strong></td>
 <td>Categorização automática assistida</td>
-<td>O sistema deve inferir a categoria das transações com base no histórico do usuário, permitindo conferência e ajuste no app.</td>
+<td>O sistema deve inferir a categoria das transações por regras locais e permitir conferência e ajuste no app; a correção vira regra do estabelecimento, aplicada aos lançamentos já importados e aos próximos arquivos.</td>
 <td style="text-align: center;"><span class="badge-should">Should have</span></td>
 <td style="text-align: center;"><a href="../pesquisa/guiding-questions/">GQ07</a>, <a href="../pesquisa/guiding-questions/">GQ11</a></td>
-<td style="text-align: center;"><a href="../adr/0004-calculos-deterministicos/">ADR 0004</a></td>
-<td style="text-align: center;">Previsto (Semana 3)</td>
+<td style="text-align: center;"><a href="../adr/0004-calculos-deterministicos/">ADR 0004</a>, <a href="../adr/0017-perfis-de-banco-e-natureza-do-lancamento/">ADR 0017</a>, <a href="../adr/0018-contas-periodos-transferencias-e-visoes/">ADR 0018</a></td>
+<td style="text-align: center;"><span class="badge-must">Implementado</span></td>
 </tr>
 <tr>
 <td style="text-align: center;"><strong>RF10</strong></td>
@@ -2562,6 +2623,51 @@
 <td style="text-align: center;"><span class="badge-should">Should have</span></td>
 <td style="text-align: center;"><a href="../pesquisa/guiding-questions/">GQ01</a>, <a href="../pesquisa/guiding-questions/">GQ10</a></td>
 <td style="text-align: center;"><a href="../adr/0016-arquitetura-multiagente/">ADR 0016</a></td>
+<td style="text-align: center;"><span class="badge-must">Implementado</span></td>
+</tr>
+<tr>
+<td style="text-align: center;"><strong>RF22</strong></td>
+<td>Contas e situação do período</td>
+<td>Cada arquivo pertence a uma conta com dono (pessoal ou empresa) perguntado uma vez; o sistema detecta fatura aberta ou fechada e extrato parcial, permite confirmar e ajustar o período, substitui os lançamentos ao reimportar o mesmo período, aponta lacunas e avisa de arquivo no lugar errado antes de importar.</td>
+<td style="text-align: center;"><span class="badge-must">Must have</span></td>
+<td style="text-align: center;"><a href="../pesquisa/guiding-questions/">GQ02</a>, <a href="../pesquisa/guiding-questions/">GQ03</a>, <a href="../pesquisa/guiding-questions/">GQ13</a></td>
+<td style="text-align: center;"><a href="../adr/0018-contas-periodos-transferencias-e-visoes/">ADR 0018</a></td>
+<td style="text-align: center;"><span class="badge-must">Implementado</span></td>
+</tr>
+<tr>
+<td style="text-align: center;"><strong>RF23</strong></td>
+<td>Controle de parcelamentos</td>
+<td>O sistema agrupa a mesma compra parcelada entre faturas e mostra parcela atual, quanto falta e a projeção mensal do que já está comprometido.</td>
+<td style="text-align: center;"><span class="badge-should">Should have</span></td>
+<td style="text-align: center;"><a href="../pesquisa/guiding-questions/">GQ07</a>, <a href="../pesquisa/guiding-questions/">GQ09</a></td>
+<td style="text-align: center;"><a href="../adr/0018-contas-periodos-transferencias-e-visoes/">ADR 0018</a></td>
+<td style="text-align: center;"><span class="badge-must">Implementado</span></td>
+</tr>
+<tr>
+<td style="text-align: center;"><strong>RF24</strong></td>
+<td>Transferências entre contas próprias</td>
+<td>O dinheiro que só mudou de conta (inclusive o Pix que paga a fatura de outro banco) sai dos totais: ligação certa pela conta de destino, sugestões por valor e data para o usuário confirmar ou recusar, e desfazer.</td>
+<td style="text-align: center;"><span class="badge-must">Must have</span></td>
+<td style="text-align: center;"><a href="../pesquisa/guiding-questions/">GQ07</a>, <a href="../pesquisa/guiding-questions/">GQ13</a></td>
+<td style="text-align: center;"><a href="../adr/0018-contas-periodos-transferencias-e-visoes/">ADR 0018</a></td>
+<td style="text-align: center;"><span class="badge-must">Implementado</span></td>
+</tr>
+<tr>
+<td style="text-align: center;"><strong>RF25</strong></td>
+<td>Visões de caixa e competência por dono</td>
+<td>O Resumo alterna entre gastos (competência) e caixa, filtra por dono (Tudo, Pessoal, Empresas) e mostra o total por conta, com os números calculados só no backend.</td>
+<td style="text-align: center;"><span class="badge-should">Should have</span></td>
+<td style="text-align: center;"><a href="../pesquisa/guiding-questions/">GQ07</a>, <a href="../pesquisa/guiding-questions/">GQ13</a></td>
+<td style="text-align: center;"><a href="../adr/0018-contas-periodos-transferencias-e-visoes/">ADR 0018</a>, <a href="../adr/0004-calculos-deterministicos/">ADR 0004</a></td>
+<td style="text-align: center;"><span class="badge-must">Implementado</span></td>
+</tr>
+<tr>
+<td style="text-align: center;"><strong>RF26</strong></td>
+<td>Receber arquivo por "Compartilhar"</td>
+<td>No Android, o app aceita OFX e PDF enviados por "Compartilhar" ou "Abrir com" e abre o fluxo de importação já com o arquivo, sem enviá-lo a terceiros.</td>
+<td style="text-align: center;"><span class="badge-should">Should have</span></td>
+<td style="text-align: center;"><a href="../pesquisa/guiding-questions/">GQ01</a>, <a href="../pesquisa/guiding-questions/">GQ03</a></td>
+<td style="text-align: center;"><a href="../adr/0018-contas-periodos-transferencias-e-visoes/">ADR 0018</a></td>
 <td style="text-align: center;"><span class="badge-must">Implementado</span></td>
 </tr>
 </tbody>
@@ -2704,16 +2810,16 @@
 <tr>
 <td style="text-align: center;"><strong>RF01</strong></td>
 <td style="text-align: center;">GQ02, GQ03</td>
-<td style="text-align: center;"><a href="../adr/0005-importacao-local-ofx-pdf/">ADR 0005</a>, <a href="../adr/0015-dados-reais-importacao-e-endereco-da-api/">ADR 0015</a></td>
-<td><code>api/app/services/parser_service.py</code>, <code>mobile/lib/features/transactions/</code></td>
-<td><code>api/tests/test_parser.py</code>, <code>api/tests/test_transactions_api.py</code>, <code>mobile/test/transactions_screen_test.dart</code></td>
+<td style="text-align: center;"><a href="../adr/0005-importacao-local-ofx-pdf/">ADR 0005</a>, <a href="../adr/0015-dados-reais-importacao-e-endereco-da-api/">ADR 0015</a>, <a href="../adr/0017-perfis-de-banco-e-natureza-do-lancamento/">ADR 0017</a></td>
+<td><code>api/app/services/parser_service.py</code>, <code>api/app/services/statement_profiles.py</code>, <code>api/app/services/pdf_profiles.py</code>, <code>mobile/lib/features/transactions/</code>, <code>mobile/lib/features/import_guide/</code></td>
+<td><code>api/tests/test_parser.py</code>, <code>api/tests/test_nubank_profile.py</code>, <code>api/tests/test_bb_conta.py</code>, <code>api/tests/test_bb_pdf.py</code>, <code>api/tests/test_pdf_parser_edge.py</code>, <code>api/tests/test_transactions_api.py</code>, <code>mobile/test/transactions_screen_test.dart</code>, <code>mobile/test/import_flow_test.dart</code></td>
 </tr>
 <tr>
 <td style="text-align: center;"><strong>RF02</strong></td>
 <td style="text-align: center;">GQ02, GQ03</td>
-<td style="text-align: center;"><a href="../adr/0005-importacao-local-ofx-pdf/">ADR 0005</a>, <a href="../adr/0015-dados-reais-importacao-e-endereco-da-api/">ADR 0015</a></td>
-<td><code>api/app/services/parser_service.py</code>, <code>mobile/lib/features/transactions/</code></td>
-<td><code>api/tests/test_parser.py</code>, <code>api/tests/test_transactions_api.py</code>, <code>mobile/test/transactions_screen_test.dart</code></td>
+<td style="text-align: center;"><a href="../adr/0005-importacao-local-ofx-pdf/">ADR 0005</a>, <a href="../adr/0015-dados-reais-importacao-e-endereco-da-api/">ADR 0015</a>, <a href="../adr/0017-perfis-de-banco-e-natureza-do-lancamento/">ADR 0017</a></td>
+<td><code>api/app/services/parser_service.py</code>, <code>api/app/services/statement_profiles.py</code>, <code>api/app/services/pdf_profiles.py</code>, <code>mobile/lib/features/transactions/</code>, <code>mobile/lib/features/import_guide/</code></td>
+<td><code>api/tests/test_parser.py</code>, <code>api/tests/test_nubank_profile.py</code>, <code>api/tests/test_bb_conta.py</code>, <code>api/tests/test_bb_pdf.py</code>, <code>api/tests/test_pdf_parser_edge.py</code>, <code>api/tests/test_transactions_api.py</code>, <code>mobile/test/transactions_screen_test.dart</code>, <code>mobile/test/import_flow_test.dart</code></td>
 </tr>
 <tr>
 <td style="text-align: center;"><strong>RF03</strong></td>
@@ -2749,6 +2855,13 @@
 <td style="text-align: center;"><a href="../adr/0001-flutter-android/">ADR 0001</a>, <a href="../adr/0015-dados-reais-importacao-e-endereco-da-api/">ADR 0015</a></td>
 <td><code>mobile/lib/features/dashboard/</code>, <code>mobile/lib/features/finance/</code></td>
 <td><code>mobile/test/dashboard_screen_test.dart</code>, <code>mobile/test/finance_test.dart</code></td>
+</tr>
+<tr>
+<td style="text-align: center;"><strong>RF09</strong></td>
+<td style="text-align: center;">GQ07, GQ11</td>
+<td style="text-align: center;"><a href="../adr/0017-perfis-de-banco-e-natureza-do-lancamento/">ADR 0017</a>, <a href="../adr/0018-contas-periodos-transferencias-e-visoes/">ADR 0018</a></td>
+<td><code>api/app/services/categorization_service.py</code>, <code>api/app/services/statement_profiles.py</code>, <code>mobile/lib/features/categories/</code></td>
+<td><code>api/tests/test_nubank_profile.py</code>, <code>api/tests/test_pdf_parser_edge.py</code>, <code>api/tests/test_categoria_usuario.py</code>, <code>mobile/test/category_review_test.dart</code></td>
 </tr>
 <tr>
 <td style="text-align: center;"><strong>RF10</strong></td>
@@ -2826,6 +2939,41 @@
 <td style="text-align: center;"><a href="../adr/0016-arquitetura-multiagente/">ADR 0016</a></td>
 <td><code>mobile/lib/features/agents/</code>, <code>mobile/lib/features/chat_assistant/</code>, <code>mobile/lib/core/settings/</code></td>
 <td><code>mobile/test/multi_agent_models_test.dart</code>, <code>mobile/test/agents_chat_test.dart</code>, <code>mobile/test/chat_screen_test.dart</code></td>
+</tr>
+<tr>
+<td style="text-align: center;"><strong>RF22</strong></td>
+<td style="text-align: center;">GQ02, GQ03, GQ13</td>
+<td style="text-align: center;"><a href="../adr/0018-contas-periodos-transferencias-e-visoes/">ADR 0018</a></td>
+<td><code>api/app/services/import_service.py</code>, <code>api/app/services/statement_service.py</code>, <code>api/app/services/detector_service.py</code>, <code>mobile/lib/features/import_guide/</code>, <code>mobile/lib/features/transactions/</code></td>
+<td><code>api/tests/test_contas_periodos.py</code>, <code>api/tests/test_detector.py</code>, <code>mobile/test/import_flow_contas_test.dart</code>, <code>mobile/test/library_screens_test.dart</code></td>
+</tr>
+<tr>
+<td style="text-align: center;"><strong>RF23</strong></td>
+<td style="text-align: center;">GQ07, GQ09</td>
+<td style="text-align: center;"><a href="../adr/0018-contas-periodos-transferencias-e-visoes/">ADR 0018</a></td>
+<td><code>api/app/services/installment_service.py</code>, <code>mobile/lib/features/installments/</code></td>
+<td><code>api/tests/test_parcelamentos.py</code>, <code>mobile/test/library_screens_test.dart</code></td>
+</tr>
+<tr>
+<td style="text-align: center;"><strong>RF24</strong></td>
+<td style="text-align: center;">GQ07, GQ13</td>
+<td style="text-align: center;"><a href="../adr/0018-contas-periodos-transferencias-e-visoes/">ADR 0018</a></td>
+<td><code>api/app/services/transfer_service.py</code>, <code>mobile/lib/features/transfers/</code></td>
+<td><code>api/tests/test_transferencias.py</code>, <code>api/tests/test_bb_conta.py</code>, <code>api/tests/test_bb_pdf.py</code>, <code>mobile/test/library_screens_test.dart</code></td>
+</tr>
+<tr>
+<td style="text-align: center;"><strong>RF25</strong></td>
+<td style="text-align: center;">GQ07, GQ13</td>
+<td style="text-align: center;"><a href="../adr/0018-contas-periodos-transferencias-e-visoes/">ADR 0018</a>, <a href="../adr/0004-calculos-deterministicos/">0004</a></td>
+<td><code>api/app/services/calculation_service.py</code>, <code>mobile/lib/features/dashboard/</code></td>
+<td><code>api/tests/test_contas_periodos.py</code>, <code>mobile/test/library_screens_test.dart</code></td>
+</tr>
+<tr>
+<td style="text-align: center;"><strong>RF26</strong></td>
+<td style="text-align: center;">GQ01, GQ03</td>
+<td style="text-align: center;"><a href="../adr/0018-contas-periodos-transferencias-e-visoes/">ADR 0018</a></td>
+<td><code>mobile/android/app/src/main/kotlin/br/com/trokim/trokim/MainActivity.kt</code>, <code>mobile/lib/core/sharing/</code></td>
+<td><code>mobile/test/shared_file_test.dart</code></td>
 </tr>
 <tr>
 <td style="text-align: center;"><strong>RF14</strong></td>

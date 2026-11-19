@@ -2179,6 +2179,60 @@
 
                 
               
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../adr/0017-perfis-de-banco-e-natureza-do-lancamento/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  0017 – Perfis de Banco e Natureza
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../adr/0018-contas-periodos-transferencias-e-visoes/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  0018 – Contas, Períodos e Transferências
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
             </ul>
           </nav>
         
@@ -2327,18 +2381,21 @@
         Settings["Ajustes locais&lt;br/&gt;(shared_preferences)"]
         History["Histórico de conversas&lt;br/&gt;(no aparelho)"]
         AgentTrace["Modo multiagente opcional&lt;br/&gt;(modelos Dart e trilha por resposta)"]
+        ShareIntent["Receber arquivo por Compartilhar&lt;br/&gt;(MainActivity + canal)"]
         FlutterApp --&gt; StateManagement
         FlutterApp --&gt; DesignSystem
         FlutterApp --&gt; Settings
         FlutterApp --&gt; History
         FlutterApp --&gt; AgentTrace
+        ShareIntent --&gt; FlutterApp
     end
 
     subgraph "Serviço Backend Local (Python / FastAPI)"
-        APIEntry["Routers v1&lt;br/&gt;(/transactions, /chat, /budgets, /health, /agents)"]
+        APIEntry["Routers v1&lt;br/&gt;(/transactions, /accounts, /statements, /installments,&lt;br/&gt;/transfers, /chat, /budgets, /health, /agents)"]
         AgentAsk["POST /v1/agents/ask&lt;br/&gt;(MultiAgentResponse)"]
 
-        Parser["Parser de Documentos&lt;br/&gt;(OFX &amp; PDF)"]
+        Parser["Parser de Documentos&lt;br/&gt;(OFX &amp; PDF, perfis Nubank e BB)"]
+        Library["Biblioteca local&lt;br/&gt;(contas, períodos, detector,&lt;br/&gt;transferências, parcelas, regras de categoria)"]
         CalcService["Motor de Cálculo Determinístico&lt;br/&gt;(Totais, Balanço, 50-30-20)"]
         RAGService["Mecanismo RAG Híbrido&lt;br/&gt;(Dense + Sparse TF-IDF)"]
         GenService["Serviço de Síntese Generativa&lt;br/&gt;(GenerationService)"]
@@ -2366,6 +2423,9 @@
         end
 
         APIEntry --&gt; Parser
+        APIEntry --&gt; Library
+        Library --&gt; Parser
+        Library --&gt; DomainCore
         APIEntry --&gt; CalcService
         APIEntry --&gt; RAGService
         APIEntry --&gt; GenService
@@ -2410,7 +2470,7 @@
     StateManagement --&gt;|HTTP / JSON Local| APIEntry</code></pre>
 <hr />
 <h2 id="2-fluxo-de-importacao-de-extratos-e-resumo">2. Fluxo de Importação de Extratos e Resumo<a class="headerlink" href="#2-fluxo-de-importacao-de-extratos-e-resumo" title="Permanent link">&para;</a></h2>
-<p>Os lançamentos importados ficam na <strong>memória da API</strong> (somem ao reiniciá-la, <a href="../../adr/0015-dados-reais-importacao-e-endereco-da-api/">ADR 0015</a>). O app só exibe o que o backend calculou.</p>
+<p>Pagamento de fatura, resgates e transferências próprias ficam fora dos totais e o estorno abate a despesa (<a href="../../adr/0017-perfis-de-banco-e-natureza-do-lancamento/">ADR 0017</a>). Contas, situação do período, transferências entre contas próprias, parcelamentos e regras de categoria seguem a <a href="../../adr/0018-contas-periodos-transferencias-e-visoes/">ADR 0018</a>. Os lançamentos importados ficam na <strong>memória da API</strong> (somem ao reiniciá-la, <a href="../../adr/0015-dados-reais-importacao-e-endereco-da-api/">ADR 0015</a>). O app só exibe o que o backend calculou.</p>
 <pre class="mermaid"><code>sequenceDiagram
     autonumber
     actor User as Usuário (Android)
@@ -2420,13 +2480,16 @@
     participant Calc as Calculation Service
     participant Mem as Memória da API
 
-    User-&gt;&gt;Mobile: Escolhe um arquivo .ofx ou .pdf (seletor do sistema)
-    Mobile-&gt;&gt;API: POST /v1/transactions/upload (multipart)
+    User-&gt;&gt;Mobile: Escolhe banco, dono e tipo (ou pula) e um arquivo .ofx ou .pdf (seletor ou Compartilhar)
+    Mobile-&gt;&gt;API: POST /v1/transactions/inspect (sem gravar)
+    API--&gt;&gt;Mobile: Banco, tipo, período, dono provável e avisos (arquivo no lugar errado)
+    Mobile-&gt;&gt;API: POST /v1/transactions/upload (multipart, dono e confirmação)
     API-&gt;&gt;Parser: parse_ofx ou parse_pdf_text
-    Parser-&gt;&gt;Parser: Extrai os lançamentos e marca duplicatas do arquivo
+    Parser-&gt;&gt;Parser: Detecta o banco, classifica a natureza, limpa o estabelecimento e marca duplicatas (FITID)
     API-&gt;&gt;API: Compara com os já importados (data, descrição, valor e tipo)
     API-&gt;&gt;Mem: Guarda os lançamentos (duplicatas marcadas ficam fora dos totais)
-    API--&gt;&gt;Mobile: filename, imported_count, duplicate_count
+    API-&gt;&gt;API: Conta e período (substitui o mesmo período), transferências próprias e regras de categoria
+    API--&gt;&gt;Mobile: filename, imported_count, institution, kind, outcome, statement, auto_transfers, transfer_suggestions
     Mobile-&gt;&gt;API: GET /v1/transactions/summary
     API-&gt;&gt;Calc: calculate_summary(lançamentos)
     Calc--&gt;&gt;API: Receitas, despesas, saldo, taxa de poupança e categorias
