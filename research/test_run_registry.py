@@ -16,6 +16,8 @@ RUNS = sorted((ROOT / "research/rag_benchmark/results/comparison").glob("*/run.j
 ASSETS = ROOT / "docs/assets/comparacao"
 PAGE = ROOT / "docs/pesquisa/resultados.md"
 APPROACHES = ["llm_pura", "rag_ingenuo", "trokim_estruturado"]
+OPTIONAL = ["multiagente"]  # Semana 4 (#60)
+MULTIAGENT = ROOT / "research/rag_benchmark/results/multiagent"
 REQUIRED = {
     "schema_version",
     "run_id",
@@ -52,7 +54,10 @@ def test_run_json_completo_e_consistente(path):
     assert run["run_id"] == path.parent.name
     assert run["run_id"].startswith(run["date"]), "o id da execução começa pela data"
     assert run["cases"] == 30
-    assert list(run["approaches"]) == APPROACHES
+    assert list(run["approaches"]) in (APPROACHES, APPROACHES + OPTIONAL)
+    assert len(run["reference_commit"]) in (7, 40)
+    if "audit_pending" in run:  # registrada pelo runner: formulário de revisão versionado
+        assert (ROOT / run["audit_pending"]).is_file()
     for key, info in run["approaches"].items():
         for metric in METRICS:
             assert 0 <= info[metric] <= 1, f"{key}.{metric} fora de [0, 1]"
@@ -89,6 +94,8 @@ def test_graficos_da_execucao_existem_e_estao_na_pagina(path):
     figures = ["fig1-metricas.png", "fig3-latencia.png"]
     if run["audit"]:
         figures.append("fig2-alucinacao-auditada.png")
+    if (MULTIAGENT / run["run_id"] / "multiagent_report.json").exists():
+        figures += ["fig4-multiagente-cenarios.png", "fig5-latencia-por-agente.png"]
     page = PAGE.read_text(encoding="utf-8")
     for name in figures:
         assert (ASSETS / run["run_id"] / name).stat().st_size > 1000, name
@@ -111,3 +118,23 @@ def test_calibracao_de_alpha_tem_series_do_mesmo_tamanho():
     data = _load(ROOT / "research/rag_benchmark/results/alpha_calibration.json")
     assert len(data["alpha"]) == len(data["recall_at_3"]) == len(data["grounded_accuracy"])
     assert data["chosen_alpha"] in data["alpha"]
+
+
+@pytest.mark.parametrize(
+    "path", sorted(MULTIAGENT.glob("*/multiagent_report.json")), ids=lambda p: p.parent.name
+)
+def test_cenarios_multiagente_tem_execucao_comparativa_e_numeros_coerentes(path):
+    run_id = path.parent.name
+    run = _load(ROOT / "research/rag_benchmark/results/comparison" / run_id / "run.json")
+    report = _load(path)
+    assert "multiagente" in run["approaches"]
+    assert report["case_count"] == 20
+    free = report["free"]
+    assert sum(row["cases"] for row in free["by_category"].values()) == 20
+    assert 0 <= free["numbers_reproduced"] <= free["numbers_expected"]
+    assert report["injected"]["cases"] == 5
+    summary = run.get("multiagent_scenarios")
+    assert summary, "run.json precisa resumir os cenários multiagente"
+    assert summary["status_ok"] == free["status_ok"]
+    assert summary["numbers_reproduced"] == free["numbers_reproduced"]
+    assert summary["injected_blocked"] == report["injected"]["blocked_with_expected_code"]

@@ -31,6 +31,8 @@ chave de API). Modelo padrão
 reduz a produto interno.
 
 Persistência vetorial com `sqlite-vec` (tabela virtual `vec0`) em arquivo SQLite
+(nota de 18/11/2026: o esquema passou a ser criado por migrações Alembic e as tabelas comuns
+por modelos SQLAlchemy, sem mudar a decisão; ver [ADR 0019](0019-orm-e-migracoes-numeradas.md))
 em `api/data/vector_store.db`, coerente com o SQLite embutido da ADR 0002. Uma
 tabela de metadados guarda por chunk: `document_id`, fonte, URL, título, seção e
 conteúdo.

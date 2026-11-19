@@ -1,0 +1,70 @@
+{
+  "status": "pendente",
+  "reviewer": null,
+  "cases": [
+    {
+      "method": "multiagente",
+      "id": "M07",
+      "flagged": true,
+      "block_correct": null,
+      "confirmed": null,
+      "notes": ""
+    },
+    {
+      "method": "multiagente",
+      "id": "M09",
+      "flagged": true,
+      "block_correct": null,
+      "confirmed": null,
+      "notes": ""
+    },
+    {
+      "method": "multiagente",
+      "id": "M15",
+      "flagged": true,
+      "block_correct": null,
+      "confirmed": null,
+      "notes": ""
+    },
+    {
+      "method": "multiagente",
+      "id": "M16",
+      "flagged": true,
+      "block_correct": "não se aplica",
+      "confirmed": null,
+      "notes": ""
+    },
+    {
+      "method": "multiagente",
+      "id": "M17",
+      "flagged": true,
+      "block_correct": "não se aplica",
+      "confirmed": null,
+      "notes": ""
+    },
+    {
+      "method": "multiagente",
+      "id": "M18",
+      "flagged": false,
+      "block_correct": null,
+      "confirmed": null,
+      "notes": ""
+    },
+    {
+      "method": "multiagente",
+      "id": "M19",
+      "flagged": false,
+      "block_correct": "não se aplica",
+      "confirmed": null,
+      "notes": ""
+    },
+    {
+      "method": "multiagente",
+      "id": "M20",
+      "flagged": true,
+      "block_correct": "não se aplica",
+      "confirmed": null,
+      "notes": ""
+    }
+  ]
+}

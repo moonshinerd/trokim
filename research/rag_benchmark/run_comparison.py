@@ -1,5 +1,8 @@
 """Benchmark automatizado comparativo: LLM Pura vs. Naive RAG vs. Trokim Estruturado.
 
+Com ``--multiagent`` (#60), roda também a quarta abordagem: o orquestrador da Semana 4 em
+processo (sem HTTP), com o Research Agent buscando no mesmo corpus unificado das outras.
+
 Executa as 30 perguntas do gabarito da Semana 3 (Issue #20 e #24) sobre as 3 abordagens,
 mede latência e métricas de alucinação/fidelidade/abstenção (Issue #21) e grava os
 artefatos auditados em artifacts/research/.
@@ -330,13 +333,34 @@ async def execute_case_grounded(
     }
 
 
+async def execute_case_multiagent(
+    case: dict[str, Any], llm: LLMProvider, retriever: UnifiedCorpusRetriever, temperature: float
+) -> dict[str, Any]:
+    """Abordagem 4: o orquestrador da Semana 4 com os agentes reais, em processo.
+
+    Mesmo corpus, recuperação e teto de tokens do Trokim estruturado. O C29 recebe lançamentos
+    sintéticos com os mesmos totais que as outras abordagens recebem no prompt; o C30 continua
+    sem. Ver ``multiagent_benchmark``.
+    """
+    from multiagent_benchmark import ComparisonRAG, execute_multiagent, legacy_transactions
+
+    return await execute_multiagent(
+        case["query"],
+        llm,
+        ComparisonRAG(retriever),
+        temperature=temperature,
+        transactions=legacy_transactions(case),
+    )
+
+
 async def run_benchmark(
     cases: list[dict[str, Any]],
     llm: LLMProvider,
     retriever: UnifiedCorpusRetriever,
     temperature: float = 0.1,
+    include_multiagent: bool = False,
 ) -> dict[str, Any]:
-    """Executa as 3 abordagens sobre todos os casos de teste e mede tempos."""
+    """Executa as abordagens sobre todos os casos de teste e mede tempos."""
     results_cases: list[dict[str, Any]] = []
 
     total = len(cases)
@@ -355,23 +379,30 @@ async def run_benchmark(
         # 3. Trokim Estruturado
         grounded_res = await execute_case_grounded(case, retriever, llm, temperature=temperature)
 
+        responses = {
+            "llm_pura": pure_res,
+            "rag_ingenuo": naive_res,
+            "trokim_estruturado": grounded_res,
+        }
+        # 4. Multiagente (Semana 4)
+        if include_multiagent:
+            responses["multiagente"] = await execute_case_multiagent(
+                case, llm, retriever, temperature
+            )
+
         results_cases.append(
             {
                 "id": case_id,
                 "category": category,
                 "expected_behavior": behavior,
                 "query": case["query"],
-                "responses": {
-                    "llm_pura": pure_res,
-                    "rag_ingenuo": naive_res,
-                    "trokim_estruturado": grounded_res,
-                },
+                "responses": responses,
             }
         )
 
     # Agrega metadados e latências médias
     mean_latencies = {}
-    for method in ("llm_pura", "rag_ingenuo", "trokim_estruturado"):
+    for method in results_cases[0]["responses"] if results_cases else ():
         lats = [c["responses"][method]["latency_ms"] for c in results_cases]
         mean_latencies[method] = round(sum(lats) / len(lats), 2) if lats else 0.0
 
@@ -394,7 +425,9 @@ def generate_svg_chart(report: dict[str, Any], output_path: Path) -> None:
         ("llm_pura", "LLM Pura", "#f87171"),
         ("rag_ingenuo", "Naive RAG", "#fbbf24"),
         ("trokim_estruturado", "Trokim Estruturado", "#34d399"),
+        ("multiagente", "Multiagente", "#a78bfa"),
     ]
+    methods = [m for m in methods if m[0] in report["methods"]]
 
     metric_keys = [
         ("factual_inconsistency_rate", "Inconsistência (Alucinação)", True),
@@ -410,7 +443,7 @@ def generate_svg_chart(report: dict[str, Any], output_path: Path) -> None:
     margin_right = 40
     chart_width = width - margin_left - margin_right
     cluster_width = chart_width / len(metric_keys)
-    bar_width = 38
+    bar_width = 38 if len(methods) <= 3 else 30
     plot_height = 240
 
     svg_lines = [
@@ -444,7 +477,7 @@ def generate_svg_chart(report: dict[str, Any], output_path: Path) -> None:
             val = report["methods"][method_id].get(m_key)
             val_pct = (val or 0.0) * 100.0
             b_height = (val_pct / 100.0) * plot_height
-            b_x = c_x + (b_idx - 1) * (bar_width + 4) - bar_width / 2
+            b_x = c_x + (b_idx - (len(methods) - 1) / 2) * (bar_width + 4) - bar_width / 2
             b_y = margin_top + plot_height - b_height
 
             # Barra
@@ -470,7 +503,7 @@ def generate_svg_chart(report: dict[str, Any], output_path: Path) -> None:
     svg_lines.append("  <!-- Legenda -->")
     svg_lines.append(f'  <g transform="translate({margin_left}, {leg_y})">')
     for idx, (_, label, color) in enumerate(methods):
-        lx = idx * 220 + 80
+        lx = idx * (220 if len(methods) <= 3 else 170) + 40
         svg_lines.append(
             f'    <rect x="{lx}" y="0" width="14" height="14" rx="3" fill="{color}" />'
         )
@@ -492,7 +525,7 @@ def generate_svg_chart(report: dict[str, Any], output_path: Path) -> None:
         'font-size="11" font-weight="600" letter-spacing="1">LATÊNCIA MÉDIA POR REQUISIÇÃO</text>'
     )
 
-    card_col_w = chart_width / 3
+    card_col_w = chart_width / len(methods)
     for idx, (m_id, m_label, color) in enumerate(methods):
         col_x = margin_left + idx * card_col_w + 20
         lat_val = report["methods"][m_id].get("latency_mean_ms")
@@ -540,9 +573,35 @@ def main(argv: list[str] | None = None) -> int:
         "--timeout", type=float, default=120.0, help="Timeout em segundos para o LLM."
     )
     parser.add_argument("--limit", type=int, default=None, help="Limita o número de casos.")
+    parser.add_argument(
+        "--multiagent",
+        action="store_true",
+        help="Inclui a quarta abordagem: o sistema multiagente da Semana 4 (#60).",
+    )
+    parser.add_argument(
+        "--run-id",
+        help=(
+            "Registra uma execução nova em results/comparison/<run-id>/ (run.json e formulário "
+            "de auditoria). Recusa mock, --limit e identificador já usado."
+        ),
+    )
+    parser.add_argument("--notas", default="", help="Observações para o run.json.")
     args = parser.parse_args(argv)
 
     try:
+        if args.limit is not None and args.limit <= 0:
+            raise ValueError("O limite de casos deve ser positivo.")
+        if args.run_id:
+            from multiagent_benchmark import RESULTS, check_new_run
+
+            if args.provider == "mock" or args.limit is not None:
+                raise ValueError("Execução registrada exige modelo real e os 30 casos.")
+            run_dir = RESULTS / "comparison" / args.run_id
+            check_new_run(args.run_id, run_dir)
+            args.output = run_dir / "comparison_results.json"
+            args.report_json = run_dir / "comparison_report.json"
+            args.report_md = run_dir / "comparison_report.md"
+            args.chart_svg = run_dir / "comparison_chart.svg"
         cases = load_cases(args.cases)
         if args.limit:
             cases = cases[: args.limit]
@@ -568,7 +627,13 @@ def main(argv: list[str] | None = None) -> int:
         retriever = UnifiedCorpusRetriever()
 
         raw_results = asyncio.run(
-            run_benchmark(cases, llm, retriever, temperature=args.temperature)
+            run_benchmark(
+                cases,
+                llm,
+                retriever,
+                temperature=args.temperature,
+                include_multiagent=args.multiagent,
+            )
         )
 
         args.output.parent.mkdir(parents=True, exist_ok=True)
@@ -598,6 +663,26 @@ def main(argv: list[str] | None = None) -> int:
         # Gráfico comparativo em SVG
         generate_svg_chart(report, args.chart_svg)
         print(f"Gráfico comparativo SVG gerado em: {args.chart_svg}")
+
+        if args.run_id:
+            from multiagent_benchmark import (
+                comparison_audit_rows,
+                write_audit_template,
+                write_run_registry,
+            )
+
+            write_audit_template(
+                args.output.parent / "audit_pending.json", comparison_audit_rows(report)
+            )
+            path = write_run_registry(
+                args.run_id,
+                report,
+                model=str(getattr(llm, "model", args.model)),
+                provider=f"{provider_name} (mesma camada do app)",
+                temperature=args.temperature,
+                notes=args.notas,
+            )
+            print(f"Execução registrada em: {path} (revisão pendente em audit_pending.json)")
 
         print("\n" + "=" * 60)
         print("RESUMO COMPARATIVO — SEMANA 3")

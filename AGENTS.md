@@ -87,6 +87,7 @@ trokim/
 - Use tipagem estrita com Pydantic v2 e validações de esquema.
 - Formatação e linter via `ruff check` e `ruff format`.
 - Testes automatizados com `pytest` cobrindo cálculo financeiro, extração de OFX e recuperação RAG.
+- Banco de dados: **SQLAlchemy (ORM)** e **Alembic** ([ADR 0019](docs/adr/0019-orm-e-migracoes-numeradas.md)). Nada de `create_all` nem de SQL à mão fora da exceção do `sqlite-vec`. Mudança de esquema entra como nova revisão numerada em `api/migrations/<banco>/versions/` (`002_...`, `003_...`, com `--rev-id`); revisão publicada não se edita.
 
 ### Mobile (`mobile/`):
 - Arquitetura por funcionalidades (*feature-first*), separando apresentação, controladores de estado e repositórios.
@@ -105,10 +106,12 @@ trokim/
 ## 5. Comandos Rápidos
 
 ```bash
+make build        # Prepara a aplicação: dependências e índice CNPJ descomprimido
 make setup        # Configura ambiente virtual uv e dependências
 make test         # Executa bateria de testes na api e research
 make lint         # Executa ruff para checagem estática
 make format       # Aplica auto-formatação
 make docs-serve   # Inicia servidor local de documentação Zensical
 make api-run      # Inicia backend FastAPI (:8000)
+make cnpj-atualizar  # Atualiza o índice CNPJ com o mês novo da Receita (~5 GB; pede confirmação)
 ```

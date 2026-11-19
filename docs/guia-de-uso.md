@@ -17,10 +17,10 @@ Instruções para configurar, executar e testar o ambiente de desenvolvimento co
 Clone o repositório e execute a automação inicial:
 
 ```bash
-# Sincroniza dependências com uv e prepara o ambiente virtual
-make setup
+# Prepara a aplicação: dependências (uv) e índice CNPJ descomprimido
+make build
 
-# Executa a bateria de testes automatizados (375 da API e 109 de pesquisa)
+# Executa a bateria de testes automatizados (418 da API e 161 de pesquisa)
 make test
 
 # Lint (ruff) e build estrito da documentação
@@ -61,6 +61,7 @@ cp api/.env.example api/.env
 | `LLM_API_BASE` | Endereço do servidor do modelo (vazio usa o Ollama local, `http://localhost:11434`) | vazio |
 | `LLM_API_KEY` | Só para modelos de nuvem (uma escolha explícita, fora da premissa local-first) | vazio |
 | `LLM_TIMEOUT` | Tempo limite da geração, em segundos | `120` |
+| `LLM_MAX_TOKENS` | Teto de tokens da redação do Communication Agent (multiagente) | `500` |
 | `LLM_THINKING` | Raciocínio estendido de modelos que o suportam (desligado: evita respostas vazias) | `false` |
 | `LLM_TITLE_TIMEOUT` | Tempo limite do título da conversa, em segundos | `25` |
 | `LLM_TITLE_MODEL` | Modelo leve só para dar título às conversas (vazio usa `LLM_MODEL`) | `ollama/qwen2.5:1.5b` |
@@ -110,9 +111,15 @@ Se o modelo estiver indisponível, `/v1/chat/generate` devolve `503` com uma men
 
 ```bash
 make comparison-validate                                   # valida gabarito, prompts e fontes (sem chamar o modelo)
-make comparison-run RUN=2026-11-20-qwen2.5-1.5b MODEL=ollama/qwen2.5:1.5b   # registra uma execução versionada
+make comparison-run RUN=2026-11-20-qwen2.5-1.5b MODEL=ollama/qwen2.5:1.5b   # execução completa e registrada
 make report-charts                                         # regenera os gráficos do MkDocs
 ```
+
+O `comparison-run` roda as quatro abordagens (LLM pura, RAG ingênuo, Trokim estruturado e
+multiagente) nos 30 casos e os 20 cenários multiagente, e grava sozinho o `run.json` e os
+formulários de revisão humana (`audit_pending.json`). Ele recusa um `RUN` já usado: uma execução
+publicada nunca é sobrescrita. Para um modelo de nuvem pelo LiteLLM, exporte a chave do provedor
+antes (por exemplo, `LLM_API_KEY` para `openrouter/...`) e use só perguntas e dados sintéticos.
 
 O passo a passo para registrar uma execução está em [Histórico de Resultados](pesquisa/resultados.md#6-como-registrar-uma-nova-execucao).
 
@@ -129,7 +136,7 @@ DEBUG=false ENVIRONMENT=development make api-run
 # Terminal 2: app (requer Flutter estável, JDK 17 e Android SDK 36)
 cd mobile
 flutter pub get
-flutter test          # 123 testes
+flutter test          # 238 testes
 flutter run           # emulador Android; a API fica em http://10.0.2.2:8000/v1
 ```
 
@@ -359,6 +366,28 @@ escolha a todos os lançamentos do mesmo estabelecimento e aos próximos arquivo
 aquele lançamento. Pagamento de fatura, investimentos e transferências entre suas contas não têm
 categoria. A LLM não participa: a regra é sua e fica na API local
 (`PATCH /v1/transactions/{uid}/category`, `GET` e `DELETE /v1/transactions/category-rules`).
+
+Antes de cair em **Outros**, a API tenta, nesta ordem: as regras por palavra (marcas e termos no
+formato de vários bancos e adquirentes, inclusive **Impostos e taxas** para DARF, DAS, IPVA e
+IPTU), o **dicionário de redes** gerado dos dados abertos do CNPJ e, quando o banco traz o CNPJ do
+recebedor (Pix do Nubank), a **atividade econômica (CNAE)** da empresa. As convenções e as medições
+estão em [Categorias](arquitetura/categorias.md).
+
+O índice CNPJ → categoria vem no repositório, comprimido (14 MB), e é consultado só na sua
+máquina. `make build` o descomprime em `api/data/cnpj/`; a API também faz isso sozinha no
+primeiro uso. Para atualizar com o mês mais recente da Receita Federal:
+
+```bash
+make cnpj-atualizar               # mostra o aviso e pede para digitar SIM
+make cnpj-atualizar CONFIRMAR=sim # sem perguntar (CI, scripts)
+make cnpj-atualizar MANTER_DOWNLOAD=1 MES=2026-11 CNPJ_BASE=/outro/disco
+```
+
+Antes de começar, ele mostra quanto vai baixar (cerca de 5 GB), o espaço livre no disco, o tempo
+esperado (de 1 a 3 horas de download e cerca de 40 minutos de geração), a memória (até 1,5 GB) e
+os arquivos versionados que vai substituir. No fim, apaga os arquivos baixados. Se o índice já é do
+mês mais recente, não faz nada. Depois, confira com `git diff --stat api/app/data`, rode
+`make test` e registre o mês na [ADR 0020](adr/0020-categorizacao-por-cnae.md).
 
 | Resumo com filtros | Gastos sem categoria | Escolha da categoria |
 |---|---|---|

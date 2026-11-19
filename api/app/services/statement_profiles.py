@@ -26,6 +26,23 @@ _PREFIXOS_LOJA = re.compile(
     r"^(?:EBW\s*\*\s*|MP\s*\*\s*|PAG\s*\*\s*|PG\s*\*\s*|IFD\s*\*\s*|Mp\s+)", re.IGNORECASE
 )
 _NUMERO_LOJA = re.compile(r"\s+\d{1,6}$")
+# Documentos dentro do nome: MEI costuma vir como "NOME 12345678909" ou "12.345.678 NOME".
+_DOC_NO_NOME = re.compile(
+    r"\d{3}\.?\d{3}\.?\d{3}-?\d{2}"  # CPF, com ou sem pontuação
+    r"|\d{2}\.?\d{3}\.?\d{3}/?\d{4}-?\d{2}"  # CNPJ completo
+    r"|\b\d{2}\.\d{3}\.\d{3}\b"  # raiz do CNPJ (MEI)
+    r"|\b\d{11}\b|\b\d{14}\b"
+)
+
+
+def strip_documents(name: str | None) -> str | None:
+    """Tira CPF e CNPJ que alguns bancos colocam no nome da contraparte (comum em MEI)."""
+    if not name:
+        return name
+    cleaned = re.sub(r"\s+", " ", _DOC_NO_NOME.sub(" ", name)).strip(" -*")
+    return cleaned or None
+
+
 _SUFIXOS_LOJA = re.compile(r"\s*-\s*NuPay\s*$|\s+NuPay\s*$", re.IGNORECASE)
 
 
@@ -157,6 +174,7 @@ class ParsedMemo:
 def _clean_merchant(raw: str) -> str:
     name = _PREFIXOS_LOJA.sub("", raw.strip())
     name = _SUFIXOS_LOJA.sub("", name)
+    name = strip_documents(name) or ""
     name = _NUMERO_LOJA.sub("", name)  # "DROGASIL 123" -> "DROGASIL"
     return re.sub(r"\s+", " ", name).strip(" -*")
 
@@ -178,7 +196,7 @@ def _counterparty(
     """
     if not parts:
         return None, None, None, None
-    name = re.sub(r"\s*\([^)]*\)\s*$", "", parts[0]).strip()
+    name = strip_documents(re.sub(r"\s*\([^)]*\)\s*$", "", parts[0]).strip()) or ""
     rest = " ".join(parts[1:])
     kind = None
     doc = None
@@ -269,6 +287,15 @@ class NubankProfile:
             return ParsedMemo(text, TransactionNature.INTEREST)
         if head.startswith("tarifa") or head.startswith("anuidade"):
             return ParsedMemo(text, TransactionNature.FEE)
+        if head.startswith("pagamento de boleto"):
+            # Boleto pago: o beneficiário vem depois do " - " (empresa, conta de consumo, imposto).
+            payee = _clean_merchant(" - ".join(parts[1:])) if len(parts) > 1 else ""
+            return ParsedMemo(
+                f"Boleto - {payee}" if payee else "Pagamento de boleto",
+                TransactionNature.PURCHASE,
+                merchant=payee or None,
+                counterparty_kind=CounterpartyKind.COMPANY if payee else None,
+            )
 
         # Cartão: qualquer outro débito é compra; crédito desconhecido fica como "outro".
         if kind == "cartao" and tx_type == TransactionType.DEBIT:
@@ -337,7 +364,7 @@ class BancoDoBrasilProfile:
         who = doc = None
         who_kind = None
         if counterparty:
-            who = counterparty.group("name").strip()
+            who = strip_documents(counterparty.group("name").strip())
             doc = normalize_doc(counterparty.group("doc"))
             if doc:
                 who_kind = (

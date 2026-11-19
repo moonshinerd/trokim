@@ -148,6 +148,10 @@ A resposta segue rigorosamente o contrato de `MultiAgentResponse` com a trilha d
 
 ## Avaliação
 
-O benchmark do sistema multiagente contra o Trokim estruturado entra no
-[Histórico de Resultados](../pesquisa/resultados.md) como uma nova execução (issue [#60](https://github.com/moonshinerd/trokim/issues/60)), com o
-[gabarito multiagente](../pesquisa/gabarito-multiagente.md) (issue [#56](https://github.com/moonshinerd/trokim/issues/56)).
+O sistema multiagente foi medido como quarta abordagem nos 30 casos da comparação e nos 20
+cenários do [gabarito multiagente](../pesquisa/gabarito-multiagente.md) (issues
+[#56](https://github.com/moonshinerd/trokim/issues/56) e [#60](https://github.com/moonshinerd/trokim/issues/60)),
+com o Qwen 2.5 de 1,5 B local e o GPT-6 Luna. Os números, os gráficos e a comparação com o
+Trokim estruturado estão no [Histórico de Resultados](../pesquisa/resultados.md#8-semana-4-multiagente-nos-30-casos-da-comparacao).
+Em resumo: os rascunhos inválidos injetados foram todos barrados, o C30 foi retido, o C29 saiu
+com os números do sistema (protocolo corrigido de 19/11) e o C27 continua respondido, porque a política de escopo do Research não reconhece previsões de preço.

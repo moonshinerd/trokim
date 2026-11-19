@@ -21,7 +21,7 @@ O **Trokim** é um assistente financeiro de código aberto (*open-source*) proje
 
 ---
 
-## Destaques do Projeto (Entregas 1 a 3 Concluídas)
+## Destaques do Projeto (Entregas 1 a 4 Concluídas)
 
 <div class="grid cards" markdown>
 
@@ -45,6 +45,20 @@ O **Trokim** é um assistente financeiro de código aberto (*open-source*) proje
 
     Três abordagens em 30 casos, com revisão manual e **histórico versionado de execuções**: a fundamentação em evidências reduziu as alucinações confirmadas de 30,0% (piso) para 13,3% e 6,7%.
     [:octicons-arrow-right-24: Ver Resultados e Gráficos](pesquisa/resultados.md)
+
+-   :material-account-group:{ .lg .middle } **Sistema Multiagente com Validação**
+
+    ---
+
+    Research, Analysis, Communication e Validation Agent em sequência: o Validation barra número sem suporte e conselho fora de escopo, e as **5 armadilhas injetadas foram barradas** em todas as execuções.
+    [:octicons-arrow-right-24: Ver Agentes](agentes/index.md)
+
+-   :material-tag-multiple:{ .lg .middle } **Categorização pela Atividade da Loja**
+
+    ---
+
+    Índice local de 22 milhões de CNPJs pela atividade econômica (CNAE) e 746 redes conhecidas: a categorização dos lançamentos reais foi de 56% para **67%** (89% sem as transferências Pix a pessoas).
+    [:octicons-arrow-right-24: Ver ADR 0020](adr/0020-categorizacao-por-cnae.md)
 
 -   :material-calculator:{ .lg .middle } **Cálculos 100% Determinísticos**
 
@@ -100,9 +114,14 @@ graph TD
         API --> Parser[Parser OFX & PDF]
         API --> Calc[Serviço de Cálculo Determinístico]
         API --> RAG[Mecanismo RAG Híbrido: FastEmbed + SQLite-Vec]
-        API --> DB[(SQLite Local: vetores e metadados da base)]
+        API --> DB[(SQLite Local: vetores e metadados da base<br/>ORM + migrações Alembic)]
         API --> Gen[Síntese Generativa<br/>LLMProvider: LiteLLM, Ollama local ou mock]
         Gen --> RAG
+        API --> Orq[Orquestrador multiagente<br/>Research → Analysis → Communication → Validation]
+        Orq --> RAG
+        Orq --> Calc
+        Orq --> Gen
+        Parser --> Cat[Categorização<br/>formatos dos bancos + índice CNPJ/CNAE local]
     end
 
     subgraph "Base de Conhecimento Regulada"

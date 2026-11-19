@@ -30,6 +30,9 @@ class Settings(BaseSettings):
     # Modelo leve só para nomear conversas (ex.: "ollama/qwen2.5:1.5b"). Vazio = usa LLM_MODEL.
     LLM_TITLE_MODEL: str = ""
     LLM_TEMPERATURE: float = 0.1
+    # Teto de tokens da redação do Communication Agent: sem ele, modelos pequenos podem gerar
+    # até estourar o tempo limite (achado do benchmark multiagente, #60).
+    LLM_MAX_TOKENS: int = Field(default=500, gt=0)
 
     RAG_SIMILARITY_THRESHOLD: float = 0.15
     RAG_TOP_K: int = 3
@@ -38,11 +41,18 @@ class Settings(BaseSettings):
     RAG_CHUNK_MAX_CHARS: int = Field(default=500, gt=0)
     RAG_CHUNK_OVERLAP_TOKENS: int = Field(default=50, ge=0)
     RAG_HYBRID_ALPHA: float = Field(default=0.3, ge=0, le=1)
+    # Índice CNPJ → categoria (opcional, fora do git; gerado por `make cnpj-index`).
+    CNPJ_INDEX_DIR: str = "data/cnpj"
 
     @property
     def vector_db_path(self) -> Path:
         """Caminho do banco vetorial; relativo é resolvido a partir de `api/`, não do cwd."""
         path = Path(self.RAG_VECTOR_DB_PATH)
+        return path if path.is_absolute() else API_DIR / path
+
+    @property
+    def cnpj_index_dir(self) -> Path:
+        path = Path(self.CNPJ_INDEX_DIR)
         return path if path.is_absolute() else API_DIR / path
 
     model_config = SettingsConfigDict(

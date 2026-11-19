@@ -20,6 +20,7 @@ dependencies = [
     "python-multipart>=0.0.12",
     "fastembed>=0.9.1",
     "sqlite-vec>=0.1.9",
+    "alembic>=1.13",
 ]
 
 [dependency-groups]
@@ -49,3 +50,6 @@ asyncio_mode = "auto"
 asyncio_default_fixture_loop_scope = "function"
 testpaths = ["tests"]
 pythonpath = ["."]
+markers = [
+    "indice_cnpj_real: usa o índice CNPJ real versionado (por padrão os testes não o consultam)",
+]

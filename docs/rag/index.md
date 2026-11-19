@@ -38,7 +38,11 @@ O modelo `sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2`, suportad
 FastEmbed instalado, gera vetores multilíngues de **384 dimensões**, normalizados.
 SQLite com extensão **sqlite-vec** usa tabela virtual `vec0` e distância de cosseno;
 a similaridade é `1 - distância`, equivalente ao produto interno de vetores unitários.
-A escolha mantém o armazenamento local-first da ADR 0002.
+A escolha mantém o armazenamento local-first da ADR 0002. Desde a Semana 4, as tabelas de
+metadados e de chunks são modelos SQLAlchemy e o esquema vem de migrações Alembic numeradas,
+inclusive a `vec0` com a dimensão dos embeddings
+([ADR 0019](../adr/0019-orm-e-migracoes-numeradas.md)); o benchmark da Semana 2 deu os mesmos
+resultados depois da mudança.
 
 A busca híbrida usa `alpha * cosseno_denso + (1 - alpha) * cosseno_tfidf`.
 O componente lexical mantém TF-IDF de palavras (1–2 gramas) e caracteres (3–5), pesos

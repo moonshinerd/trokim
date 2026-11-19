@@ -14,7 +14,7 @@ A arquitetura do **Trokim** foi concebida para atender aos requisitos de alta pe
 2. **Camada Backend (FastAPI / Python 3.12+):**
    - Construída com FastAPI pela alta performance assíncrona e tipagem robusta com Pydantic v2.
    - Gerenciamento de dependências ultra-rápido com `uv`.
-   - Banco de dados embutido **SQLite** garantindo funcionamento 100% *local-first* sem necessidade de servidores externos.
+   - Banco de dados embutido **SQLite** garantindo funcionamento 100% *local-first* sem necessidade de servidores externos. As tabelas são modelos SQLAlchemy e o esquema evolui por migrações Alembic numeradas, aplicadas ao abrir cada banco ([ADR 0019](../adr/0019-orm-e-migracoes-numeradas.md)). Os lançamentos importados ainda ficam em memória na API; a persistência deles em SQLite é pendência da Semana 5.
 3. **Mecanismo RAG Híbrido e Banco Vetorial (Semana 2):**
    - Embeddings multilíngues gerados localmente pelo modelo `sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2` (384 dimensões) via **FastEmbed**.
    - Persistência e indexação vetorial nativa em SQLite com a extensão **sqlite-vec** (tabela virtual `vec0`).
@@ -31,6 +31,10 @@ A arquitetura do **Trokim** foi concebida para atender aos requisitos de alta pe
    - Orquestrador determinístico coordenando quatro agentes especializados: `ResearchAgent` (recuperação de evidências e verificação de escopo), `AnalysisAgent` (cálculos matemáticos determinísticos sem LLM), `CommunicationAgent` (redação pedagógica ancorada em fontes oficiais) e `ValidationAgent` (auditoria defensiva factual contra alucinações).
    - Exposição via endpoint HTTP `POST /v1/agents/ask` devolvendo `MultiAgentResponse` com a trilha de auditoria (`steps`) detalhando o papel e tempo de execução de cada agente.
    - No app, o modo multiagente é opcional em Ajustes; modelos Dart validam o contrato e a resposta oferece uma trilha acessível com etapas, cálculos, evidências e explicações de abstenção/rejeição.
+   - O Communication chama o modelo com teto de tokens (`LLM_MAX_TOKENS`); o desempenho medido está no [Histórico de Resultados](../pesquisa/resultados.md#8-semana-4-multiagente-nos-30-casos-da-comparacao).
+7. **Categorização pela atividade econômica (Semana 4, [ADR 0020](../adr/0020-categorizacao-por-cnae.md)):**
+   - Regras por palavra, dicionário de 746 redes e o CNAE do recebedor, consultado num índice local de CNPJs montado com os dados abertos da Receita Federal ([Categorias](categorias.md)).
+   - O índice vai versionado comprimido (`api/app/data/cnpj_categorias.xz`, 14 MB) e é descomprimido por `make build` ou no primeiro uso; `make cnpj-atualizar` baixa o mês novo da Receita, com aviso de tamanho e confirmação.
 
 ---
 
@@ -42,7 +46,7 @@ O backend adota uma arquitetura em camadas limpa e desacoplada:
 routers/ (HTTP fino, esquemas Pydantic: /transactions, /chat/ask, /chat/generate, /chat/title, /budgets, /agents/ask)
    │
    ▼
-services/ (Regras de negócio: CalculationService, ParserService, RAGService, GenerationService, TitleService, Orchestrator e agentes)
+services/ (Regras de negócio: CalculationService, ParserService, CategorizationService, RAGService, GenerationService, TitleService, Orchestrator e agentes)
    │
    ▼
 domain/   (Entidades de negócio puras: Transaction, Budget, EvidenceChunk, MultiAgentResponse)
@@ -51,4 +55,4 @@ domain/   (Entidades de negócio puras: Transaction, Budget, EvidenceChunk, Mult
 clients/  (Adaptadores de persistência e LLM: SQLiteVectorStore, FastEmbed, LiteLLMProvider, OllamaProvider, MockLLMProvider)
 ```
 
-Essa estrutura garante que a evolução do sistema nas semanas seguintes (Semana 4: multiagentes; Semana 5: multimodalidade; Semana 6: integração) ocorra sem acoplamento indevido.
+Essa estrutura permitiu acrescentar os agentes na Semana 4 sem mexer nas camadas existentes e deve receber da mesma forma a multimodalidade (Semana 5) e a integração completa (Semana 6).

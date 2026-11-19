@@ -13,7 +13,7 @@ def _fatura(fitid_extra: str = "c3", inicio: str = "20261103", fim: str = "20261
         [
             D("DEBIT", "20261104", "-55.00", f"{fitid_extra}a", "Eletro Exemplo"),
             D("DEBIT", "20261105", "-20.00", f"{fitid_extra}b", "Eletro Exemplo - Parcela 1/3"),
-            D("DEBIT", "20261106", "-12.00", f"{fitid_extra}c", "Papelaria Exemplo"),
+            D("DEBIT", "20261106", "-12.00", f"{fitid_extra}c", "Bazar Exemplo"),
         ],
         inicio=inicio,
         fim=fim,
@@ -38,8 +38,8 @@ async def test_corrigir_categoria_vale_para_todo_o_estabelecimento():
     assert corpo == {"updated": 2, "merchant": "Eletro Exemplo", "rule": True}
     eletro = [t["category"] for t in txs if t["merchant"] == "Eletro Exemplo"]
     assert eletro == ["moradia", "moradia"]
-    papelaria = next(t for t in txs if t["merchant"] == "Papelaria Exemplo")
-    assert papelaria["category"] == "outros"
+    bazar = next(t for t in txs if t["merchant"] == "Bazar Exemplo")
+    assert bazar["category"] == "outros"
     assert resumo["expenses_by_category"]["moradia"] == 75.0
 
 
@@ -47,7 +47,7 @@ async def test_corrigir_categoria_vale_para_todo_o_estabelecimento():
 async def test_regra_aprendida_vale_para_o_proximo_arquivo():
     async with cliente() as c:
         await enviar(c, _fatura(), "fatura_nov.ofx", "pessoal")
-        uid = await _uid(c, "Papelaria Exemplo")
+        uid = await _uid(c, "Bazar Exemplo")
         await c.patch(f"/v1/transactions/{uid}/category", json={"category": "educacao"})
         corpo = (
             await enviar(
@@ -59,13 +59,13 @@ async def test_regra_aprendida_vale_para_o_proximo_arquivo():
         ).json()
         txs = (await c.get("/v1/transactions")).json()
         regras = (await c.get("/v1/transactions/category-rules")).json()
-    assert [t["category"] for t in txs if t["merchant"] == "Papelaria Exemplo"] == [
+    assert [t["category"] for t in txs if t["merchant"] == "Bazar Exemplo"] == [
         "educacao",
         "educacao",
     ]
-    # o arquivo novo traz 2 lançamentos do Eletro sem regra; a papelaria já vem categorizada
+    # o arquivo novo traz 2 lançamentos do Eletro sem regra; o bazar já vem categorizado
     assert corpo["uncategorized_count"] == 2
-    assert regras == [{"merchant": "papelaria exemplo", "category": "educacao"}]
+    assert regras == [{"merchant": "bazar exemplo", "category": "educacao"}]
 
 
 @pytest.mark.asyncio
@@ -91,14 +91,14 @@ async def test_so_este_lancamento_nao_cria_regra():
 async def test_remover_regra_mantem_o_que_ja_mudou_e_para_de_aplicar():
     async with cliente() as c:
         await enviar(c, _fatura(), "fatura_nov.ofx", "pessoal")
-        uid = await _uid(c, "Papelaria Exemplo")
+        uid = await _uid(c, "Bazar Exemplo")
         await c.patch(f"/v1/transactions/{uid}/category", json={"category": "educacao"})
-        r = await c.delete("/v1/transactions/category-rules/Papelaria Exemplo")
+        r = await c.delete("/v1/transactions/category-rules/Bazar Exemplo")
         assert r.status_code == 200
         await enviar(c, _fatura("d", "20261203", "20261210"), "fatura_dez.ofx", "pessoal")
         txs = (await c.get("/v1/transactions")).json()
         assert (await c.delete("/v1/transactions/category-rules/nada")).status_code == 404
-    assert sorted(t["category"] for t in txs if t["merchant"] == "Papelaria Exemplo") == [
+    assert sorted(t["category"] for t in txs if t["merchant"] == "Bazar Exemplo") == [
         "educacao",
         "outros",
     ]
@@ -132,7 +132,7 @@ async def test_movimentacao_interna_e_gasto_como_renda_sao_recusados():
 async def test_limpar_extratos_apaga_as_regras():
     async with cliente() as c:
         await enviar(c, _fatura(), "fatura.ofx", "pessoal")
-        uid = await _uid(c, "Papelaria Exemplo")
+        uid = await _uid(c, "Bazar Exemplo")
         await c.patch(f"/v1/transactions/{uid}/category", json={"category": "educacao"})
         await c.delete("/v1/transactions/clear")
         assert (await c.get("/v1/transactions/category-rules")).json() == []

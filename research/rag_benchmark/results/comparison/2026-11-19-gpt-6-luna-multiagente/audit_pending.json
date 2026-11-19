@@ -1,0 +1,237 @@
+{
+  "status": "pendente",
+  "reviewer": null,
+  "cases": [
+    {
+      "method": "llm_pura",
+      "id": "C01",
+      "flagged": true,
+      "confirmed": null,
+      "notes": ""
+    },
+    {
+      "method": "llm_pura",
+      "id": "C02",
+      "flagged": true,
+      "confirmed": null,
+      "notes": ""
+    },
+    {
+      "method": "llm_pura",
+      "id": "C04",
+      "flagged": true,
+      "confirmed": null,
+      "notes": ""
+    },
+    {
+      "method": "llm_pura",
+      "id": "C11",
+      "flagged": true,
+      "confirmed": null,
+      "notes": ""
+    },
+    {
+      "method": "llm_pura",
+      "id": "C27",
+      "flagged": false,
+      "confirmed": null,
+      "notes": ""
+    },
+    {
+      "method": "llm_pura",
+      "id": "C29",
+      "flagged": true,
+      "confirmed": null,
+      "notes": ""
+    },
+    {
+      "method": "llm_pura",
+      "id": "C30",
+      "flagged": false,
+      "confirmed": null,
+      "notes": ""
+    },
+    {
+      "method": "rag_ingenuo",
+      "id": "C11",
+      "flagged": true,
+      "confirmed": null,
+      "notes": ""
+    },
+    {
+      "method": "rag_ingenuo",
+      "id": "C16",
+      "flagged": true,
+      "confirmed": null,
+      "notes": ""
+    },
+    {
+      "method": "rag_ingenuo",
+      "id": "C25",
+      "flagged": true,
+      "confirmed": null,
+      "notes": ""
+    },
+    {
+      "method": "rag_ingenuo",
+      "id": "C26",
+      "flagged": true,
+      "confirmed": null,
+      "notes": ""
+    },
+    {
+      "method": "rag_ingenuo",
+      "id": "C27",
+      "flagged": false,
+      "confirmed": null,
+      "notes": ""
+    },
+    {
+      "method": "rag_ingenuo",
+      "id": "C29",
+      "flagged": false,
+      "confirmed": null,
+      "notes": ""
+    },
+    {
+      "method": "rag_ingenuo",
+      "id": "C30",
+      "flagged": false,
+      "confirmed": null,
+      "notes": ""
+    },
+    {
+      "method": "trokim_estruturado",
+      "id": "C16",
+      "flagged": true,
+      "confirmed": null,
+      "notes": ""
+    },
+    {
+      "method": "trokim_estruturado",
+      "id": "C20",
+      "flagged": true,
+      "confirmed": null,
+      "notes": ""
+    },
+    {
+      "method": "trokim_estruturado",
+      "id": "C24",
+      "flagged": true,
+      "confirmed": null,
+      "notes": ""
+    },
+    {
+      "method": "trokim_estruturado",
+      "id": "C27",
+      "flagged": false,
+      "confirmed": null,
+      "notes": ""
+    },
+    {
+      "method": "trokim_estruturado",
+      "id": "C29",
+      "flagged": false,
+      "confirmed": null,
+      "notes": ""
+    },
+    {
+      "method": "trokim_estruturado",
+      "id": "C30",
+      "flagged": true,
+      "confirmed": null,
+      "notes": ""
+    },
+    {
+      "method": "multiagente",
+      "id": "C02",
+      "flagged": true,
+      "confirmed": null,
+      "notes": ""
+    },
+    {
+      "method": "multiagente",
+      "id": "C03",
+      "flagged": true,
+      "confirmed": null,
+      "notes": ""
+    },
+    {
+      "method": "multiagente",
+      "id": "C13",
+      "flagged": true,
+      "confirmed": null,
+      "notes": ""
+    },
+    {
+      "method": "multiagente",
+      "id": "C16",
+      "flagged": true,
+      "confirmed": null,
+      "notes": ""
+    },
+    {
+      "method": "multiagente",
+      "id": "C17",
+      "flagged": true,
+      "confirmed": null,
+      "notes": ""
+    },
+    {
+      "method": "multiagente",
+      "id": "C18",
+      "flagged": true,
+      "confirmed": null,
+      "notes": ""
+    },
+    {
+      "method": "multiagente",
+      "id": "C19",
+      "flagged": true,
+      "confirmed": null,
+      "notes": ""
+    },
+    {
+      "method": "multiagente",
+      "id": "C20",
+      "flagged": true,
+      "confirmed": null,
+      "notes": ""
+    },
+    {
+      "method": "multiagente",
+      "id": "C25",
+      "flagged": true,
+      "confirmed": null,
+      "notes": ""
+    },
+    {
+      "method": "multiagente",
+      "id": "C26",
+      "flagged": true,
+      "confirmed": null,
+      "notes": ""
+    },
+    {
+      "method": "multiagente",
+      "id": "C27",
+      "flagged": false,
+      "confirmed": null,
+      "notes": ""
+    },
+    {
+      "method": "multiagente",
+      "id": "C29",
+      "flagged": true,
+      "confirmed": null,
+      "notes": ""
+    },
+    {
+      "method": "multiagente",
+      "id": "C30",
+      "flagged": false,
+      "confirmed": null,
+      "notes": ""
+    }
+  ]
+}

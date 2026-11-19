@@ -42,6 +42,26 @@ O JSON histórico contém recortes das entradas, não um contexto integral repro
 
 C29 usa exclusivamente valores sintéticos. A amostra representa uma execução, não uma estimativa estatística nem uma nova rodada do benchmark; por isso, não altera o histórico de resultados ou os gráficos.
 
+## Teto de tokens
+
+O agente chama o modelo com `max_tokens` igual a `LLM_MAX_TOKENS` (500 por padrão, no
+`api/.env`). Sem esse teto, o Qwen 2.5 de 1,5 B às vezes gerava até estourar o tempo limite de
+120 s: no benchmark da [#60](https://github.com/moonshinerd/trokim/issues/60) isso aconteceu em
+8 dos 30 casos e em 9 dos 20 cenários, e o `/v1/agents/ask` teria o mesmo problema. O teste
+`test_redacao_tem_teto_de_tokens` cobre o padrão e o valor passado no construtor. No
+benchmark, o agente usa 300 tokens, o mesmo orçamento das outras abordagens.
+
+## O que o benchmark mostrou
+
+Como a proteção só aceita frases literais das evidências e linhas exatas dos cálculos, quase toda
+resposta do fluxo multiagente é o rascunho seguro montado com os trechos, e não o texto do modelo
+(27 de 28 respostas com o GPT-6 Luna e todas com o Qwen em 18/11; 26 de 28 e todas as 23 em
+19/11). Isso evita
+números inventados, mas deixa a resposta pouco natural e o F1 de tokens baixo. O benchmark guarda,
+em cada tentativa, a resposta original do modelo (`llm_responses`) e o rascunho enviado ao
+Validation (`drafts`), o que permite ver o que foi trocado. Aceitar paráfrase com citação
+verificada é o próximo passo ([Histórico de resultados](../pesquisa/resultados.md#8-semana-4-multiagente-nos-30-casos-da-comparacao)).
+
 ## Limitações
 
 Um modelo pequeno pode inventar conteúdo, parafrasear, omitir citações ou alterar números apesar do prompt. A checagem reduz esse risco ao rejeitar formatos que não consegue validar literalmente, mas pode produzir respostas pouco naturais ou incompletas. Os trechos usados na execução são resumos editoriais da base de conhecimento; consulte as fontes originais no [catálogo do RAG](../rag/catalogo.md).

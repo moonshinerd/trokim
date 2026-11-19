@@ -49,8 +49,12 @@ Registro formal dos alinhamentos, dinâmicas de ideação e deliberações técn
 ---
 
 ### Checkpoint da Semana 4 — Sistema Multiagentes (Planejada em 16/11/2026, entrega em 18/11/2026)
-- **Status:** <span class="badge-should">Sprint Ativa</span>
-- **Planejamento:** épico [#50](https://github.com/moonshinerd/trokim/issues/50) com o contrato de mensagens dos agentes; Fase 1 (segunda 16/11) com as tarefas independentes [#51](https://github.com/moonshinerd/trokim/issues/51) a [#57](https://github.com/moonshinerd/trokim/issues/57) e Fase 2 (quarta 18/11) com as bloqueadas [#58](https://github.com/moonshinerd/trokim/issues/58) a [#61](https://github.com/moonshinerd/trokim/issues/61). Detalhes e grafo de precedência em [Planejamento](../planejamento.md#6-semana-4-sistema-multiagentes-sprint-ativa).
-- **Decisão arquitetural:** [ADR 0016](../adr/0016-arquitetura-multiagente.md) (proposta).
-- **Registro:** não houve reunião de planejamento registrada em ata; a ata só será criada se houver reunião de validação de fato.
+- **Status:** <span class="badge-must">Concluído</span> (com pendências assumidas, listadas abaixo)
+- **Planejamento:** épico [#50](https://github.com/moonshinerd/trokim/issues/50) com o contrato de mensagens dos agentes; Fase 1 (segunda 16/11) com as tarefas independentes [#51](https://github.com/moonshinerd/trokim/issues/51) a [#57](https://github.com/moonshinerd/trokim/issues/57) e Fase 2 (quarta 18/11) com as bloqueadas [#58](https://github.com/moonshinerd/trokim/issues/58) a [#61](https://github.com/moonshinerd/trokim/issues/61). Detalhes e grafo de precedência em [Planejamento](../planejamento.md#6-semana-4-sistema-multiagentes-concluida).
+- **Decisões arquiteturais:** [ADR 0016](../adr/0016-arquitetura-multiagente.md) (aceita), [ADR 0019](../adr/0019-orm-e-migracoes-numeradas.md) (ORM e migrações numeradas) e [ADR 0020](../adr/0020-categorizacao-por-cnae.md) (categorização pela atividade econômica).
+- **Resultados Consolidados:**
+  - Quatro agentes com contrato de mensagens, orquestrador e endpoint `POST /v1/agents/ask` ([#51](https://github.com/moonshinerd/trokim/issues/51) a [#58](https://github.com/moonshinerd/trokim/issues/58)); conversa multiagente no app ([#59](https://github.com/moonshinerd/trokim/issues/59)).
+  - Benchmark do multiagente como quarta abordagem nos 30 casos e em 20 cenários próprios, em execuções versionadas com os dois modelos (Qwen 2.5 de 1,5 B local e GPT-6 Luna pelo OpenRouter) ([#60](https://github.com/moonshinerd/trokim/issues/60), [Histórico de Resultados](../pesquisa/resultados.md)). Os 5 rascunhos inválidos injetados foram barrados em todas as execuções, o C30 foi retido e o C29 saiu com os números do sistema; o C27 continua respondido.
+  - Importação de várias contas e categorização por formatos de vários bancos e pela atividade econômica das lojas ([#80](https://github.com/moonshinerd/trokim/issues/80)).
+- **Pendências assumidas:** revisão humana dos casos sinalizados (formulários `audit_pending.json` de cada execução); política de escopo para previsões de preço (C27); persistência dos lançamentos em SQLite; homologação em aparelho Android físico. Não houve reunião de validação, então não há ata desta semana.
 

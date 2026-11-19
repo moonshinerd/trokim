@@ -18,6 +18,7 @@ class TransactionCategory(StrEnum):
     EDUCATION = "educacao"
     LEISURE = "lazer"
     SERVICES = "servicos"
+    TAXES = "impostos"
     INCOME = "renda"
     OTHER = "outros"
 

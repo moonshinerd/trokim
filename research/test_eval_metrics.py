@@ -326,3 +326,12 @@ def test_resultados_incompletos_sao_rejeitados():
         assert "resposta ausente" in str(error)
     else:
         raise AssertionError("O avaliador aceitou abordagens ausentes.")
+
+
+def test_marcador_de_citacao_nao_conta_como_numero_sem_suporte():
+    case = {"id": "C99", "query": "Q", "expected_answer": "A reserva tem liquidez."}
+    answer = "A reserva tem liquidez. [2]\nAvalie os riscos. [3]"
+    assert eval_comparison.factual_inconsistencies(answer, case, ["fonte sem números"]) == []
+    inventado = "A reserva rende 12% ao ano. [2]"
+    findings = eval_comparison.factual_inconsistencies(inventado, case, ["fonte sem números"])
+    assert findings == ["número sem suporte: 12%"]

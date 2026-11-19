@@ -1,0 +1,1367 @@
+{
+  "schema_version": 1,
+  "methodology": {
+    "token_f1": "Média SQuAD F1 nos casos que esperam resposta: unigramas em minúsculas, sem acentos, pontuação ou artigos e com contagem multiconjunto.",
+    "concept_recall": "Cada grupo de conceitos vale uma unidade; qualquer alternativa textual contígua cobre o grupo, com normalização conservadora de flexões regulares pt-BR.",
+    "factual_inconsistency_rate": "Proporção de respostas não abstidas com número sem suporte, frase proibida literal ou contradição heurística por negação.",
+    "limitations": "As regras factuais são lexicais, não comprovam entailment semântico e exigem revisão humana dos casos sinalizados."
+  },
+  "case_count": 30,
+  "methods": {
+    "llm_pura": {
+      "label": "LLM pura",
+      "cases": 30,
+      "answered": 30,
+      "token_f1": 0.21520502159299382,
+      "concept_recall": 0.6833333333333333,
+      "factual_inconsistency_rate": 0.16666666666666666,
+      "inconsistent_answers": 5,
+      "abstention_f1": 0.0,
+      "abstention": {
+        "tp": 0,
+        "fp": 0,
+        "fn": 3,
+        "tn": 27,
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0
+      },
+      "latency_mean_ms": 3125.6136666666666,
+      "case_details": [
+        {
+          "id": "C01",
+          "answer": "Uma forma simples de organizar o orçamento é:\n\n1. **Anote todas as receitas** do mês, como salário e outras entradas.\n2. **Registre as despesas** — inclusive as pequenas — e separe-as por categorias, como moradia, alimentação, transporte, contas e lazer.\n3. **Distinga despesas fixas e variáveis** e identifique quais são essenciais.\n4. **Compare o que entrou com o que saiu** para entender para onde o dinheiro está indo.\n5. **Defina limites por categoria** e acompanhe os gastos ao longo do mês.\n6. **Revise o orçamento regularmente** e ajuste os limites quando sua renda ou suas despesas mudarem.\n\nUma planilha, um aplicativo ou um caderno já podem ajudar. O importante é registrar os valores com frequência e manter o método simples o bastante para continuar usando.",
+          "expected_abstention": false,
+          "predicted_abstention": false,
+          "token_f1": 0.10619469026548672,
+          "concept_recall": 1.0,
+          "factual_inconsistencies": [
+            "número sem suporte: 3",
+            "número sem suporte: 4",
+            "número sem suporte: 5"
+          ],
+          "latency_ms": 3835.79
+        },
+        {
+          "id": "C02",
+          "answer": "Comece fazendo um retrato claro da situação:\n\n1. **Liste todas as dívidas**: credor, saldo, parcela, vencimento, juros e se há atraso. Confira contratos, faturas e aplicativos.\n2. **Organize o orçamento**: anote renda e gastos essenciais para saber quanto pode destinar às dívidas sem comprometer moradia, alimentação e contas básicas.\n3. **Priorize**: mantenha os pagamentos mínimos que conseguir e procure primeiro os credores de dívidas atrasadas ou com juros mais altos. Se não der para pagar tudo, entre em contato antes do vencimento.\n4. **Negocie com cuidado**: peça o saldo atualizado e compare o custo total, as parcelas e as condições. Só aceite um acordo que caiba no orçamento.\n5. **Evite aumentar a dívida**: suspenda gastos não essenciais e evite contratar novo crédito sem entender o custo e como pagará.\n\nSe as dívidas forem muitas, um órgão de defesa do consumidor ou serviço de orientação financeira pode ajudar a avaliar as opções.",
+          "expected_abstention": false,
+          "predicted_abstention": false,
+          "token_f1": 0.07092198581560283,
+          "concept_recall": 1.0,
+          "factual_inconsistencies": [
+            "número sem suporte: 2",
+            "número sem suporte: 3",
+            "número sem suporte: 4",
+            "número sem suporte: 5"
+          ],
+          "latency_ms": 3983.92
+        },
+        {
+          "id": "C03",
+          "answer": "Não. A taxa de juros é importante, mas compare também:\n\n- **CET (Custo Efetivo Total)**, que reúne juros, tarifas, impostos e outros encargos;\n- **valor total pago** e valor das parcelas;\n- **prazo** do crédito;\n- seguros ou serviços incluídos;\n- regras de atraso, quitação antecipada e amortização;\n- se a taxa é fixa ou pode variar.\n\nCompare propostas para o mesmo valor e prazo, e verifique se a parcela cabe no orçamento. Uma taxa menor pode não significar crédito mais barato se houver custos extras ou prazo maior.",
+          "expected_abstention": false,
+          "predicted_abstention": false,
+          "token_f1": 0.09302325581395347,
+          "concept_recall": 1.0,
+          "factual_inconsistencies": [],
+          "latency_ms": 3394.61
+        },
+        {
+          "id": "C04",
+          "answer": "Para definir metas financeiras e prazos:\n\n1. **Seja específico:** em vez de “guardar dinheiro”, defina o objetivo, como montar uma reserva ou pagar uma dívida.\n2. **Priorize:** considere urgência, importância e impacto no seu orçamento.\n3. **Estabeleça um prazo realista:** leve em conta sua renda, despesas e outras prioridades. Metas de curto, médio e longo prazo podem ajudar a organizar o planejamento.\n4. **Divida em etapas:** acompanhe o progresso regularmente e ajuste o plano se sua situação mudar.\n5. **Reserve margem para imprevistos:** prazos muito apertados podem dificultar a manutenção do plano.\n\nNão é necessário acertar tudo de início: metas podem ser revistas conforme suas condições mudam.",
+          "expected_abstention": false,
+          "predicted_abstention": false,
+          "token_f1": 0.11214953271028037,
+          "concept_recall": 1.0,
+          "factual_inconsistencies": [
+            "número sem suporte: 2",
+            "número sem suporte: 3",
+            "número sem suporte: 4",
+            "número sem suporte: 5"
+          ],
+          "latency_ms": 2383.7
+        },
+        {
+          "id": "C05",
+          "answer": "Mantenha a reserva em um lugar **seguro, de baixa oscilação e com acesso rápido** — a liquidez é essencial numa emergência. Você pode comparar opções de renda fixa de resgate fácil, observando prazo de saque, custos, riscos e eventual cobertura do FGC.\n\nEvite deixar a reserva em investimentos que possam oscilar muito ou exigir resgate demorado, como ações ou produtos de longo prazo. Se precisar de acesso imediato, considere manter uma pequena parte em uma conta de uso diário e o restante em uma opção com liquidez adequada.",
+          "expected_abstention": false,
+          "predicted_abstention": false,
+          "token_f1": 0.046511627906976744,
+          "concept_recall": 0.3333333333333333,
+          "factual_inconsistencies": [],
+          "latency_ms": 4407.25
+        },
+        {
+          "id": "C06",
+          "answer": "Para avaliar seu perfil de investidor, considere:\n\n- **Objetivos:** para que você está investindo e quando pretende usar o dinheiro.\n- **Prazo:** quanto mais próximo o objetivo, menor costuma ser a margem para oscilações.\n- **Tolerância a perdas:** como você reagiria se seus investimentos caíssem temporariamente.\n- **Capacidade de assumir riscos:** sua renda, reserva de emergência, dívidas e necessidade de acesso ao dinheiro.\n- **Experiência e conhecimento:** o quanto você entende dos produtos e de seus riscos.\n\nBancos e corretoras costumam aplicar questionários de perfil, mas as respostas devem refletir sua situação real — não apenas sua disposição para correr riscos. Reavalie o perfil quando seus objetivos ou sua condição financeira mudarem.",
+          "expected_abstention": false,
+          "predicted_abstention": false,
+          "token_f1": 0.1308411214953271,
+          "concept_recall": 1.0,
+          "factual_inconsistencies": [],
+          "latency_ms": 3797.3
+        },
+        {
+          "id": "C07",
+          "answer": "Não. **Liquidez diária** significa que você pode pedir o resgate com frequência — em geral, em dias úteis —, mas não garante que o valor do investimento fique estável. O preço pode oscilar conforme o tipo de aplicação e as condições do mercado. Verifique também o prazo de pagamento do resgate e as regras do produto.",
+          "expected_abstention": false,
+          "predicted_abstention": false,
+          "token_f1": 0.1111111111111111,
+          "concept_recall": 0.5,
+          "factual_inconsistencies": [],
+          "latency_ms": 3499.79
+        },
+        {
+          "id": "C08",
+          "answer": "Não. A diversificação pode reduzir o risco de perdas concentradas em um único investimento, mas não elimina todos os riscos. Fatores que afetam o mercado como um todo, inflação e mudanças nas taxas de juros, por exemplo, ainda podem impactar uma carteira diversificada.",
+          "expected_abstention": false,
+          "predicted_abstention": false,
+          "token_f1": 0.23255813953488372,
+          "concept_recall": 1.0,
+          "factual_inconsistencies": [],
+          "latency_ms": 1378.6
+        },
+        {
+          "id": "C09",
+          "answer": "Não. O investimento mais adequado depende de fatores como objetivos, prazo, tolerância a oscilações, necessidade de acesso ao dinheiro e situação financeira de cada pessoa. O que funciona para alguém pode não ser apropriado para outra. Em geral, vale entender essas necessidades antes de escolher e, se necessário, buscar orientação profissional.",
+          "expected_abstention": false,
+          "predicted_abstention": false,
+          "token_f1": 0.10909090909090909,
+          "concept_recall": 0.5,
+          "factual_inconsistencies": [],
+          "latency_ms": 1572.95
+        },
+        {
+          "id": "C10",
+          "answer": "Não. Ganhar mais pode ajudar, mas bem-estar financeiro também envolve conseguir pagar as contas, lidar com imprevistos, administrar dívidas e planejar objetivos — sem que o dinheiro cause preocupação constante.\n\nHábitos como acompanhar gastos, manter uma reserva para emergências quando possível e ajustar o orçamento à sua realidade também contribuem. O que conta é o equilíbrio entre renda, despesas, segurança e tranquilidade.",
+          "expected_abstention": false,
+          "predicted_abstention": false,
+          "token_f1": 0.08333333333333334,
+          "concept_recall": 0.3333333333333333,
+          "factual_inconsistencies": [],
+          "latency_ms": 3290.43
+        },
+        {
+          "id": "C11",
+          "answer": "Sim. No começo, anote também os pequenos gastos — café, lanche, taxas e compras rápidas — porque eles ajudam a mostrar para onde o dinheiro está indo. Depois, você pode simplificar o acompanhamento se perceber que alguns não fazem diferença.\n\nPara começar o orçamento familiar:\n\n1. **Registre a renda líquida** da família.\n2. **Anote os gastos por algumas semanas ou por um mês**, usando caderno, planilha ou aplicativo.\n3. **Separe por categorias**, como moradia, contas, alimentação, transporte, saúde, dívidas e lazer.\n4. **Inclua despesas que não acontecem todo mês**, como manutenção, material escolar ou presentes.\n5. **Compare o que entra com o que sai** e conversem sobre prioridades e ajustes possíveis.\n6. **Revisem o orçamento regularmente**, sem buscar perfeição: o importante é criar o hábito.\n\nSe houver despesas difíceis de prever, reserve espaço no orçamento para elas. O melhor método é aquele que todos da família conseguem manter.",
+          "expected_abstention": false,
+          "predicted_abstention": false,
+          "token_f1": 0.05714285714285715,
+          "concept_recall": 0.5,
+          "factual_inconsistencies": [
+            "número sem suporte: 3",
+            "número sem suporte: 4",
+            "número sem suporte: 5"
+          ],
+          "latency_ms": 4381.04
+        },
+        {
+          "id": "C12",
+          "answer": "Não. Uma parcela pequena, por si só, não garante que o empréstimo caiba no orçamento. Avalie a renda líquida e sua estabilidade, as despesas e dívidas atuais, o custo total do empréstimo e possíveis mudanças na renda ou nos gastos. Deixe margem para imprevistos antes de assumir novas parcelas.",
+          "expected_abstention": false,
+          "predicted_abstention": false,
+          "token_f1": 0.0784313725490196,
+          "concept_recall": 0.5,
+          "factual_inconsistencies": [],
+          "latency_ms": 2830.03
+        },
+        {
+          "id": "C13",
+          "answer": "Sim. Em geral, vale a pena procurar os credores para entender as opções de renegociação e evitar que a dívida continue gerando encargos. Antes de aceitar, confira o valor total, juros, taxas, número de parcelas e consequências de atrasos no novo acordo.\n\nProponha uma parcela que caiba no seu orçamento e peça as condições por escrito. Não aceite sob pressão; compare as opções e priorize despesas essenciais. Se houver cobranças que você não reconhece, peça a documentação antes de negociar.",
+          "expected_abstention": false,
+          "predicted_abstention": false,
+          "token_f1": 0.10256410256410255,
+          "concept_recall": 1.0,
+          "factual_inconsistencies": [],
+          "latency_ms": 2301.27
+        },
+        {
+          "id": "C14",
+          "answer": "É crédito disponibilizado pelo banco, não dinheiro seu. Se você usa o cheque especial, fica devendo esse valor e pode haver cobrança de juros e tarifas. Confira no extrato se o saldo está positivo ou se há uso do limite e consulte as condições do seu banco.",
+          "expected_abstention": false,
+          "predicted_abstention": false,
+          "token_f1": 0.2641509433962264,
+          "concept_recall": 0.5,
+          "factual_inconsistencies": [],
+          "latency_ms": 1782.68
+        },
+        {
+          "id": "C15",
+          "answer": "Em geral, não. Para imprevistos, o mais importante é conseguir acessar o dinheiro rapidamente e com baixo risco — um ganho maior pode vir acompanhado de prazo de resgate, oscilação ou chance de perda.\n\nUma abordagem comum é manter a reserva de emergência líquida e deixar para buscar mais rendimento com o dinheiro que não precisa ficar disponível para urgências. Antes de escolher, confira prazo de resgate, riscos e eventuais custos.",
+          "expected_abstention": false,
+          "predicted_abstention": false,
+          "token_f1": 0.08450704225352113,
+          "concept_recall": 0.3333333333333333,
+          "factual_inconsistencies": [],
+          "latency_ms": 3284.75
+        },
+        {
+          "id": "C16",
+          "answer": "O valor que não foi pago entra no crédito rotativo do cartão e gera juros e encargos, conforme as condições do emissor. O saldo pode aumentar até a próxima fatura. Se não quitar tudo na data seguinte, o emissor deve oferecer uma opção de parcelamento do saldo, geralmente com condições diferentes das do rotativo.\n\nConfira na fatura ou no aplicativo o saldo atualizado, os juros e as opções disponíveis.",
+          "expected_abstention": false,
+          "predicted_abstention": false,
+          "token_f1": 0.2933333333333333,
+          "concept_recall": 1.0,
+          "factual_inconsistencies": [],
+          "latency_ms": 1903.98
+        },
+        {
+          "id": "C17",
+          "answer": "O mesmo saldo pode ficar no crédito rotativo **somente até o vencimento da fatura seguinte**. Depois disso, ele não pode continuar no rotativo: a instituição deve oferecer outra forma de financiamento, como parcelamento, conforme as condições do contrato. Confira na fatura como essa mudança será feita.",
+          "expected_abstention": false,
+          "predicted_abstention": false,
+          "token_f1": 0.2857142857142857,
+          "concept_recall": 0.5,
+          "factual_inconsistencies": [],
+          "latency_ms": 4505.53
+        },
+        {
+          "id": "C18",
+          "answer": "Para uma dívida de rotativo originada em fevereiro de 2024, os juros e encargos não podem ultrapassar o valor original da dívida. Assim, o total devido pode chegar, no máximo, a duas vezes esse valor. Esse é um limite acumulado, não um teto para a taxa mensal.",
+          "expected_abstention": false,
+          "predicted_abstention": false,
+          "token_f1": 0.4927536231884058,
+          "concept_recall": 0.6666666666666666,
+          "factual_inconsistencies": [],
+          "latency_ms": 4889.38
+        },
+        {
+          "id": "C19",
+          "answer": "",
+          "expected_abstention": false,
+          "predicted_abstention": false,
+          "token_f1": 0.0,
+          "concept_recall": 0.0,
+          "factual_inconsistencies": [],
+          "latency_ms": 7248.85
+        },
+        {
+          "id": "C20",
+          "answer": "Em regra, não. O limite se aplica aos juros e encargos do **rotativo do cartão** e ao **parcelamento da fatura**. Compras parceladas com juros cobrados pela loja são uma operação diferente e não entram nesse limite. Confira o contrato e a fatura, pois as condições devem aparecer discriminadas.",
+          "expected_abstention": false,
+          "predicted_abstention": false,
+          "token_f1": 0.3934426229508197,
+          "concept_recall": 1.0,
+          "factual_inconsistencies": [],
+          "latency_ms": 1521.99
+        },
+        {
+          "id": "C21",
+          "answer": "Não. A CVM não recomenda investir sem avaliar os riscos. Promessas de retorno “milagroso” e garantido são sinais de alerta: desconfie, verifique se a oferta e os responsáveis estão regularizados e não invista antes de entender os riscos.",
+          "expected_abstention": false,
+          "predicted_abstention": false,
+          "token_f1": 0.3181818181818182,
+          "concept_recall": 0.5,
+          "factual_inconsistencies": [],
+          "latency_ms": 1391.46
+        },
+        {
+          "id": "C22",
+          "answer": "Não. Diversificar pode reduzir o impacto de perdas em um investimento específico, mas não elimina todos os riscos. Ainda existem riscos que afetam o mercado como um todo, além de inflação, juros e outros fatores. A diversificação também não garante ganhos nem impede perdas.",
+          "expected_abstention": false,
+          "predicted_abstention": false,
+          "token_f1": 0.38297872340425526,
+          "concept_recall": 1.0,
+          "factual_inconsistencies": [],
+          "latency_ms": 1781.59
+        },
+        {
+          "id": "C23",
+          "answer": "Não. **Liquidez diária** significa que você pode pedir o resgate em dias úteis, conforme as regras do investimento; não garante que o valor não oscile. O preço pode variar, e o resgate pode resultar em ganho ou perda. Confira também prazos, taxas e condições de resgate.",
+          "expected_abstention": false,
+          "predicted_abstention": false,
+          "token_f1": 0.19230769230769232,
+          "concept_recall": 0.5,
+          "factual_inconsistencies": [],
+          "latency_ms": 1820.29
+        },
+        {
+          "id": "C24",
+          "answer": "Não. O BCB não concede um prazo de 30 dias sem juros no crédito rotativo. Em geral, você evita os juros do rotativo ao pagar **o valor total da fatura até o vencimento**. Se pagar apenas o mínimo ou parte da fatura, o saldo restante entra no rotativo e pode gerar juros e encargos. O intervalo entre uma compra e o vencimento depende do ciclo da fatura.",
+          "expected_abstention": false,
+          "predicted_abstention": false,
+          "token_f1": 0.29729729729729726,
+          "concept_recall": 0.6666666666666666,
+          "factual_inconsistencies": [],
+          "latency_ms": 3917.56
+        },
+        {
+          "id": "C25",
+          "answer": "Não. O teto não significa juros de até 100% ao mês. Para o rotativo e o parcelamento da fatura, ele limita o total de juros e encargos acumulados: eles não podem ultrapassar o valor original da dívida. Ou seja, o limite é sobre o custo total, não sobre a taxa mensal.",
+          "expected_abstention": false,
+          "predicted_abstention": false,
+          "token_f1": 0.5396825396825397,
+          "concept_recall": 0.6666666666666666,
+          "factual_inconsistencies": [],
+          "latency_ms": 3308.3
+        },
+        {
+          "id": "C26",
+          "answer": "Não. O limite de juros e encargos do rotativo do cartão passou a valer para operações originadas a partir de 3 de janeiro de 2024. Em geral, ele não se aplica retroativamente a uma operação iniciada em 2023.",
+          "expected_abstention": false,
+          "predicted_abstention": false,
+          "token_f1": 0.5185185185185185,
+          "concept_recall": 1.0,
+          "factual_inconsistencies": [],
+          "latency_ms": 5681.18
+        },
+        {
+          "id": "C27",
+          "answer": "Não é possível saber o preço exato de uma ação daqui a um ano. Ele depende de fatores imprevisíveis, como resultados da empresa, cenário econômico e comportamento do mercado. Qualquer valor seria apenas uma estimativa, não uma garantia.",
+          "expected_abstention": true,
+          "predicted_abstention": false,
+          "token_f1": null,
+          "concept_recall": 0.0,
+          "factual_inconsistencies": [],
+          "latency_ms": 1406.11
+        },
+        {
+          "id": "C28",
+          "answer": "Não posso inventar uma resolução do Banco Central. Nenhum resultado foi fornecido para confirmar essa alegação, e não é correto afirmar que existe rendimento garantido sem risco. Verifique normas e informações diretamente nos canais oficiais do Banco Central.",
+          "expected_abstention": true,
+          "predicted_abstention": false,
+          "token_f1": null,
+          "concept_recall": 0.5,
+          "factual_inconsistencies": [],
+          "latency_ms": 1736.21
+        },
+        {
+          "id": "C29",
+          "answer": "No exemplo sintético, o sistema registrou **0,30 de receitas** e **0,10 de despesas** — classificadas como “outros”. O **saldo líquido foi 0,20**, ou seja, as receitas superaram as despesas nesse valor. Foram consideradas 3 transações.",
+          "expected_abstention": false,
+          "predicted_abstention": false,
+          "token_f1": 0.41379310344827586,
+          "concept_recall": 1.0,
+          "factual_inconsistencies": [
+            "número sem suporte: 3"
+          ],
+          "latency_ms": 4319.47
+        },
+        {
+          "id": "C30",
+          "answer": "Não há resultado determinístico fornecido pelo sistema, então não posso informar o saldo.",
+          "expected_abstention": true,
+          "predicted_abstention": false,
+          "token_f1": null,
+          "concept_recall": 1.0,
+          "factual_inconsistencies": [],
+          "latency_ms": 2212.4
+        }
+      ]
+    },
+    "rag_ingenuo": {
+      "label": "RAG ingênuo",
+      "cases": 30,
+      "answered": 30,
+      "token_f1": 0.3071405026857326,
+      "concept_recall": 0.7222222222222222,
+      "factual_inconsistency_rate": 0.13333333333333333,
+      "inconsistent_answers": 4,
+      "abstention_f1": 0.0,
+      "abstention": {
+        "tp": 0,
+        "fp": 0,
+        "fn": 3,
+        "tn": 27,
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0
+      },
+      "latency_mean_ms": 2120.1013333333335,
+      "case_details": [
+        {
+          "id": "C01",
+          "answer": "Anote todas as receitas e despesas, inclusive os pequenos gastos. Separe as despesas entre fixas, que se repetem com valores estáveis, e variáveis, que mudam conforme o consumo. Agrupe os gastos, compare o que planejou com o que realmente gastou e ajuste o orçamento. Esse registro ajuda a entender para onde vai o dinheiro e a distinguir necessidades de desejos.",
+          "expected_abstention": false,
+          "predicted_abstention": false,
+          "token_f1": 0.17543859649122806,
+          "concept_recall": 1.0,
+          "factual_inconsistencies": [],
+          "latency_ms": 2225.47
+        },
+        {
+          "id": "C02",
+          "answer": "Comece fazendo um levantamento de todas as dívidas: anote cada credor, o saldo restante, os juros e as parcelas. Isso ajuda a entender a situação e planejar pagamentos ou negociações.\n\nDepois, procure os credores para conversar sobre condições e prazos que caibam no seu orçamento. Enquanto reorganiza as contas, evite assumir novas dívidas. Se possível, reduza despesas ou busque renda adicional para ajudar no plano.",
+          "expected_abstention": false,
+          "predicted_abstention": false,
+          "token_f1": 0.12698412698412698,
+          "concept_recall": 1.0,
+          "factual_inconsistencies": [],
+          "latency_ms": 1730.81
+        },
+        {
+          "id": "C03",
+          "answer": "Não. Compare também o **Custo Efetivo Total (CET)**, que reúne os encargos da operação, o valor total a pagar e o impacto das parcelas no seu orçamento. Leia o contrato e avalie se consegue pagar, pois uma prestação pequena não significa que o crédito seja barato.",
+          "expected_abstention": false,
+          "predicted_abstention": false,
+          "token_f1": 0.21739130434782608,
+          "concept_recall": 0.5,
+          "factual_inconsistencies": [],
+          "latency_ms": 1754.48
+        },
+        {
+          "id": "C04",
+          "answer": "Comece identificando o que deseja realizar — por exemplo, estudar, viajar ou comprar uma casa — e quando precisará do dinheiro. Separe as metas por prazo (curto, médio ou longo) e considere quanto cada uma é prioritária.\n\nDepois, registre receitas e despesas em um orçamento, incluindo pequenos gastos. Isso ajuda a entender seus hábitos, distinguir necessidades de desejos e ajustar o planejamento. As escolhas para guardar ou investir devem ser compatíveis com o prazo em que você pretende usar os recursos.",
+          "expected_abstention": false,
+          "predicted_abstention": false,
+          "token_f1": 0.12820512820512822,
+          "concept_recall": 0.5,
+          "factual_inconsistencies": [],
+          "latency_ms": 2117.93
+        },
+        {
+          "id": "C05",
+          "answer": "Mantenha a reserva em uma opção de baixo risco, com liquidez diária e sem carência, para poder acessar o dinheiro quando surgir um imprevisto. Não priorize uma rentabilidade maior se isso comprometer a disponibilidade da reserva. A escolha deve considerar sua situação pessoal.",
+          "expected_abstention": false,
+          "predicted_abstention": false,
+          "token_f1": 0.27906976744186046,
+          "concept_recall": 1.0,
+          "factual_inconsistencies": [],
+          "latency_ms": 1796.78
+        },
+        {
+          "id": "C06",
+          "answer": "Para avaliar seu perfil de investidor, considere **sua capacidade financeira de suportar perdas** e **sua disposição emocional para aceitar riscos**. Também leve em conta seus objetivos e seu patrimônio.\n\nQuestionários de perfil podem ajudar a orientar essa avaliação, mas não são uma verdade absoluta nem substituem uma decisão consciente. Responda com sinceridade e reveja o perfil se sua situação financeira ou seus objetivos mudarem.",
+          "expected_abstention": false,
+          "predicted_abstention": false,
+          "token_f1": 0.20588235294117646,
+          "concept_recall": 1.0,
+          "factual_inconsistencies": [],
+          "latency_ms": 1884.43
+        },
+        {
+          "id": "C07",
+          "answer": "Não. Liquidez diária significa que você pode resgatar ou vender o investimento diariamente, mas não garante que o preço fique estável. A possibilidade de resgate e a manutenção do valor investido são coisas diferentes.",
+          "expected_abstention": false,
+          "predicted_abstention": false,
+          "token_f1": 0.16216216216216217,
+          "concept_recall": 0.5,
+          "factual_inconsistencies": [],
+          "latency_ms": 1033.01
+        },
+        {
+          "id": "C08",
+          "answer": "Não. A diversificação pode reduzir riscos, mas não elimina todos eles. Fatores econômicos e de mercado ainda podem afetar os investimentos, e é importante considerar também riscos de crédito e liquidez.",
+          "expected_abstention": false,
+          "predicted_abstention": false,
+          "token_f1": 0.2777777777777778,
+          "concept_recall": 1.0,
+          "factual_inconsistencies": [],
+          "latency_ms": 1387.07
+        },
+        {
+          "id": "C09",
+          "answer": "Não. O investimento adequado depende dos seus objetivos, do prazo em que precisará do dinheiro, da necessidade de resgatá-lo antes e do seu perfil de risco. Por isso, uma opção que serve para uma pessoa pode não ser adequada para outra.",
+          "expected_abstention": false,
+          "predicted_abstention": false,
+          "token_f1": 0.2608695652173913,
+          "concept_recall": 1.0,
+          "factual_inconsistencies": [],
+          "latency_ms": 1286.65
+        },
+        {
+          "id": "C10",
+          "answer": "Não. Bem-estar financeiro não depende apenas de ganhar mais. Também envolve conseguir pagar as despesas do dia a dia, lidar com imprevistos, avançar em objetivos e ter liberdade para fazer escolhas que tragam qualidade de vida, agora e no futuro. Renda e patrimônio, sozinhos, não mostram toda a situação financeira de uma pessoa.",
+          "expected_abstention": false,
+          "predicted_abstention": false,
+          "token_f1": 0.14925373134328357,
+          "concept_recall": 0.3333333333333333,
+          "factual_inconsistencies": [],
+          "latency_ms": 1530.89
+        },
+        {
+          "id": "C11",
+          "answer": "Sim. Anotar também os pequenos gastos ajuda a entender para onde o dinheiro está indo e a identificar hábitos de consumo.\n\nPara começar o orçamento familiar:\n1. Registrem todas as receitas e despesas.\n2. Separem as despesas fixas, que costumam se repetir com valores estáveis, das variáveis, que mudam conforme o consumo.\n3. Agrupem os gastos e distingam necessidades de desejos.\n4. Comparem o que foi planejado com o que foi gasto e ajustem as escolhas quando necessário.\n\nFaçam esse registro regularmente para acompanhar o orçamento.",
+          "expected_abstention": false,
+          "predicted_abstention": false,
+          "token_f1": 0.14814814814814814,
+          "concept_recall": 1.0,
+          "factual_inconsistencies": [
+            "número sem suporte: 3",
+            "número sem suporte: 4"
+          ],
+          "latency_ms": 4175.68
+        },
+        {
+          "id": "C12",
+          "answer": "Não. Uma parcela pequena, por si só, não mostra o custo total do empréstimo nem se caberá no orçamento. Considere sua renda futura, as demais despesas, o total a pagar e o Custo Efetivo Total (CET). Compare propostas e leia o contrato antes de contratar.",
+          "expected_abstention": false,
+          "predicted_abstention": false,
+          "token_f1": 0.13333333333333333,
+          "concept_recall": 0.5,
+          "factual_inconsistencies": [],
+          "latency_ms": 1387.56
+        },
+        {
+          "id": "C13",
+          "answer": "Sim. Procure os credores e negocie condições e prazos que caibam no seu orçamento. Antes, liste cada dívida, o valor restante e os juros; isso ajuda a avaliar as propostas. Enquanto se reorganiza, evite assumir novas dívidas.",
+          "expected_abstention": false,
+          "predicted_abstention": false,
+          "token_f1": 0.20512820512820512,
+          "concept_recall": 1.0,
+          "factual_inconsistencies": [],
+          "latency_ms": 2111.72
+        },
+        {
+          "id": "C14",
+          "answer": "É crédito oferecido pelo banco, não dinheiro seu nem renda extra. Se usar, você terá de devolver o valor com juros e outros encargos. Confira o custo total e se conseguirá pagar sem comprometer o orçamento.",
+          "expected_abstention": false,
+          "predicted_abstention": false,
+          "token_f1": 0.28571428571428575,
+          "concept_recall": 0.0,
+          "factual_inconsistencies": [],
+          "latency_ms": 2039.9
+        },
+        {
+          "id": "C15",
+          "answer": "Em geral, para dinheiro destinado a imprevistos, a facilidade de acesso costuma ser importante. Buscar um ganho maior pode envolver oscilações, risco de perda ou dificuldade para resgatar no momento necessário. Liquidez não garante que o valor investido permaneça estável.\n\nAntes de abrir mão dela, considere quando pode precisar do dinheiro, se há prazo ou custo para resgate e quanto risco você aceita. Compare essas condições com seu objetivo, sem se basear apenas no retorno esperado.",
+          "expected_abstention": false,
+          "predicted_abstention": false,
+          "token_f1": 0.10126582278481013,
+          "concept_recall": 0.3333333333333333,
+          "factual_inconsistencies": [],
+          "latency_ms": 3841.55
+        },
+        {
+          "id": "C16",
+          "answer": "O saldo restante vai para o crédito rotativo, com juros e encargos previstos no contrato. Esse financiamento dura até o vencimento da fatura seguinte, em geral cerca de 30 dias; não é um período gratuito nem permite manter o mesmo saldo indefinidamente no rotativo.",
+          "expected_abstention": false,
+          "predicted_abstention": false,
+          "token_f1": 0.4074074074074074,
+          "concept_recall": 1.0,
+          "factual_inconsistencies": [
+            "número sem suporte: 30",
+            "possível contradição por negação: O saldo restante vai para o crédito rotativo, com juros e encargos previstos no contrato."
+          ],
+          "latency_ms": 1674.94
+        },
+        {
+          "id": "C17",
+          "answer": "O saldo pode permanecer no rotativo até o vencimento da fatura seguinte, geralmente por cerca de 30 dias. Esse prazo não é gratuito: há juros e encargos, e não permite manter indefinidamente o mesmo saldo no rotativo.",
+          "expected_abstention": false,
+          "predicted_abstention": false,
+          "token_f1": 0.5454545454545455,
+          "concept_recall": 0.5,
+          "factual_inconsistencies": [],
+          "latency_ms": 2772.51
+        },
+        {
+          "id": "C18",
+          "answer": "Para uma dívida do rotativo originada em fevereiro de 2024, os juros e encargos acumulados não podem ultrapassar o valor original da dívida. Esse limite vale para a operação, não estabelece um teto para a taxa mensal.",
+          "expected_abstention": false,
+          "predicted_abstention": false,
+          "token_f1": 0.5245901639344263,
+          "concept_recall": 0.6666666666666666,
+          "factual_inconsistencies": [],
+          "latency_ms": 1323.9
+        },
+        {
+          "id": "C19",
+          "answer": "Não. Como a dívida se originou em fevereiro de 2024, o limite continua valendo: juros e encargos acumulados no rotativo e no parcelamento não podem ultrapassar o valor original da dívida. A migração para parcelamento não reinicia esse limite, e ele não estabelece um teto para a taxa mensal.",
+          "expected_abstention": false,
+          "predicted_abstention": false,
+          "token_f1": 0.45714285714285713,
+          "concept_recall": 1.0,
+          "factual_inconsistencies": [],
+          "latency_ms": 1523.98
+        },
+        {
+          "id": "C20",
+          "answer": "Não. O limite de juros e encargos do rotativo e do parcelamento do saldo da fatura **não inclui compras parceladas com juros feitas na loja**.",
+          "expected_abstention": false,
+          "predicted_abstention": false,
+          "token_f1": 0.6666666666666666,
+          "concept_recall": 1.0,
+          "factual_inconsistencies": [],
+          "latency_ms": 1757.18
+        },
+        {
+          "id": "C21",
+          "answer": "Não. A CVM recomenda desconfiar de promessas de retornos milagrosos ou muito acima do mercado e avaliar o risco junto com o retorno esperado. Considere também a possibilidade de perder parte do dinheiro; rentabilidade passada não garante resultados futuros.",
+          "expected_abstention": false,
+          "predicted_abstention": false,
+          "token_f1": 0.30434782608695654,
+          "concept_recall": 0.5,
+          "factual_inconsistencies": [],
+          "latency_ms": 1234.89
+        },
+        {
+          "id": "C22",
+          "answer": "Não. A diversificação pode reduzir riscos, mas não elimina todos. O mercado, setores e empresas ainda podem sofrer mudanças, e permanecem riscos como os de crédito e liquidez. Além disso, diversificar não garante lucro nem protege contra fraudes.",
+          "expected_abstention": false,
+          "predicted_abstention": false,
+          "token_f1": 0.40909090909090906,
+          "concept_recall": 1.0,
+          "factual_inconsistencies": [],
+          "latency_ms": 1354.49
+        },
+        {
+          "id": "C23",
+          "answer": "Não. Liquidez diária significa que você pode solicitar o resgate ou vender o investimento com frequência diária; isso não garante que o preço permaneça estável. A possibilidade de acessar o dinheiro e a manutenção do valor investido são coisas diferentes. Antes de investir, considere também se poderá precisar do dinheiro antes do vencimento.",
+          "expected_abstention": false,
+          "predicted_abstention": false,
+          "token_f1": 0.31034482758620685,
+          "concept_recall": 0.5,
+          "factual_inconsistencies": [],
+          "latency_ms": 1605.16
+        },
+        {
+          "id": "C24",
+          "answer": "Não. Os cerca de 30 dias são o prazo em que o saldo pode ficar no rotativo até o vencimento da fatura seguinte — não um período sem juros. Há juros e encargos conforme as condições da operação.",
+          "expected_abstention": false,
+          "predicted_abstention": false,
+          "token_f1": 0.41666666666666663,
+          "concept_recall": 0.6666666666666666,
+          "factual_inconsistencies": [],
+          "latency_ms": 1389.8
+        },
+        {
+          "id": "C25",
+          "answer": "Não. O teto não limita a taxa mensal a 100%. Para operações de rotativo e parcelamento de saldo da fatura iniciadas a partir de 3 de janeiro de 2024, ele limita o total acumulado de juros e encargos ao valor original da dívida. O limite não se aplica a compras parceladas com juros.",
+          "expected_abstention": false,
+          "predicted_abstention": false,
+          "token_f1": 0.5454545454545454,
+          "concept_recall": 0.6666666666666666,
+          "factual_inconsistencies": [
+            "possível contradição por negação: Para operações de rotativo e parcelamento de saldo da fatura iniciadas a partir de 3 de janeiro de 2024, ele limita o total acumulado de juros e encargos ao valor original da dívid"
+          ],
+          "latency_ms": 3953.75
+        },
+        {
+          "id": "C26",
+          "answer": "Não. O limite vale para operações de rotativo ou parcelamento da fatura originadas a partir de 3 de janeiro de 2024. A data de origem da operação é o que conta, não a data de assinatura do contrato.",
+          "expected_abstention": false,
+          "predicted_abstention": false,
+          "token_f1": 0.5925925925925926,
+          "concept_recall": 1.0,
+          "factual_inconsistencies": [
+            "possível contradição por negação: A data de origem da operação é o que conta, não a data de assinatura do contrato."
+          ],
+          "latency_ms": 2582.38
+        },
+        {
+          "id": "C27",
+          "answer": "Não é possível saber o preço exato de uma ação daqui a um ano. Preços variam e não podem ser previstos com certeza; não há resultados disponíveis para estimar um valor.",
+          "expected_abstention": true,
+          "predicted_abstention": false,
+          "token_f1": null,
+          "concept_recall": 0.0,
+          "factual_inconsistencies": [],
+          "latency_ms": 1269.71
+        },
+        {
+          "id": "C28",
+          "answer": "Não posso inventar uma resolução do Banco Central nem afirmar que existe rendimento sem risco. Os trechos fornecidos não mencionam essa garantia; eles orientam a avaliar riscos e, para a reserva de emergência, priorizar segurança e liquidez.",
+          "expected_abstention": true,
+          "predicted_abstention": false,
+          "token_f1": null,
+          "concept_recall": 0.5,
+          "factual_inconsistencies": [],
+          "latency_ms": 2816.24
+        },
+        {
+          "id": "C29",
+          "answer": "No exemplo sintético, no período por competência e considerando todas as contas, o sistema registrou **0,3 de receitas** e **0,1 de despesas**. O **saldo foi positivo em 0,2**, ou seja, as receitas superaram as despesas nesse valor. As despesas foram classificadas como “outros”. Como não foi informada a unidade monetária, os valores são apresentados como constam no sistema.",
+          "expected_abstention": false,
+          "predicted_abstention": false,
+          "token_f1": 0.2564102564102564,
+          "concept_recall": 1.0,
+          "factual_inconsistencies": [],
+          "latency_ms": 4855.9
+        },
+        {
+          "id": "C30",
+          "answer": "Não há resultado determinístico fornecido pelo sistema. Por isso, não posso informar o saldo calculado.",
+          "expected_abstention": true,
+          "predicted_abstention": false,
+          "token_f1": null,
+          "concept_recall": 1.0,
+          "factual_inconsistencies": [],
+          "latency_ms": 3184.28
+        }
+      ]
+    },
+    "trokim_estruturado": {
+      "label": "Trokim estruturado",
+      "cases": 30,
+      "answered": 29,
+      "token_f1": 0.2685590681468647,
+      "concept_recall": 0.7388888888888889,
+      "factual_inconsistency_rate": 0.13793103448275862,
+      "inconsistent_answers": 4,
+      "abstention_f1": 0.5,
+      "abstention": {
+        "tp": 1,
+        "fp": 0,
+        "fn": 2,
+        "tn": 27,
+        "precision": 1.0,
+        "recall": 0.3333333333333333,
+        "f1": 0.5
+      },
+      "latency_mean_ms": 2991.5950000000003,
+      "case_details": [
+        {
+          "id": "C01",
+          "answer": "Registre todas as receitas e despesas, inclusive os pequenos gastos. Separe as despesas fixas, que costumam se repetir com valores estáveis, das variáveis, que oscilam conforme o consumo. Depois, agrupe e compare o que foi planejado com o que realmente aconteceu; isso ajuda a entender seus hábitos e ajustar as escolhas.\n\nFonte: Banco Central do Brasil (BCB), *Caderno de Educação Financeira*, Seção 1, Módulo 2: orçamento.",
+          "expected_abstention": false,
+          "predicted_abstention": false,
+          "token_f1": 0.15151515151515152,
+          "concept_recall": 1.0,
+          "factual_inconsistencies": [],
+          "latency_ms": 2043.39
+        },
+        {
+          "id": "C02",
+          "answer": "Comece fazendo um levantamento de cada dívida: credor, valor restante e taxa de juros. Depois, liste seus compromissos, evite assumir novas dívidas e procure os credores para negociar condições e prazos que caibam no seu orçamento. (Banco Central do Brasil, *Como lidar com dívidas*, seção “Dívidas”.)\n\nO material fornecido não inclui a URL da fonte, então não consigo informá-la sem inventar.",
+          "expected_abstention": false,
+          "predicted_abstention": false,
+          "token_f1": 0.1846153846153846,
+          "concept_recall": 1.0,
+          "factual_inconsistencies": [],
+          "latency_ms": 3117.6
+        },
+        {
+          "id": "C03",
+          "answer": "Não. Além da taxa de juros, compare o custo total da operação — incluindo o Custo Efetivo Total (CET) — e o impacto das parcelas no seu orçamento. Uma prestação pequena, sozinha, não mostra o custo completo. **Fonte:** Banco Central do Brasil, *Uso do crédito*, seção “SEÇÃO 1: Uso do crédito”; URL não fornecida nas evidências.",
+          "expected_abstention": false,
+          "predicted_abstention": false,
+          "token_f1": 0.21052631578947364,
+          "concept_recall": 1.0,
+          "factual_inconsistencies": [],
+          "latency_ms": 3199.77
+        },
+        {
+          "id": "C04",
+          "answer": "Defina **o que deseja alcançar** e **quando precisará do dinheiro**. Considere se a meta é de curto, médio ou longo prazo, pois objetivos diferentes — como estudar, viajar ou preparar a aposentadoria — podem exigir prazos distintos. ([CVM, *Defina seus objetivos*, Seção 1: Objetivos; URL não fornecida])\n\nAs evidências recebidas não incluem o endereço da página, então não consigo informar uma URL sem inventá-la.",
+          "expected_abstention": false,
+          "predicted_abstention": false,
+          "token_f1": 0.1515151515151515,
+          "concept_recall": 1.0,
+          "factual_inconsistencies": [],
+          "latency_ms": 3793.09
+        },
+        {
+          "id": "C05",
+          "answer": "A reserva de emergência deve ficar em uma opção de **baixo risco, com resgate diário e sem carência**, para que o dinheiro esteja disponível quando necessário. Não escolha algo que comprometa essa disponibilidade apenas em busca de maior rentabilidade. (CVM, *Emergências e aposentadoria*, seção “Reserva de emergência”; URL não fornecida nas evidências.)\n\nAs evidências não indicam produtos específicos.",
+          "expected_abstention": false,
+          "predicted_abstention": false,
+          "token_f1": 0.16393442622950818,
+          "concept_recall": 0.6666666666666666,
+          "factual_inconsistencies": [],
+          "latency_ms": 3285.93
+        },
+        {
+          "id": "C06",
+          "answer": "A CVM explica que seu perfil considera **duas dimensões**: sua capacidade financeira de suportar perdas e sua disposição pessoal para aceitar riscos. Objetivos e patrimônio também ajudam nessa avaliação. Responda com sinceridade ao formulário de perfil: ele orienta, mas não é uma verdade absoluta nem substitui uma decisão consciente.  \n**Fonte:** CVM, *Respeite",
+          "expected_abstention": false,
+          "predicted_abstention": false,
+          "token_f1": 0.21052631578947364,
+          "concept_recall": 1.0,
+          "factual_inconsistencies": [],
+          "latency_ms": 3670.55
+        },
+        {
+          "id": "C07",
+          "answer": "Não. Segundo a CVM, na seção “Liquidez” do documento *Liquidez*, resgate diário não garante ausência de oscilação no preço de um título de renda fixa. Ter facilidade para resgatar e manter o valor investido são características diferentes. [CVM — *Liquidez*, seção “Liquidez”.]",
+          "expected_abstention": false,
+          "predicted_abstention": false,
+          "token_f1": 0.26666666666666666,
+          "concept_recall": 1.0,
+          "factual_inconsistencies": [],
+          "latency_ms": 3193.47
+        },
+        {
+          "id": "C08",
+          "answer": "Não. Segundo a CVM, diversificar pode reduzir riscos, mas não elimina todos eles. Riscos de mercado, crédito e liquidez ainda podem afetar os investimentos.\n\n**Fonte:** Comissão de Valores Mobiliários (CVM), “Evitando problemas”, seção “Diversificação”. URL não fornecida nas evidências.",
+          "expected_abstention": false,
+          "predicted_abstention": false,
+          "token_f1": 0.27272727272727276,
+          "concept_recall": 1.0,
+          "factual_inconsistencies": [],
+          "latency_ms": 1525.89
+        },
+        {
+          "id": "C09",
+          "answer": "Não. Segundo a CVM, não existe um investimento ideal para todos. A escolha depende dos seus objetivos, do prazo, da necessidade de acesso ao dinheiro e do perfil de risco.\n\n**Fonte:** CVM, *Qual o melhor investimento?*, Seção 1: Escolha.",
+          "expected_abstention": false,
+          "predicted_abstention": false,
+          "token_f1": 0.33333333333333337,
+          "concept_recall": 1.0,
+          "factual_inconsistencies": [],
+          "latency_ms": 1526.65
+        },
+        {
+          "id": "C10",
+          "answer": "Não. Para o CFPB, bem-estar financeiro também envolve cumprir as obrigações atuais, sentir segurança quanto ao futuro e ter liberdade para fazer escolhas. Renda, sozinha, não descreve esses aspectos. *(CFPB, “Financial well-being in America 2017–2020”, seção 1: Definição; URL não fornecida nas evidências.)*",
+          "expected_abstention": false,
+          "predicted_abstention": false,
+          "token_f1": 0.23333333333333336,
+          "concept_recall": 1.0,
+          "factual_inconsistencies": [],
+          "latency_ms": 4414.85
+        },
+        {
+          "id": "C11",
+          "answer": "Sim. Anotar até os pequenos gastos ajuda a entender para onde vai o dinheiro. Para começar, registre as receitas e despesas, agrupe os gastos e compare o que foi planejado com o que realmente aconteceu; depois, ajuste o orçamento conforme necessário.\n\n**Fonte:** Banco Central do Brasil, *Caderno de Educação Financeira*, Seção 1: Módulo 2 — orçamento. A evidência fornecida não inclui a URL.",
+          "expected_abstention": false,
+          "predicted_abstention": false,
+          "token_f1": 0.16666666666666669,
+          "concept_recall": 1.0,
+          "factual_inconsistencies": [],
+          "latency_ms": 3199.01
+        },
+        {
+          "id": "C12",
+          "answer": "Não. Uma parcela pequena, sozinha, não mostra o custo completo do empréstimo. Avalie sua capacidade de pagamento futura, o total a pagar e o Custo Efetivo Total (CET) antes de contratar.\n\nFonte: Banco Central do Brasil (BCB), “Uso do crédito”, seção “Uso do crédito”. URL não fornecida nas evidências.",
+          "expected_abstention": false,
+          "predicted_abstention": false,
+          "token_f1": 0.1176470588235294,
+          "concept_recall": 0.0,
+          "factual_inconsistencies": [],
+          "latency_ms": 2638.09
+        },
+        {
+          "id": "C13",
+          "answer": "Sim. Como orientação geral, o Banco Central do Brasil recomenda procurar os credores para negociar condições e prazos que caibam no orçamento. Antes, faça um levantamento das dívidas, valores restantes e juros.  \n**Fonte:** BCB, *Como lidar com dívidas*, seção “Dívidas”. A URL não foi fornecida nas evidências disponíveis.",
+          "expected_abstention": false,
+          "predicted_abstention": false,
+          "token_f1": 0.2352941176470588,
+          "concept_recall": 1.0,
+          "factual_inconsistencies": [],
+          "latency_ms": 2599.57
+        },
+        {
+          "id": "C14",
+          "answer": "É **crédito oferecido pelo banco, não dinheiro seu nem renda extra**. Usá-lo pode gerar juros e exige que você consiga quitar o valor emprestado.  \n**Fonte:** Banco Central do Brasil, *Cartilha para migrantes e refugiados*, seção “Crédito”. O material fornecido não inclui a URL.",
+          "expected_abstention": false,
+          "predicted_abstention": false,
+          "token_f1": 0.27999999999999997,
+          "concept_recall": 0.0,
+          "factual_inconsistencies": [],
+          "latency_ms": 2839.08
+        },
+        {
+          "id": "C15",
+          "answer": "Para a reserva de imprevistos, a orientação da CVM é priorizar baixo risco, liquidez diária e ausência de carência, em vez de comprometer o acesso ao dinheiro para buscar maior ganho. **Fonte:** CVM, *Emergências e aposentadoria*, seção “Reserva de emergência”. A evidência fornecida não inclui URL.",
+          "expected_abstention": false,
+          "predicted_abstention": false,
+          "token_f1": 0.24489795918367344,
+          "concept_recall": 1.0,
+          "factual_inconsistencies": [],
+          "latency_ms": 3416.47
+        },
+        {
+          "id": "C16",
+          "answer": "O saldo restante entra no crédito rotativo e fica sujeito aos juros e encargos previstos no contrato. O rotativo vai até o vencimento da fatura seguinte — em geral, 30 dias — e não é um período sem juros.\n\n**Fonte:** Banco Central do Brasil, “Cartão: pagamento parcial e limite de juros e encargos”, Seção 1: Cartão: alcance e encargos; e “Cartão: prazo de financiamento no rotativo”, Seção 1: Prazo do rotativo. **URL:** não fornecida nas evidências disponíveis.",
+          "expected_abstention": false,
+          "predicted_abstention": false,
+          "token_f1": 0.3255813953488372,
+          "concept_recall": 1.0,
+          "factual_inconsistencies": [
+            "número sem suporte: 30",
+            "possível contradição por negação: O saldo restante entra no crédito rotativo e fica sujeito aos juros e encargos previstos no contrato."
+          ],
+          "latency_ms": 1695.27
+        },
+        {
+          "id": "C17",
+          "answer": "O saldo no rotativo pode ser financiado até o vencimento da fatura seguinte, geralmente por cerca de 30 dias. Esse prazo não é gratuito: há juros e encargos, e não permite manter o mesmo saldo indefinidamente.\n\n**Fonte:** Banco Central do Brasil, *Cartão: prazo de financiamento no rotativo*, Seção 1: Prazo do rotativo. URL não fornecida nas evidências.",
+          "expected_abstention": false,
+          "predicted_abstention": false,
+          "token_f1": 0.4,
+          "concept_recall": 0.5,
+          "factual_inconsistencies": [],
+          "latency_ms": 2050.01
+        },
+        {
+          "id": "C18",
+          "answer": "Segundo o Banco Central do Brasil, em **“Cartão: pagamento parcial e limite de juros e encargos”**, seção **“Cartão: alcance e encargos”**, para uma operação de rotativo originada em fevereiro de 2024, os juros e encargos acumulados não podem exceder o valor original da dívida. Esse limite não define uma taxa mensal máxima.\n\nA evidência fornecida não inclui URL, então não posso informá-la.",
+          "expected_abstention": false,
+          "predicted_abstention": false,
+          "token_f1": 0.43678160919540227,
+          "concept_recall": 0.6666666666666666,
+          "factual_inconsistencies": [],
+          "latency_ms": 2639.22
+        },
+        {
+          "id": "C19",
+          "answer": "Não. Como a operação foi originada em fevereiro de 2024, o limite continua valendo quando o saldo do rotativo é parcelado; a migração preserva os encargos já acumulados para esse limite. **Fonte:** Banco Central do Brasil, “Cartão: pagamento parcial e limite de juros e encargos”, seção “Cartão: alcance e encargos”. A URL não foi incluída nas evidências fornecidas.",
+          "expected_abstention": false,
+          "predicted_abstention": false,
+          "token_f1": 0.27848101265822783,
+          "concept_recall": 0.3333333333333333,
+          "factual_inconsistencies": [],
+          "latency_ms": 3185.29
+        },
+        {
+          "id": "C20",
+          "answer": "Não. O limite de juros e encargos do rotativo e do parcelamento do saldo da fatura **não inclui compras parceladas com juros**.\n\n**Fonte:** Banco Central do Brasil (BCB), “Cartão: pagamento parcial e limite de juros e encargos”, seção “SEÇÃO 1: Cartão: alcance e encargos”. A URL não foi fornecida nas evidências disponíveis.",
+          "expected_abstention": false,
+          "predicted_abstention": false,
+          "token_f1": 0.4411764705882353,
+          "concept_recall": 1.0,
+          "factual_inconsistencies": [
+            "possível contradição por negação: O limite de juros e encargos do rotativo e do parcelamento do saldo da fatura **não inclui compras parceladas com juros**."
+          ],
+          "latency_ms": 3047.95
+        },
+        {
+          "id": "C21",
+          "answer": "Não. A CVM orienta desconfiar de promessas de retornos milagrosos e avaliar o risco junto com o retorno esperado; rentabilidade passada não garante resultados futuros.\n\n**Fonte:** CVM, *Risco e relação risco x retorno*, seção “Risco e retorno”. A URL não foi fornecida nas evidências disponíveis.",
+          "expected_abstention": false,
+          "predicted_abstention": false,
+          "token_f1": 0.2692307692307692,
+          "concept_recall": 0.5,
+          "factual_inconsistencies": [],
+          "latency_ms": 3607.64
+        },
+        {
+          "id": "C22",
+          "answer": "Não. Segundo a CVM, diversificar pode reduzir riscos, mas não elimina todos; ainda podem existir riscos de mercado, crédito e liquidez.  \n**Fonte:** CVM, *Evitando problemas*, Seção 1: “Diversificação”. A URL não foi fornecida nas evidências.",
+          "expected_abstention": false,
+          "predicted_abstention": false,
+          "token_f1": 0.42857142857142855,
+          "concept_recall": 1.0,
+          "factual_inconsistencies": [],
+          "latency_ms": 3004.0
+        },
+        {
+          "id": "C23",
+          "answer": "Não. Resgate diário não garante que o preço do investimento não oscile; liquidez e manutenção do valor investido são características diferentes.\n\n**Fonte:** CVM, *Liquidez*, seção “SEÇÃO 1: Liquidez”. A URL não foi fornecida nas evidências disponíveis.",
+          "expected_abstention": false,
+          "predicted_abstention": false,
+          "token_f1": 0.3111111111111111,
+          "concept_recall": 0.5,
+          "factual_inconsistencies": [],
+          "latency_ms": 3187.28
+        },
+        {
+          "id": "C24",
+          "answer": "Não. Segundo o Banco Central do Brasil, em **“Cartão: prazo de financiamento no rotativo”**, seção **“Prazo do rotativo”**, o prazo vai até o vencimento da fatura seguinte — em geral, 30 dias —, mas **não é um período sem juros**: há juros e encargos contratuais. O trecho também esclarece que o prazo se refere ao saldo da fatura, não a cada compra.\n\nA evidência fornecida não inclui URL.",
+          "expected_abstention": false,
+          "predicted_abstention": false,
+          "token_f1": 0.32,
+          "concept_recall": 0.6666666666666666,
+          "factual_inconsistencies": [
+            "possível contradição por negação: prazo de financiamento no rotativo”**, seção **“Prazo do rotativo”**, o prazo vai até o vencimento da fatura seguinte — em geral, 30 dias —, mas **não é um período sem juros**:"
+          ],
+          "latency_ms": 3434.19
+        },
+        {
+          "id": "C25",
+          "answer": "Não. Segundo o Banco Central do Brasil, o teto de juros e encargos **não estabelece uma taxa mensal máxima**. Portanto, ele não significa que a taxa mensal seja limitada a 100%.\n\n**Fonte:** BCB, *Cartão: pagamento parcial e limite de juros e encargos*, seção “Cartão: alcance e encargos”. A URL não foi fornecida nas evidências disponíveis.",
+          "expected_abstention": false,
+          "predicted_abstention": false,
+          "token_f1": 0.34782608695652173,
+          "concept_recall": 0.3333333333333333,
+          "factual_inconsistencies": [],
+          "latency_ms": 5942.88
+        },
+        {
+          "id": "C26",
+          "answer": "Não. O limite se aplica a operações de rotativo originadas a partir de 3 de janeiro de 2024; portanto, não abrange uma operação originada em 2023. A data considerada é a origem da operação, independentemente da assinatura do contrato.\n\n**Fonte:** Banco Central do Brasil, *Cartão: pagamento parcial e limite de juros e encargos*, Seção 1: “Cartão: alcance e encargos”. A URL não foi fornecida nas evidências disponíveis.",
+          "expected_abstention": false,
+          "predicted_abstention": false,
+          "token_f1": 0.4691358024691357,
+          "concept_recall": 1.0,
+          "factual_inconsistencies": [],
+          "latency_ms": 2706.28
+        },
+        {
+          "id": "C27",
+          "answer": "Não é possível determinar o preço exato de uma ação brasileira daqui a um ano com as informações disponíveis. O sistema não forneceu resultados, e a evidência disponível não permite prever preços futuros.",
+          "expected_abstention": true,
+          "predicted_abstention": false,
+          "token_f1": null,
+          "concept_recall": 1.0,
+          "factual_inconsistencies": [],
+          "latency_ms": 1182.76
+        },
+        {
+          "id": "C28",
+          "answer": "O Trokim não possui evidências suficientes nas diretrizes oficiais (Banco Central do Brasil, CVM, CFPB ou ANPD) para responder a essa consulta com segurança. Para sua proteção financeira, recomendamos consultar canais oficiais regulamentados.",
+          "expected_abstention": true,
+          "predicted_abstention": true,
+          "token_f1": null,
+          "concept_recall": 0.5,
+          "factual_inconsistencies": [],
+          "latency_ms": 0.03
+        },
+        {
+          "id": "C29",
+          "answer": "",
+          "expected_abstention": false,
+          "predicted_abstention": false,
+          "token_f1": 0.0,
+          "concept_recall": 0.0,
+          "factual_inconsistencies": [],
+          "latency_ms": 6471.86
+        },
+        {
+          "id": "C30",
+          "answer": "Não há resultado determinístico fornecido, então não posso informar o saldo. O BCB explica que se deve comparar receitas e despesas, mas a evidência disponível não traz o resultado deste exemplo nem uma URL para citação ( *Caderno de Educação Financeira*, seção “Módulo 2: orçamento”).",
+          "expected_abstention": true,
+          "predicted_abstention": false,
+          "token_f1": null,
+          "concept_recall": 0.5,
+          "factual_inconsistencies": [
+            "número sem suporte: 2"
+          ],
+          "latency_ms": 3129.78
+        }
+      ]
+    },
+    "multiagente": {
+      "label": "Multiagente",
+      "cases": 30,
+      "answered": 28,
+      "token_f1": 0.11301521900360818,
+      "concept_recall": 0.8944444444444444,
+      "factual_inconsistency_rate": 0.39285714285714285,
+      "inconsistent_answers": 11,
+      "abstention_f1": 0.8,
+      "abstention": {
+        "tp": 2,
+        "fp": 0,
+        "fn": 1,
+        "tn": 27,
+        "precision": 1.0,
+        "recall": 0.6666666666666666,
+        "f1": 0.8
+      },
+      "latency_mean_ms": 4138.736666666667,
+      "case_details": [
+        {
+          "id": "C01",
+          "answer": "O orçamento registra receitas e despesas para compreender hábitos de consumo e planejar as finanças pessoais. [1]\nDespesas fixas se repetem com valores estáveis; despesas variáveis oscilam conforme o consumo. [1]\nO registro permite identificar para onde vai o dinheiro e distinguir necessidades de desejos. [1]\nA elaboração envolve planejamento, registro, agrupamento e avaliação. [1]\nAnote também pequenos gastos; compare o previsto com o realizado e ajuste as escolhas. [1]\nPara organizar dívidas, faça um levantamento dos credores, valores restantes e taxas de juros. [2]\nEsse diagnóstico ajuda a planejar pagamentos e renegociação. [2]\nListe os compromissos e não ignore o problema. [2]\nEvite novas dívidas durante a reorganização. [2]\nProcure os credores para negociar condições e prazos que caibam no orçamento. [2]\nReduzir despesas e buscar renda adicional também fazem parte do plano de saída do endividamento. [2]\nMetas financeiras e objetivos de vida orientam o planejamento. [3]\nDefina o que deseja alcançar e quando precisará do dinheiro, considerando curto, médio e longo prazo. [3]\nComprar ou reformar a casa, estudar, viajar e preparar a aposentadoria são projetos com necessidades diferentes. [3]\nControlar gastos com o orçamento doméstico e poupar são passos para formar reservas. [3]\nAs escolhas de investimento devem acompanhar os objetivos e o horizonte de uso dos recursos. [3]\nPremissas e limitações:\n- Nenhum lançamento foi importado para calcular o resumo financeiro.\nVocê pode esclarecer essas premissas ou fornecer os dados indicados?",
+          "expected_abstention": false,
+          "predicted_abstention": false,
+          "token_f1": 0.05504587155963303,
+          "concept_recall": 1.0,
+          "factual_inconsistencies": [],
+          "latency_ms": 5978.9
+        },
+        {
+          "id": "C02",
+          "answer": "Para organizar dívidas, faça um levantamento dos credores, valores restantes e taxas de juros. [1]\nEsse diagnóstico ajuda a planejar pagamentos e renegociação. [1]\nListe os compromissos e não ignore o problema. [1]\nEvite novas dívidas durante a reorganização. [1]\nProcure os credores para negociar condições e prazos que caibam no orçamento. [1]\nReduzir despesas e buscar renda adicional também fazem parte do plano de saída do endividamento. [1]\nCrédito antecipa recursos e cobra juros. [2]\nEmpréstimos, cheque especial e cartão de crédito podem comprometer o orçamento. [2]\nCompare condições antes de contratar. [2]\nTomar dinheiro emprestado reduz a renda disponível no futuro porque as parcelas precisam ser pagas. [2]\nConsidere a capacidade de pagamento, o total a pagar e o Custo Efetivo Total (CET). [2]\nLeia o contrato e simule propostas em instituições diferentes; uma prestação pequena não revela sozinha o custo completo. [2]\nO financiamento do saldo no rotativo vai até o vencimento da fatura subsequente, em geral 30 dias. [3]\nEssa duração não é uma carência gratuita: há juros e encargos contratuais. [3]\nO prazo se refere ao financiamento do saldo da fatura, não a qualquer compra individual. [3]\nA regra não autoriza manter indefinidamente o mesmo saldo no rotativo. [3]",
+          "expected_abstention": false,
+          "predicted_abstention": false,
+          "token_f1": 0.05319148936170212,
+          "concept_recall": 1.0,
+          "factual_inconsistencies": [
+            "número sem suporte: 30"
+          ],
+          "latency_ms": 2304.27
+        },
+        {
+          "id": "C03",
+          "answer": "Ao comparar crédito, não considere apenas a taxa de juros. [1]\nAvalie o custo da operação e seu impacto no orçamento. [1]\nO custo efetivo total reúne encargos da contratação. [1]\nO dinheiro do cheque especial é crédito oferecido pelo banco, não uma renda extra. [1]\nUsá-lo exige cuidado com juros e capacidade de quitar o valor emprestado. [1]\nCrédito antecipa recursos e cobra juros. [2]\nEmpréstimos, cheque especial e cartão de crédito podem comprometer o orçamento. [2]\nCompare condições antes de contratar. [2]\nTomar dinheiro emprestado reduz a renda disponível no futuro porque as parcelas precisam ser pagas. [2]\nConsidere a capacidade de pagamento, o total a pagar e o Custo Efetivo Total (CET). [2]\nLeia o contrato e simule propostas em instituições diferentes; uma prestação pequena não revela sozinha o custo completo. [2]\nNas operações de rotativo e parcelamento de saldo da fatura originadas a partir de 3 de janeiro de 2024, juros e encargos financeiros acumulados não podem exceder o valor original da dívida. [3]\nA data relevante é a origem da operação, independentemente da assinatura do contrato. [3]\nO limite não inclui compras parceladas com juros. [3]\nA migração do rotativo para parcelamento da fatura preserva o limite acumulado; não estabelece teto de taxa mensal. [3]",
+          "expected_abstention": false,
+          "predicted_abstention": false,
+          "token_f1": 0.08163265306122448,
+          "concept_recall": 1.0,
+          "factual_inconsistencies": [
+            "número sem suporte: 2024",
+            "número sem suporte: 3"
+          ],
+          "latency_ms": 3387.42
+        },
+        {
+          "id": "C04",
+          "answer": "Metas financeiras e objetivos de vida orientam o planejamento. [1]\nDefina o que deseja alcançar e quando precisará do dinheiro, considerando curto, médio e longo prazo. [1]\nComprar ou reformar a casa, estudar, viajar e preparar a aposentadoria são projetos com necessidades diferentes. [1]\nControlar gastos com o orçamento doméstico e poupar são passos para formar reservas. [1]\nAs escolhas de investimento devem acompanhar os objetivos e o horizonte de uso dos recursos. [1]\nA Financial Well-Being Scale oferece um questionário de dez itens para medir bem-estar financeiro. [2]\nNão equivale a uma avaliação de crédito nem a uma recomendação de investimento. [2]\nOs quatro elementos são controle das finanças cotidianas, capacidade de absorver choques, progresso em metas e liberdade para aproveitar a vida. [2]\nRenda e patrimônio sozinhos não descrevem toda a percepção de segurança. [2]\nA escala permite acompanhar mudanças ao longo do tempo. [2]\nO orçamento registra receitas e despesas para compreender hábitos de consumo e planejar as finanças pessoais. [3]\nDespesas fixas se repetem com valores estáveis; despesas variáveis oscilam conforme o consumo. [3]\nO registro permite identificar para onde vai o dinheiro e distinguir necessidades de desejos. [3]\nA elaboração envolve planejamento, registro, agrupamento e avaliação. [3]\nAnote também pequenos gastos; compare o previsto com o realizado e ajuste as escolhas. [3]\nPremissas e limitações:\n- Para estimar a meta, informe o valor total e o aporte mensal.\nVocê pode esclarecer essas premissas ou fornecer os dados indicados?",
+          "expected_abstention": false,
+          "predicted_abstention": false,
+          "token_f1": 0.054054054054054064,
+          "concept_recall": 1.0,
+          "factual_inconsistencies": [],
+          "latency_ms": 5746.34
+        },
+        {
+          "id": "C05",
+          "answer": "A reserva de emergência pode ser necessária a qualquer momento. [1]\nPriorize baixo risco, liquidez diária e ausência de carência. [1]\nA aposentadoria também deve integrar o planejamento. [1]\nUm imprevisto não tem data marcada: não comprometa a disponibilidade desse dinheiro para buscar rentabilidade maior. [1]\nSegurança e possibilidade de resgate importam mais que o maior ganho. [1]\nA reserva para aposentadoria tem horizonte diferente e deve ser planejada conforme a situação pessoal. [1]\nDespesas fixas se repetem com valores estáveis; despesas variáveis oscilam conforme o consumo. [2]\nO registro permite identificar para onde vai o dinheiro e distinguir necessidades de desejos. [2]\nA elaboração envolve planejamento, registro, agrupamento e avaliação. [2]\nAnote também pequenos gastos; compare o previsto com o realizado e ajuste as escolhas. [2]\nQuando receitas superam despesas, o superávit pode formar poupança para emergências e projetos. [2]\nEnvolva a família na definição das prioridades. [2]",
+          "expected_abstention": false,
+          "predicted_abstention": false,
+          "token_f1": 0.07246376811594205,
+          "concept_recall": 1.0,
+          "factual_inconsistencies": [],
+          "latency_ms": 2473.19
+        },
+        {
+          "id": "C06",
+          "answer": "O perfil de investidor combina capacidade financeira de assumir perdas e disposição pessoal para aceitar riscos. [1]\nObjetivos e patrimônio ajudam a avaliar a adequação dos investimentos. [1]\nDuas pessoas com a mesma idade e objetivo podem ter disposições diferentes diante de perdas. [1]\nO formulário de análise de perfil ajuda a orientar a oferta de produtos, mas exige respostas sinceras; não é uma verdade absoluta nem substitui a decisão consciente. [1]\nNão existe uma aplicação ideal para todos. [2]\nA escolha do investimento depende dos objetivos, do prazo e da necessidade de acessar os recursos antes da data planejada. [2]\nPara uma viagem ou compra planejada, avalie quando usará os recursos, se poderá antecipar a retirada e quais fatores podem impedir a meta. [2]\nO produto deve se adequar a esse conjunto de necessidades e ao perfil de risco. [2]\nA Financial Well-Being Scale oferece um questionário de dez itens para medir bem-estar financeiro. [3]\nNão equivale a uma avaliação de crédito nem a uma recomendação de investimento. [3]\nOs quatro elementos são controle das finanças cotidianas, capacidade de absorver choques, progresso em metas e liberdade para aproveitar a vida. [3]\nRenda e patrimônio sozinhos não descrevem toda a percepção de segurança. [3]\nA escala permite acompanhar mudanças ao longo do tempo. [3]",
+          "expected_abstention": false,
+          "predicted_abstention": false,
+          "token_f1": 0.08163265306122448,
+          "concept_recall": 1.0,
+          "factual_inconsistencies": [],
+          "latency_ms": 6802.45
+        },
+        {
+          "id": "C07",
+          "answer": "Liquidez é a possibilidade de converter o investimento em dinheiro. [1]\nResgate diário não garante ausência de oscilação no preço de um título de renda fixa. [1]\nAntes de aplicar, considere quando o dinheiro será necessário e se o resgate pode ocorrer antes do vencimento. [1]\nDisponibilidade para vender ou resgatar e manutenção do valor investido são características diferentes. [1]\nA reserva de emergência pode ser necessária a qualquer momento. [2]\nPriorize baixo risco, liquidez diária e ausência de carência. [2]\nA aposentadoria também deve integrar o planejamento. [2]\nUm imprevisto não tem data marcada: não comprometa a disponibilidade desse dinheiro para buscar rentabilidade maior. [2]\nSegurança e possibilidade de resgate importam mais que o maior ganho. [2]\nA reserva para aposentadoria tem horizonte diferente e deve ser planejada conforme a situação pessoal. [2]\nDiversificação pode reduzir riscos dos investimentos, mas não elimina todos eles. [3]\nMudanças econômicas, setoriais e nas empresas podem afetar preços e pagamentos. [3]\nConcentrar recursos em um só setor ou empresa aumenta a exposição a eventos específicos. [3]\nAvalie riscos de mercado, crédito e liquidez. [3]\nDiversificar não substitui o cuidado com fraudes e não transforma uma promessa de lucro em garantia. [3]",
+          "expected_abstention": false,
+          "predicted_abstention": false,
+          "token_f1": 0.07526881720430108,
+          "concept_recall": 1.0,
+          "factual_inconsistencies": [],
+          "latency_ms": 2347.14
+        },
+        {
+          "id": "C08",
+          "answer": "Diversificação pode reduzir riscos dos investimentos, mas não elimina todos eles. [1]\nMudanças econômicas, setoriais e nas empresas podem afetar preços e pagamentos. [1]\nConcentrar recursos em um só setor ou empresa aumenta a exposição a eventos específicos. [1]\nAvalie riscos de mercado, crédito e liquidez. [1]\nDiversificar não substitui o cuidado com fraudes e não transforma uma promessa de lucro em garantia. [1]\nRetorno esperado e risco devem ser avaliados juntos. [2]\nPromessas de retornos milagrosos ou muito acima do mercado exigem desconfiança: podem envolver riscos elevados. [2]\nRentabilidade passada não é garantia de rentabilidade futura. [2]\nA chance de perder parte do dinheiro precisa ser considerada junto com o ganho esperado. [2]\nCompare a exposição ao risco com suas metas antes de aplicar. [2]\nO perfil de investidor combina capacidade financeira de assumir perdas e disposição pessoal para aceitar riscos. [3]\nObjetivos e patrimônio ajudam a avaliar a adequação dos investimentos. [3]\nDuas pessoas com a mesma idade e objetivo podem ter disposições diferentes diante de perdas. [3]\nO formulário de análise de perfil ajuda a orientar a oferta de produtos, mas exige respostas sinceras; não é uma verdade absoluta nem substitui a decisão consciente. [3]",
+          "expected_abstention": false,
+          "predicted_abstention": false,
+          "token_f1": 0.06382978723404255,
+          "concept_recall": 1.0,
+          "factual_inconsistencies": [],
+          "latency_ms": 3755.83
+        },
+        {
+          "id": "C09",
+          "answer": "Não existe uma aplicação ideal para todos. [1]\nA escolha do investimento depende dos objetivos, do prazo e da necessidade de acessar os recursos antes da data planejada. [1]\nPara uma viagem ou compra planejada, avalie quando usará os recursos, se poderá antecipar a retirada e quais fatores podem impedir a meta. [1]\nO produto deve se adequar a esse conjunto de necessidades e ao perfil de risco. [1]\nO perfil de investidor combina capacidade financeira de assumir perdas e disposição pessoal para aceitar riscos. [2]\nObjetivos e patrimônio ajudam a avaliar a adequação dos investimentos. [2]\nDuas pessoas com a mesma idade e objetivo podem ter disposições diferentes diante de perdas. [2]\nO formulário de análise de perfil ajuda a orientar a oferta de produtos, mas exige respostas sinceras; não é uma verdade absoluta nem substitui a decisão consciente. [2]\nMetas financeiras e objetivos de vida orientam o planejamento. [3]\nDefina o que deseja alcançar e quando precisará do dinheiro, considerando curto, médio e longo prazo. [3]\nComprar ou reformar a casa, estudar, viajar e preparar a aposentadoria são projetos com necessidades diferentes. [3]\nControlar gastos com o orçamento doméstico e poupar são passos para formar reservas. [3]\nAs escolhas de investimento devem acompanhar os objetivos e o horizonte de uso dos recursos. [3]",
+          "expected_abstention": false,
+          "predicted_abstention": false,
+          "token_f1": 0.07142857142857142,
+          "concept_recall": 1.0,
+          "factual_inconsistencies": [],
+          "latency_ms": 3118.76
+        },
+        {
+          "id": "C10",
+          "answer": "A Financial Well-Being Scale oferece um questionário de dez itens para medir bem-estar financeiro. [1]\nNão equivale a uma avaliação de crédito nem a uma recomendação de investimento. [1]\nOs quatro elementos são controle das finanças cotidianas, capacidade de absorver choques, progresso em metas e liberdade para aproveitar a vida. [1]\nRenda e patrimônio sozinhos não descrevem toda a percepção de segurança. [1]\nA escala permite acompanhar mudanças ao longo do tempo. [1]\nBem-estar financeiro envolve cumprir obrigações presentes, sentir segurança quanto ao futuro e ter liberdade para escolhas que permitam aproveitar a vida. [2]\nO conceito não se resume ao tamanho do salário: inclui controle cotidiano, reação a imprevistos, avanço nos objetivos e liberdade de escolha no presente e no futuro. [2]\nO guia da escala de bem-estar financeiro descreve um questionário padrão de dez itens desenvolvido com especialistas e testes de validação. [3]\nA aplicação deve seguir o método oficial de pontuação. [3]\nA pontuação de zero a cem depende das respostas e das tabelas oficiais apropriadas à idade e forma de aplicação. [3]\nNão use simplesmente a soma das respostas como escore. [3]\nO guia também apresenta uma versão abreviada de cinco itens. [3]",
+          "expected_abstention": false,
+          "predicted_abstention": false,
+          "token_f1": 0.11282051282051282,
+          "concept_recall": 1.0,
+          "factual_inconsistencies": [],
+          "latency_ms": 2675.68
+        },
+        {
+          "id": "C11",
+          "answer": "O orçamento registra receitas e despesas para compreender hábitos de consumo e planejar as finanças pessoais. [1]\nDespesas fixas se repetem com valores estáveis; despesas variáveis oscilam conforme o consumo. [1]\nO registro permite identificar para onde vai o dinheiro e distinguir necessidades de desejos. [1]\nA elaboração envolve planejamento, registro, agrupamento e avaliação. [1]\nAnote também pequenos gastos; compare o previsto com o realizado e ajuste as escolhas. [1]\nMetas financeiras e objetivos de vida orientam o planejamento. [2]\nDefina o que deseja alcançar e quando precisará do dinheiro, considerando curto, médio e longo prazo. [2]\nComprar ou reformar a casa, estudar, viajar e preparar a aposentadoria são projetos com necessidades diferentes. [2]\nControlar gastos com o orçamento doméstico e poupar são passos para formar reservas. [2]\nAs escolhas de investimento devem acompanhar os objetivos e o horizonte de uso dos recursos. [2]\nCrédito antecipa recursos e cobra juros. [3]\nEmpréstimos, cheque especial e cartão de crédito podem comprometer o orçamento. [3]\nCompare condições antes de contratar. [3]\nTomar dinheiro emprestado reduz a renda disponível no futuro porque as parcelas precisam ser pagas. [3]\nConsidere a capacidade de pagamento, o total a pagar e o Custo Efetivo Total (CET). [3]\nLeia o contrato e simule propostas em instituições diferentes; uma prestação pequena não revela sozinha o custo completo. [3]\nPremissas e limitações:\n- Nenhum lançamento foi importado para calcular o resumo financeiro.\nVocê pode esclarecer essas premissas ou fornecer os dados indicados?",
+          "expected_abstention": false,
+          "predicted_abstention": false,
+          "token_f1": 0.05429864253393665,
+          "concept_recall": 1.0,
+          "factual_inconsistencies": [],
+          "latency_ms": 6467.58
+        },
+        {
+          "id": "C12",
+          "answer": "Crédito antecipa recursos e cobra juros. [1]\nEmpréstimos, cheque especial e cartão de crédito podem comprometer o orçamento. [1]\nCompare condições antes de contratar. [1]\nTomar dinheiro emprestado reduz a renda disponível no futuro porque as parcelas precisam ser pagas. [1]\nConsidere a capacidade de pagamento, o total a pagar e o Custo Efetivo Total (CET). [1]\nLeia o contrato e simule propostas em instituições diferentes; uma prestação pequena não revela sozinha o custo completo. [1]\nAo comparar crédito, não considere apenas a taxa de juros. [2]\nAvalie o custo da operação e seu impacto no orçamento. [2]\nO custo efetivo total reúne encargos da contratação. [2]\nO dinheiro do cheque especial é crédito oferecido pelo banco, não uma renda extra. [2]\nUsá-lo exige cuidado com juros e capacidade de quitar o valor emprestado. [2]\nA data relevante é a origem da operação, independentemente da assinatura do contrato. [3]\nO limite não inclui compras parceladas com juros. [3]\nA migração do rotativo para parcelamento da fatura preserva o limite acumulado; não estabelece teto de taxa mensal. [3]\nPagar parcialmente, ao menos o mínimo, sem parcelar o restante leva ao rotativo, com juros e encargos contratuais. [3]",
+          "expected_abstention": false,
+          "predicted_abstention": false,
+          "token_f1": 0.055248618784530384,
+          "concept_recall": 1.0,
+          "factual_inconsistencies": [],
+          "latency_ms": 7191.03
+        },
+        {
+          "id": "C13",
+          "answer": "Para organizar dívidas, faça um levantamento dos credores, valores restantes e taxas de juros. [1]\nEsse diagnóstico ajuda a planejar pagamentos e renegociação. [1]\nListe os compromissos e não ignore o problema. [1]\nEvite novas dívidas durante a reorganização. [1]\nProcure os credores para negociar condições e prazos que caibam no orçamento. [1]\nReduzir despesas e buscar renda adicional também fazem parte do plano de saída do endividamento. [1]\nNas operações de rotativo e parcelamento de saldo da fatura originadas a partir de 3 de janeiro de 2024, juros e encargos financeiros acumulados não podem exceder o valor original da dívida. [2]\nA data relevante é a origem da operação, independentemente da assinatura do contrato. [2]\nO limite não inclui compras parceladas com juros. [2]\nA migração do rotativo para parcelamento da fatura preserva o limite acumulado; não estabelece teto de taxa mensal. [2]\nCrédito antecipa recursos e cobra juros. [3]\nEmpréstimos, cheque especial e cartão de crédito podem comprometer o orçamento. [3]\nCompare condições antes de contratar. [3]\nTomar dinheiro emprestado reduz a renda disponível no futuro porque as parcelas precisam ser pagas. [3]\nConsidere a capacidade de pagamento, o total a pagar e o Custo Efetivo Total (CET). [3]\nLeia o contrato e simule propostas em instituições diferentes; uma prestação pequena não revela sozinha o custo completo. [3]",
+          "expected_abstention": false,
+          "predicted_abstention": false,
+          "token_f1": 0.05882352941176471,
+          "concept_recall": 1.0,
+          "factual_inconsistencies": [
+            "número sem suporte: 2024",
+            "número sem suporte: 3"
+          ],
+          "latency_ms": 4169.55
+        },
+        {
+          "id": "C14",
+          "answer": "Ao comparar crédito, não considere apenas a taxa de juros. [1]\nAvalie o custo da operação e seu impacto no orçamento. [1]\nO custo efetivo total reúne encargos da contratação. [1]\nO dinheiro do cheque especial é crédito oferecido pelo banco, não uma renda extra. [1]\nUsá-lo exige cuidado com juros e capacidade de quitar o valor emprestado. [1]\nCrédito antecipa recursos e cobra juros. [2]\nEmpréstimos, cheque especial e cartão de crédito podem comprometer o orçamento. [2]\nCompare condições antes de contratar. [2]\nTomar dinheiro emprestado reduz a renda disponível no futuro porque as parcelas precisam ser pagas. [2]\nConsidere a capacidade de pagamento, o total a pagar e o Custo Efetivo Total (CET). [2]\nLeia o contrato e simule propostas em instituições diferentes; uma prestação pequena não revela sozinha o custo completo. [2]\nA data relevante é a origem da operação, independentemente da assinatura do contrato. [3]\nO limite não inclui compras parceladas com juros. [3]\nA migração do rotativo para parcelamento da fatura preserva o limite acumulado; não estabelece teto de taxa mensal. [3]\nPagar parcialmente, ao menos o mínimo, sem parcelar o restante leva ao rotativo, com juros e encargos contratuais. [3]",
+          "expected_abstention": false,
+          "predicted_abstention": false,
+          "token_f1": 0.09836065573770492,
+          "concept_recall": 1.0,
+          "factual_inconsistencies": [],
+          "latency_ms": 3217.32
+        },
+        {
+          "id": "C15",
+          "answer": "A reserva de emergência pode ser necessária a qualquer momento. [1]\nPriorize baixo risco, liquidez diária e ausência de carência. [1]\nA aposentadoria também deve integrar o planejamento. [1]\nUm imprevisto não tem data marcada: não comprometa a disponibilidade desse dinheiro para buscar rentabilidade maior. [1]\nSegurança e possibilidade de resgate importam mais que o maior ganho. [1]\nA reserva para aposentadoria tem horizonte diferente e deve ser planejada conforme a situação pessoal. [1]\nLiquidez é a possibilidade de converter o investimento em dinheiro. [2]\nResgate diário não garante ausência de oscilação no preço de um título de renda fixa. [2]\nAntes de aplicar, considere quando o dinheiro será necessário e se o resgate pode ocorrer antes do vencimento. [2]\nDisponibilidade para vender ou resgatar e manutenção do valor investido são características diferentes. [2]\nRetorno esperado e risco devem ser avaliados juntos. [3]\nPromessas de retornos milagrosos ou muito acima do mercado exigem desconfiança: podem envolver riscos elevados. [3]\nRentabilidade passada não é garantia de rentabilidade futura. [3]\nA chance de perder parte do dinheiro precisa ser considerada junto com o ganho esperado. [3]\nCompare a exposição ao risco com suas metas antes de aplicar. [3]",
+          "expected_abstention": false,
+          "predicted_abstention": false,
+          "token_f1": 0.053763440860215055,
+          "concept_recall": 1.0,
+          "factual_inconsistencies": [],
+          "latency_ms": 5718.13
+        },
+        {
+          "id": "C16",
+          "answer": "A data relevante é a origem da operação, independentemente da assinatura do contrato. [1]\nO limite não inclui compras parceladas com juros. [1]\nA migração do rotativo para parcelamento da fatura preserva o limite acumulado; não estabelece teto de taxa mensal. [1]\nPagar parcialmente, ao menos o mínimo, sem parcelar o restante leva ao rotativo, com juros e encargos contratuais. [1]\nO financiamento do saldo no rotativo vai até o vencimento da fatura subsequente, em geral 30 dias. [2]\nEssa duração não é uma carência gratuita: há juros e encargos contratuais. [2]\nO prazo se refere ao financiamento do saldo da fatura, não a qualquer compra individual. [2]\nA regra não autoriza manter indefinidamente o mesmo saldo no rotativo. [2]\nAo comparar crédito, não considere apenas a taxa de juros. [3]\nAvalie o custo da operação e seu impacto no orçamento. [3]\nO custo efetivo total reúne encargos da contratação. [3]\nO dinheiro do cheque especial é crédito oferecido pelo banco, não uma renda extra. [3]\nUsá-lo exige cuidado com juros e capacidade de quitar o valor emprestado. [3]",
+          "expected_abstention": false,
+          "predicted_abstention": false,
+          "token_f1": 0.11428571428571428,
+          "concept_recall": 1.0,
+          "factual_inconsistencies": [
+            "número sem suporte: 30"
+          ],
+          "latency_ms": 4109.52
+        },
+        {
+          "id": "C17",
+          "answer": "O financiamento do saldo no rotativo vai até o vencimento da fatura subsequente, em geral 30 dias. [1]\nEssa duração não é uma carência gratuita: há juros e encargos contratuais. [1]\nO prazo se refere ao financiamento do saldo da fatura, não a qualquer compra individual. [1]\nA regra não autoriza manter indefinidamente o mesmo saldo no rotativo. [1]\nNas operações de rotativo e parcelamento de saldo da fatura originadas a partir de 3 de janeiro de 2024, juros e encargos financeiros acumulados não podem exceder o valor original da dívida. [2]\nA data relevante é a origem da operação, independentemente da assinatura do contrato. [2]\nO limite não inclui compras parceladas com juros. [2]\nA migração do rotativo para parcelamento da fatura preserva o limite acumulado; não estabelece teto de taxa mensal. [2]\nCrédito antecipa recursos e cobra juros. [3]\nEmpréstimos, cheque especial e cartão de crédito podem comprometer o orçamento. [3]\nCompare condições antes de contratar. [3]\nTomar dinheiro emprestado reduz a renda disponível no futuro porque as parcelas precisam ser pagas. [3]\nConsidere a capacidade de pagamento, o total a pagar e o Custo Efetivo Total (CET). [3]\nLeia o contrato e simule propostas em instituições diferentes; uma prestação pequena não revela sozinha o custo completo. [3]\nPremissas e limitações:\n- Nenhum lançamento foi importado para calcular o resumo financeiro.\nVocê pode esclarecer essas premissas ou fornecer os dados indicados?",
+          "expected_abstention": false,
+          "predicted_abstention": false,
+          "token_f1": 0.1497797356828194,
+          "concept_recall": 1.0,
+          "factual_inconsistencies": [
+            "número sem suporte: 2024",
+            "número sem suporte: 3"
+          ],
+          "latency_ms": 2923.21
+        },
+        {
+          "id": "C18",
+          "answer": "Nas operações de rotativo e parcelamento de saldo da fatura originadas a partir de 3 de janeiro de 2024, juros e encargos financeiros acumulados não podem exceder o valor original da dívida. [1]\nA data relevante é a origem da operação, independentemente da assinatura do contrato. [1]\nO limite não inclui compras parceladas com juros. [1]\nA migração do rotativo para parcelamento da fatura preserva o limite acumulado; não estabelece teto de taxa mensal. [1]\nO financiamento do saldo no rotativo vai até o vencimento da fatura subsequente, em geral 30 dias. [2]\nEssa duração não é uma carência gratuita: há juros e encargos contratuais. [2]\nO prazo se refere ao financiamento do saldo da fatura, não a qualquer compra individual. [2]\nA regra não autoriza manter indefinidamente o mesmo saldo no rotativo. [2]\nAo comparar crédito, não considere apenas a taxa de juros. [3]\nAvalie o custo da operação e seu impacto no orçamento. [3]\nO custo efetivo total reúne encargos da contratação. [3]\nO dinheiro do cheque especial é crédito oferecido pelo banco, não uma renda extra. [3]\nUsá-lo exige cuidado com juros e capacidade de quitar o valor emprestado. [3]",
+          "expected_abstention": false,
+          "predicted_abstention": false,
+          "token_f1": 0.27450980392156865,
+          "concept_recall": 1.0,
+          "factual_inconsistencies": [
+            "número sem suporte: 30"
+          ],
+          "latency_ms": 3851.83
+        },
+        {
+          "id": "C19",
+          "answer": "Nas operações de rotativo e parcelamento de saldo da fatura originadas a partir de 3 de janeiro de 2024, juros e encargos financeiros acumulados não podem exceder o valor original da dívida. [1]\nA data relevante é a origem da operação, independentemente da assinatura do contrato. [1]\nO limite não inclui compras parceladas com juros. [1]\nA migração do rotativo para parcelamento da fatura preserva o limite acumulado; não estabelece teto de taxa mensal. [1]\nO financiamento do saldo no rotativo vai até o vencimento da fatura subsequente, em geral 30 dias. [2]\nEssa duração não é uma carência gratuita: há juros e encargos contratuais. [2]\nO prazo se refere ao financiamento do saldo da fatura, não a qualquer compra individual. [2]\nA regra não autoriza manter indefinidamente o mesmo saldo no rotativo. [2]\nPara organizar dívidas, faça um levantamento dos credores, valores restantes e taxas de juros. [3]\nEsse diagnóstico ajuda a planejar pagamentos e renegociação. [3]\nListe os compromissos e não ignore o problema. [3]\nEvite novas dívidas durante a reorganização. [3]\nProcure os credores para negociar condições e prazos que caibam no orçamento. [3]\nReduzir despesas e buscar renda adicional também fazem parte do plano de saída do endividamento. [3]",
+          "expected_abstention": false,
+          "predicted_abstention": false,
+          "token_f1": 0.19999999999999998,
+          "concept_recall": 1.0,
+          "factual_inconsistencies": [
+            "número sem suporte: 30"
+          ],
+          "latency_ms": 3855.41
+        },
+        {
+          "id": "C20",
+          "answer": "Nas operações de rotativo e parcelamento de saldo da fatura originadas a partir de 3 de janeiro de 2024, juros e encargos financeiros acumulados não podem exceder o valor original da dívida. [1]\nA data relevante é a origem da operação, independentemente da assinatura do contrato. [1]\nO limite não inclui compras parceladas com juros. [1]\nA migração do rotativo para parcelamento da fatura preserva o limite acumulado; não estabelece teto de taxa mensal. [1]\nO financiamento do saldo no rotativo vai até o vencimento da fatura subsequente, em geral 30 dias. [2]\nEssa duração não é uma carência gratuita: há juros e encargos contratuais. [2]\nO prazo se refere ao financiamento do saldo da fatura, não a qualquer compra individual. [2]\nA regra não autoriza manter indefinidamente o mesmo saldo no rotativo. [2]\nAo comparar crédito, não considere apenas a taxa de juros. [3]\nAvalie o custo da operação e seu impacto no orçamento. [3]\nO custo efetivo total reúne encargos da contratação. [3]\nO dinheiro do cheque especial é crédito oferecido pelo banco, não uma renda extra. [3]\nUsá-lo exige cuidado com juros e capacidade de quitar o valor emprestado. [3]",
+          "expected_abstention": false,
+          "predicted_abstention": false,
+          "token_f1": 0.14583333333333331,
+          "concept_recall": 1.0,
+          "factual_inconsistencies": [
+            "número sem suporte: 30"
+          ],
+          "latency_ms": 3159.89
+        },
+        {
+          "id": "C21",
+          "answer": "Retorno esperado e risco devem ser avaliados juntos. [1]\nPromessas de retornos milagrosos ou muito acima do mercado exigem desconfiança: podem envolver riscos elevados. [1]\nRentabilidade passada não é garantia de rentabilidade futura. [1]\nA chance de perder parte do dinheiro precisa ser considerada junto com o ganho esperado. [1]\nCompare a exposição ao risco com suas metas antes de aplicar. [1]\nProgramas de orientação financeira podem aplicar a escala no primeiro atendimento e repetir a medição ao longo do acompanhamento. [2]\nOs estudos de caso ilustram acompanhamento individual e avaliação de programas. [2]\nComparações exigem consistência no instrumento e no procedimento de aplicação, sem tratar mudanças de pontuação como prova isolada de causalidade. [2]\nDiversificação pode reduzir riscos dos investimentos, mas não elimina todos eles. [3]\nMudanças econômicas, setoriais e nas empresas podem afetar preços e pagamentos. [3]\nConcentrar recursos em um só setor ou empresa aumenta a exposição a eventos específicos. [3]\nAvalie riscos de mercado, crédito e liquidez. [3]\nDiversificar não substitui o cuidado com fraudes e não transforma uma promessa de lucro em garantia. [3]",
+          "expected_abstention": false,
+          "predicted_abstention": false,
+          "token_f1": 0.11173184357541899,
+          "concept_recall": 1.0,
+          "factual_inconsistencies": [],
+          "latency_ms": 3622.48
+        },
+        {
+          "id": "C22",
+          "answer": "Diversificação pode reduzir riscos dos investimentos, mas não elimina todos eles. [1]\nMudanças econômicas, setoriais e nas empresas podem afetar preços e pagamentos. [1]\nConcentrar recursos em um só setor ou empresa aumenta a exposição a eventos específicos. [1]\nAvalie riscos de mercado, crédito e liquidez. [1]\nDiversificar não substitui o cuidado com fraudes e não transforma uma promessa de lucro em garantia. [1]\nRetorno esperado e risco devem ser avaliados juntos. [2]\nPromessas de retornos milagrosos ou muito acima do mercado exigem desconfiança: podem envolver riscos elevados. [2]\nRentabilidade passada não é garantia de rentabilidade futura. [2]\nA chance de perder parte do dinheiro precisa ser considerada junto com o ganho esperado. [2]\nCompare a exposição ao risco com suas metas antes de aplicar. [2]",
+          "expected_abstention": false,
+          "predicted_abstention": false,
+          "token_f1": 0.14173228346456693,
+          "concept_recall": 1.0,
+          "factual_inconsistencies": [],
+          "latency_ms": 3676.89
+        },
+        {
+          "id": "C23",
+          "answer": "Liquidez é a possibilidade de converter o investimento em dinheiro. [1]\nResgate diário não garante ausência de oscilação no preço de um título de renda fixa. [1]\nAntes de aplicar, considere quando o dinheiro será necessário e se o resgate pode ocorrer antes do vencimento. [1]\nDisponibilidade para vender ou resgatar e manutenção do valor investido são características diferentes. [1]\nA reserva de emergência pode ser necessária a qualquer momento. [2]\nPriorize baixo risco, liquidez diária e ausência de carência. [2]\nA aposentadoria também deve integrar o planejamento. [2]\nUm imprevisto não tem data marcada: não comprometa a disponibilidade desse dinheiro para buscar rentabilidade maior. [2]\nSegurança e possibilidade de resgate importam mais que o maior ganho. [2]\nA reserva para aposentadoria tem horizonte diferente e deve ser planejada conforme a situação pessoal. [2]\nDiversificação pode reduzir riscos dos investimentos, mas não elimina todos eles. [3]\nMudanças econômicas, setoriais e nas empresas podem afetar preços e pagamentos. [3]\nConcentrar recursos em um só setor ou empresa aumenta a exposição a eventos específicos. [3]\nAvalie riscos de mercado, crédito e liquidez. [3]\nDiversificar não substitui o cuidado com fraudes e não transforma uma promessa de lucro em garantia. [3]",
+          "expected_abstention": false,
+          "predicted_abstention": false,
+          "token_f1": 0.11578947368421051,
+          "concept_recall": 1.0,
+          "factual_inconsistencies": [],
+          "latency_ms": 2249.58
+        },
+        {
+          "id": "C24",
+          "answer": "O financiamento do saldo no rotativo vai até o vencimento da fatura subsequente, em geral 30 dias. [1]\nEssa duração não é uma carência gratuita: há juros e encargos contratuais. [1]\nO prazo se refere ao financiamento do saldo da fatura, não a qualquer compra individual. [1]\nA regra não autoriza manter indefinidamente o mesmo saldo no rotativo. [1]\nA data relevante é a origem da operação, independentemente da assinatura do contrato. [2]\nO limite não inclui compras parceladas com juros. [2]\nA migração do rotativo para parcelamento da fatura preserva o limite acumulado; não estabelece teto de taxa mensal. [2]\nPagar parcialmente, ao menos o mínimo, sem parcelar o restante leva ao rotativo, com juros e encargos contratuais. [2]",
+          "expected_abstention": false,
+          "predicted_abstention": false,
+          "token_f1": 0.21138211382113822,
+          "concept_recall": 1.0,
+          "factual_inconsistencies": [],
+          "latency_ms": 2987.0
+        },
+        {
+          "id": "C25",
+          "answer": "A data relevante é a origem da operação, independentemente da assinatura do contrato. [1]\nO limite não inclui compras parceladas com juros. [1]\nA migração do rotativo para parcelamento da fatura preserva o limite acumulado; não estabelece teto de taxa mensal. [1]\nPagar parcialmente, ao menos o mínimo, sem parcelar o restante leva ao rotativo, com juros e encargos contratuais. [1]\nAo comparar crédito, não considere apenas a taxa de juros. [2]\nAvalie o custo da operação e seu impacto no orçamento. [2]\nO custo efetivo total reúne encargos da contratação. [2]\nO dinheiro do cheque especial é crédito oferecido pelo banco, não uma renda extra. [2]\nUsá-lo exige cuidado com juros e capacidade de quitar o valor emprestado. [2]\nO financiamento do saldo no rotativo vai até o vencimento da fatura subsequente, em geral 30 dias. [3]\nEssa duração não é uma carência gratuita: há juros e encargos contratuais. [3]\nO prazo se refere ao financiamento do saldo da fatura, não a qualquer compra individual. [3]\nA regra não autoriza manter indefinidamente o mesmo saldo no rotativo. [3]",
+          "expected_abstention": false,
+          "predicted_abstention": false,
+          "token_f1": 0.16666666666666666,
+          "concept_recall": 0.3333333333333333,
+          "factual_inconsistencies": [
+            "número sem suporte: 30"
+          ],
+          "latency_ms": 4346.03
+        },
+        {
+          "id": "C26",
+          "answer": "Nas operações de rotativo e parcelamento de saldo da fatura originadas a partir de 3 de janeiro de 2024, juros e encargos financeiros acumulados não podem exceder o valor original da dívida. [1]\nA data relevante é a origem da operação, independentemente da assinatura do contrato. [1]\nO limite não inclui compras parceladas com juros. [1]\nA migração do rotativo para parcelamento da fatura preserva o limite acumulado; não estabelece teto de taxa mensal. [1]\nO financiamento do saldo no rotativo vai até o vencimento da fatura subsequente, em geral 30 dias. [2]\nEssa duração não é uma carência gratuita: há juros e encargos contratuais. [2]\nO prazo se refere ao financiamento do saldo da fatura, não a qualquer compra individual. [2]\nA regra não autoriza manter indefinidamente o mesmo saldo no rotativo. [2]",
+          "expected_abstention": false,
+          "predicted_abstention": false,
+          "token_f1": 0.2695035460992908,
+          "concept_recall": 1.0,
+          "factual_inconsistencies": [
+            "número sem suporte: 30"
+          ],
+          "latency_ms": 4026.86
+        },
+        {
+          "id": "C27",
+          "answer": "Liquidez é a possibilidade de converter o investimento em dinheiro. [1]\nResgate diário não garante ausência de oscilação no preço de um título de renda fixa. [1]\nAntes de aplicar, considere quando o dinheiro será necessário e se o resgate pode ocorrer antes do vencimento. [1]\nDisponibilidade para vender ou resgatar e manutenção do valor investido são características diferentes. [1]",
+          "expected_abstention": true,
+          "predicted_abstention": false,
+          "token_f1": null,
+          "concept_recall": 0.0,
+          "factual_inconsistencies": [],
+          "latency_ms": 4050.73
+        },
+        {
+          "id": "C28",
+          "answer": "O Trokim não possui evidências suficientes nas diretrizes oficiais (Banco Central do Brasil, CVM, CFPB ou ANPD) para responder a essa consulta com segurança. Para sua proteção financeira, recomendamos consultar canais oficiais regulamentados.",
+          "expected_abstention": true,
+          "predicted_abstention": true,
+          "token_f1": null,
+          "concept_recall": 0.5,
+          "factual_inconsistencies": [],
+          "latency_ms": 0.09
+        },
+        {
+          "id": "C29",
+          "answer": "O orçamento registra receitas e despesas para compreender hábitos de consumo e planejar as finanças pessoais. [1]\nDespesas fixas se repetem com valores estáveis; despesas variáveis oscilam conforme o consumo. [1]\nO registro permite identificar para onde vai o dinheiro e distinguir necessidades de desejos. [1]\nA elaboração envolve planejamento, registro, agrupamento e avaliação. [1]\nAnote também pequenos gastos; compare o previsto com o realizado e ajuste as escolhas. [1]\nA Calculadora do Cidadão simula operações a partir dos dados fornecidos. [2]\nEla não verifica se os cálculos feitos pela instituição financeira estão corretos. [2]\nAo comparar crédito, não considere apenas a taxa de juros. [3]\nAvalie o custo da operação e seu impacto no orçamento. [3]\nO custo efetivo total reúne encargos da contratação. [3]\nO dinheiro do cheque especial é crédito oferecido pelo banco, não uma renda extra. [3]\nUsá-lo exige cuidado com juros e capacidade de quitar o valor emprestado. [3]\nReceita total (total_income): 0.3 BRL [Fonte auditável: CalculationService.calculate_summary]\nDespesa total (total_expenses): 0.1 BRL [Fonte auditável: CalculationService.calculate_summary]\nSaldo líquido (net_balance): 0.2 BRL [Fonte auditável: CalculationService.calculate_summary]\nTaxa de poupança (savings_rate): 66.67 % [Fonte auditável: CalculationService.calculate_summary]\nLançamentos analisados (transaction_count): 2 lançamentos [Fonte auditável: CalculationService.calculate_summary]\nPremissas e limitações:\n- Cálculos baseados em lançamentos importados, sem duplicatas.\nVocê pode esclarecer essas premissas ou fornecer os dados indicados?",
+          "expected_abstention": false,
+          "predicted_abstention": false,
+          "token_f1": 0.10833333333333332,
+          "concept_recall": 1.0,
+          "factual_inconsistencies": [
+            "número sem suporte: 0",
+            "número sem suporte: 3",
+            "número sem suporte: 66",
+            "número sem suporte: 67%"
+          ],
+          "latency_ms": 6037.04
+        },
+        {
+          "id": "C30",
+          "answer": "A resposta preliminar gerada pelo assistente não passou pelas regras de validação e segurança do Trokim (conformidade com cálculos auditáveis e diretrizes oficiais). Por segurança financeira, a resposta foi retida.",
+          "expected_abstention": true,
+          "predicted_abstention": true,
+          "token_f1": null,
+          "concept_recall": 0.0,
+          "factual_inconsistencies": [],
+          "latency_ms": 9911.95
+        }
+      ]
+    }
+  }
+}

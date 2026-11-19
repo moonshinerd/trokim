@@ -64,6 +64,21 @@ A eficácia do `ValidationAgent` foi validada contra as falhas documentadas no b
 - **Comportamento no Benchmark:** O modelo desobedeceu à restrição arquitetural e calculou autonomamente a aritmética (`0,20`).
 - **Detecção do Agente:** A pergunta contém intenção de cálculo (`calcule o saldo`), `ctx.calculations` está vazio e o rascunho apresentou valor numérico próprio. O agente bloqueia a saída emitindo `CALCULATION_MISSING` (`BLOCKER`).
 
+### Resultado medido no benchmark (#60)
+
+Os casos acima descrevem o que o agente detecta quando recebe aquele rascunho. No fluxo completo,
+medido nos 30 casos e nos 20 cenários ([Histórico de resultados](../pesquisa/resultados.md#8-semana-4-multiagente-nos-30-casos-da-comparacao)):
+
+- os 5 rascunhos inválidos injetados nas armadilhas foram barrados com o código esperado, em
+  todas as execuções;
+- o C30 foi retido com `CALCULATION_MISSING` com os dois modelos;
+- o C29 passou sem bloqueio e com os totais do sistema quando o fluxo recebeu os lançamentos
+  sintéticos (execuções de 19/11);
+- o C27 **não** foi barrado: o Research não se absteve, e o Communication trocou o texto do
+  modelo por trechos literais sobre liquidez, que não disparam `OUT_OF_SCOPE_ADVICE`;
+- parte dos bloqueios em casos regulares vem de formato (por exemplo, "R$ 6,000" com milhar em
+  inglês lido como R$ 6).
+
 ### Casos C04 e C17 — Valores Inventados pela LLM Pura
 - **Cenário C04:** Valores arbitrários (`R$ 100.000` e `R$ 5.000`) inventados ao discorrer sobre metas financeiras.
 - **Cenário C17:** Taxa de câmbio fictícia (`1,5%`) e valor não fundamentado (`R$ 1.018,25`) ao explicar o rotativo do cartão.

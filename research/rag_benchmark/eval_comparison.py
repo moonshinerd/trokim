@@ -39,6 +39,12 @@ METHODS = {
         "label": "Trokim estruturado",
         "aliases": {"trokim_estruturado", "trokim_grounded", "grounded"},
     },
+    # Semana 4 (#60): opcional, para que as execuções anteriores continuem avaliáveis.
+    "multiagente": {
+        "label": "Multiagente",
+        "aliases": {"multiagente", "multiagent", "multi_agent"},
+        "optional": True,
+    },
 }
 METHOD_ALIASES = {
     alias: method for method, config in METHODS.items() for alias in config["aliases"]
@@ -207,6 +213,9 @@ def _canonical_number(raw: str) -> str:
         return value
 
 
+CITATION_MARKER = re.compile(r"\[\d{1,2}\]")
+
+
 def _numeric_facts(text: str) -> set[tuple[str, str]]:
     facts = set()
     for match in NUMBER_PATTERN.finditer(text):
@@ -287,9 +296,11 @@ def factual_inconsistencies(
     query = str(case.get("query", ""))
     factual_sources = [reference, *relevant_sources]
     supported_numbers = _numeric_facts("\n".join([query, *factual_sources]))
+    # Marcadores de citação ("[2]") não são afirmações numéricas (correção da Semana 4).
+    answer_numbers = CITATION_MARKER.sub(" ", answer)
     findings = {
         _format_number_fact(value, unit)
-        for value, unit in _numeric_facts(answer)
+        for value, unit in _numeric_facts(answer_numbers)
         if not _number_is_supported((value, unit), supported_numbers)
     }
     findings.update(_contradictions(answer, factual_sources))
@@ -325,10 +336,18 @@ def predicted_abstention(response: dict[str, Any]) -> bool:
             raise ValueError("answered deve ser booleano.")
         signals.append(not response["answered"])
     if "status" in response:
-        valid_statuses = {"grounded", "abstained", "pure_baseline", "naive_rag"}
+        valid_statuses = {
+            "grounded",
+            "abstained",
+            "pure_baseline",
+            "naive_rag",
+            "answered",
+            "rejected",
+        }
         if response["status"] not in valid_statuses:
             raise ValueError(f"Status de resposta inválido: {response['status']}")
-        signals.append(response["status"] == "abstained")
+        # A rejeição do Validation retém o rascunho: para o usuário, é uma não resposta.
+        signals.append(response["status"] in {"abstained", "rejected"})
     if not signals:
         raise ValueError("Resposta precisa de status, answered ou abstained.")
     if any(signal != signals[0] for signal in signals[1:]):
@@ -451,7 +470,7 @@ def evaluate_comparison(
     results: dict[str, Any],
     sources: dict[str, str] | None = None,
 ) -> dict[str, Any]:
-    """Compara as três abordagens sem executar geração ou acesso à rede."""
+    """Compara as abordagens presentes nos resultados, sem gerar texto nem acessar a rede."""
     source_map = sources if sources is not None else load_sources()
     responses_by_case = normalize_results(results)
     case_ids = [case["id"] for case in cases]
@@ -464,6 +483,9 @@ def evaluate_comparison(
 
     methods_report = {}
     for method, config in METHODS.items():
+        present = any(method in responses for responses in responses_by_case.values())
+        if config.get("optional") and not present:
+            continue  # abordagem fora desta execução (ex.: multiagente antes da Semana 4)
         token_scores: list[float] = []
         concept_scores: list[float] = []
         expected_abstentions: list[bool] = []
@@ -573,8 +595,7 @@ def render_markdown(report: dict[str, Any]) -> str:
         ),
         "|---|---:|---:|---:|---:|---:|",
     ]
-    for method in METHODS:
-        metrics = report["methods"][method]
+    for metrics in report["methods"].values():
 
         def percent(value: float | None) -> str:
             return "—" if value is None else f"{value:.1%}"

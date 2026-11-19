@@ -19,7 +19,12 @@ RUN uv sync --no-dev
 
 # Copia código da aplicação e base de conhecimento
 COPY api/app ./app
+COPY api/migrations ./migrations
+COPY api/alembic.ini ./alembic.ini
 COPY research/knowledge_base /srv/research/knowledge_base
+
+# Descomprime o índice CNPJ versionado (ADR 0020); a API refaz sozinha se o pacote mudar.
+RUN uv run python -m app.services.cnpj_index
 
 EXPOSE 8000
 
