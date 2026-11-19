@@ -142,3 +142,27 @@ Os testes conferem schema, composição, reprodução do ledger, integridade, n�
 - **GQ04 / GQ11:** aritmética independente de LLM e conferência dos números conhecidos.
 - **GQ05:** evidências, abstenção segura e retenção de rascunhos inválidos.
 - [Matriz de requisitos](../requisitos.md), [ADR 0004](../adr/0004-calculos-deterministicos.md), [ADR 0008](../adr/0008-material-comparativo-versionado.md), [ADR 0016](../adr/0016-arquitetura-multiagente.md) e [Validation Agent](../agentes/validation-agent.md).
+
+
+## Integração com o benchmark (#60)
+
+O runner aceita `--multiagent`: executa os 30 casos históricos com quatro
+abordagens e os 20 cenários desta página em bloco separado. Usa os agentes reais
+com modelo, temperatura e corpus comuns ao comparador. Os campos de gabarito e
+os rascunhos adversariais nunca são incluídos nos prompts de geração livre.
+
+Os cinco ensaios controlados continuam separados: Research e Communication
+controlados, Analysis, Orchestrator e Validation reais. Seu resultado mede a
+rejeição de uma violação conhecida, não a frequência com que o modelo inventa
+informações. Uma abstenção antecipada no fluxo livre não exige código de Validation.
+
+M16–M18 não recebem o ledger no ensaio livre, conforme `use_ledger`; M19 e M20
+recebem. A pergunta livre de M19 solicita legitimamente o saldo, e somente o
+rascunho injetado contém o valor inventado. Por isso M19 não entra no denominador
+de recusa segura; permanece na revisão obrigatória e no ensaio controlado.
+
+O relatório separa números reproduzidos, cobertura de conceitos, estados de
+resposta e tempos por categoria. A comparação exata dos agentes e status do
+gabarito regular é diagnóstica; os status adversariais não são impostos às
+perguntas livres. Os resultados por categoria estão na
+[seção 9 do histórico de resultados](resultados.md#9-semana-4-os-20-cenarios-multiagente).

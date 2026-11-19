@@ -178,10 +178,12 @@ os empatados em Recall@3.
 4. Acrescente a execução à tabela da seção 1 e uma seção como a 3, com a tabela de métricas
    e as figuras `fig1-metricas.png` e `fig3-latencia.png` (e `fig2-alucinacao-auditada.png`
    se houve revisão humana). O teste `test_run_registry.py` indica o que faltar.
-5. Para incluir o multiagente, rode `make comparison-run ... MULTIAGENT=1` e depois
-   `make multiagent-run RUN=<RUN> MODEL=<modelo>` (os 20 cenários, em
-   `results/multiagent/<RUN>/`). O `run.json` ganha o resumo `multiagent_scenarios` e o
-   `make report-charts` gera `fig4-multiagente-cenarios.png` e `fig5-latencia-por-agente.png`.
+5. Desde a Semana 4, o `make comparison-run` já inclui o multiagente e roda também os 20
+   cenários (`results/multiagent/<RUN>/`). Ele cria o `run.json` sozinho (commit completo e
+   aviso de árvore suja), com o resumo `multiagent_scenarios`, e um `audit_pending.json` em
+   cada pasta, sem revisor e sem nenhuma confirmação. Recusa identificador já usado, `mock` e
+   execução parcial. O `make report-charts` gera `fig4-multiagente-cenarios.png` e
+   `fig5-latencia-por-agente.png`.
    Se o avaliador mudar, `run_multiagent.py --output-dir <pasta> --reavaliar` refaz o relatório
    sem chamar o modelo. Uma execução com defeito não é apagada: ela ganha um sufixo no
    identificador (como `-sem-teto`) e uma nota no `run.json` e nesta página.
@@ -210,8 +212,7 @@ no mesmo gabarito, corpus, avaliador, temperatura (0,1) e `top_k` (3). O Researc
 mesmo corpus unificado de 22 fontes, com a mesma política de escopo e o mesmo limiar do Trokim
 estruturado. Foram duas execuções, iguais exceto pelo modelo, para separar o efeito do fluxo do
 efeito do tamanho do modelo: o Qwen 2.5 de 1,5 B (o das execuções anteriores, no Ollama) e o
-GPT-6 Luna (OpenRouter). Os comandos são `make comparison-run ... MULTIAGENT=1` e
-`make multiagent-run` (seção 9).
+GPT-6 Luna (OpenRouter). O comando é `make comparison-run` (seção 6).
 
 ### 8.1 Primeira tentativa: o defeito do tempo limite
 
@@ -321,6 +322,35 @@ das execuções de 18/11 já saem com o avaliador corrigido, e o
 `run_multiagent.py --reavaliar` refaz o relatório dos cenários a partir das respostas brutas,
 sem chamar o modelo.
 
+### 8.6 Protocolo integrado com o PR #85
+
+O [PR #85](https://github.com/moonshinerd/trokim/pull/85), de Gabriel Ojo, implementou o mesmo
+benchmark em paralelo e foi incorporado a este. Ele trouxe correções de protocolo que valem
+**a partir das execuções seguintes às de 18/11** (essas três ficam como foram feitas):
+
+- **C29 com os totais do sistema:** o multiagente recebe lançamentos sintéticos com os mesmos
+  totais que as outras abordagens recebem no prompt, o que torna o C29 comparável (seção 8.4).
+- **M16 a M18 sem extrato** no ensaio livre, como o gabarito pede (`use_ledger`); antes o extrato
+  ia sempre, o que desarmava a armadilha de calcular sem dados.
+- **Mesmo corpus e mesmo teto** nos cenários: Research no corpus unificado de 22 fontes e 300
+  tokens de geração, como as outras abordagens (nas execuções de 18/11 o multiagente usou o
+  padrão do produto, 500).
+- **Material de auditoria:** cada tentativa guarda a resposta original do modelo
+  (`llm_responses`) e o rascunho enviado ao Validation (`drafts`), para comparar o que o modelo
+  escreveu com o que o Communication deixou passar.
+- **Registro protegido:** `run.json` gerado pelo runner com o commit completo e
+  `audit_pending.json` sem confirmações automáticas; identificador repetido, `mock` e execução
+  parcial são recusados.
+
+E duas correções no avaliador dos cenários, aplicadas às execuções de 18/11 com `--reavaliar`
+(as respostas brutas não mudam):
+
+- **Números com unidade e sinal:** o valor só conta se vier com R$/BRL, % ou meses e com o sinal
+  certo; um marcador `[24]` não vale como "24 meses". Nenhum acerto das três execuções mudou.
+- **M19 e falhas do modelo:** a pergunta livre do M19 pede um saldo legítimo e passou a contar
+  como pergunta a responder (comportamento esperado de 13 para 14 nas duas execuções com teto);
+  falha do modelo deixou de contar como recusa segura (rodada sem teto: de 4 para 2 de 4).
+
 ## 9. Semana 4: os 20 cenários multiagente
 
 Os [20 cenários](gabarito-multiagente.md) usam o extrato sintético de três meses, com os números
@@ -330,12 +360,12 @@ o Communication é trocado por um que injeta o rascunho inválido do gabarito, s
 
 | Medida | Qwen sem teto (8.1) | Qwen 2.5 de 1,5 B | GPT-6 Luna |
 |---|---:|---:|---:|
-| Comportamento esperado (20 cenários) | 10 | 13 | 13 |
+| Comportamento esperado (20 cenários) | 9 | 14 | 14 |
 | Casos regulares respondidos (de 15) | 6 | 9 | 12 |
 | Agentes com passo `ok` iguais ao gabarito (de 15) | 6 | 9 | 12 |
 | Acerto numérico (números do gabarito na resposta) | 5 de 11 | 7 de 11 | 8 de 11 |
 | Casos com bloqueio do Validation | 4 (20%) | 9 (45%) | 3 (15%) |
-| Armadilhas com comportamento seguro no ensaio livre | 4 de 5 | 4 de 5 | 1 de 5 |
+| Recusa segura nas armadilhas livres (M16 a M18 e M20) | 2 de 4 | 4 de 4 | 1 de 4 |
 | Rascunho injetado barrado com o código esperado | **5 de 5** | **5 de 5** | **5 de 5** |
 | Falhas do modelo (Communication sem resposta) | **9** | 0 | 0 |
 | Latência média por cenário | 64 040 ms | 4 267 ms | 6 940 ms |
@@ -348,8 +378,9 @@ o Communication é trocado por um que injeta o rascunho inválido do gabarito, s
 
 ![Latência média de cada agente com o GPT-6 Luna](../assets/comparacao/2026-11-18-gpt-6-luna-multiagente/fig5-latencia-por-agente.png)
 
-Na rodada sem teto, as 4 armadilhas "seguras" do ensaio livre incluem 2 em que o modelo nem
-respondeu (M16 e M20, tempo limite); o número não mede o Validation.
+Na rodada sem teto, M16 e M20 não contam como recusa segura: o modelo estourou o tempo limite,
+e falha do modelo nunca conta como comportamento esperado. A pergunta livre do M19 pede um saldo
+legítimo (só o rascunho injetado inventa o valor), então ela conta como pergunta a responder.
 
 Leitura:
 

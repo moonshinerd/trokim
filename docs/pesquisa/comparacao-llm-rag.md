@@ -192,3 +192,15 @@ equivalentes aos desta página.
 - Repetir com várias execuções por modelo (em 18/11 houve uma com o Qwen e uma com o GPT-6 Luna, já com o multiagente; ver [seção 8 do histórico](resultados.md#8-semana-4-multiagente-nos-30-casos-da-comparacao)).
 - Revisão humana independente e cega.
 - Homologação do chat generativo no Android (ver [planejamento](../planejamento.md)).
+
+
+## Ampliação multiagente — issue #60
+
+O comparador oferece uma quarta abordagem que chama o orquestrador e os agentes
+reais em processo. A comparação histórica mantém seus 30 casos; os 20 cenários
+novos são avaliados separadamente, incluindo números, bloqueios, recusas seguras
+e tempos por agente. Os ensaios com rascunhos adversariais não são misturados às
+respostas geradas pelo modelo. Os resultados anteriores desta página permanecem
+inalterados. O protocolo, as execuções e a leitura estão nas
+[seções 8 e 9 do histórico de resultados](resultados.md#8-semana-4-multiagente-nos-30-casos-da-comparacao);
+a revisão humana dos casos sinalizados está pendente (`audit_pending.json` de cada execução).

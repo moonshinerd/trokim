@@ -18,9 +18,9 @@ help:
 	@echo "  make synthetic-data      - Gera extratos OFX e faturas sintéticas para testes LGPD"
 	@echo "  make comparison-validate - Valida integridade do material comparativo (Semana 3)"
 	@echo "  make comparison-eval     - Executa o benchmark comparativo das 3 abordagens (Semana 3)"
-	@echo "  make comparison-run RUN=<data>-<modelo> MODEL=<modelo litellm> - Registra uma nova execução versionada"
-	@echo "  make comparison-run ... MULTIAGENT=1 - Inclui a abordagem multiagente (Semana 4)"
-	@echo "  make multiagent-run RUN=<data>-<modelo> MODEL=<modelo> - 20 cenários multiagente"
+	@echo "  make comparison-run RUN=<data>-<modelo> MODEL=<modelo litellm> - Execução completa e registrada"
+	@echo "                             (4 abordagens nos 30 casos + 20 cenários; recusa RUN já usado)"
+	@echo "  make multiagent-run RUN=<data>-<modelo> MODEL=<modelo> - Só os 20 cenários multiagente"
 	@echo "  make report-charts       - Gera os gráficos versionados do benchmark para o MkDocs"
 	@echo "  make cnpj-indice         - Descomprime o índice CNPJ versionado em api/data/cnpj (rápido)"
 	@echo "  make cnpj-atualizar      - Baixa o mês mais recente da Receita (~5 GB), refaz o índice e o"
@@ -86,22 +86,20 @@ ingest:
 synthetic-data:
 	cd api && uv run python ../research/synthetic_data/generate_datasets.py
 
-# Registra uma execução do benchmark comparativo em results/comparison/<RUN>/.
-# Depois crie o run.json (modelo em docs/pesquisa/resultados.md) e rode `make report-charts`.
+# Execução completa e registrada do benchmark (#60): as quatro abordagens nos 30 casos e os 20
+# cenários multiagente, em results/comparison/<RUN>/ e results/multiagent/<RUN>/, com run.json e
+# formulários de auditoria pendente. Recusa RUN já usado. Depois: `make report-charts`.
 comparison-run:
-	@test -n "$(RUN)" -a -n "$(MODEL)" || { echo "Uso: make comparison-run RUN=2026-11-20-qwen2.5-7b MODEL=ollama/qwen2.5:7b"; exit 1; }
-	cd api && uv run python ../research/rag_benchmark/run_comparison.py --provider litellm --model "$(MODEL)" --temperature 0.1 \
-		--output ../research/rag_benchmark/results/comparison/$(RUN)/comparison_results.json \
-		--report-json ../research/rag_benchmark/results/comparison/$(RUN)/comparison_report.json \
-		--report-md ../research/rag_benchmark/results/comparison/$(RUN)/comparison_report.md \
-		--chart-svg ../research/rag_benchmark/results/comparison/$(RUN)/comparison_chart.svg \
-		$(if $(MULTIAGENT),--multiagent)
+	@test -n "$(RUN)" -a -n "$(MODEL)" || { echo "Uso: make comparison-run RUN=2026-11-20-qwen2.5-7b MODEL=ollama/qwen2.5:7b [NOTAS='...']"; exit 1; }
+	cd api && uv run python ../research/rag_benchmark/run_comparison.py --provider litellm --model "$(MODEL)" \
+		--temperature 0.1 --multiagent --run-id "$(RUN)" --notas "$(NOTAS)"
+	$(MAKE) -s multiagent-run RUN="$(RUN)" MODEL="$(MODEL)"
 
-# Os 20 cenários multiagente da Semana 4 (#60), com o extrato sintético.
+# Só os 20 cenários multiagente (o resumo entra no run.json da mesma execução, se existir).
 multiagent-run:
 	@test -n "$(RUN)" -a -n "$(MODEL)" || { echo "Uso: make multiagent-run RUN=2026-11-18-qwen2.5-1.5b MODEL=ollama/qwen2.5:1.5b"; exit 1; }
 	cd api && uv run python ../research/rag_benchmark/run_multiagent.py --model "$(MODEL)" --temperature 0.1 \
-		--output-dir ../research/rag_benchmark/results/multiagent/$(RUN)
+		--run-id "$(RUN)"
 
 # Gráficos dos docs: lidos de run.json e dos resultados; matplotlib só é trazido por este comando.
 report-charts:

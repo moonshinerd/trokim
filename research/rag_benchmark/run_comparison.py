@@ -37,11 +37,6 @@ from app.clients.llm_factory import get_llm_provider  # noqa: E402
 from app.clients.sqlite_vector_store import SQLiteVectorStore  # noqa: E402
 from app.domain.models import EvidenceChunk  # noqa: E402
 from app.models.llm_provider import LLMProvider  # noqa: E402
-from app.services.agents.analysis import AnalysisAgent  # noqa: E402
-from app.services.agents.communication import CommunicationAgent  # noqa: E402
-from app.services.agents.orchestrator import Orchestrator  # noqa: E402
-from app.services.agents.research import ResearchAgent  # noqa: E402
-from app.services.agents.validation import ValidationAgent  # noqa: E402
 from app.services.generation_service import ABSTENTION_MESSAGE  # noqa: E402
 from app.services.ingestion_service import parse_document  # noqa: E402
 from app.services.rag_service import RAGService  # noqa: E402
@@ -338,70 +333,24 @@ async def execute_case_grounded(
     }
 
 
-class CorpusEvidenceSource:
-    """Fonte de evidências do Research Agent sobre o corpus unificado da comparação.
-
-    Mesma política de escopo, recuperação híbrida, top-k e limiar do Trokim estruturado:
-    a diferença medida é só a do fluxo multiagente (cálculo, redação e validação separados).
-    """
-
-    def __init__(
-        self, retriever: UnifiedCorpusRetriever, top_k: int = 3, threshold: float = 0.15
-    ) -> None:
-        self.retriever = retriever
-        self.top_k = top_k
-        self.threshold = threshold
-
-    def is_outside_scope(self, query: str) -> bool:
-        return RAGService.is_outside_scope(query)
-
-    def retrieve_evidence(self, query: str) -> list[EvidenceChunk]:
-        return self.retriever.retrieve_hybrid(query, top_k=self.top_k, threshold=self.threshold)
-
-
-def build_orchestrator(
-    retriever: UnifiedCorpusRetriever, llm: LLMProvider, temperature: float = 0.1
-) -> Orchestrator:
-    return Orchestrator(
-        research=ResearchAgent(rag_service=CorpusEvidenceSource(retriever)),  # type: ignore[arg-type]
-        analysis=AnalysisAgent(),
-        communication=CommunicationAgent(llm_provider=llm, temperature=temperature),
-        validation=ValidationAgent(),
-    )
-
-
-def multiagent_record(response: Any, latency_ms: float) -> dict[str, Any]:
-    """Converte a resposta do orquestrador no formato do avaliador, com a trilha completa."""
-    status = response.status.value
-    return {
-        "answer": response.answer.strip(),
-        "status": status,
-        "answered": status == "answered",
-        "abstained": status != "answered",
-        "latency_ms": latency_ms,
-        "retrieved_chunks": [c.id for c in response.evidences],
-        "validation_issues": [
-            {"code": i.code, "severity": i.severity.value} for i in response.validation_issues
-        ],
-        "steps": [
-            {
-                "agent": step.agent.value,
-                "status": step.status.value,
-                "duration_ms": step.duration_ms,
-                "summary": step.summary,
-            }
-            for step in response.steps
-        ],
-    }
-
-
 async def execute_case_multiagent(
-    case: dict[str, Any], orchestrator: Orchestrator
+    case: dict[str, Any], llm: LLMProvider, retriever: UnifiedCorpusRetriever, temperature: float
 ) -> dict[str, Any]:
-    """Abordagem 4: sistema multiagente (Research, Analysis, Communication e Validation)."""
-    t0 = time.perf_counter()
-    response = await orchestrator.run(case["query"])
-    return multiagent_record(response, round((time.perf_counter() - t0) * 1000, 2))
+    """Abordagem 4: o orquestrador da Semana 4 com os agentes reais, em processo.
+
+    Mesmo corpus, recuperação e teto de tokens do Trokim estruturado. O C29 recebe lançamentos
+    sintéticos com os mesmos totais que as outras abordagens recebem no prompt; o C30 continua
+    sem. Ver ``multiagent_benchmark``.
+    """
+    from multiagent_benchmark import ComparisonRAG, execute_multiagent, legacy_transactions
+
+    return await execute_multiagent(
+        case["query"],
+        llm,
+        ComparisonRAG(retriever),
+        temperature=temperature,
+        transactions=legacy_transactions(case),
+    )
 
 
 async def run_benchmark(
@@ -409,7 +358,7 @@ async def run_benchmark(
     llm: LLMProvider,
     retriever: UnifiedCorpusRetriever,
     temperature: float = 0.1,
-    orchestrator: Orchestrator | None = None,
+    include_multiagent: bool = False,
 ) -> dict[str, Any]:
     """Executa as abordagens sobre todos os casos de teste e mede tempos."""
     results_cases: list[dict[str, Any]] = []
@@ -436,8 +385,10 @@ async def run_benchmark(
             "trokim_estruturado": grounded_res,
         }
         # 4. Multiagente (Semana 4)
-        if orchestrator is not None:
-            responses["multiagente"] = await execute_case_multiagent(case, orchestrator)
+        if include_multiagent:
+            responses["multiagente"] = await execute_case_multiagent(
+                case, llm, retriever, temperature
+            )
 
         results_cases.append(
             {
@@ -627,9 +578,30 @@ def main(argv: list[str] | None = None) -> int:
         action="store_true",
         help="Inclui a quarta abordagem: o sistema multiagente da Semana 4 (#60).",
     )
+    parser.add_argument(
+        "--run-id",
+        help=(
+            "Registra uma execução nova em results/comparison/<run-id>/ (run.json e formulário "
+            "de auditoria). Recusa mock, --limit e identificador já usado."
+        ),
+    )
+    parser.add_argument("--notas", default="", help="Observações para o run.json.")
     args = parser.parse_args(argv)
 
     try:
+        if args.limit is not None and args.limit <= 0:
+            raise ValueError("O limite de casos deve ser positivo.")
+        if args.run_id:
+            from multiagent_benchmark import RESULTS, check_new_run
+
+            if args.provider == "mock" or args.limit is not None:
+                raise ValueError("Execução registrada exige modelo real e os 30 casos.")
+            run_dir = RESULTS / "comparison" / args.run_id
+            check_new_run(args.run_id, run_dir)
+            args.output = run_dir / "comparison_results.json"
+            args.report_json = run_dir / "comparison_report.json"
+            args.report_md = run_dir / "comparison_report.md"
+            args.chart_svg = run_dir / "comparison_chart.svg"
         cases = load_cases(args.cases)
         if args.limit:
             cases = cases[: args.limit]
@@ -654,14 +626,13 @@ def main(argv: list[str] | None = None) -> int:
         print("Carregando e indexando corpus unificado (22 fontes)...")
         retriever = UnifiedCorpusRetriever()
 
-        orchestrator = (
-            build_orchestrator(retriever, llm, temperature=args.temperature)
-            if args.multiagent
-            else None
-        )
         raw_results = asyncio.run(
             run_benchmark(
-                cases, llm, retriever, temperature=args.temperature, orchestrator=orchestrator
+                cases,
+                llm,
+                retriever,
+                temperature=args.temperature,
+                include_multiagent=args.multiagent,
             )
         )
 
@@ -692,6 +663,26 @@ def main(argv: list[str] | None = None) -> int:
         # Gráfico comparativo em SVG
         generate_svg_chart(report, args.chart_svg)
         print(f"Gráfico comparativo SVG gerado em: {args.chart_svg}")
+
+        if args.run_id:
+            from multiagent_benchmark import (
+                comparison_audit_rows,
+                write_audit_template,
+                write_run_registry,
+            )
+
+            write_audit_template(
+                args.output.parent / "audit_pending.json", comparison_audit_rows(report)
+            )
+            path = write_run_registry(
+                args.run_id,
+                report,
+                model=str(getattr(llm, "model", args.model)),
+                provider=f"{provider_name} (mesma camada do app)",
+                temperature=args.temperature,
+                notes=args.notas,
+            )
+            print(f"Execução registrada em: {path} (revisão pendente em audit_pending.json)")
 
         print("\n" + "=" * 60)
         print("RESUMO COMPARATIVO — SEMANA 3")

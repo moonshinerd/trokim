@@ -57,7 +57,7 @@
   "multiagent_scenarios": {
     "report": "research/rag_benchmark/results/multiagent/2026-11-18-gpt-6-luna-multiagente/multiagent_report.md",
     "cases": 20,
-    "status_ok": 13,
+    "status_ok": 14,
     "numbers_expected": 11,
     "numbers_reproduced": 8,
     "validation_block_rate": 0.15,

@@ -55,6 +55,9 @@ def test_run_json_completo_e_consistente(path):
     assert run["run_id"].startswith(run["date"]), "o id da execução começa pela data"
     assert run["cases"] == 30
     assert list(run["approaches"]) in (APPROACHES, APPROACHES + OPTIONAL)
+    assert len(run["reference_commit"]) in (7, 40)
+    if "audit_pending" in run:  # registrada pelo runner: formulário de revisão versionado
+        assert (ROOT / run["audit_pending"]).is_file()
     for key, info in run["approaches"].items():
         for metric in METRICS:
             assert 0 <= info[metric] <= 1, f"{key}.{metric} fora de [0, 1]"

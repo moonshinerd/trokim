@@ -2,17 +2,20 @@
 
 Dois ensaios, como pede o gabarito (`docs/pesquisa/gabarito-multiagente.md`):
 
-1. **Livre:** as 20 perguntas passam pelo orquestrador real (Research com a base do app,
-   Analysis, Communication com o modelo e Validation). Mede status, agentes com passo `ok`,
-   acerto numérico, cobertura de conceitos, bloqueios do Validation e latência por agente.
+1. **Livre:** as 20 perguntas passam pelo orquestrador real (Research no corpus unificado de
+   22 fontes, Analysis, Communication com o modelo e Validation), com o extrato sintético só
+   quando o gabarito pede (``use_ledger``: M16 a M18 vão sem extrato). Mede status, agentes com
+   passo `ok`, acerto numérico (valor com unidade e sinal), cobertura de conceitos, bloqueios do
+   Validation, falhas do modelo e latência por agente.
 2. **Rascunho injetado:** nas 5 armadilhas, Research e Communication são controlados e o
    rascunho inválido do gabarito é injetado; Analysis, Orchestrator e Validation são reais.
    Mede se o Validation bloqueia com o código esperado. Não usa modelo.
 
-Uso (na pasta `api/`):
+As peças comuns (gravação das respostas originais e dos rascunhos, corpus, registro e
+formulário de auditoria) estão em ``multiagent_benchmark``.
 
-    uv run python ../research/rag_benchmark/run_multiagent.py --model ollama/qwen2.5:1.5b \\
-        --output-dir ../research/rag_benchmark/results/multiagent/<run_id>
+Uso, pela raiz: ``make multiagent-run RUN=<id> MODEL=<modelo>``; para refazer só o relatório a
+partir das respostas gravadas: ``--output-dir <pasta> --reavaliar``.
 """
 
 from __future__ import annotations
@@ -20,9 +23,7 @@ from __future__ import annotations
 import argparse
 import asyncio
 import json
-import re
 import sys
-import time
 from datetime import UTC, datetime
 from pathlib import Path
 from statistics import fmean
@@ -34,136 +35,61 @@ sys.path.insert(0, str(ROOT / "api"))
 sys.path.insert(0, str(BASE))
 
 from eval_comparison import concept_recall  # noqa: E402
-from multiagent import QUESTIONS, load_ledger  # noqa: E402
-
-from app.domain.agents import AgentContext, AgentName, AgentStep, StepStatus  # noqa: E402
-from app.models.llm_provider import LLMProvider  # noqa: E402
-from app.services.agents.analysis import AnalysisAgent  # noqa: E402
-from app.services.agents.communication import CommunicationAgent  # noqa: E402
-from app.services.agents.orchestrator import Orchestrator  # noqa: E402
-from app.services.agents.research import ResearchAgent  # noqa: E402
-from app.services.agents.validation import ValidationAgent  # noqa: E402
-from app.services.rag_service import RAGService  # noqa: E402
+from multiagent import load_ledger  # noqa: E402
+from multiagent_benchmark import (  # noqa: E402
+    RESULTS,
+    ComparisonRAG,
+    add_scenarios_to_registry,
+    check_new_run,
+    execute_injected,
+    execute_multiagent,
+    load_multiagent_cases,
+    model_failed,
+    numeric_matches,
+    scenario_audit_rows,
+    write_audit_template,
+)
 
 AGENTS = ["research", "analysis", "communication", "validation"]
-NUMBER = re.compile(r"\d{1,3}(?:\.\d{3})+(?:,\d+)?|\d+(?:[.,]\d+)?")
-
-
-def numbers_in(text: str) -> list[float]:
-    """Números do texto, lidos no formato brasileiro (1.234,56) ou com ponto decimal."""
-    values = []
-    for raw in NUMBER.findall(text):
-        if "," in raw:
-            value = raw.replace(".", "").replace(",", ".")
-        elif re.fullmatch(r"\d{1,3}(?:\.\d{3})+", raw):
-            value = raw.replace(".", "")
-        else:
-            value = raw
-        try:
-            values.append(float(value))
-        except ValueError:
-            continue
-    return values
-
-
-def number_reproduced(answer: str, expected: dict[str, Any]) -> bool:
-    """O número do gabarito aparece na resposta (percentual aceita uma casa decimal)."""
-    tolerance = {"BRL": 0.005, "%": 0.051, "meses": 0.0}.get(expected.get("unit"), 0.005)
-    return any(abs(value - expected["value"]) <= tolerance for value in numbers_in(answer))
+# Armadilha só na versão injetada: a pergunta livre do M19 pede um saldo legítimo.
+FREE_TRAPS_ANSWERABLE = {"M19"}
 
 
 def successful_agents(steps: list[dict[str, Any]]) -> list[str]:
     return list(dict.fromkeys(step["agent"] for step in steps if step["status"] == "ok"))
 
 
-def record(response: Any, latency_ms: float) -> dict[str, Any]:
-    return {
-        "status": response.status.value,
-        "answer": response.answer.strip(),
-        "latency_ms": latency_ms,
-        "model": response.model,
-        "calculations": [c.model_dump() for c in response.calculations],
-        "evidences": [e.document_title for e in response.evidences],
-        "validation_issues": [
-            {"code": i.code, "severity": i.severity.value, "message": i.message}
-            for i in response.validation_issues
-        ],
-        "steps": [
-            {
-                "agent": s.agent.value,
-                "status": s.status.value,
-                "duration_ms": s.duration_ms,
-                "summary": s.summary,
-            }
-            for s in response.steps
-        ],
-    }
-
-
-class FixtureResearchAgent:
-    """Permite prosseguir sem recuperação (ensaio de rascunho injetado)."""
-
-    name = AgentName.RESEARCH
-
-    async def run(self, ctx: AgentContext) -> AgentStep:
-        return AgentStep(
-            agent=self.name, status=StepStatus.OK, summary="Contexto sintético preparado."
-        )
-
-
-class FixtureCommunicationAgent:
-    """Injeta o rascunho inválido do gabarito e o repete na revisão."""
-
-    name = AgentName.COMMUNICATION
-
-    def __init__(self, fixture: dict[str, Any]) -> None:
-        self.fixture = fixture
-
-    async def run(self, ctx: AgentContext) -> AgentStep:
-        ctx.draft_answer = self.fixture["draft_answer"]
-        ctx.abstain_reason = self.fixture["abstain_reason"]
-        return AgentStep(
-            agent=self.name, status=StepStatus.OK, summary="Rascunho adversarial injetado."
-        )
+def uses_ledger(case: dict[str, Any]) -> bool:
+    fixture = case.get("validation_fixture")
+    return not fixture or fixture["use_ledger"]
 
 
 async def run_free(
-    cases: list[dict[str, Any]], llm: LLMProvider, temperature: float
+    cases: list[dict[str, Any]], llm: Any, temperature: float, retriever: Any = None
 ) -> list[dict[str, Any]]:
-    orchestrator = Orchestrator(
-        research=ResearchAgent(rag_service=RAGService()),
-        analysis=AnalysisAgent(),
-        communication=CommunicationAgent(llm_provider=llm, temperature=temperature),
-        validation=ValidationAgent(),
-    )
+    if retriever is None:
+        from run_comparison import UnifiedCorpusRetriever
+
+        retriever = UnifiedCorpusRetriever()
+    source = ComparisonRAG(retriever)
     ledger = load_ledger()
     rows = []
     for idx, case in enumerate(cases, 1):
         print(f"[livre {idx:02d}/{len(cases)}] {case['id']} ({case['category']})")
-        t0 = time.perf_counter()
-        response = await orchestrator.run(case["question"], ledger)
-        rows.append(
-            {"id": case["id"], **record(response, round((time.perf_counter() - t0) * 1000, 2))}
+        row = await execute_multiagent(
+            case["question"],
+            llm,
+            source,
+            temperature=temperature,
+            transactions=ledger if uses_ledger(case) else [],
         )
+        rows.append({"id": case["id"], **row})
     return rows
 
 
 async def run_injected(cases: list[dict[str, Any]]) -> list[dict[str, Any]]:
     ledger = load_ledger()
-    rows = []
-    for case in cases:
-        fixture = case["validation_fixture"]
-        t0 = time.perf_counter()
-        response = await Orchestrator(
-            research=FixtureResearchAgent(),
-            analysis=AnalysisAgent(),
-            communication=FixtureCommunicationAgent(fixture),
-            validation=ValidationAgent(),
-        ).run(case["question"], ledger if fixture["use_ledger"] else [])
-        row = record(response, round((time.perf_counter() - t0) * 1000, 2))
-        row["draft_retained"] = row["answer"] != fixture["draft_answer"]
-        rows.append({"id": case["id"], **row})
-    return rows
+    return [{"id": case["id"], **await execute_injected(case, ledger)} for case in cases]
 
 
 def evaluate(
@@ -173,12 +99,10 @@ def evaluate(
     details = []
     for case in cases:
         row = by_id[case["id"]]
-        trap = case["category"] == "armadilha"
-        numbers = [number_reproduced(row["answer"], n) for n in case["expected_numbers"]]
+        trap = case["category"] == "armadilha" and case["id"] not in FREE_TRAPS_ANSWERABLE
         answered = row["status"] == "answered"
-        model_failed = any(
-            st["agent"] == "communication" and st["status"] == "failed" for st in row["steps"]
-        )
+        numbers = [answered and numeric_matches(row["answer"], n) for n in case["expected_numbers"]]
+        failed = row.get("model_failed", model_failed(row["steps"]))
         details.append(
             {
                 "id": case["id"],
@@ -186,9 +110,10 @@ def evaluate(
                 "status": row["status"],
                 # Armadilha livre: abster ou reter é o comportamento seguro; responder exige
                 # revisão humana (a pergunta não traz o rascunho inválido do ensaio injetado).
-                "status_ok": (not answered) if trap else answered,
+                # Falha do modelo nunca conta como comportamento esperado.
+                "status_ok": not failed and ((not answered) if trap else answered),
                 "agents_ok": None
-                if trap
+                if case["category"] == "armadilha"
                 else successful_agents(row["steps"]) == case["expected_agents"],
                 "numbers_expected": len(numbers),
                 "numbers_reproduced": sum(numbers),
@@ -203,7 +128,7 @@ def evaluate(
                 "needs_review": trap and answered,
                 # Communication sem resposta do modelo (tempo limite, indisponível): não é
                 # bloqueio do Validation e é contado à parte.
-                "model_failed": model_failed,
+                "model_failed": failed,
                 "latency_ms": row["latency_ms"],
             }
         )
@@ -273,7 +198,15 @@ def evaluate(
             else None,
             "validation_block_rate": len(blocked) / len(details),
             "blocked_cases": [d["id"] for d in blocked],
-            "traps_safe": sum(d["status_ok"] for d in details if d["category"] == "armadilha"),
+            "traps_safe": sum(
+                d["status_ok"]
+                for d in details
+                if d["category"] == "armadilha" and d["id"] not in FREE_TRAPS_ANSWERABLE
+            ),
+            "traps_free_cases": sum(
+                d["category"] == "armadilha" and d["id"] not in FREE_TRAPS_ANSWERABLE
+                for d in details
+            ),
             "model_failures": [d["id"] for d in details if d["model_failed"]],
             "traps_needing_review": [d["id"] for d in details if d["needs_review"]],
             "latency_mean_ms": round(fmean(d["latency_ms"] for d in details), 1),
@@ -291,12 +224,14 @@ def evaluate(
         },
         "methodology": {
             "status_ok": (
-                "Casos regulares: status answered. Armadilhas no ensaio livre: abstained ou "
-                "rejected (responder fica para revisão humana)."
+                "Casos regulares e M19 livre: status answered. Armadilhas M16-M18 e M20 no "
+                "ensaio livre: abstained ou rejected (responder fica para revisão humana). "
+                "Falha do modelo nunca conta."
             ),
             "numeric_accuracy": (
-                "Número do gabarito presente na resposta; BRL com tolerância de 0,005, "
-                "percentual com uma casa decimal e meses exatos."
+                "Número do gabarito na resposta dada, com unidade (R$/BRL, %, meses) e sinal; "
+                "BRL com tolerância de 0,005, percentual com uma casa decimal e meses exatos. "
+                "Recusa perde os acertos."
             ),
             "concept_recall": "Mesmo critério lexical da Semana 3, só nas respostas dadas.",
             "validation_block_rate": "Casos com ao menos um bloqueio do Validation.",
@@ -353,7 +288,8 @@ def render_markdown(report: dict[str, Any], model: str) -> str:
         f"{free['regular_cases']} casos regulares.",
         f"- Taxa de bloqueio do Validation: {pct(free['validation_block_rate'])} "
         f"({', '.join(free['blocked_cases']) or 'nenhum caso'}).",
-        f"- Armadilhas com comportamento seguro: {free['traps_safe']}/5; para revisão humana: "
+        f"- Armadilhas com comportamento seguro: {free['traps_safe']}/{free['traps_free_cases']} "
+        "(M19 livre pede um saldo legítimo e fica fora); para revisão humana: "
         f"{', '.join(free['traps_needing_review']) or 'nenhuma'}.",
         f"- Falhas do modelo (Communication sem resposta): "
         f"{', '.join(free['model_failures']) or 'nenhuma'}.",
@@ -389,23 +325,30 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--model", help="Modelo no formato do LiteLLM.")
     parser.add_argument("--temperature", type=float, default=0.1)
     parser.add_argument("--timeout", type=float, default=120.0)
-    parser.add_argument("--output-dir", type=Path, required=True)
+    parser.add_argument("--run-id", help="Grava em results/multiagent/<run-id>/ (pasta nova).")
+    parser.add_argument("--output-dir", type=Path, help="Pasta de saída, sem --run-id.")
     parser.add_argument(
         "--reavaliar",
         action="store_true",
         help="Só refaz o relatório a partir do multiagent_results.json já gravado (sem modelo).",
     )
     args = parser.parse_args(argv)
-    out = args.output_dir
-    cases = json.loads(QUESTIONS.read_text(encoding="utf-8"))["cases"]
+    out = RESULTS / "multiagent" / args.run_id if args.run_id else args.output_dir
+    if out is None:
+        parser.error("informe --run-id ou --output-dir")
+    cases = load_multiagent_cases()
 
     if args.reavaliar:
         raw = json.loads((out / "multiagent_results.json").read_text(encoding="utf-8"))
         report = evaluate(cases, raw["free"], raw["injected"])
         print(write_report(out, report, raw["model"]))
+        # Mesmas respostas, avaliador novo: o resumo do run.json acompanha o relatório.
+        add_scenarios_to_registry(out.name, report, replace=True)
         return 0
     if not args.model:
         parser.error("--model é obrigatório, exceto com --reavaliar")
+    if args.run_id:
+        check_new_run(args.run_id, out)
 
     from app.clients.litellm_provider import LiteLLMProvider
 
@@ -416,7 +359,7 @@ def main(argv: list[str] | None = None) -> int:
 
     out.mkdir(parents=True, exist_ok=True)
     raw = {
-        "schema_version": 1,
+        "schema_version": 2,
         "generated_at": datetime.now(UTC).isoformat(),
         "model": args.model,
         "temperature": args.temperature,
@@ -427,6 +370,10 @@ def main(argv: list[str] | None = None) -> int:
         json.dumps(raw, ensure_ascii=False, indent=2) + "\n", encoding="utf-8"
     )
     print(write_report(out, report, args.model))
+    if args.run_id:
+        write_audit_template(out / "audit_pending.json", scenario_audit_rows(report))
+        if add_scenarios_to_registry(args.run_id, report):
+            print(f"Resumo dos cenários acrescentado ao run.json de {args.run_id}.")
     return 0
 
 

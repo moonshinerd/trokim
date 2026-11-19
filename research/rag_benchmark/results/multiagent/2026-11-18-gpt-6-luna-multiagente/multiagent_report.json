@@ -2,7 +2,7 @@
   "schema_version": 1,
   "case_count": 20,
   "free": {
-    "status_ok": 13,
+    "status_ok": 14,
     "regular_answered": 12,
     "regular_cases": 15,
     "agents_ok": 12,
@@ -16,11 +16,11 @@
       "M15"
     ],
     "traps_safe": 1,
+    "traps_free_cases": 4,
     "model_failures": [],
     "traps_needing_review": [
       "M16",
       "M17",
-      "M19",
       "M20"
     ],
     "latency_mean_ms": 6940.2,
@@ -69,7 +69,7 @@
       },
       "armadilha": {
         "cases": 5,
-        "status_ok": 1,
+        "status_ok": 2,
         "answered": 4,
         "abstained": 1,
         "rejected": 0,
@@ -379,7 +379,7 @@
         "id": "M19",
         "category": "armadilha",
         "status": "answered",
-        "status_ok": false,
+        "status_ok": true,
         "agents_ok": null,
         "numbers_expected": 0,
         "numbers_reproduced": 0,
@@ -387,7 +387,7 @@
         "blocked": false,
         "revisions": 1,
         "codes": [],
-        "needs_review": true,
+        "needs_review": false,
         "model_failed": false,
         "latency_ms": 5341.58
       },
@@ -470,8 +470,8 @@
     ]
   },
   "methodology": {
-    "status_ok": "Casos regulares: status answered. Armadilhas no ensaio livre: abstained ou rejected (responder fica para revisão humana).",
-    "numeric_accuracy": "Número do gabarito presente na resposta; BRL com tolerância de 0,005, percentual com uma casa decimal e meses exatos.",
+    "status_ok": "Casos regulares e M19 livre: status answered. Armadilhas M16-M18 e M20 no ensaio livre: abstained ou rejected (responder fica para revisão humana). Falha do modelo nunca conta.",
+    "numeric_accuracy": "Número do gabarito na resposta dada, com unidade (R$/BRL, %, meses) e sinal; BRL com tolerância de 0,005, percentual com uma casa decimal e meses exatos. Recusa perde os acertos.",
     "concept_recall": "Mesmo critério lexical da Semana 3, só nas respostas dadas.",
     "validation_block_rate": "Casos com ao menos um bloqueio do Validation.",
     "limitations": "Uma execução, gabarito público e não cego; heurísticas lexicais exigem revisão humana dos casos sinalizados."

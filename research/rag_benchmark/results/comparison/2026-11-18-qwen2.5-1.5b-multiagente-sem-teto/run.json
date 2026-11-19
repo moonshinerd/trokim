@@ -57,11 +57,11 @@
   "multiagent_scenarios": {
     "report": "research/rag_benchmark/results/multiagent/2026-11-18-qwen2.5-1.5b-multiagente-sem-teto/multiagent_report.md",
     "cases": 20,
-    "status_ok": 10,
+    "status_ok": 9,
     "numbers_expected": 11,
     "numbers_reproduced": 5,
     "validation_block_rate": 0.2,
-    "traps_safe": 4,
+    "traps_safe": 2,
     "injected_blocked": 5,
     "latency_mean_ms": 64040.5
   }

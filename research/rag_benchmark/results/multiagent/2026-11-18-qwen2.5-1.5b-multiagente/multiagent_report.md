@@ -9,12 +9,12 @@ Modelo: `ollama/qwen2.5:1.5b`. Casos: **20**.
 | Evidência | 5 | 3 | 3 | 0 | 2 | — | 83,3% |
 | Cálculo | 5 | 3 | 3 | 0 | 2 | 4/6 | 100,0% |
 | Evidência + cálculo | 5 | 3 | 3 | 0 | 2 | 3/5 | 100,0% |
-| Armadilha | 5 | 4 | 1 | 1 | 3 | — | — |
+| Armadilha | 5 | 5 | 1 | 1 | 3 | — | — |
 
 - Acerto numérico: **7/11** (63,6%).
 - Agentes com passo `ok` iguais ao gabarito: 9/15 casos regulares.
 - Taxa de bloqueio do Validation: 45,0% (M01, M02, M06, M09, M12, M15, M16, M17, M20).
-- Armadilhas com comportamento seguro: 4/5; para revisão humana: M19.
+- Armadilhas com comportamento seguro: 4/4 (M19 livre pede um saldo legítimo e fica fora); para revisão humana: nenhuma.
 - Falhas do modelo (Communication sem resposta): nenhuma.
 - Latência média: 4267 ms; por agente: research 25 ms, analysis 1 ms, communication 2648 ms, validation 2 ms.
 

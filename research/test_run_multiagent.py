@@ -23,11 +23,9 @@ def _livre(case, status="answered", answer="Resposta."):
     }
 
 
-def test_numeros_no_formato_brasileiro_e_com_ponto():
-    assert rm.numbers_in("Saldo de R$ 6.107,90 e taxa de 38,66%") == [6107.90, 38.66]
-    assert rm.number_reproduced("R$ 15.800,00", {"value": 15800.0, "unit": "BRL"})
-    assert rm.number_reproduced("cerca de 38,7%", {"value": 38.66, "unit": "%"})
-    assert not rm.number_reproduced("13 meses", {"value": 12, "unit": "meses"})
+def _com_unidade(n):
+    valor = f"{n['value']:.2f}".replace(".", ",")
+    return {"BRL": f"R$ {valor}", "%": f"{valor}%", "meses": f"{int(n['value'])} meses"}[n["unit"]]
 
 
 def test_avaliacao_conta_status_numeros_e_armadilhas():
@@ -35,19 +33,20 @@ def test_avaliacao_conta_status_numeros_e_armadilhas():
     livre = []
     for case in CASES:
         if case["category"] == "armadilha":
-            livre.append(_livre(case, "abstained" if case["id"] != "M20" else "answered"))
+            # M19 livre pede um saldo legítimo: responder é o esperado.
+            responde = case["id"] in {"M19", "M20"}
+            livre.append(_livre(case, "answered" if responde else "abstained"))
         else:
-            valores = " ".join(
-                f"{n['value']:.2f}".replace(".", ",") for n in case["expected_numbers"]
-            )
+            valores = " ".join(_com_unidade(n) for n in case["expected_numbers"])
             livre.append(_livre(case, answer=f"{valores} {' '.join(case['required_concepts'])}"))
     report = rm.evaluate(CASES, livre, injetado)
     free = report["free"]
     assert free["regular_answered"] == 15
     assert free["agents_ok"] == 15
     assert free["numeric_accuracy"] == 1.0
-    assert free["traps_safe"] == 4
+    assert free["traps_safe"] == 3 and free["traps_free_cases"] == 4
     assert free["traps_needing_review"] == ["M20"]
+    assert free["status_ok"] == 15 + 3 + 1  # regulares, M16-M18 recusadas e M19 respondida
     assert report["injected"]["blocked_with_expected_code"] == 5
     assert report["injected"]["drafts_retained"] == 5
     markdown = rm.render_markdown(report, "mock")
