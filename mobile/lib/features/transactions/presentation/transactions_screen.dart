@@ -225,7 +225,7 @@ class _PrivacyBanner extends StatelessWidget {
                   ),
                   const SizedBox(height: 4),
                   Text(
-                    'Aceita OFX e faturas em PDF. O arquivo é lido pela API na sua máquina '
+                    'Aceita OFX, faturas em PDF e CSV (C6). O arquivo é lido pela API na sua máquina '
                     'e os lançamentos ficam na memória dela até ser reiniciada.',
                     style: TextStyle(
                       fontSize: 13,

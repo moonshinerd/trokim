@@ -171,9 +171,11 @@ class FinanceController extends ChangeNotifier {
 
   void _checkExtension(String name) {
     final lower = name.toLowerCase();
-    if (!lower.endsWith('.ofx') && !lower.endsWith('.pdf')) {
+    if (!lower.endsWith('.ofx') &&
+        !lower.endsWith('.pdf') &&
+        !lower.endsWith('.csv')) {
       throw const ImportFailure(
-        'Formato não suportado. Escolha um arquivo .ofx ou .pdf.',
+        'Formato não suportado. Escolha um arquivo .ofx, .pdf ou .csv.',
       );
     }
   }
@@ -199,7 +201,7 @@ class FinanceController extends ChangeNotifier {
     }
   }
 
-  /// Envia um extrato OFX ou PDF e recarrega o resumo. Lança [ImportFailure]
+  /// Envia um extrato OFX, PDF ou CSV e recarrega o resumo. Lança [ImportFailure]
   /// com a mensagem a exibir quando algo dá errado.
   Future<ImportResult> importStatement(
     String name,

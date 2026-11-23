@@ -157,7 +157,12 @@ class ImportedFile {
   /// Transações descartadas por já existirem (mesma data, descrição e valor).
   final int duplicates;
 
-  String get kind => name.toLowerCase().endsWith('.pdf') ? 'PDF' : 'OFX';
+  String get kind {
+    final lower = name.toLowerCase();
+    if (lower.endsWith('.pdf')) return 'PDF';
+    if (lower.endsWith('.csv')) return 'CSV';
+    return 'OFX';
+  }
 
   /// Agrupa por arquivo, na ordem em que cada um apareceu pela primeira vez.
   static List<ImportedFile> fromTransactions(
@@ -319,6 +324,11 @@ int _count(Map<String, dynamic> json, String key) {
 String? institutionName(String? id) => switch (id) {
   'nubank' => 'Nubank',
   'bb' => 'Banco do Brasil',
+  'picpay' => 'PicPay',
+  'mercadopago' => 'Mercado Pago',
+  'inter' => 'Banco Inter',
+  'c6' => 'C6 Bank',
+  'itau' => 'Itaú',
   final other? => other,
   null => null,
 };

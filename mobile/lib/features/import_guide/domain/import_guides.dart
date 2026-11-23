@@ -62,9 +62,8 @@ const List<SupportedBankInfo> supportedBanks = [
     bank: GuideBank.picpay,
     name: 'PicPay',
     supportLevel: BankSupportLevel.experimental,
-    acceptedFormats: 'PDF (extrato da conta)',
-    description:
-        'Extrato da conta do PicPay em PDF (fatura do cartão ainda não)',
+    acceptedFormats: 'PDF (extrato da conta e fatura do cartão)',
+    description: 'Extrato da conta e fatura do PicPay Card em PDF',
     experimentalNotice: 'Suporte experimental: leitor baseado em formato público do PicPay, ainda não testado em conta real.',
     icon: Icons.account_balance_wallet_rounded,
   ),

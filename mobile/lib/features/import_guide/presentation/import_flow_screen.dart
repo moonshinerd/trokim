@@ -623,7 +623,7 @@ class _BankStep extends StatelessWidget {
         _OptionCard(
           icon: Icons.folder_open_rounded,
           title: 'Outro banco',
-          subtitle: 'Arquivo OFX ou PDF que você já tem',
+          subtitle: 'Arquivo OFX, PDF ou CSV que você já tem',
           onTap: onOther,
         ),
         Container(
