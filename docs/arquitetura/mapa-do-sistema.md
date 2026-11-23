@@ -321,3 +321,22 @@ sequenceDiagram
     API-->>Mobile: Resposta auditada com trilha dos agentes
     Mobile-->>User: Exibe resposta com botão "Como cheguei a essa resposta"
 ```
+
+
+## Leitura de documento (componente da #88)
+
+```mermaid
+flowchart TD
+    D["Arquivo em memória"] --> T{"Texto útil?"}
+    T -->|Sim| P["Perfil textual"]
+    T -->|Não| Q{"Qualidade da imagem"}
+    Q -->|Insuficiente| A["Abstenção da página"]
+    Q -->|Suficiente| O["OCR local"]
+    P --> R["Campos para revisão"]
+    O --> R
+```
+
+O [agente de documento](../agentes/document-agent.md) devolve campos e trilha sanitizada.
+Visão opcional exige proteção dos pixels e política de confiança; permanece bloqueada
+sem essas garantias. Validação financeira (#89), endpoints e confirmação (#96) ainda
+precisam ser integrados. Nenhum lançamento é criado por esse componente.

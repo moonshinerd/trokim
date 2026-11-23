@@ -86,16 +86,59 @@ trilha tipada dos agentes, duração, cálculos e validações. O botão **Como
 cheguei a essa resposta** abre as etapas e explica abstenções/rejeições em
 linguagem simples. Desligado, o fluxo configurado de chat continua igual.
 
-### Importação guiada (Nubank)
+### Importação guiada e bancos suportados (RF29, ADR 0022)
 
-**Extratos → Importar extrato** abre `features/import_guide/`: escolha do banco, tipo (fatura do
-cartão ou extrato da conta), tutorial passo a passo e resumo. Em toda tela há **Pular tutorial**,
-e **Já tenho o arquivo** vai direto ao seletor. **Não mostrar este tutorial de novo** (e o
-interruptor **Tutorial ao importar extratos** em Ajustes) controla `showImportTutorial`, salvo no
+**Extratos → Importar extrato** abre a tela de **Bancos suportados** (`features/import_guide/`):
+lista com os bancos homologados, seus respectivos selos de suporte (**Validado** ou
+**Experimental**), formatos aceitos (OFX, PDF) e botão **Ver como exportar**.
+Os bancos atualmente suportados são:
+
+- **Nubank (Validado):** OFX para cartão e conta corrente, cobrindo pessoa física e Nubank Empresas.
+- **Banco do Brasil (Validado):** fatura Ourocard em PDF pelo app do cartão e extrato da conta corrente em OFX.
+- **PicPay (Validado):** extrato da carteira e fatura do PicPay Card em PDF (testado com arquivos reais).
+- **Mercado Pago (Validado):** extrato da conta e fatura do cartão em PDF (testado com arquivos reais).
+- **Banco Inter (Experimental):** extrato em OFX e fatura em PDF, baseado na ajuda oficial (não testado em conta real).
+- **C6 Bank (Experimental):** extrato em OFX e fatura em PDF, baseado na ajuda oficial (não testado em conta real).
+- **Itaú (Experimental):** extrato em OFX e fatura em PDF, baseado na ajuda oficial (não testado em conta real).
+
+Em toda tela há o atalho **Pular tutorial**, e na tela inicial de bancos o botão
+**Já tenho o arquivo** vai direto ao seletor de arquivos. Caso o banco do usuário não
+esteja na lista, a opção **Outro banco** permite importar via parser genérico, e o card de
+ajuda traz o link **Pedir suporte a um banco** direcionando para a abertura de issues no repositório.
+
+No último passo do tutorial, **Não mostrar este tutorial de novo** (e o interruptor
+**Tutorial ao importar extratos** em Ajustes) controla `showImportTutorial`, salvo no
 aparelho; desligado, o app abre o seletor na hora. O resumo mostra o banco detectado pela API,
-lançamentos lidos, repetidos ignorados, movimentações fora dos totais e gastos sem categoria. O
-Resumo ganha **Onde você mais gastou**, calculado pela API. Testes:
-`test/import_flow_test.dart` e `test/nubank_summary_test.dart`.
+lançamentos lidos, repetidos ignorados, movimentações fora dos totais e gastos sem categoria.
+Testes: `test/import_flow_test.dart`, `test/supported_banks_test.dart` e `test/nubank_summary_test.dart`.
+
+### Como acrescentar o guia de um banco novo
+
+Para adicionar o passo a passo de exportação e suporte a uma nova instituição financeira:
+
+1. **Adicionar o identificador no enum:**
+   Em `mobile/lib/features/import_guide/domain/import_guides.dart`, acrescente o banco no enum `GuideBank` (ex.: `santander`).
+
+2. **Registrar no catálogo `supportedBanks`:**
+   Adicione uma entrada `SupportedBankInfo` na lista `supportedBanks`, definindo:
+   - `bank`: o valor do enum.
+   - `name`: o nome amigável do banco exibido na interface.
+   - `supportLevel`: `BankSupportLevel.validated` (se testado em arquivos de conta real) ou `BankSupportLevel.experimental` (se baseado em documentação oficial de ajuda).
+   - `acceptedFormats`: formatos aceitos (ex.: `'OFX (conta) e PDF (fatura)'`).
+   - `description`: descrição curta das fontes.
+   - `experimentalNotice`: aviso obrigatório para bancos experimentais (ex.: `'Suporte experimental: passos baseados na ajuda oficial do banco, ainda não testados em conta real.'`).
+   - `icon`: ícone representativo (`Icons.account_balance_rounded`, etc.).
+
+3. **Escrever a função de passos do tutorial:**
+   Crie a função `meuBancoGuide(NubankStatementKind kind)` retornando `List<GuideStep>` com 3 a 5 passos curtos. Cada passo deve especificar `icon`, `title` e `description` orientando onde encontrar o botão de exportar no app do banco e qual formato selecionar.
+   Nenhum tutorial pode prometer que um banco experimental foi validado.
+
+4. **Integrar no seletor central:**
+   Conecte a nova função no switch de `getGuideForBank(...)` em `import_guides.dart` e nos textos contextuais de `_KindStep` em `import_flow_screen.dart`.
+
+5. **Testes e documentação:**
+   - Crie testes de widget em `mobile/test/supported_banks_test.dart` conferindo a exibição do card, selo correto, navegação do tutorial e o aviso experimental.
+   - Atualize a tabela e tutoriais em `docs/guia-de-uso.md`.
 
 ### Várias contas, Banco do Brasil e categorias (ADR 0018)
 

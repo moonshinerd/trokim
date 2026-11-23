@@ -99,6 +99,7 @@ nav:
       - Analysis Agent: agentes/analysis-agent.md
       - Validation Agent: agentes/validation-agent.md
       - Communication Agent: agentes/communication-agent.md
+      - Document Agent: agentes/document-agent.md
   - Base RAG (Semana 2):
       - Mecanismo e Fontes: rag/index.md
       - Catálogo de Fontes: rag/catalogo.md
@@ -126,5 +127,6 @@ nav:
       - "0019 – ORM e Migrações Numeradas": adr/0019-orm-e-migracoes-numeradas.md
       - "0020 – Categorização por CNAE": adr/0020-categorizacao-por-cnae.md
       - "0021 – Leitura de Imagem Modular (OCR e Visão)": adr/0021-visao-e-ocr-modulares.md
+      - "0022 – Perfis de Banco e Níveis de Suporte": adr/0022-registro-de-perfis-e-niveis-de-suporte.md
       - "0024 – Persistência Local e Backup Criptografado": adr/0024-persistencia-local-e-backup-criptografado.md
       - "0025 – Armazenamento no Aparelho e API sem Estado": adr/0025-armazenamento-no-aparelho-e-api-sem-estado.md

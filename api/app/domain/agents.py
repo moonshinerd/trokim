@@ -7,6 +7,7 @@ from app.domain.models import EvidenceChunk, Transaction
 
 
 class AgentName(StrEnum):
+    DOCUMENT = "document"
     RESEARCH = "research"
     ANALYSIS = "analysis"
     COMMUNICATION = "communication"

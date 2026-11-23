@@ -20,6 +20,7 @@ Rastreabilidade bidirecional entre os Requisitos do Sistema (Funcionais e Não F
 | **v1.8.1** | 23/11/2026 | Semana 5 (*Multimodalidade*) | Inclusão de **RF27** (captura e prévia documental) e **RF28** (revisão humana, confiança, bloqueios e abstenção para imagem ilegível), rastreados à ADR 0021. | Equipe Trokim |
 | **v1.10.0** | 23/11/2026 | Semana 5 (*Armazenamento no aparelho*) | **RF31** passa a ter o aparelho como fonte da verdade: biblioteca cifrada (AES-256-GCM, chave no Keystore) e API que a mantém só em memória ([ADR 0025](adr/0025-armazenamento-no-aparelho-e-api-sem-estado.md)). | Equipe Trokim |
 | **v1.9.0** | 23/11/2026 | Semana 5 (*Leitura de imagem*) | Inclusão de **RNF12** (motores de leitura de imagem intercambiáveis e consentimento para provedor remoto) e das portas de OCR e visão ([ADR 0021](adr/0021-visao-e-ocr-modulares.md)); backend em contêiner com OCR. **RF27** segue em implementação. | Equipe Trokim |
+| **v1.11.0** | 23/11/2026 | Semana 5 (*Bancos suportados e tutoriais*) | Inclusão de **RF29** (tutoriais por banco e tela de bancos suportados com selos Validado e Experimental), cobrindo Nubank, Banco do Brasil, PicPay, Mercado Pago, Banco Inter, C6 Bank e Itaú, com vinculação da [ADR 0022](adr/0022-registro-de-perfis-e-niveis-de-suporte.md). | Equipe Trokim |
 
 ---
 
@@ -144,3 +145,15 @@ graph LR
 | **RNF10** | GQ01, GQ07 | [ADR 0011](adr/0011-identidade-visual-e-tema-do-sistema.md), [0013](adr/0013-preferencias-locais-e-aba-de-ajustes.md), [0021](adr/0021-visao-e-ocr-modulares.md) | `mobile/lib/core/theme/app_theme.dart`, `mobile/lib/core/widgets/app_motion.dart`, `mobile/lib/features/documents/` | `mobile/test/splash_gate_test.dart`, `mobile/test/settings_screen_test.dart`, `mobile/test/document_import_screen_test.dart` |
 | **RNF11** | GQ01, GQ03 | [ADR 0012](adr/0012-mascote-onca-e-arte-de-marca-livre.md) | `mobile/assets/brand/`, `docs/referencias.md` | Revisão no PR |
 | **RNF12** | GQ02, GQ03 | [ADR 0021](adr/0021-visao-e-ocr-modulares.md) | `api/app/models/vision_provider.py`, `api/app/clients/vision_factory.py`, `api/app/clients/rapidocr_provider.py`, `api/app/clients/litellm_vision_provider.py` | `api/tests/test_vision_ports.py` |
+
+
+
+## Rastreabilidade do agente de documento (#88)
+
+| Requisito do épico #86 | Origem | Atendimento nesta implementação |
+|---|---|---|
+| RF27 — leitura de foto ou PDF escaneado | GQ02 | Componente integrado às portas da #87; ensaio com OCR real e calibração com a #90 pendentes |
+| RF28 — revisão humana e abstenção | GQ02, GQ05 | `needs_review=True`, abstenção e leitura parcial; confirmação no app depende da #96 |
+
+O [Agente de documento](agentes/document-agent.md) detalha limites, formatos, proteção dos dados
+e testes. Estes requisitos não são declarados concluídos de ponta a ponta nesta entrega parcial.

@@ -174,6 +174,9 @@ void main() {
     await h.open(tester);
     await tester.tap(find.text('Importar extrato'));
     await tester.pumpAndSettle();
+    await tester.scrollUntilVisible(find.text('Outro banco'), 200);
+    await tester.drag(find.byType(ListView), const Offset(0, -80));
+    await tester.pumpAndSettle();
     await h.tapAsync(tester, find.text('Outro banco'));
     expect(find.text('Pronto!'), findsOneWidget);
     expect(find.textContaining('Detectei'), findsNothing);
