@@ -1,8 +1,4 @@
-"""Preparação de arquivos em memória e portas internas de leitura.
-
-As portas internas serão adaptadas às interfaces definitivas da #87, sem
-acoplar o agente ao motor. Nenhum adaptador real é instalado implicitamente.
-"""
+"""Preparação de arquivos em memória e contrato de anonimização de pixels."""
 
 import io
 import threading
@@ -26,21 +22,6 @@ class DocumentReadError(Exception):
     def __init__(self, code: str):
         self.code = code
         super().__init__(code)
-
-
-@dataclass(frozen=True)
-class TextReading:
-    text: str
-    confidence: float
-    field_confidences: dict[str, float] | None = None
-
-
-class DocumentOcr(Protocol):
-    async def read(self, image: bytes) -> TextReading: ...
-
-
-class DocumentVision(Protocol):
-    async def extract(self, image: bytes, instructions: str, schema: dict[str, object]) -> str: ...
 
 
 class VisionSanitizer(Protocol):

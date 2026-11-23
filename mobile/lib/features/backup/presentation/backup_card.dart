@@ -170,6 +170,7 @@ class _BackupCardState extends State<BackupCard> {
       );
       final added = (result['added'] as Map?)?['transactions'] ?? 0;
       final total = result['transactions_total'] ?? 0;
+      await finance?.saveToDevice();
       await finance?.load();
       _show(
         'Backup restaurado: $added lançamentos novos, $total no total.',
@@ -190,6 +191,24 @@ class _BackupCardState extends State<BackupCard> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          if (FinanceScope.read(context)?.deviceCopyUnreadable ?? false) ...[
+            Container(
+              key: const Key('aviso-copia-ilegivel'),
+              padding: const EdgeInsets.all(12),
+              decoration: BoxDecoration(
+                color: c.accent.withValues(alpha: 0.12),
+                borderRadius: BorderRadius.circular(12),
+              ),
+              child: Text(
+                'Não foi possível ler a cópia dos seus dados guardada neste '
+                'aparelho (o arquivo foi alterado ou a chave se perdeu). Ele '
+                'foi guardado à parte, sem ser apagado. Restaure um backup '
+                'abaixo para recuperar seus dados.',
+                style: TextStyle(color: c.ink, height: 1.4),
+              ),
+            ),
+            const SizedBox(height: 12),
+          ],
           Text(
             'Leve seus dados para outro aparelho em um arquivo protegido por '
             'senha. Ninguém lê o arquivo sem ela, e ela não é guardada: se '

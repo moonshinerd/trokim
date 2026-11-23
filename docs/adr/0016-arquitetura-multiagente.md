@@ -115,5 +115,6 @@ com o mesmo `AgentStep`, sem executar o pipeline de pesquisa e comunicação do 
 O contexto próprio exclui os bytes de serialização e representação; a operação apaga sua
 referência ao arquivo ao terminar. A integração ao orquestrador HTTP pertence à #96.
 O contrato público do épico #86 fica em `domain/documents.py` e deve ser compartilhado
-com as #87 e #89. As portas internas provisórias serão adaptadas à #87.
+com a #89. O agente usa diretamente as portas `OcrProvider` e `VisionProvider` da #87
+(ADR 0021), com seus resultados tipados e suas fábricas configuráveis.
 A leitura, os limites e as pendências estão no [Agente de documento](../agentes/document-agent.md).

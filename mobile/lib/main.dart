@@ -5,6 +5,8 @@ import 'core/network/api_client.dart';
 import 'core/settings/settings_controller.dart';
 import 'core/sharing/shared_file_listener.dart';
 import 'core/sharing/shared_file_receiver.dart';
+import 'core/storage/library_sync.dart';
+import 'core/storage/local_library_store.dart';
 import 'core/theme/app_theme.dart';
 import 'core/widgets/app_motion.dart';
 import 'core/widgets/coin.dart';
@@ -21,13 +23,17 @@ Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   final settings = await SettingsController.load();
   await Mascot.load();
-  final finance = FinanceController(
-    FinanceRepository(
-      () => ApiClient(baseUrlProvider: () => settings.apiBaseUrl),
-    ),
-  );
-  // A abertura espera este carregamento real: o resumo já aparece pronto.
-  final firstLoad = finance.load();
+  // O aparelho guarda a biblioteca cifrada; a API só a mantém em memória (ADR 0025).
+  ApiClient newClient() =>
+      ApiClient(baseUrlProvider: () => settings.apiBaseUrl);
+  final sync = LibrarySync(await EncryptedFileLibraryStore.open(), newClient);
+  final finance = FinanceController(FinanceRepository(newClient, sync: sync));
+  // A abertura espera o retrato do aparelho voltar à API e só então carrega o
+  // resumo, já pronto.
+  final firstLoad = () async {
+    await sync.hydrate();
+    await finance.load();
+  }();
   runApp(
     SettingsScope(
       controller: settings,

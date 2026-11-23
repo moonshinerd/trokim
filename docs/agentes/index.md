@@ -1,4 +1,4 @@
-# Sistema Multiagente (Semana 4)
+# Sistema Multiagente (Semanas 4 e 5)
 
 O primeiro protótipo multiagente do Trokim: quatro agentes com papéis separados, coordenados por um
 orquestrador determinístico, com a **trilha** de cada resposta visível no app. A decisão está na
@@ -11,7 +11,8 @@ orquestrador determinístico, com a **trilha** de cada resposta visível no app.
 
 Na Semana 3 o Trokim errou os casos C27, C29 e C30 porque o mesmo passo recupera, calcula, escreve e
 se auto-avalia. Separar os papéis dá cálculo determinístico, recuperação auditável e uma checagem
-independente antes de qualquer resposta sair. Só o agente de comunicação usa LLM.
+independente antes de qualquer resposta sair. No fluxo de chat, só o agente de comunicação usa LLM. A leitura de documentos pode usar
+visão opcional, com consentimento remoto e proteção de dados.
 
 ## Fluxo
 
@@ -161,5 +162,5 @@ com os números do sistema (protocolo corrigido de 19/11) e o C27 continua respo
 
 O quinto agente tem contexto próprio, distinto do chat: lê documentos e devolve campos
 para revisão. Veja [Agente de documento](document-agent.md) para escopo, abstenção,
-privacidade e dependências ainda pendentes. O componente da #88 não adiciona endpoints;
-a ligação ao fluxo do app pertence à #96.
+privacidade e dependências ainda pendentes. O componente da #88 usa as portas e fábricas de OCR e visão da #87 e não adiciona endpoints;
+a ligação ao fluxo do app pertence à #96. A calibração com a #90 continua pendente.

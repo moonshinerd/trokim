@@ -163,8 +163,10 @@ def parse_text(
 ) -> TextExtraction:
     from app.services.pdf_profiles import is_bb_fatura, parse_bb_fatura
 
-    if not (is_bb_fatura(text) or bb_header):
-        return TextExtraction(*parse_fields(text, source, confidence))
+    generic = TextExtraction(*parse_fields(text, source, confidence))
+    # Um cabeçalho explícito prevalece sobre o contexto de uma página anterior.
+    if generic.kind != DocumentKind.OTHER or not (is_bb_fatura(text) or bb_header):
+        return generic
     parsed = parse_bb_fatura(bb_header + text, "documento.pdf")
     fields = [
         ExtractedField(key="bank", value="Banco do Brasil", source=source, confidence=confidence)

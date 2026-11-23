@@ -4,10 +4,11 @@ import asyncio
 import time
 from dataclasses import dataclass, field
 from decimal import Decimal
-from typing import Literal, TypedDict
+from typing import Literal, NotRequired, TypedDict
 
 from pydantic import BaseModel, ConfigDict, Field, ValidationError
 
+from app.core.config import settings
 from app.domain.agents import AgentName, AgentStep, IssueSeverity, StepStatus, ValidationIssue
 from app.domain.documents import (
     DocumentKind,
@@ -18,6 +19,7 @@ from app.domain.documents import (
     FieldSource,
     QualityReport,
 )
+from app.models.vision_provider import OcrProvider, VisionProvider, VisionResult
 from app.services.document_fields import (
     EXPECTED,
     TEXT_CONFIDENCE,
@@ -28,12 +30,10 @@ from app.services.document_fields import (
     normalized_value,
     parse_text,
 )
+from app.services.document_ocr import ocr_row_confidences, ocr_text_and_confidence
 from app.services.document_reading import (
-    DocumentOcr,
     DocumentPage,
     DocumentReadError,
-    DocumentVision,
-    TextReading,
     VisionSanitizer,
     image_bytes,
     read_pages,
@@ -56,6 +56,7 @@ class VisionFields(BaseModel):
 class PageTrace(TypedDict):
     page: int
     status: str
+    code: NotRequired[str]
 
 
 @dataclass
@@ -65,6 +66,7 @@ class PageExtraction:
     report: QualityReport
     engines: set[str] = field(default_factory=set)
     issues: list[ValidationIssue] = field(default_factory=list)
+    failure: str | None = None
 
 
 def warning(code: str, message: str) -> ValidationIssue:
@@ -81,19 +83,13 @@ def text_quality() -> QualityReport:
     )
 
 
-def check_reading(reading: TextReading) -> None:
-    confidences = [reading.confidence, *(reading.field_confidences or {}).values()]
-    if not all(0 <= value <= 1 for value in confidences):
-        raise DocumentReadError("INVALID_OCR_RESULT")
-
-
 class DocumentAgent:
     name = AgentName.DOCUMENT
 
     def __init__(
         self,
-        ocr: DocumentOcr | None = None,
-        vision: DocumentVision | None = None,
+        ocr: OcrProvider | None = None,
+        vision: VisionProvider | None = None,
         sanitizer: VisionSanitizer | None = None,
         timeout: float = 30,
     ) -> None:
@@ -140,6 +136,7 @@ class DocumentAgent:
         trace: list[PageTrace] = []
         engines: set[str] = set()
         kind = DocumentKind.OTHER
+        failures: list[str] = []
         bb_header = ""
         for page in read_pages(ctx.content, ctx.media_type):
             result = await self._read_page(ctx.content, page, bb_header)
@@ -160,16 +157,22 @@ class DocumentAgent:
             issues.extend(result.issues)
             reports.append(result.report)
             engines.update(result.engines)
-            trace.append(
-                {
-                    "page": page.number,
-                    "status": (
-                        "illegible"
-                        if result.report.quality == DocumentQuality.ILLEGIBLE
-                        else "+".join(sorted(result.engines)) or "quality_gate"
-                    ),
-                }
-            )
+            page_trace: PageTrace = {
+                "page": page.number,
+                "status": (
+                    "failed"
+                    if result.failure
+                    else "illegible"
+                    if result.report.quality == DocumentQuality.ILLEGIBLE
+                    else "+".join(sorted(result.engines)) or "quality_gate"
+                ),
+            }
+            if result.failure:
+                failures.append(result.failure)
+                page_trace["code"] = result.failure
+            trace.append(page_trace)
+        if failures and not collection.values and not transactions:
+            raise DocumentReadError(failures[0])
         if not reports:
             raise DocumentReadError("EMPTY_DOCUMENT")
         if collection.conflicts:
@@ -211,10 +214,9 @@ class DocumentAgent:
                 raise DocumentReadError("OCR_TIMEOUT") from None
             except Exception:
                 raise DocumentReadError("OCR_UNAVAILABLE") from None
-            check_reading(reading)
-            ocr_text = parse_text(
-                reading.text, FieldSource.OCR, reading.confidence, bb_header=bb_header
-            )
+            ocr_text, confidences = ocr_text_and_confidence(reading)
+            mean_confidence = reading.mean_confidence or 0.0
+            ocr_text = parse_text(ocr_text, FieldSource.OCR, mean_confidence, bb_header=bb_header)
             if text.kind != DocumentKind.OTHER and ocr_text.kind not in {
                 DocumentKind.OTHER,
                 text.kind,
@@ -222,19 +224,32 @@ class DocumentAgent:
                 raise DocumentReadError("MIXED_DOCUMENT_KINDS")
             if ocr_text.kind != DocumentKind.OTHER:
                 result.text.kind = ocr_text.kind
-            result.report = assess_quality(image, reading.confidence)
+            result.report = assess_quality(image, mean_confidence)
             candidates: list[ExtractedField] = []
             for item in ocr_text.fields:
-                confidence = (reading.field_confidences or {}).get(item.key, reading.confidence)
+                confidence = confidences.get(item.key, mean_confidence)
                 if confidence >= MIN_OCR_CONFIDENCE:
                     candidates.append(item.model_copy(update={"confidence": confidence}))
                 else:
                     result.issues.append(warning("LOW_CONFIDENCE", "Campo exige nova leitura."))
             fields.merge(candidates)
             # Não substitui silenciosamente linhas textuais por uma segunda leitura OCR.
-            if not result.text.transactions and reading.confidence >= MIN_OCR_CONFIDENCE:
-                result.text.transactions = ocr_text.transactions
-            result.engines.add("ocr")
+            if not result.text.transactions:
+                confidences_by_row = ocr_row_confidences(reading, len(ocr_text.transactions))
+                for row, row_confidence in zip(
+                    ocr_text.transactions,
+                    confidences_by_row,
+                    strict=True,
+                ):
+                    if row_confidence >= MIN_OCR_CONFIDENCE:
+                        result.text.transactions.append(
+                            row.model_copy(update={"confidence": row_confidence})
+                        )
+                    else:
+                        result.issues.append(
+                            warning("LOW_CONFIDENCE", "Lançamento exige nova leitura.")
+                        )
+            result.engines.add(reading.engine)
             expected = EXPECTED.get(result.text.kind, set())
             if (
                 self.vision is not None
@@ -243,6 +258,16 @@ class DocumentAgent:
             ):
                 if await self._complement(image_bytes(image), fields, result.issues):
                     result.engines.add("vlm")
+            return result
+        except DocumentReadError as error:
+            if error.code == "MIXED_DOCUMENT_KINDS":
+                raise
+            result.failure = error.code
+            result.report.quality = DocumentQuality.PARTIAL
+            result.report.reasons.append("Leitura interrompida por falha técnica.")
+            result.issues.append(
+                warning(error.code, "Falha na leitura da página; revise o documento.")
+            )
             return result
         finally:
             if image is not None:
@@ -310,6 +335,9 @@ class DocumentAgent:
         vision = self.vision
         if vision is None:
             return False
+        if vision.is_remote and not settings.VISION_ALLOW_REMOTE:
+            issues.append(warning("VISION_REMOTE_BLOCKED", "Visão remota exige consentimento."))
+            return False
         if self.sanitizer is None:
             issues.append(warning("VISION_PRIVACY_BLOCKED", "Visão bloqueada por privacidade."))
             return False
@@ -328,7 +356,9 @@ class DocumentAgent:
                 ),
                 self.timeout,
             )
-            proposed = VisionFields.model_validate_json(raw)
+            if not isinstance(raw, VisionResult):
+                raise ValueError("INVALID_VISION_OUTPUT")
+            proposed = VisionFields.model_validate_json(raw.content)
             candidates: list[ExtractedField] = []
             keys: set[str] = set()
             # Valida e sanitiza tudo antes de modificar qualquer campo do OCR.

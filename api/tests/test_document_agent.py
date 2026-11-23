@@ -10,11 +10,22 @@ from reportlab.pdfgen import canvas
 
 from app.domain.agents import StepStatus
 from app.domain.documents import DocumentQuality
+from app.models.vision_provider import OcrResult, OcrWord, VisionResult
 from app.services.agents.document import DocumentAgent, DocumentContext
-from app.services.document_reading import TextReading
 from app.services.image_quality import assess_quality
 
 PIX = "Comprovante Pix\nData: 23/11/2026\nValor: R$ 12,50\nFavorecido: Pessoa Sintética\n"
+
+
+def ocr_result(text, confidence, field_confidences=None):
+    words = []
+    for line in text.splitlines():
+        from app.services.document_fields import LABELS
+
+        key = LABELS.get(line.split(":", 1)[0].strip().casefold())
+        value = (field_confidences or {}).get(key, confidence)
+        words.append(OcrWord.model_construct(text=line, confidence=value, box=None))
+    return OcrResult.model_construct(words=words, engine="ocr")
 
 
 def picture(blank=False):
@@ -47,7 +58,7 @@ def pdf(texts):
 
 async def extract(content=None, text=PIX, confidence=0.98, **kwargs):
     ocr = AsyncMock()
-    ocr.read.return_value = TextReading(text, confidence)
+    ocr.read.return_value = ocr_result(text, confidence)
     ctx = DocumentContext(content=content or picture(), media_type="image/png")
     step = await DocumentAgent(ocr=ocr, **kwargs).run(ctx)
     return ctx, step, ocr
@@ -93,6 +104,7 @@ async def test_unknown_layout():
 
 async def test_text_pdf_bypasses_ocr_and_vision():
     ocr, vision = AsyncMock(), AsyncMock()
+    vision.is_remote = False
     ctx = DocumentContext(content=pdf([PIX]), media_type="application/pdf")
     step = await DocumentAgent(ocr=ocr, vision=vision).run(ctx)
     assert step.status == StepStatus.OK
@@ -166,6 +178,7 @@ async def test_conflicting_pages_remove_field():
 
 async def test_vision_blocked_without_sanitizer():
     vision = AsyncMock()
+    vision.is_remote = False
     ctx, _, _ = await extract(text=PIX.replace("Data: 23/11/2026\n", ""), vision=vision)
     vision.extract.assert_not_called()
     assert any(i.code == "VISION_PRIVACY_BLOCKED" for i in ctx.result.issues)
@@ -178,7 +191,10 @@ class SyntheticSanitizer:
 
 async def test_invalid_vision_preserves_ocr():
     vision = AsyncMock()
-    vision.extract.return_value = '{"cpf":"123.456.789-00"}'
+    vision.is_remote = False
+    vision.extract.return_value = VisionResult(
+        content=('{"cpf":"123.456.789-00"}'), model="mock-vision"
+    )
     ctx, _, _ = await extract(
         text=PIX.replace("Data: 23/11/2026\n", ""), vision=vision, sanitizer=SyntheticSanitizer()
     )
@@ -189,8 +205,10 @@ async def test_invalid_vision_preserves_ocr():
 
 async def test_vision_conflict_never_overwrites():
     vision = AsyncMock()
-    vision.extract.return_value = (
-        '{"fields":[{"key":"amount","value":"99.00","confidence":1,"source":"vlm"}]}'
+    vision.is_remote = False
+    vision.extract.return_value = VisionResult(
+        content=('{"fields":[{"key":"amount","value":"99.00","confidence":1,"source":"vlm"}]}'),
+        model="mock-vision",
     )
     ctx, _, _ = await extract(
         text=PIX.replace("Data: 23/11/2026\n", ""), vision=vision, sanitizer=SyntheticSanitizer()
@@ -237,6 +255,7 @@ async def test_invoice_rows():
 
 async def test_complete_ocr_does_not_call_vision():
     vision = AsyncMock()
+    vision.is_remote = False
     ctx, _, _ = await extract(vision=vision, sanitizer=SyntheticSanitizer())
     assert len(ctx.result.fields) == 3
     vision.extract.assert_not_called()
@@ -246,6 +265,7 @@ async def test_bb_profile_bypasses_image_engines():
     from tests.bb_samples import FATURA_PADRAO
 
     ocr, vision = AsyncMock(), AsyncMock()
+    vision.is_remote = False
     ctx = DocumentContext(content=FATURA_PADRAO, media_type="application/pdf")
     step = await DocumentAgent(ocr=ocr, vision=vision).run(ctx)
     assert step.status == StepStatus.OK
@@ -342,7 +362,7 @@ async def test_text_header_uses_ocr_and_preserves_text_fields(monkeypatch):
         "app.services.agents.document.render_pdf_page", lambda *_: Image.open(io.BytesIO(picture()))
     )
     ocr = AsyncMock()
-    ocr.read.return_value = TextReading(PIX, 0.98)
+    ocr.read.return_value = ocr_result(PIX, 0.98)
     ctx = DocumentContext(
         content=pdf(["Comprovante Pix\nBanco: Banco Sintético"]), media_type="application/pdf"
     )
@@ -375,8 +395,10 @@ async def test_bb_partial_preserves_readable_first_page(monkeypatch):
 
 async def test_vision_adds_missing_field_as_review_proposal():
     vision = AsyncMock()
-    vision.extract.return_value = (
-        '{"fields":[{"key":"date","value":"2026-11-23","confidence":1,"source":"vlm"}]}'
+    vision.is_remote = False
+    vision.extract.return_value = VisionResult(
+        content=('{"fields":[{"key":"date","value":"2026-11-23","confidence":1,"source":"vlm"}]}'),
+        model="mock-vision",
     )
     ctx, step, _ = await extract(
         text=PIX.replace("Data: 23/11/2026\n", ""), vision=vision, sanitizer=SyntheticSanitizer()
@@ -392,9 +414,13 @@ async def test_vision_adds_missing_field_as_review_proposal():
 
 async def test_invalid_vision_batch_does_not_modify_ocr():
     vision = AsyncMock()
-    vision.extract.return_value = (
-        '{"fields":[{"key":"amount","value":"99.00","confidence":1,"source":"vlm"},'
-        '{"key":"date","value":"inválida","confidence":1,"source":"vlm"}]}'
+    vision.is_remote = False
+    vision.extract.return_value = VisionResult(
+        content=(
+            '{"fields":[{"key":"amount","value":"99.00","confidence":1,"source":"vlm"},'
+            '{"key":"date","value":"inválida","confidence":1,"source":"vlm"}]}'
+        ),
+        model="mock-vision",
     )
     ctx, _, _ = await extract(
         text=PIX.replace("Data: 23/11/2026\n", ""), vision=vision, sanitizer=SyntheticSanitizer()
@@ -405,9 +431,13 @@ async def test_invalid_vision_batch_does_not_modify_ocr():
 
 async def test_vision_free_fields_are_sanitized():
     vision = AsyncMock()
-    vision.extract.return_value = (
-        '{"fields":[{"key":"counterparty","value":"Pessoa Sintética CPF 123.456.789-00",'
-        '"confidence":1,"source":"vlm"}]}'
+    vision.is_remote = False
+    vision.extract.return_value = VisionResult(
+        content=(
+            '{"fields":[{"key":"counterparty","value":"Pessoa Sintética CPF 123.456.789-00",'
+            '"confidence":1,"source":"vlm"}]}'
+        ),
+        model="mock-vision",
     )
     ctx, _, _ = await extract(
         text=PIX.replace("Favorecido: Pessoa Sintética\n", ""),
@@ -420,7 +450,7 @@ async def test_vision_free_fields_are_sanitized():
 
 async def test_per_field_confidence_rejects_only_uncertain_field():
     ocr = AsyncMock()
-    ocr.read.return_value = TextReading(PIX, 0.98, {"amount": 0.2})
+    ocr.read.return_value = ocr_result(PIX, 0.98, {"amount": 0.2})
     ctx = DocumentContext(content=picture(), media_type="image/png")
     await DocumentAgent(ocr=ocr).run(ctx)
     assert {f.key for f in ctx.result.fields} == {"date", "counterparty"}
@@ -433,7 +463,7 @@ async def test_ocr_conflict_does_not_reinsert_text_field(monkeypatch):
         "app.services.agents.document.render_pdf_page", lambda *_: Image.open(io.BytesIO(picture()))
     )
     ocr = AsyncMock()
-    ocr.read.return_value = TextReading(PIX.replace("12,50", "99,00"), 0.98)
+    ocr.read.return_value = ocr_result(PIX.replace("12,50", "99,00"), 0.98)
     text = PIX.replace("Data: 23/11/2026\n", "")
     ctx = DocumentContext(content=pdf([text, PIX]), media_type="application/pdf")
     await DocumentAgent(ocr=ocr).run(ctx)
@@ -452,8 +482,10 @@ async def test_incomplete_invoice_row_is_partial():
 
 async def test_vision_numeric_amount_is_normalized_without_rounding():
     vision = AsyncMock()
-    vision.extract.return_value = (
-        '{"fields":[{"key":"amount","value":12.5,"confidence":1,"source":"vlm"}]}'
+    vision.is_remote = False
+    vision.extract.return_value = VisionResult(
+        content=('{"fields":[{"key":"amount","value":12.5,"confidence":1,"source":"vlm"}]}'),
+        model="mock-vision",
     )
     ctx, _, _ = await extract(
         text=PIX.replace("Valor: R$ 12,50\n", ""), vision=vision, sanitizer=SyntheticSanitizer()
@@ -466,8 +498,12 @@ async def test_vision_numeric_amount_is_normalized_without_rounding():
 @pytest.mark.parametrize("value", ["12.501", "true", '"12,5"'])
 async def test_vision_rejects_ambiguous_or_invalid_amount(value):
     vision = AsyncMock()
-    vision.extract.return_value = (
-        '{"fields":[{"key":"amount","value":' + value + ',"confidence":1,"source":"vlm"}]}'
+    vision.is_remote = False
+    vision.extract.return_value = VisionResult(
+        content=(
+            '{"fields":[{"key":"amount","value":' + value + ',"confidence":1,"source":"vlm"}]}'
+        ),
+        model="mock-vision",
     )
     ctx, _, _ = await extract(
         text=PIX.replace("Valor: R$ 12,50\n", ""), vision=vision, sanitizer=SyntheticSanitizer()

@@ -4,11 +4,12 @@ Implementação da [#88](https://github.com/moonshinerd/trokim/issues/88), confo
 público do [épico #86](https://github.com/moonshinerd/trokim/issues/86).
 Rastreabilidade: RF27, RF28; GQ02, GQ05; [ADR 0016](../adr/0016-arquitetura-multiagente.md).
 
-!!! warning "Componente em implementação, sem integração HTTP"
-    A leitura e a trilha têm testes determinísticos. As portas internas de OCR precisam ser
-    adaptadas às portas definitivas da #87; os exemplos e a calibração dependem da #90.
-    Não há motor OCR real configurado nesta entrega parcial. A API de extração, a validação
-    financeira e a confirmação pertencem às #96 e #89. O recurso ainda não está disponível no app.
+!!! warning "Componente integrado às portas, sem endpoint HTTP"
+    O agente usa `OcrProvider`, `OcrResult`, `VisionProvider` e `VisionResult` da #87,
+    já integrada à `main`. A fábrica seleciona OCR local e visão por configuração.
+    A calibração dos layouts e dos limiares ainda depende do dataset da #90; o ensaio
+    com o motor OCR real não foi executado neste ambiente. A validação financeira e a
+    confirmação HTTP pertencem às #89 e #96. O recurso ainda não está disponível no app.
 
 ## Entrada, saída e responsabilidades
 
@@ -21,14 +22,27 @@ promessa de apagamento físico de memória do processo.
 O agente não persiste lançamentos nem executa os agentes de pesquisa e comunicação do chat.
 `AgentName.DOCUMENT` identifica seu passo; a integração ao fluxo HTTP fica na #96.
 Um resultado bem-sucedido sempre tem `needs_review=True`.
-Falhas técnicas devolvem passo `failed`, código seguro e `ctx.result=None`.
+Se nenhuma página produzir campos ou lançamentos, falhas técnicas devolvem passo `failed`,
+código seguro e `ctx.result=None`. Havendo leitura segura em alguma página, o resultado é
+parcial, preserva os dados e informa o código da falha operacional na trilha da página.
 
 Os modelos de domínio ficam em `api/app/domain/documents.py`, com uma única definição do
-contrato do épico. A #87 deve reutilizar esse módulo, evitando cópias concorrentes. As portas
-`DocumentOcr`, `DocumentVision` e `VisionSanitizer` são internas e provisórias, sem fábrica ou
-motor embutido. `TextReading.confidence` é a confiança agregada fornecida pelo adaptador de OCR;
-`field_confidences` permite informar uma confiança específica por chave, que prevalece
-sobre a média para aquele campo. O contrato definitivo deve ser alinhado às #87 e #89.
+contrato do épico #86. As portas e os resultados de leitura são importados diretamente de
+`api/app/models/vision_provider.py` (ADR 0021), sem interfaces paralelas ou adaptadores fictícios.
+`document_factory.get_document_agent()` usa as fábricas da #87 e `VISION_TIMEOUT`.
+
+O OCR retorna `OcrResult.words` e `mean_confidence`; o agente agrupa palavras com caixas
+sobrepostas na mesma linha e ordena as palavras por posição horizontal. Sem caixas, preserva
+a ordem fornecida. A confiança do campo rotulado é o mínimo das palavras da linha e de suas
+ocorrências repetidas; a média global é usada somente quando não há correspondência por chave.
+Linhas de lançamento usam a confiança da própria linha; sem associação exata, usam
+a menor confiança das palavras. Linhas abaixo do limite são descartadas com aviso,
+mesmo que a média global seja alta. A política deve ser calibrada junto à #90 e alinhada à validação da #89.
+
+`VisionSanitizer` é um contrato interno de proteção dos pixels: não substitui `VisionProvider`.
+Sem implementação que garanta anonimização, a visão continua bloqueada. A fábrica da #87
+recusa visão remota sem consentimento; o agente também verifica essa autorização antes de
+chamar um provedor remoto injetado diretamente.
 
 ## Cobertura inicial e formatos
 
@@ -106,14 +120,14 @@ proteção da imagem, `VISION_PRIVACY_BLOCKED` impede a chamada. Uma implementa�
 retorna os bytes originais só é admissível em testes com imagem sintética sem dados pessoais.
 O consentimento remoto deve ser aplicado pela fábrica da #87, além dessa proteção.
 
-Saída de visão passa por esquema Pydantic com campos extras proibidos. JSON inválido ou falha
+O JSON em `VisionResult.content` passa por esquema Pydantic com campos extras proibidos. JSON inválido ou falha
 descarta a contribuição e preserva o OCR. A confiança autodeclarada nunca promove um novo campo
 a seguro: propostas novas são normalizadas, sanitizadas e devolvidas com origem `vlm`,
 confiança limitada a 0,50 e `VISION_REVIEW_REQUIRED`. São candidatas à revisão humana,
 sem garantia de correção; tornam o resultado parcial. Divergências retiram o campo, sem
 sobrescrita ou reinserção posterior. Campos desconhecidos, duplicados, datas/valores inválidos
 ou formato inesperado descartam todo o lote antes de alterar o OCR. O motor `vlm` aparece
-na trilha quando chamado. O limite de confiança ainda depende de alinhamento com a #89.
+na trilha quando chamado; o OCR informa o identificador de `OcrResult.engine`. O limite de confiança ainda depende de alinhamento com a #89.
 
 ## Valores, falhas e validação
 
@@ -131,8 +145,9 @@ A #96 definirá os códigos HTTP correspondentes. Cancelamento é propagado apó
 
 ```bash
 cd api
-uv sync --extra documents
-uv run pytest tests/test_document_agent.py
+uv lock --check
+uv sync --frozen --extra documents
+uv run pytest tests/test_document_agent.py tests/test_document_providers.py tests/test_vision_ports.py
 uv run ruff check .
 uv run ruff format --check .
 cd ..
@@ -146,11 +161,9 @@ As imagens aleatórias dos testes exercitam as métricas e não representam um b
 
 Antes de considerar a #88 concluída:
 
-- Integrar as portas e o motor real da #87, sem duplicar contratos.
 - Acordar os três layouts e calibrar os limites com os documentos da #90.
 - Consolidar obrigatoriedade e confiança por campo com a #89.
 - Documentar um ensaio reproduzível com OCR real: arquivos sintéticos, campos e limitações.
-- Atualizar e verificar o lock de dependências, executar a suíte completa e o build estrito.
 
 A meta de acerto de 90% pertence ao benchmark da #98; nenhum resultado novo de acurácia é
 alegado por esta implementação parcial.
@@ -164,10 +177,12 @@ confiança por campo, complemento de visão com baixa confiança, privacidade da
 validação atômica de lotes de visão e linha de fatura sem data/valor. A leitura não afirma
 completude quando uma linha reconhecida está incompleta.
 
-Verificação local após os ajustes: 41 testes específicos do agente e 88 testes no conjunto
-com parser, cálculos, análise, validação e orquestrador passaram. Ruff e formatação da API
-passaram. Isso não substitui a suíte completa, o build estrito ou o ensaio com OCR real.
+A integração acrescenta testes com `MockOcrProvider` e `MockVisionProvider` públicos,
+reconstrução de linhas por caixas OCR, confiança por campo, bloqueio de consentimento remoto,
+fábrica configurável e renderização real de PDF em memória. O lock combina os extras `ocr`
+e `documents`; `uv lock --check --offline` valida o conjunto sem alterar dependências.
 
-A atualização automática do `api/uv.lock` foi tentada, mas o ambiente de execução não
-consegue resolver o endereço do PyPI. O lock ainda precisa ser regenerado com `uv lock`
-antes de validar a instalação congelada do extra `documents`. Não é um check concluído.
+Verificação local: 498 testes de API e 161 de pesquisa passaram. Dois testes de OCR real
+da #87 e um teste opcional de pesquisa foram pulados por dependências/recursos ausentes.
+Isso não substitui a calibração nem o ensaio com o motor OCR real. Nenhum resultado de
+acurácia do dataset multimodal é alegado.
