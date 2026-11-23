@@ -2576,8 +2576,8 @@
 <ul>
 <li><strong>Status:</strong> Aceita</li>
 <li><strong>Data:</strong> 23/11/2026</li>
-<li><strong>Requisitos / GQs:</strong> RF27, RNF01, RNF12; GQ02, GQ03</li>
-<li><strong>Issues:</strong> <a href="https://github.com/moonshinerd/trokim/issues/87">#87</a></li>
+<li><strong>Requisitos / GQs:</strong> RF27, RF28, RNF01, RNF10, RNF12; GQ01, GQ02, GQ03</li>
+<li><strong>Issues:</strong> <a href="https://github.com/moonshinerd/trokim/issues/87">#87</a>, <a href="https://github.com/moonshinerd/trokim/issues/91">#91</a></li>
 <li><strong>ADRs relacionadas:</strong> <a href="../0009-sintese-generativa-local/">0009</a>, <a href="../0015-dados-reais-importacao-e-endereco-da-api/">0015</a>, <a href="../0016-arquitetura-multiagente/">0016</a></li>
 </ul>
 <h2 id="contexto">Contexto<a class="headerlink" href="#contexto" title="Permanent link">&para;</a></h2>
@@ -2608,6 +2608,14 @@ nuvem contraria a premissa local-first do projeto.</p>
 <li><strong>Backend em contêiner.</strong> <code>deploy/Dockerfile</code> empacota a API com o OCR e o modelo de
    embeddings já baixado, e roda como usuário sem privilégios. O app Flutter fica fora do
    contêiner, instalado no aparelho.</li>
+<li><strong>Revisão humana no app.</strong> No app Flutter (<code>mobile/lib/features/documents/</code>), a leitura é assistida:
+   o usuário visualiza uma prévia antes da leitura, vê cada campo extraído com seu nível de confiança
+   (alta, média, baixa), edita dados duvidosos, resolve bloqueios e confirma ou descarta explicitamente.
+   Linhas podem ser excluídas e bloqueios só são liberados quando os campos obrigatórios correspondentes
+   são alterados para valores válidos; campos opcionais não bloqueiam. Bloqueios sem campo editável
+   continuam impedindo confirmar. Imagens ilegíveis orientam nova tentativa com dicas de enquadramento. Nenhum
+   lançamento é criado sem confirmação humana ativa. A etapa inicial utiliza repositório de teste
+   (mock) e a integração com o endpoint real pertence à issue #97.</li>
 </ol>
 <h2 id="consequencias">Consequências<a class="headerlink" href="#consequencias" title="Permanent link">&para;</a></h2>
 <ul>
@@ -2618,6 +2626,8 @@ nuvem contraria a premissa local-first do projeto.</p>
   opcional e a imagem Docker é grande.</li>
 <li>A confiança do OCR alimenta o porteiro de qualidade da imagem, que decide abster-se quando a
   foto não permite concluir.</li>
+<li>A tela de revisão do app desacopla o motor de extração da confirmação do usuário; trocas de motor
+  ou modelos não alteram o fluxo de conferência nem criam lançamentos de forma silenciosa.</li>
 </ul>
 <h2 id="alternativas-descartadas">Alternativas descartadas<a class="headerlink" href="#alternativas-descartadas" title="Permanent link">&para;</a></h2>
 <ul>

@@ -2692,6 +2692,13 @@
 <td style="text-align: center;">Equipe Trokim</td>
 </tr>
 <tr>
+<td style="text-align: center;"><strong>v1.8.1</strong></td>
+<td style="text-align: center;">23/11/2026</td>
+<td style="text-align: center;">Semana 5 (<em>Multimodalidade</em>)</td>
+<td>Inclusão de <strong>RF27</strong> (captura e prévia documental) e <strong>RF28</strong> (revisão humana, confiança, bloqueios e abstenção para imagem ilegível), rastreados à ADR 0021.</td>
+<td style="text-align: center;">Equipe Trokim</td>
+</tr>
+<tr>
 <td style="text-align: center;"><strong>v1.10.0</strong></td>
 <td style="text-align: center;">23/11/2026</td>
 <td style="text-align: center;">Semana 5 (<em>Armazenamento no aparelho</em>)</td>
@@ -2975,13 +2982,22 @@
 <td style="text-align: center;"><span class="badge-must">Implementado</span></td>
 </tr>
 <tr>
-<td style="text-align: center;"><strong>RF29</strong></td>
-<td>Tutoriais por banco e tela de bancos suportados</td>
-<td>O app deve apresentar a lista de bancos suportados com selos explícitos de suporte (<strong>Validado</strong> para Nubank, BB, PicPay e Mercado Pago; <strong>Experimental</strong> para Inter, C6 e Itaú), formatos aceitos e tutoriais passo a passo navegáveis orientando a exportação no app da instituição. Bancos experimentais devem alertar que não foram testados em contas reais, permitindo ainda pular o tutorial, usar o parser genérico em "Outro banco" e solicitar suporte pelo repositório.</td>
+<td style="text-align: center;"><strong>RF27</strong></td>
+<td>Leitura assistida de documentos</td>
+<td>O app deve permitir fotografar ou selecionar comprovantes e faturas digitalizadas e apresentar uma prévia antes da leitura.</td>
 <td style="text-align: center;"><span class="badge-must">Must have</span></td>
-<td style="text-align: center;"><a href="../pesquisa/guiding-questions/">GQ01</a>, <a href="../pesquisa/guiding-questions/">GQ03</a></td>
-<td style="text-align: center;"><a href="../adr/0022-registro-de-perfis-e-niveis-de-suporte/">ADR 0022</a></td>
-<td style="text-align: center;"><span class="badge-must">Implementado</span></td>
+<td style="text-align: center;"><a href="../pesquisa/guiding-questions/">GQ01</a>, <a href="../pesquisa/guiding-questions/">GQ02</a>, <a href="../pesquisa/guiding-questions/">GQ03</a></td>
+<td style="text-align: center;"><a href="../adr/0021-visao-e-ocr-modulares/">ADR 0021</a></td>
+<td style="text-align: center;">Implementado no mobile (mock; integração real na #97)</td>
+</tr>
+<tr>
+<td style="text-align: center;"><strong>RF28</strong></td>
+<td>Revisão humana antes da importação</td>
+<td>Os campos extraídos devem ser editáveis, indicar confiança e bloqueios, e só podem ser confirmados por ação explícita; documentos ilegíveis devem pedir nova captura.</td>
+<td style="text-align: center;"><span class="badge-must">Must have</span></td>
+<td style="text-align: center;"><a href="../pesquisa/guiding-questions/">GQ01</a>, <a href="../pesquisa/guiding-questions/">GQ02</a>, <a href="../pesquisa/guiding-questions/">GQ03</a></td>
+<td style="text-align: center;"><a href="../adr/0021-visao-e-ocr-modulares/">ADR 0021</a></td>
+<td style="text-align: center;">Implementado no mobile (mock; integração real na #97)</td>
 </tr>
 <tr>
 <td style="text-align: center;"><strong>RF31</strong></td>
@@ -3105,7 +3121,7 @@
 <td>A interface deve seguir o tema claro/escuro do aparelho, respeitar "reduzir movimento", manter contraste legível, tipografia embarcada e rolagem sem deformação.</td>
 <td style="text-align: center;"><span class="badge-must">Must have</span></td>
 <td style="text-align: center;"><a href="../pesquisa/guiding-questions/">GQ01</a>, <a href="../pesquisa/guiding-questions/">GQ07</a></td>
-<td style="text-align: center;"><a href="../adr/0011-identidade-visual-e-tema-do-sistema/">ADR 0011</a>, <a href="../adr/0013-preferencias-locais-e-aba-de-ajustes/">ADR 0013</a></td>
+<td style="text-align: center;"><a href="../adr/0011-identidade-visual-e-tema-do-sistema/">ADR 0011</a>, <a href="../adr/0013-preferencias-locais-e-aba-de-ajustes/">ADR 0013</a>, <a href="../adr/0021-visao-e-ocr-modulares/">ADR 0021</a></td>
 <td style="text-align: center;"><span class="badge-must">Implementado</span></td>
 </tr>
 <tr>
@@ -3316,11 +3332,18 @@
 <td><code>mobile/test/shared_file_test.dart</code></td>
 </tr>
 <tr>
-<td style="text-align: center;"><strong>RF29</strong></td>
-<td style="text-align: center;">GQ01, GQ03</td>
-<td style="text-align: center;"><a href="../adr/0022-registro-de-perfis-e-niveis-de-suporte/">ADR 0022</a></td>
-<td><code>mobile/lib/features/import_guide/</code></td>
-<td><code>mobile/test/supported_banks_test.dart</code>, <code>mobile/test/import_flow_test.dart</code></td>
+<td style="text-align: center;"><strong>RF27</strong></td>
+<td style="text-align: center;">GQ01, GQ02, GQ03</td>
+<td style="text-align: center;"><a href="../adr/0021-visao-e-ocr-modulares/">ADR 0021</a></td>
+<td><code>mobile/lib/features/documents/</code>, <code>mobile/lib/features/transactions/</code></td>
+<td><code>mobile/test/document_import_screen_test.dart</code></td>
+</tr>
+<tr>
+<td style="text-align: center;"><strong>RF28</strong></td>
+<td style="text-align: center;">GQ01, GQ02, GQ03</td>
+<td style="text-align: center;"><a href="../adr/0021-visao-e-ocr-modulares/">ADR 0021</a></td>
+<td><code>mobile/lib/features/documents/</code></td>
+<td><code>mobile/test/document_import_screen_test.dart</code></td>
 </tr>
 <tr>
 <td style="text-align: center;"><strong>RF31</strong></td>
@@ -3388,9 +3411,9 @@
 <tr>
 <td style="text-align: center;"><strong>RNF10</strong></td>
 <td style="text-align: center;">GQ01, GQ07</td>
-<td style="text-align: center;"><a href="../adr/0011-identidade-visual-e-tema-do-sistema/">ADR 0011</a>, <a href="../adr/0013-preferencias-locais-e-aba-de-ajustes/">0013</a></td>
-<td><code>mobile/lib/core/theme/app_theme.dart</code>, <code>mobile/lib/core/widgets/app_motion.dart</code></td>
-<td><code>mobile/test/splash_gate_test.dart</code>, <code>mobile/test/settings_screen_test.dart</code></td>
+<td style="text-align: center;"><a href="../adr/0011-identidade-visual-e-tema-do-sistema/">ADR 0011</a>, <a href="../adr/0013-preferencias-locais-e-aba-de-ajustes/">0013</a>, <a href="../adr/0021-visao-e-ocr-modulares/">0021</a></td>
+<td><code>mobile/lib/core/theme/app_theme.dart</code>, <code>mobile/lib/core/widgets/app_motion.dart</code>, <code>mobile/lib/features/documents/</code></td>
+<td><code>mobile/test/splash_gate_test.dart</code>, <code>mobile/test/settings_screen_test.dart</code>, <code>mobile/test/document_import_screen_test.dart</code></td>
 </tr>
 <tr>
 <td style="text-align: center;"><strong>RNF11</strong></td>

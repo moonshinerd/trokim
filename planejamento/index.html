@@ -847,10 +847,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#recorte-acordado-da-88-agente-de-documento" class="md-nav__link">
+  <a href="#revisao-da-captura-de-documentos-91" class="md-nav__link">
     <span class="md-ellipsis">
       <span class="md-typeset">
-        Recorte acordado da #88 — agente de documento
+        Revisão da captura de documentos (#91)
       </span>
     </span>
   </a>
@@ -2933,10 +2933,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#recorte-acordado-da-88-agente-de-documento" class="md-nav__link">
+  <a href="#revisao-da-captura-de-documentos-91" class="md-nav__link">
     <span class="md-ellipsis">
       <span class="md-typeset">
-        Recorte acordado da #88 — agente de documento
+        Revisão da captura de documentos (#91)
       </span>
     </span>
   </a>
@@ -3735,14 +3735,17 @@ comprimido e preparado por <code>make build</code> (<a href="../adr/0020-categor
 <p><strong>Backend em contêiner (já em <code>main</code>):</strong> <code>deploy/Dockerfile</code> e o <code>docker-compose.yml</code> sobem só a API com o OCR local e os embeddings já baixados, como usuário sem privilégios, com os dados em volume (<a href="../adr/0021-visao-e-ocr-modulares/">ADR 0021</a>, <a href="https://github.com/moonshinerd/trokim/issues/87">#87</a>). O app Flutter segue instalado no aparelho.</p>
 <p><strong>Armazenamento no aparelho e API sem estado (já em <code>main</code>):</strong> o aparelho guarda a biblioteca cifrada e a API a mantém só em memória (<a href="../adr/0025-armazenamento-no-aparelho-e-api-sem-estado/">ADR 0025</a>, <a href="https://github.com/moonshinerd/trokim/issues/104">#104</a>).</p>
 <p><strong>Encaminhado para a Semana 6</strong> (milestone "Semana 6 — Integração Completa"): as pendências herdadas da Semana 4, que são redação com paráfrase verificada, política de escopo para previsão de preço (C27) e revisão humana dos casos sinalizados (<a href="https://github.com/moonshinerd/trokim/issues/105">#105</a>).</p>
-<h3 id="recorte-acordado-da-88-agente-de-documento">Recorte acordado da #88 — agente de documento<a class="headerlink" href="#recorte-acordado-da-88-agente-de-documento" title="Permanent link">&para;</a></h3>
-<p>Implementação iniciada com três layouts sintéticos rotulados, perfil PDF textual existente,
-limite de 10 páginas, extração parcial e abstenção sem preenchimento por palpite.
-O código tem contexto próprio e trilha sanitizada; não expõe endpoint nem persiste lançamento.
-As portas e fábricas da #87 já estão integradas. A #90 acrescenta 40 documentos, manifesto,
-gabarito de recuperabilidade, calibração/verificação por família e runner de OCR real no CI.
-Os limites visuais foram mantidos após o ensaio sintético. O ensaio de extração já foi registrado, com
-limitações de transcrição; o fechamento exige conferir o CI e o ensaio com OCR real; a #89 aplica a validação financeira. Consulte o <a href="../agentes/document-agent/">escopo e as pendências</a>.</p>
+<h3 id="revisao-da-captura-de-documentos-91">Revisão da captura de documentos (#91)<a class="headerlink" href="#revisao-da-captura-de-documentos-91" title="Permanent link">&para;</a></h3>
+<p>A PR #110 implementa o fluxo com repositório falso e revisão humana. A revisão
+acrescenta validação única para o formulário e a confirmação, tratamento de
+respostas após fechar a tela, acesso pelo fluxo de importação e testes de
+regressão. Confirmar ainda não cria lançamentos: extração e persistência reais
+continuam na integração #97.</p>
+<p>A integração da PR #110 com o catálogo de bancos da <code>main</code> preserva os sete
+bancos, seus tutoriais e o pedido de suporte, junto ao acesso à revisão de
+documentos. Os testes de bancos suportados verificam a coexistência dessas
+entradas. A configuração de backup continua recebendo o cliente e os seletores
+fornecidos pela tela de Ajustes.</p>
 
 
 

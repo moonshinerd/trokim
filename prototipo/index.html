@@ -709,6 +709,17 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#captura-e-revisao-de-documentos-no-app" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Captura e revisão de documentos no app
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     
   
@@ -2538,6 +2549,17 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#captura-e-revisao-de-documentos-no-app" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Captura e revisão de documentos no app
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     
   
@@ -2577,6 +2599,13 @@
 <h3 id="fluxo-de-importacao-e-tela-de-bancos-suportados">Fluxo de importação e tela de bancos suportados<a class="headerlink" href="#fluxo-de-importacao-e-tela-de-bancos-suportados" title="Permanent link">&para;</a></h3>
 <p>O protótipo estático web foca na navegação das cinco abas principais e na identidade visual, não executando o upload ou processamento de arquivos (o botão de importar extrato na aba Extratos é apenas demonstrativo). O fluxo interativo completo de importação — incluindo a <strong>tela de Bancos Suportados</strong> com selos de validação (<strong>Validado</strong> e <strong>Experimental</strong>), formatos aceitos e tutoriais passo a passo navegáveis para cada banco (<a href="../requisitos/">RF29</a>, <a href="../adr/0022-registro-de-perfis-e-niveis-de-suporte/">ADR 0022</a>) — é implementado e testado de forma nativa no aplicativo Flutter para Android (<code>mobile/lib/features/import_guide/</code>), funcionando em modo local-first no dispositivo. Veja os tutoriais detalhados de cada instituição no <a href="../guia-de-uso/#82-importar-por-banco-e-bancos-suportados-rf29">Guia de Uso</a>.</p>
 <p>O iframe usa um caminho relativo compatível com a página publicada em <code>/prototipo/</code>, inclusive quando o site está em um subdiretório. Os endereços <code>#resumo</code>, <code>#extratos</code>, <code>#assistente</code>, <code>#cenarios</code> e <code>#ajustes</code> abrem a tela correspondente; um fragmento desconhecido retorna ao Resumo.</p>
+<h2 id="captura-e-revisao-de-documentos-no-app">Captura e revisão de documentos no app<a class="headerlink" href="#captura-e-revisao-de-documentos-no-app" title="Permanent link">&para;</a></h2>
+<p>O aplicativo também oferece <strong>Fotografar ou escolher documento</strong> em <strong>Extratos</strong>
+e no primeiro passo de <strong>Importar extrato</strong>. Esse fluxo ainda não é interativo
+no protótipo estático: a <a href="../guia-de-uso/#810-fotografar-ou-escolher-documento">seção de documentos do Guia de Uso</a>
+mostra a captura sintética da tela e descreve prévia, confiança, correções,
+bloqueios e descarte. No app, a leitura desta fase é simulada, sem criar
+lançamentos; a integração real pertence à issue #97.</p>
 
 
 
