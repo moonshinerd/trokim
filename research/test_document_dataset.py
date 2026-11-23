@@ -54,16 +54,26 @@ def test_composicao_familias_e_demonstracao():
         assert len({c["bank"] for c in CASES if c["split"] == split}) == 4
 
 
-def test_gerador_reproduz_bytes_e_semente_muda_documentos():
-    data, files = build()
-    assert data == DATA
-    for path, content in files.items():
-        assert (ROOT / path).read_bytes() == content, path
+def test_manifesto_confere_integridade_dos_arquivos_versionados():
+    files = {case["path"]: (ROOT / case["path"]).read_bytes() for case in CASES}
+    path = "research/rag_benchmark/data/documents_gabarito.json"
+    files[path] = (ROOT / path).read_bytes()
     assert manifest(files) == json.loads(
         (ROOT / "research/rag_benchmark/documents_manifest.json").read_text()
     )
-    other, _ = build(seed=91)
+
+
+def test_gerador_reproduz_bytes_no_mesmo_ambiente_e_semente_muda_documentos():
+    data, files = build()
+    assert data == DATA
+    repeated, repeated_files = build()
+    assert repeated == data
+    # Bibliotecas nativas de renderização/compressão podem variar entre plataformas.
+    assert manifest(files) == manifest(repeated_files)
+    other, other_files = build(seed=91)
     assert other["cases"][0]["expected_fields"] != data["cases"][0]["expected_fields"]
+    first_path = data["cases"][0]["path"]
+    assert other_files[first_path] != files[first_path]
 
 
 def test_dados_pessoais_sao_constantes_invalidas_e_nomes_de_exemplo():

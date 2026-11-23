@@ -11,6 +11,9 @@ GQ02, GQ03, GQ05; [ADR 0008](../adr/0008-material-comparativo-versionado.md).
 e a fonte redistribuível Bitstream Vera, incluída com sua licença em `fonts/`.
 Não depende das fontes instaladas no sistema, da data atual nem de arquivos financeiros externos.
 As versões de renderização estão fixadas em `api/uv.lock`; mudar essas versões pode mudar bytes.
+O lock não fixa as bibliotecas nativas dos pacotes de cada plataforma (por exemplo, FreeType,
+zlib e codecs). Por isso, a mesma semente preserva o gabarito, mas não garante bytes idênticos
+entre macOS e Linux. A repetibilidade byte a byte é verificada no mesmo ambiente.
 
 | Propriedade | Composição |
 |---|---|
@@ -55,7 +58,9 @@ indicador e linhas sem correspondência são diagnósticos automáticos, não re
 
 `research/rag_benchmark/documents_manifest.json` registra SHA-256 dos bytes das imagens, PDFs,
 gabarito, schema, gerador, fonte, licença e lock. Os testes verificam o manifesto sem atualizá-lo
-e confrontam os arquivos versionados com uma nova geração. Antes de alterar hashes, revise a
+e comparam duas gerações feitas no mesmo ambiente, sem exigir que seus bytes coincidam com
+os produzidos em outra plataforma. A integridade dos arquivos versionados continua sendo
+verificada separadamente contra os hashes publicados. Antes de alterar hashes, revise a
 mudança de insumo; regenerar o manifesto não justifica sozinho uma divergência inesperada.
 
 ## Reprodução
@@ -63,15 +68,17 @@ mudança de insumo; regenerar o manifesto não justifica sozinho uma divergênci
 ```bash
 cd api
 uv sync --frozen --extra documents
-uv run python ../research/synthetic_data/generate_document_images.py
+uv run python ../research/synthetic_data/generate_document_images.py --output ../artifacts/documents/reproducao
 uv run pytest -c pyproject.toml ../research/test_document_dataset.py
 cd ..
 make docs-build
 ```
 
 O gerador também aceita `--seed` e `--output <raiz>`, preservando os caminhos relativos. Use uma
-pasta temporária para experimentar outra semente. A reprodução dos hashes usa a semente padrão,
-a fonte versionada e as dependências do lock. Não substitua os dados oficiais por outra semente
+pasta temporária para experimentar outra semente ou plataforma. A reprodução dos hashes exige,
+além da semente padrão, fonte e dependências fixadas, o mesmo ambiente nativo de renderização
+e compressão. Os ensaios comparativos usam os arquivos versionados e seu manifesto, sem
+regenerá-los no runner. Não substitua os dados oficiais por outra semente
 durante uma execução comparativa.
 
 ## Calibração e ensaio com OCR real
