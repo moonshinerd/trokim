@@ -1,4 +1,10 @@
-"""Métricas locais. Limiares provisórios: calibração depende da #90."""
+"""Métricas locais verificadas no corpus sintético da #90; não certificam fotos reais.
+
+O ensaio mantém 320 px, Laplaciano 15 e contraste 12: na calibração não há falso
+aceite/rejeição; a validação usa famílias separadas. Confiança 0,80 é política
+conservadora de leitura (compartilhada com #89), não probabilidade calibrada.
+Textura, moldura e corte não são detectados semanticamente por estas métricas.
+"""
 
 import numpy as np
 from PIL import Image

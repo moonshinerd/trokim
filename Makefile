@@ -16,6 +16,8 @@ help:
 	@echo "  make rag-eval            - Executa benchmark e avaliação da base RAG (Semana 2)"
 	@echo "  make ingest              - Ingere a base de conhecimento no banco vetorial local"
 	@echo "  make synthetic-data      - Gera extratos OFX e faturas sintéticas para testes LGPD"
+	@echo "  make document-images     - Recria os 40 documentos e o manifesto multimodal (#90)"
+	@echo "  make document-calibrate RUN=<id> - Calibra e ensaia com OCR real (#88/#90)"
 	@echo "  make comparison-validate - Valida integridade do material comparativo (Semana 3)"
 	@echo "  make comparison-eval     - Executa o benchmark comparativo das 3 abordagens (Semana 3)"
 	@echo "  make comparison-run RUN=<data>-<modelo> MODEL=<modelo litellm> - Execução completa e registrada"
@@ -86,6 +88,15 @@ ingest:
 synthetic-data:
 	cd api && uv run python ../research/synthetic_data/generate_datasets.py
 
+.PHONY: document-images document-calibrate
+document-images:
+	cd api && uv run python ../research/synthetic_data/generate_document_images.py
+
+document-calibrate:
+	@test -n "$(RUN)" || { echo "Uso: make document-calibrate RUN=2026-11-23-rapidocr-v1"; exit 1; }
+	cd api && uv run --extra documents --extra ocr python ../research/rag_benchmark/calibrate_documents.py \
+		--ocr --output "../research/rag_benchmark/results/documents/$(RUN)"
+
 # Execução completa e registrada do benchmark (#60): as quatro abordagens nos 30 casos e os 20
 # cenários multiagente, em results/comparison/<RUN>/ e results/multiagent/<RUN>/, com run.json e
 # formulários de auditoria pendente. Recusa RUN já usado. Depois: `make report-charts`.
@@ -103,6 +114,7 @@ multiagent-run:
 
 # Gráficos dos docs: lidos de run.json e dos resultados; matplotlib só é trazido por este comando.
 report-charts:
+	cd api && uv run python ../research/rag_benchmark/document_charts.py
 	uv run --with matplotlib python research/rag_benchmark/make_report_charts.py
 
 # Categorização por atividade (ADR 0020): dados abertos do CNPJ, baixados uma vez, fora do git.

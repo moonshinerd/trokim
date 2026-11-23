@@ -1,0 +1,522 @@
+[
+  {
+    "id": "D01",
+    "metrics": {
+      "sharpness": 1036.0282536226298,
+      "min_side": 1000,
+      "contrast": 44.77356659869161,
+      "resolution": [
+        1000,
+        1250
+      ]
+    },
+    "gate_rejected": false
+  },
+  {
+    "id": "D02",
+    "metrics": {
+      "sharpness": 560.3552168439443,
+      "min_side": 1000,
+      "contrast": 43.86521588531408,
+      "resolution": [
+        1000,
+        1250
+      ]
+    },
+    "gate_rejected": false
+  },
+  {
+    "id": "D03",
+    "metrics": {
+      "sharpness": 1028.917463131391,
+      "min_side": 1000,
+      "contrast": 43.68109723471241,
+      "resolution": [
+        1000,
+        1250
+      ]
+    },
+    "gate_rejected": false
+  },
+  {
+    "id": "D04",
+    "metrics": {
+      "sharpness": 429.58733171471147,
+      "min_side": 1000,
+      "contrast": 28.499985472579034,
+      "resolution": [
+        1000,
+        1250
+      ]
+    },
+    "gate_rejected": false
+  },
+  {
+    "id": "D05",
+    "metrics": {
+      "sharpness": 1454.6526370047789,
+      "min_side": 1000,
+      "contrast": 44.26759226613781,
+      "resolution": [
+        1000,
+        1250
+      ]
+    },
+    "gate_rejected": false
+  },
+  {
+    "id": "D06",
+    "metrics": {
+      "sharpness": 1167.6489728564213,
+      "min_side": 1000,
+      "contrast": 44.32785439021384,
+      "resolution": [
+        1000,
+        1250
+      ]
+    },
+    "gate_rejected": false
+  },
+  {
+    "id": "D07",
+    "metrics": {
+      "sharpness": 1007.9262001567237,
+      "min_side": 1000,
+      "contrast": 40.75264028078955,
+      "resolution": [
+        1000,
+        1250
+      ]
+    },
+    "gate_rejected": false
+  },
+  {
+    "id": "D08",
+    "metrics": {
+      "sharpness": 789.1229815142178,
+      "min_side": 1000,
+      "contrast": 41.03586653439853,
+      "resolution": [
+        1000,
+        1250
+      ]
+    },
+    "gate_rejected": false
+  },
+  {
+    "id": "D09",
+    "metrics": {
+      "sharpness": 1030.9872019680386,
+      "min_side": 1000,
+      "contrast": 44.46587565911937,
+      "resolution": [
+        1000,
+        1250
+      ]
+    },
+    "gate_rejected": false
+  },
+  {
+    "id": "D10",
+    "metrics": {
+      "sharpness": 1017.3353405529007,
+      "min_side": 1000,
+      "contrast": 44.49638695006117,
+      "resolution": [
+        1000,
+        1250
+      ]
+    },
+    "gate_rejected": false
+  },
+  {
+    "id": "D11",
+    "metrics": {
+      "sharpness": 1514.1791001875547,
+      "min_side": 1000,
+      "contrast": 46.21523449464304,
+      "resolution": [
+        1000,
+        1250
+      ]
+    },
+    "gate_rejected": false
+  },
+  {
+    "id": "D12",
+    "metrics": {
+      "sharpness": 2622.1842284938202,
+      "min_side": 545,
+      "contrast": 64.66108887889628,
+      "resolution": [
+        1000,
+        545
+      ]
+    },
+    "gate_rejected": false
+  },
+  {
+    "id": "D13",
+    "metrics": {
+      "sharpness": 996.6210979651611,
+      "min_side": 1000,
+      "contrast": 42.066067229683654,
+      "resolution": [
+        1000,
+        1250
+      ]
+    },
+    "gate_rejected": false
+  },
+  {
+    "id": "D14",
+    "metrics": {
+      "sharpness": 855.3644966213835,
+      "min_side": 1000,
+      "contrast": 41.233846710796406,
+      "resolution": [
+        1000,
+        1250
+      ]
+    },
+    "gate_rejected": false
+  },
+  {
+    "id": "D15",
+    "metrics": {
+      "sharpness": 984.5500006423102,
+      "min_side": 1000,
+      "contrast": 40.41201949526632,
+      "resolution": [
+        1000,
+        1250
+      ]
+    },
+    "gate_rejected": false
+  },
+  {
+    "id": "D16",
+    "metrics": {
+      "sharpness": 1814.2416988941563,
+      "min_side": 415,
+      "contrast": 62.83451832235558,
+      "resolution": [
+        1000,
+        415
+      ]
+    },
+    "gate_rejected": false
+  },
+  {
+    "id": "D17",
+    "metrics": {
+      "sharpness": 1510.2178282847747,
+      "min_side": 1000,
+      "contrast": 46.94211121100115,
+      "resolution": [
+        1000,
+        1250
+      ]
+    },
+    "gate_rejected": false
+  },
+  {
+    "id": "D18",
+    "metrics": {
+      "sharpness": 1451.3005803273213,
+      "min_side": 1000,
+      "contrast": 46.54465424054178,
+      "resolution": [
+        1000,
+        1250
+      ]
+    },
+    "gate_rejected": false
+  },
+  {
+    "id": "D19",
+    "metrics": {
+      "sharpness": 1035.628094329685,
+      "min_side": 1000,
+      "contrast": 43.96013919399237,
+      "resolution": [
+        1000,
+        1250
+      ]
+    },
+    "gate_rejected": false
+  },
+  {
+    "id": "D20",
+    "metrics": {
+      "sharpness": 1770.2969425533877,
+      "min_side": 415,
+      "contrast": 68.46633308941995,
+      "resolution": [
+        1000,
+        415
+      ]
+    },
+    "gate_rejected": false
+  },
+  {
+    "id": "D21",
+    "metrics": {
+      "sharpness": 985.0342865217615,
+      "min_side": 1000,
+      "contrast": 41.68628787805048,
+      "resolution": [
+        1000,
+        1250
+      ]
+    },
+    "gate_rejected": false
+  },
+  {
+    "id": "D22",
+    "metrics": {
+      "sharpness": 861.2498570859022,
+      "min_side": 1000,
+      "contrast": 41.03409759256585,
+      "resolution": [
+        1000,
+        1250
+      ]
+    },
+    "gate_rejected": false
+  },
+  {
+    "id": "D23",
+    "metrics": {
+      "sharpness": 1477.5550379605365,
+      "min_side": 1000,
+      "contrast": 43.07579937563887,
+      "resolution": [
+        1000,
+        1250
+      ]
+    },
+    "gate_rejected": false
+  },
+  {
+    "id": "D24",
+    "metrics": {
+      "sharpness": 2615.512616393007,
+      "min_side": 545,
+      "contrast": 60.078354269394524,
+      "resolution": [
+        1000,
+        545
+      ]
+    },
+    "gate_rejected": false
+  },
+  {
+    "id": "D25",
+    "metrics": {
+      "sharpness": 1038.817900223524,
+      "min_side": 1000,
+      "contrast": 44.78943518736813,
+      "resolution": [
+        1000,
+        1250
+      ]
+    },
+    "gate_rejected": false
+  },
+  {
+    "id": "D26",
+    "metrics": {
+      "sharpness": 894.0176233877368,
+      "min_side": 1000,
+      "contrast": 43.97803110484871,
+      "resolution": [
+        1000,
+        1250
+      ]
+    },
+    "gate_rejected": false
+  },
+  {
+    "id": "D27",
+    "metrics": {
+      "sharpness": 1029.9927081727558,
+      "min_side": 1000,
+      "contrast": 43.66309488592438,
+      "resolution": [
+        1000,
+        1250
+      ]
+    },
+    "gate_rejected": false
+  },
+  {
+    "id": "D28",
+    "metrics": {
+      "sharpness": 0.297275641025641,
+      "min_side": 1000,
+      "contrast": 32.05012570653039,
+      "resolution": [
+        1000,
+        1250
+      ]
+    },
+    "gate_rejected": true
+  },
+  {
+    "id": "D29",
+    "metrics": {
+      "sharpness": 1473.7713375468886,
+      "min_side": 1000,
+      "contrast": 44.35901931503446,
+      "resolution": [
+        1000,
+        1250
+      ]
+    },
+    "gate_rejected": false
+  },
+  {
+    "id": "D30",
+    "metrics": {
+      "sharpness": 0.2744977133754689,
+      "min_side": 1000,
+      "contrast": 10.938048182740056,
+      "resolution": [
+        1000,
+        1250
+      ]
+    },
+    "gate_rejected": true
+  },
+  {
+    "id": "D31",
+    "metrics": {
+      "sharpness": 1006.9050055238682,
+      "min_side": 1000,
+      "contrast": 40.74058475918576,
+      "resolution": [
+        1000,
+        1250
+      ]
+    },
+    "gate_rejected": false
+  },
+  {
+    "id": "D32",
+    "metrics": {
+      "sharpness": 0.31189943990545194,
+      "min_side": 1000,
+      "contrast": 29.343174754532622,
+      "resolution": [
+        1000,
+        1250
+      ]
+    },
+    "gate_rejected": true
+  },
+  {
+    "id": "D33",
+    "metrics": {
+      "sharpness": 1024.1605245747905,
+      "min_side": 1000,
+      "contrast": 44.42609778601183,
+      "resolution": [
+        1000,
+        1250
+      ]
+    },
+    "gate_rejected": false
+  },
+  {
+    "id": "D34",
+    "metrics": {
+      "sharpness": 0.1977785699604337,
+      "min_side": 1000,
+      "contrast": 11.47985511603289,
+      "resolution": [
+        1000,
+        1250
+      ]
+    },
+    "gate_rejected": true
+  },
+  {
+    "id": "D35",
+    "metrics": {
+      "sharpness": 1491.677131506603,
+      "min_side": 1000,
+      "contrast": 46.08999420211594,
+      "resolution": [
+        1000,
+        1250
+      ]
+    },
+    "gate_rejected": false
+  },
+  {
+    "id": "D36",
+    "metrics": {
+      "sharpness": 0.4788551461898155,
+      "min_side": 1000,
+      "contrast": 33.037928069918536,
+      "resolution": [
+        1000,
+        1250
+      ]
+    },
+    "gate_rejected": true
+  },
+  {
+    "id": "D37",
+    "metrics": {
+      "sharpness": 995.7701845999692,
+      "min_side": 1000,
+      "contrast": 42.02696606791692,
+      "resolution": [
+        1000,
+        1250
+      ]
+    },
+    "gate_rejected": false
+  },
+  {
+    "id": "D38",
+    "metrics": {
+      "sharpness": 0.20038634962232157,
+      "min_side": 1000,
+      "contrast": 10.78031103198971,
+      "resolution": [
+        1000,
+        1250
+      ]
+    },
+    "gate_rejected": true
+  },
+  {
+    "id": "D39",
+    "metrics": {
+      "sharpness": 990.0036129952213,
+      "min_side": 1000,
+      "contrast": 40.32639011214451,
+      "resolution": [
+        1000,
+        1250
+      ]
+    },
+    "gate_rejected": false
+  },
+  {
+    "id": "D40",
+    "metrics": {
+      "sharpness": 0.319843212065156,
+      "min_side": 1000,
+      "contrast": 28.849373218918586,
+      "resolution": [
+        1000,
+        1250
+      ]
+    },
+    "gate_rejected": true
+  }
+]

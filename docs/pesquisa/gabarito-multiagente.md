@@ -166,3 +166,10 @@ resposta e tempos por categoria. A comparação exata dos agentes e status do
 gabarito regular é diagnóstica; os status adversariais não são impostos às
 perguntas livres. Os resultados por categoria estão na
 [seção 9 do histórico de resultados](resultados.md#9-semana-4-os-20-cenarios-multiagente).
+
+## Relação com o dataset multimodal (Semana 5)
+
+O [gabarito multimodal da #90](gabarito-multimodal.md) versiona 40 documentos sintéticos,
+seus campos, recuperabilidade, qualidade e manifesto. Ele calibra o agente da #88 e prepara
+o comparador da #98. Não altera os 20 cenários, ledger ou manifesto desta página; o gabarito
+de documentos também não é fornecido como entrada aos motores de extração.

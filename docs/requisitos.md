@@ -152,8 +152,11 @@ graph LR
 
 | Requisito do épico #86 | Origem | Atendimento nesta implementação |
 |---|---|---|
-| RF27 — leitura de foto ou PDF escaneado | GQ02 | Componente integrado às portas da #87; ensaio com OCR real e calibração com a #90 pendentes |
+| RF27 — leitura de foto ou PDF escaneado | GQ02 | Componente da #88 integrado às portas; corpus da #90 e limites visuais verificados; runner de OCR real e integração HTTP pela #96 |
 | RF28 — revisão humana e abstenção | GQ02, GQ05 | `needs_review=True`, abstenção e leitura parcial; confirmação no app depende da #96 |
 
 O [Agente de documento](agentes/document-agent.md) detalha limites, formatos, proteção dos dados
 e testes. Estes requisitos não são declarados concluídos de ponta a ponta nesta entrega parcial.
+
+O [gabarito multimodal](pesquisa/gabarito-multimodal.md) rastreia RF14/RF27/RF28 a GQ02, GQ03 e GQ05.
+A política de revisão não autoriza confirmar documentos antes da validação financeira da #89.

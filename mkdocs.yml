@@ -80,6 +80,7 @@ nav:
       - Comparação LLM × RAG (Semana 3): pesquisa/comparacao-llm-rag.md
       - Histórico de Resultados e Gráficos: pesquisa/resultados.md
       - Gabarito Multiagente (Semana 4): pesquisa/gabarito-multiagente.md
+      - Gabarito Multimodal (Semana 5): pesquisa/gabarito-multimodal.md
       - Fontes e Referências: referencias.md
   - Requisitos: requisitos.md
   - Processo: processo/cbl.md
@@ -92,7 +93,7 @@ nav:
       - Visão Geral: arquitetura/index.md
       - Mapa do Sistema: arquitetura/mapa-do-sistema.md
       - Categorias dos Gastos: arquitetura/categorias.md
-  - Agentes (Semana 4):
+  - Agentes (Semana 4 e 5):
       - Visão Geral: agentes/index.md
       - Orquestrador e Contratos: agentes/orquestrador.md
       - Research Agent: agentes/research-agent.md
