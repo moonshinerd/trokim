@@ -238,7 +238,7 @@ comprimido e preparado por `make build` ([ADR 0020](adr/0020-categorizacao-por-c
 
 ## 7. Semana 5 — Multimodalidade (Sprint Ativa)
 
-O entregável oficial da **Semana 5 (23/11 a 27/11)** é o *agente multimodal*: o Trokim passa a ler **foto ou PDF escaneado** de fatura, comprovante de Pix e boleto, extrai os campos, valida por código e **mostra ao usuário para revisão antes de virar lançamento**. A equipe deixa **tudo pronto na quarta-feira, 25/11/2026** e **entrega na sexta-feira, 27/11**. As tarefas estão na milestone **"Semana 5 — Multimodalidade (Agente Multimodal)"**, com o épico [#86](https://github.com/moonshinerd/trokim/issues/86) e o contrato do documento extraído.
+O entregável oficial da **Semana 5 (23/11 a 27/11)** é o *agente multimodal*: o Trokim passa a ler **foto ou PDF escaneado** de fatura, comprovante de Pix e boleto, extrai os campos, valida por código e **mostra ao usuário para revisão antes de virar lançamento**. A equipe deixa **tudo pronto na quarta-feira, 25/11/2026** e **entrega até a segunda-feira, 30/11, às 8h00**, na pasta da equipe no Teams (canal "Segundo Desafio"). O texto da entrega pede, no mínimo, **duas modalidades** (aqui, texto no chat e imagem ou PDF no agente de documento), a documentação de **modalidades suportadas, limitações conhecidas e casos de falha com mitigação**, e uma **demonstração** de um fluxo com duas modalidades que mostre como a informação vira resposta. As tarefas estão na milestone **"Semana 5 — Multimodalidade (Agente Multimodal)"**, com o épico [#86](https://github.com/moonshinerd/trokim/issues/86) e o contrato do documento extraído.
 
 Além do entregável, a semana leva duas frentes do projeto: **suporte a mais bancos, com tutorial** (PicPay e Mercado Pago testados com arquivos reais; Inter, C6 e Itaú como **experimentais**) e o **chat respondendo sobre as contas, parcelas e dívidas** que o usuário importou.
 
@@ -254,7 +254,8 @@ Além do entregável, a semana leva duas frentes do projeto: **suporte a mais ba
 | **Terça 24/11** | Revisão cruzada e merge da Fase 1; quem estiver desbloqueado adianta a Fase 2 | revisão dos PRs |
 | **Quarta 25/11** | **Fase 2:** integração, benchmark, documentação e **tudo pronto** (corte às 18h) | [#95](https://github.com/moonshinerd/trokim/issues/95), [#96](https://github.com/moonshinerd/trokim/issues/96), [#97](https://github.com/moonshinerd/trokim/issues/97), [#98](https://github.com/moonshinerd/trokim/issues/98), [#99](https://github.com/moonshinerd/trokim/issues/99) |
 | **Quinta 26/11** | Homologação em aparelho Android real, correções e ensaio | [#100](https://github.com/moonshinerd/trokim/issues/100) |
-| **Sexta 27/11** | **Entrega** | — |
+| **Sexta 27/11 a domingo 29/11** | Margem de segurança: ensaio, correção do que quebra a demonstração e conferência do envio (sem funcionalidade nova) | — |
+| **Segunda 30/11, 8h00** | **Entrega** no Teams | — |
 
 ```mermaid
 flowchart TD
