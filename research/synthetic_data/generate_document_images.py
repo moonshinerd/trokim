@@ -292,7 +292,7 @@ def build(seed: int = SEED) -> tuple[dict, dict[str, bytes]]:
 
 def manifest(files: dict[str, bytes], root: Path = ROOT) -> dict:
     inputs = [
-        Path(__file__).relative_to(ROOT).as_posix(),
+        Path(__file__).resolve().relative_to(ROOT).as_posix(),
         "research/synthetic_data/fonts/Vera.ttf",
         "research/synthetic_data/fonts/LICENSE.txt",
         "research/rag_benchmark/data/documents_gabarito.schema.json",

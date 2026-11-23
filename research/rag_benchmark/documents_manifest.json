@@ -47,6 +47,6 @@
     "research/synthetic_data/document_images/D40.pdf": "2d046e25a9cf6e5d790918f080d0ff25d1604fb69312ada378272bf653bf9e57",
     "research/synthetic_data/fonts/LICENSE.txt": "3361d054759a2fc686a2c058be82deaf9c2e6fe549be9004d7935a6c1736315d",
     "research/synthetic_data/fonts/Vera.ttf": "c4c45690b345435b2cba52ecabe275f05e49b389b39fe68ad03afbb551288d3d",
-    "research/synthetic_data/generate_document_images.py": "33017d7404952c6175064276d8ef0b6b1f300496dadf568717200e426465558d"
+    "research/synthetic_data/generate_document_images.py": "ebf1ce86cb53f80c82ad81045e08336f38bca493c96af8b00466e0590f66a7d9"
   }
 }
