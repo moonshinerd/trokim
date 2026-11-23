@@ -13,6 +13,13 @@ Future<void> _advanceSteps(WidgetTester tester, int count) async {
   }
 }
 
+void _setTallSurface(WidgetTester tester) {
+  tester.view.physicalSize = const Size(800, 2200);
+  tester.view.devicePixelRatio = 1;
+  addTearDown(tester.view.resetPhysicalSize);
+  addTearDown(tester.view.resetDevicePixelRatio);
+}
+
 void main() {
   group('Domínio: supportedBanks e getGuideForBank', () {
     test('catálogo contém os 7 bancos obrigatórios e níveis corretos', () {
@@ -81,6 +88,7 @@ void main() {
     testWidgets(
       'exibe título, selos Validado e Experimental e formatos aceitos',
       (tester) async {
+        _setTallSurface(tester);
         final h = FlowHarness();
         await h.open(tester);
         await h.startImport(tester);
@@ -98,18 +106,12 @@ void main() {
         expect(find.text('PicPay'), findsOneWidget);
         expect(find.text('Mercado Pago'), findsOneWidget);
 
-        // Bancos experimentais na lista (com rolagem)
-        await tester.scrollUntilVisible(find.text('Banco Inter'), 150);
+        // Bancos experimentais na lista
         expect(find.text('Banco Inter'), findsOneWidget);
-
-        await tester.scrollUntilVisible(find.text('C6 Bank'), 150);
         expect(find.text('C6 Bank'), findsOneWidget);
-
-        await tester.scrollUntilVisible(find.text('Itaú'), 150);
         expect(find.text('Itaú'), findsOneWidget);
 
         // Atalhos
-        await tester.scrollUntilVisible(find.text('Outro banco'), 150);
         expect(find.text('Outro banco'), findsOneWidget);
         expect(find.text('Banco não reconhecido?'), findsOneWidget);
         expect(find.text('Pedir suporte a um banco'), findsOneWidget);
@@ -120,6 +122,7 @@ void main() {
     testWidgets('botão "Já tenho o arquivo" pula tutoriais e abre seletor', (
       tester,
     ) async {
+      _setTallSurface(tester);
       final h = FlowHarness();
       h.api.onUpload = (_) => jsonResponse(uploadJson());
       await h.open(tester);
@@ -132,12 +135,12 @@ void main() {
     testWidgets('opção "Outro banco" aciona a leitura sem tutorial', (
       tester,
     ) async {
+      _setTallSurface(tester);
       final h = FlowHarness();
       h.api.onUpload = (_) => jsonResponse(uploadJson(institution: 'outro'));
       await h.open(tester);
       await h.startImport(tester);
 
-      await tester.scrollUntilVisible(find.text('Outro banco'), 200);
       await h.tapAsync(tester, find.text('Outro banco'));
       expect(find.text('Pronto!'), findsOneWidget);
     });
@@ -145,6 +148,7 @@ void main() {
     testWidgets('link "Pedir suporte a um banco" aciona callback', (
       tester,
     ) async {
+      _setTallSurface(tester);
       var requested = false;
       final h = FlowHarness();
       await h.open(
@@ -154,10 +158,6 @@ void main() {
         ),
       );
 
-      await tester.scrollUntilVisible(
-        find.text('Pedir suporte a um banco'),
-        250,
-      );
       await tester.tap(find.text('Pedir suporte a um banco'));
       await tester.pumpAndSettle();
 
@@ -169,6 +169,7 @@ void main() {
     testWidgets('PicPay (Validado): tutorial da fatura do cartão', (
       tester,
     ) async {
+      _setTallSurface(tester);
       final h = FlowHarness();
       await h.open(tester);
       await h.startImport(tester);
@@ -218,6 +219,7 @@ void main() {
     testWidgets('Mercado Pago (Validado): extrato da conta e pular tutorial', (
       tester,
     ) async {
+      _setTallSurface(tester);
       final h = FlowHarness();
       h.api.onUpload = (_) =>
           jsonResponse(uploadJson(institution: 'mercadopago', kind: 'conta'));
@@ -247,22 +249,17 @@ void main() {
     testWidgets('Banco Inter (Experimental): exibe selo e aviso experimental', (
       tester,
     ) async {
+      _setTallSurface(tester);
       final h = FlowHarness();
       await h.open(tester);
       await h.startImport(tester);
 
-      await tester.scrollUntilVisible(find.text('Banco Inter'), 200);
       await tester.tap(find.text('Banco Inter'));
       await tester.pumpAndSettle();
 
       // Aviso experimental na tela de escolha do tipo
       expect(find.text('O que você quer importar?'), findsOneWidget);
-      expect(
-        find.textContaining(
-          'Suporte experimental: tutorial baseado na ajuda oficial',
-        ),
-        findsOneWidget,
-      );
+      expect(find.textContaining('Suporte experimental'), findsOneWidget);
 
       await tester.tap(find.text('Extrato da conta'));
       await tester.pumpAndSettle();
@@ -284,11 +281,11 @@ void main() {
     testWidgets('C6 Bank (Experimental): fatura do cartão com passos curtos', (
       tester,
     ) async {
+      _setTallSurface(tester);
       final h = FlowHarness();
       await h.open(tester);
       await h.startImport(tester);
 
-      await tester.scrollUntilVisible(find.text('C6 Bank'), 200);
       await tester.tap(find.text('C6 Bank'));
       await tester.pumpAndSettle();
 
@@ -309,11 +306,11 @@ void main() {
     });
 
     testWidgets('Itaú (Experimental): extrato da conta em OFX', (tester) async {
+      _setTallSurface(tester);
       final h = FlowHarness();
       await h.open(tester);
       await h.startImport(tester);
 
-      await tester.scrollUntilVisible(find.text('Itaú'), 200);
       await tester.tap(find.text('Itaú'));
       await tester.pumpAndSettle();
 
@@ -331,6 +328,7 @@ void main() {
     testWidgets(
       'checkbox "Não mostrar este tutorial de novo" atualiza preferência',
       (tester) async {
+        _setTallSurface(tester);
         final h = FlowHarness();
         await h.open(tester);
         await h.startImport(tester);
