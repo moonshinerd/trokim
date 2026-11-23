@@ -237,7 +237,7 @@ def parse_inter_fatura(text: str, filename: str) -> OfxParseResult | None:
 # --------------------------------------------------------------------------- Itaú (fatura)
 _ITAU = re.compile(rf"^(?P<d>\d{{2}})/(?P<m>\d{{2}})\s+(?P<desc>.+?)\s+(?P<v>{_MONEY})\s*$")
 _ITAU_PARCELA = re.compile(r"\b(\d{2})/(\d{2})\b\s*$")
-_ITAU_DUE = re.compile(r"vencimento:?\s*(\d{2})/(\d{2})/(\d{4})", re.I)
+_ITAU_DUE = re.compile(r"(?:vencimento|emiss[aã]o):?\s*(\d{2})/(\d{2})/(\d{4})", re.I)
 _ITAU_TOTAL = re.compile(rf"total dos lan[cç]amentos atuais\D*({_MONEY})", re.I)
 
 
@@ -355,10 +355,69 @@ def parse_picpay_extrato(text: str, filename: str) -> OfxParseResult | None:
     return _result("picpay", "conta", "conta", txs, min(dates), max(dates), None)
 
 
+# --------------------------------------------------------------------------- PicPay (fatura)
+_PICPAY_CARD = re.compile(r"picpay\s+card\s+final\s+\d{4}", re.I)
+_PICPAY_DUE = re.compile(r"vencimento:?\s*(\d{2})-(\d{2})-(\d{4})", re.I)
+_PICPAY_LINE = re.compile(rf"^(?P<d>\d{{2}})/(?P<m>\d{{2}})\s+(?P<desc>.+?)\s+(?P<v>{_MONEY})\s*$")
+_PICPAY_PARC = re.compile(r"\bPARC\.?\s*(\d{1,2})/(\d{1,2})\b", re.I)
+_PICPAY_SKIP = ("transações nacionais", "data estabelecimento", "subtotal")
+
+
+def is_picpay_fatura(text: str) -> bool:
+    return bool(_PICPAY_CARD.search(text))
+
+
+def parse_picpay_fatura(text: str, filename: str) -> OfxParseResult | None:
+    due = _PICPAY_DUE.search(text)
+    if not due:
+        return None  # sem o vencimento não há ano seguro para a data DD/MM
+    due_date = date(int(due.group(3)), int(due.group(2)), int(due.group(1)))
+    txs: list[Transaction] = []
+    for ln in (ln.strip() for ln in text.split("\n")):
+        if any(skip in ln.lower() for skip in _PICPAY_SKIP):
+            continue
+        m = _PICPAY_LINE.match(ln)
+        if not m:
+            continue
+        month, day = int(m.group("m")), int(m.group("d"))
+        year = due_date.year if month <= due_date.month else due_date.year - 1
+        try:
+            posted = date(year, month, day)
+        except ValueError:
+            continue
+        desc = m.group("desc")
+        parcela = None
+        pm = _PICPAY_PARC.search(desc)
+        if pm and 1 <= int(pm.group(1)) <= int(pm.group(2)):
+            parcela = (int(pm.group(1)), int(pm.group(2)))
+            desc = _PICPAY_PARC.sub("", desc).strip()
+        value = _money(m.group("v"))
+        credit = value < 0 or "pagamento de fatura" in desc.lower()
+        txs.append(
+            _make(
+                "picpay",
+                "fatura",
+                len(txs),
+                posted,
+                desc,
+                value,
+                not credit,
+                filename,
+                "cartao",
+                parcela,
+            )
+        )
+    if not txs:
+        return None
+    dates = [t.date for t in txs]
+    return _result("picpay", "cartao", "cartao", txs, min(dates), due_date, None)
+
+
 PDF_PROFILES = (
     ("mercadopago", is_mercadopago_extrato, parse_mercadopago_extrato),
     ("inter", is_inter_fatura, parse_inter_fatura),
     ("itau", is_itau_fatura, parse_itau_fatura),
+    ("picpay", is_picpay_fatura, parse_picpay_fatura),
     ("picpay", is_picpay_extrato, parse_picpay_extrato),
 )
 

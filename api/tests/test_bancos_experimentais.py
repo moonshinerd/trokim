@@ -144,3 +144,29 @@ def test_bordas_pdf_nao_quebram():
     # Itaú: compra de dezembro numa fatura que vence em janeiro cai no ano anterior
     jan = "itau unibanco\nVencimento: 10/01/2027\nlançamentos: compras e saques\n20/12 LOJA 10,00"
     assert parse_itau_fatura(jan, "t.pdf").transactions[0].date.year == 2026
+
+
+PICPAY_FATURA = """Picpay Card final 1234
+Vencimento: 05-01-2026
+Transações Nacionais
+Data Estabelecimento Valor
+20/12 LOJA TESTE PARC 02/03 1.234,56
+22/12 PAGAMENTO DE FATURA 500,00
+Subtotal 1.234,56
+"""
+
+
+def test_picpay_fatura_parcela_ano_e_pagamento():
+    r = parse_bank_pdf(PICPAY_FATURA, "p.pdf")
+    assert r and r.kind == "cartao" and len(r.transactions) == 2
+    compra, pagto = r.transactions
+    assert (compra.installment_number, compra.installment_total) == (2, 3)
+    assert compra.amount == 1234.56 and compra.date.year == 2025  # dezembro, vence em janeiro
+    assert pagto.type.value == "credit" and pagto.nature.value == "pagamento_fatura"
+    # sem vencimento: abstém-se
+    assert parse_bank_pdf(PICPAY_FATURA.replace("Vencimento: 05-01-2026", ""), "p.pdf") is None
+
+
+def test_itau_usa_emissao_quando_nao_ha_vencimento():
+    t = "itau unibanco\nEmissão: 28/11/2026\nlançamentos: compras e saques\n03/11 X 5,00"
+    assert parse_itau_fatura(t, "t.pdf").transactions[0].date.year == 2026
