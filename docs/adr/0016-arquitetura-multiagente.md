@@ -106,3 +106,15 @@ Benchmark da [#60](https://github.com/moonshinerd/trokim/issues/60), com duas ro
   limite (8 dos 30 casos, 9 dos 20 cenários). O Communication passou a usar `LLM_MAX_TOKENS`.
 - **Próximo passo:** aceitar paráfrase com citação verificada, em vez de só frases literais, e
   ampliar a política de escopo para previsões de preço.
+
+
+## Extensão: agente de documento (Semana 5, #88)
+
+`AgentName.DOCUMENT` e `DocumentAgent.run(DocumentContext)` acrescentam um passo de leitura
+com o mesmo `AgentStep`, sem executar o pipeline de pesquisa e comunicação do chat.
+O contexto próprio exclui os bytes de serialização e representação; a operação apaga sua
+referência ao arquivo ao terminar. A integração ao orquestrador HTTP pertence à #96.
+O contrato público do épico #86 fica em `domain/documents.py` e deve ser compartilhado
+com a #89. O agente usa diretamente as portas `OcrProvider` e `VisionProvider` da #87
+(ADR 0021), com seus resultados tipados e suas fábricas configuráveis.
+A leitura, os limites e as pendências estão no [Agente de documento](../agentes/document-agent.md).

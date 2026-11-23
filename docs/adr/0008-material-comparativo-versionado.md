@@ -33,3 +33,14 @@ Atualizar hashes exige revisão de conteúdo e não substitui conferência das f
 ## Adendo — Gabarito Multiagente (Semana 4)
 
 O gabarito multiagente de 20 cenários (`research/rag_benchmark/questions_multiagent.json`, issue [#56](https://github.com/moonshinerd/trokim/issues/56)) constitui um conjunto isolado e independente, munido de extrato sintético próprio (`ledger_multiagente.json`), JSON Schema específico e manifesto de hashes dedicado (`multiagent_manifest.json`). Ele avalia a arquitetura de quatro agentes da Semana 4 ([ADR 0016](0016-arquitetura-multiagente.md)) e não altera nem substitui o material comparativo da Semana 3.
+
+## Adendo — Imagens e scans sintéticos (Semana 5, #90)
+
+O corpus multimodal tem manifesto próprio (`research/rag_benchmark/documents_manifest.json`)
+com SHA-256 dos arquivos, gabarito, schema, gerador, fonte/licença e lock de dependências.
+A fonte acompanha o código; imagens e PDFs são versionados, incluindo os casos da demonstração.
+O gabarito distingue verdade original de campos recuperáveis; famílias não atravessam os grupos
+de calibração e verificação. Alterar insumos exige revisar o conteúdo antes de regenerar hashes.
+Execuções guardam commit, hashes de código, versões, parâmetros e leituras brutas sintéticas em
+pastas novas. Não substituem os conjuntos das Semanas 3/4 nem autorizam guardar documentos reais.
+Veja o [protocolo multimodal](../pesquisa/gabarito-multimodal.md).

@@ -333,10 +333,20 @@ Cada issue exige a atualização do MkDocs **no mesmo PR** (regra do `AGENTS.md`
 
 **Revisão do MkDocs do início da semana** (regra do `AGENTS.md`): o MkDocs foi conferido contra o código; os números de testes da API (418) batem com a execução, os links internos estão sem quebra e o `make docs-build` passa. A lacuna encontrada foi a referência dos endpoints, que não listava as rotas de contas, arquivos, parcelas, transferências, regras de categoria e cenários; ela entrou no [Guia de Uso](guia-de-uso.md). Não foi possível reexecutar os testes de pesquisa e do app Flutter neste ambiente, então esses dois números seguem como informados na Entrega 4. As issues da semana foram abertas **antes** desta revisão, o que contraria a ordem do `AGENTS.md`, e o desvio fica registrado aqui.
 
-**Persistência e backup (já em `main` antes da Fase 1):** a biblioteca do usuário passou a ser gravada no SQLite local e restaurada ao iniciar a API, com backup criptografado `.trokim` ([#102](https://github.com/moonshinerd/trokim/issues/102), [ADR 0024](adr/0024-persistencia-local-e-backup-criptografado.md)). Por isso as issues da semana já nascem sobre dados duráveis. As telas de backup já estão em Ajustes; fica para a Semana 6 o armazenamento no aparelho (SQLCipher, com a API sem estado).
+**Persistência e backup (já em `main` antes da Fase 1):** a biblioteca do usuário passou a ser gravada no SQLite local e restaurada ao iniciar a API, com backup criptografado `.trokim` ([#102](https://github.com/moonshinerd/trokim/issues/102), [ADR 0024](adr/0024-persistencia-local-e-backup-criptografado.md)). Por isso as issues da semana já nascem sobre dados duráveis. As telas de backup já estão em Ajustes; o armazenamento no aparelho e a API sem estado foram incorporados na #104, conforme a ADR 0025.
 
 **Backend em contêiner (já em `main`):** `deploy/Dockerfile` e o `docker-compose.yml` sobem só a API com o OCR local e os embeddings já baixados, como usuário sem privilégios, com os dados em volume ([ADR 0021](adr/0021-visao-e-ocr-modulares.md), [#87](https://github.com/moonshinerd/trokim/issues/87)). O app Flutter segue instalado no aparelho.
 
 **Armazenamento no aparelho e API sem estado (já em `main`):** o aparelho guarda a biblioteca cifrada e a API a mantém só em memória ([ADR 0025](adr/0025-armazenamento-no-aparelho-e-api-sem-estado.md), [#104](https://github.com/moonshinerd/trokim/issues/104)).
 
 **Encaminhado para a Semana 6** (milestone "Semana 6 — Integração Completa"): as pendências herdadas da Semana 4, que são redação com paráfrase verificada, política de escopo para previsão de preço (C27) e revisão humana dos casos sinalizados ([#105](https://github.com/moonshinerd/trokim/issues/105)).
+
+### Recorte acordado da #88 — agente de documento
+
+Implementação iniciada com três layouts sintéticos rotulados, perfil PDF textual existente,
+limite de 10 páginas, extração parcial e abstenção sem preenchimento por palpite.
+O código tem contexto próprio e trilha sanitizada; não expõe endpoint nem persiste lançamento.
+As portas e fábricas da #87 já estão integradas. A #90 acrescenta 40 documentos, manifesto,
+gabarito de recuperabilidade, calibração/verificação por família e runner de OCR real no CI.
+Os limites visuais foram mantidos após o ensaio sintético. A conclusão da #88 exige registrar
+o ensaio de extração e integrar a PR #108; a #89 aplica a validação financeira. Consulte o [escopo e as pendências](agentes/document-agent.md).

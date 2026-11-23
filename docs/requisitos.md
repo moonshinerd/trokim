@@ -139,3 +139,18 @@ graph LR
 | **RNF10** | GQ01, GQ07 | [ADR 0011](adr/0011-identidade-visual-e-tema-do-sistema.md), [0013](adr/0013-preferencias-locais-e-aba-de-ajustes.md) | `mobile/lib/core/theme/app_theme.dart`, `mobile/lib/core/widgets/app_motion.dart` | `mobile/test/splash_gate_test.dart`, `mobile/test/settings_screen_test.dart` |
 | **RNF11** | GQ01, GQ03 | [ADR 0012](adr/0012-mascote-onca-e-arte-de-marca-livre.md) | `mobile/assets/brand/`, `docs/referencias.md` | Revisão no PR |
 | **RNF12** | GQ02, GQ03 | [ADR 0021](adr/0021-visao-e-ocr-modulares.md) | `api/app/models/vision_provider.py`, `api/app/clients/vision_factory.py`, `api/app/clients/rapidocr_provider.py`, `api/app/clients/litellm_vision_provider.py` | `api/tests/test_vision_ports.py` |
+
+
+
+## Rastreabilidade do agente de documento (#88)
+
+| Requisito do épico #86 | Origem | Atendimento nesta implementação |
+|---|---|---|
+| RF27 — leitura de foto ou PDF escaneado | GQ02 | Componente da #88 integrado às portas; corpus da #90 e limites visuais verificados; runner de OCR real e integração HTTP pela #96 |
+| RF28 — revisão humana e abstenção | GQ02, GQ05 | `needs_review=True`, abstenção e leitura parcial; confirmação no app depende da #96 |
+
+O [Agente de documento](agentes/document-agent.md) detalha limites, formatos, proteção dos dados
+e testes. Estes requisitos não são declarados concluídos de ponta a ponta nesta entrega parcial.
+
+O [gabarito multimodal](pesquisa/gabarito-multimodal.md) rastreia RF14/RF27/RF28 a GQ02, GQ03 e GQ05.
+A política de revisão não autoriza confirmar documentos antes da validação financeira da #89.

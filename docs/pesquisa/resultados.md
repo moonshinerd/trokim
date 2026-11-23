@@ -2,7 +2,8 @@
 
 Esta página reúne **todas as execuções registradas** do benchmark da comparação LLM x RAG
 (Semana 3), das execuções com o sistema multiagente (Semana 4, [seções 8 e 9](#8-semana-4-multiagente-nos-30-casos-da-comparacao)) e do
-benchmark de recuperação (Semana 2), com os gráficos de cada uma. Nenhuma
+benchmark de recuperação (Semana 2) e da calibração visual sintética de documentos
+(Semana 5, seção 10), com os gráficos de cada uma. Nenhuma
 execução é sobrescrita: se os resultados melhorarem, a nova execução entra como uma nova
 linha e uma nova pasta, e as antigas continuam acessíveis para comparação.
 
@@ -495,3 +496,38 @@ de 18/11, e os de 19/11 para o
 [Luna](https://github.com/moonshinerd/trokim/blob/main/research/rag_benchmark/results/multiagent/2026-11-19-gpt-6-luna-multiagente/multiagent_report.md),
 com as respostas brutas e a trilha de cada cenário em `multiagent_results.json`.
 
+
+## 10. Semana 5 — Calibração sintética do porteiro
+
+Execução `2026-11-23-quality-v2`, de 23/11/2026: mede exclusivamente as métricas visuais dos
+40 arquivos do [gabarito multimodal](gabarito-multimodal.md). Os metadados e medições ficam em
+`research/rag_benchmark/results/documents/2026-11-23-quality-v2/` (`run.json` e `readings.json`).
+O registro inclui o commit `c547db5`, árvore limpa, hashes do código executado e manifesto, versões
+(Python 3.12.16, Pillow 13.0.0), parâmetros e limitações. É medição de desenvolvimento, sem revisão
+humana cega; não representa acurácia de OCR ou de fotografias reais.
+
+| Conjunto | Legíveis/parciais aceitos | Legíveis/parciais rejeitados | Ilegíveis aceitos | Ilegíveis rejeitados |
+|---|---:|---:|---:|---:|
+| Calibração — 20 arquivos | 17 | 0 | 0 | 3 |
+| Verificação — 20 arquivos | 16 | 0 | 0 | 4 |
+
+O seletor utilizou somente a calibração e manteve lado mínimo **320 px**, variância do
+Laplaciano **15** e contraste **12**. A verificação usou famílias distintas, sem reajuste.
+Os sete ilegíveis deste corpus têm baixa nitidez por construção; esses números não mostram
+capacidade de detectar ilegibilidade causada exclusivamente por ruído, corte ou reflexo.
+A confiança OCR de 0,80 é política conservadora e não foi calibrada probabilisticamente.
+
+![Matriz de aceitação do porteiro nos conjuntos de calibração e verificação](../assets/documentos/2026-11-23-quality-v2/qualidade.svg)
+
+A instalação local de RapidOCR não pôde ser concluída porque o ambiente não resolveu o domínio
+de distribuição de pacotes. Portanto, os resultados de campos, linhas e abstenção do motor estão
+marcados como **não medidos** (`null`) nesta execução. Os testes de regressão demonstram
+separadamente a abstenção vazia nos sete ilegíveis antes de chamar o OCR.
+
+O runner `calibrate_documents.py --ocr` e o job `research` do CI executam o motor real e guardam
+leituras brutas sintéticas e trilhas para auditoria. O ensaio real precisa ser conferido e registrado
+antes de considerar a #88 concluída. A comparação dos três motores, a meta de acerto de 90% e os
+cenários de chat da #98 continuam pendentes. Para gerar novamente os gráficos: `make report-charts`.
+
+A execução preliminar `2026-11-23-quality-v1` permanece preservada com árvore alterada
+e os mesmos totais visuais; a v2 registra a repetição sobre código commitado e árvore limpa.

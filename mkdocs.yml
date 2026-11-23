@@ -80,6 +80,7 @@ nav:
       - Comparação LLM × RAG (Semana 3): pesquisa/comparacao-llm-rag.md
       - Histórico de Resultados e Gráficos: pesquisa/resultados.md
       - Gabarito Multiagente (Semana 4): pesquisa/gabarito-multiagente.md
+      - Gabarito Multimodal (Semana 5): pesquisa/gabarito-multimodal.md
       - Fontes e Referências: referencias.md
   - Requisitos: requisitos.md
   - Processo: processo/cbl.md
@@ -99,6 +100,7 @@ nav:
       - Analysis Agent: agentes/analysis-agent.md
       - Validation Agent: agentes/validation-agent.md
       - Communication Agent: agentes/communication-agent.md
+      - Document Agent: agentes/document-agent.md
   - Base RAG (Semana 2):
       - Mecanismo e Fontes: rag/index.md
       - Catálogo de Fontes: rag/catalogo.md
