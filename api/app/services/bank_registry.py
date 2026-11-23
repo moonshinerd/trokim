@@ -151,11 +151,11 @@ def _seed() -> None:
             "c6",
             "C6 Bank",
             "experimental",
-            ("ofx", "pdf"),
+            ("ofx", "csv"),
             ofx_codes=("336",),
             ofx_names=("c6 bank", "banco c6"),
             pdf_keywords=("c6 bank", "banco c6"),
-            note="Sem conta real para validar; o OFX sai só pelo web banking.",
+            note="Fatura em CSV e conta em OFX (web banking); sem arquivo real.",
         )
     )
     register_bank(

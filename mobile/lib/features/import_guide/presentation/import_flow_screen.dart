@@ -745,7 +745,7 @@ class _KindStep extends StatelessWidget {
       GuideBank.inter =>
         'Extrato da conta em OFX ou fatura do cartão Inter em PDF.',
       GuideBank.c6 =>
-        'Extrato da conta C6 em OFX ou fatura do cartão C6 em PDF.',
+        'Extrato da conta C6 em OFX ou fatura do cartão C6 em CSV.',
       GuideBank.itau =>
         'Extrato da conta corrente em OFX ou fatura do cartão Itaú em PDF.',
       _ => 'Escolha o que você quer importar.',

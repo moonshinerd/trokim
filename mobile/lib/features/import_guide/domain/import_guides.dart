@@ -90,8 +90,8 @@ const List<SupportedBankInfo> supportedBanks = [
     bank: GuideBank.c6,
     name: 'C6 Bank',
     supportLevel: BankSupportLevel.experimental,
-    acceptedFormats: 'OFX (conta)',
-    description: 'Extrato da conta do C6 em OFX (fatura em PDF ainda não)',
+    acceptedFormats: 'OFX (conta) e CSV (fatura do cartão)',
+    description: 'Extrato da conta do C6 em OFX e fatura do cartão em CSV',
     experimentalNotice: 'Suporte experimental: passos baseados na ajuda oficial do C6 Bank, ainda não testados em conta real.',
     icon: Icons.account_balance_rounded,
   ),
@@ -516,7 +516,7 @@ List<GuideStep> interGuide(NubankStatementKind kind) => switch (kind) {
   ],
 };
 
-/// Passo a passo experimental do C6 Bank: extrato da conta (OFX) e fatura do cartão (PDF).
+/// Passo a passo experimental do C6 Bank: extrato da conta (OFX) e fatura do cartão (CSV).
 ///
 /// Baseado na central de ajuda oficial do C6 Bank. Não testado em conta real.
 List<GuideStep> c6Guide(NubankStatementKind kind) => switch (kind) {
@@ -533,15 +533,14 @@ List<GuideStep> c6Guide(NubankStatementKind kind) => switch (kind) {
     ),
     GuideStep(
       icon: Icons.download_rounded,
-      title: 'Baixe a fatura em PDF',
-      description:
-          'Toque em Baixar fatura ou enviar por e-mail no formato PDF.',
+      title: 'Baixe a fatura em CSV',
+      description: 'Toque em Baixar fatura e escolha o formato CSV (planilha).',
     ),
     GuideStep(
       icon: Icons.share_rounded,
       title: 'Importe no Trokim',
       description:
-          'Salve o arquivo PDF no aparelho ou compartilhe com o Trokim.',
+          'Salve o arquivo CSV no aparelho ou compartilhe com o Trokim.',
     ),
   ],
   NubankStatementKind.account => const [

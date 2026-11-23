@@ -170,3 +170,53 @@ def test_picpay_fatura_parcela_ano_e_pagamento():
 def test_itau_usa_emissao_quando_nao_ha_vencimento():
     t = "itau unibanco\nEmissão: 28/11/2026\nlançamentos: compras e saques\n03/11 X 5,00"
     assert parse_itau_fatura(t, "t.pdf").transactions[0].date.year == 2026
+
+
+C6_CSV = (
+    "Data de Compra;Nome no Cartão;Final do Cartão;Categoria;Descrição;Parcela;"
+    "Valor (em US$);Cotação (em R$);Valor (em R$)\n"
+    "05/11/2026;FULANO;1234;Supermercados;MERCADO CENTRAL;Única;0;0;1.234,56\n"
+    "10/11/2026;FULANO;1234;Eletrônicos;LOJA TECH;02/05;0;0;200.00\n"
+    "12/11/2026;FULANO;1234;Pagamento;PAGAMENTO FATURA;Única;0;0;-1000,00\n"
+)
+
+
+def test_c6_csv_valores_parcela_e_sinal():
+    from app.services.bank_csv_profiles import parse_c6_fatura_csv
+
+    r = parse_c6_fatura_csv(C6_CSV.encode(), "Fatura_2026-11-20.csv")
+    assert r and r.institution == "c6" and r.kind == "cartao" and len(r.transactions) == 3
+    compra, parcela, pagto = r.transactions
+    assert compra.amount == 1234.56 and compra.type.value == "debit"
+    assert (parcela.installment_number, parcela.installment_total) == (2, 5)
+    assert parcela.amount == 200.0  # formato com ponto decimal também
+    assert pagto.type.value == "credit" and pagto.nature.value == "pagamento_fatura"
+    assert r.meta.acct_id == "c6-1234"
+
+
+def test_c6_csv_bordas():
+    from app.services.bank_csv_profiles import parse_c6_fatura_csv
+
+    assert parse_c6_fatura_csv(b"", "x.csv") is None
+    assert parse_c6_fatura_csv(b"a;b;c\n1;2;3", "x.csv") is None  # cabeçalho que não bate
+    latin = C6_CSV.encode("latin-1")  # acentos em latin-1
+    assert len(parse_c6_fatura_csv(latin, "x.csv").transactions) == 3
+    ruim = C6_CSV + "31/02/2026;F;1234;X;DATA IMPOSSIVEL;Única;0;0;5,00\nlinha curta\n"
+    assert len(parse_c6_fatura_csv(ruim.encode(), "x.csv").transactions) == 3
+
+
+def test_upload_csv_c6_pela_api():
+    client = TestClient(app)
+    r = client.post(
+        "/v1/transactions/upload",
+        files={"file": ("Fatura_2026-11-20.csv", C6_CSV.encode(), "text/csv")},
+        data={"confirmed": "true"},
+    )
+    assert r.status_code == 200, r.text
+    # CSV de outro layout: recusado com mensagem clara, sem quebrar
+    r2 = client.post(
+        "/v1/transactions/upload",
+        files={"file": ("qualquer.csv", b"a;b\n1;2", "text/csv")},
+        data={"confirmed": "true"},
+    )
+    assert r2.status_code in (400, 415, 422)

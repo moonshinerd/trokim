@@ -350,7 +350,7 @@ O fluxo é flexível e respeita o tempo do usuário:
 | **PicPay** | <span class="badge-should">Experimental</span> | PDF | Fatura do PicPay Card e extrato da conta | Fatura lida pelo layout de parsers públicos (`Picpay Card final`, `PARC NN/NN`, vencimento `DD-MM-AAAA`); sem arquivo real para conciliar. |
 | **Mercado Pago** | <span class="badge-should">Experimental</span> | PDF | Extrato de movimentações (fatura do cartão ainda não) | Layout publicado (Data, Descrição, ID, Valor, Saldo); fecha com o saldo final do arquivo. |
 | **Banco Inter** | <span class="badge-should">Experimental</span> | OFX (conta) e PDF (fatura) | Fatura do cartão (PDF) e extrato da conta (OFX) | Baseado na ajuda oficial do banco; ainda não testado em conta real. |
-| **C6 Bank** | <span class="badge-should">Experimental</span> | OFX (conta) e PDF (fatura) | Fatura do cartão (PDF) e extrato da conta (OFX) | Baseado na ajuda oficial do banco; ainda não testado em conta real. |
+| **C6 Bank** | <span class="badge-should">Experimental</span> | OFX (conta) e CSV (fatura) | Fatura do cartão (CSV, separador `;`) e extrato da conta (OFX) | Colunas lidas por nome; aceita `1.234,56` e `1234.56`; sem arquivo real para conciliar. |
 | **Itaú** | <span class="badge-should">Experimental</span> | OFX (conta) e PDF (fatura) | Fatura do cartão (PDF) e extrato da conta (OFX) | Baseado na ajuda oficial do banco; ainda não testado em conta real. |
 
 > [!NOTE] Níveis de suporte e transparência ([ADR 0022](adr/0022-registro-de-perfis-e-niveis-de-suporte.md))
@@ -430,7 +430,7 @@ avisa e deixa escolher entre importar mesmo assim ou trocar o arquivo.
 - **Banco do Brasil, conta corrente:** extrato em **OFX** (tipo "Money 2000+"), onde o campo
   `NAME` é o tipo do lançamento e `MEMO` a contraparte.
 - **PicPay e Mercado Pago:** experimentais. Os leitores foram escritos a partir de layouts públicos e testados só com arquivos sintéticos; vire "Validado" quando um arquivo real fechar com o total.
-- **Inter, C6 Bank e Itaú:** perfis experimentais gerados a partir dos manuais oficiais de ajuda, combinando extratos de conta em OFX e faturas de cartão de crédito em PDF.
+- **Inter, C6 Bank e Itaú:** perfis experimentais gerados a partir dos manuais oficiais de ajuda, combinando extratos de conta em OFX e faturas de cartão em PDF (no C6, CSV). Os layouts vêm dos [parsers públicos citados nas referências](referencias.md#5-parsers-e-exemplos-publicos-de-faturas-e-extratos).
 
 Na aba **Extratos**, a seção **Contas** lista cada conta e cartão com o dono, que pode ser trocado a
 qualquer momento.
@@ -553,5 +553,3 @@ sistema. A integração ao endpoint e a criação dos lançamentos pertencem à 
 
 ![Captura do emulador Android com a revisão de um comprovante sintético, campos editáveis e confiança baixa](assets/app/revisao-documento-sintetico.png)
 
-!!! note "C6 Bank: a fatura sai em CSV"
-    Parsers públicos mostram que a fatura do C6 é exportada em CSV (separador `;`, colunas Data, Nome Cartão, Final Cartão, Categoria, Descrição, Parcela, Valor). O Trokim ainda aceita só OFX e PDF; o CSV do C6 fica para uma próxima issue.

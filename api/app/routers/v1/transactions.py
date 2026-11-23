@@ -18,7 +18,7 @@ from app.services.detector_service import detect
 from app.services.import_service import ImportService, account_label
 from app.services.library_service import LIBRARY
 from app.services.parser_service import ParserService
-from app.services.pdf_profiles import parse_pdf_statement
+from app.services.pdf_profiles import parse_statement_file
 
 router = APIRouter(prefix="/transactions", tags=["Transactions"])
 
@@ -103,9 +103,9 @@ async def inspect_statement(
             raise HTTPException(
                 status_code=400, detail=f"Erro ao processar arquivo OFX: {str(e)}"
             ) from e
-    elif lower.endswith(".pdf"):
+    elif lower.endswith((".pdf", ".csv")):
         try:
-            parsed = parse_pdf_statement(content, filename)
+            parsed = parse_statement_file(content, filename)
         except Exception as e:
             raise HTTPException(
                 status_code=400, detail=f"Erro ao processar arquivo PDF: {str(e)}"
@@ -137,9 +137,9 @@ async def upload_statement(
 
     lower = filename.lower()
     pdf_profile = None
-    if lower.endswith(".pdf"):
+    if lower.endswith((".pdf", ".csv")):
         try:
-            pdf_profile = parse_pdf_statement(content, filename)
+            pdf_profile = parse_statement_file(content, filename)
         except Exception as e:
             raise HTTPException(
                 status_code=400, detail=f"Erro ao processar arquivo PDF: {str(e)}"
@@ -221,7 +221,10 @@ async def upload_statement(
     else:
         raise HTTPException(
             status_code=400,
-            detail="Formato de arquivo não suportado no MVP. Envie um arquivo .ofx ou .pdf.",
+            detail=(
+                "Formato de arquivo não suportado no MVP. "
+                "Envie um arquivo .ofx, .pdf ou .csv (fatura do C6)."
+            ),
         )
 
     summary = CalculationService.calculate_summary(_LOCAL_TRANSACTIONS)
