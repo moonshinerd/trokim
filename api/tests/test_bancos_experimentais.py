@@ -220,3 +220,18 @@ def test_upload_csv_c6_pela_api():
         data={"confirmed": "true"},
     )
     assert r2.status_code in (400, 415, 422)
+
+
+def test_movimento_entre_contas_proprias_fica_fora_dos_totais():
+    from app.domain.models import TransactionNature as N
+    from app.domain.models import TransactionType as T
+    from app.services.bank_profiles import bank_nature
+
+    assert bank_nature("Recarga PicPay", T.CREDIT, None) == N.INTERNAL_TRANSFER
+    assert bank_nature("Recarga de saldo", T.DEBIT, None) == N.INTERNAL_TRANSFER
+    assert bank_nature("Transferência entre contas", T.DEBIT, None) == N.INTERNAL_TRANSFER
+    # recarga de celular continua sendo compra; Pix para outra pessoa continua sendo Pix
+    assert bank_nature("Recarga de celular", T.DEBIT, None) == N.PURCHASE
+    assert bank_nature("Pix enviado FULANO", T.DEBIT, None) == N.PIX_OUT
+    # mesmo depois de limpar o documento, o texto de pagamento de fatura vence
+    assert bank_nature("Pagamento de fatura PicPay Card", T.DEBIT, None) == N.CARD_PAYMENT

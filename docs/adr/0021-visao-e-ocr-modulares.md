@@ -62,5 +62,9 @@ nuvem contraria a premissa local-first do projeto.
 - **Um único modelo de visão:** lento no hardware da equipe e impreciso em números; o OCR lê o
   texto de forma barata e o modelo de visão só complementa.
 - **OCR em nuvem:** envia a imagem de um documento financeiro a terceiros.
-- **Tesseract:** exige binário do sistema e vai bem pior em foto com perspectiva; fica como
-  adaptador futuro caso o RapidOCR não atenda.
+- **Tesseract como padrão:** exige binário do sistema e vai bem pior em foto com perspectiva. Existe
+  como **adaptador opcional** (`OCR_PROVIDER=tesseract`, `TesseractProvider`), que chama o
+  programa já instalado e lê a saída TSV (palavra, confiança e caixa). Os testes cobrem o parser e o
+  caminho do subprocesso com um executável falso; o teste com o Tesseract real é pulado quando o
+  programa não está instalado, então **o adaptador ainda não foi comparado com o RapidOCR** nas
+  imagens sintéticas.

@@ -28,7 +28,12 @@ _FEE = re.compile(r"\b(tarifa|anuidade|cesta|pacote|mensalidade|seguro)\b")
 _INTEREST = re.compile(r"\b(juros|iof|multa|encargos|mora)\b")
 _REDEEM = re.compile(r"\bresgate\b")
 _APPLY = re.compile(r"\b(aplicacao|investimento|cdb|rdb|lci|lca|poupanca)\b")
-_INCOME = re.compile(r"\brendimentos?\b")
+# Dinheiro que o usuário move entre as próprias contas não é receita nem gasto. "Recarga de
+# celular" é compra; "recarga de saldo/PicPay/carteira" é transferência própria.
+_OWN_TRANSFER = re.compile(
+    r"\brecarga\b.*\b(saldo|picpay|carteira|conta|mercado pago)\b"
+    r"|\b(entre contas|mesma titularidade|propria conta|conta propria|transferencia propria)\b"
+)
 
 
 def bank_nature(
@@ -39,6 +44,8 @@ def bank_nature(
     incoming = tx_type == TransactionType.CREDIT
     if _CARD_PAYMENT.search(norm):
         return TransactionNature.CARD_PAYMENT
+    if _OWN_TRANSFER.search(norm) and "celular" not in norm:
+        return TransactionNature.INTERNAL_TRANSFER
     if _REFUND.search(norm):
         return TransactionNature.REFUND
     if _REDEEM.search(norm):

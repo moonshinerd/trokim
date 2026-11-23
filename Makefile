@@ -17,6 +17,7 @@ help:
 	@echo "  make ingest              - Ingere a base de conhecimento no banco vetorial local"
 	@echo "  make synthetic-data      - Gera extratos OFX e faturas sintéticas para testes LGPD"
 	@echo "  make document-images     - Recria os 40 documentos e o manifesto multimodal (#90)"
+	@echo "  make validar-banco ARQUIVO=<arquivo> - Confere um arquivo real de banco e imprime só totais (ADR 0022)"
 	@echo "  make document-calibrate RUN=<id> - Calibra e ensaia com OCR real (#88/#90)"
 	@echo "  make comparison-validate - Valida integridade do material comparativo (Semana 3)"
 	@echo "  make comparison-eval     - Executa o benchmark comparativo das 3 abordagens (Semana 3)"
@@ -88,7 +89,11 @@ ingest:
 synthetic-data:
 	cd api && uv run python ../research/synthetic_data/generate_datasets.py
 
-.PHONY: document-images document-calibrate
+.PHONY: validar-banco document-images document-calibrate
+validar-banco:
+	@test -n "$(ARQUIVO)" || (echo "uso: make validar-banco ARQUIVO=/caminho/do/arquivo"; exit 2)
+	cd api && uv run python -m scripts.validar_banco "$(abspath $(ARQUIVO))"
+
 document-images:
 	cd api && uv run python ../research/synthetic_data/generate_document_images.py
 
