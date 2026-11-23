@@ -1,4 +1,5 @@
 import 'package:material_ui/material_ui.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import '../../../core/format.dart';
 import '../../../core/settings/settings_controller.dart';
@@ -611,38 +612,74 @@ class _BankStep extends StatelessWidget {
   }
 
   @override
-  Widget build(BuildContext context) => _StepLayout(
-    title: 'De qual banco é o arquivo?',
-    subtitle: 'Mostramos como baixar o arquivo certo. Você pode pular.',
-    actions: [
-      const DocumentImportButton(),
-      OutlinedButton.icon(
-        onPressed: onHaveFile,
-        icon: const Icon(Icons.upload_file_rounded),
-        label: const Text('Já tenho o arquivo'),
-      ),
-    ],
-    children: [
-      _OptionCard(
-        icon: Icons.account_balance_rounded,
-        title: 'Nubank',
-        subtitle: 'Conta e cartão, pessoal ou Empresas',
-        onTap: onNubank,
-      ),
-      _OptionCard(
-        icon: Icons.account_balance_rounded,
-        title: 'Banco do Brasil',
-        subtitle: 'Fatura Ourocard (PDF) e extrato da conta (OFX)',
-        onTap: onBb,
-      ),
-      _OptionCard(
-        icon: Icons.folder_open_rounded,
-        title: 'Outro banco',
-        subtitle: 'Arquivo OFX ou PDF que você já tem',
-        onTap: onOther,
-      ),
-    ],
-  );
+  Widget build(BuildContext context) {
+    final c = context.colors;
+    return _StepLayout(
+      title: 'Bancos suportados',
+      subtitle: 'De qual banco é o arquivo?',
+      children: [
+        for (final bank in supportedBanks)
+          _SupportedBankCard(bank: bank, onTap: () => onSelectBank(bank.bank)),
+        _OptionCard(
+          icon: Icons.folder_open_rounded,
+          title: 'Outro banco',
+          subtitle: 'Arquivo OFX ou PDF que você já tem',
+          onTap: onOther,
+        ),
+        Container(
+          margin: const EdgeInsets.only(top: 4, bottom: 8),
+          padding: const EdgeInsets.all(14),
+          decoration: BoxDecoration(
+            color: c.surface,
+            borderRadius: BorderRadius.circular(16),
+            border: Border.all(color: c.line),
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                children: [
+                  Icon(Icons.help_outline_rounded, size: 20, color: c.accent),
+                  const SizedBox(width: 8),
+                  const Expanded(
+                    child: Text(
+                      'Banco não reconhecido?',
+                      style: TextStyle(
+                        fontWeight: FontWeight.w700,
+                        fontSize: 14,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 6),
+              Text(
+                'Envie o arquivo pelo parser genérico e confira o resumo. O Trokim tenta extrair os lançamentos mesmo de outros formatos.',
+                style: TextStyle(color: c.muted, fontSize: 13, height: 1.4),
+              ),
+              const SizedBox(height: 8),
+              Align(
+                alignment: Alignment.centerLeft,
+                child: TextButton.icon(
+                  onPressed: onRequestSupport ?? _defaultRequestSupport,
+                  icon: const Icon(Icons.open_in_new_rounded, size: 16),
+                  label: const Text('Pedir suporte a um banco'),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ],
+      actions: [
+        const DocumentImportButton(),
+        OutlinedButton.icon(
+          onPressed: onHaveFile,
+          icon: const Icon(Icons.upload_file_rounded),
+          label: const Text('Já tenho o arquivo'),
+        ),
+      ],
+    );
+  }
 }
 
 class _ProductStep extends StatelessWidget {
@@ -736,13 +773,7 @@ class _KindStep extends StatelessWidget {
 
     return _StepLayout(
       title: 'O que você quer importar?',
-      subtitle: bb
-          ? 'A fatura do cartão e o extrato da conta saem de apps diferentes.'
-          : 'Cada um é baixado de um lugar diferente no app do Nubank.',
-      actions: [
-        FilledButton(onPressed: onSkip, child: const Text('Pular tutorial')),
-        TextButton(onPressed: onBack, child: const Text('Voltar')),
-      ],
+      subtitle: subtitle,
       children: [
         if (info?.isExperimental == true) ...[
           Container(
@@ -784,6 +815,10 @@ class _KindStep extends StatelessWidget {
           subtitle: accSub,
           onTap: () => onSelected(NubankStatementKind.account),
         ),
+      ],
+      actions: [
+        FilledButton(onPressed: onSkip, child: const Text('Pular tutorial')),
+        TextButton(onPressed: onBack, child: const Text('Voltar')),
       ],
     );
   }

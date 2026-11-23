@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:trokim/features/import_guide/domain/import_guides.dart';
 import 'package:trokim/features/import_guide/presentation/import_flow_screen.dart';
@@ -110,6 +110,9 @@ void main() {
         expect(find.text('Banco Inter'), findsOneWidget);
         expect(find.text('C6 Bank'), findsOneWidget);
         expect(find.text('Itaú'), findsOneWidget);
+
+        // A captura documental continua disponível junto ao catálogo completo.
+        expect(find.text('Fotografar ou escolher documento'), findsOneWidget);
 
         // Atalhos
         expect(find.text('Outro banco'), findsOneWidget);

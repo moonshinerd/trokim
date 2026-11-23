@@ -104,9 +104,9 @@ class TransactionsScreen extends StatelessWidget {
             ),
             const CoverageNotice(),
             const ShortcutsSection(),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20),
-              child: const DocumentImportButton(),
+            const Padding(
+              padding: EdgeInsets.symmetric(horizontal: 20),
+              child: DocumentImportButton(),
             ),
             const Padding(
               padding: EdgeInsets.fromLTRB(20, 20, 20, 10),

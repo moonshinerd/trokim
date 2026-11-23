@@ -348,3 +348,9 @@ acrescenta validação única para o formulário e a confirmação, tratamento d
 respostas após fechar a tela, acesso pelo fluxo de importação e testes de
 regressão. Confirmar ainda não cria lançamentos: extração e persistência reais
 continuam na integração #97.
+
+A integração da PR #110 com o catálogo de bancos da `main` preserva os sete
+bancos, seus tutoriais e o pedido de suporte, junto ao acesso à revisão de
+documentos. Os testes de bancos suportados verificam a coexistência dessas
+entradas. A configuração de backup continua recebendo o cliente e os seletores
+fornecidos pela tela de Ajustes.
