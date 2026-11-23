@@ -34,6 +34,16 @@ class ValidationIssueCode(StrEnum):
     ABSTENTION_MISMATCH = "ABSTENTION_MISMATCH"
     CALCULATION_MISSING = "CALCULATION_MISSING"
 
+    # Validação de documentos multimodais (Épico #86 / Issue #89)
+    DATE_INVALID = "DATE_INVALID"
+    AMOUNT_FORMAT = "AMOUNT_FORMAT"
+    TOTAL_MISMATCH = "TOTAL_MISMATCH"
+    DUE_BEFORE_ISSUE = "DUE_BEFORE_ISSUE"
+    FIELD_MISSING = "FIELD_MISSING"
+    LOW_CONFIDENCE = "LOW_CONFIDENCE"
+    POSSIBLE_DUPLICATE = "POSSIBLE_DUPLICATE"
+    ALREADY_RECONCILED = "ALREADY_RECONCILED"
+
 
 # Padrões para remoção de elementos estruturais que não constituem fatos numéricos
 CITATION_PATTERN = re.compile(r"\[\d+(?:\s*[,-]\s*\d+)*\]")

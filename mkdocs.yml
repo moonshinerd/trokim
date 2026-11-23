@@ -92,13 +92,14 @@ nav:
       - Visão Geral: arquitetura/index.md
       - Mapa do Sistema: arquitetura/mapa-do-sistema.md
       - Categorias dos Gastos: arquitetura/categorias.md
-  - Agentes (Semana 4):
+  - Agentes (Semana 4 e 5):
       - Visão Geral: agentes/index.md
       - Orquestrador e Contratos: agentes/orquestrador.md
       - Research Agent: agentes/research-agent.md
       - Analysis Agent: agentes/analysis-agent.md
       - Validation Agent: agentes/validation-agent.md
       - Communication Agent: agentes/communication-agent.md
+      - Document Agent: agentes/document-agent.md
   - Base RAG (Semana 2):
       - Mecanismo e Fontes: rag/index.md
       - Catálogo de Fontes: rag/catalogo.md
