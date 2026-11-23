@@ -61,18 +61,19 @@ const List<SupportedBankInfo> supportedBanks = [
   SupportedBankInfo(
     bank: GuideBank.picpay,
     name: 'PicPay',
-    supportLevel: BankSupportLevel.validated,
+    supportLevel: BankSupportLevel.experimental,
     acceptedFormats: 'PDF (extrato da conta e fatura do cartão)',
-    description: 'Extrato da conta e fatura do PicPay Card em formato PDF',
+    description: 'Extrato da conta e fatura do PicPay Card em PDF',
+    experimentalNotice: 'Suporte experimental: leitor baseado em formato público do PicPay, ainda não testado em conta real.',
     icon: Icons.account_balance_wallet_rounded,
   ),
   SupportedBankInfo(
     bank: GuideBank.mercadopago,
     name: 'Mercado Pago',
-    supportLevel: BankSupportLevel.validated,
-    acceptedFormats: 'PDF (extrato da conta e fatura do cartão)',
-    description:
-        'Extrato de movimentações da conta e fatura do cartão Mercado Pago',
+    supportLevel: BankSupportLevel.experimental,
+    acceptedFormats: 'PDF (extrato da conta)',
+    description: 'Extrato de movimentações da conta Mercado Pago (fatura do cartão ainda não)',
+    experimentalNotice: 'Suporte experimental: leitor baseado em formato público do Mercado Pago, ainda não testado em conta real.',
     icon: Icons.storefront_rounded,
   ),
   SupportedBankInfo(
@@ -88,8 +89,8 @@ const List<SupportedBankInfo> supportedBanks = [
     bank: GuideBank.c6,
     name: 'C6 Bank',
     supportLevel: BankSupportLevel.experimental,
-    acceptedFormats: 'OFX (conta) e PDF (fatura)',
-    description: 'Extrato da conta em OFX e fatura do cartão C6 em PDF',
+    acceptedFormats: 'OFX (conta) e CSV (fatura do cartão)',
+    description: 'Extrato da conta do C6 em OFX e fatura do cartão em CSV',
     experimentalNotice: 'Suporte experimental: passos baseados na ajuda oficial do C6 Bank, ainda não testados em conta real.',
     icon: Icons.account_balance_rounded,
   ),
@@ -514,7 +515,7 @@ List<GuideStep> interGuide(NubankStatementKind kind) => switch (kind) {
   ],
 };
 
-/// Passo a passo experimental do C6 Bank: extrato da conta (OFX) e fatura do cartão (PDF).
+/// Passo a passo experimental do C6 Bank: extrato da conta (OFX) e fatura do cartão (CSV).
 ///
 /// Baseado na central de ajuda oficial do C6 Bank. Não testado em conta real.
 List<GuideStep> c6Guide(NubankStatementKind kind) => switch (kind) {
@@ -531,15 +532,14 @@ List<GuideStep> c6Guide(NubankStatementKind kind) => switch (kind) {
     ),
     GuideStep(
       icon: Icons.download_rounded,
-      title: 'Baixe a fatura em PDF',
-      description:
-          'Toque em Baixar fatura ou enviar por e-mail no formato PDF.',
+      title: 'Baixe a fatura em CSV',
+      description: 'Toque em Baixar fatura e escolha o formato CSV (planilha).',
     ),
     GuideStep(
       icon: Icons.share_rounded,
       title: 'Importe no Trokim',
       description:
-          'Salve o arquivo PDF no aparelho ou compartilhe com o Trokim.',
+          'Salve o arquivo CSV no aparelho ou compartilhe com o Trokim.',
     ),
   ],
   NubankStatementKind.account => const [

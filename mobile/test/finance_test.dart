@@ -228,4 +228,11 @@ void main() {
       );
     });
   });
+
+  test('nomes dos bancos do registro aparecem formatados', () {
+    expect(institutionName('c6'), 'C6 Bank');
+    expect(institutionName('mercadopago'), 'Mercado Pago');
+    expect(institutionName('itau'), 'Itaú');
+    expect(institutionName('desconhecido'), 'desconhecido');
+  });
 }

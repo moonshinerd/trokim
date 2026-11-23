@@ -15,8 +15,8 @@ Cada banco possui particularidades operacionais: caminhos distintos nos menus do
 ## Decisão
 
 1. **Dois níveis explícitos de suporte (Validado vs. Experimental):**
-   - **Validado:** Bancos que foram exaustivamente testados e conciliados ponta a ponta com arquivos e extratos de contas reais. Integram esta categoria: **Nubank**, **Banco do Brasil**, **PicPay** e **Mercado Pago**.
-   - **Experimental:** Bancos cujos tutoriais e perfis foram elaborados a partir das centrais de ajuda oficiais e documentação pública das instituições, mas que ainda não foram homologados com arquivos de contas reais pela equipe. Integram esta categoria: **Banco Inter**, **C6 Bank** e **Itaú**.
+   - **Validado:** Bancos que foram exaustivamente testados e conciliados ponta a ponta com arquivos e extratos de contas reais. Integram esta categoria: **Nubank** e **Banco do Brasil**.
+   - **Experimental:** Bancos cujos tutoriais e perfis foram elaborados a partir das centrais de ajuda oficiais e documentação pública das instituições, mas que ainda não foram homologados com arquivos de contas reais pela equipe. Integram esta categoria: **PicPay**, **Mercado Pago**, **Banco Inter**, **C6 Bank** e **Itaú**. PicPay e Mercado Pago nasceram como "Validado" no texto, mas não havia leitor nem arquivo real; foram corrigidos para Experimental.
 2. **Transparência e vedação a promessas inverídicas:**
    Nenhum tutorial ou tela pode afirmar que um banco experimental possui suporte validado. A interface móvel e a documentação devem estampar selos visuais explícitos (`Validado` com realce positivo e `Experimental` com realce âmbar/ouro) e avisos contextuais antes e durante a exibição dos passos.
 3. **Catálogo unificado no app (`supportedBanks`):**
@@ -44,3 +44,10 @@ Cada banco possui particularidades operacionais: caminhos distintos nos menus do
 - **Tutorial obrigatório a cada importação:** Rejeitado por comprometer a usabilidade e a agilidade de usuários recorrentes.
 - **Depender apenas de Open Finance:** Rejeitado (conforme [ADR 0005](0005-importacao-local-ofx-pdf.md)) em prol da soberania local-first e privacidade dos dados.
 
+
+## Implementação (#92)
+
+- `api/app/services/bank_registry.py`: `BankInfo` e `register_bank`; detecção por conteúdo (`detect_ofx_bank`, `detect_pdf_bank`). Banco novo é um registro, sem mexer nos demais.
+- `bank_profiles.py` (OFX genérico por texto) e `bank_pdf_profiles.py` (Mercado Pago extrato, Inter e Itaú fatura, PicPay extrato), todos conferindo o total do arquivo quando existe.
+- `GET /v1/banks` devolve nome, nível, formatos e nota.
+- Limites: sem arquivo real de nenhum deles; C6 só por OFX; fatura do PicPay Card, do Mercado Pago e do C6 em PDF não tem leitor.

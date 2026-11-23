@@ -287,17 +287,34 @@ void main() {
     tester,
   ) async {
     final h = _Harness(
-      picker: () async => PickedStatement('dados.csv', () async => [1]),
+      picker: () async => PickedStatement('dados.xlsx', () async => [1]),
     );
     await h.open(tester);
     await tester.tap(find.text('Importar extrato'));
     await tester.pumpAndSettle();
     await h.tapAsync(tester, find.text('Já tenho o arquivo'));
     expect(
-      find.text('Formato não suportado. Escolha um arquivo .ofx ou .pdf.'),
+      find.text(
+        'Formato não suportado. Escolha um arquivo .ofx, .pdf ou .csv.',
+      ),
       findsOneWidget,
     );
     expect(h.api.count('POST', '/transactions/upload'), 0);
+  });
+
+  testWidgets('arquivo .csv (fatura do C6) é aceito e enviado à API', (
+    tester,
+  ) async {
+    final h = _Harness(
+      picker: () async =>
+          PickedStatement('Fatura_2026-11-20.csv', () async => [1]),
+    );
+    await h.open(tester);
+    await tester.tap(find.text('Importar extrato'));
+    await tester.pumpAndSettle();
+    await h.tapAsync(tester, find.text('Já tenho o arquivo'));
+    expect(find.textContaining('Formato não suportado'), findsNothing);
+    expect(h.api.count('POST', '/transactions/upload'), greaterThan(0));
   });
 
   testWidgets('API fora do ar na importação mostra erro de conexão', (

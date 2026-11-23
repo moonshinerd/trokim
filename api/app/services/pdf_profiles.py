@@ -237,7 +237,18 @@ def parse_pdf_statement(content: bytes, filename: str) -> OfxParseResult | None:
     text = "\n".join((page.extract_text() or "") for page in reader.pages)
     if is_bb_fatura(text):
         return parse_bb_fatura(text, filename, _pdf_creation_date(reader))
-    return None
+    from app.services.bank_pdf_profiles import parse_bank_pdf  # perfis experimentais
+
+    return parse_bank_pdf(text, filename)
 
 
-__all__ = ["is_bb_fatura", "parse_bb_fatura", "parse_pdf_statement"]
+def parse_statement_file(content: bytes, filename: str) -> OfxParseResult | None:
+    """PDF ou CSV de um banco do registro. ``None`` quando não há perfil para o arquivo."""
+    if filename.lower().endswith(".csv"):
+        from app.services.bank_csv_profiles import parse_c6_fatura_csv
+
+        return parse_c6_fatura_csv(content, filename)
+    return parse_pdf_statement(content, filename)
+
+
+__all__ = ["is_bb_fatura", "parse_bb_fatura", "parse_pdf_statement", "parse_statement_file"]

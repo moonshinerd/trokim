@@ -189,7 +189,7 @@ class ApiClient {
     ];
   }
 
-  /// Envia um extrato (OFX ou PDF) para a API local processar.
+  /// Envia um extrato (OFX, PDF ou CSV) para a API local processar.
   ///
   /// [owner] (`pessoal` ou `empresa`) e [expectKind] (`conta` ou `cartao`) vêm do que o usuário
   /// escolheu. [confirmed] importa mesmo quando o detector avisa de um conflito (a API devolve

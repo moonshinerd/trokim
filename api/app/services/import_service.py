@@ -7,6 +7,7 @@ from app.domain.models import (
     Statement,
     StatementStatus,
 )
+from app.services.bank_registry import bank_label
 from app.services.categorization_service import CategoryRuleService
 from app.services.library_service import Library
 from app.services.parser_service import OfxParseResult, ParserService
@@ -25,9 +26,7 @@ def bank_code(raw: str | None) -> str | None:
 
 
 def institution_label(institution: str | None) -> str:
-    return {"nubank": "Nubank", "bb": "Banco do Brasil"}.get(
-        institution or "", (institution or "Banco").title()
-    )
+    return bank_label(institution)
 
 
 def account_label(account: Account) -> str:
