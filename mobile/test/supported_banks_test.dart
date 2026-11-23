@@ -219,35 +219,36 @@ void main() {
       expect(find.text('Passo 3 de 4'), findsOneWidget);
     });
 
-    testWidgets('Mercado Pago (Experimental): extrato da conta e pular tutorial', (
-      tester,
-    ) async {
-      _setTallSurface(tester);
-      final h = FlowHarness();
-      h.api.onUpload = (_) =>
-          jsonResponse(uploadJson(institution: 'mercadopago', kind: 'conta'));
-      await h.open(tester);
-      await h.startImport(tester);
+    testWidgets(
+      'Mercado Pago (Experimental): extrato da conta e pular tutorial',
+      (tester) async {
+        _setTallSurface(tester);
+        final h = FlowHarness();
+        h.api.onUpload = (_) =>
+            jsonResponse(uploadJson(institution: 'mercadopago', kind: 'conta'));
+        await h.open(tester);
+        await h.startImport(tester);
 
-      await tester.tap(find.text('Mercado Pago'));
-      await tester.pumpAndSettle();
+        await tester.tap(find.text('Mercado Pago'));
+        await tester.pumpAndSettle();
 
-      expect(find.text('O que você quer importar?'), findsOneWidget);
-      expect(
-        find.text('Extrato da conta Mercado Pago (arquivo PDF)'),
-        findsOneWidget,
-      );
+        expect(find.text('O que você quer importar?'), findsOneWidget);
+        expect(
+          find.text('Extrato da conta Mercado Pago (arquivo PDF)'),
+          findsOneWidget,
+        );
 
-      await tester.tap(find.text('Extrato da conta'));
-      await tester.pumpAndSettle();
+        await tester.tap(find.text('Extrato da conta'));
+        await tester.pumpAndSettle();
 
-      expect(find.text('Passo 1 de 4'), findsOneWidget);
-      expect(find.text('Acesse seu extrato'), findsOneWidget);
+        expect(find.text('Passo 1 de 4'), findsOneWidget);
+        expect(find.text('Acesse seu extrato'), findsOneWidget);
 
-      // Pular tutorial vai direto ao upload
-      await h.tapAsync(tester, find.text('Pular tutorial'));
-      expect(find.text('Pronto!'), findsOneWidget);
-    });
+        // Pular tutorial vai direto ao upload
+        await h.tapAsync(tester, find.text('Pular tutorial'));
+        expect(find.text('Pronto!'), findsOneWidget);
+      },
+    );
 
     testWidgets('Banco Inter (Experimental): exibe selo e aviso experimental', (
       tester,

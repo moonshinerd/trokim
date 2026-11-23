@@ -124,3 +124,23 @@ def test_endpoint_banks_niveis():
     data = {b["bank_id"]: b["support_level"] for b in TestClient(app).get("/v1/banks").json()}
     assert data["nubank"] == data["bb"] == "validado"
     assert {data[k] for k in ("picpay", "mercadopago", "inter", "c6", "itau")} == {"experimental"}
+
+
+def test_bordas_pdf_nao_quebram():
+    # vazio, só cabeçalho, linha sem valor, data impossível, valor com milhar
+    for text in (
+        "",
+        "EXTRATO DE CONTA\nID da operação",
+        "Despesas da fatura\n99 de xyz. 2026 A R$ 1,00",
+    ):
+        assert parse_bank_pdf(text, "x.pdf") is None
+    big = "Despesas da fatura\n01 de dez. 2026 TV R$ 1.234,56\nTotal da sua fatura R$ 1.234,56"
+    assert parse_inter_fatura(big, "i.pdf").reconciled is True
+    # total diferente da soma: não fecha
+    bad = big.replace("Total da sua fatura R$ 1.234,56", "Total da sua fatura R$ 9,00")
+    assert parse_inter_fatura(bad, "i.pdf").reconciled is False
+    # Itaú sem vencimento: abstém-se em vez de chutar o ano
+    assert parse_itau_fatura("lançamentos: compras e saques\n03/11 X 1,00", "t.pdf") is None
+    # Itaú: compra de dezembro numa fatura que vence em janeiro cai no ano anterior
+    jan = "itau unibanco\nVencimento: 10/01/2027\nlançamentos: compras e saques\n20/12 LOJA 10,00"
+    assert parse_itau_fatura(jan, "t.pdf").transactions[0].date.year == 2026
