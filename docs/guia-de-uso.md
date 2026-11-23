@@ -104,7 +104,9 @@ retrato à API, que o mantém só em memória; depois de cada alteração o app 
 ([ADR 0025](adr/0025-armazenamento-no-aparelho-e-api-sem-estado.md)). Por isso a API pode ser
 reiniciada ou recriada sem perder nada. A API só deve ser a **sua**: o retrato inclui dados
 privados e é enviado a ela inteiro. O backup automático do Android fica desligado, porque
-levaria o arquivo sem a chave.
+levaria o arquivo sem a chave. Se o arquivo for alterado ou a chave se perder, o app não mostra
+dado errado: guarda o arquivo à parte (`biblioteca.trokim.corrompido`), avisa em **Ajustes >
+Backup** e você recupera pelo backup `.trokim`.
 
 Quem usa a API sem o app ainda tem o SQLite local (`trokim.db`, não cifrado), controlado por
 `LIBRARY_PERSISTENCE` ([ADR 0024](adr/0024-persistencia-local-e-backup-criptografado.md)). O

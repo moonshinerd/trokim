@@ -1,5 +1,7 @@
 import 'dart:async';
 
+import 'package:flutter/foundation.dart';
+
 import '../network/api_client.dart';
 import 'local_library_store.dart';
 
@@ -19,6 +21,10 @@ class LibrarySync {
   /// Último erro de sincronização, para a interface avisar sem travar o uso.
   Object? lastError;
 
+  /// A cópia guardada no aparelho existia, mas não pôde ser lida (foi posta de
+  /// lado). A interface avisa e sugere restaurar um backup.
+  bool unreadable = false;
+
   Future<T> _serial<T>(Future<T> Function() action) {
     final next = _queue.then((_) => action());
     _queue = next.then<void>((_) {}, onError: (_) {});
@@ -31,7 +37,20 @@ class LibrarySync {
   Future<bool> hydrate() => _serial(() async {
     final client = _newClient();
     try {
-      final local = await _store.read();
+      String? local;
+      try {
+        local = await _store.read();
+      } on Object catch (error) {
+        // Arquivo adulterado, truncado ou sem a chave: nunca devolve dado
+        // errado e nunca o sobrescreve. Fica de lado e o usuário é avisado.
+        unreadable = true;
+        lastError = error;
+        debugPrint(
+          'Trokim: a cópia do aparelho não pôde ser lida (${error.runtimeType}).',
+        );
+        await _store.quarantine();
+        return false;
+      }
       if (local != null) {
         await client.putLibrarySnapshot(local);
       } else {
@@ -42,6 +61,9 @@ class LibrarySync {
       return true;
     } on Object catch (error) {
       lastError = error;
+      debugPrint(
+        'Trokim: sincronização com o aparelho falhou (${error.runtimeType}).',
+      );
       return false;
     } finally {
       client.close();
@@ -55,9 +77,13 @@ class LibrarySync {
     try {
       await _store.write(await client.getLibrarySnapshot());
       lastError = null;
+      unreadable = false;
       return true;
     } on Object catch (error) {
       lastError = error;
+      debugPrint(
+        'Trokim: sincronização com o aparelho falhou (${error.runtimeType}).',
+      );
       return false;
     } finally {
       client.close();

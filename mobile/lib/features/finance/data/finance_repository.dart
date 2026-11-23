@@ -31,6 +31,9 @@ class FinanceRepository {
     return result;
   }
 
+  /// A cópia do aparelho não pôde ser lida e foi posta de lado.
+  bool get deviceCopyUnreadable => _sync?.unreadable ?? false;
+
   /// Grava o retrato atual no aparelho (depois de restaurar um backup).
   Future<void> saveToDevice() async => _sync?.saveFromApi();
 

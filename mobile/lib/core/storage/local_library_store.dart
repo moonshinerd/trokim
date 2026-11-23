@@ -15,6 +15,10 @@ abstract class LocalLibraryStore {
   Future<String?> read();
   Future<void> write(String json);
   Future<void> clear();
+
+  /// Põe de lado um arquivo que não pôde ser lido, sem apagá-lo, para que a
+  /// próxima gravação não o destrua.
+  Future<void> quarantine();
 }
 
 /// Guarda o retrato só na memória: usado nos testes.
@@ -30,6 +34,15 @@ class MemoryLibraryStore implements LocalLibraryStore {
 
   @override
   Future<void> clear() async => _value = null;
+
+  /// Cópia posta de lado por [quarantine] (só para testes).
+  String? quarantined;
+
+  @override
+  Future<void> quarantine() async {
+    quarantined = _value;
+    _value = null;
+  }
 }
 
 /// Chave de 256 bits do arquivo cifrado.
@@ -136,6 +149,14 @@ class EncryptedFileLibraryStore implements LocalLibraryStore {
   @override
   Future<void> clear() async {
     if (await _file.exists()) await _file.delete();
+  }
+
+  @override
+  Future<void> quarantine() async {
+    if (!await _file.exists()) return;
+    final aside = File('${_file.path}.corrompido');
+    if (await aside.exists()) await aside.delete();
+    await _file.rename(aside.path);
   }
 
   bool _startsWithMagic(List<int> bytes) {

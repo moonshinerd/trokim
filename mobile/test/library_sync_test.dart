@@ -144,5 +144,61 @@ void main() {
       expect(await sync.saveFromApi(), isTrue);
       expect(await store.read(), _retrato);
     });
+
+    test(
+      'arquivo ilegível é posto de lado, avisa e não é sobrescrito',
+      () async {
+        final store = _IlegivelStore();
+        final sync = LibrarySync(
+          store,
+          () => _api(
+            http_testing.MockClient((_) async => http.Response(_retrato, 200)),
+          ),
+        );
+        expect(await sync.hydrate(), isFalse);
+        expect(sync.unreadable, isTrue);
+        expect(store.wasQuarantined, isTrue);
+        // Uma nova gravação válida limpa o aviso.
+        expect(await sync.saveFromApi(), isTrue);
+        expect(sync.unreadable, isFalse);
+      },
+    );
+
+    test('arquivo corrompido em disco é preservado como .corrompido', () async {
+      final dir = Directory.systemTemp.createTempSync('trokim_q_');
+      addTearDown(() => dir.deleteSync(recursive: true));
+      final file = File('${dir.path}/b.trokim');
+      final store = EncryptedFileLibraryStore(file, MemoryKeyStore());
+      await store.write(_retrato);
+      final bytes = file.readAsBytesSync();
+      bytes[bytes.length ~/ 2] ^= 0xFF;
+      file.writeAsBytesSync(bytes);
+      final sync = LibrarySync(
+        store,
+        () => _api(
+          http_testing.MockClient((_) async => http.Response(_retrato, 200)),
+        ),
+      );
+      expect(await sync.hydrate(), isFalse);
+      expect(file.existsSync(), isFalse);
+      expect(File('${file.path}.corrompido').readAsBytesSync(), bytes);
+    });
   });
+}
+
+class _IlegivelStore extends MemoryLibraryStore {
+  bool wasQuarantined = false;
+  bool _broken = true;
+
+  @override
+  Future<String?> read() async {
+    if (_broken) throw const FormatException('ilegível');
+    return super.read();
+  }
+
+  @override
+  Future<void> quarantine() async {
+    wasQuarantined = true;
+    _broken = false;
+  }
 }

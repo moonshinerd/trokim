@@ -32,9 +32,13 @@ a fonte única de verdade.
 4. **Migração.** Se o aparelho ainda não tem arquivo e a API já tem dados (versão antiga do app),
    o app traz os dados da API para o aparelho na primeira abertura. Se a API estiver fora do ar,
    nada é apagado: o arquivo do aparelho permanece e a sincronização repete na próxima abertura.
-5. **Backup do Android desligado** (`allowBackup=false`): a cópia automática do Google levaria o
+5. **Arquivo ilegível nunca é sobrescrito.** Se o arquivo foi alterado, truncado ou a chave se
+   perdeu, a leitura falha na autenticação do AES-GCM (nunca devolve dado errado). O app guarda o
+   arquivo à parte como `biblioteca.trokim.corrompido`, sem apagá-lo, e avisa em Ajustes para
+   restaurar um backup. Sem isso, o próximo import regravaria o arquivo e destruiria a cópia.
+6. **Backup do Android desligado** (`allowBackup=false`): a cópia automática do Google levaria o
    arquivo sem a chave, que não sai do Keystore.
-6. O backup `.trokim` ([ADR 0024](0024-persistencia-local-e-backup-criptografado.md)) segue como
+7. O backup `.trokim` ([ADR 0024](0024-persistencia-local-e-backup-criptografado.md)) segue como
    o caminho para trocar de aparelho; ao restaurar, o app grava o resultado no aparelho.
 
 ## Consequências
