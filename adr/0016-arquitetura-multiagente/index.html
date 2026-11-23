@@ -1431,6 +1431,33 @@
 
                 
               
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../agentes/document-agent/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Document Agent
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
             </ul>
           </nav>
         
@@ -2200,6 +2227,17 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#extensao-agente-de-documento-semana-5-88" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Extensão: agente de documento (Semana 5, #88)
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     
   
@@ -2541,6 +2579,17 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#extensao-agente-de-documento-semana-5-88" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Extensão: agente de documento (Semana 5, #88)
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     
   
@@ -2687,6 +2736,15 @@ em <code>api/app/services/agents/base.py</code>. O contrato completo está no é
 <li><strong>Próximo passo:</strong> aceitar paráfrase com citação verificada, em vez de só frases literais, e
   ampliar a política de escopo para previsões de preço.</li>
 </ul>
+<h2 id="extensao-agente-de-documento-semana-5-88">Extensão: agente de documento (Semana 5, #88)<a class="headerlink" href="#extensao-agente-de-documento-semana-5-88" title="Permanent link">&para;</a></h2>
+<p><code>AgentName.DOCUMENT</code> e <code>DocumentAgent.run(DocumentContext)</code> acrescentam um passo de leitura
+com o mesmo <code>AgentStep</code>, sem executar o pipeline de pesquisa e comunicação do chat.
+O contexto próprio exclui os bytes de serialização e representação; a operação apaga sua
+referência ao arquivo ao terminar. A integração ao orquestrador HTTP pertence à #96.
+O contrato público do épico #86 fica em <code>domain/documents.py</code> e deve ser compartilhado
+com a #89. O agente usa diretamente as portas <code>OcrProvider</code> e <code>VisionProvider</code> da #87
+(ADR 0021), com seus resultados tipados e suas fábricas configuráveis.
+A leitura, os limites e as pendências estão no <a href="../../agentes/document-agent/">Agente de documento</a>.</p>
 
 
 

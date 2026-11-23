@@ -1289,6 +1289,17 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#leitura-de-documento-componente-da-88" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Leitura de documento (componente da #88)
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     
   
@@ -1537,6 +1548,33 @@
     
   
   Communication Agent
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../agentes/document-agent/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Document Agent
 
     
   </span>
@@ -2541,6 +2579,17 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#leitura-de-documento-componente-da-88" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Leitura de documento (componente da #88)
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     
   
@@ -2852,6 +2901,19 @@
     Orch--&gt;&gt;API: MultiAgentResponse (status: answered, answer, steps, durações)
     API--&gt;&gt;Mobile: Resposta auditada com trilha dos agentes
     Mobile--&gt;&gt;User: Exibe resposta com botão "Como cheguei a essa resposta"</code></pre>
+<h2 id="leitura-de-documento-componente-da-88">Leitura de documento (componente da #88)<a class="headerlink" href="#leitura-de-documento-componente-da-88" title="Permanent link">&para;</a></h2>
+<pre class="mermaid"><code>flowchart TD
+    D["Arquivo em memória"] --&gt; T{"Texto útil?"}
+    T --&gt;|Sim| P["Perfil textual"]
+    T --&gt;|Não| Q{"Qualidade da imagem"}
+    Q --&gt;|Insuficiente| A["Abstenção da página"]
+    Q --&gt;|Suficiente| O["OCR local"]
+    P --&gt; R["Campos para revisão"]
+    O --&gt; R</code></pre>
+<p>O <a href="../../agentes/document-agent/">agente de documento</a> devolve campos e trilha sanitizada.
+Visão opcional exige proteção dos pixels e política de confiança; permanece bloqueada
+sem essas garantias. Validação financeira (#89), endpoints e confirmação (#96) ainda
+precisam ser integrados. Nenhum lançamento é criado por esse componente.</p>
 
 
 

@@ -1443,6 +1443,17 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#agente-de-documento-semana-5" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Agente de documento (Semana 5)
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     
   
@@ -1576,6 +1587,33 @@
     
   
   Communication Agent
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="./document-agent/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Document Agent
 
     
   </span>
@@ -2619,6 +2657,17 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#agente-de-documento-semana-5" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Agente de documento (Semana 5)
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     
   
@@ -2640,7 +2689,7 @@
   
 
 
-<h1 id="sistema-multiagente-semana-4">Sistema Multiagente (Semana 4)<a class="headerlink" href="#sistema-multiagente-semana-4" title="Permanent link">&para;</a></h1>
+<h1 id="sistema-multiagente-semanas-4-e-5">Sistema Multiagente (Semanas 4 e 5)<a class="headerlink" href="#sistema-multiagente-semanas-4-e-5" title="Permanent link">&para;</a></h1>
 <p>O primeiro protótipo multiagente do Trokim: quatro agentes com papéis separados, coordenados por um
 orquestrador determinístico, com a <strong>trilha</strong> de cada resposta visível no app. A decisão está na
 <a href="../adr/0016-arquitetura-multiagente/">ADR 0016</a>; o planejamento, em <a href="../planejamento/">Planejamento</a>.</p>
@@ -2651,7 +2700,8 @@ orquestrador determinístico, com a <strong>trilha</strong> de cada resposta vis
 <h2 id="por-que-multiagente">Por que multiagente<a class="headerlink" href="#por-que-multiagente" title="Permanent link">&para;</a></h2>
 <p>Na Semana 3 o Trokim errou os casos C27, C29 e C30 porque o mesmo passo recupera, calcula, escreve e
 se auto-avalia. Separar os papéis dá cálculo determinístico, recuperação auditável e uma checagem
-independente antes de qualquer resposta sair. Só o agente de comunicação usa LLM.</p>
+independente antes de qualquer resposta sair. No fluxo de chat, só o agente de comunicação usa LLM. A leitura de documentos pode usar
+visão opcional, com consentimento remoto e proteção de dados.</p>
 <h2 id="fluxo">Fluxo<a class="headerlink" href="#fluxo" title="Permanent link">&para;</a></h2>
 <pre class="mermaid"><code>flowchart LR
     Q[Pergunta] --&gt; O{Orquestrador}
@@ -2853,6 +2903,11 @@ com o Qwen 2.5 de 1,5 B local e o GPT-6 Luna. Os números, os gráficos e a comp
 Trokim estruturado estão no <a href="../pesquisa/resultados/#8-semana-4-multiagente-nos-30-casos-da-comparacao">Histórico de Resultados</a>.
 Em resumo: os rascunhos inválidos injetados foram todos barrados, o C30 foi retido, o C29 saiu
 com os números do sistema (protocolo corrigido de 19/11) e o C27 continua respondido, porque a política de escopo do Research não reconhece previsões de preço.</p>
+<h2 id="agente-de-documento-semana-5">Agente de documento (Semana 5)<a class="headerlink" href="#agente-de-documento-semana-5" title="Permanent link">&para;</a></h2>
+<p>O quinto agente tem contexto próprio, distinto do chat: lê documentos e devolve campos
+para revisão. Veja <a href="document-agent/">Agente de documento</a> para escopo, abstenção,
+privacidade e dependências ainda pendentes. O componente da #88 usa as portas e fábricas de OCR e visão da #87 e não adiciona endpoints;
+a ligação ao fluxo do app pertence à #96. A calibração com a #90 continua pendente.</p>
 
 
 

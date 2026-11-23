@@ -846,6 +846,17 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#recorte-acordado-da-88-agente-de-documento" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Recorte acordado da #88 — agente de documento
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -1701,6 +1712,33 @@
     
   
   Communication Agent
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../agentes/document-agent/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Document Agent
 
     
   </span>
@@ -2867,6 +2905,17 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#recorte-acordado-da-88-agente-de-documento" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Recorte acordado da #88 — agente de documento
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -3650,10 +3699,16 @@ comprimido e preparado por <code>make build</code> (<a href="../adr/0020-categor
 </tbody>
 </table>
 <p><strong>Revisão do MkDocs do início da semana</strong> (regra do <code>AGENTS.md</code>): o MkDocs foi conferido contra o código; os números de testes da API (418) batem com a execução, os links internos estão sem quebra e o <code>make docs-build</code> passa. A lacuna encontrada foi a referência dos endpoints, que não listava as rotas de contas, arquivos, parcelas, transferências, regras de categoria e cenários; ela entrou no <a href="../guia-de-uso/">Guia de Uso</a>. Não foi possível reexecutar os testes de pesquisa e do app Flutter neste ambiente, então esses dois números seguem como informados na Entrega 4. As issues da semana foram abertas <strong>antes</strong> desta revisão, o que contraria a ordem do <code>AGENTS.md</code>, e o desvio fica registrado aqui.</p>
-<p><strong>Persistência e backup (já em <code>main</code> antes da Fase 1):</strong> a biblioteca do usuário passou a ser gravada no SQLite local e restaurada ao iniciar a API, com backup criptografado <code>.trokim</code> (<a href="https://github.com/moonshinerd/trokim/issues/102">#102</a>, <a href="../adr/0024-persistencia-local-e-backup-criptografado/">ADR 0024</a>). Por isso as issues da semana já nascem sobre dados duráveis. As telas de backup já estão em Ajustes; fica para a Semana 6 o armazenamento no aparelho (SQLCipher, com a API sem estado).</p>
+<p><strong>Persistência e backup (já em <code>main</code> antes da Fase 1):</strong> a biblioteca do usuário passou a ser gravada no SQLite local e restaurada ao iniciar a API, com backup criptografado <code>.trokim</code> (<a href="https://github.com/moonshinerd/trokim/issues/102">#102</a>, <a href="../adr/0024-persistencia-local-e-backup-criptografado/">ADR 0024</a>). Por isso as issues da semana já nascem sobre dados duráveis. As telas de backup já estão em Ajustes; o armazenamento no aparelho e a API sem estado foram incorporados na #104, conforme a ADR 0025.</p>
 <p><strong>Backend em contêiner (já em <code>main</code>):</strong> <code>deploy/Dockerfile</code> e o <code>docker-compose.yml</code> sobem só a API com o OCR local e os embeddings já baixados, como usuário sem privilégios, com os dados em volume (<a href="../adr/0021-visao-e-ocr-modulares/">ADR 0021</a>, <a href="https://github.com/moonshinerd/trokim/issues/87">#87</a>). O app Flutter segue instalado no aparelho.</p>
 <p><strong>Armazenamento no aparelho e API sem estado (já em <code>main</code>):</strong> o aparelho guarda a biblioteca cifrada e a API a mantém só em memória (<a href="../adr/0025-armazenamento-no-aparelho-e-api-sem-estado/">ADR 0025</a>, <a href="https://github.com/moonshinerd/trokim/issues/104">#104</a>).</p>
 <p><strong>Encaminhado para a Semana 6</strong> (milestone "Semana 6 — Integração Completa"): as pendências herdadas da Semana 4, que são redação com paráfrase verificada, política de escopo para previsão de preço (C27) e revisão humana dos casos sinalizados (<a href="https://github.com/moonshinerd/trokim/issues/105">#105</a>).</p>
+<h3 id="recorte-acordado-da-88-agente-de-documento">Recorte acordado da #88 — agente de documento<a class="headerlink" href="#recorte-acordado-da-88-agente-de-documento" title="Permanent link">&para;</a></h3>
+<p>Implementação iniciada com três layouts sintéticos rotulados, perfil PDF textual existente,
+limite de 10 páginas, extração parcial e abstenção sem preenchimento por palpite.
+O código tem contexto próprio e trilha sanitizada; não expõe endpoint nem persiste lançamento.
+As portas e fábricas da #87 já estão integradas. A conclusão depende do ensaio com OCR real,
+calibração com a #90 e política de confiança compartilhada com a #89. Consulte o <a href="../agentes/document-agent/">escopo e as pendências</a>.</p>
 
 
 
