@@ -1032,6 +1032,34 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#10-semana-5-calibracao-sintetica-do-porteiro" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        10. Semana 5 — Calibração sintética do porteiro
+      </span>
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="10. Semana 5 — Calibração sintética do porteiro">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#101-ocr-real-e-revisao-da-extracao" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        10.1. OCR real e revisão da extração
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
       </ul>
     
   
@@ -1057,6 +1085,33 @@
     
   
   Gabarito Multiagente (Semana 4)
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../gabarito-multimodal/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Gabarito Multimodal (Semana 5)
 
     
   </span>
@@ -2834,6 +2889,34 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#10-semana-5-calibracao-sintetica-do-porteiro" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        10. Semana 5 — Calibração sintética do porteiro
+      </span>
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="10. Semana 5 — Calibração sintética do porteiro">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#101-ocr-real-e-revisao-da-extracao" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        10.1. OCR real e revisão da extração
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
       </ul>
     
   
@@ -2858,7 +2941,8 @@
 <h1 id="historico-de-resultados-e-graficos">Histórico de resultados e gráficos<a class="headerlink" href="#historico-de-resultados-e-graficos" title="Permanent link">&para;</a></h1>
 <p>Esta página reúne <strong>todas as execuções registradas</strong> do benchmark da comparação LLM x RAG
 (Semana 3), das execuções com o sistema multiagente (Semana 4, <a href="#8-semana-4-multiagente-nos-30-casos-da-comparacao">seções 8 e 9</a>) e do
-benchmark de recuperação (Semana 2), com os gráficos de cada uma. Nenhuma
+benchmark de recuperação (Semana 2) e da calibração visual sintética de documentos
+(Semana 5, seção 10), com os gráficos de cada uma. Nenhuma
 execução é sobrescrita: se os resultados melhorarem, a nova execução entra como uma nova
 linha e uma nova pasta, e as antigas continuam acessíveis para comparação.</p>
 <div class="admonition note">
@@ -3793,6 +3877,126 @@ de 18/11, e os de 19/11 para o
 <a href="https://github.com/moonshinerd/trokim/blob/main/research/rag_benchmark/results/multiagent/2026-11-19-qwen2.5-1.5b-multiagente/multiagent_report.md">Qwen</a> e o
 <a href="https://github.com/moonshinerd/trokim/blob/main/research/rag_benchmark/results/multiagent/2026-11-19-gpt-6-luna-multiagente/multiagent_report.md">Luna</a>,
 com as respostas brutas e a trilha de cada cenário em <code>multiagent_results.json</code>.</p>
+<h2 id="10-semana-5-calibracao-sintetica-do-porteiro">10. Semana 5 — Calibração sintética do porteiro<a class="headerlink" href="#10-semana-5-calibracao-sintetica-do-porteiro" title="Permanent link">&para;</a></h2>
+<p>Execução <code>2026-11-23-quality-v2</code>, de 23/11/2026: mede exclusivamente as métricas visuais dos
+40 arquivos do <a href="../gabarito-multimodal/">gabarito multimodal</a>. Os metadados e medições ficam em
+<code>research/rag_benchmark/results/documents/2026-11-23-quality-v2/</code> (<code>run.json</code> e <code>readings.json</code>).
+O registro inclui o commit <code>c547db5</code>, árvore limpa, hashes do código executado e manifesto, versões
+(Python 3.12.16, Pillow 13.0.0), parâmetros e limitações. É medição de desenvolvimento, sem revisão
+humana cega; não representa acurácia de OCR ou de fotografias reais.</p>
+<table>
+<thead>
+<tr>
+<th>Conjunto</th>
+<th style="text-align: right;">Legíveis/parciais aceitos</th>
+<th style="text-align: right;">Legíveis/parciais rejeitados</th>
+<th style="text-align: right;">Ilegíveis aceitos</th>
+<th style="text-align: right;">Ilegíveis rejeitados</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Calibração — 20 arquivos</td>
+<td style="text-align: right;">17</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">3</td>
+</tr>
+<tr>
+<td>Verificação — 20 arquivos</td>
+<td style="text-align: right;">16</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">4</td>
+</tr>
+</tbody>
+</table>
+<p>O seletor utilizou somente a calibração e manteve lado mínimo <strong>320 px</strong>, variância do
+Laplaciano <strong>15</strong> e contraste <strong>12</strong>. A verificação usou famílias distintas, sem reajuste.
+Os sete ilegíveis deste corpus têm baixa nitidez por construção; esses números não mostram
+capacidade de detectar ilegibilidade causada exclusivamente por ruído, corte ou reflexo.
+A confiança OCR de 0,80 é política conservadora e não foi calibrada probabilisticamente.</p>
+<p><img alt="Matriz de aceitação do porteiro nos conjuntos de calibração e verificação" src="../../assets/documentos/2026-11-23-quality-v2/qualidade.svg" /></p>
+<p>A instalação local de RapidOCR não pôde ser concluída porque o ambiente não resolveu o domínio
+de distribuição de pacotes. Portanto, os resultados de campos, linhas e abstenção do motor estão
+marcados como <strong>não medidos</strong> (<code>null</code>) nesta execução. Os testes de regressão demonstram
+separadamente a abstenção vazia nos sete ilegíveis antes de chamar o OCR.</p>
+<p>O runner <code>calibrate_documents.py --ocr</code> e o job <code>research</code> do CI executam o motor real e guardam
+leituras brutas sintéticas e trilhas para auditoria. O primeiro ensaio real e sua repetição estão registrados na seção 10.1. A comparação dos três motores, a meta de acerto de 90% e os
+cenários de chat da #98 continuam pendentes. Para gerar novamente os gráficos: <code>make report-charts</code>.</p>
+<p>A execução preliminar <code>2026-11-23-quality-v1</code> permanece preservada com árvore alterada
+e os mesmos totais visuais; a v2 registra a repetição sobre código commitado e árvore limpa.</p>
+<h3 id="101-ocr-real-e-revisao-da-extracao">10.1. OCR real e revisão da extração<a class="headerlink" href="#101-ocr-real-e-revisao-da-extracao" title="Permanent link">&para;</a></h3>
+<p>A execução <code>2026-11-23-rapidocr-v1</code> foi realizada em <code>/Users/aluno1/trokim</code>, sobre
+<code>a68c55a</code> com alterações locais. <code>2026-11-23-rapidocr-v2</code> repete o ensaio com código de
+produção do commit <code>9aa637d</code>, com testes de regressão ainda alterados na árvore. Ambas
+preservam metadados, leituras brutas e documentos em <code>research/rag_benchmark/results/documents/</code>.
+Nenhum resultado anterior foi sobrescrito. O gabarito, imagens e limites permaneceram iguais.</p>
+<table>
+<thead>
+<tr>
+<th>Métrica</th>
+<th style="text-align: right;">v1 calibração</th>
+<th style="text-align: right;">v1 verificação</th>
+<th style="text-align: right;">v2 calibração</th>
+<th style="text-align: right;">v2 verificação</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Campos exatos / recuperáveis</td>
+<td style="text-align: right;">48/57</td>
+<td style="text-align: right;">42/57</td>
+<td style="text-align: right;">49/57</td>
+<td style="text-align: right;">45/57</td>
+</tr>
+<tr>
+<td>Linhas exatas / recuperáveis</td>
+<td style="text-align: right;">9/21</td>
+<td style="text-align: right;">4/9</td>
+<td style="text-align: right;">9/21</td>
+<td style="text-align: right;">4/9</td>
+</tr>
+<tr>
+<td>Abstenções vazias / ilegíveis</td>
+<td style="text-align: right;">3/3</td>
+<td style="text-align: right;">4/4</td>
+<td style="text-align: right;">3/3</td>
+<td style="text-align: right;">4/4</td>
+</tr>
+<tr>
+<td>Campos não recuperáveis retornados</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+</tr>
+<tr>
+<td>Falhas técnicas</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+</tr>
+</tbody>
+</table>
+<p>Na v2, todas as 114 chaves recuperáveis foram devolvidas: há <strong>20 valores textuais diferentes</strong>
+por espaços ou acentos, sem corrigir nomes por palpite. Os campos financeiros e datas acertaram
+os <strong>61/61</strong> valores esperados. As <strong>30/30</strong> linhas correspondem em data, valor e parcela;
+<strong>17 descrições</strong> diferem do original, e só <strong>13/30</strong> linhas são exatas. Esses componentes
+financeiros são diagnósticos separados: não substituem o acerto exato de <strong>94/114 (82,46%)</strong>
+nem demonstram que os documentos completos estão corretos.</p>
+<p>O título <code>Faturadecartao</code> ou <code>ComprovantePix</code> antes fazia o parser rejeitar o layout.
+A correção remove espaços apenas no reconhecimento de títulos conhecidos. Não altera números,
+nomes, descrições nem a política de confiança. O avaliador agora distingue omissão,
+transcrição e divergência financeira, usando <code>Decimal</code> e correspondência multiconjunto para
+impedir que a mesma linha esperada valide duas linhas devolvidas.</p>
+<p><img alt="Acerto exato e componente financeiro do OCR após revisão" src="../../assets/documentos/2026-11-23-rapidocr-v2/extracao.svg" /></p>
+<p>A verificação foi inspecionada durante esta revisão; a v2 é uma regressão de desenvolvimento,
+<strong>não um novo teste cego</strong>. O aumento de recuperação não comprova generalização. Revisão humana
+continua obrigatória. Não se afirma a meta global de 90%, e a comparação entre motores/chat
+permanece na #98. O ensaio resolve a pendência de executar OCR real da #88, com limitações
+registradas; integração HTTP/app e validação financeira continuam nas #96/#89.</p>
 
 
 

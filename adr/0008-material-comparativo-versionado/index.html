@@ -825,6 +825,33 @@
   
   
     <li class="md-nav__item">
+      <a href="../../pesquisa/gabarito-multimodal/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Gabarito Multimodal (Semana 5)
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../../referencias/" class="md-nav__link">
         
   
@@ -1989,6 +2016,17 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#adendo-imagens-e-scans-sinteticos-semana-5-90" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Adendo — Imagens e scans sintéticos (Semana 5, #90)
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     
   
@@ -2524,6 +2562,17 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#adendo-imagens-e-scans-sinteticos-semana-5-90" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Adendo — Imagens e scans sintéticos (Semana 5, #90)
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     
   
@@ -2572,6 +2621,15 @@ avaliar os critérios separadamente. Os casos são de desenvolvimento, não test
 Atualizar hashes exige revisão de conteúdo e não substitui conferência das fontes.</p>
 <h2 id="adendo-gabarito-multiagente-semana-4">Adendo — Gabarito Multiagente (Semana 4)<a class="headerlink" href="#adendo-gabarito-multiagente-semana-4" title="Permanent link">&para;</a></h2>
 <p>O gabarito multiagente de 20 cenários (<code>research/rag_benchmark/questions_multiagent.json</code>, issue <a href="https://github.com/moonshinerd/trokim/issues/56">#56</a>) constitui um conjunto isolado e independente, munido de extrato sintético próprio (<code>ledger_multiagente.json</code>), JSON Schema específico e manifesto de hashes dedicado (<code>multiagent_manifest.json</code>). Ele avalia a arquitetura de quatro agentes da Semana 4 (<a href="../0016-arquitetura-multiagente/">ADR 0016</a>) e não altera nem substitui o material comparativo da Semana 3.</p>
+<h2 id="adendo-imagens-e-scans-sinteticos-semana-5-90">Adendo — Imagens e scans sintéticos (Semana 5, #90)<a class="headerlink" href="#adendo-imagens-e-scans-sinteticos-semana-5-90" title="Permanent link">&para;</a></h2>
+<p>O corpus multimodal tem manifesto próprio (<code>research/rag_benchmark/documents_manifest.json</code>)
+com SHA-256 dos arquivos, gabarito, schema, gerador, fonte/licença e lock de dependências.
+A fonte acompanha o código; imagens e PDFs são versionados, incluindo os casos da demonstração.
+O gabarito distingue verdade original de campos recuperáveis; famílias não atravessam os grupos
+de calibração e verificação. Alterar insumos exige revisar o conteúdo antes de regenerar hashes.
+Execuções guardam commit, hashes de código, versões, parâmetros e leituras brutas sintéticas em
+pastas novas. Não substituem os conjuntos das Semanas 3/4 nem autorizam guardar documentos reais.
+Veja o <a href="../../pesquisa/gabarito-multimodal/">protocolo multimodal</a>.</p>
 
 
 
