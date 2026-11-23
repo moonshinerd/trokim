@@ -18,6 +18,8 @@
         <link rel="prev" href="../0021-visao-e-ocr-modulares/">
       
       
+        <link rel="next" href="../0025-armazenamento-no-aparelho-e-api-sem-estado/">
+      
       
         
       
@@ -2328,10 +2330,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#proximos-passos-semana-6" class="md-nav__link">
+  <a href="#proximos-passos" class="md-nav__link">
     <span class="md-ellipsis">
       <span class="md-typeset">
-        Próximos passos (Semana 6)
+        Próximos passos
       </span>
     </span>
   </a>
@@ -2354,6 +2356,33 @@
   
 </nav>
       
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../0025-armazenamento-no-aparelho-e-api-sem-estado/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  0025 – Armazenamento no Aparelho e API sem Estado
+
+    
+  </span>
+  
+  
+
+      </a>
     </li>
   
 
@@ -2442,10 +2471,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#proximos-passos-semana-6" class="md-nav__link">
+  <a href="#proximos-passos" class="md-nav__link">
     <span class="md-ellipsis">
       <span class="md-typeset">
-        Próximos passos (Semana 6)
+        Próximos passos
       </span>
     </span>
   </a>
@@ -2566,11 +2595,12 @@ levar os dados para outro aparelho sem passar por terceiros.</p>
 <li>Gravar o retrato inteiro a cada alteração é simples e atômico, mas cresce com o volume; a
   porta permite trocar por tabelas normalizadas sem mexer nas regras.</li>
 </ul>
-<h2 id="proximos-passos-semana-6">Próximos passos (Semana 6)<a class="headerlink" href="#proximos-passos-semana-6" title="Permanent link">&para;</a></h2>
+<h2 id="proximos-passos">Próximos passos<a class="headerlink" href="#proximos-passos" title="Permanent link">&para;</a></h2>
 <ul>
-<li><strong>Armazenamento no aparelho</strong> (<a href="https://github.com/moonshinerd/trokim/issues/104">#104</a>): o app guarda a biblioteca em SQLite criptografado (SQLCipher) e a
-  API passa a <strong>não ter estado</strong>, recebendo por requisição só o retrato agregado necessário. Esta
-  ADR já fixa o contrato (<code>LibrarySnapshot</code>) e o que pode sair do aparelho.</li>
+<li><strong>Armazenamento no aparelho:</strong> feito na <a href="../0025-armazenamento-no-aparelho-e-api-sem-estado/">ADR 0025</a>
+  (<a href="https://github.com/moonshinerd/trokim/issues/104">#104</a>): o app guarda este mesmo
+  <code>LibrarySnapshot</code> cifrado no aparelho e a API o mantém só em memória. O <code>trokim.db</code> desta ADR
+  fica como opção para quem roda a API sem o app (<code>LIBRARY_PERSISTENCE</code>).</li>
 </ul>
 <h2 id="alternativas-descartadas">Alternativas descartadas<a class="headerlink" href="#alternativas-descartadas" title="Permanent link">&para;</a></h2>
 <ul>

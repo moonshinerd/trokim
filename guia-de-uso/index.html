@@ -2674,6 +2674,33 @@
 
                 
               
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../adr/0025-armazenamento-no-aparelho-e-api-sem-estado/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  0025 – Armazenamento no Aparelho e API sem Estado
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
             </ul>
           </nav>
         
@@ -3282,6 +3309,11 @@ material sintético vai à nuvem nos testes do projeto.</p>
 <td>Compara dois cenários de orçamento</td>
 </tr>
 <tr>
+<td>Biblioteca no aparelho</td>
+<td><code>GET</code> e <code>PUT /library/snapshot</code></td>
+<td>O app lê o retrato para guardá-lo cifrado e o devolve à API ao abrir</td>
+</tr>
+<tr>
 <td>Backup</td>
 <td><code>POST /backup/export</code>, <code>POST /backup/import</code></td>
 <td>Exporta e restaura a biblioteca em arquivo <code>.trokim</code> criptografado</td>
@@ -3289,12 +3321,21 @@ material sintético vai à nuvem nos testes do projeto.</p>
 </tbody>
 </table>
 <h3 id="backup-e-persistencia">Backup e persistência<a class="headerlink" href="#backup-e-persistencia" title="Permanent link">&para;</a></h3>
-<p>A biblioteca (lançamentos, contas, arquivos, transferências e regras de categoria) é gravada no
-SQLite local (<code>trokim.db</code>) depois de cada alteração e restaurada quando a API inicia
-(<a href="../adr/0024-persistencia-local-e-backup-criptografado/">ADR 0024</a>). <code>LIBRARY_PERSISTENCE=false</code>
-desliga a gravação. O arquivo <code>trokim.db</code> não é criptografado; o <strong>backup é sempre cifrado</strong>
-(AES-256-GCM, chave derivada da sua senha por scrypt) e não pode ser aberto sem ela, nem
-recuperado se a senha for esquecida.</p>
+<p><strong>No app, o aparelho guarda seus dados.</strong> A biblioteca (lançamentos, contas, arquivos,
+transferências e regras de categoria) fica em um arquivo <strong>cifrado</strong> (AES-256-GCM) na pasta
+privada do app, com a chave no armazenamento seguro do Android. Ao abrir, o app devolve esse
+retrato à API, que o mantém só em memória; depois de cada alteração o app regrava o arquivo
+(<a href="../adr/0025-armazenamento-no-aparelho-e-api-sem-estado/">ADR 0025</a>). Por isso a API pode ser
+reiniciada ou recriada sem perder nada. A API só deve ser a <strong>sua</strong>: o retrato inclui dados
+privados e é enviado a ela inteiro. O backup automático do Android fica desligado, porque
+levaria o arquivo sem a chave. Se o arquivo for alterado ou a chave se perder, o app não mostra
+dado errado: guarda o arquivo à parte (<code>biblioteca.trokim.corrompido</code>), avisa em <strong>Ajustes &gt;
+Backup</strong> e você recupera pelo backup <code>.trokim</code>.</p>
+<p>Quem usa a API sem o app ainda tem o SQLite local (<code>trokim.db</code>, não cifrado), controlado por
+<code>LIBRARY_PERSISTENCE</code> (<a href="../adr/0024-persistencia-local-e-backup-criptografado/">ADR 0024</a>). O
+<strong>backup é sempre cifrado</strong> (AES-256-GCM, chave derivada da sua senha por scrypt) e não pode ser
+aberto sem ela, nem recuperado se a senha for esquecida; é o caminho para trocar de aparelho.
+Perder o aparelho sem backup é perder os dados.</p>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Exportar (a senha tem pelo menos 8 caracteres e nunca é gravada)</span>
 </span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>curl<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span>http://127.0.0.1:8000/v1/backup/export<span class="w"> </span><span class="se">\</span>
 </span><span id="__span-2-3"><a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">"Content-Type: application/json"</span><span class="w"> </span>-d<span class="w"> </span><span class="s1">'{"passphrase": "minha-senha-longa"}'</span><span class="w"> </span><span class="se">\</span>
