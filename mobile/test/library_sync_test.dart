@@ -11,10 +11,8 @@ import 'package:trokim/core/storage/local_library_store.dart';
 const _retrato =
     '{"version":1,"transactions":[{"uid":"a"}],"accounts":{"x":{"id":"x"}}}';
 
-ApiClient _api(http.Client client) => ApiClient(
-  baseUrlProvider: () => 'http://api.test/v1',
-  client: client,
-);
+ApiClient _api(http.Client client) =>
+    ApiClient(baseUrlProvider: () => 'http://api.test/v1', client: client);
 
 void main() {
   group('armazenamento cifrado', () {
@@ -22,14 +20,21 @@ void main() {
     setUp(() => dir = Directory.systemTemp.createTempSync('trokim_'));
     tearDown(() => dir.deleteSync(recursive: true));
 
-    test('grava e lê de volta, e o arquivo não deixa o texto à mostra', () async {
-      final keys = MemoryKeyStore();
-      final store = EncryptedFileLibraryStore(File('${dir.path}/b.trokim'), keys);
-      await store.write(_retrato);
-      expect(await store.read(), _retrato);
-      final cru = File('${dir.path}/b.trokim').readAsStringSync(encoding: latin1);
-      expect(cru.contains('transactions'), isFalse);
-    });
+    test(
+      'grava e lê de volta, e o arquivo não deixa o texto à mostra',
+      () async {
+        final keys = MemoryKeyStore();
+        final store = EncryptedFileLibraryStore(
+          File('${dir.path}/b.trokim'),
+          keys,
+        );
+        await store.write(_retrato);
+        expect(await store.read(), _retrato);
+        final cru = File('${dir.path}/b.trokim')
+            .readAsStringSync(encoding: latin1);
+        expect(cru.contains('transactions'), isFalse);
+      },
+    );
 
     test('sem a chave certa a leitura falha', () async {
       final file = File('${dir.path}/b.trokim');
@@ -114,7 +119,9 @@ void main() {
       final sync = LibrarySync(
         store,
         () => _api(
-          http_testing.MockClient((_) async => throw const SocketException('x')),
+          http_testing.MockClient(
+            (_) async => throw const SocketException('x'),
+          ),
         ),
       );
       expect(await sync.hydrate(), isFalse);

@@ -98,8 +98,7 @@ class EncryptedFileLibraryStore implements LocalLibraryStore {
     if (!await _file.exists()) return null;
     final bytes = await _file.readAsBytes();
     const header = 4 + _nonceSize;
-    if (bytes.length < header + _macSize ||
-        !_startsWithMagic(bytes)) {
+    if (bytes.length < header + _macSize || !_startsWithMagic(bytes)) {
       throw const FormatException('Arquivo da biblioteca inválido.');
     }
     final nonce = bytes.sublist(4, header);

@@ -149,8 +149,9 @@ class FinanceRepository {
     ),
   );
 
-  Future<void> confirmTransfer(TransferSuggestion item) =>
-      _mutate((client) => client.confirmTransfer(item.debitUid, item.creditUid));
+  Future<void> confirmTransfer(TransferSuggestion item) => _mutate(
+    (client) => client.confirmTransfer(item.debitUid, item.creditUid),
+  );
 
   Future<void> rejectTransfer(TransferSuggestion item) =>
       _mutate((client) => client.rejectTransfer(item.debitUid, item.creditUid));
