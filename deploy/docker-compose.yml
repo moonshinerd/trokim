@@ -1,5 +1,6 @@
-version: '3.8'
-
+# Sobe só o backend (API + OCR local). O app Flutter roda no aparelho do usuário.
+#   docker compose -f deploy/docker-compose.yml up --build
+# O Ollama (texto e visão) roda na máquina do usuário e é acessado por host.docker.internal.
 services:
   api:
     build:
@@ -8,13 +9,26 @@ services:
     container_name: trokim-api
     restart: unless-stopped
     ports:
-      - "8000:8000"
+      - "127.0.0.1:8000:8000" # só a própria máquina; o celular usa o IP da rede (ver Guia de Uso)
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
     environment:
-      - ENVIRONMENT=production
-      - DEBUG=false
-      - PORT=8000
-      - HOST=0.0.0.0
-      - DATABASE_URL=sqlite+aiosqlite:////srv/data/trokim.db
+      ENVIRONMENT: production
+      DEBUG: "false"
+      HOST: 0.0.0.0
+      DATABASE_URL: sqlite+aiosqlite:////srv/data/trokim.db
+      RAG_VECTOR_DB_PATH: /srv/data/vector_store.db
+      # Texto: Ollama na máquina do usuário.
+      LLM_PROVIDER: ${LLM_PROVIDER:-litellm}
+      LLM_MODEL: ${LLM_MODEL:-ollama/qwen2.5}
+      LLM_API_BASE: ${LLM_API_BASE:-http://host.docker.internal:11434}
+      # Leitura de imagem: OCR local por padrão; modelo de visão opcional.
+      OCR_PROVIDER: ${OCR_PROVIDER:-rapidocr}
+      VISION_PROVIDER: ${VISION_PROVIDER:-none}
+      VISION_MODEL: ${VISION_MODEL:-ollama/qwen2.5vl}
+      VISION_API_BASE: ${VISION_API_BASE:-http://host.docker.internal:11434}
+      VISION_API_KEY: ${VISION_API_KEY:-}
+      VISION_ALLOW_REMOTE: ${VISION_ALLOW_REMOTE:-false}
     volumes:
       - trokim-data:/srv/data
 
