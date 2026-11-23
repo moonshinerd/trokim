@@ -170,6 +170,7 @@ class _BackupCardState extends State<BackupCard> {
       );
       final added = (result['added'] as Map?)?['transactions'] ?? 0;
       final total = result['transactions_total'] ?? 0;
+      await finance?.saveToDevice();
       await finance?.load();
       _show(
         'Backup restaurado: $added lançamentos novos, $total no total.',

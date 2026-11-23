@@ -1,4 +1,5 @@
 import '../../../core/network/api_client.dart';
+import '../../../core/storage/library_sync.dart';
 import '../../categories/domain/ledger_entry.dart';
 import '../domain/finance_models.dart';
 import '../domain/library_models.dart';
@@ -7,9 +8,12 @@ import '../domain/library_models.dart';
 class FinanceRepository {
   /// [newClient] cria um cliente por operação, que é fechado ao final; assim
   /// o endereço da API editado em Ajustes vale na chamada seguinte.
-  FinanceRepository(this._newClient);
+  FinanceRepository(this._newClient, {LibrarySync? sync}) : _sync = sync;
 
   final ApiClient Function() _newClient;
+
+  /// Guarda no aparelho o retrato da biblioteca depois de cada alteração (ADR 0025).
+  final LibrarySync? _sync;
 
   Future<T> _run<T>(Future<T> Function(ApiClient client) action) async {
     final client = _newClient();
@@ -19,6 +23,16 @@ class FinanceRepository {
       client.close();
     }
   }
+
+  /// Como [_run], mas grava o retrato no aparelho quando a alteração dá certo.
+  Future<T> _mutate<T>(Future<T> Function(ApiClient client) action) async {
+    final result = await _run(action);
+    await _sync?.saveFromApi();
+    return result;
+  }
+
+  /// Grava o retrato atual no aparelho (depois de restaurar um backup).
+  Future<void> saveToDevice() async => _sync?.saveFromApi();
 
   Future<FinancialSummary> fetchSummary({
     String owner = 'todas',
@@ -42,7 +56,7 @@ class FinanceRepository {
     String uid,
     String category, {
     bool applyToMerchant = true,
-  }) => _run(
+  }) => _mutate(
     (client) async => CategoryChange.fromJson(
       await client.setTransactionCategory(
         uid,
@@ -86,7 +100,7 @@ class FinanceRepository {
     AccountOwner? owner,
     String? expectKind,
     bool confirmed = false,
-  }) => _run(
+  }) => _mutate(
     (client) async => ImportResult.fromJson(
       await client.uploadStatement(
         filename,
@@ -114,7 +128,7 @@ class FinanceRepository {
     ),
   );
 
-  Future<AccountInfo> setAccountOwner(String id, AccountOwner owner) => _run(
+  Future<AccountInfo> setAccountOwner(String id, AccountOwner owner) => _mutate(
     (client) async =>
         AccountInfo.fromJson(await client.patchAccount(id, owner: owner.api)),
   );
@@ -124,7 +138,7 @@ class FinanceRepository {
     bool? closed,
     DateTime? periodStart,
     DateTime? periodEnd,
-  }) => _run(
+  }) => _mutate(
     (client) async => StatementInfo.fromJson(
       await client.patchStatement(
         id,
@@ -136,12 +150,12 @@ class FinanceRepository {
   );
 
   Future<void> confirmTransfer(TransferSuggestion item) =>
-      _run((client) => client.confirmTransfer(item.debitUid, item.creditUid));
+      _mutate((client) => client.confirmTransfer(item.debitUid, item.creditUid));
 
   Future<void> rejectTransfer(TransferSuggestion item) =>
-      _run((client) => client.rejectTransfer(item.debitUid, item.creditUid));
+      _mutate((client) => client.rejectTransfer(item.debitUid, item.creditUid));
 
-  Future<void> undoTransfer(OwnTransfer item) => _run(
+  Future<void> undoTransfer(OwnTransfer item) => _mutate(
     (client) => item.automatic
         ? client.unmarkTransfer(item.id)
         : client.undoTransfer(item.id),

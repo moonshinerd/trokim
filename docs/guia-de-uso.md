@@ -92,16 +92,25 @@ Todos os caminhos começam em `/v1`. O contrato completo e interativo fica no Sw
 | Biblioteca | `GET /installments` | Parcelamentos agrupados |
 | Biblioteca | `GET /transfers`, `GET /transfers/suggestions`, `POST /transfers/{confirm,reject,unmark,undo}` | Transferências entre contas próprias |
 | Cenários | `POST /budgets/compare` | Compara dois cenários de orçamento |
+| Biblioteca no aparelho | `GET` e `PUT /library/snapshot` | O app lê o retrato para guardá-lo cifrado e o devolve à API ao abrir |
 | Backup | `POST /backup/export`, `POST /backup/import` | Exporta e restaura a biblioteca em arquivo `.trokim` criptografado |
 
 ### Backup e persistência
 
-A biblioteca (lançamentos, contas, arquivos, transferências e regras de categoria) é gravada no
-SQLite local (`trokim.db`) depois de cada alteração e restaurada quando a API inicia
-([ADR 0024](adr/0024-persistencia-local-e-backup-criptografado.md)). `LIBRARY_PERSISTENCE=false`
-desliga a gravação. O arquivo `trokim.db` não é criptografado; o **backup é sempre cifrado**
-(AES-256-GCM, chave derivada da sua senha por scrypt) e não pode ser aberto sem ela, nem
-recuperado se a senha for esquecida.
+**No app, o aparelho guarda seus dados.** A biblioteca (lançamentos, contas, arquivos,
+transferências e regras de categoria) fica em um arquivo **cifrado** (AES-256-GCM) na pasta
+privada do app, com a chave no armazenamento seguro do Android. Ao abrir, o app devolve esse
+retrato à API, que o mantém só em memória; depois de cada alteração o app regrava o arquivo
+([ADR 0025](adr/0025-armazenamento-no-aparelho-e-api-sem-estado.md)). Por isso a API pode ser
+reiniciada ou recriada sem perder nada. A API só deve ser a **sua**: o retrato inclui dados
+privados e é enviado a ela inteiro. O backup automático do Android fica desligado, porque
+levaria o arquivo sem a chave.
+
+Quem usa a API sem o app ainda tem o SQLite local (`trokim.db`, não cifrado), controlado por
+`LIBRARY_PERSISTENCE` ([ADR 0024](adr/0024-persistencia-local-e-backup-criptografado.md)). O
+**backup é sempre cifrado** (AES-256-GCM, chave derivada da sua senha por scrypt) e não pode ser
+aberto sem ela, nem recuperado se a senha for esquecida; é o caminho para trocar de aparelho.
+Perder o aparelho sem backup é perder os dados.
 
 ```bash
 # Exportar (a senha tem pelo menos 8 caracteres e nunca é gravada)

@@ -271,6 +271,9 @@ class FinanceController extends ChangeNotifier {
   }
 
   /// Lançamentos importados (para revisar categorias). Lança se a API falhar.
+  /// Guarda no aparelho o retrato atual (depois de restaurar um backup).
+  Future<void> saveToDevice() => _repository.saveToDevice();
+
   Future<List<LedgerEntry>> fetchEntries() => _repository.fetchEntries();
 
   /// Corrige a categoria e recarrega o resumo. Lança se a API recusar.

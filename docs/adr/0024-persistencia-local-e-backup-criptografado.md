@@ -58,11 +58,12 @@ levar os dados para outro aparelho sem passar por terceiros.
 - Gravar o retrato inteiro a cada alteração é simples e atômico, mas cresce com o volume; a
   porta permite trocar por tabelas normalizadas sem mexer nas regras.
 
-## Próximos passos (Semana 6)
+## Próximos passos
 
-- **Armazenamento no aparelho** ([#104](https://github.com/moonshinerd/trokim/issues/104)): o app guarda a biblioteca em SQLite criptografado (SQLCipher) e a
-  API passa a **não ter estado**, recebendo por requisição só o retrato agregado necessário. Esta
-  ADR já fixa o contrato (`LibrarySnapshot`) e o que pode sair do aparelho.
+- **Armazenamento no aparelho:** feito na [ADR 0025](0025-armazenamento-no-aparelho-e-api-sem-estado.md)
+  ([#104](https://github.com/moonshinerd/trokim/issues/104)): o app guarda este mesmo
+  `LibrarySnapshot` cifrado no aparelho e a API o mantém só em memória. O `trokim.db` desta ADR
+  fica como opção para quem roda a API sem o app (`LIBRARY_PERSISTENCE`).
 
 ## Alternativas descartadas
 
