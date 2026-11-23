@@ -2325,6 +2325,33 @@
   
   
     <li class="md-nav__item">
+      <a href="../../adr/0021-visao-e-ocr-modulares/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  0021 – Leitura de Imagem Modular (OCR e Visão)
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../../adr/0024-persistencia-local-e-backup-criptografado/" class="md-nav__link">
         
   
@@ -2506,6 +2533,7 @@
         APIEntry["Routers v1&lt;br/&gt;(/transactions, /accounts, /statements, /installments,&lt;br/&gt;/transfers, /backup, /chat, /budgets, /health, /agents)"]
         AgentAsk["POST /v1/agents/ask&lt;br/&gt;(MultiAgentResponse)"]
 
+        Vision["Portas de leitura de imagem&lt;br/&gt;(OcrProvider: RapidOCR local;&lt;br/&gt;VisionProvider: LiteLLM, opcional)"]
         Parser["Parser de Documentos&lt;br/&gt;(OFX &amp; PDF, perfis Nubank e BB)"]
         Library["Biblioteca local&lt;br/&gt;(contas, períodos, detector,&lt;br/&gt;transferências, parcelas, regras de categoria)"]
         CalcService["Motor de Cálculo Determinístico&lt;br/&gt;(Totais, Balanço, 50-30-20)"]
@@ -2535,6 +2563,7 @@
         end
 
         APIEntry --&gt; Parser
+        Vision -.-&gt;|foto ou PDF escaneado, Semana 5| Parser
         APIEntry --&gt; Library
         Library --&gt; Parser
         Library --&gt; DomainCore

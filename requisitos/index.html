@@ -2311,6 +2311,33 @@
   
   
     <li class="md-nav__item">
+      <a href="../adr/0021-visao-e-ocr-modulares/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  0021 – Leitura de Imagem Modular (OCR e Visão)
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../adr/0024-persistencia-local-e-backup-criptografado/" class="md-nav__link">
         
   
@@ -2532,6 +2559,13 @@
 <td style="text-align: center;">23/11/2026</td>
 <td style="text-align: center;">Semana 5 (<em>Persistência e backup</em>)</td>
 <td>Inclusão de <strong>RF31</strong> (persistência local da biblioteca) e <strong>RF32</strong> (backup criptografado), com a <a href="../adr/0024-persistencia-local-e-backup-criptografado/">ADR 0024</a>. A API passa a restaurar a biblioteca ao iniciar.</td>
+<td style="text-align: center;">Equipe Trokim</td>
+</tr>
+<tr>
+<td style="text-align: center;"><strong>v1.9.0</strong></td>
+<td style="text-align: center;">23/11/2026</td>
+<td style="text-align: center;">Semana 5 (<em>Leitura de imagem</em>)</td>
+<td>Inclusão de <strong>RNF12</strong> (motores de leitura de imagem intercambiáveis e consentimento para provedor remoto) e das portas de OCR e visão (<a href="../adr/0021-visao-e-ocr-modulares/">ADR 0021</a>); backend em contêiner com OCR. <strong>RF27</strong> segue em implementação.</td>
 <td style="text-align: center;">Equipe Trokim</td>
 </tr>
 </tbody>
@@ -2930,6 +2964,15 @@
 <td style="text-align: center;"><a href="../adr/0012-mascote-onca-e-arte-de-marca-livre/">ADR 0012</a></td>
 <td style="text-align: center;"><span class="badge-must">Implementado</span></td>
 </tr>
+<tr>
+<td style="text-align: center;"><strong>RNF12</strong></td>
+<td>Motores de visão intercambiáveis e consentimento</td>
+<td>OCR e modelo de visão ficam atrás de portas e se trocam só por configuração. O OCR é local por padrão; o modelo de visão vem desligado, e um provedor remoto (que leva a imagem para fora do aparelho) só é usado com consentimento explícito. Imagem, texto lido e resposta do modelo nunca são registrados em log.</td>
+<td style="text-align: center;"><span class="badge-must">Must have</span></td>
+<td style="text-align: center;"><a href="../pesquisa/guiding-questions/">GQ02</a>, <a href="../pesquisa/guiding-questions/">GQ03</a></td>
+<td style="text-align: center;"><a href="../adr/0021-visao-e-ocr-modulares/">ADR 0021</a></td>
+<td style="text-align: center;"><span class="badge-must">Implementado</span></td>
+</tr>
 </tbody>
 </table>
 <hr />
@@ -3195,6 +3238,13 @@
 <td style="text-align: center;"><a href="../adr/0012-mascote-onca-e-arte-de-marca-livre/">ADR 0012</a></td>
 <td><code>mobile/assets/brand/</code>, <code>docs/referencias.md</code></td>
 <td>Revisão no PR</td>
+</tr>
+<tr>
+<td style="text-align: center;"><strong>RNF12</strong></td>
+<td style="text-align: center;">GQ02, GQ03</td>
+<td style="text-align: center;"><a href="../adr/0021-visao-e-ocr-modulares/">ADR 0021</a></td>
+<td><code>api/app/models/vision_provider.py</code>, <code>api/app/clients/vision_factory.py</code>, <code>api/app/clients/rapidocr_provider.py</code>, <code>api/app/clients/litellm_vision_provider.py</code></td>
+<td><code>api/tests/test_vision_ports.py</code></td>
 </tr>
 </tbody>
 </table>

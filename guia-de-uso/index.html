@@ -668,6 +668,28 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
+  <a href="#backend-em-docker-com-ocr" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Backend em Docker (com OCR)
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#leitura-de-imagem-ocr-e-modelo-de-visao" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Leitura de imagem: OCR e modelo de visão
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#referencia-rapida-da-api" class="md-nav__link">
     <span class="md-ellipsis">
       <span class="md-typeset">
@@ -2605,6 +2627,33 @@
   
   
     <li class="md-nav__item">
+      <a href="../adr/0021-visao-e-ocr-modulares/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  0021 – Leitura de Imagem Modular (OCR e Visão)
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../adr/0024-persistencia-local-e-backup-criptografado/" class="md-nav__link">
         
   
@@ -2696,6 +2745,28 @@
   
     <nav class="md-nav" aria-label="2. Configuração do Backend e Dependências">
       <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#backend-em-docker-com-ocr" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Backend em Docker (com OCR)
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#leitura-de-imagem-ocr-e-modelo-de-visao" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Leitura de imagem: OCR e modelo de visão
+      </span>
+    </span>
+  </a>
+  
+</li>
         
           <li class="md-nav__item">
   <a href="#referencia-rapida-da-api" class="md-nav__link">
@@ -3074,6 +3145,71 @@
 - <strong>Health check:</strong> <code>http://127.0.0.1:8000/v1/health</code>
 - <strong>Consulta RAG Extrativa:</strong> <code>POST http://127.0.0.1:8000/v1/chat/ask</code>
 - <strong>Síntese Generativa Contextualizada:</strong> <code>POST http://127.0.0.1:8000/v1/chat/generate</code></p>
+<h3 id="backend-em-docker-com-ocr">Backend em Docker (com OCR)<a class="headerlink" href="#backend-em-docker-com-ocr" title="Permanent link">&para;</a></h3>
+<p>O <code>deploy/</code> empacota só o <strong>backend</strong>, com o OCR local e o modelo de embeddings já baixados (a
+API roda sem internet depois da construção). O app Flutter não entra no contêiner: ele é
+instalado no aparelho e aponta para este endereço em <strong>Ajustes &gt; Conexão</strong>.</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>docker<span class="w"> </span>compose<span class="w"> </span>-f<span class="w"> </span>deploy/docker-compose.yml<span class="w"> </span>up<span class="w"> </span>--build<span class="w"> </span>-d<span class="w">   </span><span class="c1"># sobe em 127.0.0.1:8000</span>
+</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>docker<span class="w"> </span>compose<span class="w"> </span>-f<span class="w"> </span>deploy/docker-compose.yml<span class="w"> </span>down<span class="w">            </span><span class="c1"># para; os dados ficam no volume</span>
+</span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>docker<span class="w"> </span>compose<span class="w"> </span>-f<span class="w"> </span>deploy/docker-compose.yml<span class="w"> </span>down<span class="w"> </span>-v<span class="w">         </span><span class="c1"># para e APAGA os dados do usuário</span>
+</span></code></pre></div>
+<p>Os dados (SQLite e índice vetorial) ficam no volume <code>trokim-data</code>, nunca na imagem. O Ollama
+(texto e visão) roda na sua máquina e o contêiner o encontra por <code>host.docker.internal:11434</code>.
+Para o celular acessar, publique a porta na rede local editando <code>ports</code> (por exemplo
+<code>"0.0.0.0:8000:8000"</code>) e use o IP do computador; por padrão só a própria máquina alcança a API.</p>
+<h3 id="leitura-de-imagem-ocr-e-modelo-de-visao">Leitura de imagem: OCR e modelo de visão<a class="headerlink" href="#leitura-de-imagem-ocr-e-modelo-de-visao" title="Permanent link">&para;</a></h3>
+<p>O OCR é local (RapidOCR) e vem ligado. O modelo de visão é opcional e vem <strong>desligado</strong>
+(<a href="../adr/0021-visao-e-ocr-modulares/">ADR 0021</a>). Tudo se troca por variável de ambiente
+(<code>api/.env</code> ou o ambiente do contêiner):</p>
+<table>
+<thead>
+<tr>
+<th>Variável</th>
+<th>Padrão</th>
+<th>Para quê</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>OCR_PROVIDER</code></td>
+<td><code>rapidocr</code></td>
+<td>Motor de OCR (<code>rapidocr</code> ou <code>mock</code>). Fora do Docker, instale com <code>uv sync --extra ocr</code></td>
+</tr>
+<tr>
+<td><code>VISION_PROVIDER</code></td>
+<td><code>none</code></td>
+<td><code>none</code>, <code>litellm</code> ou <code>mock</code></td>
+</tr>
+<tr>
+<td><code>VISION_MODEL</code></td>
+<td><code>ollama/qwen2.5vl</code></td>
+<td>Modelo no formato do LiteLLM; <code>openrouter/...</code> é remoto</td>
+</tr>
+<tr>
+<td><code>VISION_API_BASE</code></td>
+<td>vazio</td>
+<td>Endereço do servidor do modelo</td>
+</tr>
+<tr>
+<td><code>VISION_API_KEY</code></td>
+<td>vazio</td>
+<td>Chave, só em variável de ambiente</td>
+</tr>
+<tr>
+<td><code>VISION_TIMEOUT</code></td>
+<td><code>120</code></td>
+<td>Segundos</td>
+</tr>
+<tr>
+<td><code>VISION_ALLOW_REMOTE</code></td>
+<td><code>false</code></td>
+<td>Consentimento para enviar a imagem para fora do aparelho</td>
+</tr>
+</tbody>
+</table>
+<p>Um modelo remoto, como o do OpenRouter, é <strong>recusado</strong> enquanto <code>VISION_ALLOW_REMOTE</code> não for
+<code>true</code>: a imagem de um documento financeiro sairia do aparelho. O consentimento é seu, e só
+material sintético vai à nuvem nos testes do projeto.</p>
 <h3 id="referencia-rapida-da-api">Referência rápida da API<a class="headerlink" href="#referencia-rapida-da-api" title="Permanent link">&para;</a></h3>
 <p>Todos os caminhos começam em <code>/v1</code>. O contrato completo e interativo fica no Swagger (<code>/docs</code>).</p>
 <table>
@@ -3159,14 +3295,14 @@ SQLite local (<code>trokim.db</code>) depois de cada alteração e restaurada qu
 desliga a gravação. O arquivo <code>trokim.db</code> não é criptografado; o <strong>backup é sempre cifrado</strong>
 (AES-256-GCM, chave derivada da sua senha por scrypt) e não pode ser aberto sem ela, nem
 recuperado se a senha for esquecida.</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Exportar (a senha tem pelo menos 8 caracteres e nunca é gravada)</span>
-</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>curl<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span>http://127.0.0.1:8000/v1/backup/export<span class="w"> </span><span class="se">\</span>
-</span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">"Content-Type: application/json"</span><span class="w"> </span>-d<span class="w"> </span><span class="s1">'{"passphrase": "minha-senha-longa"}'</span><span class="w"> </span><span class="se">\</span>
-</span><span id="__span-1-4"><a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="w">  </span>-o<span class="w"> </span>meu-backup.trokim
-</span><span id="__span-1-5"><a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>
-</span><span id="__span-1-6"><a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="c1"># Restaurar em outro aparelho: "substituir" apaga o que existe, "mesclar" só acrescenta o que falta</span>
-</span><span id="__span-1-7"><a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>curl<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span>http://127.0.0.1:8000/v1/backup/import<span class="w"> </span><span class="se">\</span>
-</span><span id="__span-1-8"><a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="w">  </span>-F<span class="w"> </span><span class="s2">"file=@meu-backup.trokim"</span><span class="w"> </span>-F<span class="w"> </span><span class="s2">"passphrase=minha-senha-longa"</span><span class="w"> </span>-F<span class="w"> </span><span class="s2">"mode=mesclar"</span>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Exportar (a senha tem pelo menos 8 caracteres e nunca é gravada)</span>
+</span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>curl<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span>http://127.0.0.1:8000/v1/backup/export<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-2-3"><a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">"Content-Type: application/json"</span><span class="w"> </span>-d<span class="w"> </span><span class="s1">'{"passphrase": "minha-senha-longa"}'</span><span class="w"> </span><span class="se">\</span>
+</span><span id="__span-2-4"><a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="w">  </span>-o<span class="w"> </span>meu-backup.trokim
+</span><span id="__span-2-5"><a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>
+</span><span id="__span-2-6"><a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="c1"># Restaurar em outro aparelho: "substituir" apaga o que existe, "mesclar" só acrescenta o que falta</span>
+</span><span id="__span-2-7"><a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>curl<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span>http://127.0.0.1:8000/v1/backup/import<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-2-8"><a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="w">  </span>-F<span class="w"> </span><span class="s2">"file=@meu-backup.trokim"</span><span class="w"> </span>-F<span class="w"> </span><span class="s2">"passphrase=minha-senha-longa"</span><span class="w"> </span>-F<span class="w"> </span><span class="s2">"mode=mesclar"</span>
 </span></code></pre></div>
 <p>Senha errada ou arquivo adulterado devolvem <code>400</code> com a mensagem "Senha incorreta ou arquivo
 corrompido". No app, em <strong>Ajustes &gt; Backup</strong>, informe a senha e toque em <strong>Exportar backup</strong> ou <strong>Restaurar backup</strong> (com a opção de substituir ou só mesclar).</p>
@@ -3174,12 +3310,12 @@ corrompido". No app, em <strong>Ajustes &gt; Backup</strong>, informe a senha e 
 <h2 id="3-sintese-generativa-local-litellm-e-ollama">3. Síntese Generativa Local (LiteLLM e Ollama)<a class="headerlink" href="#3-sintese-generativa-local-litellm-e-ollama" title="Permanent link">&para;</a></h2>
 <p>A camada generativa usa a porta <code>LLMProvider</code> (<a href="../adr/0009-sintese-generativa-local/">ADR 0009</a>). O provedor padrão é o <strong>LiteLLM</strong>, que aceita qualquer modelo definido por configuração. Com um modelo local no <strong>Ollama</strong>, nenhum dado sai da sua máquina.</p>
 <h3 id="configuracao-do-modelo-local">Configuração do modelo local<a class="headerlink" href="#configuracao-do-modelo-local" title="Permanent link">&para;</a></h3>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Instala o Ollama (https://ollama.com), sobe o servidor e baixa um modelo leve</span>
-</span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>ollama<span class="w"> </span>serve
-</span><span id="__span-2-3"><a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>ollama<span class="w"> </span>pull<span class="w"> </span>qwen2.5:1.5b
-</span><span id="__span-2-4"><a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>
-</span><span id="__span-2-5"><a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="c1"># A API lê api/.env (copie de api/.env.example)</span>
-</span><span id="__span-2-6"><a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>cp<span class="w"> </span>api/.env.example<span class="w"> </span>api/.env
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Instala o Ollama (https://ollama.com), sobe o servidor e baixa um modelo leve</span>
+</span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>ollama<span class="w"> </span>serve
+</span><span id="__span-3-3"><a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>ollama<span class="w"> </span>pull<span class="w"> </span>qwen2.5:1.5b
+</span><span id="__span-3-4"><a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>
+</span><span id="__span-3-5"><a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="c1"># A API lê api/.env (copie de api/.env.example)</span>
+</span><span id="__span-3-6"><a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>cp<span class="w"> </span>api/.env.example<span class="w"> </span>api/.env
 </span></code></pre></div>
 <table>
 <thead>
@@ -3240,35 +3376,35 @@ corrompido". No app, em <strong>Ajustes &gt; Backup</strong>, informe a senha e 
 <p>Um modelo grande rodando na CPU leva dezenas de segundos por resposta (o <code>gemma4:26b</code> levou cerca de 50 s); para o dia a dia, prefira um modelo menor. Em ambientes sem modelo, use <code>LLM_PROVIDER=mock</code>.</p>
 <h3 id="exemplos-de-requisicoes-http">Exemplos de requisições HTTP<a class="headerlink" href="#exemplos-de-requisicoes-http" title="Permanent link">&para;</a></h3>
 <h4 id="modo-grounded-fundamentado-no-rag-com-abstencao-ativa">Modo Grounded (fundamentado no RAG, com abstenção ativa):<a class="headerlink" href="#modo-grounded-fundamentado-no-rag-com-abstencao-ativa" title="Permanent link">&para;</a></h4>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>curl<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span>http://127.0.0.1:8000/v1/chat/generate<span class="w"> </span><span class="se">\</span>
-</span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">"Content-Type: application/json"</span><span class="w"> </span><span class="se">\</span>
-</span><span id="__span-3-3"><a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">'{"message": "Como funciona o rotativo do cartao de credito?", "mode": "grounded"}'</span>
-</span></code></pre></div>
-<h4 id="modo-pure-base-de-comparacao-sem-rag">Modo Pure (base de comparação, sem RAG):<a class="headerlink" href="#modo-pure-base-de-comparacao-sem-rag" title="Permanent link">&para;</a></h4>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>curl<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span>http://127.0.0.1:8000/v1/chat/generate<span class="w"> </span><span class="se">\</span>
 </span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">"Content-Type: application/json"</span><span class="w"> </span><span class="se">\</span>
-</span><span id="__span-4-3"><a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">'{"message": "Como funciona o rotativo do cartao de credito?", "mode": "pure"}'</span>
+</span><span id="__span-4-3"><a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">'{"message": "Como funciona o rotativo do cartao de credito?", "mode": "grounded"}'</span>
 </span></code></pre></div>
-<h4 id="modo-naive-base-de-comparacao-rag-ingenuo-sem-politica-de-abstencao">Modo Naive (base de comparação, RAG ingênuo sem política de abstenção):<a class="headerlink" href="#modo-naive-base-de-comparacao-rag-ingenuo-sem-politica-de-abstencao" title="Permanent link">&para;</a></h4>
+<h4 id="modo-pure-base-de-comparacao-sem-rag">Modo Pure (base de comparação, sem RAG):<a class="headerlink" href="#modo-pure-base-de-comparacao-sem-rag" title="Permanent link">&para;</a></h4>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>curl<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span>http://127.0.0.1:8000/v1/chat/generate<span class="w"> </span><span class="se">\</span>
 </span><span id="__span-5-2"><a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">"Content-Type: application/json"</span><span class="w"> </span><span class="se">\</span>
-</span><span id="__span-5-3"><a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">'{"message": "Como funciona o rotativo do cartao de credito?", "mode": "naive"}'</span>
+</span><span id="__span-5-3"><a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">'{"message": "Como funciona o rotativo do cartao de credito?", "mode": "pure"}'</span>
+</span></code></pre></div>
+<h4 id="modo-naive-base-de-comparacao-rag-ingenuo-sem-politica-de-abstencao">Modo Naive (base de comparação, RAG ingênuo sem política de abstenção):<a class="headerlink" href="#modo-naive-base-de-comparacao-rag-ingenuo-sem-politica-de-abstencao" title="Permanent link">&para;</a></h4>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>curl<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span>http://127.0.0.1:8000/v1/chat/generate<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-6-2"><a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">"Content-Type: application/json"</span><span class="w"> </span><span class="se">\</span>
+</span><span id="__span-6-3"><a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">'{"message": "Como funciona o rotativo do cartao de credito?", "mode": "naive"}'</span>
 </span></code></pre></div>
 <h4 id="sistema-multiagente-quatro-agentes-com-calculos-deterministicos-e-trilha-de-auditoria">Sistema Multiagente (quatro agentes com cálculos determinísticos e trilha de auditoria):<a class="headerlink" href="#sistema-multiagente-quatro-agentes-com-calculos-deterministicos-e-trilha-de-auditoria" title="Permanent link">&para;</a></h4>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>curl<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span>http://127.0.0.1:8000/v1/agents/ask<span class="w"> </span><span class="se">\</span>
-</span><span id="__span-6-2"><a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">"Content-Type: application/json"</span><span class="w"> </span><span class="se">\</span>
-</span><span id="__span-6-3"><a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">'{"message": "Como montar uma reserva de emergencia e quanto tempo leva com meus gastos?"}'</span>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>curl<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span>http://127.0.0.1:8000/v1/agents/ask<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-7-2"><a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">"Content-Type: application/json"</span><span class="w"> </span><span class="se">\</span>
+</span><span id="__span-7-3"><a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">'{"message": "Como montar uma reserva de emergencia e quanto tempo leva com meus gastos?"}'</span>
 </span></code></pre></div>
 <h4 id="titulo-de-uma-conversa">Título de uma conversa:<a class="headerlink" href="#titulo-de-uma-conversa" title="Permanent link">&para;</a></h4>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>curl<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span>http://127.0.0.1:8000/v1/chat/title<span class="w"> </span><span class="se">\</span>
-</span><span id="__span-7-2"><a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">"Content-Type: application/json"</span><span class="w"> </span><span class="se">\</span>
-</span><span id="__span-7-3"><a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">'{"message": "Como montar uma reserva de emergencia?"}'</span>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>curl<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span>http://127.0.0.1:8000/v1/chat/title<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-8-2"><a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">"Content-Type: application/json"</span><span class="w"> </span><span class="se">\</span>
+</span><span id="__span-8-3"><a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">'{"message": "Como montar uma reserva de emergencia?"}'</span>
 </span></code></pre></div>
 <p>Se o modelo estiver indisponível, <code>/v1/chat/generate</code> devolve <code>503</code> com uma mensagem clara e <code>/v1/chat/title</code> devolve as primeiras palavras da pergunta (<code>source = "fallback"</code>). No app, o interruptor <strong>Respostas com IA</strong> (em Ajustes) alterna entre <code>/v1/chat/generate</code> e a busca extrativa <code>/v1/chat/ask</code>.</p>
 <h3 id="benchmark-comparativo-e-graficos">Benchmark comparativo e gráficos<a class="headerlink" href="#benchmark-comparativo-e-graficos" title="Permanent link">&para;</a></h3>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>make<span class="w"> </span>comparison-validate<span class="w">                                   </span><span class="c1"># valida gabarito, prompts e fontes (sem chamar o modelo)</span>
-</span><span id="__span-8-2"><a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>make<span class="w"> </span>comparison-run<span class="w"> </span><span class="nv">RUN</span><span class="o">=</span><span class="m">2026</span>-11-20-qwen2.5-1.5b<span class="w"> </span><span class="nv">MODEL</span><span class="o">=</span>ollama/qwen2.5:1.5b<span class="w">   </span><span class="c1"># execução completa e registrada</span>
-</span><span id="__span-8-3"><a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>make<span class="w"> </span>report-charts<span class="w">                                         </span><span class="c1"># regenera os gráficos do MkDocs</span>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>make<span class="w"> </span>comparison-validate<span class="w">                                   </span><span class="c1"># valida gabarito, prompts e fontes (sem chamar o modelo)</span>
+</span><span id="__span-9-2"><a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>make<span class="w"> </span>comparison-run<span class="w"> </span><span class="nv">RUN</span><span class="o">=</span><span class="m">2026</span>-11-20-qwen2.5-1.5b<span class="w"> </span><span class="nv">MODEL</span><span class="o">=</span>ollama/qwen2.5:1.5b<span class="w">   </span><span class="c1"># execução completa e registrada</span>
+</span><span id="__span-9-3"><a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>make<span class="w"> </span>report-charts<span class="w">                                         </span><span class="c1"># regenera os gráficos do MkDocs</span>
 </span></code></pre></div>
 <p>O <code>comparison-run</code> roda as quatro abordagens (LLM pura, RAG ingênuo, Trokim estruturado e
 multiagente) nos 30 casos e os 20 cenários multiagente, e grava sozinho o <code>run.json</code> e os
@@ -3279,14 +3415,14 @@ antes (por exemplo, <code>LLM_API_KEY</code> para <code>openrouter/...</code>) e
 <hr />
 <h2 id="31-aplicativo-mobile-no-emulador">3.1. Aplicativo Mobile no Emulador<a class="headerlink" href="#31-aplicativo-mobile-no-emulador" title="Permanent link">&para;</a></h2>
 <p>Para rodar o app Android (Flutter) com o backend local:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="c1"># Terminal 1: backend (a partir da raiz do repositório)</span>
-</span><span id="__span-9-2"><a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a><span class="nv">DEBUG</span><span class="o">=</span><span class="nb">false</span><span class="w"> </span><span class="nv">ENVIRONMENT</span><span class="o">=</span>development<span class="w"> </span>make<span class="w"> </span>api-run
-</span><span id="__span-9-3"><a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>
-</span><span id="__span-9-4"><a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a><span class="c1"># Terminal 2: app (requer Flutter estável, JDK 17 e Android SDK 36)</span>
-</span><span id="__span-9-5"><a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a><span class="nb">cd</span><span class="w"> </span>mobile
-</span><span id="__span-9-6"><a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a>flutter<span class="w"> </span>pub<span class="w"> </span>get
-</span><span id="__span-9-7"><a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a>flutter<span class="w"> </span><span class="nb">test</span><span class="w">          </span><span class="c1"># 238 testes</span>
-</span><span id="__span-9-8"><a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a>flutter<span class="w"> </span>run<span class="w">           </span><span class="c1"># emulador Android; a API fica em http://10.0.2.2:8000/v1</span>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-10-1"><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="c1"># Terminal 1: backend (a partir da raiz do repositório)</span>
+</span><span id="__span-10-2"><a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a><span class="nv">DEBUG</span><span class="o">=</span><span class="nb">false</span><span class="w"> </span><span class="nv">ENVIRONMENT</span><span class="o">=</span>development<span class="w"> </span>make<span class="w"> </span>api-run
+</span><span id="__span-10-3"><a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>
+</span><span id="__span-10-4"><a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="c1"># Terminal 2: app (requer Flutter estável, JDK 17 e Android SDK 36)</span>
+</span><span id="__span-10-5"><a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a><span class="nb">cd</span><span class="w"> </span>mobile
+</span><span id="__span-10-6"><a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a>flutter<span class="w"> </span>pub<span class="w"> </span>get
+</span><span id="__span-10-7"><a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a>flutter<span class="w"> </span><span class="nb">test</span><span class="w">          </span><span class="c1"># 238 testes</span>
+</span><span id="__span-10-8"><a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a>flutter<span class="w"> </span>run<span class="w">           </span><span class="c1"># emulador Android; a API fica em http://10.0.2.2:8000/v1</span>
 </span></code></pre></div>
 <p>No app, a aba <strong>Ajustes</strong> permite escolher o tema (por padrão segue o claro/escuro do aparelho), reduzir animações, desligar a abertura animada e <strong>testar a conexão</strong> com a API. Para apontar para outro endereço, use <code>--dart-define=API_BASE_URL=http://&lt;ip&gt;:8000/v1</code>.</p>
 <h3 id="modo-multiagente-experimental">Modo multiagente experimental<a class="headerlink" href="#modo-multiagente-experimental" title="Permanent link">&para;</a></h3>
@@ -3311,32 +3447,32 @@ reserva de emergência.</em></p>
 <hr />
 <h2 id="5-testes-e-avaliacao-do-motor-rag-benchmark">5. Testes e Avaliação do Motor RAG (Benchmark)<a class="headerlink" href="#5-testes-e-avaliacao-do-motor-rag-benchmark" title="Permanent link">&para;</a></h2>
 <p>Para rodar a suíte de avaliação empírica contra o gabarito oficial de 61 consultas:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-10-1"><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="c1"># Executa a bateria completa de testes de research e benchmark</span>
-</span><span id="__span-10-2"><a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>make<span class="w"> </span><span class="nb">test</span>
-</span><span id="__span-10-3"><a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>
-</span><span id="__span-10-4"><a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="c1"># Ou execute diretamente a avaliação com métricas detalhadas:</span>
-</span><span id="__span-10-5"><a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a><span class="nb">cd</span><span class="w"> </span>research/rag_benchmark
-</span><span id="__span-10-6"><a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a>uv<span class="w"> </span>run<span class="w"> </span>python<span class="w"> </span>eval_rag.py
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-11-1"><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="c1"># Executa a bateria completa de testes de research e benchmark</span>
+</span><span id="__span-11-2"><a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>make<span class="w"> </span><span class="nb">test</span>
+</span><span id="__span-11-3"><a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>
+</span><span id="__span-11-4"><a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a><span class="c1"># Ou execute diretamente a avaliação com métricas detalhadas:</span>
+</span><span id="__span-11-5"><a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a><span class="nb">cd</span><span class="w"> </span>research/rag_benchmark
+</span><span id="__span-11-6"><a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a>uv<span class="w"> </span>run<span class="w"> </span>python<span class="w"> </span>eval_rag.py
 </span></code></pre></div>
 <p>O script reporta <strong>Recall@3</strong>, precisão de recuperação fundamentada e taxa de abstenção.</p>
 <hr />
 <h2 id="6-geracao-de-dados-sinteticos-lgpd">6. Geração de Dados Sintéticos (LGPD)<a class="headerlink" href="#6-geracao-de-dados-sinteticos-lgpd" title="Permanent link">&para;</a></h2>
 <p>Para gerar novos extratos bancários <code>.ofx</code> e faturas <code>.pdf</code> sintéticas e reproduzíveis:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-11-1"><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>make<span class="w"> </span>synthetic-data
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-12-1"><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>make<span class="w"> </span>synthetic-data
 </span></code></pre></div>
 <p>Os arquivos serão criados em <code>research/synthetic_data/</code>, garantindo 100% de privacidade sem dados financeiros reais.</p>
 <hr />
 <h2 id="7-documentacao-viva-com-zensical">7. Documentação Viva com Zensical<a class="headerlink" href="#7-documentacao-viva-com-zensical" title="Permanent link">&para;</a></h2>
 <p>Para compilar e servir localmente o site de documentação:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-12-1"><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>make<span class="w"> </span>docs-serve
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-13-1"><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>make<span class="w"> </span>docs-serve
 </span></code></pre></div>
 <p>Acesse no navegador: <code>http://127.0.0.1:8000</code> (ou porta alternativa exibida no terminal).</p>
 <hr />
 <h2 id="8-execucao-do-aplicativo-mobile-flutter">8. Execução do Aplicativo Mobile (Flutter)<a class="headerlink" href="#8-execucao-do-aplicativo-mobile-flutter" title="Permanent link">&para;</a></h2>
 <p>Com um emulador Android ou dispositivo físico conectado:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-13-1"><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a><span class="nb">cd</span><span class="w"> </span>mobile
-</span><span id="__span-13-2"><a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a>flutter<span class="w"> </span>pub<span class="w"> </span>get
-</span><span id="__span-13-3"><a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a>flutter<span class="w"> </span>run
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-14-1"><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a><span class="nb">cd</span><span class="w"> </span>mobile
+</span><span id="__span-14-2"><a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a>flutter<span class="w"> </span>pub<span class="w"> </span>get
+</span><span id="__span-14-3"><a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a>flutter<span class="w"> </span>run
 </span></code></pre></div>
 <h3 id="81-importar-extratos-e-ver-o-resumo">8.1. Importar extratos e ver o resumo<a class="headerlink" href="#81-importar-extratos-e-ver-o-resumo" title="Permanent link">&para;</a></h3>
 <p>Com a API no ar (<code>make api-run</code>), abra a aba <strong>Extratos</strong>, toque em <strong>Importar extrato</strong> e escolha
@@ -3556,9 +3692,9 @@ estão em <a href="../arquitetura/categorias/">Categorias</a>.</p>
 <p>O índice CNPJ → categoria vem no repositório, comprimido (14 MB), e é consultado só na sua
 máquina. <code>make build</code> o descomprime em <code>api/data/cnpj/</code>; a API também faz isso sozinha no
 primeiro uso. Para atualizar com o mês mais recente da Receita Federal:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-14-1"><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a>make<span class="w"> </span>cnpj-atualizar<span class="w">               </span><span class="c1"># mostra o aviso e pede para digitar SIM</span>
-</span><span id="__span-14-2"><a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a>make<span class="w"> </span>cnpj-atualizar<span class="w"> </span><span class="nv">CONFIRMAR</span><span class="o">=</span>sim<span class="w"> </span><span class="c1"># sem perguntar (CI, scripts)</span>
-</span><span id="__span-14-3"><a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a>make<span class="w"> </span>cnpj-atualizar<span class="w"> </span><span class="nv">MANTER_DOWNLOAD</span><span class="o">=</span><span class="m">1</span><span class="w"> </span><span class="nv">MES</span><span class="o">=</span><span class="m">2026</span>-11<span class="w"> </span><span class="nv">CNPJ_BASE</span><span class="o">=</span>/outro/disco
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-15-1"><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a>make<span class="w"> </span>cnpj-atualizar<span class="w">               </span><span class="c1"># mostra o aviso e pede para digitar SIM</span>
+</span><span id="__span-15-2"><a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a>make<span class="w"> </span>cnpj-atualizar<span class="w"> </span><span class="nv">CONFIRMAR</span><span class="o">=</span>sim<span class="w"> </span><span class="c1"># sem perguntar (CI, scripts)</span>
+</span><span id="__span-15-3"><a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a>make<span class="w"> </span>cnpj-atualizar<span class="w"> </span><span class="nv">MANTER_DOWNLOAD</span><span class="o">=</span><span class="m">1</span><span class="w"> </span><span class="nv">MES</span><span class="o">=</span><span class="m">2026</span>-11<span class="w"> </span><span class="nv">CNPJ_BASE</span><span class="o">=</span>/outro/disco
 </span></code></pre></div>
 <p>Antes de começar, ele mostra quanto vai baixar (cerca de 5 GB), o espaço livre no disco, o tempo
 esperado (de 1 a 3 horas de download e cerca de 40 minutos de geração), a memória (até 1,5 GB) e
