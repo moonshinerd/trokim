@@ -253,8 +253,9 @@ class _ImportFlowScreenState extends State<ImportFlowScreen> {
                   _phase = _Phase.tutorial;
                 }),
                 onSkip: _skipTutorial,
-                onBack: () =>
-                    _go(_bank == GuideBank.nubank ? _Phase.product : _Phase.bank),
+                onBack: () => _go(
+                  _bank == GuideBank.nubank ? _Phase.product : _Phase.bank,
+                ),
               ),
               _Phase.tutorial => _TutorialStep(
                 bank: _bank ?? GuideBank.nubank,
@@ -424,10 +425,7 @@ class _OptionCard extends StatelessWidget {
 }
 
 class _SupportedBankCard extends StatelessWidget {
-  const _SupportedBankCard({
-    required this.bank,
-    required this.onTap,
-  });
+  const _SupportedBankCard({required this.bank, required this.onTap});
 
   final SupportedBankInfo bank;
   final VoidCallback onTap;
@@ -620,10 +618,7 @@ class _BankStep extends StatelessWidget {
       subtitle: 'De qual banco é o arquivo?',
       children: [
         for (final bank in supportedBanks)
-          _SupportedBankCard(
-            bank: bank,
-            onTap: () => onSelectBank(bank.bank),
-          ),
+          _SupportedBankCard(bank: bank, onTap: () => onSelectBank(bank.bank)),
         _OptionCard(
           icon: Icons.folder_open_rounded,
           title: 'Outro banco',
@@ -648,8 +643,10 @@ class _BankStep extends StatelessWidget {
                   const Expanded(
                     child: Text(
                       'Banco não reconhecido?',
-                      style:
-                          TextStyle(fontWeight: FontWeight.w700, fontSize: 14),
+                      style: TextStyle(
+                        fontWeight: FontWeight.w700,
+                        fontSize: 14,
+                      ),
                     ),
                   ),
                 ],
@@ -697,8 +694,7 @@ class _ProductStep extends StatelessWidget {
   @override
   Widget build(BuildContext context) => _StepLayout(
     title: 'Qual conta do Nubank?',
-    subtitle:
-        'O arquivo não diz se é pessoal ou Empresas, então perguntamos uma vez.',
+    subtitle: 'O arquivo não diz se é pessoal ou Empresas, então perguntamos uma vez.',
     children: [
       _OptionCard(
         icon: Icons.person_rounded,
@@ -741,8 +737,7 @@ class _KindStep extends StatelessWidget {
         'A fatura do cartão e o extrato da conta saem de apps diferentes.',
       GuideBank.nubank =>
         'Cada um é baixado de um lugar diferente no app do Nubank.',
-      GuideBank.picpay =>
-        'Extrato da conta PicPay ou fatura do PicPay Card.',
+      GuideBank.picpay => 'Extrato da conta PicPay ou fatura do PicPay Card.',
       GuideBank.mercadopago =>
         'Extrato da conta Mercado Pago ou fatura do cartão.',
       GuideBank.inter =>
@@ -785,9 +780,7 @@ class _KindStep extends StatelessWidget {
             decoration: BoxDecoration(
               color: AppTheme.gold.withValues(alpha: 0.12),
               borderRadius: BorderRadius.circular(12),
-              border: Border.all(
-                color: AppTheme.gold.withValues(alpha: 0.3),
-              ),
+              border: Border.all(color: AppTheme.gold.withValues(alpha: 0.3)),
             ),
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -800,8 +793,7 @@ class _KindStep extends StatelessWidget {
                 const SizedBox(width: 8),
                 Expanded(
                   child: Text(
-                    info?.experimentalNotice ??
-                        'Suporte experimental: tutorial baseado na ajuda oficial do banco, ainda não testado em conta real.',
+                    info?.experimentalNotice ?? 'Suporte experimental: tutorial baseado na ajuda oficial do banco, ainda não testado em conta real.',
                     style: const TextStyle(fontSize: 12, height: 1.35),
                   ),
                 ),

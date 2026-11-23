@@ -21,15 +21,33 @@ void main() {
       final bankMap = {for (final b in supportedBanks) b.bank: b};
 
       // Bancos Validados
-      expect(bankMap[GuideBank.nubank]!.supportLevel, BankSupportLevel.validated);
+      expect(
+        bankMap[GuideBank.nubank]!.supportLevel,
+        BankSupportLevel.validated,
+      );
       expect(bankMap[GuideBank.bb]!.supportLevel, BankSupportLevel.validated);
-      expect(bankMap[GuideBank.picpay]!.supportLevel, BankSupportLevel.validated);
-      expect(bankMap[GuideBank.mercadopago]!.supportLevel, BankSupportLevel.validated);
+      expect(
+        bankMap[GuideBank.picpay]!.supportLevel,
+        BankSupportLevel.validated,
+      );
+      expect(
+        bankMap[GuideBank.mercadopago]!.supportLevel,
+        BankSupportLevel.validated,
+      );
 
       // Bancos Experimentais
-      expect(bankMap[GuideBank.inter]!.supportLevel, BankSupportLevel.experimental);
-      expect(bankMap[GuideBank.c6]!.supportLevel, BankSupportLevel.experimental);
-      expect(bankMap[GuideBank.itau]!.supportLevel, BankSupportLevel.experimental);
+      expect(
+        bankMap[GuideBank.inter]!.supportLevel,
+        BankSupportLevel.experimental,
+      );
+      expect(
+        bankMap[GuideBank.c6]!.supportLevel,
+        BankSupportLevel.experimental,
+      );
+      expect(
+        bankMap[GuideBank.itau]!.supportLevel,
+        BankSupportLevel.experimental,
+      );
 
       // Nenhum banco experimental possui aviso vazio
       for (final bank in supportedBanks) {
@@ -43,7 +61,10 @@ void main() {
     test('getGuideForBank gera passos navegáveis para todos os bancos', () {
       for (final info in supportedBanks) {
         final cardSteps = getGuideForBank(info.bank, NubankStatementKind.card);
-        final accSteps = getGuideForBank(info.bank, NubankStatementKind.account);
+        final accSteps = getGuideForBank(
+          info.bank,
+          NubankStatementKind.account,
+        );
 
         expect(cardSteps, isNotEmpty, reason: 'Cartão de ${info.name}');
         expect(accSteps, isNotEmpty, reason: 'Conta de ${info.name}');
@@ -57,43 +78,44 @@ void main() {
   });
 
   group('Tela de Bancos Suportados (Widget)', () {
-    testWidgets('exibe título, selos Validado e Experimental e formatos aceitos', (
-      tester,
-    ) async {
-      final h = FlowHarness();
-      await h.open(tester);
-      await h.startImport(tester);
+    testWidgets(
+      'exibe título, selos Validado e Experimental e formatos aceitos',
+      (tester) async {
+        final h = FlowHarness();
+        await h.open(tester);
+        await h.startImport(tester);
 
-      expect(find.text('Bancos suportados'), findsOneWidget);
-      expect(find.text('De qual banco é o arquivo?'), findsOneWidget);
+        expect(find.text('Bancos suportados'), findsOneWidget);
+        expect(find.text('De qual banco é o arquivo?'), findsOneWidget);
 
-      // Selos na tela
-      expect(find.text('Validado'), findsAtLeastNWidgets(2));
-      expect(find.text('Experimental'), findsAtLeastNWidgets(2));
+        // Selos na tela
+        expect(find.text('Validado'), findsAtLeastNWidgets(2));
+        expect(find.text('Experimental'), findsAtLeastNWidgets(2));
 
-      // Bancos validados visíveis
-      expect(find.text('Nubank'), findsOneWidget);
-      expect(find.text('Banco do Brasil'), findsOneWidget);
-      expect(find.text('PicPay'), findsOneWidget);
-      expect(find.text('Mercado Pago'), findsOneWidget);
+        // Bancos validados visíveis
+        expect(find.text('Nubank'), findsOneWidget);
+        expect(find.text('Banco do Brasil'), findsOneWidget);
+        expect(find.text('PicPay'), findsOneWidget);
+        expect(find.text('Mercado Pago'), findsOneWidget);
 
-      // Bancos experimentais na lista (com rolagem)
-      await tester.scrollUntilVisible(find.text('Banco Inter'), 150);
-      expect(find.text('Banco Inter'), findsOneWidget);
+        // Bancos experimentais na lista (com rolagem)
+        await tester.scrollUntilVisible(find.text('Banco Inter'), 150);
+        expect(find.text('Banco Inter'), findsOneWidget);
 
-      await tester.scrollUntilVisible(find.text('C6 Bank'), 150);
-      expect(find.text('C6 Bank'), findsOneWidget);
+        await tester.scrollUntilVisible(find.text('C6 Bank'), 150);
+        expect(find.text('C6 Bank'), findsOneWidget);
 
-      await tester.scrollUntilVisible(find.text('Itaú'), 150);
-      expect(find.text('Itaú'), findsOneWidget);
+        await tester.scrollUntilVisible(find.text('Itaú'), 150);
+        expect(find.text('Itaú'), findsOneWidget);
 
-      // Atalhos
-      await tester.scrollUntilVisible(find.text('Outro banco'), 150);
-      expect(find.text('Outro banco'), findsOneWidget);
-      expect(find.text('Banco não reconhecido?'), findsOneWidget);
-      expect(find.text('Pedir suporte a um banco'), findsOneWidget);
-      expect(find.text('Já tenho o arquivo'), findsOneWidget);
-    });
+        // Atalhos
+        await tester.scrollUntilVisible(find.text('Outro banco'), 150);
+        expect(find.text('Outro banco'), findsOneWidget);
+        expect(find.text('Banco não reconhecido?'), findsOneWidget);
+        expect(find.text('Pedir suporte a um banco'), findsOneWidget);
+        expect(find.text('Já tenho o arquivo'), findsOneWidget);
+      },
+    );
 
     testWidgets('botão "Já tenho o arquivo" pula tutoriais e abre seletor', (
       tester,
@@ -128,13 +150,14 @@ void main() {
       await h.open(
         tester,
         home: Scaffold(
-          body: ImportFlowScreen(
-            onRequestSupport: () => requested = true,
-          ),
+          body: ImportFlowScreen(onRequestSupport: () => requested = true),
         ),
       );
 
-      await tester.scrollUntilVisible(find.text('Pedir suporte a um banco'), 250);
+      await tester.scrollUntilVisible(
+        find.text('Pedir suporte a um banco'),
+        250,
+      );
       await tester.tap(find.text('Pedir suporte a um banco'));
       await tester.pumpAndSettle();
 
@@ -143,7 +166,9 @@ void main() {
   });
 
   group('Tutoriais por banco', () {
-    testWidgets('PicPay (Validado): tutorial da fatura do cartão', (tester) async {
+    testWidgets('PicPay (Validado): tutorial da fatura do cartão', (
+      tester,
+    ) async {
       final h = FlowHarness();
       await h.open(tester);
       await h.startImport(tester);
@@ -194,9 +219,8 @@ void main() {
       tester,
     ) async {
       final h = FlowHarness();
-      h.api.onUpload = (_) => jsonResponse(
-        uploadJson(institution: 'mercadopago', kind: 'conta'),
-      );
+      h.api.onUpload = (_) =>
+          jsonResponse(uploadJson(institution: 'mercadopago', kind: 'conta'));
       await h.open(tester);
       await h.startImport(tester);
 
@@ -204,7 +228,10 @@ void main() {
       await tester.pumpAndSettle();
 
       expect(find.text('O que você quer importar?'), findsOneWidget);
-      expect(find.text('Extrato da conta Mercado Pago (arquivo PDF)'), findsOneWidget);
+      expect(
+        find.text('Extrato da conta Mercado Pago (arquivo PDF)'),
+        findsOneWidget,
+      );
 
       await tester.tap(find.text('Extrato da conta'));
       await tester.pumpAndSettle();
@@ -231,7 +258,9 @@ void main() {
       // Aviso experimental na tela de escolha do tipo
       expect(find.text('O que você quer importar?'), findsOneWidget);
       expect(
-        find.textContaining('Suporte experimental: tutorial baseado na ajuda oficial'),
+        find.textContaining(
+          'Suporte experimental: tutorial baseado na ajuda oficial',
+        ),
         findsOneWidget,
       );
 
@@ -240,7 +269,9 @@ void main() {
 
       // Aviso presente no tutorial
       expect(
-        find.text('Banco experimental — ajuda oficial (não testado em conta real)'),
+        find.text(
+          'Banco experimental — ajuda oficial (não testado em conta real)',
+        ),
         findsOneWidget,
       );
       expect(find.text('Passo 1 de 4'), findsOneWidget);
@@ -267,7 +298,9 @@ void main() {
       expect(find.text('Passo 1 de 4'), findsOneWidget);
       expect(find.text('Abra a área de cartões'), findsOneWidget);
       expect(
-        find.text('Banco experimental — ajuda oficial (não testado em conta real)'),
+        find.text(
+          'Banco experimental — ajuda oficial (não testado em conta real)',
+        ),
         findsOneWidget,
       );
 
@@ -295,29 +328,29 @@ void main() {
       expect(find.textContaining('Money 2000+'), findsOneWidget);
     });
 
-    testWidgets('checkbox "Não mostrar este tutorial de novo" atualiza preferência', (
-      tester,
-    ) async {
-      final h = FlowHarness();
-      await h.open(tester);
-      await h.startImport(tester);
+    testWidgets(
+      'checkbox "Não mostrar este tutorial de novo" atualiza preferência',
+      (tester) async {
+        final h = FlowHarness();
+        await h.open(tester);
+        await h.startImport(tester);
 
-      await tester.tap(find.text('PicPay'));
-      await tester.pumpAndSettle();
-      await tester.tap(find.text('Extrato da conta'));
-      await tester.pumpAndSettle();
+        await tester.tap(find.text('PicPay'));
+        await tester.pumpAndSettle();
+        await tester.tap(find.text('Extrato da conta'));
+        await tester.pumpAndSettle();
 
-      await _advanceSteps(tester, 3);
-      expect(find.text('Não mostrar este tutorial de novo'), findsOneWidget);
+        await _advanceSteps(tester, 3);
+        expect(find.text('Não mostrar este tutorial de novo'), findsOneWidget);
 
-      // Marca o checkbox
-      await tester.tap(find.text('Não mostrar este tutorial de novo'));
-      await tester.pumpAndSettle();
+        // Marca o checkbox
+        await tester.tap(find.text('Não mostrar este tutorial de novo'));
+        await tester.pumpAndSettle();
 
-      // Salva preferência ao escolher arquivo
-      await h.tapAsync(tester, find.text('Escolher arquivo'));
-      expect(h.settings.showImportTutorial, isFalse);
-    });
+        // Salva preferência ao escolher arquivo
+        await h.tapAsync(tester, find.text('Escolher arquivo'));
+        expect(h.settings.showImportTutorial, isFalse);
+      },
+    );
   });
 }
-

@@ -4,22 +4,10 @@ import 'package:flutter/material.dart';
 enum NubankStatementKind { card, account }
 
 /// Banco que o usuário escolheu na importação guiada.
-enum GuideBank {
-  nubank,
-  bb,
-  picpay,
-  mercadopago,
-  inter,
-  c6,
-  itau,
-  other,
-}
+enum GuideBank { nubank, bb, picpay, mercadopago, inter, c6, itau, other }
 
 /// Nível de validação do suporte ao banco no Trokim.
-enum BankSupportLevel {
-  validated,
-  experimental,
-}
+enum BankSupportLevel { validated, experimental }
 
 extension BankSupportLevelX on BankSupportLevel {
   String get label => switch (this) {
@@ -83,7 +71,8 @@ const List<SupportedBankInfo> supportedBanks = [
     name: 'Mercado Pago',
     supportLevel: BankSupportLevel.validated,
     acceptedFormats: 'PDF (extrato da conta e fatura do cartão)',
-    description: 'Extrato de movimentações da conta e fatura do cartão Mercado Pago',
+    description:
+        'Extrato de movimentações da conta e fatura do cartão Mercado Pago',
     icon: Icons.storefront_rounded,
   ),
   SupportedBankInfo(
@@ -92,8 +81,7 @@ const List<SupportedBankInfo> supportedBanks = [
     supportLevel: BankSupportLevel.experimental,
     acceptedFormats: 'OFX (conta) e PDF (fatura)',
     description: 'Extrato da conta em OFX e fatura do cartão Inter em PDF',
-    experimentalNotice:
-        'Suporte experimental: passos baseados na ajuda oficial do Banco Inter, ainda não testados em conta real.',
+    experimentalNotice: 'Suporte experimental: passos baseados na ajuda oficial do Banco Inter, ainda não testados em conta real.',
     icon: Icons.account_balance_rounded,
   ),
   SupportedBankInfo(
@@ -102,8 +90,7 @@ const List<SupportedBankInfo> supportedBanks = [
     supportLevel: BankSupportLevel.experimental,
     acceptedFormats: 'OFX (conta) e PDF (fatura)',
     description: 'Extrato da conta em OFX e fatura do cartão C6 em PDF',
-    experimentalNotice:
-        'Suporte experimental: passos baseados na ajuda oficial do C6 Bank, ainda não testados em conta real.',
+    experimentalNotice: 'Suporte experimental: passos baseados na ajuda oficial do C6 Bank, ainda não testados em conta real.',
     icon: Icons.account_balance_rounded,
   ),
   SupportedBankInfo(
@@ -111,9 +98,9 @@ const List<SupportedBankInfo> supportedBanks = [
     name: 'Itaú',
     supportLevel: BankSupportLevel.experimental,
     acceptedFormats: 'OFX (conta) e PDF (fatura)',
-    description: 'Extrato da conta corrente em OFX e fatura do cartão Itaú em PDF',
-    experimentalNotice:
-        'Suporte experimental: passos baseados na ajuda oficial do Itaú, ainda não testados em conta real.',
+    description:
+        'Extrato da conta corrente em OFX e fatura do cartão Itaú em PDF',
+    experimentalNotice: 'Suporte experimental: passos baseados na ajuda oficial do Itaú, ainda não testados em conta real.',
     icon: Icons.account_balance_rounded,
   ),
 ];
@@ -380,40 +367,34 @@ List<GuideStep> picpayGuide(NubankStatementKind kind) => switch (kind) {
     GuideStep(
       icon: Icons.credit_card_rounded,
       title: 'Abra o PicPay Card',
-      description:
-          'No app do PicPay, toque na aba Carteira ou no atalho Cartões e escolha o PicPay Card.',
+      description: 'No app do PicPay, toque na aba Carteira ou no atalho Cartões e escolha o PicPay Card.',
     ),
     GuideStep(
       icon: Icons.receipt_long_rounded,
       title: 'Acesse a fatura fechada',
-      description:
-          'Toque em Faturas e escolha o mês fechado que deseja importar. Faturas fechadas garantem a conciliação completa.',
+      description: 'Toque em Faturas e escolha o mês fechado que deseja importar. Faturas fechadas garantem a conciliação completa.',
     ),
     GuideStep(
       icon: Icons.ios_share_rounded,
       title: 'Exporte em PDF',
-      description:
-          'Toque no ícone de exportar ou compartilhar fatura e selecione o arquivo em formato PDF.',
+      description: 'Toque no ícone de exportar ou compartilhar fatura e selecione o arquivo em formato PDF.',
     ),
     GuideStep(
       icon: Icons.share_rounded,
       title: 'Compartilhe com o Trokim',
-      description:
-          'Na lista de aplicativos, escolha o Trokim para importar direto, ou salve o arquivo PDF neste aparelho.',
+      description: 'Na lista de aplicativos, escolha o Trokim para importar direto, ou salve o arquivo PDF neste aparelho.',
     ),
   ],
   NubankStatementKind.account => const [
     GuideStep(
       icon: Icons.account_balance_wallet_rounded,
       title: 'Abra o extrato da conta',
-      description:
-          'Na tela inicial do PicPay, toque sobre o seu saldo ou acesse a opção Extrato.',
+      description: 'Na tela inicial do PicPay, toque sobre o seu saldo ou acesse a opção Extrato.',
     ),
     GuideStep(
       icon: Icons.ios_share_rounded,
       title: 'Exporte o extrato',
-      description:
-          'Toque no ícone de exportar ou compartilhar no topo da tela do extrato.',
+      description: 'Toque no ícone de exportar ou compartilhar no topo da tela do extrato.',
     ),
     GuideStep(
       icon: Icons.calendar_month_rounded,
@@ -424,8 +405,7 @@ List<GuideStep> picpayGuide(NubankStatementKind kind) => switch (kind) {
     GuideStep(
       icon: Icons.share_rounded,
       title: 'Envie para o Trokim',
-      description:
-          'Compartilhe o arquivo diretamente com o Trokim ou salve na pasta de downloads do aparelho.',
+      description: 'Compartilhe o arquivo diretamente com o Trokim ou salve na pasta de downloads do aparelho.',
     ),
   ],
 };
@@ -436,34 +416,29 @@ List<GuideStep> mercadopagoGuide(NubankStatementKind kind) => switch (kind) {
     GuideStep(
       icon: Icons.credit_card_rounded,
       title: 'Acesse a área de cartões',
-      description:
-          'No app do Mercado Pago, vá até a seção Cartões e selecione o Cartão de Crédito Mercado Pago.',
+      description: 'No app do Mercado Pago, vá até a seção Cartões e selecione o Cartão de Crédito Mercado Pago.',
     ),
     GuideStep(
       icon: Icons.receipt_long_rounded,
       title: 'Escolha a fatura fechada',
-      description:
-          'Toque em Faturas e selecione a fatura do mês fechado.',
+      description: 'Toque em Faturas e selecione a fatura do mês fechado.',
     ),
     GuideStep(
       icon: Icons.download_rounded,
       title: 'Baixe a fatura em PDF',
-      description:
-          'Toque em Baixar fatura ou no ícone de compartilhar e selecione o formato PDF.',
+      description: 'Toque em Baixar fatura ou no ícone de compartilhar e selecione o formato PDF.',
     ),
     GuideStep(
       icon: Icons.share_rounded,
       title: 'Compartilhe com o Trokim',
-      description:
-          'Escolha o Trokim na lista de compartilhamento ou salve o PDF no celular.',
+      description: 'Escolha o Trokim na lista de compartilhamento ou salve o PDF no celular.',
     ),
   ],
   NubankStatementKind.account => const [
     GuideStep(
       icon: Icons.account_balance_wallet_rounded,
       title: 'Acesse seu extrato',
-      description:
-          'Na tela inicial do Mercado Pago, toque em Extrato ou Ver extrato completo.',
+      description: 'Na tela inicial do Mercado Pago, toque em Extrato ou Ver extrato completo.',
     ),
     GuideStep(
       icon: Icons.download_rounded,
@@ -474,14 +449,12 @@ List<GuideStep> mercadopagoGuide(NubankStatementKind kind) => switch (kind) {
     GuideStep(
       icon: Icons.calendar_month_rounded,
       title: 'Defina o período',
-      description:
-          'Escolha o mês ou intervalo de datas fechado para exportar o relatório de movimentações em PDF.',
+      description: 'Escolha o mês ou intervalo de datas fechado para exportar o relatório de movimentações em PDF.',
     ),
     GuideStep(
       icon: Icons.share_rounded,
       title: 'Importe no Trokim',
-      description:
-          'Compartilhe o arquivo PDF com o Trokim ou salve no armazenamento deste aparelho.',
+      description: 'Compartilhe o arquivo PDF com o Trokim ou salve no armazenamento deste aparelho.',
     ),
   ],
 };
@@ -506,8 +479,7 @@ List<GuideStep> interGuide(NubankStatementKind kind) => switch (kind) {
     GuideStep(
       icon: Icons.download_rounded,
       title: 'Baixe a fatura em PDF',
-      description:
-          'Toque no botão de baixar ou compartilhar fatura e escolha o formato PDF.',
+      description: 'Toque no botão de baixar ou compartilhar fatura e escolha o formato PDF.',
     ),
     GuideStep(
       icon: Icons.share_rounded,
@@ -520,8 +492,7 @@ List<GuideStep> interGuide(NubankStatementKind kind) => switch (kind) {
     GuideStep(
       icon: Icons.account_balance_wallet_rounded,
       title: 'Abra o extrato da conta',
-      description:
-          'Na tela inicial do Inter, toque na opção Extrato.',
+      description: 'Na tela inicial do Inter, toque na opção Extrato.',
     ),
     GuideStep(
       icon: Icons.ios_share_rounded,
@@ -532,8 +503,7 @@ List<GuideStep> interGuide(NubankStatementKind kind) => switch (kind) {
     GuideStep(
       icon: Icons.calendar_month_rounded,
       title: 'Escolha período e formato OFX',
-      description:
-          'Selecione o período desejado e marque o formato OFX. O Trokim lê arquivos OFX com maior precisão.',
+      description: 'Selecione o período desejado e marque o formato OFX. O Trokim lê arquivos OFX com maior precisão.',
     ),
     GuideStep(
       icon: Icons.save_alt_rounded,
@@ -552,14 +522,12 @@ List<GuideStep> c6Guide(NubankStatementKind kind) => switch (kind) {
     GuideStep(
       icon: Icons.credit_card_rounded,
       title: 'Abra a área de cartões',
-      description:
-          'Na tela inicial do app C6 Bank, toque em Cartão.',
+      description: 'Na tela inicial do app C6 Bank, toque em Cartão.',
     ),
     GuideStep(
       icon: Icons.receipt_long_rounded,
       title: 'Acesse a fatura fechada',
-      description:
-          'Selecione o mês da fatura fechada que deseja importar.',
+      description: 'Selecione o mês da fatura fechada que deseja importar.',
     ),
     GuideStep(
       icon: Icons.download_rounded,
@@ -578,8 +546,7 @@ List<GuideStep> c6Guide(NubankStatementKind kind) => switch (kind) {
     GuideStep(
       icon: Icons.account_balance_wallet_rounded,
       title: 'Acesse o extrato',
-      description:
-          'Na tela inicial do C6 Bank, toque em Extrato.',
+      description: 'Na tela inicial do C6 Bank, toque em Extrato.',
     ),
     GuideStep(
       icon: Icons.ios_share_rounded,
@@ -590,14 +557,12 @@ List<GuideStep> c6Guide(NubankStatementKind kind) => switch (kind) {
     GuideStep(
       icon: Icons.description_rounded,
       title: 'Selecione o formato OFX',
-      description:
-          'Escolha o período desejado e selecione o formato OFX.',
+      description: 'Escolha o período desejado e selecione o formato OFX.',
     ),
     GuideStep(
       icon: Icons.save_alt_rounded,
       title: 'Salve o arquivo OFX',
-      description:
-          'Salve o arquivo OFX neste aparelho e avance para escolher o arquivo.',
+      description: 'Salve o arquivo OFX neste aparelho e avance para escolher o arquivo.',
     ),
   ],
 };
@@ -616,8 +581,7 @@ List<GuideStep> itauGuide(NubankStatementKind kind) => switch (kind) {
     GuideStep(
       icon: Icons.receipt_long_rounded,
       title: 'Escolha a fatura fechada',
-      description:
-          'Selecione o mês da fatura já fechada que quer analisar.',
+      description: 'Selecione o mês da fatura já fechada que quer analisar.',
     ),
     GuideStep(
       icon: Icons.ios_share_rounded,
@@ -628,34 +592,29 @@ List<GuideStep> itauGuide(NubankStatementKind kind) => switch (kind) {
     GuideStep(
       icon: Icons.share_rounded,
       title: 'Importe no Trokim',
-      description:
-          'Compartilhe o PDF com o Trokim ou salve no armazenamento do aparelho.',
+      description: 'Compartilhe o PDF com o Trokim ou salve no armazenamento do aparelho.',
     ),
   ],
   NubankStatementKind.account => const [
     GuideStep(
       icon: Icons.account_balance_wallet_rounded,
       title: 'Abra o extrato da conta',
-      description:
-          'Na tela inicial do app Itaú, toque em Extrato.',
+      description: 'Na tela inicial do app Itaú, toque em Extrato.',
     ),
     GuideStep(
       icon: Icons.download_rounded,
       title: 'Selecione exportar extrato',
-      description:
-          'Toque no botão de exportar ou salvar extrato.',
+      description: 'Toque no botão de exportar ou salvar extrato.',
     ),
     GuideStep(
       icon: Icons.description_rounded,
       title: 'Escolha o formato OFX',
-      description:
-          'Defina o período e selecione o formato OFX (Money 2000+).',
+      description: 'Defina o período e selecione o formato OFX (Money 2000+).',
     ),
     GuideStep(
       icon: Icons.save_alt_rounded,
       title: 'Salve o arquivo OFX',
-      description:
-          'Baixe o arquivo OFX no aparelho para selecionar no Trokim.',
+      description: 'Baixe o arquivo OFX no aparelho para selecionar no Trokim.',
     ),
   ],
 };
