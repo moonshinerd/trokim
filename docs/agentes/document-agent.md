@@ -8,8 +8,8 @@ Rastreabilidade: RF27, RF28; GQ02, GQ05; [ADR 0016](../adr/0016-arquitetura-mult
     O agente usa `OcrProvider`, `OcrResult`, `VisionProvider` e `VisionResult` da #87,
     já integrada à `main`. A fábrica seleciona OCR local e visão por configuração.
     O dataset da #90 já verifica os limites visuais em famílias separadas. O ensaio
-    com OCR real tem runner próprio e execução configurada no CI; seus resultados devem ser
-    registrados antes de concluir a #88. A validação financeira e a
+    com OCR real foi executado e registrado no histórico, incluindo erros de transcrição.
+    A repetição está configurada no CI. A validação financeira e a
     confirmação HTTP pertencem às #89 e #96. O recurso ainda não está disponível no app.
 
 ## Entrada, saída e responsabilidades
@@ -56,7 +56,7 @@ chamar um provedor remoto injetado diretamente.
 
 Os três layouts rotulados são exercitados pelo [dataset sintético da #90](../pesquisa/gabarito-multimodal.md),
 sem certificar cobertura de documentos de bancos reais. Títulos e rótulos toleram ausência de
-acentos, variação de caixa e espaços; isso não corrige valores ou nomes lidos pelo OCR. Datas rotuladas usam `DD/MM/AAAA`;
+acentos, variação de caixa e espaços, inclusive título com palavras unidas pelo OCR; isso não corrige valores ou nomes lidos pelo OCR. Datas rotuladas usam `DD/MM/AAAA`;
 valores, o formato brasileiro com vírgula decimal. Campos duplicados e conflitantes não são
 escolhidos por palpite. A mesma coleção detecta conflitos no perfil BB, nos layouts
 rotulados e entre páginas ou motores; um campo removido por conflito não é reinserido
@@ -166,7 +166,7 @@ As imagens aleatórias dos testes exercitam as métricas e não representam um b
 
 Antes de considerar a #88 concluída:
 
-- Verificar o ensaio real e registrar os resultados do runner da #90.
+- Conferir o CI da PR complementar. O ensaio real e suas limitações já estão registrados.
 - Manter a política compartilhada: Pix exige data/valor/favorecido; boleto exige
   favorecido/valor/vencimento; fatura exige banco/vencimento/total e ao menos uma linha completa.
   OCR abaixo de 0,80 é descartado com aviso; visão fica limitada a 0,50 e exige revisão.

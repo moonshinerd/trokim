@@ -525,9 +525,46 @@ marcados como **não medidos** (`null`) nesta execução. Os testes de regressã
 separadamente a abstenção vazia nos sete ilegíveis antes de chamar o OCR.
 
 O runner `calibrate_documents.py --ocr` e o job `research` do CI executam o motor real e guardam
-leituras brutas sintéticas e trilhas para auditoria. O ensaio real precisa ser conferido e registrado
-antes de considerar a #88 concluída. A comparação dos três motores, a meta de acerto de 90% e os
+leituras brutas sintéticas e trilhas para auditoria. O primeiro ensaio real e sua repetição estão registrados na seção 10.1. A comparação dos três motores, a meta de acerto de 90% e os
 cenários de chat da #98 continuam pendentes. Para gerar novamente os gráficos: `make report-charts`.
 
 A execução preliminar `2026-11-23-quality-v1` permanece preservada com árvore alterada
 e os mesmos totais visuais; a v2 registra a repetição sobre código commitado e árvore limpa.
+
+
+### 10.1. OCR real e revisão da extração
+
+A execução `2026-11-23-rapidocr-v1` foi realizada em `/Users/aluno1/trokim`, sobre
+`a68c55a` com alterações locais. `2026-11-23-rapidocr-v2` repete o ensaio com código de
+produção do commit `9aa637d`, com testes de regressão ainda alterados na árvore. Ambas
+preservam metadados, leituras brutas e documentos em `research/rag_benchmark/results/documents/`.
+Nenhum resultado anterior foi sobrescrito. O gabarito, imagens e limites permaneceram iguais.
+
+| Métrica | v1 calibração | v1 verificação | v2 calibração | v2 verificação |
+|---|---:|---:|---:|---:|
+| Campos exatos / recuperáveis | 48/57 | 42/57 | 49/57 | 45/57 |
+| Linhas exatas / recuperáveis | 9/21 | 4/9 | 9/21 | 4/9 |
+| Abstenções vazias / ilegíveis | 3/3 | 4/4 | 3/3 | 4/4 |
+| Campos não recuperáveis retornados | 0 | 0 | 0 | 0 |
+| Falhas técnicas | 0 | 0 | 0 | 0 |
+
+Na v2, todas as 114 chaves recuperáveis foram devolvidas: há **20 valores textuais diferentes**
+por espaços ou acentos, sem corrigir nomes por palpite. Os campos financeiros e datas acertaram
+os **61/61** valores esperados. As **30/30** linhas correspondem em data, valor e parcela;
+**17 descrições** diferem do original, e só **13/30** linhas são exatas. Esses componentes
+financeiros são diagnósticos separados: não substituem o acerto exato de **94/114 (82,46%)**
+nem demonstram que os documentos completos estão corretos.
+
+O título `Faturadecartao` ou `ComprovantePix` antes fazia o parser rejeitar o layout.
+A correção remove espaços apenas no reconhecimento de títulos conhecidos. Não altera números,
+nomes, descrições nem a política de confiança. O avaliador agora distingue omissão,
+transcrição e divergência financeira, usando `Decimal` e correspondência multiconjunto para
+impedir que a mesma linha esperada valide duas linhas devolvidas.
+
+![Acerto exato e componente financeiro do OCR após revisão](../assets/documentos/2026-11-23-rapidocr-v2/extracao.svg)
+
+A verificação foi inspecionada durante esta revisão; a v2 é uma regressão de desenvolvimento,
+**não um novo teste cego**. O aumento de recuperação não comprova generalização. Revisão humana
+continua obrigatória. Não se afirma a meta global de 90%, e a comparação entre motores/chat
+permanece na #98. O ensaio resolve a pendência de executar OCR real da #88, com limitações
+registradas; integração HTTP/app e validação financeira continuam nas #96/#89.

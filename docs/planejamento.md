@@ -348,5 +348,5 @@ limite de 10 páginas, extração parcial e abstenção sem preenchimento por pa
 O código tem contexto próprio e trilha sanitizada; não expõe endpoint nem persiste lançamento.
 As portas e fábricas da #87 já estão integradas. A #90 acrescenta 40 documentos, manifesto,
 gabarito de recuperabilidade, calibração/verificação por família e runner de OCR real no CI.
-Os limites visuais foram mantidos após o ensaio sintético. A conclusão da #88 exige registrar
-o ensaio de extração e integrar a PR #108; a #89 aplica a validação financeira. Consulte o [escopo e as pendências](agentes/document-agent.md).
+Os limites visuais foram mantidos após o ensaio sintético. O ensaio de extração já foi registrado, com
+limitações de transcrição; o fechamento exige conferir CI e integrar a PR #108; a #89 aplica a validação financeira. Consulte o [escopo e as pendências](agentes/document-agent.md).

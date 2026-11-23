@@ -530,3 +530,14 @@ async def test_vision_rejects_ambiguous_or_invalid_amount(value):
     )
     assert "amount" not in {f.key for f in ctx.result.fields}
     assert any(i.code == "INVALID_VISION_OUTPUT" for i in ctx.result.issues)
+
+
+async def test_ocr_titulo_sem_espacos_nao_reconstroi_nome():
+    text = PIX.replace("Comprovante Pix", "ComprovantePix").replace(
+        "Pessoa Sintética", "PessoaSintetica"
+    )
+    ctx, _, _ = await extract(text=text)
+    assert ctx.result.kind.value == "pix_receipt"
+    assert {f.key: f.value for f in ctx.result.fields}["counterparty"] == "PessoaSintetica"
+    ctx, _, _ = await extract(text=text.replace("ComprovantePix", "ComprovantePixDesconhecido"))
+    assert ctx.result.abstained

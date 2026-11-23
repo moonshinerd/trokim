@@ -100,8 +100,9 @@ chegam ao agente: o gabarito é usado depois, no avaliador. O runner não possui
 A retenção de leituras brutas é restrita a este corpus fictício e não muda a política de privacidade
 do agente no aplicativo.
 
-As métricas incluem matriz de aceitação, acerto exato por campo recuperável, linhas corretamente
-lidas, campos não recuperáveis retornados, linhas sem correspondência, abstenção segura e falhas
+As métricas incluem matriz de aceitação, acerto exato por campo recuperável, linhas exatas, correspondência de data/valor/parcela em
+Decimal e contagem multiconjunto (sem reutilizar linhas), campos ausentes, incorretos ou
+não recuperáveis retornados, divergências financeiras e de transcrição, abstenção segura e falhas
 técnicas. O runner falha se houver falha técnica ou ilegível sem abstenção vazia. A confiança 0,80
 permanece política conservadora, não probabilidade calibrada. Os resultados registrados estão no
 [histórico](resultados.md#10-semana-5-calibracao-sintetica-do-porteiro).
@@ -118,3 +119,9 @@ conter texto, e as métricas não comprovam corte ou reflexo. A exigência de to
 baixa nitidez restringe a abrangência desses exemplos. Não há certificação de OCR em produção.
 A comparação de três motores, a meta de 90% e os cenários de chat pertencem à #98, usando estes
 insumos congelados. O [gabarito multiagente](gabarito-multiagente.md) continua independente.
+
+Na revisão, o avaliador foi separado do runner em `document_evaluation.py`: funções puras
+conferem cobertura e IDs únicos antes de contar resultados. Títulos OCR sem espaços são
+reconhecidos pelo marcador conhecido; valores, favorecidos e descrições não são corrigidos
+por heurística. Os casos da verificação já foram inspecionados nesta revisão: as novas
+execuções são regressões de desenvolvimento, não uma estimativa de generalização em teste cego.

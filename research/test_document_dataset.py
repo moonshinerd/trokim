@@ -166,3 +166,31 @@ def test_avaliador_penaliza_omissao_campo_oculto_e_lancamento_errado():
     assert result["recoverable_fields"] == len(case["recoverable_fields"])
     assert result["unexpected_fields"] == 1
     assert result["correct_transactions"] == 0 and result["unmatched_transactions"] == 1
+
+
+def test_avaliador_separa_transcricao_de_erro_financeiro_sem_reutilizar_linha():
+    from rag_benchmark.document_evaluation import matched_rows
+
+    expected = [
+        {
+            "date": "2026-10-01",
+            "amount": "1234.50",
+            "description": "Papelaria Fictícia",
+            "installment": None,
+        }
+    ]
+    actual = [{**expected[0], "amount": 1234.5, "description": "PapelariaFicticia"}]
+    assert matched_rows(expected, actual) == 0
+    assert matched_rows(expected, actual, numeric_only=True) == 1
+    assert matched_rows(expected, actual * 2, numeric_only=True) == 1
+    actual[0]["amount"] = 12345.0
+    assert matched_rows(expected, actual, numeric_only=True) == 0
+
+
+def test_avaliador_rejeita_leituras_duplicadas_ou_incompletas():
+    case = CASES[0]
+    row = {"id": case["id"], "gate_rejected": False}
+    with pytest.raises(ValueError, match="duplicados"):
+        summarize([case], [row, row])
+    with pytest.raises(ValueError, match="exatamente"):
+        summarize([case], [])
