@@ -1,12 +1,17 @@
 """Contrato de documentos do épico #86, compartilhado com #87 e #89."""
 
 from datetime import date
+from decimal import Decimal
 from enum import StrEnum
-from typing import Literal
+from typing import Annotated, Literal
 
-from pydantic import BaseModel, ConfigDict, Field
+from pydantic import BaseModel, ConfigDict, Field, StringConstraints
 
-from app.domain.agents import ValidationIssue
+from app.domain.agents import AgentStep, ValidationIssue
+from app.domain.models import TransactionCategory, TransactionType
+
+# Transaction.source_kind dos lançamentos criados a partir de um documento confirmado.
+DOCUMENT_SOURCE = "documento"
 
 
 class DocumentKind(StrEnum):
@@ -65,3 +70,37 @@ class ExtractedDocument(BaseModel):
     abstained: bool
     reason: str | None
     engine: str
+
+
+class DocumentExtractResponse(BaseModel):
+    """Resposta de ``POST /v1/documents/extract``: o lido, a validação e a trilha dos passos."""
+
+    document: ExtractedDocument
+    validation_issues: list[ValidationIssue] = Field(default_factory=list)
+    # Só vale confirmar se o documento não se absteve e nenhum aviso é bloqueio.
+    can_confirm: bool
+    steps: list[AgentStep] = Field(default_factory=list)
+    total_ms: int = 0
+
+
+class DocumentConfirmRequest(BaseModel):
+    """Campos **revisados pelo usuário**; o app manda o que está na tela, não o que o OCR leu."""
+
+    model_config = ConfigDict(extra="forbid")
+    kind: DocumentKind = DocumentKind.OTHER
+    date: date
+    amount: Annotated[Decimal, Field(gt=0, max_digits=12, decimal_places=2)]
+    description: Annotated[
+        str, StringConstraints(strip_whitespace=True, min_length=1, max_length=120)
+    ]
+    type: TransactionType = TransactionType.DEBIT
+    bank: str | None = Field(default=None, max_length=60)
+    category: TransactionCategory | None = None
+
+
+class DocumentConfirmResponse(BaseModel):
+    outcome: Literal["criado", "repetido"]
+    uid: str
+    account_id: str
+    category: TransactionCategory
+    message: str

@@ -10,6 +10,7 @@ from app.routers.v1.backup import router as backup_router
 from app.routers.v1.banks import router as banks_router
 from app.routers.v1.budgets import router as budgets_router
 from app.routers.v1.chat import router as chat_router
+from app.routers.v1.documents import router as documents_router
 from app.routers.v1.health import router as health_router
 from app.routers.v1.library import router as library_router
 from app.routers.v1.library_snapshot import router as library_snapshot_router
@@ -99,6 +100,7 @@ app.include_router(budgets_router, prefix="/v1")
 app.include_router(agents_router, prefix="/v1")
 app.include_router(backup_router, prefix="/v1")
 app.include_router(banks_router, prefix="/v1")
+app.include_router(documents_router, prefix="/v1")
 
 
 @app.get("/")

@@ -10,6 +10,7 @@ from app.domain.agents import (
     CalculationResult,
     StepStatus,
 )
+from app.domain.documents import DOCUMENT_SOURCE
 from app.services.calculation_service import CalculationService
 
 
@@ -150,6 +151,16 @@ class AnalysisAgent:
                 ctx.assumptions.append(
                     "Cálculos baseados em lançamentos importados, sem duplicatas."
                 )
+                from_documents = sum(
+                    1
+                    for t in ctx.transactions
+                    if t.source_kind == DOCUMENT_SOURCE and not t.is_duplicate
+                )
+                if from_documents:
+                    ctx.assumptions.append(
+                        f"{from_documents} lançamento(s) vieram de documentos que você enviou "
+                        "por foto ou PDF e confirmou depois de revisar."
+                    )
 
                 if has_summary_intent:
                     intents.append("resumo")

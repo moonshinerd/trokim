@@ -14,6 +14,8 @@ from app.domain.agents import (
 )
 from app.domain.models import Transaction
 from app.services.agents.base import Agent
+from app.services.agents.document_pipeline import DocumentPipeline
+from app.services.library_service import Library
 
 ABSTENTION_MESSAGE = (
     "O Trokim não possui evidências suficientes nas diretrizes oficiais "
@@ -89,12 +91,20 @@ class Orchestrator:
         communication: Agent,
         validation: Agent,
         max_revisions: int = 1,
+        document: DocumentPipeline | None = None,
     ) -> None:
         self.research = research
         self.analysis = analysis
         self.communication = communication
         self.validation = validation
         self.max_revisions = max_revisions
+        self.document = document
+
+    async def run_document(self, content: bytes, media_type: str, library: Library | None = None):
+        """Passo de documento do fluxo: leitura (#88) e validação (#89) com a trilha dos passos."""
+        if self.document is None:
+            raise RuntimeError("Orquestrador sem agente de documento configurado.")
+        return await self.document.run(content, media_type, library)
 
     async def _safe_run(self, agent: Agent, ctx: AgentContext) -> AgentStep:
         t0 = time.perf_counter()
