@@ -349,4 +349,4 @@ O código tem contexto próprio e trilha sanitizada; não expõe endpoint nem pe
 As portas e fábricas da #87 já estão integradas. A #90 acrescenta 40 documentos, manifesto,
 gabarito de recuperabilidade, calibração/verificação por família e runner de OCR real no CI.
 Os limites visuais foram mantidos após o ensaio sintético. O ensaio de extração já foi registrado, com
-limitações de transcrição; o fechamento exige conferir CI e integrar a PR #108; a #89 aplica a validação financeira. Consulte o [escopo e as pendências](agentes/document-agent.md).
+limitações de transcrição; o fechamento exige conferir o CI e o ensaio com OCR real; a #89 aplica a validação financeira. Consulte o [escopo e as pendências](agentes/document-agent.md).

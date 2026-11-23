@@ -171,7 +171,7 @@ Antes de considerar a #88 concluída:
   favorecido/valor/vencimento; fatura exige banco/vencimento/total e ao menos uma linha completa.
   OCR abaixo de 0,80 é descartado com aviso; visão fica limitada a 0,50 e exige revisão.
   A #89 continua responsável por bloqueios financeiros, somas e conciliação.
-- Conferir CI verde e a integração da PR #108 à main antes do fechamento por PR complementar.
+- Conferir o CI verde e repetir o ensaio com OCR real antes de fechar a #88.
 
 A meta de acerto de 90% pertence ao benchmark da #98; nenhum resultado novo de acurácia é
 alegado por esta implementação parcial.
@@ -192,6 +192,6 @@ e `documents`; `uv lock --check --offline` valida o conjunto sem alterar depend�
 
 Verificação local: 498 testes de API e 161 de pesquisa passaram. Dois testes de OCR real
 da #87 e um teste opcional de pesquisa foram pulados por dependências/recursos ausentes.
-Essa é a validação histórica da PR #108. A #90 acrescenta corpus, testes de reprodução,
+Essa é a validação histórica da primeira versão do agente (PR #108). A #90 acrescenta corpus, testes de reprodução,
 calibração separada por família e runner com OCR real; o histórico de resultados distingue
 a medição visual de uma execução de extração.

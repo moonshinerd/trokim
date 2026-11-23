@@ -1,7 +1,7 @@
 """Reconstrói linhas e confianças usando o contrato de OCR da ADR 0021."""
 
 from app.models.vision_provider import OcrResult, OcrWord
-from app.services.document_fields import LABELS, normalized_label, transaction_parts
+from app.services.document_fields import LABELS
 from app.services.document_reading import DocumentReadError
 
 
@@ -42,7 +42,7 @@ def ocr_text_and_confidence(reading: OcrResult) -> tuple[str, dict[str, float]]:
     lines = ocr_lines(reading)
     confidences: dict[str, float] = {}
     for text, confidence in lines:
-        label = normalized_label(text.split(":", 1)[0])
+        label = text.split(":", 1)[0].strip().casefold()
         key = LABELS.get(label)
         if key:
             confidences[key] = min(confidences.get(key, 1.0), confidence)
@@ -57,9 +57,8 @@ def ocr_row_confidences(reading: OcrResult, count: int) -> list[float]:
         confidence
         for text, confidence in ocr_lines(reading)
         if (
-            normalized_label(text.split(":", 1)[0]) == "lancamento"
-            and ":" in text
-            and len(transaction_parts(text.split(":", 1)[1])) == 3
+            text.strip().casefold().startswith("lançamento:")
+            and len(text.split(":", 1)[1].split("|")) == 3
         )
         or re.match(r"^\d{2}/\d{2}\s+.+\s+[A-Z]{2}\s+.*R\$\s*-?[\d.,]+\s*$", text)
     ]
