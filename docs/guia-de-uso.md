@@ -37,6 +37,25 @@ A API estará disponível em:
 - **Consulta RAG Extrativa:** `POST http://127.0.0.1:8000/v1/chat/ask`
 - **Síntese Generativa Contextualizada:** `POST http://127.0.0.1:8000/v1/chat/generate`
 
+### Referência rápida da API
+
+Todos os caminhos começam em `/v1`. O contrato completo e interativo fica no Swagger (`/docs`).
+
+| Grupo | Endpoint | Para quê |
+|---|---|---|
+| Saúde | `GET /health` | Confere se a API está no ar |
+| Chat | `POST /chat/ask`, `POST /chat/generate`, `POST /chat/title` | Busca extrativa, síntese fundamentada e título da conversa |
+| Multiagente | `POST /agents/ask` | Pergunta pelo sistema de quatro agentes, com a trilha |
+| Lançamentos | `POST /transactions/inspect`, `POST /transactions/upload` | Inspeciona (sem gravar) e importa OFX ou PDF |
+| Lançamentos | `GET /transactions`, `GET /transactions/summary` | Lista e resumo (filtros `owner` e `view`) |
+| Categorias | `PATCH /transactions/{uid}/category`, `GET /transactions/category-rules`, `DELETE /transactions/category-rules/{merchant}` | Corrige categoria e gerencia as regras por estabelecimento |
+| Lançamentos | `DELETE /transactions/clear` | Apaga os dados importados |
+| Biblioteca | `GET /accounts`, `PATCH /accounts/{id}` | Contas e dono (pessoal ou empresa) |
+| Biblioteca | `GET /statements`, `PATCH /statements/{id}` | Arquivos importados e situação do período |
+| Biblioteca | `GET /installments` | Parcelamentos agrupados |
+| Biblioteca | `GET /transfers`, `GET /transfers/suggestions`, `POST /transfers/{confirm,reject,unmark,undo}` | Transferências entre contas próprias |
+| Cenários | `POST /budgets/compare` | Compara dois cenários de orçamento |
+
 ---
 
 ## 3. Síntese Generativa Local (LiteLLM e Ollama)
