@@ -347,7 +347,7 @@ O fluxo é flexível e respeita o tempo do usuário:
 |---|:---:|:---:|---|---|
 | **Nubank** | <span class="badge-must">Validado</span> | OFX | Cartão de crédito e conta (pessoa física ou Empresas) | Fatura aberta não tem PDF; OFX vem por e-mail ou app. |
 | **Banco do Brasil** | <span class="badge-must">Validado</span> | PDF (cartão) e OFX (conta) | Fatura Ourocard (PDF) e extrato da conta corrente (OFX) | Fatura sai pelo app Ourocard em PDF; extrato da conta sai pelo app BB em OFX (Money 2000+). |
-| **PicPay** | <span class="badge-should">Experimental</span> | PDF | Extrato da conta (fatura do PicPay Card ainda não) | Layout genérico `DD/MM/AAAA descrição R$ valor`; sem arquivo real para conciliar. |
+| **PicPay** | <span class="badge-should">Experimental</span> | PDF | Fatura do PicPay Card e extrato da conta | Fatura lida pelo layout de parsers públicos (`Picpay Card final`, `PARC NN/NN`, vencimento `DD-MM-AAAA`); sem arquivo real para conciliar. |
 | **Mercado Pago** | <span class="badge-should">Experimental</span> | PDF | Extrato de movimentações (fatura do cartão ainda não) | Layout publicado (Data, Descrição, ID, Valor, Saldo); fecha com o saldo final do arquivo. |
 | **Banco Inter** | <span class="badge-should">Experimental</span> | OFX (conta) e PDF (fatura) | Fatura do cartão (PDF) e extrato da conta (OFX) | Baseado na ajuda oficial do banco; ainda não testado em conta real. |
 | **C6 Bank** | <span class="badge-should">Experimental</span> | OFX (conta) e PDF (fatura) | Fatura do cartão (PDF) e extrato da conta (OFX) | Baseado na ajuda oficial do banco; ainda não testado em conta real. |
@@ -552,3 +552,6 @@ adiciona a imagem à biblioteca; fotos capturadas podem permanecer no cache temp
 sistema. A integração ao endpoint e a criação dos lançamentos pertencem à issue #97.
 
 ![Captura do emulador Android com a revisão de um comprovante sintético, campos editáveis e confiança baixa](assets/app/revisao-documento-sintetico.png)
+
+!!! note "C6 Bank: a fatura sai em CSV"
+    Parsers públicos mostram que a fatura do C6 é exportada em CSV (separador `;`, colunas Data, Nome Cartão, Final Cartão, Categoria, Descrição, Parcela, Valor). O Trokim ainda aceita só OFX e PDF; o CSV do C6 fica para uma próxima issue.

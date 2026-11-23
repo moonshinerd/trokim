@@ -119,7 +119,7 @@ def _seed() -> None:
             ofx_codes=("380",),
             ofx_names=("picpay",),
             pdf_keywords=("picpay",),
-            note="Fatura do PicPay Card e extrato, a partir de parsers públicos; falta arquivo real.",
+            note="Fatura e extrato lidos por layout público; falta arquivo real.",
         )
     )
     register_bank(
