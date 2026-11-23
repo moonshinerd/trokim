@@ -1,6 +1,7 @@
 """Extração conservadora e fusão comum de campos dos layouts suportados."""
 
 import re
+import unicodedata
 from dataclasses import dataclass, field
 from datetime import datetime
 from decimal import Decimal
@@ -27,6 +28,27 @@ LABELS = {
 }
 TEXT_CONFIDENCE = 0.95
 VISION_REVIEW_CONFIDENCE = 0.5
+
+
+def normalized_label(text: str) -> str:
+    """Ignora acentos/caixa só em marcadores estruturais; não corrige valores lidos."""
+    return " ".join(
+        "".join(
+            char for char in unicodedata.normalize("NFKD", text) if not unicodedata.combining(char)
+        )
+        .casefold()
+        .split()
+    )
+
+
+def transaction_parts(raw: str) -> list[str]:
+    if "|" in raw:
+        return [part.strip() for part in raw.split("|")]
+    # O OCR pode omitir separadores verticais; data e moeda continuam inequívocas.
+    match = re.fullmatch(
+        r"\s*(\d{2}/\d{2}/\d{4})\s+(.+?)\s+(?:R\$\s*)?(-?(?:\d{1,3}(?:\.\d{3})+|\d+),\d{2})\s*", raw
+    )
+    return list(match.groups()) if match else []
 
 
 @dataclass
@@ -108,11 +130,11 @@ def parse_fields(
     confidence: float,
 ) -> tuple[DocumentKind, list[ExtractedField], list[ExtractedTransaction]]:
     lines = text.strip().splitlines()
-    title = lines[0].strip().casefold() if lines else ""
+    title = normalized_label(lines[0]).replace(" ", "") if lines else ""
     kinds = {
-        "comprovante pix": DocumentKind.PIX_RECEIPT,
+        "comprovantepix": DocumentKind.PIX_RECEIPT,
         "boleto": DocumentKind.BOLETO,
-        "fatura de cartão": DocumentKind.CARD_INVOICE,
+        "faturadecartao": DocumentKind.CARD_INVOICE,
     }
     kind = kinds.get(title, DocumentKind.OTHER)
     fields: list[ExtractedField] = []
@@ -123,7 +145,7 @@ def parse_fields(
         if ":" not in line:
             continue
         label, raw = line.split(":", 1)
-        key = LABELS.get(label.strip().casefold())
+        key = LABELS.get(normalized_label(label))
         if key:
             value = normalized_value(key, raw.strip())
             if value is not None:
@@ -135,8 +157,8 @@ def parse_fields(
                         source=source,
                     )
                 )
-        elif label.strip().casefold() == "lançamento" and kind == DocumentKind.CARD_INVOICE:
-            parts = [part.strip() for part in raw.split("|")]
+        elif normalized_label(label) == "lancamento" and kind == DocumentKind.CARD_INVOICE:
+            parts = transaction_parts(raw)
             if len(parts) == 3:
                 try:
                     day = datetime.strptime(parts[0], "%d/%m/%Y").date()

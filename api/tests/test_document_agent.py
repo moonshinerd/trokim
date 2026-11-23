@@ -102,6 +102,26 @@ async def test_unknown_layout():
     assert "UNSUPPORTED_LAYOUT" in [i.code for i in ctx.result.issues]
 
 
+async def test_ocr_sem_acentos_preserva_confianca_da_linha():
+    text = (
+        "Fatura de cartao\nBanco: Banco Exemplo\nVencimento: 30/11/2026\nTotal: 12,50\n"
+        "Lancamento: 23/11/2026 Papelaria Exemplo 12,50"
+    )
+    ctx, _, _ = await extract(text=text)
+    assert ctx.result.kind.value == "card_invoice"
+    assert len(ctx.result.transactions) == 1
+    assert ctx.result.transactions[0].amount == 12.5
+    assert ctx.result.transactions[0].confidence == 0.98
+    ctx, _, _ = await extract(text=text, confidence=0.3)
+    assert ctx.result.transactions == []
+
+
+async def test_ocr_nao_corrige_numero_ambiguo_ao_normalizar_rotulo():
+    ctx, _, _ = await extract(text=PIX.replace("12,50", "I2,50"))
+    assert "amount" not in {f.key for f in ctx.result.fields}
+    assert ctx.result.quality.quality == DocumentQuality.PARTIAL
+
+
 async def test_text_pdf_bypasses_ocr_and_vision():
     ocr, vision = AsyncMock(), AsyncMock()
     vision.is_remote = False
@@ -510,3 +530,14 @@ async def test_vision_rejects_ambiguous_or_invalid_amount(value):
     )
     assert "amount" not in {f.key for f in ctx.result.fields}
     assert any(i.code == "INVALID_VISION_OUTPUT" for i in ctx.result.issues)
+
+
+async def test_ocr_titulo_sem_espacos_nao_reconstroi_nome():
+    text = PIX.replace("Comprovante Pix", "ComprovantePix").replace(
+        "Pessoa Sintética", "PessoaSintetica"
+    )
+    ctx, _, _ = await extract(text=text)
+    assert ctx.result.kind.value == "pix_receipt"
+    assert {f.key: f.value for f in ctx.result.fields}["counterparty"] == "PessoaSintetica"
+    ctx, _, _ = await extract(text=text.replace("ComprovantePix", "ComprovantePixDesconhecido"))
+    assert ctx.result.abstained

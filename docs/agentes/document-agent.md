@@ -7,8 +7,9 @@ Rastreabilidade: RF27, RF28; GQ02, GQ05; [ADR 0016](../adr/0016-arquitetura-mult
 !!! warning "Componente integrado às portas, sem endpoint HTTP"
     O agente usa `OcrProvider`, `OcrResult`, `VisionProvider` e `VisionResult` da #87,
     já integrada à `main`. A fábrica seleciona OCR local e visão por configuração.
-    A calibração dos layouts e dos limiares ainda depende do dataset da #90; o ensaio
-    com o motor OCR real não foi executado neste ambiente. A validação financeira e a
+    O dataset da #90 já verifica os limites visuais em famílias separadas. O ensaio
+    com OCR real foi executado e registrado no histórico, incluindo erros de transcrição.
+    A repetição está configurada no CI. A validação financeira e a
     confirmação HTTP pertencem às #89 e #96. O recurso ainda não está disponível no app.
 
 ## Entrada, saída e responsabilidades
@@ -37,7 +38,7 @@ a ordem fornecida. A confiança do campo rotulado é o mínimo das palavras da l
 ocorrências repetidas; a média global é usada somente quando não há correspondência por chave.
 Linhas de lançamento usam a confiança da própria linha; sem associação exata, usam
 a menor confiança das palavras. Linhas abaixo do limite são descartadas com aviso,
-mesmo que a média global seja alta. A política deve ser calibrada junto à #90 e alinhada à validação da #89.
+mesmo que a média global seja alta. O limite de 0,80 é uma política conservadora compartilhada com a #89; não é uma probabilidade calibrada.
 
 `VisionSanitizer` é um contrato interno de proteção dos pixels: não substitui `VisionProvider`.
 Sem implementação que garanta anonimização, a visão continua bloqueada. A fábrica da #87
@@ -53,13 +54,15 @@ chamar um provedor remoto injetado diretamente.
 | Fatura sintética | Cabeçalho `Fatura de cartão` e linhas rotuladas | Banco, vencimento, total, lançamentos |
 | PDF textual Ourocard/BB | Perfil existente `pdf_profiles.py` | Lançamentos e metadados explícitos |
 
-Os três layouts rotulados são uma proposta verificável para os exemplos da #90, ainda não
-uma cobertura validada de documentos de bancos reais. Datas rotuladas usam `DD/MM/AAAA`;
+Os três layouts rotulados são exercitados pelo [dataset sintético da #90](../pesquisa/gabarito-multimodal.md),
+sem certificar cobertura de documentos de bancos reais. Títulos e rótulos toleram ausência de
+acentos, variação de caixa e espaços, inclusive título com palavras unidas pelo OCR; isso não corrige valores ou nomes lidos pelo OCR. Datas rotuladas usam `DD/MM/AAAA`;
 valores, o formato brasileiro com vírgula decimal. Campos duplicados e conflitantes não são
 escolhidos por palpite. A mesma coleção detecta conflitos no perfil BB, nos layouts
 rotulados e entre páginas ou motores; um campo removido por conflito não é reinserido
 por uma leitura posterior. Todos os caminhos usam a mesma finalização de qualidade. Um lançamento sintético usa
-`Lançamento: DD/MM/AAAA | descrição | 12,50`.
+`Lançamento: DD/MM/AAAA | descrição | 12,50`; também aceita a linha sem barras quando
+a data e o valor brasileiro final são inequívocos. A confiança continua associada à própria linha.
 
 Não há leitura genérica de qualquer layout, código de barras, QR Code ou autenticação bancária.
 Não há correção de perspectiva, reflexo ou recuperação de fotos degradadas. A preparação
@@ -81,9 +84,11 @@ a renderização PDF é serializada para não compartilhar chamadas concorrentes
 4. A visão opcional só é considerada para campos ausentes ou incertos e com anonimização
    garantida por um adaptador explicitamente fornecido.
 
-`image_quality.py` contém limites **provisórios, não calibrados**: lado mínimo 320 pixels,
-variância do Laplaciano 15, desvio padrão de cinza 12 e confiança OCR mínima 0,80.
-Esses números não demonstram precisão em fotografias reais e precisam ser calibrados na #90.
+`image_quality.py` mantém lado mínimo 320 pixels, variância do Laplaciano 15 e desvio
+padrão de cinza 12: os limites foram selecionados na calibração sintética da #90 e verificados
+em famílias separadas. A confiança OCR mínima de 0,80 continua política conservadora.
+Esses números não demonstram precisão em fotografias reais; a nitidez mede textura global,
+não a presença de texto recuperável. Veja o [protocolo e as limitações](../pesquisa/gabarito-multimodal.md).
 A confiança textual 0,95 é uma convenção inicial de extração, não probabilidade de correção.
 Texto selecionável pode conter erros. A política definitiva por campo deve ser compartilhada
 com a #89; o OCR usa a confiança por campo quando fornecida e a global somente como fallback.
@@ -127,7 +132,7 @@ confiança limitada a 0,50 e `VISION_REVIEW_REQUIRED`. São candidatas à revis�
 sem garantia de correção; tornam o resultado parcial. Divergências retiram o campo, sem
 sobrescrita ou reinserção posterior. Campos desconhecidos, duplicados, datas/valores inválidos
 ou formato inesperado descartam todo o lote antes de alterar o OCR. O motor `vlm` aparece
-na trilha quando chamado; o OCR informa o identificador de `OcrResult.engine`. O limite de confiança ainda depende de alinhamento com a #89.
+na trilha quando chamado; o OCR informa o identificador de `OcrResult.engine`. O limite de 0,50 da visão permanece apenas candidato para revisão; a #89 aplica a validação financeira.
 
 ## Valores, falhas e validação
 
@@ -161,9 +166,12 @@ As imagens aleatórias dos testes exercitam as métricas e não representam um b
 
 Antes de considerar a #88 concluída:
 
-- Acordar os três layouts e calibrar os limites com os documentos da #90.
-- Consolidar obrigatoriedade e confiança por campo com a #89.
-- Documentar um ensaio reproduzível com OCR real: arquivos sintéticos, campos e limitações.
+- Conferir o CI da PR complementar. O ensaio real e suas limitações já estão registrados.
+- Manter a política compartilhada: Pix exige data/valor/favorecido; boleto exige
+  favorecido/valor/vencimento; fatura exige banco/vencimento/total e ao menos uma linha completa.
+  OCR abaixo de 0,80 é descartado com aviso; visão fica limitada a 0,50 e exige revisão.
+  A #89 continua responsável por bloqueios financeiros, somas e conciliação.
+- Conferir o CI verde e repetir o ensaio com OCR real antes de fechar a #88.
 
 A meta de acerto de 90% pertence ao benchmark da #98; nenhum resultado novo de acurácia é
 alegado por esta implementação parcial.
@@ -184,5 +192,6 @@ e `documents`; `uv lock --check --offline` valida o conjunto sem alterar depend�
 
 Verificação local: 498 testes de API e 161 de pesquisa passaram. Dois testes de OCR real
 da #87 e um teste opcional de pesquisa foram pulados por dependências/recursos ausentes.
-Isso não substitui a calibração nem o ensaio com o motor OCR real. Nenhum resultado de
-acurácia do dataset multimodal é alegado.
+Essa é a validação histórica da primeira versão do agente (PR #108). A #90 acrescenta corpus, testes de reprodução,
+calibração separada por família e runner com OCR real; o histórico de resultados distingue
+a medição visual de uma execução de extração.

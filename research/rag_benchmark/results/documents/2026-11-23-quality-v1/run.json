@@ -1,0 +1,103 @@
+{
+  "created_at": "2026-11-23T13:28:18.672311+00:00",
+  "commit": "431350ae7f1fc2638165cfdbe3db3b138310e368",
+  "dirty": true,
+  "mode": "quality_only",
+  "python": "3.12.16",
+  "platform": "macOS-27.0.1-arm64-arm-64bit",
+  "packages": {
+    "pillow": "13.0.0",
+    "numpy": "2.5.4",
+    "reportlab": "5.1.0",
+    "pypdfium2": "5.15.2"
+  },
+  "manifest_sha256": "25a22aa31418d36ce357bb259b82aafc8687270694515f4c69f470e4827a9071",
+  "source_sha256": {
+    "api/app/services/image_quality.py": "823e9435ab981255d1dc92e93ee657e83599d8f2c0895ae6b6c98e937d1d05ab",
+    "api/app/services/document_fields.py": "6cb6093751ab41227c5b1607b79b77e03dad3ac1d0dbb9b45100255d4aed7eb1",
+    "api/app/services/document_ocr.py": "4c6cdbcc42e58cc58d83fdae11afcde0bf52faff3d9529ea772cbce6bcfc2615",
+    "api/app/services/agents/document.py": "0302e8ee8510d1e0a2878755fdd7c244ec3bf5da205a70240b142b7179d8c45c",
+    "api/app/clients/rapidocr_provider.py": "a03d7e0325bf7296a1df6d230d6f4245192bcb1ec396babc850a36939ef7c90e",
+    "research/rag_benchmark/calibrate_documents.py": "0a09e2227df52ed4a0ca099008c42ffbb557715d0d53dd6a89ed8416473b4ed0"
+  },
+  "ocr_confidence": 0.8,
+  "calibration": {
+    "limits": {
+      "min_side": 320,
+      "sharpness": 15.0,
+      "contrast": 12.0
+    },
+    "calibration_ids": [
+      "D01",
+      "D02",
+      "D03",
+      "D04",
+      "D05",
+      "D06",
+      "D11",
+      "D12",
+      "D13",
+      "D14",
+      "D15",
+      "D16",
+      "D17",
+      "D18",
+      "D27",
+      "D28",
+      "D29",
+      "D30",
+      "D31",
+      "D32"
+    ],
+    "objective": "falso aceite, falsa rejeição, mudanças dos limites (ordem lexicográfica)",
+    "calibration_errors": [
+      0,
+      0
+    ],
+    "candidates": 37
+  },
+  "summary": {
+    "calibration": {
+      "documents": 20,
+      "gate": {
+        "readable_accepted": 17,
+        "readable_rejected": 0,
+        "illegible_accepted": 0,
+        "illegible_rejected": 3
+      },
+      "correct_fields": null,
+      "recoverable_fields": null,
+      "unexpected_fields": null,
+      "correct_transactions": null,
+      "recoverable_transactions": null,
+      "unmatched_transactions": null,
+      "illegible_documents": null,
+      "safe_abstentions": null,
+      "technical_failures": null
+    },
+    "validation": {
+      "documents": 20,
+      "gate": {
+        "readable_accepted": 16,
+        "readable_rejected": 0,
+        "illegible_accepted": 0,
+        "illegible_rejected": 4
+      },
+      "correct_fields": null,
+      "recoverable_fields": null,
+      "unexpected_fields": null,
+      "correct_transactions": null,
+      "recoverable_transactions": null,
+      "unmatched_transactions": null,
+      "illegible_documents": null,
+      "safe_abstentions": null,
+      "technical_failures": null
+    }
+  },
+  "limitations": [
+    "Dados sintéticos de desenvolvimento; sem revisão humana cega.",
+    "Verificação separada por família; não é amostra de fotografias reais.",
+    "A confiança OCR 0,80 é política conservadora; não probabilidade calibrada.",
+    "Comparação de motores e meta de 90% pertencem à #98."
+  ]
+}
