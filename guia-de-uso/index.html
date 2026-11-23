@@ -1,4 +1,6 @@
 
+
+
 <!doctype html>
 <html lang="pt" class="no-js">
   <head>
@@ -7,6 +9,7 @@
       <meta name="viewport" content="width=device-width,initial-scale=1">
       
         <meta name="description" content="Assistente financeiro pessoal de código aberto com privacidade local-first e RAG (Challenge 2 - Qualidade de Vida)">
+      
       
       
       
@@ -22,7 +25,7 @@
       
       
       <link rel="icon" href="../assets/icon.png">
-      <meta name="generator" content="zensical-0.1.2">
+      <meta name="generator" content="zensical-0.1.3">
     
     
       
@@ -33,12 +36,13 @@
       
         
       
-      <link rel="stylesheet" href="../assets/stylesheets/modern/main.ebb7f775.min.css">
+      <link rel="stylesheet" href="../assets/stylesheets/modern/main.e2cf241e.min.css">
       
         
           
         
         <link rel="stylesheet" href="../assets/stylesheets/modern/palette.b60ce83d.min.css">
+      
       
       
 
@@ -659,6 +663,23 @@
       </span>
     </span>
   </a>
+  
+    <nav class="md-nav" aria-label="2. Configuração do Backend e Dependências">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#referencia-rapida-da-api" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Referência rápida da API
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
   
 </li>
         
@@ -2635,6 +2656,23 @@
     </span>
   </a>
   
+    <nav class="md-nav" aria-label="2. Configuração do Backend e Dependências">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#referencia-rapida-da-api" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Referência rápida da API
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
         
           <li class="md-nav__item">
@@ -2987,6 +3025,79 @@
 - <strong>Health check:</strong> <code>http://127.0.0.1:8000/v1/health</code>
 - <strong>Consulta RAG Extrativa:</strong> <code>POST http://127.0.0.1:8000/v1/chat/ask</code>
 - <strong>Síntese Generativa Contextualizada:</strong> <code>POST http://127.0.0.1:8000/v1/chat/generate</code></p>
+<h3 id="referencia-rapida-da-api">Referência rápida da API<a class="headerlink" href="#referencia-rapida-da-api" title="Permanent link">&para;</a></h3>
+<p>Todos os caminhos começam em <code>/v1</code>. O contrato completo e interativo fica no Swagger (<code>/docs</code>).</p>
+<table>
+<thead>
+<tr>
+<th>Grupo</th>
+<th>Endpoint</th>
+<th>Para quê</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Saúde</td>
+<td><code>GET /health</code></td>
+<td>Confere se a API está no ar</td>
+</tr>
+<tr>
+<td>Chat</td>
+<td><code>POST /chat/ask</code>, <code>POST /chat/generate</code>, <code>POST /chat/title</code></td>
+<td>Busca extrativa, síntese fundamentada e título da conversa</td>
+</tr>
+<tr>
+<td>Multiagente</td>
+<td><code>POST /agents/ask</code></td>
+<td>Pergunta pelo sistema de quatro agentes, com a trilha</td>
+</tr>
+<tr>
+<td>Lançamentos</td>
+<td><code>POST /transactions/inspect</code>, <code>POST /transactions/upload</code></td>
+<td>Inspeciona (sem gravar) e importa OFX ou PDF</td>
+</tr>
+<tr>
+<td>Lançamentos</td>
+<td><code>GET /transactions</code>, <code>GET /transactions/summary</code></td>
+<td>Lista e resumo (filtros <code>owner</code> e <code>view</code>)</td>
+</tr>
+<tr>
+<td>Categorias</td>
+<td><code>PATCH /transactions/{uid}/category</code>, <code>GET /transactions/category-rules</code>, <code>DELETE /transactions/category-rules/{merchant}</code></td>
+<td>Corrige categoria e gerencia as regras por estabelecimento</td>
+</tr>
+<tr>
+<td>Lançamentos</td>
+<td><code>DELETE /transactions/clear</code></td>
+<td>Apaga os dados importados</td>
+</tr>
+<tr>
+<td>Biblioteca</td>
+<td><code>GET /accounts</code>, <code>PATCH /accounts/{id}</code></td>
+<td>Contas e dono (pessoal ou empresa)</td>
+</tr>
+<tr>
+<td>Biblioteca</td>
+<td><code>GET /statements</code>, <code>PATCH /statements/{id}</code></td>
+<td>Arquivos importados e situação do período</td>
+</tr>
+<tr>
+<td>Biblioteca</td>
+<td><code>GET /installments</code></td>
+<td>Parcelamentos agrupados</td>
+</tr>
+<tr>
+<td>Biblioteca</td>
+<td><code>GET /transfers</code>, <code>GET /transfers/suggestions</code>, <code>POST /transfers/{confirm,reject,unmark,undo}</code></td>
+<td>Transferências entre contas próprias</td>
+</tr>
+<tr>
+<td>Cenários</td>
+<td><code>POST /budgets/compare</code></td>
+<td>Compara dois cenários de orçamento</td>
+</tr>
+</tbody>
+</table>
 <hr />
 <h2 id="3-sintese-generativa-local-litellm-e-ollama">3. Síntese Generativa Local (LiteLLM e Ollama)<a class="headerlink" href="#3-sintese-generativa-local-litellm-e-ollama" title="Permanent link">&para;</a></h2>
 <p>A camada generativa usa a porta <code>LLMProvider</code> (<a href="../adr/0009-sintese-generativa-local/">ADR 0009</a>). O provedor padrão é o <strong>LiteLLM</strong>, que aceita qualquer modelo definido por configuração. Com um modelo local no <strong>Ollama</strong>, nenhum dado sai da sua máquina.</p>
@@ -3472,7 +3583,8 @@ API local.</p>
       <script id="__config" type="application/json">{"annotate":null,"base":"..","features":["navigation.instant","navigation.instant.progress","navigation.tracking","navigation.tabs","navigation.tabs.sticky","navigation.sections","navigation.expand","navigation.top","search.suggest","search.highlight","search.share","content.code.copy"],"redirect":null,"search":"../assets/javascripts/workers/search.719e0d91.min.js","tags":null,"translations":{"clipboard.copied":"Copiado para área de transferência","clipboard.copy":"Copiar para área de transferência","clipboard.error":"Could not copy to clipboard","search.result.more.one":"mais 1 nesta página","search.result.more.other":"# mais nesta página","search.result.none":"Nenhum documento encontrado","search.result.one":"1 documento encontrado","search.result.other":"# documentos encontrados","search.result.placeholder":"Digite para iniciar a busca","search.result.term.missing":"Ausente","select.version":"Selecione a versão"},"version":null}</script>
     
     
-      <script src="../assets/javascripts/bundle.3cb411a8.min.js"></script>
+      <script src="../assets/javascripts/bundle.9e76c64c.min.js"></script>
+      
       
     
   </body>

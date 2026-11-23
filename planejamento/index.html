@@ -1,4 +1,6 @@
 
+
+
 <!doctype html>
 <html lang="pt" class="no-js">
   <head>
@@ -7,6 +9,7 @@
       <meta name="viewport" content="width=device-width,initial-scale=1">
       
         <meta name="description" content="Assistente financeiro pessoal de código aberto com privacidade local-first e RAG (Challenge 2 - Qualidade de Vida)">
+      
       
       
       
@@ -22,7 +25,7 @@
       
       
       <link rel="icon" href="../assets/icon.png">
-      <meta name="generator" content="zensical-0.1.2">
+      <meta name="generator" content="zensical-0.1.3">
     
     
       
@@ -33,12 +36,13 @@
       
         
       
-      <link rel="stylesheet" href="../assets/stylesheets/modern/main.ebb7f775.min.css">
+      <link rel="stylesheet" href="../assets/stylesheets/modern/main.e2cf241e.min.css">
       
         
           
         
         <link rel="stylesheet" href="../assets/stylesheets/modern/palette.b60ce83d.min.css">
+      
       
       
 
@@ -786,6 +790,56 @@
     <span class="md-ellipsis">
       <span class="md-typeset">
         6.4 Situação ao fim da semana (18/11)
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#7-semana-5-multimodalidade-sprint-ativa" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        7. Semana 5 — Multimodalidade (Sprint Ativa)
+      </span>
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="7. Semana 5 — Multimodalidade (Sprint Ativa)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#71-cronograma" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        7.1 Cronograma
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#72-matriz-de-tarefas-e-responsabilidades" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        7.2 Matriz de tarefas e responsabilidades
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#73-mkdocs-sempre-atualizado" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        7.3 MkDocs sempre atualizado
       </span>
     </span>
   </a>
@@ -2660,6 +2714,56 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#7-semana-5-multimodalidade-sprint-ativa" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        7. Semana 5 — Multimodalidade (Sprint Ativa)
+      </span>
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="7. Semana 5 — Multimodalidade (Sprint Ativa)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#71-cronograma" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        7.1 Cronograma
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#72-matriz-de-tarefas-e-responsabilidades" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        7.2 Matriz de tarefas e responsabilidades
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#73-mkdocs-sempre-atualizado" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        7.3 MkDocs sempre atualizado
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
       </ul>
     
   
@@ -2728,7 +2832,7 @@
 <td style="text-align: center;"><strong>Semana 5</strong></td>
 <td>Multimodalidade</td>
 <td>Assistente multimodal (leitura de faturas PDF, extratos e comprovantes em imagem)</td>
-<td style="text-align: center;"><span class="badge-should">Em planejamento</span></td>
+<td style="text-align: center;"><span class="badge-should">Sprint Ativa</span></td>
 <td style="text-align: center;">23/11 a 27/11</td>
 </tr>
 <tr>
@@ -3168,8 +3272,277 @@ comprimido e preparado por <code>make build</code> (<a href="../adr/0020-categor
 <li>persistência dos lançamentos em SQLite (hoje ficam em memória na API);</li>
 <li>homologação do app em aparelho Android físico.</li>
 </ul>
-<p><strong>Semana 5 (em planejamento):</strong> multimodalidade (comprovantes e faturas em imagem). As issues
-serão abertas depois da revisão do MkDocs do início da semana, como pede o <code>AGENTS.md</code>.</p>
+<hr />
+<h2 id="7-semana-5-multimodalidade-sprint-ativa">7. Semana 5 — Multimodalidade (Sprint Ativa)<a class="headerlink" href="#7-semana-5-multimodalidade-sprint-ativa" title="Permanent link">&para;</a></h2>
+<p>O entregável oficial da <strong>Semana 5 (23/11 a 27/11)</strong> é o <em>agente multimodal</em>: o Trokim passa a ler <strong>foto ou PDF escaneado</strong> de fatura, comprovante de Pix e boleto, extrai os campos, valida por código e <strong>mostra ao usuário para revisão antes de virar lançamento</strong>. A equipe deixa <strong>tudo pronto na quarta-feira, 25/11/2026</strong> e <strong>entrega na sexta-feira, 27/11</strong>. As tarefas estão na milestone <strong>"Semana 5 — Multimodalidade (Agente Multimodal)"</strong>, com o épico <a href="https://github.com/moonshinerd/trokim/issues/86">#86</a> e o contrato do documento extraído.</p>
+<p>Além do entregável, a semana leva duas frentes do projeto: <strong>suporte a mais bancos, com tutorial</strong> (PicPay e Mercado Pago testados com arquivos reais; Inter, C6 e Itaú como <strong>experimentais</strong>) e o <strong>chat respondendo sobre as contas, parcelas e dívidas</strong> que o usuário importou.</p>
+<p><strong>Hipóteses a medir:</strong> (1) acerto por campo de pelo menos 90% em documentos legíveis; (2) abstenção em 100% das imagens ilegíveis, sem campo inventado; (3) comparação entre OCR local, VLM local e VLM via OpenRouter (nuvem só com dado sintético); (4) o chat acerta os números de conta, parcela e dívida contra o <code>CalculationService</code>, sem número inventado.</p>
+<p><strong>Decisões de projeto:</strong> motores de leitura <strong>modulares</strong> atrás de portas (<code>OcrProvider</code> e <code>VisionProvider</code>, no padrão do <code>LLMProvider</code>), OCR local por padrão, VLM opcional pela camada LiteLLM (Ollama local ou OpenRouter) e <strong>provedor remoto só com consentimento explícito</strong>. ADRs previstas: 0021 (visão e OCR modulares), 0022 (registro de perfis de banco e níveis de suporte) e 0023 (contexto do usuário no chat).</p>
+<h3 id="71-cronograma">7.1 Cronograma<a class="headerlink" href="#71-cronograma" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Quando</th>
+<th>O que</th>
+<th>Issues</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Segunda 23/11</strong></td>
+<td><strong>Fase 1:</strong> tarefas independentes, todas em paralelo</td>
+<td><a href="https://github.com/moonshinerd/trokim/issues/87">#87</a>, <a href="https://github.com/moonshinerd/trokim/issues/88">#88</a>, <a href="https://github.com/moonshinerd/trokim/issues/89">#89</a>, <a href="https://github.com/moonshinerd/trokim/issues/90">#90</a>, <a href="https://github.com/moonshinerd/trokim/issues/91">#91</a>, <a href="https://github.com/moonshinerd/trokim/issues/92">#92</a>, <a href="https://github.com/moonshinerd/trokim/issues/93">#93</a>, <a href="https://github.com/moonshinerd/trokim/issues/94">#94</a></td>
+</tr>
+<tr>
+<td><strong>Terça 24/11</strong></td>
+<td>Revisão cruzada e merge da Fase 1; quem estiver desbloqueado adianta a Fase 2</td>
+<td>revisão dos PRs</td>
+</tr>
+<tr>
+<td><strong>Quarta 25/11</strong></td>
+<td><strong>Fase 2:</strong> integração, benchmark, documentação e <strong>tudo pronto</strong> (corte às 18h)</td>
+<td><a href="https://github.com/moonshinerd/trokim/issues/95">#95</a>, <a href="https://github.com/moonshinerd/trokim/issues/96">#96</a>, <a href="https://github.com/moonshinerd/trokim/issues/97">#97</a>, <a href="https://github.com/moonshinerd/trokim/issues/98">#98</a>, <a href="https://github.com/moonshinerd/trokim/issues/99">#99</a></td>
+</tr>
+<tr>
+<td><strong>Quinta 26/11</strong></td>
+<td>Homologação em aparelho Android real, correções e ensaio</td>
+<td><a href="https://github.com/moonshinerd/trokim/issues/100">#100</a></td>
+</tr>
+<tr>
+<td><strong>Sexta 27/11</strong></td>
+<td><strong>Entrega</strong></td>
+<td>—</td>
+</tr>
+</tbody>
+</table>
+<pre class="mermaid"><code>flowchart TD
+    subgraph "Fase 1: segunda e terça (independentes)"
+        A["#87 Portas de visão e OCR&lt;br/&gt;&lt;b&gt;@moonshinerd&lt;/b&gt;"]
+        B["#88 Agente de documento&lt;br/&gt;&lt;b&gt;@gabrielcrzojo&lt;/b&gt;"]
+        C["#89 Validação dos campos&lt;br/&gt;&lt;b&gt;@rebecaboncaputo&lt;/b&gt;"]
+        D["#90 Dataset multimodal sintético&lt;br/&gt;&lt;b&gt;@rebecaboncaputo&lt;/b&gt;"]
+        E["#91 Mobile: captura e revisão&lt;br/&gt;&lt;b&gt;@Luix3005&lt;/b&gt;"]
+        F["#92 PicPay, Mercado Pago e mais bancos&lt;br/&gt;&lt;b&gt;@moonshinerd&lt;/b&gt;"]
+        G["#93 Tutoriais e bancos suportados&lt;br/&gt;&lt;b&gt;@zainoca + @Luix3005&lt;/b&gt;"]
+        H["#94 Consultas sobre os dados do usuário&lt;br/&gt;&lt;b&gt;@rebecaboncaputo&lt;/b&gt;"]
+    end
+    subgraph "Fase 2: quarta (bloqueadas)"
+        I["#95 Chat com contas e dívidas&lt;br/&gt;&lt;b&gt;@gabrielcrzojo + @moonshinerd&lt;/b&gt;"]
+        J["#96 Endpoint de documentos&lt;br/&gt;&lt;b&gt;@moonshinerd + @gabrielcrzojo&lt;/b&gt;"]
+        K["#97 Mobile: chat com contexto e documento&lt;br/&gt;&lt;b&gt;@Luix3005 + @zainoca&lt;/b&gt;"]
+        L["#98 Benchmark multimodal e do chat&lt;br/&gt;&lt;b&gt;@rebecaboncaputo + @gabrielcrzojo&lt;/b&gt;"]
+        M["#99 Docs e Entrega 5&lt;br/&gt;&lt;b&gt;@moonshinerd + @zainoca&lt;/b&gt;"]
+    end
+    A --&gt;|bloqueia| J
+    B --&gt;|bloqueia| J
+    C --&gt;|bloqueia| J
+    H --&gt;|bloqueia| I
+    I --&gt;|bloqueia| K
+    J --&gt;|bloqueia| K
+    E --&gt;|bloqueia| K
+    D --&gt;|bloqueia| L
+    I --&gt;|bloqueia| L
+    J --&gt;|bloqueia| L
+    K --&gt;|bloqueia| M
+    L --&gt;|bloqueia| M</code></pre>
+<h3 id="72-matriz-de-tarefas-e-responsabilidades">7.2 Matriz de tarefas e responsabilidades<a class="headerlink" href="#72-matriz-de-tarefas-e-responsabilidades" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th style="text-align: center;">Issue</th>
+<th>Escopo</th>
+<th style="text-align: center;">Responsável</th>
+<th style="text-align: center;">Fase</th>
+<th>Precedência</th>
+<th style="text-align: center;">Estimativa</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: center;"><a href="https://github.com/moonshinerd/trokim/issues/87">#87</a></td>
+<td>Portas <code>OcrProvider</code> e <code>VisionProvider</code>, adaptadores e ADR 0021</td>
+<td style="text-align: center;">@moonshinerd</td>
+<td style="text-align: center;">1</td>
+<td><strong>Não-bloqueante</strong></td>
+<td style="text-align: center;">3,5 h</td>
+</tr>
+<tr>
+<td style="text-align: center;"><a href="https://github.com/moonshinerd/trokim/issues/88">#88</a></td>
+<td>Agente de documento (extração, qualidade e abstenção)</td>
+<td style="text-align: center;">@gabrielcrzojo</td>
+<td style="text-align: center;">1</td>
+<td>Contrato do épico; <strong>não-bloqueante</strong></td>
+<td style="text-align: center;">4 h</td>
+</tr>
+<tr>
+<td style="text-align: center;"><a href="https://github.com/moonshinerd/trokim/issues/89">#89</a></td>
+<td>Validação dos campos extraídos e conciliação</td>
+<td style="text-align: center;">@rebecaboncaputo</td>
+<td style="text-align: center;">1</td>
+<td><strong>Não-bloqueante</strong></td>
+<td style="text-align: center;">3 h</td>
+</tr>
+<tr>
+<td style="text-align: center;"><a href="https://github.com/moonshinerd/trokim/issues/90">#90</a></td>
+<td>Dataset multimodal sintético e gabarito de campos</td>
+<td style="text-align: center;">@rebecaboncaputo</td>
+<td style="text-align: center;">1</td>
+<td><strong>Não-bloqueante</strong></td>
+<td style="text-align: center;">4 h</td>
+</tr>
+<tr>
+<td style="text-align: center;"><a href="https://github.com/moonshinerd/trokim/issues/91">#91</a></td>
+<td>Mobile: captura e revisão dos campos</td>
+<td style="text-align: center;">@Luix3005</td>
+<td style="text-align: center;">1</td>
+<td>Contrato do épico; <strong>não-bloqueante</strong></td>
+<td style="text-align: center;">4 h</td>
+</tr>
+<tr>
+<td style="text-align: center;"><a href="https://github.com/moonshinerd/trokim/issues/92">#92</a></td>
+<td>PicPay e Mercado Pago (reais) e Inter, C6 e Itaú (experimentais)</td>
+<td style="text-align: center;">@moonshinerd</td>
+<td style="text-align: center;">1</td>
+<td><strong>Não-bloqueante</strong></td>
+<td style="text-align: center;">4,5 h</td>
+</tr>
+<tr>
+<td style="text-align: center;"><a href="https://github.com/moonshinerd/trokim/issues/93">#93</a></td>
+<td>Tutoriais por banco e tela de bancos suportados</td>
+<td style="text-align: center;">@zainoca, @Luix3005</td>
+<td style="text-align: center;">1</td>
+<td>Lista de bancos da <a href="https://github.com/moonshinerd/trokim/issues/92">#92</a></td>
+<td style="text-align: center;">3 h</td>
+</tr>
+<tr>
+<td style="text-align: center;"><a href="https://github.com/moonshinerd/trokim/issues/94">#94</a></td>
+<td>Consultas determinísticas sobre os dados do usuário</td>
+<td style="text-align: center;">@rebecaboncaputo</td>
+<td style="text-align: center;">1</td>
+<td><strong>Não-bloqueante</strong></td>
+<td style="text-align: center;">4 h</td>
+</tr>
+<tr>
+<td style="text-align: center;"><a href="https://github.com/moonshinerd/trokim/issues/95">#95</a></td>
+<td>Chat com contas, parcelas e dívidas</td>
+<td style="text-align: center;">@gabrielcrzojo, @moonshinerd</td>
+<td style="text-align: center;">2</td>
+<td><strong>Bloqueada por <a href="https://github.com/moonshinerd/trokim/issues/94">#94</a></strong></td>
+<td style="text-align: center;">4 h</td>
+</tr>
+<tr>
+<td style="text-align: center;"><a href="https://github.com/moonshinerd/trokim/issues/96">#96</a></td>
+<td>Endpoint de documentos, orquestração e importação</td>
+<td style="text-align: center;">@moonshinerd, @gabrielcrzojo</td>
+<td style="text-align: center;">2</td>
+<td><strong>Bloqueada por <a href="https://github.com/moonshinerd/trokim/issues/87">#87</a>, <a href="https://github.com/moonshinerd/trokim/issues/88">#88</a> e <a href="https://github.com/moonshinerd/trokim/issues/89">#89</a></strong></td>
+<td style="text-align: center;">3 h</td>
+</tr>
+<tr>
+<td style="text-align: center;"><a href="https://github.com/moonshinerd/trokim/issues/97">#97</a></td>
+<td>Mobile: chat com contexto e documento ponta a ponta</td>
+<td style="text-align: center;">@Luix3005, @zainoca</td>
+<td style="text-align: center;">2</td>
+<td><strong>Bloqueada por <a href="https://github.com/moonshinerd/trokim/issues/91">#91</a>, <a href="https://github.com/moonshinerd/trokim/issues/95">#95</a> e <a href="https://github.com/moonshinerd/trokim/issues/96">#96</a></strong></td>
+<td style="text-align: center;">4 h</td>
+</tr>
+<tr>
+<td style="text-align: center;"><a href="https://github.com/moonshinerd/trokim/issues/98">#98</a></td>
+<td>Benchmark multimodal e do chat com os dados do usuário</td>
+<td style="text-align: center;">@rebecaboncaputo, @gabrielcrzojo</td>
+<td style="text-align: center;">2</td>
+<td><strong>Bloqueada por <a href="https://github.com/moonshinerd/trokim/issues/90">#90</a>, <a href="https://github.com/moonshinerd/trokim/issues/95">#95</a> e <a href="https://github.com/moonshinerd/trokim/issues/96">#96</a></strong></td>
+<td style="text-align: center;">4 h</td>
+</tr>
+<tr>
+<td style="text-align: center;"><a href="https://github.com/moonshinerd/trokim/issues/99">#99</a></td>
+<td>Docs, ADRs, resultados e documento da Entrega 5</td>
+<td style="text-align: center;">@moonshinerd, @zainoca</td>
+<td style="text-align: center;">2</td>
+<td><strong>Bloqueada por <a href="https://github.com/moonshinerd/trokim/issues/97">#97</a> e <a href="https://github.com/moonshinerd/trokim/issues/98">#98</a></strong></td>
+<td style="text-align: center;">4 h</td>
+</tr>
+<tr>
+<td style="text-align: center;"><a href="https://github.com/moonshinerd/trokim/issues/100">#100</a></td>
+<td>Homologação em aparelho real e congelamento</td>
+<td style="text-align: center;">todos</td>
+<td style="text-align: center;">3</td>
+<td>Depende da Fase 2</td>
+<td style="text-align: center;">3 h</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Revisão cruzada</strong> (1 aprovação de outro membro por PR): <a href="https://github.com/moonshinerd/trokim/issues/87">#87</a> por @gabrielcrzojo, <a href="https://github.com/moonshinerd/trokim/issues/88">#88</a> por @moonshinerd, <a href="https://github.com/moonshinerd/trokim/issues/89">#89</a> por @zainoca, <a href="https://github.com/moonshinerd/trokim/issues/90">#90</a> por @gabrielcrzojo, <a href="https://github.com/moonshinerd/trokim/issues/91">#91</a> por @zainoca, <a href="https://github.com/moonshinerd/trokim/issues/92">#92</a> por @Luix3005, <a href="https://github.com/moonshinerd/trokim/issues/93">#93</a> por @moonshinerd e <a href="https://github.com/moonshinerd/trokim/issues/94">#94</a> por @gabrielcrzojo.</p>
+<h3 id="73-mkdocs-sempre-atualizado">7.3 MkDocs sempre atualizado<a class="headerlink" href="#73-mkdocs-sempre-atualizado" title="Permanent link">&para;</a></h3>
+<p>Cada issue exige a atualização do MkDocs <strong>no mesmo PR</strong> (regra do <code>AGENTS.md</code>). Para não haver conflito, cada uma edita só as suas páginas:</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: center;">Issue</th>
+<th>Páginas do MkDocs que ela atualiza</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: center;"><a href="https://github.com/moonshinerd/trokim/issues/87">#87</a></td>
+<td>ADR 0021 (nova), <a href="../arquitetura/mapa-do-sistema/">Mapa do Sistema</a>, <a href="../guia-de-uso/">Guia de Uso</a> (variáveis <code>OCR_PROVIDER</code> e <code>VISION_*</code>), <a href="../requisitos/">Requisitos</a> (RNF12)</td>
+</tr>
+<tr>
+<td style="text-align: center;"><a href="https://github.com/moonshinerd/trokim/issues/88">#88</a></td>
+<td><a href="../agentes/">Agentes</a>, <code>agentes/document-agent.md</code> (nova), <a href="../arquitetura/mapa-do-sistema/">Mapa do Sistema</a>, <a href="../adr/0016-arquitetura-multiagente/">ADR 0016</a> (nota)</td>
+</tr>
+<tr>
+<td style="text-align: center;"><a href="https://github.com/moonshinerd/trokim/issues/89">#89</a></td>
+<td><a href="../agentes/validation-agent/">Validation Agent</a> (códigos novos)</td>
+</tr>
+<tr>
+<td style="text-align: center;"><a href="https://github.com/moonshinerd/trokim/issues/90">#90</a></td>
+<td><code>pesquisa/gabarito-multimodal.md</code> (nova), <a href="../pesquisa/gabarito-multiagente/">Gabarito Multiagente</a>, <a href="../adr/0008-material-comparativo-versionado/">ADR 0008</a> (nota)</td>
+</tr>
+<tr>
+<td style="text-align: center;"><a href="https://github.com/moonshinerd/trokim/issues/91">#91</a></td>
+<td><a href="../guia-de-uso/">Guia de Uso</a> (importar por foto), <code>mobile/README.md</code>, <a href="../prototipo/">Protótipo</a></td>
+</tr>
+<tr>
+<td style="text-align: center;"><a href="https://github.com/moonshinerd/trokim/issues/92">#92</a></td>
+<td>ADR 0022 (nova), <a href="../arquitetura/categorias/">Categorias</a>, <a href="../guia-de-uso/">Guia de Uso</a> (bancos suportados), <a href="../requisitos/">Requisitos</a> (RF29), <a href="../adr/0017-perfis-de-banco-e-natureza-do-lancamento/">ADR 0017</a> (nota)</td>
+</tr>
+<tr>
+<td style="text-align: center;"><a href="https://github.com/moonshinerd/trokim/issues/93">#93</a></td>
+<td><a href="../guia-de-uso/">Guia de Uso</a> (tutorial por banco), <a href="../prototipo/">Protótipo</a>, <code>mobile/README.md</code></td>
+</tr>
+<tr>
+<td style="text-align: center;"><a href="https://github.com/moonshinerd/trokim/issues/94">#94</a></td>
+<td><a href="../agentes/analysis-agent/">Analysis Agent</a>, <a href="../adr/0004-calculos-deterministicos/">ADR 0004</a> (nota)</td>
+</tr>
+<tr>
+<td style="text-align: center;"><a href="https://github.com/moonshinerd/trokim/issues/95">#95</a></td>
+<td><a href="../agentes/analysis-agent/">Analysis</a>, <a href="../agentes/communication-agent/">Communication</a> e <a href="../agentes/validation-agent/">Validation</a>, <a href="../agentes/orquestrador/">Orquestrador</a>, ADR 0023 (nova), <a href="../requisitos/">Requisitos</a> (RF30)</td>
+</tr>
+<tr>
+<td style="text-align: center;"><a href="https://github.com/moonshinerd/trokim/issues/96">#96</a></td>
+<td><code>agentes/document-agent.md</code>, <a href="../agentes/">Agentes</a>, <a href="../guia-de-uso/">Guia de Uso</a> (API), <a href="../arquitetura/">Arquitetura</a>, <a href="../requisitos/">Requisitos</a> (RF27 e RF28)</td>
+</tr>
+<tr>
+<td style="text-align: center;"><a href="https://github.com/moonshinerd/trokim/issues/97">#97</a></td>
+<td><a href="../guia-de-uso/">Guia de Uso</a> (chat com contas e importação por foto), <code>mobile/README.md</code>, <a href="../prototipo/">Protótipo</a></td>
+</tr>
+<tr>
+<td style="text-align: center;"><a href="https://github.com/moonshinerd/trokim/issues/98">#98</a></td>
+<td><a href="../pesquisa/resultados/">Histórico de Resultados</a> (nova execução e gráficos), <code>pesquisa/gabarito-multimodal.md</code>, <a href="../pesquisa/gabarito-multiagente/">Gabarito Multiagente</a></td>
+</tr>
+<tr>
+<td style="text-align: center;"><a href="https://github.com/moonshinerd/trokim/issues/99">#99</a></td>
+<td><strong>Varredura final de todo o MkDocs</strong>: ADRs 0021 a 0023 aceitas, requisitos, planejamento, glossário, apresentação e atas</td>
+</tr>
+<tr>
+<td style="text-align: center;"><a href="https://github.com/moonshinerd/trokim/issues/100">#100</a></td>
+<td><a href="../planejamento/">Planejamento</a> (homologação e pendências)</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Revisão do MkDocs do início da semana</strong> (regra do <code>AGENTS.md</code>): o MkDocs foi conferido contra o código; os números de testes da API (418) batem com a execução, os links internos estão sem quebra e o <code>make docs-build</code> passa. A lacuna encontrada foi a referência dos endpoints, que não listava as rotas de contas, arquivos, parcelas, transferências, regras de categoria e cenários; ela entrou no <a href="../guia-de-uso/">Guia de Uso</a>. Não foi possível reexecutar os testes de pesquisa e do app Flutter neste ambiente, então esses dois números seguem como informados na Entrega 4. As issues da semana foram abertas <strong>antes</strong> desta revisão, o que contraria a ordem do <code>AGENTS.md</code>, e o desvio fica registrado aqui.</p>
+<p><strong>Pendências herdadas da Semana 4</strong> e ainda não atribuídas a uma issue: revisão humana dos casos sinalizados, política de escopo para previsão de preço (C27) e redação que aceite paráfrase com citação verificada, e <strong>persistência dos lançamentos em SQLite</strong> (hoje ficam em memória na API). A decisão de incluir ou não a persistência nesta semana está em aberto.</p>
 
 
 
@@ -3237,7 +3610,8 @@ serão abertas depois da revisão do MkDocs do início da semana, como pede o <c
       <script id="__config" type="application/json">{"annotate":null,"base":"..","features":["navigation.instant","navigation.instant.progress","navigation.tracking","navigation.tabs","navigation.tabs.sticky","navigation.sections","navigation.expand","navigation.top","search.suggest","search.highlight","search.share","content.code.copy"],"redirect":null,"search":"../assets/javascripts/workers/search.719e0d91.min.js","tags":null,"translations":{"clipboard.copied":"Copiado para área de transferência","clipboard.copy":"Copiar para área de transferência","clipboard.error":"Could not copy to clipboard","search.result.more.one":"mais 1 nesta página","search.result.more.other":"# mais nesta página","search.result.none":"Nenhum documento encontrado","search.result.one":"1 documento encontrado","search.result.other":"# documentos encontrados","search.result.placeholder":"Digite para iniciar a busca","search.result.term.missing":"Ausente","select.version":"Selecione a versão"},"version":null}</script>
     
     
-      <script src="../assets/javascripts/bundle.3cb411a8.min.js"></script>
+      <script src="../assets/javascripts/bundle.9e76c64c.min.js"></script>
+      
       
     
   </body>
