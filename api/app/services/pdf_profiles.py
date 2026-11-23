@@ -237,7 +237,9 @@ def parse_pdf_statement(content: bytes, filename: str) -> OfxParseResult | None:
     text = "\n".join((page.extract_text() or "") for page in reader.pages)
     if is_bb_fatura(text):
         return parse_bb_fatura(text, filename, _pdf_creation_date(reader))
-    return None
+    from app.services.bank_pdf_profiles import parse_bank_pdf  # perfis experimentais
+
+    return parse_bank_pdf(text, filename)
 
 
 __all__ = ["is_bb_fatura", "parse_bb_fatura", "parse_pdf_statement"]

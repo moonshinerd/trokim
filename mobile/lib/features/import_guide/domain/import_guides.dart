@@ -61,18 +61,20 @@ const List<SupportedBankInfo> supportedBanks = [
   SupportedBankInfo(
     bank: GuideBank.picpay,
     name: 'PicPay',
-    supportLevel: BankSupportLevel.validated,
+    supportLevel: BankSupportLevel.experimental,
     acceptedFormats: 'PDF (extrato da conta e fatura do cartão)',
     description: 'Extrato da conta e fatura do PicPay Card em formato PDF',
+    experimentalNotice: 'Suporte experimental: leitor baseado em formato público do PicPay, ainda não testado em conta real.',
     icon: Icons.account_balance_wallet_rounded,
   ),
   SupportedBankInfo(
     bank: GuideBank.mercadopago,
     name: 'Mercado Pago',
-    supportLevel: BankSupportLevel.validated,
+    supportLevel: BankSupportLevel.experimental,
     acceptedFormats: 'PDF (extrato da conta e fatura do cartão)',
     description:
         'Extrato de movimentações da conta e fatura do cartão Mercado Pago',
+    experimentalNotice: 'Suporte experimental: leitor baseado em formato público do Mercado Pago, ainda não testado em conta real.',
     icon: Icons.storefront_rounded,
   ),
   SupportedBankInfo(

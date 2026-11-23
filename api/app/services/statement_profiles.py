@@ -113,7 +113,11 @@ def detect_statement(text: str) -> Detection | None:
         return Detection("nubank", kind)
     if "banco do brasil" in org_text or codes & {"1", "001", "0001"}:
         return Detection("bb", kind)
-    return None
+    # Demais bancos do registro (ADR 0022): reconhecidos pelo <ORG> e pelos códigos do OFX.
+    from app.services.bank_registry import detect_ofx_bank  # evita importação circular
+
+    other = detect_ofx_bank(org.group(1) if org else "", codes)
+    return Detection(other, kind) if other else None
 
 
 @dataclass(frozen=True)

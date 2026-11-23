@@ -11,6 +11,7 @@ from app.domain.models import (
     TransactionCategory,
     TransactionType,
 )
+from app.services.bank_profiles import ExperimentalOfxProfile
 from app.services.categorization_service import CategorizationService
 from app.services.statement_profiles import (
     PROFILES,
@@ -57,7 +58,9 @@ class ParserService:
         if ofx.account and ofx.account.account_id:
             account_id = str(ofx.account.account_id)
 
-        profile = PROFILES.get(detection.institution) if detection else None
+        profile = (
+            (PROFILES.get(detection.institution) or ExperimentalOfxProfile) if detection else None
+        )
         statement = ofx.account.statement if ofx.account else None
         transactions: list[Transaction] = []
         if statement and statement.transactions:

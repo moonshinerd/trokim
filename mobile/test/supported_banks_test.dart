@@ -35,11 +35,11 @@ void main() {
       expect(bankMap[GuideBank.bb]!.supportLevel, BankSupportLevel.validated);
       expect(
         bankMap[GuideBank.picpay]!.supportLevel,
-        BankSupportLevel.validated,
+        BankSupportLevel.experimental,
       );
       expect(
         bankMap[GuideBank.mercadopago]!.supportLevel,
-        BankSupportLevel.validated,
+        BankSupportLevel.experimental,
       );
 
       // Bancos Experimentais
@@ -169,7 +169,7 @@ void main() {
   });
 
   group('Tutoriais por banco', () {
-    testWidgets('PicPay (Validado): tutorial da fatura do cartão', (
+    testWidgets('PicPay (Experimental): tutorial da fatura do cartão', (
       tester,
     ) async {
       _setTallSurface(tester);
@@ -219,7 +219,7 @@ void main() {
       expect(find.text('Passo 3 de 4'), findsOneWidget);
     });
 
-    testWidgets('Mercado Pago (Validado): extrato da conta e pular tutorial', (
+    testWidgets('Mercado Pago (Experimental): extrato da conta e pular tutorial', (
       tester,
     ) async {
       _setTallSurface(tester);

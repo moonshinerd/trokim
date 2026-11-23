@@ -347,8 +347,8 @@ O fluxo é flexível e respeita o tempo do usuário:
 |---|:---:|:---:|---|---|
 | **Nubank** | <span class="badge-must">Validado</span> | OFX | Cartão de crédito e conta (pessoa física ou Empresas) | Fatura aberta não tem PDF; OFX vem por e-mail ou app. |
 | **Banco do Brasil** | <span class="badge-must">Validado</span> | PDF (cartão) e OFX (conta) | Fatura Ourocard (PDF) e extrato da conta corrente (OFX) | Fatura sai pelo app Ourocard em PDF; extrato da conta sai pelo app BB em OFX (Money 2000+). |
-| **PicPay** | <span class="badge-must">Validado</span> | PDF | Fatura do PicPay Card e extrato da conta | Testado com arquivos reais; fatura e extrato em PDF. |
-| **Mercado Pago** | <span class="badge-must">Validado</span> | PDF | Fatura do cartão e extrato de movimentações | Testado com arquivos reais; fatura e extrato em PDF. |
+| **PicPay** | <span class="badge-should">Experimental</span> | PDF | Extrato da conta (fatura do PicPay Card ainda não) | Layout genérico `DD/MM/AAAA descrição R$ valor`; sem arquivo real para conciliar. |
+| **Mercado Pago** | <span class="badge-should">Experimental</span> | PDF | Extrato de movimentações (fatura do cartão ainda não) | Layout publicado (Data, Descrição, ID, Valor, Saldo); fecha com o saldo final do arquivo. |
 | **Banco Inter** | <span class="badge-should">Experimental</span> | OFX (conta) e PDF (fatura) | Fatura do cartão (PDF) e extrato da conta (OFX) | Baseado na ajuda oficial do banco; ainda não testado em conta real. |
 | **C6 Bank** | <span class="badge-should">Experimental</span> | OFX (conta) e PDF (fatura) | Fatura do cartão (PDF) e extrato da conta (OFX) | Baseado na ajuda oficial do banco; ainda não testado em conta real. |
 | **Itaú** | <span class="badge-should">Experimental</span> | OFX (conta) e PDF (fatura) | Fatura do cartão (PDF) e extrato da conta (OFX) | Baseado na ajuda oficial do banco; ainda não testado em conta real. |
@@ -367,11 +367,11 @@ O fluxo é flexível e respeita o tempo do usuário:
   - *Cartão Ourocard:* no app Ourocard, toque em *Ver faturas →* escolha o mês *→ Salvar ou Compartilhar →* selecione o arquivo em formato **PDF**. Você pode compartilhar direto com o Trokim pela lista de aplicativos do Android.
   - *Extrato da conta corrente:* no app do Banco do Brasil, toque em *Extrato → Download extrato →* escolha o período *→* selecione o tipo **OFX (Money 2000+)**.
 
-- **PicPay (Validado — testado com arquivos reais):**
+- **PicPay (Experimental):**
   - *Fatura do PicPay Card:* no app PicPay, acesse a aba *Carteira* (ou atalho *Cartões*) *→ PicPay Card → Faturas →* escolha a fatura fechada *→* toque em exportar e selecione o formato **PDF**. Compartilhe com o Trokim ou salve no aparelho.
   - *Extrato da conta:* toque sobre o saldo da conta ou acesse *Extrato →* toque no ícone de exportar no topo *→* defina o período *→* exporte em formato **PDF**.
 
-- **Mercado Pago (Validado — testado com arquivos reais):**
+- **Mercado Pago (Experimental):**
   - *Fatura do cartão de crédito:* no app Mercado Pago, vá até a seção *Cartões → Cartão Mercado Pago → Faturas →* selecione a fatura do mês fechado *→ Baixar fatura* em formato **PDF**.
   - *Extrato da conta:* na tela inicial, toque em *Extrato* (ou *Ver extrato completo*) *→* toque no ícone de download/exportar no canto superior direito *→* escolha o período *→* baixe o relatório em **PDF**.
 
@@ -429,7 +429,7 @@ avisa e deixa escolher entre importar mesmo assim ou trocar o arquivo.
   cartão, e confere a soma dos lançamentos com o total da fatura.
 - **Banco do Brasil, conta corrente:** extrato em **OFX** (tipo "Money 2000+"), onde o campo
   `NAME` é o tipo do lançamento e `MEMO` a contraparte.
-- **PicPay e Mercado Pago:** ambos validados com faturas e extratos em PDF gerados a partir do fluxo real de exportação nos aplicativos.
+- **PicPay e Mercado Pago:** experimentais. Os leitores foram escritos a partir de layouts públicos e testados só com arquivos sintéticos; vire "Validado" quando um arquivo real fechar com o total.
 - **Inter, C6 Bank e Itaú:** perfis experimentais gerados a partir dos manuais oficiais de ajuda, combinando extratos de conta em OFX e faturas de cartão de crédito em PDF.
 
 Na aba **Extratos**, a seção **Contas** lista cada conta e cartão com o dono, que pode ser trocado a

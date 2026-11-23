@@ -7,6 +7,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from app.db.database import init_db
 from app.routers.v1.agents import router as agents_router
 from app.routers.v1.backup import router as backup_router
+from app.routers.v1.banks import router as banks_router
 from app.routers.v1.budgets import router as budgets_router
 from app.routers.v1.chat import router as chat_router
 from app.routers.v1.health import router as health_router
@@ -97,6 +98,7 @@ app.include_router(chat_router, prefix="/v1")
 app.include_router(budgets_router, prefix="/v1")
 app.include_router(agents_router, prefix="/v1")
 app.include_router(backup_router, prefix="/v1")
+app.include_router(banks_router, prefix="/v1")
 
 
 @app.get("/")
