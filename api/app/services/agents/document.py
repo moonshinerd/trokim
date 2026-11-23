@@ -1,0 +1,368 @@
+"""Agente de documento: leitura local, abstenção e trilha sanitizada (#88)."""
+
+import asyncio
+import time
+from dataclasses import dataclass, field
+from decimal import Decimal
+from typing import Literal, TypedDict
+
+from pydantic import BaseModel, ConfigDict, Field, ValidationError
+
+from app.domain.agents import AgentName, AgentStep, IssueSeverity, StepStatus, ValidationIssue
+from app.domain.documents import (
+    DocumentKind,
+    DocumentQuality,
+    ExtractedDocument,
+    ExtractedField,
+    ExtractedTransaction,
+    FieldSource,
+    QualityReport,
+)
+from app.services.document_fields import (
+    EXPECTED,
+    TEXT_CONFIDENCE,
+    VISION_REVIEW_CONFIDENCE,
+    FieldCollection,
+    TextExtraction,
+    bb_continuation_header,
+    normalized_value,
+    parse_text,
+)
+from app.services.document_reading import (
+    DocumentOcr,
+    DocumentPage,
+    DocumentReadError,
+    DocumentVision,
+    TextReading,
+    VisionSanitizer,
+    image_bytes,
+    read_pages,
+    render_pdf_page,
+)
+from app.services.image_quality import MIN_OCR_CONFIDENCE, assess_quality
+
+
+class DocumentContext(BaseModel):
+    content: bytes = Field(exclude=True, repr=False)
+    media_type: Literal["application/pdf", "image/jpeg", "image/png"]
+    result: ExtractedDocument | None = None
+
+
+class VisionFields(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+    fields: list[ExtractedField] = Field(max_length=20)
+
+
+class PageTrace(TypedDict):
+    page: int
+    status: str
+
+
+@dataclass
+class PageExtraction:
+    text: TextExtraction
+    collection: FieldCollection
+    report: QualityReport
+    engines: set[str] = field(default_factory=set)
+    issues: list[ValidationIssue] = field(default_factory=list)
+
+
+def warning(code: str, message: str) -> ValidationIssue:
+    return ValidationIssue(code=code, severity=IssueSeverity.WARNING, message=message)
+
+
+def text_quality() -> QualityReport:
+    return QualityReport(
+        quality=DocumentQuality.LEGIBLE,
+        sharpness=0,
+        resolution=(0, 0),
+        mean_ocr_confidence=None,
+        reasons=[],
+    )
+
+
+def check_reading(reading: TextReading) -> None:
+    confidences = [reading.confidence, *(reading.field_confidences or {}).values()]
+    if not all(0 <= value <= 1 for value in confidences):
+        raise DocumentReadError("INVALID_OCR_RESULT")
+
+
+class DocumentAgent:
+    name = AgentName.DOCUMENT
+
+    def __init__(
+        self,
+        ocr: DocumentOcr | None = None,
+        vision: DocumentVision | None = None,
+        sanitizer: VisionSanitizer | None = None,
+        timeout: float = 30,
+    ) -> None:
+        self.ocr, self.vision, self.sanitizer = ocr, vision, sanitizer
+        self.timeout = timeout
+
+    async def run(self, ctx: DocumentContext) -> AgentStep:
+        started = time.perf_counter()
+        ctx.result = None
+        try:
+            result, pages = await self._extract(ctx)
+            ctx.result = result
+            return AgentStep(
+                agent=self.name,
+                status=StepStatus.ABSTAINED if result.abstained else StepStatus.OK,
+                summary="Leitura encerrada; confira os avisos antes de confirmar.",
+                duration_ms=int((time.perf_counter() - started) * 1000),
+                detail={
+                    "engine": result.engine,
+                    "pages": pages,
+                    "fields": len(result.fields),
+                    "issues": [item.code for item in result.issues],
+                },
+            )
+        except Exception as error:
+            code = (
+                error.code if isinstance(error, DocumentReadError) else "DOCUMENT_PROCESSING_FAILED"
+            )
+            return AgentStep(
+                agent=self.name,
+                status=StepStatus.FAILED,
+                summary="Não foi possível processar o documento.",
+                duration_ms=int((time.perf_counter() - started) * 1000),
+                detail={"code": code},
+            )
+        finally:
+            ctx.content = b""
+
+    async def _extract(self, ctx: DocumentContext) -> tuple[ExtractedDocument, list[PageTrace]]:
+        collection = FieldCollection()
+        transactions: list[ExtractedTransaction] = []
+        issues: list[ValidationIssue] = []
+        reports: list[QualityReport] = []
+        trace: list[PageTrace] = []
+        engines: set[str] = set()
+        kind = DocumentKind.OTHER
+        bb_header = ""
+        for page in read_pages(ctx.content, ctx.media_type):
+            result = await self._read_page(ctx.content, page, bb_header)
+            if not bb_header:
+                bb_header = bb_continuation_header(page.text or "")
+            page_kind = result.text.kind
+            if page_kind != DocumentKind.OTHER:
+                if kind not in {DocumentKind.OTHER, page_kind}:
+                    raise DocumentReadError("MIXED_DOCUMENT_KINDS")
+                kind = page_kind
+            elif result.report.quality != DocumentQuality.ILLEGIBLE:
+                result.issues.append(warning("UNSUPPORTED_LAYOUT", "Layout não suportado."))
+            for key in result.collection.conflicts:
+                collection.values.pop(key, None)
+                collection.conflicts.add(key)
+            collection.merge(list(result.collection.values.values()))
+            transactions.extend(result.text.transactions)
+            issues.extend(result.issues)
+            reports.append(result.report)
+            engines.update(result.engines)
+            trace.append(
+                {
+                    "page": page.number,
+                    "status": (
+                        "illegible"
+                        if result.report.quality == DocumentQuality.ILLEGIBLE
+                        else "+".join(sorted(result.engines)) or "quality_gate"
+                    ),
+                }
+            )
+        if not reports:
+            raise DocumentReadError("EMPTY_DOCUMENT")
+        if collection.conflicts:
+            issues.append(warning("FIELD_CONFLICT", "Campo divergente entre leituras; revise."))
+        return self._finish(kind, collection, transactions, reports, issues, engines), trace
+
+    async def _read_page(
+        self, content: bytes, page: DocumentPage, bb_header: str
+    ) -> PageExtraction:
+        text = parse_text(
+            page.text or "",
+            FieldSource.TEXT_LAYER,
+            TEXT_CONFIDENCE,
+            bb_header=bb_header if page.text else "",
+        )
+        fields = FieldCollection()
+        fields.merge(text.fields)
+        result = PageExtraction(
+            text,
+            fields,
+            text_quality(),
+            {"text_layer"} if fields.values or text.transactions else set(),
+        )
+        image = page.image
+        try:
+            if text.sufficient(continuation=bool(bb_header)):
+                return result
+            image = image or render_pdf_page(content, page.number - 1)
+            result.report = assess_quality(image)
+            if result.report.quality == DocumentQuality.ILLEGIBLE:
+                if fields.values or text.transactions:
+                    result.report.quality = DocumentQuality.PARTIAL
+                return result
+            if self.ocr is None:
+                raise DocumentReadError("OCR_UNAVAILABLE")
+            try:
+                reading = await asyncio.wait_for(self.ocr.read(image_bytes(image)), self.timeout)
+            except TimeoutError:
+                raise DocumentReadError("OCR_TIMEOUT") from None
+            except Exception:
+                raise DocumentReadError("OCR_UNAVAILABLE") from None
+            check_reading(reading)
+            ocr_text = parse_text(
+                reading.text, FieldSource.OCR, reading.confidence, bb_header=bb_header
+            )
+            if text.kind != DocumentKind.OTHER and ocr_text.kind not in {
+                DocumentKind.OTHER,
+                text.kind,
+            }:
+                raise DocumentReadError("MIXED_DOCUMENT_KINDS")
+            if ocr_text.kind != DocumentKind.OTHER:
+                result.text.kind = ocr_text.kind
+            result.report = assess_quality(image, reading.confidence)
+            candidates: list[ExtractedField] = []
+            for item in ocr_text.fields:
+                confidence = (reading.field_confidences or {}).get(item.key, reading.confidence)
+                if confidence >= MIN_OCR_CONFIDENCE:
+                    candidates.append(item.model_copy(update={"confidence": confidence}))
+                else:
+                    result.issues.append(warning("LOW_CONFIDENCE", "Campo exige nova leitura."))
+            fields.merge(candidates)
+            # Não substitui silenciosamente linhas textuais por uma segunda leitura OCR.
+            if not result.text.transactions and reading.confidence >= MIN_OCR_CONFIDENCE:
+                result.text.transactions = ocr_text.transactions
+            result.engines.add("ocr")
+            expected = EXPECTED.get(result.text.kind, set())
+            if (
+                self.vision is not None
+                and result.text.kind != DocumentKind.OTHER
+                and (expected - fields.values.keys() or fields.conflicts)
+            ):
+                if await self._complement(image_bytes(image), fields, result.issues):
+                    result.engines.add("vlm")
+            return result
+        finally:
+            if image is not None:
+                image.close()
+
+    @staticmethod
+    def _finish(
+        kind: DocumentKind,
+        fields: FieldCollection,
+        transactions: list[ExtractedTransaction],
+        reports: list[QualityReport],
+        issues: list[ValidationIssue],
+        engines: set[str],
+    ) -> ExtractedDocument:
+        incomplete = (
+            bool(EXPECTED.get(kind, set()) - fields.values.keys())
+            or (kind == DocumentKind.CARD_INVOICE and not transactions)
+            or any(
+                row.date is None or row.amount is None or not row.description
+                for row in transactions
+            )
+            or any(item.confidence < MIN_OCR_CONFIDENCE for item in fields.values.values())
+            or any(report.quality != DocumentQuality.LEGIBLE for report in reports)
+        )
+        if incomplete:
+            issues.append(warning("INCOMPLETE_EXTRACTION", "Leitura incompleta; revise os campos."))
+        abstained = not fields.values and not transactions
+        all_illegible = all(report.quality == DocumentQuality.ILLEGIBLE for report in reports)
+        quality = reports[0].model_copy(deep=True)
+        quality.quality = (
+            DocumentQuality.ILLEGIBLE
+            if all_illegible
+            else DocumentQuality.PARTIAL
+            if incomplete or abstained or issues
+            else DocumentQuality.LEGIBLE
+        )
+        quality.reasons = sorted({reason for report in reports for reason in report.reasons})
+        reason = None
+        if abstained:
+            reason = (
+                "Documento ilegível. Envie uma nova foto."
+                if all_illegible
+                else "Nenhum campo seguro identificado. Use um layout suportado "
+                "ou preencha manualmente."
+            )
+        bank = fields.values.get("bank")
+        return ExtractedDocument(
+            kind=kind,
+            bank=str(bank.value) if bank else None,
+            quality=quality,
+            fields=list(fields.values.values()),
+            transactions=transactions,
+            issues=issues,
+            abstained=abstained,
+            reason=reason,
+            engine="+".join(sorted(engines)) or "quality_gate",
+        )
+
+    async def _complement(
+        self,
+        image: bytes,
+        fields: FieldCollection,
+        issues: list[ValidationIssue],
+    ) -> bool:
+        vision = self.vision
+        if vision is None:
+            return False
+        if self.sanitizer is None:
+            issues.append(warning("VISION_PRIVACY_BLOCKED", "Visão bloqueada por privacidade."))
+            return False
+        called = False
+        try:
+            safe_image = self.sanitizer.sanitize(image)
+            if safe_image is None:
+                issues.append(warning("VISION_PRIVACY_BLOCKED", "Visão bloqueada por privacidade."))
+                return False
+            called = True
+            raw = await asyncio.wait_for(
+                vision.extract(
+                    safe_image,
+                    "Extraia apenas os campos visíveis, sem CPF, conta ou agência.",
+                    VisionFields.model_json_schema(),
+                ),
+                self.timeout,
+            )
+            proposed = VisionFields.model_validate_json(raw)
+            candidates: list[ExtractedField] = []
+            keys: set[str] = set()
+            # Valida e sanitiza tudo antes de modificar qualquer campo do OCR.
+            for item in proposed.fields:
+                if item.key in keys or item.source != FieldSource.VLM or item.value is None:
+                    raise ValueError("INVALID_VISION_FIELDS")
+                keys.add(item.key)
+                raw_value = str(item.value)
+                if isinstance(item.value, float):
+                    if item.key not in {"amount", "total"}:
+                        raise ValueError("INVALID_VISION_FIELDS")
+                    decimal_value = Decimal(raw_value)
+                    if decimal_value * 100 != (decimal_value * 100).to_integral_value():
+                        raise ValueError("INVALID_VISION_FIELDS")
+                    raw_value = format(decimal_value, ".2f")
+                value = normalized_value(item.key, raw_value, canonical=True)
+                if value is None:
+                    raise ValueError("INVALID_VISION_FIELDS")
+                candidates.append(
+                    ExtractedField(
+                        key=item.key,
+                        value=value,
+                        source=FieldSource.VLM,
+                        confidence=min(item.confidence, VISION_REVIEW_CONFIDENCE),
+                    )
+                )
+            before = set(fields.values)
+            fields.merge(candidates)
+            if fields.conflicts or set(fields.values) - before:
+                issues.append(warning("VISION_REVIEW_REQUIRED", "Leitura de visão exige revisão."))
+        except (ValidationError, ValueError, TimeoutError):
+            issues.append(warning("INVALID_VISION_OUTPUT", "Contribuição de visão descartada."))
+        except Exception:
+            issues.append(
+                warning("VISION_UNAVAILABLE", "Visão indisponível; leitura local preservada.")
+            )
+        return called

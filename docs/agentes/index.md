@@ -155,3 +155,11 @@ com o Qwen 2.5 de 1,5 B local e o GPT-6 Luna. Os números, os gráficos e a comp
 Trokim estruturado estão no [Histórico de Resultados](../pesquisa/resultados.md#8-semana-4-multiagente-nos-30-casos-da-comparacao).
 Em resumo: os rascunhos inválidos injetados foram todos barrados, o C30 foi retido, o C29 saiu
 com os números do sistema (protocolo corrigido de 19/11) e o C27 continua respondido, porque a política de escopo do Research não reconhece previsões de preço.
+
+
+## Agente de documento (Semana 5)
+
+O quinto agente tem contexto próprio, distinto do chat: lê documentos e devolve campos
+para revisão. Veja [Agente de documento](document-agent.md) para escopo, abstenção,
+privacidade e dependências ainda pendentes. O componente da #88 não adiciona endpoints;
+a ligação ao fluxo do app pertence à #96.

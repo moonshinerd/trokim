@@ -336,3 +336,12 @@ Cada issue exige a atualização do MkDocs **no mesmo PR** (regra do `AGENTS.md`
 **Persistência e backup (já em `main` antes da Fase 1):** a biblioteca do usuário passou a ser gravada no SQLite local e restaurada ao iniciar a API, com backup criptografado `.trokim` ([#102](https://github.com/moonshinerd/trokim/issues/102), [ADR 0024](adr/0024-persistencia-local-e-backup-criptografado.md)). Por isso as issues da semana já nascem sobre dados duráveis. As telas de backup já estão em Ajustes; fica para a Semana 6 o armazenamento no aparelho (SQLCipher, com a API sem estado).
 
 **Pendências herdadas da Semana 4** e ainda não atribuídas a uma issue: revisão humana dos casos sinalizados e política de escopo para previsão de preço (C27) e redação que aceite paráfrase com citação verificada.
+
+
+### Recorte acordado da #88 — agente de documento
+
+Implementação iniciada com três layouts sintéticos rotulados, perfil PDF textual existente,
+limite de 10 páginas, extração parcial e abstenção sem preenchimento por palpite.
+O código tem contexto próprio e trilha sanitizada; não expõe endpoint nem persiste lançamento.
+A conclusão depende das portas e OCR real da #87, calibração com a #90 e política de confiança
+compartilhada com a #89. Consulte o [escopo e as pendências](agentes/document-agent.md).

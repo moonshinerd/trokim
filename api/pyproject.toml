@@ -24,6 +24,9 @@ dependencies = [
     "cryptography>=43",
 ]
 
+[project.optional-dependencies]
+documents = ["Pillow>=10.4", "pypdfium2>=4.30"]
+
 [dependency-groups]
 dev = [
     "jsonschema>=4.23",

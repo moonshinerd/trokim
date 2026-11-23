@@ -135,3 +135,14 @@ graph LR
 | **RNF09** | GQ05, GQ08 | [ADR 0006](adr/0006-curadoria-benchmark.md), [0007](adr/0007-banco-vetorial-embeddings.md) | `research/rag_benchmark/` | CI GitHub Actions / Runner Mac |
 | **RNF10** | GQ01, GQ07 | [ADR 0011](adr/0011-identidade-visual-e-tema-do-sistema.md), [0013](adr/0013-preferencias-locais-e-aba-de-ajustes.md) | `mobile/lib/core/theme/app_theme.dart`, `mobile/lib/core/widgets/app_motion.dart` | `mobile/test/splash_gate_test.dart`, `mobile/test/settings_screen_test.dart` |
 | **RNF11** | GQ01, GQ03 | [ADR 0012](adr/0012-mascote-onca-e-arte-de-marca-livre.md) | `mobile/assets/brand/`, `docs/referencias.md` | Revisão no PR |
+
+
+## Rastreabilidade do agente de documento (#88)
+
+| Requisito do épico #86 | Origem | Atendimento nesta implementação |
+|---|---|---|
+| RF27 — leitura de foto ou PDF escaneado | GQ02 | Componente de leitura e portas internas; OCR real e calibração pendentes (#87/#90) |
+| RF28 — revisão humana e abstenção | GQ02, GQ05 | `needs_review=True`, abstenção e leitura parcial; confirmação no app depende da #96 |
+
+O [Agente de documento](agentes/document-agent.md) detalha limites, formatos, proteção dos dados
+e testes. Estes requisitos não são declarados concluídos de ponta a ponta nesta entrega parcial.
