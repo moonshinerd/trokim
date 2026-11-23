@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:intl/intl.dart';
 
 import '../../../core/theme/app_theme.dart';
@@ -546,14 +546,10 @@ class _BalanceCard extends StatelessWidget {
     return Container(
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(28),
-        gradient: LinearGradient(
+        gradient: const LinearGradient(
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
-          colors: const [
-            Color(0xFF3F6666),
-            Color(0xFF2F4F4F),
-            Color(0xFF1B3232),
-          ],
+          colors: [Color(0xFF3F6666), Color(0xFF2F4F4F), Color(0xFF1B3232)],
         ),
         boxShadow: [
           BoxShadow(
@@ -574,7 +570,7 @@ class _BalanceCard extends StatelessWidget {
               color: Colors.white.withValues(alpha: 0.07),
             ),
           ),
-          Positioned(right: 22, top: 22, child: const SpinningCoin(size: 70)),
+          const Positioned(right: 22, top: 22, child: SpinningCoin(size: 70)),
           Padding(
             padding: const EdgeInsets.all(22),
             child: Column(

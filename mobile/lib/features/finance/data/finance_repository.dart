@@ -8,7 +8,7 @@ import '../domain/library_models.dart';
 class FinanceRepository {
   /// [newClient] cria um cliente por operação, que é fechado ao final; assim
   /// o endereço da API editado em Ajustes vale na chamada seguinte.
-  FinanceRepository(this._newClient, {LibrarySync? sync}) : _sync = sync;
+  FinanceRepository(this._newClient, {this._sync});
 
   final ApiClient Function() _newClient;
 

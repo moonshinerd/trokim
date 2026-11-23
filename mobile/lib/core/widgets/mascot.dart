@@ -1,6 +1,6 @@
 import 'dart:ui' as ui;
 
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:flutter/services.dart' show rootBundle;
 
 /// Mascote do Trokim: a onça-pintada (a da nota de R\$ 50), em dourado com as

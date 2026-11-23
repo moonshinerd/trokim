@@ -342,12 +342,16 @@ Cada issue exige a atualização do MkDocs **no mesmo PR** (regra do `AGENTS.md`
 
 **Encaminhado para a Semana 6** (milestone "Semana 6 — Integração Completa"): as pendências herdadas da Semana 4, que são redação com paráfrase verificada, política de escopo para previsão de preço (C27) e revisão humana dos casos sinalizados ([#105](https://github.com/moonshinerd/trokim/issues/105)).
 
-### Recorte acordado da #88 — agente de documento
+### Revisão da captura de documentos (#91)
 
-Implementação iniciada com três layouts sintéticos rotulados, perfil PDF textual existente,
-limite de 10 páginas, extração parcial e abstenção sem preenchimento por palpite.
-O código tem contexto próprio e trilha sanitizada; não expõe endpoint nem persiste lançamento.
-As portas e fábricas da #87 já estão integradas. A #90 acrescenta 40 documentos, manifesto,
-gabarito de recuperabilidade, calibração/verificação por família e runner de OCR real no CI.
-Os limites visuais foram mantidos após o ensaio sintético. O ensaio de extração já foi registrado, com
-limitações de transcrição; o fechamento exige conferir o CI e o ensaio com OCR real; a #89 aplica a validação financeira. Consulte o [escopo e as pendências](agentes/document-agent.md).
+A PR #110 implementa o fluxo com repositório falso e revisão humana. A revisão
+acrescenta validação única para o formulário e a confirmação, tratamento de
+respostas após fechar a tela, acesso pelo fluxo de importação e testes de
+regressão. Confirmar ainda não cria lançamentos: extração e persistência reais
+continuam na integração #97.
+
+A integração da PR #110 com o catálogo de bancos da `main` preserva os sete
+bancos, seus tutoriais e o pedido de suporte, junto ao acesso à revisão de
+documentos. Os testes de bancos suportados verificam a coexistência dessas
+entradas. A configuração de backup continua recebendo o cliente e os seletores
+fornecidos pela tela de Ajustes.

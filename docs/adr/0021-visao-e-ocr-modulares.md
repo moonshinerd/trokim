@@ -2,8 +2,8 @@
 
 - **Status:** Aceita
 - **Data:** 23/11/2026
-- **Requisitos / GQs:** RF27, RNF01, RNF12; GQ02, GQ03
-- **Issues:** [#87](https://github.com/moonshinerd/trokim/issues/87)
+- **Requisitos / GQs:** RF27, RF28, RNF01, RNF10, RNF12; GQ01, GQ02, GQ03
+- **Issues:** [#87](https://github.com/moonshinerd/trokim/issues/87), [#91](https://github.com/moonshinerd/trokim/issues/91)
 - **ADRs relacionadas:** [0009](0009-sintese-generativa-local.md), [0015](0015-dados-reais-importacao-e-endereco-da-api.md), [0016](0016-arquitetura-multiagente.md)
 
 ## Contexto
@@ -36,6 +36,14 @@ nuvem contraria a premissa local-first do projeto.
 6. **Backend em contêiner.** `deploy/Dockerfile` empacota a API com o OCR e o modelo de
    embeddings já baixado, e roda como usuário sem privilégios. O app Flutter fica fora do
    contêiner, instalado no aparelho.
+7. **Revisão humana no app.** No app Flutter (`mobile/lib/features/documents/`), a leitura é assistida:
+   o usuário visualiza uma prévia antes da leitura, vê cada campo extraído com seu nível de confiança
+   (alta, média, baixa), edita dados duvidosos, resolve bloqueios e confirma ou descarta explicitamente.
+   Linhas podem ser excluídas e bloqueios só são liberados quando os campos obrigatórios correspondentes
+   são alterados para valores válidos; campos opcionais não bloqueiam. Bloqueios sem campo editável
+   continuam impedindo confirmar. Imagens ilegíveis orientam nova tentativa com dicas de enquadramento. Nenhum
+   lançamento é criado sem confirmação humana ativa. A etapa inicial utiliza repositório de teste
+   (mock) e a integração com o endpoint real pertence à issue #97.
 
 ## Consequências
 
@@ -46,6 +54,8 @@ nuvem contraria a premissa local-first do projeto.
   opcional e a imagem Docker é grande.
 - A confiança do OCR alimenta o porteiro de qualidade da imagem, que decide abster-se quando a
   foto não permite concluir.
+- A tela de revisão do app desacopla o motor de extração da confirmação do usuário; trocas de motor
+  ou modelos não alteram o fluxo de conferência nem criam lançamentos de forma silenciosa.
 
 ## Alternativas descartadas
 

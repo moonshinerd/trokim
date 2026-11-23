@@ -24,3 +24,12 @@ O layout se adapta a telas estreitas e largas; em desktop, a interface fica cent
 O protótipo estático web foca na navegação das cinco abas principais e na identidade visual, não executando o upload ou processamento de arquivos (o botão de importar extrato na aba Extratos é apenas demonstrativo). O fluxo interativo completo de importação — incluindo a **tela de Bancos Suportados** com selos de validação (**Validado** e **Experimental**), formatos aceitos e tutoriais passo a passo navegáveis para cada banco ([RF29](requisitos.md), [ADR 0022](adr/0022-registro-de-perfis-e-niveis-de-suporte.md)) — é implementado e testado de forma nativa no aplicativo Flutter para Android (`mobile/lib/features/import_guide/`), funcionando em modo local-first no dispositivo. Veja os tutoriais detalhados de cada instituição no [Guia de Uso](guia-de-uso.md#82-importar-por-banco-e-bancos-suportados-rf29).
 
 O iframe usa um caminho relativo compatível com a página publicada em `/prototipo/`, inclusive quando o site está em um subdiretório. Os endereços `#resumo`, `#extratos`, `#assistente`, `#cenarios` e `#ajustes` abrem a tela correspondente; um fragmento desconhecido retorna ao Resumo.
+
+## Captura e revisão de documentos no app
+
+O aplicativo também oferece **Fotografar ou escolher documento** em **Extratos**
+e no primeiro passo de **Importar extrato**. Esse fluxo ainda não é interativo
+no protótipo estático: a [seção de documentos do Guia de Uso](guia-de-uso.md#810-fotografar-ou-escolher-documento)
+mostra a captura sintética da tela e descreve prévia, confiança, correções,
+bloqueios e descarte. No app, a leitura desta fase é simulada, sem criar
+lançamentos; a integração real pertence à issue #97.

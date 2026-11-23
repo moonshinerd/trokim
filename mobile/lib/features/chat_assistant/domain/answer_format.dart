@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 /// Prepara o texto de uma resposta do LLM para exibir no chat.
 ///

@@ -28,11 +28,11 @@ class ApiClient {
   final Duration titleTimeout;
   final Set<Completer<void>> _generationAborts = {};
 
-  /// [baseUrlProvider] é consultado a cada chamada, para que o endereço
+  /// [_baseUrlProvider] é consultado a cada chamada, para que o endereço
   /// editado em Ajustes valha sem recriar o cliente.
   ApiClient({
     String? baseUrl,
-    String Function()? baseUrlProvider,
+    this._baseUrlProvider,
     http.Client? client,
     this.timeout = const Duration(seconds: 15),
     this.uploadTimeout = const Duration(seconds: 60),
@@ -41,7 +41,6 @@ class ApiClient {
       seconds: ApiConstants.chatGenerateTimeoutSeconds,
     ),
   }) : _fixedBaseUrl = baseUrl,
-       _baseUrlProvider = baseUrlProvider,
        _client = client ?? http.Client() {
     if (generationTimeout <= Duration.zero) {
       throw ArgumentError.value(generationTimeout, 'generationTimeout');

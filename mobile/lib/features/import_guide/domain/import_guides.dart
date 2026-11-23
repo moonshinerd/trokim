@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 /// Tipo de arquivo que o usuário quer importar.
 enum NubankStatementKind { card, account }

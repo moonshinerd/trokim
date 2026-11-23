@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../../../core/format.dart';
@@ -6,6 +6,7 @@ import '../../../core/settings/settings_controller.dart';
 import '../../../core/theme/app_theme.dart';
 import '../../../core/widgets/app_motion.dart';
 import '../../categories/presentation/category_review_screen.dart';
+import '../../documents/presentation/document_import_button.dart';
 import '../../finance/domain/finance_models.dart';
 import '../../finance/domain/library_models.dart';
 import '../../finance/presentation/finance_controller.dart';
@@ -670,6 +671,7 @@ class _BankStep extends StatelessWidget {
         ),
       ],
       actions: [
+        const DocumentImportButton(),
         OutlinedButton.icon(
           onPressed: onHaveFile,
           icon: const Icon(Icons.upload_file_rounded),
@@ -695,6 +697,10 @@ class _ProductStep extends StatelessWidget {
   Widget build(BuildContext context) => _StepLayout(
     title: 'Qual conta do Nubank?',
     subtitle: 'O arquivo não diz se é pessoal ou Empresas, então perguntamos uma vez.',
+    actions: [
+      FilledButton(onPressed: onSkip, child: const Text('Pular tutorial')),
+      TextButton(onPressed: onBack, child: const Text('Voltar')),
+    ],
     children: [
       _OptionCard(
         icon: Icons.person_rounded,
@@ -708,10 +714,6 @@ class _ProductStep extends StatelessWidget {
         subtitle: 'Conta e cartão da sua empresa',
         onTap: () => onSelected(AccountOwner.business),
       ),
-    ],
-    actions: [
-      FilledButton(onPressed: onSkip, child: const Text('Pular tutorial')),
-      TextButton(onPressed: onBack, child: const Text('Voltar')),
     ],
   );
 }
@@ -854,6 +856,23 @@ class _TutorialStep extends StatelessWidget {
     final last = index == steps.length - 1;
     return _StepLayout(
       title: step.title,
+      actions: [
+        FilledButton(
+          onPressed: last ? onPick : onNext,
+          child: Text(last ? 'Escolher arquivo' : 'Próximo'),
+        ),
+        Row(
+          children: [
+            TextButton(onPressed: onBack, child: const Text('Voltar')),
+            const Spacer(),
+            if (!last)
+              TextButton(
+                onPressed: onSkip,
+                child: const Text('Pular tutorial'),
+              ),
+          ],
+        ),
+      ],
       children: [
         if (isExperimental)
           Padding(
@@ -926,23 +945,6 @@ class _TutorialStep extends StatelessWidget {
           ),
         ],
       ],
-      actions: [
-        FilledButton(
-          onPressed: last ? onPick : onNext,
-          child: Text(last ? 'Escolher arquivo' : 'Próximo'),
-        ),
-        Row(
-          children: [
-            TextButton(onPressed: onBack, child: const Text('Voltar')),
-            const Spacer(),
-            if (!last)
-              TextButton(
-                onPressed: onSkip,
-                child: const Text('Pular tutorial'),
-              ),
-          ],
-        ),
-      ],
     );
   }
 }
@@ -1013,6 +1015,34 @@ class _DecideStep extends StatelessWidget {
       subtitle: inspection.attention.isEmpty
           ? 'O arquivo não diz isso. Escolha uma vez e o app lembra.'
           : null,
+      actions: [
+        if (_ownerQuestion) ...[
+          FilledButton(
+            onPressed: () =>
+                onImport(suggested ?? AccountOwner.personal, confirmed: true),
+            child: Text(
+              'Importar como ${ownerLabel(suggested ?? AccountOwner.personal, institution)}',
+            ),
+          ),
+          OutlinedButton(
+            onPressed: () => onImport(
+              suggested == null ? AccountOwner.business : other,
+              confirmed: true,
+            ),
+            child: Text(
+              'Importar como ${ownerLabel(suggested == null ? AccountOwner.business : other, institution)}',
+            ),
+          ),
+        ] else
+          FilledButton(
+            onPressed: () => onImport(fallbackOwner, confirmed: true),
+            child: const Text('Importar mesmo assim'),
+          ),
+        TextButton(
+          onPressed: onOtherFile,
+          child: const Text('Escolher outro arquivo'),
+        ),
+      ],
       children: [
         if (inspection.institutionLabel != null)
           Padding(
@@ -1069,34 +1099,6 @@ class _DecideStep extends StatelessWidget {
             ),
           ),
       ],
-      actions: [
-        if (_ownerQuestion) ...[
-          FilledButton(
-            onPressed: () =>
-                onImport(suggested ?? AccountOwner.personal, confirmed: true),
-            child: Text(
-              'Importar como ${ownerLabel(suggested ?? AccountOwner.personal, institution)}',
-            ),
-          ),
-          OutlinedButton(
-            onPressed: () => onImport(
-              suggested == null ? AccountOwner.business : other,
-              confirmed: true,
-            ),
-            child: Text(
-              'Importar como ${ownerLabel(suggested == null ? AccountOwner.business : other, institution)}',
-            ),
-          ),
-        ] else
-          FilledButton(
-            onPressed: () => onImport(fallbackOwner, confirmed: true),
-            child: const Text('Importar mesmo assim'),
-          ),
-        TextButton(
-          onPressed: onOtherFile,
-          child: const Text('Escolher outro arquivo'),
-        ),
-      ],
     );
   }
 }
@@ -1135,6 +1137,7 @@ class _SummaryStep extends StatelessWidget {
     return _StepLayout(
       title: 'Pronto!',
       subtitle: result.filename,
+      actions: [FilledButton(onPressed: onDone, child: const Text('Concluir'))],
       children: [
         if (detected != null)
           Padding(
@@ -1252,7 +1255,6 @@ class _SummaryStep extends StatelessWidget {
             ),
           ),
       ],
-      actions: [FilledButton(onPressed: onDone, child: const Text('Concluir'))],
     );
   }
 }
@@ -1467,6 +1469,13 @@ class _FailedStep extends StatelessWidget {
   @override
   Widget build(BuildContext context) => _StepLayout(
     title: 'Não deu para importar',
+    actions: [
+      FilledButton(
+        onPressed: onRetry,
+        child: const Text('Escolher outro arquivo'),
+      ),
+      TextButton(onPressed: onTutorial, child: const Text('Ver tutorial')),
+    ],
     children: [
       Row(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -1476,13 +1485,6 @@ class _FailedStep extends StatelessWidget {
           Expanded(child: Text(message, style: const TextStyle(height: 1.4))),
         ],
       ),
-    ],
-    actions: [
-      FilledButton(
-        onPressed: onRetry,
-        child: const Text('Escolher outro arquivo'),
-      ),
-      TextButton(onPressed: onTutorial, child: const Text('Ver tutorial')),
     ],
   );
 }
