@@ -227,7 +227,7 @@ DEBUG=false ENVIRONMENT=development make api-run
 # Terminal 2: app (requer Flutter estável, JDK 17 e Android SDK 36)
 cd mobile
 flutter pub get
-flutter test          # 238 testes
+flutter test          # 244 testes
 flutter run           # emulador Android; a API fica em http://10.0.2.2:8000/v1
 ```
 
@@ -493,3 +493,19 @@ API local.
 
 As capturas desta seção usam o cenário sintético completo
 (`python research/synthetic_data/generate_nubank_datasets.py`), com dados fictícios.
+
+### 8.10. Fotografar ou escolher documento
+
+Na tela **Extratos**, toque em **Fotografar ou escolher documento**. Fotografe,
+selecione uma imagem ou escolha um PDF. A câmera é aberta somente após essa
+ação; a seleção usa os seletores do sistema. Confira a pré-visualização e toque
+em **Ler documento**. A revisão apresenta valor, data, favorecido, banco e
+vencimento, com seus níveis de confiança. Edite os campos destacados e remova
+linhas de fatura se necessário. Um bloqueio impede confirmar enquanto o campo
+não for corrigido. **Confirmar** exige ação explícita; **Descartar** abandona a
+leitura. Se o documento estiver ilegível, siga as dicas de enquadramento e toque
+em **Tirar outra foto**. A imagem é lida no aparelho e não é guardada. Nesta
+fase, o repositório falso usa dados sintéticos; a integração ao endpoint está
+na issue #97.
+
+![Captura do emulador Android com a revisão de um comprovante sintético, campos editáveis e confiança baixa](assets/app/revisao-documento-sintetico.png)

@@ -40,11 +40,11 @@ class ChatController extends ChangeNotifier {
   bool _isDisposed = false;
   String? _failedQuestion;
 
-  /// Com [store], as conversas são guardadas e nomeadas; sem ele, o chat
+  /// Com [_store], as conversas são guardadas e nomeadas; sem ele, o chat
   /// funciona só em memória (uma conversa).
   ChatController({
     ChatRepository? repository,
-    ConversationStore? store,
+    this._store,
     this.generative = true,
     this.multiAgent = false,
     String Function()? baseUrlProvider,
@@ -53,8 +53,7 @@ class ChatController extends ChangeNotifier {
            ChatRepository(
              apiClient: ApiClient(baseUrlProvider: baseUrlProvider),
            ),
-       _ownsRepository = repository == null,
-       _store = store;
+       _ownsRepository = repository == null;
 
   static ChatMessage _welcome() =>
       ChatMessage(isUser: false, text: welcomeText);

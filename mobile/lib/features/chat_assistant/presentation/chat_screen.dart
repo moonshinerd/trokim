@@ -1,5 +1,5 @@
 import 'package:flutter/gestures.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../../../core/theme/app_theme.dart';
@@ -144,7 +144,7 @@ class _ChatScreenState extends State<ChatScreen> {
                       color: context.colors.accent,
                       size: 19,
                     ),
-                    SizedBox(width: 8),
+                    const SizedBox(width: 8),
                     Expanded(
                       child: Text(
                         'Auditoria pedagógica: respostas fundamentadas exibem as fontes e os trechos recuperados. O Trokim não fabrica um comparativo sem evidências.',
@@ -167,7 +167,7 @@ class _ChatScreenState extends State<ChatScreen> {
                   itemBuilder: (context, index) {
                     if (index == _chat.messages.length) {
                       return Padding(
-                        padding: EdgeInsets.symmetric(vertical: 12),
+                        padding: const EdgeInsets.symmetric(vertical: 12),
                         child: Row(
                           children: [
                             SizedBox(
@@ -178,7 +178,7 @@ class _ChatScreenState extends State<ChatScreen> {
                                 color: context.colors.accent,
                               ),
                             ),
-                            SizedBox(width: 12),
+                            const SizedBox(width: 12),
                             Expanded(
                               child: Text(
                                 'Consultando fontes e gerando resposta...',

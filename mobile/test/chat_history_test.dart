@@ -1,7 +1,6 @@
-import 'dart:async';
 import 'dart:convert';
 
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:http/http.dart' as http;
 import 'package:http/testing.dart';
@@ -38,12 +37,11 @@ http.Response _reply([String answer = 'Resposta oficial [1]']) => _json({
 
 class Harness {
   Harness({
-    String? title = 'Reserva de emergência',
+    this._title = 'Reserva de emergência',
     this.titleDelay = Duration.zero,
     ConversationStore? store,
     bool generative = true,
-  }) : store = store ?? MemoryConversationStore(),
-       _title = title {
+  }) : store = store ?? MemoryConversationStore() {
     final client = MockClient((request) async {
       paths.add(request.url.path);
       if (request.url.path.endsWith('/chat/title')) {

@@ -21,6 +21,7 @@ mobile/
 │   └── features/
 │       ├── dashboard/        # Resumo calculado pela API (receitas, despesas, poupança e categorias)
 │       ├── transactions/     # Importação por seletor de arquivos e lista de extratos OFX/PDF
+│       ├── documents/        # Captura, prévia e revisão de campos de comprovantes (fase 1 com repositório falso)
 │       ├── finance/          # Modelos, repositório e controlador do resumo e da importação
 │       ├── chat_assistant/   # Chat com resposta fundamentada, fontes clicáveis e histórico de conversas
 │       ├── agents/           # Contratos Dart estritos para resposta e trilha multiagente
@@ -153,6 +154,12 @@ tráfego HTTP habilitado para esse backend local. Essa configuração de transpo
 é para desenvolvimento; um serviço remoto de produção deve usar HTTPS.
 
 ### Celular físico
+
+Na importação por documento, a câmera só é aberta depois que a pessoa toca em
+**Fotografar**; nenhum acesso é solicitado na inicialização. No Android, a
+câmera e os seletores de imagem/PDF são abertos por intents e seletores do
+sistema, sem permissão ampla de armazenamento no app. A foto fica no dispositivo
+durante a revisão e não é persistida pelo app.
 
 Conecte o celular e o computador à mesma rede confiável. Como `make api-run`
 escuta apenas em `127.0.0.1`, para permitir acesso pela rede inicie o backend

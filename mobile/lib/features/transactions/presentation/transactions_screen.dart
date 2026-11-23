@@ -1,10 +1,12 @@
 import 'package:file_picker/file_picker.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 import '../../../core/settings/settings_controller.dart';
 import '../../../core/theme/app_theme.dart';
 import '../../../core/widgets/app_motion.dart';
 import '../../../core/widgets/screen_header.dart';
+import '../../documents/domain/extracted_document.dart';
+import '../../documents/presentation/document_import_screen.dart';
 import '../../finance/domain/finance_models.dart';
 import '../../finance/domain/library_models.dart';
 import '../../finance/presentation/finance_controller.dart';
@@ -103,6 +105,18 @@ class TransactionsScreen extends StatelessWidget {
             ),
             const CoverageNotice(),
             const ShortcutsSection(),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 20),
+              child: OutlinedButton.icon(
+                onPressed: () => Navigator.of(context).push<ReviewedDocument>(
+                  MaterialPageRoute(
+                    builder: (_) => const DocumentImportScreen(),
+                  ),
+                ),
+                icon: const Icon(Icons.document_scanner_outlined),
+                label: const Text('Fotografar ou escolher documento'),
+              ),
+            ),
             const Padding(
               padding: EdgeInsets.fromLTRB(20, 20, 20, 10),
               child: Reveal(
@@ -218,7 +232,7 @@ class _PrivacyBanner extends StatelessWidget {
                       color: context.colors.ink,
                     ),
                   ),
-                  SizedBox(height: 4),
+                  const SizedBox(height: 4),
                   Text(
                     'Aceita OFX e faturas em PDF. O arquivo é lido pela API na sua máquina '
                     'e os lançamentos ficam na memória dela até ser reiniciada.',

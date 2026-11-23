@@ -1,6 +1,6 @@
 import 'dart:async';
 
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:http/http.dart' as http;
 
 import '../../../core/constants/api_constants.dart';
@@ -107,7 +107,7 @@ class SettingsScreen extends StatelessWidget {
                 title: 'Conexão',
                 child: _ConnectionCard(client: client),
               ),
-              _Section(
+              const _Section(
                 index: 5,
                 title: 'Backup',
                 child: BackupCard(
@@ -119,7 +119,7 @@ class SettingsScreen extends StatelessWidget {
               _Section(
                 index: 6,
                 title: 'Privacidade',
-                child: const _InfoRow(
+                child: _InfoRow(
                   icon: Icons.lock_rounded,
                   text:
                       'Seus extratos são lidos e guardados só neste '
