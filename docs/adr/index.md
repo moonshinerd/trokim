@@ -28,6 +28,7 @@ Este repositório registra formalmente todas as decisões de arquitetura e tecno
 | [**0018**](0018-contas-periodos-transferencias-e-visoes.md) | Contas, Períodos, Transferências entre Contas Próprias e Visões de Caixa e Competência | <span class="badge-must">Aceita</span> | 18/11/2026 | RF01, RF02, RF09, RF22 a RF26, GQ02, GQ03, GQ07, GQ09, GQ13 |
 | [**0019**](0019-orm-e-migracoes-numeradas.md) | ORM (SQLAlchemy) e Migrações Numeradas (Alembic) nos Bancos SQLite | <span class="badge-must">Aceita</span> | 18/11/2026 | RF12, RNF01, RNF05, RNF07, GQ03, GQ06 |
 | [**0020**](0020-categorizacao-por-cnae.md) | Categorização por Atividade Econômica (CNAE) com Dados Abertos do CNPJ | <span class="badge-must">Aceita</span> | 18/11/2026 | RF09, RNF01, GQ03, GQ07, GQ11 |
+| [**0021**](0021-visao-e-ocr-modulares.md) | Leitura de Imagem Modular: Portas de OCR e de Visão | <span class="badge-must">Aceita</span> | 23/11/2026 | RF27, RNF01, RNF12, GQ02, GQ03 |
 | [**0024**](0024-persistencia-local-e-backup-criptografado.md) | Persistência Local da Biblioteca e Backup Criptografado | <span class="badge-must">Aceita</span> | 23/11/2026 | RF31, RF32, RNF01, RNF05, GQ03, GQ06 |
 
 - [0006 — Curadoria rastreável e benchmark](0006-curadoria-benchmark.md)
@@ -45,4 +46,5 @@ Este repositório registra formalmente todas as decisões de arquitetura e tecno
 - [0018 — Contas, períodos, transferências e visões](0018-contas-periodos-transferencias-e-visoes.md)
 - [0019 — ORM e migrações numeradas](0019-orm-e-migracoes-numeradas.md)
 - [0020 — Categorização por CNAE com dados abertos do CNPJ](0020-categorizacao-por-cnae.md)
+- [0021 — Leitura de imagem modular (OCR e visão)](0021-visao-e-ocr-modulares.md)
 - [0024 — Persistência local da biblioteca e backup criptografado](0024-persistencia-local-e-backup-criptografado.md)

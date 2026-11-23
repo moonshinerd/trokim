@@ -37,6 +37,43 @@ A API estará disponível em:
 - **Consulta RAG Extrativa:** `POST http://127.0.0.1:8000/v1/chat/ask`
 - **Síntese Generativa Contextualizada:** `POST http://127.0.0.1:8000/v1/chat/generate`
 
+### Backend em Docker (com OCR)
+
+O `deploy/` empacota só o **backend**, com o OCR local e o modelo de embeddings já baixados (a
+API roda sem internet depois da construção). O app Flutter não entra no contêiner: ele é
+instalado no aparelho e aponta para este endereço em **Ajustes > Conexão**.
+
+```bash
+docker compose -f deploy/docker-compose.yml up --build -d   # sobe em 127.0.0.1:8000
+docker compose -f deploy/docker-compose.yml down            # para; os dados ficam no volume
+docker compose -f deploy/docker-compose.yml down -v         # para e APAGA os dados do usuário
+```
+
+Os dados (SQLite e índice vetorial) ficam no volume `trokim-data`, nunca na imagem. O Ollama
+(texto e visão) roda na sua máquina e o contêiner o encontra por `host.docker.internal:11434`.
+Para o celular acessar, publique a porta na rede local editando `ports` (por exemplo
+`"0.0.0.0:8000:8000"`) e use o IP do computador; por padrão só a própria máquina alcança a API.
+
+### Leitura de imagem: OCR e modelo de visão
+
+O OCR é local (RapidOCR) e vem ligado. O modelo de visão é opcional e vem **desligado**
+([ADR 0021](adr/0021-visao-e-ocr-modulares.md)). Tudo se troca por variável de ambiente
+(`api/.env` ou o ambiente do contêiner):
+
+| Variável | Padrão | Para quê |
+|---|---|---|
+| `OCR_PROVIDER` | `rapidocr` | Motor de OCR (`rapidocr` ou `mock`). Fora do Docker, instale com `uv sync --extra ocr` |
+| `VISION_PROVIDER` | `none` | `none`, `litellm` ou `mock` |
+| `VISION_MODEL` | `ollama/qwen2.5vl` | Modelo no formato do LiteLLM; `openrouter/...` é remoto |
+| `VISION_API_BASE` | vazio | Endereço do servidor do modelo |
+| `VISION_API_KEY` | vazio | Chave, só em variável de ambiente |
+| `VISION_TIMEOUT` | `120` | Segundos |
+| `VISION_ALLOW_REMOTE` | `false` | Consentimento para enviar a imagem para fora do aparelho |
+
+Um modelo remoto, como o do OpenRouter, é **recusado** enquanto `VISION_ALLOW_REMOTE` não for
+`true`: a imagem de um documento financeiro sairia do aparelho. O consentimento é seu, e só
+material sintético vai à nuvem nos testes do projeto.
+
 ### Referência rápida da API
 
 Todos os caminhos começam em `/v1`. O contrato completo e interativo fica no Swagger (`/docs`).

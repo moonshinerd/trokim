@@ -36,6 +36,16 @@ class Settings(BaseSettings):
     # até estourar o tempo limite (achado do benchmark multiagente, #60).
     LLM_MAX_TOKENS: int = Field(default=500, gt=0)
 
+    # Leitura de imagem (ADR 0021). OCR local por padrão; o modelo de visão é opcional.
+    OCR_PROVIDER: str = "rapidocr"  # "rapidocr" ou "mock"
+    VISION_PROVIDER: str = "none"  # "none" (padrão), "litellm" ou "mock"
+    VISION_MODEL: str = "ollama/qwen2.5vl"  # formato do LiteLLM; "openrouter/..." é remoto
+    VISION_API_BASE: str = ""
+    VISION_API_KEY: str = ""
+    VISION_TIMEOUT: float = 120.0
+    # Modelo remoto leva a imagem para fora do aparelho: só com consentimento explícito.
+    VISION_ALLOW_REMOTE: bool = False
+
     RAG_SIMILARITY_THRESHOLD: float = 0.15
     RAG_TOP_K: int = 3
     RAG_EMBEDDING_MODEL: str = "sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2"

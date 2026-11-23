@@ -335,4 +335,6 @@ Cada issue exige a atualização do MkDocs **no mesmo PR** (regra do `AGENTS.md`
 
 **Persistência e backup (já em `main` antes da Fase 1):** a biblioteca do usuário passou a ser gravada no SQLite local e restaurada ao iniciar a API, com backup criptografado `.trokim` ([#102](https://github.com/moonshinerd/trokim/issues/102), [ADR 0024](adr/0024-persistencia-local-e-backup-criptografado.md)). Por isso as issues da semana já nascem sobre dados duráveis. As telas de backup já estão em Ajustes; fica para a Semana 6 o armazenamento no aparelho (SQLCipher, com a API sem estado).
 
-**Pendências herdadas da Semana 4** e ainda não atribuídas a uma issue: revisão humana dos casos sinalizados e política de escopo para previsão de preço (C27) e redação que aceite paráfrase com citação verificada.
+**Backend em contêiner (já em `main`):** `deploy/Dockerfile` e o `docker-compose.yml` sobem só a API com o OCR local e os embeddings já baixados, como usuário sem privilégios, com os dados em volume ([ADR 0021](adr/0021-visao-e-ocr-modulares.md), [#87](https://github.com/moonshinerd/trokim/issues/87)). O app Flutter segue instalado no aparelho.
+
+**Encaminhado para a Semana 6** (milestone "Semana 6 — Integração Completa"): armazenamento no aparelho com SQLCipher e API sem estado ([#104](https://github.com/moonshinerd/trokim/issues/104)); e as pendências herdadas da Semana 4, que são redação com paráfrase verificada, política de escopo para previsão de preço (C27) e revisão humana dos casos sinalizados ([#105](https://github.com/moonshinerd/trokim/issues/105)).

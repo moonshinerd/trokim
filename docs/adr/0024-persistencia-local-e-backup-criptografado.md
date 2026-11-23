@@ -60,7 +60,7 @@ levar os dados para outro aparelho sem passar por terceiros.
 
 ## Próximos passos (Semana 6)
 
-- **Armazenamento no aparelho:** o app guarda a biblioteca em SQLite criptografado (SQLCipher) e a
+- **Armazenamento no aparelho** ([#104](https://github.com/moonshinerd/trokim/issues/104)): o app guarda a biblioteca em SQLite criptografado (SQLCipher) e a
   API passa a **não ter estado**, recebendo por requisição só o retrato agregado necessário. Esta
   ADR já fixa o contrato (`LibrarySnapshot`) e o que pode sair do aparelho.
 

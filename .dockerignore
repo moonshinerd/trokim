@@ -1,0 +1,16 @@
+.git
+.claude
+.github
+mobile
+docs
+overrides
+research/rag_benchmark
+research/synthetic_data
+research/cnpj
+**/.venv
+**/__pycache__
+**/.pytest_cache
+**/.ruff_cache
+api/tests
+api/data
+**/*.db

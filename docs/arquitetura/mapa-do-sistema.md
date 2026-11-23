@@ -28,6 +28,7 @@ graph TD
         APIEntry["Routers v1<br/>(/transactions, /accounts, /statements, /installments,<br/>/transfers, /backup, /chat, /budgets, /health, /agents)"]
         AgentAsk["POST /v1/agents/ask<br/>(MultiAgentResponse)"]
         
+        Vision["Portas de leitura de imagem<br/>(OcrProvider: RapidOCR local;<br/>VisionProvider: LiteLLM, opcional)"]
         Parser["Parser de Documentos<br/>(OFX & PDF, perfis Nubank e BB)"]
         Library["Biblioteca local<br/>(contas, períodos, detector,<br/>transferências, parcelas, regras de categoria)"]
         CalcService["Motor de Cálculo Determinístico<br/>(Totais, Balanço, 50-30-20)"]
@@ -57,6 +58,7 @@ graph TD
         end
         
         APIEntry --> Parser
+        Vision -.->|foto ou PDF escaneado, Semana 5| Parser
         APIEntry --> Library
         Library --> Parser
         Library --> DomainCore
