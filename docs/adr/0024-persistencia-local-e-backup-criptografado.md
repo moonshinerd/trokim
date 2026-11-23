@@ -63,8 +63,6 @@ levar os dados para outro aparelho sem passar por terceiros.
 - **Armazenamento no aparelho:** o app guarda a biblioteca em SQLite criptografado (SQLCipher) e a
   API passa a **não ter estado**, recebendo por requisição só o retrato agregado necessário. Esta
   ADR já fixa o contrato (`LibrarySnapshot`) e o que pode sair do aparelho.
-- **Telas de backup no app** (Ajustes: exportar e importar, com o seletor de arquivos e
-  "Compartilhar"). A API já está pronta.
 
 ## Alternativas descartadas
 

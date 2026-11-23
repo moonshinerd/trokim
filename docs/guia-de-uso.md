@@ -78,7 +78,7 @@ curl -X POST http://127.0.0.1:8000/v1/backup/import \
 ```
 
 Senha errada ou arquivo adulterado devolvem `400` com a mensagem "Senha incorreta ou arquivo
-corrompido". As telas de exportar e importar no app entram na Semana 6.
+corrompido". No app, em **Ajustes > Backup**, informe a senha e toque em **Exportar backup** ou **Restaurar backup** (com a opção de substituir ou só mesclar).
 
 ---
 
