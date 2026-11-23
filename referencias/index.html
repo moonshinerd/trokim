@@ -959,10 +959,21 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#5-creditos-de-arte" class="md-nav__link">
+  <a href="#5-parsers-e-exemplos-publicos-de-faturas-e-extratos" class="md-nav__link">
     <span class="md-ellipsis">
       <span class="md-typeset">
-        5. Créditos de Arte
+        5. Parsers e exemplos públicos de faturas e extratos
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#6-creditos-de-arte" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        6. Créditos de Arte
       </span>
     </span>
   </a>
@@ -2563,10 +2574,21 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#5-creditos-de-arte" class="md-nav__link">
+  <a href="#5-parsers-e-exemplos-publicos-de-faturas-e-extratos" class="md-nav__link">
     <span class="md-ellipsis">
       <span class="md-typeset">
-        5. Créditos de Arte
+        5. Parsers e exemplos públicos de faturas e extratos
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#6-creditos-de-arte" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        6. Créditos de Arte
       </span>
     </span>
   </a>
@@ -2768,7 +2790,111 @@
 </tr>
 </tbody>
 </table>
-<h2 id="5-creditos-de-arte">5. Créditos de Arte<a class="headerlink" href="#5-creditos-de-arte" title="Permanent link">&para;</a></h2>
+<h2 id="5-parsers-e-exemplos-publicos-de-faturas-e-extratos">5. Parsers e exemplos públicos de faturas e extratos<a class="headerlink" href="#5-parsers-e-exemplos-publicos-de-faturas-e-extratos" title="Permanent link">&para;</a></h2>
+<p>Não há fatura real publicada (ela traz CPF, endereço e compras). Os layouts dos bancos experimentais (<a href="../adr/0022-registro-de-perfis-e-niveis-de-suporte/">ADR 0022</a>) foram <strong>lidos do código e das issues</strong> de projetos abertos. <strong>Nenhum código foi copiado:</strong> só os padrões do formato (cabeçalhos, data, valor, parcela) viraram regras próprias do Trokim, testadas com texto sintético. Licenças não foram auditadas, o que reforça não copiar código. Em todos os casos, "não testado em arquivo real" vale também para nós.</p>
+<table>
+<thead>
+<tr>
+<th>Ref</th>
+<th>Repositório</th>
+<th>Banco / formato</th>
+<th>O que serviu ao Trokim</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>[REF17]</strong></td>
+<td><a href="https://github.com/thiagocolen/monday-money/issues/67">thiagocolen/monday-money #67</a></td>
+<td>Mercado Pago, extrato PDF</td>
+<td>Colunas Data, Descrição, ID da operação, Valor, Saldo; data <code>DD-MM-AAAA</code>; descrição quebrada em várias linhas; cabeçalho que não se repete.</td>
+</tr>
+<tr>
+<td><strong>[REF18]</strong></td>
+<td><a href="https://github.com/crgasparoto-br/SolverFin/pull/746">crgasparoto-br/SolverFin #746</a></td>
+<td>Mercado Pago, extrato PDF</td>
+<td>Conferir movimentos contra os saldos; rodapé não é lançamento.</td>
+</tr>
+<tr>
+<td><strong>[REF19]</strong></td>
+<td><a href="https://github.com/wendersoon/pdf_para_ofx_mercado_pago">wendersoon/pdf_para_ofx_mercado_pago</a></td>
+<td>Mercado Pago, extrato PDF</td>
+<td>Resumo (Saldo inicial, Entradas, Saídas), valor <code>R$</code> com milhar por ponto.</td>
+</tr>
+<tr>
+<td><strong>[REF20]</strong></td>
+<td><a href="https://github.com/Gamegart/pdf-extractor-bank-data">Gamegart/pdf-extractor-bank-data</a></td>
+<td>Mercado Pago (México), PDF</td>
+<td>Mostrou que o layout varia por país; não aproveitado.</td>
+</tr>
+<tr>
+<td><strong>[REF21]</strong></td>
+<td><a href="https://github.com/Rafaelrr5/financas-br">Rafaelrr5/financas-br</a></td>
+<td>Inter, fatura e extrato PDF</td>
+<td>Marcador "Despesas da fatura"; linha com <code>+</code> é crédito; pagamento aparece como saída no extrato.</td>
+</tr>
+<tr>
+<td><strong>[REF22]</strong></td>
+<td><a href="https://github.com/cranzss/importaFatura">cranzss/importaFatura</a></td>
+<td>Inter, fatura PDF</td>
+<td>Data <code>12 de nov. 2026</code>, parcela <code>(Parcela NN de NN)</code>, total da fatura e vencimento.</td>
+</tr>
+<tr>
+<td><strong>[REF23]</strong></td>
+<td><a href="https://github.com/Kiq98/pybank">Kiq98/pybank</a></td>
+<td>Inter, Nubank, BB e outros, PDF</td>
+<td>Detecção do banco pelo conteúdo e conferência do total.</td>
+</tr>
+<tr>
+<td><strong>[REF24]</strong></td>
+<td><a href="https://github.com/uoyj/fatura-viewer-parser">uoyj/fatura-viewer-parser</a></td>
+<td>Itaú, Mercado Pago, Nubank, PDF</td>
+<td>Arquitetura de um parser por banco e versão (inspirou o registro).</td>
+</tr>
+<tr>
+<td><strong>[REF25]</strong></td>
+<td><a href="https://github.com/ThomazMasayuki/extrator_fatura">ThomazMasayuki/extrator_fatura</a></td>
+<td>Genérico, PDF</td>
+<td>Parcela <code>NN/NN</code>, senha só em memória, pagamento fora da soma.</td>
+</tr>
+<tr>
+<td><strong>[REF26]</strong></td>
+<td><a href="https://github.com/luizhumbertobove-ops/dash-fatura">luizhumbertobove-ops/dash-fatura</a></td>
+<td>Itaú, fatura PDF</td>
+<td>Duas colunas, seções "Lançamentos: compras e saques" e "próximas faturas", ano pelo vencimento.</td>
+</tr>
+<tr>
+<td><strong>[REF27]</strong></td>
+<td><a href="https://github.com/gmega/parser-fatura-itau">gmega/parser-fatura-itau</a></td>
+<td>Itaú, fatura PDF e OFX</td>
+<td>Âncora <code>Emissão: DD/MM/AAAA</code> para o ano; OFX 1.x em latin-1.</td>
+</tr>
+<tr>
+<td><strong>[REF28]</strong></td>
+<td><a href="https://github.com/devfelipepinho/extrator-fatura-itau-pdf">devfelipepinho/extrator-fatura-itau-pdf</a></td>
+<td>Itaú, fatura PDF</td>
+<td>Linha <code>DD/MM descrição valor</code> (e o alerta de que o milhar quebra regex ingênua).</td>
+</tr>
+<tr>
+<td><strong>[REF29]</strong></td>
+<td><a href="https://github.com/dm1nduc42/projetoCartao">dm1nduc42/projetoCartao</a></td>
+<td>PicPay, fatura PDF</td>
+<td><code>Picpay Card final NNNN</code>, <code>Vencimento: DD-MM-AAAA</code>, <code>PARC NN/NN</code>, linhas "Subtotal".</td>
+</tr>
+<tr>
+<td><strong>[REF30]</strong></td>
+<td><a href="https://github.com/BenKefa/Ler_Extrato_Git">BenKefa/Ler_Extrato_Git</a></td>
+<td>PicPay, fatura PDF</td>
+<td>Cabeçalho "Data / Estabelecimento / Valor"; "PAGAMENTO DE FATURA" fora dos totais.</td>
+</tr>
+<tr>
+<td><strong>[REF31]</strong></td>
+<td><a href="https://github.com/danilopopeye/c6bank-transactions">danilopopeye/c6bank-transactions</a></td>
+<td>C6 Bank, fatura CSV</td>
+<td>Separador <code>;</code>, colunas Data, Nome no Cartão, Final do Cartão, Categoria, Descrição, Parcela (<code>Única</code> ou <code>N/M</code>), Valor (em US$), Cotação, Valor (em R$).</td>
+</tr>
+</tbody>
+</table>
+<h2 id="6-creditos-de-arte">6. Créditos de Arte<a class="headerlink" href="#6-creditos-de-arte" title="Permanent link">&para;</a></h2>
 <ul>
 <li><strong>Mascote (onça-pintada):</strong> estilizado a partir do vetor <em>Jaguar SVG</em>, de Jordan Irwin (AntumDeluge), publicado em <a href="https://opengameart.org/node/98089">OpenGameArt</a> sob <strong>CC0 (domínio público)</strong>. Atribuição não é obrigatória; fica aqui por boa prática. O Trokim removeu o cenário, ampliou a área de desenho e recolorou a arte em tons dourados com as manchas vazadas.</li>
 <li><strong>Tipografia:</strong> <a href="https://fonts.google.com/specimen/Plus+Jakarta+Sans">Plus Jakarta Sans</a>, licença SIL Open Font License 1.1 (arquivo embarcado no site em <code>docs/assets/fonts/</code> e no app, sem requisição ao Google Fonts).</li>

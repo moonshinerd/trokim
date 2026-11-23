@@ -2394,6 +2394,17 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#implementacao-92" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Implementação (#92)
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     
   
@@ -2551,6 +2562,17 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#implementacao-92" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Implementação (#92)
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     
   
@@ -2586,8 +2608,8 @@
 <h2 id="decisao">Decisão<a class="headerlink" href="#decisao" title="Permanent link">&para;</a></h2>
 <ol>
 <li><strong>Dois níveis explícitos de suporte (Validado vs. Experimental):</strong></li>
-<li><strong>Validado:</strong> Bancos que foram exaustivamente testados e conciliados ponta a ponta com arquivos e extratos de contas reais. Integram esta categoria: <strong>Nubank</strong>, <strong>Banco do Brasil</strong>, <strong>PicPay</strong> e <strong>Mercado Pago</strong>.</li>
-<li><strong>Experimental:</strong> Bancos cujos tutoriais e perfis foram elaborados a partir das centrais de ajuda oficiais e documentação pública das instituições, mas que ainda não foram homologados com arquivos de contas reais pela equipe. Integram esta categoria: <strong>Banco Inter</strong>, <strong>C6 Bank</strong> e <strong>Itaú</strong>.</li>
+<li><strong>Validado:</strong> Bancos que foram exaustivamente testados e conciliados ponta a ponta com arquivos e extratos de contas reais. Integram esta categoria: <strong>Nubank</strong> e <strong>Banco do Brasil</strong>.</li>
+<li><strong>Experimental:</strong> Bancos cujos tutoriais e perfis foram elaborados a partir das centrais de ajuda oficiais e documentação pública das instituições, mas que ainda não foram homologados com arquivos de contas reais pela equipe. Integram esta categoria: <strong>PicPay</strong>, <strong>Mercado Pago</strong>, <strong>Banco Inter</strong>, <strong>C6 Bank</strong> e <strong>Itaú</strong>. PicPay e Mercado Pago nasceram como "Validado" no texto, mas não havia leitor nem arquivo real; foram corrigidos para Experimental.</li>
 <li><strong>Transparência e vedação a promessas inverídicas:</strong>
    Nenhum tutorial ou tela pode afirmar que um banco experimental possui suporte validado. A interface móvel e a documentação devem estampar selos visuais explícitos (<code>Validado</code> com realce positivo e <code>Experimental</code> com realce âmbar/ouro) e avisos contextuais antes e durante a exibição dos passos.</li>
 <li><strong>Catálogo unificado no app (<code>supportedBanks</code>):</strong>
@@ -2614,6 +2636,13 @@
 <li><strong>Tratar todos os bancos igualmente sem selo:</strong> Rejeitado porque bancos não testados em contas reais podem apresentar variações não mapeadas no layout, e a transparência é pilar inegociável do projeto.</li>
 <li><strong>Tutorial obrigatório a cada importação:</strong> Rejeitado por comprometer a usabilidade e a agilidade de usuários recorrentes.</li>
 <li><strong>Depender apenas de Open Finance:</strong> Rejeitado (conforme <a href="../0005-importacao-local-ofx-pdf/">ADR 0005</a>) em prol da soberania local-first e privacidade dos dados.</li>
+</ul>
+<h2 id="implementacao-92">Implementação (#92)<a class="headerlink" href="#implementacao-92" title="Permanent link">&para;</a></h2>
+<ul>
+<li><code>api/app/services/bank_registry.py</code>: <code>BankInfo</code> e <code>register_bank</code>; detecção por conteúdo (<code>detect_ofx_bank</code>, <code>detect_pdf_bank</code>). Banco novo é um registro, sem mexer nos demais.</li>
+<li><code>bank_profiles.py</code> (OFX genérico por texto) e <code>bank_pdf_profiles.py</code> (Mercado Pago extrato, Inter e Itaú fatura, PicPay extrato), todos conferindo o total do arquivo quando existe.</li>
+<li><code>GET /v1/banks</code> devolve nome, nível, formatos e nota.</li>
+<li>Limites: sem arquivo real de nenhum deles; C6 só por OFX; fatura do PicPay Card, do Mercado Pago e do C6 em PDF não tem leitor.</li>
 </ul>
 
 

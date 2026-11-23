@@ -3732,17 +3732,17 @@ ela responde. Os lançamentos ficam gravados no SQLite local e voltam quando a A
 </tr>
 <tr>
 <td><strong>PicPay</strong></td>
-<td style="text-align: center;"><span class="badge-must">Validado</span></td>
+<td style="text-align: center;"><span class="badge-should">Experimental</span></td>
 <td style="text-align: center;">PDF</td>
 <td>Fatura do PicPay Card e extrato da conta</td>
-<td>Testado com arquivos reais; fatura e extrato em PDF.</td>
+<td>Fatura lida pelo layout de parsers públicos (<code>Picpay Card final</code>, <code>PARC NN/NN</code>, vencimento <code>DD-MM-AAAA</code>); sem arquivo real para conciliar.</td>
 </tr>
 <tr>
 <td><strong>Mercado Pago</strong></td>
-<td style="text-align: center;"><span class="badge-must">Validado</span></td>
+<td style="text-align: center;"><span class="badge-should">Experimental</span></td>
 <td style="text-align: center;">PDF</td>
-<td>Fatura do cartão e extrato de movimentações</td>
-<td>Testado com arquivos reais; fatura e extrato em PDF.</td>
+<td>Extrato de movimentações (fatura do cartão ainda não)</td>
+<td>Layout publicado (Data, Descrição, ID, Valor, Saldo); fecha com o saldo final do arquivo.</td>
 </tr>
 <tr>
 <td><strong>Banco Inter</strong></td>
@@ -3754,9 +3754,9 @@ ela responde. Os lançamentos ficam gravados no SQLite local e voltam quando a A
 <tr>
 <td><strong>C6 Bank</strong></td>
 <td style="text-align: center;"><span class="badge-should">Experimental</span></td>
-<td style="text-align: center;">OFX (conta) e PDF (fatura)</td>
-<td>Fatura do cartão (PDF) e extrato da conta (OFX)</td>
-<td>Baseado na ajuda oficial do banco; ainda não testado em conta real.</td>
+<td style="text-align: center;">OFX (conta) e CSV (fatura)</td>
+<td>Fatura do cartão (CSV, separador <code>;</code>) e extrato da conta (OFX)</td>
+<td>Colunas lidas por nome; aceita <code>1.234,56</code> e <code>1234.56</code>; sem arquivo real para conciliar.</td>
 </tr>
 <tr>
 <td><strong>Itaú</strong></td>
@@ -3787,14 +3787,14 @@ Bancos com selo <strong>Validado</strong> foram testados com arquivos e extratos
 <p><em>Extrato da conta corrente:</em> no app do Banco do Brasil, toque em <em>Extrato → Download extrato →</em> escolha o período <em>→</em> selecione o tipo <strong>OFX (Money 2000+)</strong>.</p>
 </li>
 <li>
-<p><strong>PicPay (Validado — testado com arquivos reais):</strong></p>
+<p><strong>PicPay (Experimental):</strong></p>
 </li>
 <li><em>Fatura do PicPay Card:</em> no app PicPay, acesse a aba <em>Carteira</em> (ou atalho <em>Cartões</em>) <em>→ PicPay Card → Faturas →</em> escolha a fatura fechada <em>→</em> toque em exportar e selecione o formato <strong>PDF</strong>. Compartilhe com o Trokim ou salve no aparelho.</li>
 <li>
 <p><em>Extrato da conta:</em> toque sobre o saldo da conta ou acesse <em>Extrato →</em> toque no ícone de exportar no topo <em>→</em> defina o período <em>→</em> exporte em formato <strong>PDF</strong>.</p>
 </li>
 <li>
-<p><strong>Mercado Pago (Validado — testado com arquivos reais):</strong></p>
+<p><strong>Mercado Pago (Experimental):</strong></p>
 </li>
 <li><em>Fatura do cartão de crédito:</em> no app Mercado Pago, vá até a seção <em>Cartões → Cartão Mercado Pago → Faturas →</em> selecione a fatura do mês fechado <em>→ Baixar fatura</em> em formato <strong>PDF</strong>.</li>
 <li>
@@ -3902,8 +3902,8 @@ avisa e deixa escolher entre importar mesmo assim ou trocar o arquivo.</p>
   cartão, e confere a soma dos lançamentos com o total da fatura.</li>
 <li><strong>Banco do Brasil, conta corrente:</strong> extrato em <strong>OFX</strong> (tipo "Money 2000+"), onde o campo
   <code>NAME</code> é o tipo do lançamento e <code>MEMO</code> a contraparte.</li>
-<li><strong>PicPay e Mercado Pago:</strong> ambos validados com faturas e extratos em PDF gerados a partir do fluxo real de exportação nos aplicativos.</li>
-<li><strong>Inter, C6 Bank e Itaú:</strong> perfis experimentais gerados a partir dos manuais oficiais de ajuda, combinando extratos de conta em OFX e faturas de cartão de crédito em PDF.</li>
+<li><strong>PicPay e Mercado Pago:</strong> experimentais. Os leitores foram escritos a partir de layouts públicos e testados só com arquivos sintéticos; vire "Validado" quando um arquivo real fechar com o total.</li>
+<li><strong>Inter, C6 Bank e Itaú:</strong> perfis experimentais gerados a partir dos manuais oficiais de ajuda, combinando extratos de conta em OFX e faturas de cartão em PDF (no C6, CSV). Os layouts vêm dos <a href="../referencias/#5-parsers-e-exemplos-publicos-de-faturas-e-extratos">parsers públicos citados nas referências</a>.</li>
 </ul>
 <p>Na aba <strong>Extratos</strong>, a seção <strong>Contas</strong> lista cada conta e cartão com o dono, que pode ser trocado a
 qualquer momento.</p>
