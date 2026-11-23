@@ -25,6 +25,7 @@ sys.path.insert(0, str(ROOT / "api"))
 sys.path.insert(0, str(ROOT / "research"))
 
 from rag_benchmark.document_dataset import MANIFEST, load_dataset  # noqa: E402
+from rag_benchmark.document_evaluation import summarize  # noqa: E402
 
 from app.clients.rapidocr_provider import RapidOcrProvider  # noqa: E402
 from app.services import image_quality  # noqa: E402
@@ -91,79 +92,6 @@ def calibrate(cases: list[dict], metrics: dict[str, dict]) -> dict:
         "calibration_errors": list(score(selected)[:2]),
         "candidates": len(candidates),
     }
-
-
-def summarize(cases: list[dict], readings: list[dict]) -> dict:
-    """Acerto exato normalizado; campos omitidos contam no denominador recuperável."""
-    truth = {case["id"]: case for case in cases}
-    summary = {}
-    for split in ("calibration", "validation"):
-        rows = [row for row in readings if truth[row["id"]]["split"] == split]
-        field_correct = field_total = unexpected = 0
-        transaction_correct = transaction_total = unexpected_rows = 0
-        illegible = abstentions = failures = 0
-        gate_matrix = {
-            "readable_accepted": 0,
-            "readable_rejected": 0,
-            "illegible_accepted": 0,
-            "illegible_rejected": 0,
-        }
-        for row in rows:
-            case = truth[row["id"]]
-            bad = case["expected_quality"] == "illegible"
-            gate_matrix[
-                ("illegible" if bad else "readable")
-                + ("_rejected" if row["gate_rejected"] else "_accepted")
-            ] += 1
-            if "document" not in row:
-                continue
-            doc = row["document"]
-            failures += doc is None
-            if bad:
-                illegible += 1
-                abstentions += bool(
-                    doc and doc["abstained"] and not doc["fields"] and not doc["transactions"]
-                )
-            expected = case["recoverable_fields"]
-            actual = {field["key"]: field["value"] for field in doc["fields"]} if doc else {}
-            field_total += len(expected)
-            field_correct += sum(actual.get(key) == value for key, value in expected.items())
-            unexpected += sum(key not in expected for key in actual)
-            expected_rows = case["recoverable_transactions"]
-            actual_rows = doc["transactions"] if doc else []
-            transaction_total += len(expected_rows)
-            matched = set()
-            for actual_row in actual_rows:
-                for i, expected_row in enumerate(expected_rows):
-                    if i not in matched and all(
-                        str(actual_row[key]) == str(expected_row[key])
-                        if key != "amount"
-                        else actual_row[key] == float(expected_row[key])
-                        for key in ("date", "description", "amount", "installment")
-                    ):
-                        matched.add(i)
-                        break
-                else:
-                    unexpected_rows += 1
-            transaction_correct += len(matched)
-        summary[split] = {
-            "documents": len(rows),
-            "gate": gate_matrix,
-            "correct_fields": field_correct,
-            "recoverable_fields": field_total,
-            "unexpected_fields": unexpected,
-            "correct_transactions": transaction_correct,
-            "recoverable_transactions": transaction_total,
-            "unmatched_transactions": unexpected_rows,
-            "illegible_documents": illegible,
-            "safe_abstentions": abstentions,
-            "technical_failures": failures,
-        }
-        if not any("document" in row for row in rows):
-            for key in summary[split]:
-                if key not in {"documents", "gate"}:
-                    summary[split][key] = None
-    return summary
 
 
 class AuditedOcr(RapidOcrProvider):
@@ -234,6 +162,9 @@ async def run(output: Path, use_ocr: bool) -> None:
         "api/app/services/agents/document.py",
         "api/app/clients/rapidocr_provider.py",
         "research/rag_benchmark/calibrate_documents.py",
+        "research/rag_benchmark/document_evaluation.py",
+        "api/app/services/document_reading.py",
+        "api/app/domain/documents.py",
     ]
     metadata = {
         "created_at": datetime.now(UTC).isoformat(),

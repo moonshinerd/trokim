@@ -130,11 +130,11 @@ def parse_fields(
     confidence: float,
 ) -> tuple[DocumentKind, list[ExtractedField], list[ExtractedTransaction]]:
     lines = text.strip().splitlines()
-    title = normalized_label(lines[0]) if lines else ""
+    title = normalized_label(lines[0]).replace(" ", "") if lines else ""
     kinds = {
-        "comprovante pix": DocumentKind.PIX_RECEIPT,
+        "comprovantepix": DocumentKind.PIX_RECEIPT,
         "boleto": DocumentKind.BOLETO,
-        "fatura de cartao": DocumentKind.CARD_INVOICE,
+        "faturadecartao": DocumentKind.CARD_INVOICE,
     }
     kind = kinds.get(title, DocumentKind.OTHER)
     fields: list[ExtractedField] = []
