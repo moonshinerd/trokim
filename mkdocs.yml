@@ -93,7 +93,7 @@ nav:
       - Visão Geral: arquitetura/index.md
       - Mapa do Sistema: arquitetura/mapa-do-sistema.md
       - Categorias dos Gastos: arquitetura/categorias.md
-  - Agentes (Semana 4):
+  - Agentes (Semana 4 e 5):
       - Visão Geral: agentes/index.md
       - Orquestrador e Contratos: agentes/orquestrador.md
       - Research Agent: agentes/research-agent.md
