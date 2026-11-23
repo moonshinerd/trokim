@@ -3,6 +3,7 @@
 from app.clients.litellm_vision_provider import LiteLLMVisionProvider
 from app.clients.mock_vision import MockOcrProvider, MockVisionProvider
 from app.clients.rapidocr_provider import RapidOcrProvider
+from app.clients.tesseract_provider import TesseractProvider
 from app.core.config import settings
 from app.models.vision_provider import OcrProvider, VisionProvider
 
@@ -17,7 +18,9 @@ def get_ocr_provider(provider_name: str | None = None) -> OcrProvider:
         return RapidOcrProvider()
     if selected == "mock":
         return MockOcrProvider()
-    raise ValueError(f"OCR_PROVIDER desconhecido: '{selected}' (use rapidocr ou mock).")
+    if selected == "tesseract":
+        return TesseractProvider()
+    raise ValueError(f"OCR_PROVIDER desconhecido: '{selected}' (use rapidocr, tesseract ou mock).")
 
 
 def get_vision_provider(

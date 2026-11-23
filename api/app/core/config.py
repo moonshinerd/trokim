@@ -37,7 +37,8 @@ class Settings(BaseSettings):
     LLM_MAX_TOKENS: int = Field(default=500, gt=0)
 
     # Leitura de imagem (ADR 0021). OCR local por padrão; o modelo de visão é opcional.
-    OCR_PROVIDER: str = "rapidocr"  # "rapidocr" ou "mock"
+    OCR_PROVIDER: str = "rapidocr"  # "rapidocr", "tesseract" ou "mock"
+    TESSERACT_LANG: str = "por"  # idioma do Tesseract (pacote tesseract-ocr-por)
     VISION_PROVIDER: str = "none"  # "none" (padrão), "litellm" ou "mock"
     VISION_MODEL: str = "ollama/qwen2.5vl"  # formato do LiteLLM; "openrouter/..." é remoto
     VISION_API_BASE: str = ""

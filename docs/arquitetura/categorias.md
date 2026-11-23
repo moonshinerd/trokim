@@ -37,6 +37,18 @@ são gasto nem renda ([ADR 0017](../adr/0017-perfis-de-banco-e-natureza-do-lanca
    BB em PDF).
 6. Entrada sem regra vira **Renda**; o resto fica em **Outros**.
 
+## Bancos além de Nubank e BB
+
+Inter, C6, Itaú, PicPay e Mercado Pago (todos **experimentais**, [ADR 0022](../adr/0022-registro-de-perfis-e-niveis-de-suporte.md))
+usam a mesma classificação por texto em `bank_profiles.py`, na ordem: pagamento de fatura, **movimento entre
+as próprias contas**, estorno, resgate, aplicação, juros e IOF, tarifa, Pix ou transferência e, por fim, compra.
+
+- Pagamento de fatura, resgate, aplicação e movimento entre contas próprias ficam **fora dos totais**.
+- "Recarga PicPay", "recarga de saldo" e "transferência entre contas" são movimento próprio: não são receita
+  nem gasto. "Recarga de celular" é compra (serviços).
+- Mercado Livre é varejo e cai em **serviços**, como os demais ([ordem de decisão](#ordem-de-decisao)).
+- Pix para pessoa física fica em "outros", como no Nubank.
+
 ## Como a categorização é medida
 
 | Conjunto | Casos | O que mede | Teste |

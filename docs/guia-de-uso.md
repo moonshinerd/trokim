@@ -62,7 +62,8 @@ O OCR é local (RapidOCR) e vem ligado. O modelo de visão é opcional e vem **d
 
 | Variável | Padrão | Para quê |
 |---|---|---|
-| `OCR_PROVIDER` | `rapidocr` | Motor de OCR (`rapidocr` ou `mock`). Fora do Docker, instale com `uv sync --extra ocr` |
+| `OCR_PROVIDER` | `rapidocr` | Motor de OCR (`rapidocr`, `tesseract` ou `mock`). Fora do Docker, `rapidocr` pede `uv sync --extra ocr`; `tesseract` pede o programa instalado (`tesseract-ocr` e o idioma `por`) |
+| `TESSERACT_LANG` | `por` | Idioma do Tesseract |
 | `VISION_PROVIDER` | `none` | `none`, `litellm` ou `mock` |
 | `VISION_MODEL` | `ollama/qwen2.5vl` | Modelo no formato do LiteLLM; `openrouter/...` é remoto |
 | `VISION_API_BASE` | vazio | Endereço do servidor do modelo |
@@ -553,3 +554,13 @@ sistema. A integração ao endpoint e a criação dos lançamentos pertencem à 
 
 ![Captura do emulador Android com a revisão de um comprovante sintético, campos editáveis e confiança baixa](assets/app/revisao-documento-sintetico.png)
 
+
+## Conferir um arquivo real de banco
+
+Para um banco experimental virar **Validado**, alguém precisa testar com um arquivo **real** da própria conta:
+
+```bash
+make validar-banco ARQUIVO=/caminho/do/arquivo.pdf   # ou .ofx, .csv
+```
+
+O comando roda no seu computador e imprime só números agregados (banco reconhecido, quantidade, período, somas, naturezas e se o total do arquivo fecha). Não imprime descrições, nomes nem número de conta (só os 4 últimos dígitos). Compare as somas com o app do banco; se fecharem, abra uma issue com **esses números**, nunca com o arquivo.

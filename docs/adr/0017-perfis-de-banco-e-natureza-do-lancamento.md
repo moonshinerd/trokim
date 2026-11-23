@@ -53,3 +53,5 @@ leitura, `1.250,00` virava `125,00` e compra sem sinal virava crédito.
   que o ajuste de categoria no app (RF09) resolve.
 - Os testes usam só arquivos sintéticos (`api/tests/nubank_samples.py` e
   `research/synthetic_data/generate_nubank_datasets.py`); nenhum extrato real entra no repositório.
+
+> **Atualização (Semana 5):** o registro de bancos, os níveis de suporte (Validado e Experimental) e os perfis de Inter, C6, Itaú, PicPay e Mercado Pago estão na [ADR 0022](0022-registro-de-perfis-e-niveis-de-suporte.md). A regra desta ADR (a natureza do lançamento decide o que entra nos totais) vale para todos.

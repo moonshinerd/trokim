@@ -14,7 +14,7 @@
     "questions_sha256": "383b8a1560cd8ca76f6b361a709d95ef9538a49f03dffdf030fda851c00424f5",
     "evaluator_sha256": "33ee862b713cf9ae8ad8bda95b0fd9a512314374351471def9fe4f73acab60bb",
     "corpus_sha256": "3deb71c8154b515b5c1072b98d6e58202b56a03a86b32c31cda279ad4a93721f",
-    "service_sha256": "176d135dae6a471aab48621fd6e257d9eae06e23d75fd12ce8a18b944f816dcc",
+    "service_sha256": "9002334663b658fe62c0c6a220c4b0b200ee3fdaa29f8fefe70045185d9ab197",
     "python": "3.12.13",
     "scikit_learn": "1.9.1",
     "fastembed": "0.9.1",
