@@ -1300,6 +1300,17 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#bancos-alem-de-nubank-e-bb" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Bancos além de Nubank e BB
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#como-a-categorizacao-e-medida" class="md-nav__link">
     <span class="md-ellipsis">
       <span class="md-typeset">
@@ -2536,6 +2547,17 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#bancos-alem-de-nubank-e-bb" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Bancos além de Nubank e BB
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#como-a-categorizacao-e-medida" class="md-nav__link">
     <span class="md-ellipsis">
       <span class="md-typeset">
@@ -2678,6 +2700,17 @@ são gasto nem renda (<a href="../../adr/0017-perfis-de-banco-e-natureza-do-lanc
    BB em PDF).</li>
 <li>Entrada sem regra vira <strong>Renda</strong>; o resto fica em <strong>Outros</strong>.</li>
 </ol>
+<h2 id="bancos-alem-de-nubank-e-bb">Bancos além de Nubank e BB<a class="headerlink" href="#bancos-alem-de-nubank-e-bb" title="Permanent link">&para;</a></h2>
+<p>Inter, C6, Itaú, PicPay e Mercado Pago (todos <strong>experimentais</strong>, <a href="../../adr/0022-registro-de-perfis-e-niveis-de-suporte/">ADR 0022</a>)
+usam a mesma classificação por texto em <code>bank_profiles.py</code>, na ordem: pagamento de fatura, <strong>movimento entre
+as próprias contas</strong>, estorno, resgate, aplicação, juros e IOF, tarifa, Pix ou transferência e, por fim, compra.</p>
+<ul>
+<li>Pagamento de fatura, resgate, aplicação e movimento entre contas próprias ficam <strong>fora dos totais</strong>.</li>
+<li>"Recarga PicPay", "recarga de saldo" e "transferência entre contas" são movimento próprio: não são receita
+  nem gasto. "Recarga de celular" é compra (serviços).</li>
+<li>Mercado Livre é varejo e cai em <strong>serviços</strong>, como os demais (<a href="#ordem-de-decisao">ordem de decisão</a>).</li>
+<li>Pix para pessoa física fica em "outros", como no Nubank.</li>
+</ul>
 <h2 id="como-a-categorizacao-e-medida">Como a categorização é medida<a class="headerlink" href="#como-a-categorizacao-e-medida" title="Permanent link">&para;</a></h2>
 <table>
 <thead>

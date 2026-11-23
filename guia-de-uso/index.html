@@ -1054,6 +1054,17 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#conferir-um-arquivo-real-de-banco" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Conferir um arquivo real de banco
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     
   
@@ -3280,6 +3291,17 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#conferir-um-arquivo-real-de-banco" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Conferir um arquivo real de banco
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     
   
@@ -3359,7 +3381,12 @@ Para o celular acessar, publique a porta na rede local editando <code>ports</cod
 <tr>
 <td><code>OCR_PROVIDER</code></td>
 <td><code>rapidocr</code></td>
-<td>Motor de OCR (<code>rapidocr</code> ou <code>mock</code>). Fora do Docker, instale com <code>uv sync --extra ocr</code></td>
+<td>Motor de OCR (<code>rapidocr</code>, <code>tesseract</code> ou <code>mock</code>). Fora do Docker, <code>rapidocr</code> pede <code>uv sync --extra ocr</code>; <code>tesseract</code> pede o programa instalado (<code>tesseract-ocr</code> e o idioma <code>por</code>)</td>
+</tr>
+<tr>
+<td><code>TESSERACT_LANG</code></td>
+<td><code>por</code></td>
+<td>Idioma do Tesseract</td>
 </tr>
 <tr>
 <td><code>VISION_PROVIDER</code></td>
@@ -4049,6 +4076,11 @@ repositório falso devolve dados sintéticos, sem OCR nem envio do arquivo. O ap
 adiciona a imagem à biblioteca; fotos capturadas podem permanecer no cache temporário do
 sistema. A integração ao endpoint e a criação dos lançamentos pertencem à issue #97.</p>
 <p><img alt="Captura do emulador Android com a revisão de um comprovante sintético, campos editáveis e confiança baixa" src="../assets/app/revisao-documento-sintetico.png" /></p>
+<h2 id="conferir-um-arquivo-real-de-banco">Conferir um arquivo real de banco<a class="headerlink" href="#conferir-um-arquivo-real-de-banco" title="Permanent link">&para;</a></h2>
+<p>Para um banco experimental virar <strong>Validado</strong>, alguém precisa testar com um arquivo <strong>real</strong> da própria conta:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-16-1"><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a>make<span class="w"> </span>validar-banco<span class="w"> </span><span class="nv">ARQUIVO</span><span class="o">=</span>/caminho/do/arquivo.pdf<span class="w">   </span><span class="c1"># ou .ofx, .csv</span>
+</span></code></pre></div>
+<p>O comando roda no seu computador e imprime só números agregados (banco reconhecido, quantidade, período, somas, naturezas e se o total do arquivo fecha). Não imprime descrições, nomes nem número de conta (só os 4 últimos dígitos). Compare as somas com o app do banco; se fecharem, abra uma issue com <strong>esses números</strong>, nunca com o arquivo.</p>
 
 
 

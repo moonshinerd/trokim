@@ -3000,6 +3000,15 @@
 <td style="text-align: center;">Implementado no mobile (mock; integração real na #97)</td>
 </tr>
 <tr>
+<td style="text-align: center;"><strong>RF29</strong></td>
+<td>Bancos suportados, níveis de suporte e tutoriais</td>
+<td>O app lista os bancos suportados com selo <strong>Validado</strong> ou <strong>Experimental</strong>, tutorial de exportação por banco e aviso de que banco experimental ainda não foi conferido com arquivo real. A API expõe a lista em <code>GET /v1/banks</code> e reconhece o banco <strong>pelo conteúdo</strong> do arquivo (OFX, PDF ou CSV). Banco novo é um registro e um perfil, sem alterar os demais.</td>
+<td style="text-align: center;"><span class="badge-should">Should have</span></td>
+<td style="text-align: center;"><a href="../pesquisa/guiding-questions/">GQ01</a>, <a href="../pesquisa/guiding-questions/">GQ03</a></td>
+<td style="text-align: center;"><a href="../adr/0022-registro-de-perfis-e-niveis-de-suporte/">ADR 0022</a>, <a href="../adr/0017-perfis-de-banco-e-natureza-do-lancamento/">ADR 0017</a></td>
+<td style="text-align: center;">Implementado; PicPay, Mercado Pago, Inter, C6 e Itaú seguem experimentais (sem arquivo real).</td>
+</tr>
+<tr>
 <td style="text-align: center;"><strong>RF31</strong></td>
 <td>Persistência local da biblioteca</td>
 <td>Lançamentos, contas, arquivos, transferências confirmadas e regras de categoria sobrevivem ao reinício da API e do app. A fonte da verdade é o <strong>aparelho</strong>, que guarda o retrato cifrado (AES-256-GCM, chave no armazenamento seguro do sistema); a API o recebe ao abrir o app e o mantém só em memória. O SQLite local da API, atrás de uma porta de repositório, segue como opção para quem usa a API sem o app. Só mudam quando o usuário altera algo.</td>
@@ -3344,6 +3353,20 @@
 <td style="text-align: center;"><a href="../adr/0021-visao-e-ocr-modulares/">ADR 0021</a></td>
 <td><code>mobile/lib/features/documents/</code></td>
 <td><code>mobile/test/document_import_screen_test.dart</code></td>
+</tr>
+<tr>
+<td style="text-align: center;"><strong>RF29</strong></td>
+<td style="text-align: center;">Bancos suportados, níveis de suporte e tutoriais</td>
+<td style="text-align: center;">O app lista os bancos suportados com selo <strong>Validado</strong> ou <strong>Experimental</strong>, tutorial de exportação por banco e aviso de que banco experimental ainda não foi conferido com arquivo real. A API expõe a lista em <code>GET /v1/banks</code> e reconhece o banco <strong>pelo conteúdo</strong> do arquivo (OFX, PDF ou CSV). Banco novo é um registro e um perfil, sem alterar os demais.</td>
+<td><span class="badge-should">Should have</span></td>
+<td><a href="../pesquisa/guiding-questions/">GQ01</a>, <a href="../pesquisa/guiding-questions/">GQ03</a></td>
+</tr>
+<tr>
+<td style="text-align: center;"><strong>RF29</strong></td>
+<td style="text-align: center;">GQ01, GQ03</td>
+<td style="text-align: center;"><a href="../adr/0022-registro-de-perfis-e-niveis-de-suporte/">ADR 0022</a>, <a href="../adr/0017-perfis-de-banco-e-natureza-do-lancamento/">0017</a></td>
+<td><code>api/app/services/bank_registry.py</code>, <code>bank_profiles.py</code>, <code>bank_pdf_profiles.py</code>, <code>bank_csv_profiles.py</code>, <code>api/app/routers/v1/banks.py</code>, <code>mobile/lib/features/import_guide/</code></td>
+<td><code>api/tests/test_bancos_experimentais.py</code>, <code>api/tests/test_validar_banco.py</code>, <code>mobile/test/supported_banks_test.dart</code></td>
 </tr>
 <tr>
 <td style="text-align: center;"><strong>RF31</strong></td>
