@@ -2338,6 +2338,33 @@
   
   
     <li class="md-nav__item">
+      <a href="../adr/0022-registro-de-perfis-e-niveis-de-suporte/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  0022 – Perfis de Banco e Níveis de Suporte
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../adr/0024-persistencia-local-e-backup-criptografado/" class="md-nav__link">
         
   
@@ -2602,6 +2629,13 @@
 <td>Inclusão de <strong>RNF12</strong> (motores de leitura de imagem intercambiáveis e consentimento para provedor remoto) e das portas de OCR e visão (<a href="../adr/0021-visao-e-ocr-modulares/">ADR 0021</a>); backend em contêiner com OCR. <strong>RF27</strong> segue em implementação.</td>
 <td style="text-align: center;">Equipe Trokim</td>
 </tr>
+<tr>
+<td style="text-align: center;"><strong>v1.11.0</strong></td>
+<td style="text-align: center;">23/11/2026</td>
+<td style="text-align: center;">Semana 5 (<em>Bancos suportados e tutoriais</em>)</td>
+<td>Inclusão de <strong>RF29</strong> (tutoriais por banco e tela de bancos suportados com selos Validado e Experimental), cobrindo Nubank, Banco do Brasil, PicPay, Mercado Pago, Banco Inter, C6 Bank e Itaú, com vinculação da <a href="../adr/0022-registro-de-perfis-e-niveis-de-suporte/">ADR 0022</a>.</td>
+<td style="text-align: center;">Equipe Trokim</td>
+</tr>
 </tbody>
 </table>
 <hr />
@@ -2862,6 +2896,15 @@
 <td style="text-align: center;"><span class="badge-should">Should have</span></td>
 <td style="text-align: center;"><a href="../pesquisa/guiding-questions/">GQ01</a>, <a href="../pesquisa/guiding-questions/">GQ03</a></td>
 <td style="text-align: center;"><a href="../adr/0018-contas-periodos-transferencias-e-visoes/">ADR 0018</a></td>
+<td style="text-align: center;"><span class="badge-must">Implementado</span></td>
+</tr>
+<tr>
+<td style="text-align: center;"><strong>RF29</strong></td>
+<td>Tutoriais por banco e tela de bancos suportados</td>
+<td>O app deve apresentar a lista de bancos suportados com selos explícitos de suporte (<strong>Validado</strong> para Nubank, BB, PicPay e Mercado Pago; <strong>Experimental</strong> para Inter, C6 e Itaú), formatos aceitos e tutoriais passo a passo navegáveis orientando a exportação no app da instituição. Bancos experimentais devem alertar que não foram testados em contas reais, permitindo ainda pular o tutorial, usar o parser genérico em "Outro banco" e solicitar suporte pelo repositório.</td>
+<td style="text-align: center;"><span class="badge-must">Must have</span></td>
+<td style="text-align: center;"><a href="../pesquisa/guiding-questions/">GQ01</a>, <a href="../pesquisa/guiding-questions/">GQ03</a></td>
+<td style="text-align: center;"><a href="../adr/0022-registro-de-perfis-e-niveis-de-suporte/">ADR 0022</a></td>
 <td style="text-align: center;"><span class="badge-must">Implementado</span></td>
 </tr>
 <tr>
@@ -3195,6 +3238,13 @@
 <td style="text-align: center;"><a href="../adr/0018-contas-periodos-transferencias-e-visoes/">ADR 0018</a></td>
 <td><code>mobile/android/app/src/main/kotlin/br/com/trokim/trokim/MainActivity.kt</code>, <code>mobile/lib/core/sharing/</code></td>
 <td><code>mobile/test/shared_file_test.dart</code></td>
+</tr>
+<tr>
+<td style="text-align: center;"><strong>RF29</strong></td>
+<td style="text-align: center;">GQ01, GQ03</td>
+<td style="text-align: center;"><a href="../adr/0022-registro-de-perfis-e-niveis-de-suporte/">ADR 0022</a></td>
+<td><code>mobile/lib/features/import_guide/</code></td>
+<td><code>mobile/test/supported_banks_test.dart</code>, <code>mobile/test/import_flow_test.dart</code></td>
 </tr>
 <tr>
 <td style="text-align: center;"><strong>RF31</strong></td>

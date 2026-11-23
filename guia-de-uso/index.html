@@ -923,10 +923,22 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#82-importar-do-nubank-conta-e-cartao" class="md-nav__link">
+  <a href="#82-importar-por-banco-e-bancos-suportados-rf29" class="md-nav__link">
     <span class="md-ellipsis">
       <span class="md-typeset">
-        8.2. Importar do Nubank (conta e cartão)
+        8.2. Importar por banco e bancos suportados (RF29)
+      </span>
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="8.2. Importar por banco e bancos suportados (RF29)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#tabela-de-bancos-suportados" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Tabela de bancos suportados
       </span>
     </span>
   </a>
@@ -934,10 +946,26 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#83-varias-contas-nubank-empresas-e-banco-do-brasil" class="md-nav__link">
+  <a href="#passo-a-passo-de-exportacao-por-banco" class="md-nav__link">
     <span class="md-ellipsis">
       <span class="md-typeset">
-        8.3. Várias contas: Nubank Empresas e Banco do Brasil
+        Passo a passo de exportação por banco
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#83-varias-contas-deteccao-e-conciliacao" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        8.3. Várias contas, detecção e conciliação
       </span>
     </span>
   </a>
@@ -2654,6 +2682,33 @@
   
   
     <li class="md-nav__item">
+      <a href="../adr/0022-registro-de-perfis-e-niveis-de-suporte/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  0022 – Perfis de Banco e Níveis de Suporte
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../adr/0024-persistencia-local-e-backup-criptografado/" class="md-nav__link">
         
   
@@ -3029,10 +3084,22 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#82-importar-do-nubank-conta-e-cartao" class="md-nav__link">
+  <a href="#82-importar-por-banco-e-bancos-suportados-rf29" class="md-nav__link">
     <span class="md-ellipsis">
       <span class="md-typeset">
-        8.2. Importar do Nubank (conta e cartão)
+        8.2. Importar por banco e bancos suportados (RF29)
+      </span>
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="8.2. Importar por banco e bancos suportados (RF29)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#tabela-de-bancos-suportados" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Tabela de bancos suportados
       </span>
     </span>
   </a>
@@ -3040,10 +3107,26 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#83-varias-contas-nubank-empresas-e-banco-do-brasil" class="md-nav__link">
+  <a href="#passo-a-passo-de-exportacao-por-banco" class="md-nav__link">
     <span class="md-ellipsis">
       <span class="md-typeset">
-        8.3. Várias contas: Nubank Empresas e Banco do Brasil
+        Passo a passo de exportação por banco
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#83-varias-contas-deteccao-e-conciliacao" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        8.3. Várias contas, detecção e conciliação
       </span>
     </span>
   </a>
@@ -3538,22 +3621,129 @@ calculou.</p>
 <p>Para usar a API em outro endereço (por exemplo, um aparelho físico na mesma rede), edite o
 <strong>endereço da API</strong> em <strong>Ajustes</strong> e toque em <strong>Salvar endereço</strong>; <strong>Testar conexão</strong> confere se
 ela responde. Os lançamentos ficam gravados no SQLite local e voltam quando a API reinicia (veja <a href="#backup-e-persistencia">Backup</a>).</p>
-<h3 id="82-importar-do-nubank-conta-e-cartao">8.2. Importar do Nubank (conta e cartão)<a class="headerlink" href="#82-importar-do-nubank-conta-e-cartao" title="Permanent link">&para;</a></h3>
-<p>O Trokim reconhece o OFX do Nubank pelo conteúdo do arquivo (não pelo nome) e trata cada tipo:</p>
+<h3 id="82-importar-por-banco-e-bancos-suportados-rf29">8.2. Importar por banco e bancos suportados (RF29)<a class="headerlink" href="#82-importar-por-banco-e-bancos-suportados-rf29" title="Permanent link">&para;</a></h3>
+<p>No aplicativo, o caminho é <strong>Extratos → Importar extrato</strong>, que abre a tela <strong>Bancos suportados</strong>. A tela apresenta as instituições financeiras cadastradas com seus respectivos selos de suporte (<strong>Validado</strong> ou <strong>Experimental</strong>), os formatos aceitos (OFX, PDF) e o botão <strong>Ver como exportar</strong> para abrir o tutorial guiado.</p>
+<p>O fluxo é flexível e respeita o tempo do usuário:
+- Em qualquer tela de tutorial, você pode tocar em <strong>Pular tutorial</strong> para ir direto ao seletor de arquivos.
+- Na tela de bancos, o botão <strong>Já tenho o arquivo</strong> pula todas as etapas e abre o seletor imediatamente.
+- No último passo do tutorial, a opção <strong>Não mostrar este tutorial de novo</strong> desliga o passo a passo (podendo ser reativado a qualquer momento em <strong>Ajustes → Tutorial ao importar extratos</strong>).
+- Caso o seu banco não esteja listado, a opção <strong>Outro banco</strong> permite importar qualquer arquivo <code>.ofx</code> ou <code>.pdf</code> pelo parser genérico do Trokim. O bloco inferior de ajuda traz ainda o link <strong>Pedir suporte a um banco</strong>, direcionando para o repositório GitHub.</p>
+<h4 id="tabela-de-bancos-suportados">Tabela de bancos suportados<a class="headerlink" href="#tabela-de-bancos-suportados" title="Permanent link">&para;</a></h4>
+<table>
+<thead>
+<tr>
+<th>Banco</th>
+<th style="text-align: center;">Nível de suporte</th>
+<th style="text-align: center;">Formato aceito</th>
+<th>O que importar</th>
+<th>Observações</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Nubank</strong></td>
+<td style="text-align: center;"><span class="badge-must">Validado</span></td>
+<td style="text-align: center;">OFX</td>
+<td>Cartão de crédito e conta (pessoa física ou Empresas)</td>
+<td>Fatura aberta não tem PDF; OFX vem por e-mail ou app.</td>
+</tr>
+<tr>
+<td><strong>Banco do Brasil</strong></td>
+<td style="text-align: center;"><span class="badge-must">Validado</span></td>
+<td style="text-align: center;">PDF (cartão) e OFX (conta)</td>
+<td>Fatura Ourocard (PDF) e extrato da conta corrente (OFX)</td>
+<td>Fatura sai pelo app Ourocard em PDF; extrato da conta sai pelo app BB em OFX (Money 2000+).</td>
+</tr>
+<tr>
+<td><strong>PicPay</strong></td>
+<td style="text-align: center;"><span class="badge-must">Validado</span></td>
+<td style="text-align: center;">PDF</td>
+<td>Fatura do PicPay Card e extrato da conta</td>
+<td>Testado com arquivos reais; fatura e extrato em PDF.</td>
+</tr>
+<tr>
+<td><strong>Mercado Pago</strong></td>
+<td style="text-align: center;"><span class="badge-must">Validado</span></td>
+<td style="text-align: center;">PDF</td>
+<td>Fatura do cartão e extrato de movimentações</td>
+<td>Testado com arquivos reais; fatura e extrato em PDF.</td>
+</tr>
+<tr>
+<td><strong>Banco Inter</strong></td>
+<td style="text-align: center;"><span class="badge-should">Experimental</span></td>
+<td style="text-align: center;">OFX (conta) e PDF (fatura)</td>
+<td>Fatura do cartão (PDF) e extrato da conta (OFX)</td>
+<td>Baseado na ajuda oficial do banco; ainda não testado em conta real.</td>
+</tr>
+<tr>
+<td><strong>C6 Bank</strong></td>
+<td style="text-align: center;"><span class="badge-should">Experimental</span></td>
+<td style="text-align: center;">OFX (conta) e PDF (fatura)</td>
+<td>Fatura do cartão (PDF) e extrato da conta (OFX)</td>
+<td>Baseado na ajuda oficial do banco; ainda não testado em conta real.</td>
+</tr>
+<tr>
+<td><strong>Itaú</strong></td>
+<td style="text-align: center;"><span class="badge-should">Experimental</span></td>
+<td style="text-align: center;">OFX (conta) e PDF (fatura)</td>
+<td>Fatura do cartão (PDF) e extrato da conta (OFX)</td>
+<td>Baseado na ajuda oficial do banco; ainda não testado em conta real.</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p>[!NOTE] Níveis de suporte e transparência (<a href="../adr/0022-registro-de-perfis-e-niveis-de-suporte/">ADR 0022</a>)
+Bancos com selo <strong>Validado</strong> foram testados com arquivos e extratos de contas reais pela equipe. Bancos com selo <strong>Experimental</strong> tiveram seus tutoriais criados a partir das centrais de ajuda oficiais das instituições, mas ainda não foram testados em contas reais. O Trokim nunca promete validação em bancos experimentais; ao importar, confira o resumo dos lançamentos.</p>
+</blockquote>
+<h4 id="passo-a-passo-de-exportacao-por-banco">Passo a passo de exportação por banco<a class="headerlink" href="#passo-a-passo-de-exportacao-por-banco" title="Permanent link">&para;</a></h4>
 <ul>
-<li><strong>Fatura do cartão:</strong> <em>Cartão de crédito → Acessar fatura →</em> escolha o mês <em>→</em> ícone de
-  compartilhar (seta saindo de uma caixa) <em>→</em> <strong>OFX</strong>. A fatura aberta não tem PDF; peça sempre o
-  OFX. O arquivo chega por e-mail.</li>
-<li><strong>Extrato da conta:</strong> tela inicial <em>→ Saldo em conta →</em> três pontinhos <em>→ Pedir extrato →</em>
-  escolha mês e ano. O e-mail traz OFX, PDF e CSV; use o <strong>OFX</strong>.</li>
+<li><strong>Nubank (Validado):</strong></li>
+<li><em>Fatura do cartão:</em> no app Nubank, toque em <em>Cartão de crédito → Acessar fatura →</em> escolha o mês <em>→</em> ícone de compartilhar (seta saindo de uma caixa) <em>→</em> escolha <strong>OFX</strong>. A fatura aberta não tem PDF; use sempre o OFX, que chega por e-mail.</li>
+<li><em>Extrato da conta pessoal:</em> toque em <em>Saldo em conta →</em> três pontinhos <em>→ Pedir extrato →</em> selecione mês e ano. O e-mail traz OFX, PDF e CSV; salve e use o <strong>OFX</strong>.</li>
+<li>
+<p><em>Nubank Empresas:</em> toque em <em>Saldo → Exportar extrato → Exportar agora → Extrato da conta Nu Empresas → Outro período →</em> marque as datas e envie por e-mail. Use o arquivo <strong>OFX que chega por e-mail</strong> (o arquivo baixado direto no celular é sempre PDF).</p>
+</li>
+<li>
+<p><strong>Banco do Brasil (Validado):</strong></p>
+</li>
+<li><em>Cartão Ourocard:</em> no app Ourocard, toque em <em>Ver faturas →</em> escolha o mês <em>→ Salvar ou Compartilhar →</em> selecione o arquivo em formato <strong>PDF</strong>. Você pode compartilhar direto com o Trokim pela lista de aplicativos do Android.</li>
+<li>
+<p><em>Extrato da conta corrente:</em> no app do Banco do Brasil, toque em <em>Extrato → Download extrato →</em> escolha o período <em>→</em> selecione o tipo <strong>OFX (Money 2000+)</strong>.</p>
+</li>
+<li>
+<p><strong>PicPay (Validado — testado com arquivos reais):</strong></p>
+</li>
+<li><em>Fatura do PicPay Card:</em> no app PicPay, acesse a aba <em>Carteira</em> (ou atalho <em>Cartões</em>) <em>→ PicPay Card → Faturas →</em> escolha a fatura fechada <em>→</em> toque em exportar e selecione o formato <strong>PDF</strong>. Compartilhe com o Trokim ou salve no aparelho.</li>
+<li>
+<p><em>Extrato da conta:</em> toque sobre o saldo da conta ou acesse <em>Extrato →</em> toque no ícone de exportar no topo <em>→</em> defina o período <em>→</em> exporte em formato <strong>PDF</strong>.</p>
+</li>
+<li>
+<p><strong>Mercado Pago (Validado — testado com arquivos reais):</strong></p>
+</li>
+<li><em>Fatura do cartão de crédito:</em> no app Mercado Pago, vá até a seção <em>Cartões → Cartão Mercado Pago → Faturas →</em> selecione a fatura do mês fechado <em>→ Baixar fatura</em> em formato <strong>PDF</strong>.</li>
+<li>
+<p><em>Extrato da conta:</em> na tela inicial, toque em <em>Extrato</em> (ou <em>Ver extrato completo</em>) <em>→</em> toque no ícone de download/exportar no canto superior direito <em>→</em> escolha o período <em>→</em> baixe o relatório em <strong>PDF</strong>.</p>
+</li>
+<li>
+<p><strong>Banco Inter (Experimental — ajuda oficial, não testado em conta real):</strong></p>
+</li>
+<li><em>Fatura do cartão:</em> no app do Banco Inter, acesse <em>Cartões → Fatura →</em> escolha a fatura fechada <em>→ Baixar fatura</em> em <strong>PDF</strong>.</li>
+<li>
+<p><em>Extrato da conta:</em> acesse <em>Extrato →</em> toque no ícone de exportação no topo <em>→</em> defina o período e selecione o formato <strong>OFX</strong>.</p>
+</li>
+<li>
+<p><strong>C6 Bank (Experimental — ajuda oficial, não testado em conta real):</strong></p>
+</li>
+<li><em>Fatura do cartão:</em> no app C6 Bank, toque em <em>Cartão → Fatura →</em> escolha a fatura fechada <em>→ Baixar fatura / Enviar por e-mail</em> em <strong>PDF</strong>.</li>
+<li>
+<p><em>Extrato da conta:</em> toque em <em>Extrato →</em> toque no ícone de compartilhar/exportar no topo direito <em>→</em> defina o período e selecione o formato <strong>OFX</strong>.</p>
+</li>
+<li>
+<p><strong>Itaú (Experimental — ajuda oficial, não testado em conta real):</strong></p>
+</li>
+<li><em>Fatura do cartão:</em> no app Itaú ou Itaú Cartões, toque em <em>Cartões → Faturas →</em> escolha a fatura fechada <em>→ Visualizar / Compartilhar</em> em formato <strong>PDF</strong>.</li>
+<li><em>Extrato da conta:</em> toque em <em>Extrato → Exportar extrato →</em> selecione o período e o formato <strong>OFX (Money 2000+)</strong>.</li>
 </ul>
-<p>No app, o caminho é <strong>Extratos → Importar extrato</strong>. O fluxo é guiado, mas <strong>nunca obriga</strong>: em qualquer
-tela dá para <strong>Pular tutorial</strong> ou tocar em <strong>Já tenho o arquivo</strong> para ir direto ao seletor. No
-último passo, <strong>Não mostrar este tutorial de novo</strong> desliga o passo a passo (e <strong>Ajustes → Tutorial
-ao importar extratos</strong> o reativa); com ele desligado, <strong>Importar extrato</strong> abre o seletor de arquivos
-na hora. Ao terminar, o app mostra o que detectou (banco e tipo), quantos lançamentos leu, quantos
-repetidos ignorou, quantas movimentações ficaram fora dos totais e quantos gastos ficaram sem
-categoria.</p>
 <table>
 <thead>
 <tr>
@@ -3564,7 +3754,7 @@ categoria.</p>
 </thead>
 <tbody>
 <tr>
-<td><img alt="Escolha do banco, com Nubank, Outro banco e o atalho Já tenho o arquivo" src="../assets/app/importacao-banco.png" width="200" /></td>
+<td><img alt="Escolha do banco, com selos e atalhos" src="../assets/app/importacao-banco.png" width="200" /></td>
 <td><img alt="Primeiro passo do tutorial do cartão, com indicador de progresso e opção de pular" src="../assets/app/importacao-tutorial.png" width="200" /></td>
 <td><img alt="Último passo do tutorial, com a opção de não mostrar de novo" src="../assets/app/importacao-tutorial-final.png" width="200" /></td>
 </tr>
@@ -3622,7 +3812,7 @@ vem calculado pela API.</p>
 <code>conta</code>), <code>by_nature</code>, <code>uncategorized_count</code> e <code>ledger_balance</code> (saldo declarado no arquivo, só
 para consulta). Arquivos de exemplo sintéticos, no mesmo formato, saem de
 <code>python research/synthetic_data/generate_nubank_datasets.py</code>.</p>
-<h3 id="83-varias-contas-nubank-empresas-e-banco-do-brasil">8.3. Várias contas: Nubank Empresas e Banco do Brasil<a class="headerlink" href="#83-varias-contas-nubank-empresas-e-banco-do-brasil" title="Permanent link">&para;</a></h3>
+<h3 id="83-varias-contas-deteccao-e-conciliacao">8.3. Várias contas, detecção e conciliação<a class="headerlink" href="#83-varias-contas-deteccao-e-conciliacao" title="Permanent link">&para;</a></h3>
 <p>O OFX não diz se a conta é pessoal ou da empresa. Antes de importar, o app pede à API uma análise
 do arquivo (<code>POST /v1/transactions/inspect</code>, que não grava nada): banco, tipo, período e dono
 provável. Quando a API não consegue decidir, o app pergunta <strong>uma vez</strong> e lembra; quando o arquivo
@@ -3636,6 +3826,8 @@ avisa e deixa escolher entre importar mesmo assim ou trocar o arquivo.</p>
   cartão, e confere a soma dos lançamentos com o total da fatura.</li>
 <li><strong>Banco do Brasil, conta corrente:</strong> extrato em <strong>OFX</strong> (tipo "Money 2000+"), onde o campo
   <code>NAME</code> é o tipo do lançamento e <code>MEMO</code> a contraparte.</li>
+<li><strong>PicPay e Mercado Pago:</strong> ambos validados com faturas e extratos em PDF gerados a partir do fluxo real de exportação nos aplicativos.</li>
+<li><strong>Inter, C6 Bank e Itaú:</strong> perfis experimentais gerados a partir dos manuais oficiais de ajuda, combinando extratos de conta em OFX e faturas de cartão de crédito em PDF.</li>
 </ul>
 <p>Na aba <strong>Extratos</strong>, a seção <strong>Contas</strong> lista cada conta e cartão com o dono, que pode ser trocado a
 qualquer momento.</p>

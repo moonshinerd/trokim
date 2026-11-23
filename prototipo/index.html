@@ -690,6 +690,23 @@
     </span>
   </a>
   
+    <nav class="md-nav" aria-label="O que é simulado">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#fluxo-de-importacao-e-tela-de-bancos-suportados" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Fluxo de importação e tela de bancos suportados
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
         
       </ul>
@@ -2305,6 +2322,33 @@
   
   
     <li class="md-nav__item">
+      <a href="../adr/0022-registro-de-perfis-e-niveis-de-suporte/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  0022 – Perfis de Banco e Níveis de Suporte
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../adr/0024-persistencia-local-e-backup-criptografado/" class="md-nav__link">
         
   
@@ -2421,6 +2465,23 @@
     </span>
   </a>
   
+    <nav class="md-nav" aria-label="O que é simulado">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#fluxo-de-importacao-e-tela-de-bancos-suportados" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Fluxo de importação e tela de bancos suportados
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
         
       </ul>
@@ -2459,6 +2520,8 @@
 <h2 id="o-que-e-simulado">O que é simulado<a class="headerlink" href="#o-que-e-simulado" title="Permanent link">&para;</a></h2>
 <p>Todos os lançamentos, saldos, categorias, mensagens, fontes associadas à conversa e valores de cenários são exemplos sintéticos criados para esta demonstração. O protótipo não importa arquivos, consulta API, executa cálculos, envia mensagens nem salva preferências. Os controles sem navegação são apenas visuais. O link da fonte só abre o site do Banco Central se selecionado e houver conexão; a demonstração e seus arquivos carregam sem serviços externos.</p>
 <p>O layout se adapta a telas estreitas e largas; em desktop, a interface fica centralizada. Os arquivos são HTML, CSS e JavaScript estáticos, sem bibliotecas externas, CDN ou fontes remotas. O contorno de foco visível permite navegar pelos controles usando teclado.</p>
+<h3 id="fluxo-de-importacao-e-tela-de-bancos-suportados">Fluxo de importação e tela de bancos suportados<a class="headerlink" href="#fluxo-de-importacao-e-tela-de-bancos-suportados" title="Permanent link">&para;</a></h3>
+<p>O protótipo estático web foca na navegação das cinco abas principais e na identidade visual, não executando o upload ou processamento de arquivos (o botão de importar extrato na aba Extratos é apenas demonstrativo). O fluxo interativo completo de importação — incluindo a <strong>tela de Bancos Suportados</strong> com selos de validação (<strong>Validado</strong> e <strong>Experimental</strong>), formatos aceitos e tutoriais passo a passo navegáveis para cada banco (<a href="../requisitos/">RF29</a>, <a href="../adr/0022-registro-de-perfis-e-niveis-de-suporte/">ADR 0022</a>) — é implementado e testado de forma nativa no aplicativo Flutter para Android (<code>mobile/lib/features/import_guide/</code>), funcionando em modo local-first no dispositivo. Veja os tutoriais detalhados de cada instituição no <a href="../guia-de-uso/#82-importar-por-banco-e-bancos-suportados-rf29">Guia de Uso</a>.</p>
 <p>O iframe usa um caminho relativo compatível com a página publicada em <code>/prototipo/</code>, inclusive quando o site está em um subdiretório. Os endereços <code>#resumo</code>, <code>#extratos</code>, <code>#assistente</code>, <code>#cenarios</code> e <code>#ajustes</code> abrem a tela correspondente; um fragmento desconhecido retorna ao Resumo.</p>
 
 
