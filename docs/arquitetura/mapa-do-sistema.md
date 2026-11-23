@@ -28,6 +28,7 @@ graph TD
         APIEntry["Routers v1<br/>(/transactions, /accounts, /statements, /installments,<br/>/transfers, /backup, /chat, /budgets, /health, /agents)"]
         AgentAsk["POST /v1/agents/ask<br/>(MultiAgentResponse)"]
         
+        Vision["Portas de leitura de imagem<br/>(OcrProvider: RapidOCR local;<br/>VisionProvider: LiteLLM, opcional)"]
         Parser["Parser de Documentos<br/>(OFX & PDF, perfis Nubank e BB)"]
         Library["Biblioteca local<br/>(contas, períodos, detector,<br/>transferências, parcelas, regras de categoria)"]
         CalcService["Motor de Cálculo Determinístico<br/>(Totais, Balanço, 50-30-20)"]
@@ -57,6 +58,7 @@ graph TD
         end
         
         APIEntry --> Parser
+        Vision -.->|foto ou PDF escaneado, Semana 5| Parser
         APIEntry --> Library
         Library --> Parser
         Library --> DomainCore
@@ -108,7 +110,7 @@ graph TD
 
 ## 2. Fluxo de Importação de Extratos e Resumo
 
-Pagamento de fatura, resgates e transferências próprias ficam fora dos totais e o estorno abate a despesa ([ADR 0017](../adr/0017-perfis-de-banco-e-natureza-do-lancamento.md)). Contas, situação do período, transferências entre contas próprias, parcelamentos e regras de categoria seguem a [ADR 0018](../adr/0018-contas-periodos-transferencias-e-visoes.md). A biblioteca do usuário é gravada no SQLite local atrás de uma porta de repositório, restaurada ao iniciar a API e exportável em backup criptografado `.trokim` ([ADR 0024](../adr/0024-persistencia-local-e-backup-criptografado.md)). O app só exibe o que o backend calculou. A categoria de cada gasto segue a ordem descrita em [Categorias](categorias.md): regras por palavra, dicionário de redes e atividade econômica (CNAE) pelo CNPJ do recebedor, com o índice local da [ADR 0020](../adr/0020-categorizacao-por-cnae.md). Os bancos SQLite (aplicação e base vetorial) usam SQLAlchemy e migrações numeradas do Alembic, aplicadas ao abrir cada banco ([ADR 0019](../adr/0019-orm-e-migracoes-numeradas.md)).
+Pagamento de fatura, resgates e transferências próprias ficam fora dos totais e o estorno abate a despesa ([ADR 0017](../adr/0017-perfis-de-banco-e-natureza-do-lancamento.md)). Contas, situação do período, transferências entre contas próprias, parcelamentos e regras de categoria seguem a [ADR 0018](../adr/0018-contas-periodos-transferencias-e-visoes.md). A biblioteca do usuário vive **no aparelho**, em arquivo cifrado (AES-256-GCM, chave no Keystore); o app a devolve à API ao abrir e a API a mantém só em memória ([ADR 0025](../adr/0025-armazenamento-no-aparelho-e-api-sem-estado.md)). O SQLite local da API, atrás de uma porta de repositório, segue como opção sem o app, e o backup criptografado `.trokim` leva os dados a outro aparelho ([ADR 0024](../adr/0024-persistencia-local-e-backup-criptografado.md)). O app só exibe o que o backend calculou. A categoria de cada gasto segue a ordem descrita em [Categorias](categorias.md): regras por palavra, dicionário de redes e atividade econômica (CNAE) pelo CNPJ do recebedor, com o índice local da [ADR 0020](../adr/0020-categorizacao-por-cnae.md). Os bancos SQLite (aplicação e base vetorial) usam SQLAlchemy e migrações numeradas do Alembic, aplicadas ao abrir cada banco ([ADR 0019](../adr/0019-orm-e-migracoes-numeradas.md)).
 
 ```mermaid
 sequenceDiagram
@@ -319,3 +321,22 @@ sequenceDiagram
     API-->>Mobile: Resposta auditada com trilha dos agentes
     Mobile-->>User: Exibe resposta com botão "Como cheguei a essa resposta"
 ```
+
+
+## Leitura de documento (componente da #88)
+
+```mermaid
+flowchart TD
+    D["Arquivo em memória"] --> T{"Texto útil?"}
+    T -->|Sim| P["Perfil textual"]
+    T -->|Não| Q{"Qualidade da imagem"}
+    Q -->|Insuficiente| A["Abstenção da página"]
+    Q -->|Suficiente| O["OCR local"]
+    P --> R["Campos para revisão"]
+    O --> R
+```
+
+O [agente de documento](../agentes/document-agent.md) devolve campos e trilha sanitizada.
+Visão opcional exige proteção dos pixels e política de confiança; permanece bloqueada
+sem essas garantias. Validação financeira (#89), endpoints e confirmação (#96) ainda
+precisam ser integrados. Nenhum lançamento é criado por esse componente.

@@ -22,7 +22,15 @@ dependencies = [
     "sqlite-vec>=0.1.9",
     "alembic>=1.13",
     "cryptography>=43",
+    "pillow>=10",
 ]
+
+[project.optional-dependencies]
+ocr = [
+    "rapidocr-onnxruntime>=1.3",
+]
+
+documents = ["Pillow>=10.4", "pypdfium2>=4.30"]
 
 [dependency-groups]
 dev = [

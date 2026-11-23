@@ -49,3 +49,15 @@ flowchart LR
 1. **Validação de Campos:** O documento é submetido às regras determinísticas (`DATE_INVALID`, `AMOUNT_FORMAT`, `TOTAL_MISMATCH`, `DUE_BEFORE_ISSUE`, `FIELD_MISSING` e `LOW_CONFIDENCE`).
 2. **Conciliação com a Biblioteca:** Em conformidade com a [ADR 0018](../adr/0018-contas-periodos-transferencias-e-visoes.md), o validador compara o documento com os lançamentos já importados na biblioteca para detectar duplicidades (`POSSIBLE_DUPLICATE`) e pagamentos de fatura já conciliados (`ALREADY_RECONCILED`).
 3. **Revisão Humana:** Se houver qualquer bloqueador (`BLOCKER`), o sistema exige que o usuário revise e confirme os dados no aplicativo antes de criar transações na biblioteca local.
+
+## Validação financeira (#89)
+
+A saída do agente passa pela validação determinística do [Validation Agent](validation-agent.md)
+(`validate_document`), que aceita o `ExtractedDocument` do agente diretamente. Os dois
+contratos têm formatos diferentes (campos por chave e lançamentos no agente; campos nomeados e
+linhas na validação), e o adaptador `app/services/document_adapter.py` os liga sem inventar dado:
+campo ausente continua ausente e a confiança global é a **menor** entre os campos e lançamentos.
+
+No ensaio com OCR real sobre o dataset sintético da #90, os documentos legíveis seguiram sem
+bloqueio, os parciais foram barrados por `FIELD_MISSING` e os ilegíveis ficaram em abstenção.
+Esse resultado vale como verificação de integração, não como medida de acurácia (#98).

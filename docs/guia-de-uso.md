@@ -37,6 +37,43 @@ A API estará disponível em:
 - **Consulta RAG Extrativa:** `POST http://127.0.0.1:8000/v1/chat/ask`
 - **Síntese Generativa Contextualizada:** `POST http://127.0.0.1:8000/v1/chat/generate`
 
+### Backend em Docker (com OCR)
+
+O `deploy/` empacota só o **backend**, com o OCR local e o modelo de embeddings já baixados (a
+API roda sem internet depois da construção). O app Flutter não entra no contêiner: ele é
+instalado no aparelho e aponta para este endereço em **Ajustes > Conexão**.
+
+```bash
+docker compose -f deploy/docker-compose.yml up --build -d   # sobe em 127.0.0.1:8000
+docker compose -f deploy/docker-compose.yml down            # para; os dados ficam no volume
+docker compose -f deploy/docker-compose.yml down -v         # para e APAGA os dados do usuário
+```
+
+Os dados (SQLite e índice vetorial) ficam no volume `trokim-data`, nunca na imagem. O Ollama
+(texto e visão) roda na sua máquina e o contêiner o encontra por `host.docker.internal:11434`.
+Para o celular acessar, publique a porta na rede local editando `ports` (por exemplo
+`"0.0.0.0:8000:8000"`) e use o IP do computador; por padrão só a própria máquina alcança a API.
+
+### Leitura de imagem: OCR e modelo de visão
+
+O OCR é local (RapidOCR) e vem ligado. O modelo de visão é opcional e vem **desligado**
+([ADR 0021](adr/0021-visao-e-ocr-modulares.md)). Tudo se troca por variável de ambiente
+(`api/.env` ou o ambiente do contêiner):
+
+| Variável | Padrão | Para quê |
+|---|---|---|
+| `OCR_PROVIDER` | `rapidocr` | Motor de OCR (`rapidocr` ou `mock`). Fora do Docker, instale com `uv sync --extra ocr` |
+| `VISION_PROVIDER` | `none` | `none`, `litellm` ou `mock` |
+| `VISION_MODEL` | `ollama/qwen2.5vl` | Modelo no formato do LiteLLM; `openrouter/...` é remoto |
+| `VISION_API_BASE` | vazio | Endereço do servidor do modelo |
+| `VISION_API_KEY` | vazio | Chave, só em variável de ambiente |
+| `VISION_TIMEOUT` | `120` | Segundos |
+| `VISION_ALLOW_REMOTE` | `false` | Consentimento para enviar a imagem para fora do aparelho |
+
+Um modelo remoto, como o do OpenRouter, é **recusado** enquanto `VISION_ALLOW_REMOTE` não for
+`true`: a imagem de um documento financeiro sairia do aparelho. O consentimento é seu, e só
+material sintético vai à nuvem nos testes do projeto.
+
 ### Referência rápida da API
 
 Todos os caminhos começam em `/v1`. O contrato completo e interativo fica no Swagger (`/docs`).
@@ -55,16 +92,27 @@ Todos os caminhos começam em `/v1`. O contrato completo e interativo fica no Sw
 | Biblioteca | `GET /installments` | Parcelamentos agrupados |
 | Biblioteca | `GET /transfers`, `GET /transfers/suggestions`, `POST /transfers/{confirm,reject,unmark,undo}` | Transferências entre contas próprias |
 | Cenários | `POST /budgets/compare` | Compara dois cenários de orçamento |
+| Biblioteca no aparelho | `GET` e `PUT /library/snapshot` | O app lê o retrato para guardá-lo cifrado e o devolve à API ao abrir |
 | Backup | `POST /backup/export`, `POST /backup/import` | Exporta e restaura a biblioteca em arquivo `.trokim` criptografado |
 
 ### Backup e persistência
 
-A biblioteca (lançamentos, contas, arquivos, transferências e regras de categoria) é gravada no
-SQLite local (`trokim.db`) depois de cada alteração e restaurada quando a API inicia
-([ADR 0024](adr/0024-persistencia-local-e-backup-criptografado.md)). `LIBRARY_PERSISTENCE=false`
-desliga a gravação. O arquivo `trokim.db` não é criptografado; o **backup é sempre cifrado**
-(AES-256-GCM, chave derivada da sua senha por scrypt) e não pode ser aberto sem ela, nem
-recuperado se a senha for esquecida.
+**No app, o aparelho guarda seus dados.** A biblioteca (lançamentos, contas, arquivos,
+transferências e regras de categoria) fica em um arquivo **cifrado** (AES-256-GCM) na pasta
+privada do app, com a chave no armazenamento seguro do Android. Ao abrir, o app devolve esse
+retrato à API, que o mantém só em memória; depois de cada alteração o app regrava o arquivo
+([ADR 0025](adr/0025-armazenamento-no-aparelho-e-api-sem-estado.md)). Por isso a API pode ser
+reiniciada ou recriada sem perder nada. A API só deve ser a **sua**: o retrato inclui dados
+privados e é enviado a ela inteiro. O backup automático do Android fica desligado, porque
+levaria o arquivo sem a chave. Se o arquivo for alterado ou a chave se perder, o app não mostra
+dado errado: guarda o arquivo à parte (`biblioteca.trokim.corrompido`), avisa em **Ajustes >
+Backup** e você recupera pelo backup `.trokim`.
+
+Quem usa a API sem o app ainda tem o SQLite local (`trokim.db`, não cifrado), controlado por
+`LIBRARY_PERSISTENCE` ([ADR 0024](adr/0024-persistencia-local-e-backup-criptografado.md)). O
+**backup é sempre cifrado** (AES-256-GCM, chave derivada da sua senha por scrypt) e não pode ser
+aberto sem ela, nem recuperado se a senha for esquecida; é o caminho para trocar de aparelho.
+Perder o aparelho sem backup é perder os dados.
 
 ```bash
 # Exportar (a senha tem pelo menos 8 caracteres e nunca é gravada)
@@ -283,27 +331,65 @@ Para usar a API em outro endereço (por exemplo, um aparelho físico na mesma re
 **endereço da API** em **Ajustes** e toque em **Salvar endereço**; **Testar conexão** confere se
 ela responde. Os lançamentos ficam gravados no SQLite local e voltam quando a API reinicia (veja [Backup](#backup-e-persistencia)).
 
-### 8.2. Importar do Nubank (conta e cartão)
+### 8.2. Importar por banco e bancos suportados (RF29)
 
-O Trokim reconhece o OFX do Nubank pelo conteúdo do arquivo (não pelo nome) e trata cada tipo:
+No aplicativo, o caminho é **Extratos → Importar extrato**, que abre a tela **Bancos suportados**. A tela apresenta as instituições financeiras cadastradas com seus respectivos selos de suporte (**Validado** ou **Experimental**), os formatos aceitos (OFX, PDF) e o botão **Ver como exportar** para abrir o tutorial guiado.
 
-- **Fatura do cartão:** *Cartão de crédito → Acessar fatura →* escolha o mês *→* ícone de
-  compartilhar (seta saindo de uma caixa) *→* **OFX**. A fatura aberta não tem PDF; peça sempre o
-  OFX. O arquivo chega por e-mail.
-- **Extrato da conta:** tela inicial *→ Saldo em conta →* três pontinhos *→ Pedir extrato →*
-  escolha mês e ano. O e-mail traz OFX, PDF e CSV; use o **OFX**.
+O fluxo é flexível e respeita o tempo do usuário:
+- Em qualquer tela de tutorial, você pode tocar em **Pular tutorial** para ir direto ao seletor de arquivos.
+- Na tela de bancos, o botão **Já tenho o arquivo** pula todas as etapas e abre o seletor imediatamente.
+- No último passo do tutorial, a opção **Não mostrar este tutorial de novo** desliga o passo a passo (podendo ser reativado a qualquer momento em **Ajustes → Tutorial ao importar extratos**).
+- Caso o seu banco não esteja listado, a opção **Outro banco** permite importar qualquer arquivo `.ofx` ou `.pdf` pelo parser genérico do Trokim. O bloco inferior de ajuda traz ainda o link **Pedir suporte a um banco**, direcionando para o repositório GitHub.
 
-No app, o caminho é **Extratos → Importar extrato**. O fluxo é guiado, mas **nunca obriga**: em qualquer
-tela dá para **Pular tutorial** ou tocar em **Já tenho o arquivo** para ir direto ao seletor. No
-último passo, **Não mostrar este tutorial de novo** desliga o passo a passo (e **Ajustes → Tutorial
-ao importar extratos** o reativa); com ele desligado, **Importar extrato** abre o seletor de arquivos
-na hora. Ao terminar, o app mostra o que detectou (banco e tipo), quantos lançamentos leu, quantos
-repetidos ignorou, quantas movimentações ficaram fora dos totais e quantos gastos ficaram sem
-categoria.
+#### Tabela de bancos suportados
+
+| Banco | Nível de suporte | Formato aceito | O que importar | Observações |
+|---|:---:|:---:|---|---|
+| **Nubank** | <span class="badge-must">Validado</span> | OFX | Cartão de crédito e conta (pessoa física ou Empresas) | Fatura aberta não tem PDF; OFX vem por e-mail ou app. |
+| **Banco do Brasil** | <span class="badge-must">Validado</span> | PDF (cartão) e OFX (conta) | Fatura Ourocard (PDF) e extrato da conta corrente (OFX) | Fatura sai pelo app Ourocard em PDF; extrato da conta sai pelo app BB em OFX (Money 2000+). |
+| **PicPay** | <span class="badge-must">Validado</span> | PDF | Fatura do PicPay Card e extrato da conta | Testado com arquivos reais; fatura e extrato em PDF. |
+| **Mercado Pago** | <span class="badge-must">Validado</span> | PDF | Fatura do cartão e extrato de movimentações | Testado com arquivos reais; fatura e extrato em PDF. |
+| **Banco Inter** | <span class="badge-should">Experimental</span> | OFX (conta) e PDF (fatura) | Fatura do cartão (PDF) e extrato da conta (OFX) | Baseado na ajuda oficial do banco; ainda não testado em conta real. |
+| **C6 Bank** | <span class="badge-should">Experimental</span> | OFX (conta) e PDF (fatura) | Fatura do cartão (PDF) e extrato da conta (OFX) | Baseado na ajuda oficial do banco; ainda não testado em conta real. |
+| **Itaú** | <span class="badge-should">Experimental</span> | OFX (conta) e PDF (fatura) | Fatura do cartão (PDF) e extrato da conta (OFX) | Baseado na ajuda oficial do banco; ainda não testado em conta real. |
+
+> [!NOTE] Níveis de suporte e transparência ([ADR 0022](adr/0022-registro-de-perfis-e-niveis-de-suporte.md))
+> Bancos com selo **Validado** foram testados com arquivos e extratos de contas reais pela equipe. Bancos com selo **Experimental** tiveram seus tutoriais criados a partir das centrais de ajuda oficiais das instituições, mas ainda não foram testados em contas reais. O Trokim nunca promete validação em bancos experimentais; ao importar, confira o resumo dos lançamentos.
+
+#### Passo a passo de exportação por banco
+
+- **Nubank (Validado):**
+  - *Fatura do cartão:* no app Nubank, toque em *Cartão de crédito → Acessar fatura →* escolha o mês *→* ícone de compartilhar (seta saindo de uma caixa) *→* escolha **OFX**. A fatura aberta não tem PDF; use sempre o OFX, que chega por e-mail.
+  - *Extrato da conta pessoal:* toque em *Saldo em conta →* três pontinhos *→ Pedir extrato →* selecione mês e ano. O e-mail traz OFX, PDF e CSV; salve e use o **OFX**.
+  - *Nubank Empresas:* toque em *Saldo → Exportar extrato → Exportar agora → Extrato da conta Nu Empresas → Outro período →* marque as datas e envie por e-mail. Use o arquivo **OFX que chega por e-mail** (o arquivo baixado direto no celular é sempre PDF).
+
+- **Banco do Brasil (Validado):**
+  - *Cartão Ourocard:* no app Ourocard, toque em *Ver faturas →* escolha o mês *→ Salvar ou Compartilhar →* selecione o arquivo em formato **PDF**. Você pode compartilhar direto com o Trokim pela lista de aplicativos do Android.
+  - *Extrato da conta corrente:* no app do Banco do Brasil, toque em *Extrato → Download extrato →* escolha o período *→* selecione o tipo **OFX (Money 2000+)**.
+
+- **PicPay (Validado — testado com arquivos reais):**
+  - *Fatura do PicPay Card:* no app PicPay, acesse a aba *Carteira* (ou atalho *Cartões*) *→ PicPay Card → Faturas →* escolha a fatura fechada *→* toque em exportar e selecione o formato **PDF**. Compartilhe com o Trokim ou salve no aparelho.
+  - *Extrato da conta:* toque sobre o saldo da conta ou acesse *Extrato →* toque no ícone de exportar no topo *→* defina o período *→* exporte em formato **PDF**.
+
+- **Mercado Pago (Validado — testado com arquivos reais):**
+  - *Fatura do cartão de crédito:* no app Mercado Pago, vá até a seção *Cartões → Cartão Mercado Pago → Faturas →* selecione a fatura do mês fechado *→ Baixar fatura* em formato **PDF**.
+  - *Extrato da conta:* na tela inicial, toque em *Extrato* (ou *Ver extrato completo*) *→* toque no ícone de download/exportar no canto superior direito *→* escolha o período *→* baixe o relatório em **PDF**.
+
+- **Banco Inter (Experimental — ajuda oficial, não testado em conta real):**
+  - *Fatura do cartão:* no app do Banco Inter, acesse *Cartões → Fatura →* escolha a fatura fechada *→ Baixar fatura* em **PDF**.
+  - *Extrato da conta:* acesse *Extrato →* toque no ícone de exportação no topo *→* defina o período e selecione o formato **OFX**.
+
+- **C6 Bank (Experimental — ajuda oficial, não testado em conta real):**
+  - *Fatura do cartão:* no app C6 Bank, toque em *Cartão → Fatura →* escolha a fatura fechada *→ Baixar fatura / Enviar por e-mail* em **PDF**.
+  - *Extrato da conta:* toque em *Extrato →* toque no ícone de compartilhar/exportar no topo direito *→* defina o período e selecione o formato **OFX**.
+
+- **Itaú (Experimental — ajuda oficial, não testado em conta real):**
+  - *Fatura do cartão:* no app Itaú ou Itaú Cartões, toque em *Cartões → Faturas →* escolha a fatura fechada *→ Visualizar / Compartilhar* em formato **PDF**.
+  - *Extrato da conta:* toque em *Extrato → Exportar extrato →* selecione o período e o formato **OFX (Money 2000+)**.
 
 | Banco | Passo a passo (cartão) | Último passo |
 |---|---|---|
-| ![Escolha do banco, com Nubank, Outro banco e o atalho Já tenho o arquivo](assets/app/importacao-banco.png){ width="200" } | ![Primeiro passo do tutorial do cartão, com indicador de progresso e opção de pular](assets/app/importacao-tutorial.png){ width="200" } | ![Último passo do tutorial, com a opção de não mostrar de novo](assets/app/importacao-tutorial-final.png){ width="200" } |
+| ![Escolha do banco, com selos e atalhos](assets/app/importacao-banco.png){ width="200" } | ![Primeiro passo do tutorial do cartão, com indicador de progresso e opção de pular](assets/app/importacao-tutorial.png){ width="200" } | ![Último passo do tutorial, com a opção de não mostrar de novo](assets/app/importacao-tutorial-final.png){ width="200" } |
 
 O que o Trokim faz com esses arquivos:
 
@@ -328,7 +414,7 @@ A resposta de `POST /v1/transactions/upload` informa `institution`, `kind` (`car
 para consulta). Arquivos de exemplo sintéticos, no mesmo formato, saem de
 `python research/synthetic_data/generate_nubank_datasets.py`.
 
-### 8.3. Várias contas: Nubank Empresas e Banco do Brasil
+### 8.3. Várias contas, detecção e conciliação
 
 O OFX não diz se a conta é pessoal ou da empresa. Antes de importar, o app pede à API uma análise
 do arquivo (`POST /v1/transactions/inspect`, que não grava nada): banco, tipo, período e dono
@@ -343,6 +429,8 @@ avisa e deixa escolher entre importar mesmo assim ou trocar o arquivo.
   cartão, e confere a soma dos lançamentos com o total da fatura.
 - **Banco do Brasil, conta corrente:** extrato em **OFX** (tipo "Money 2000+"), onde o campo
   `NAME` é o tipo do lançamento e `MEMO` a contraparte.
+- **PicPay e Mercado Pago:** ambos validados com faturas e extratos em PDF gerados a partir do fluxo real de exportação nos aplicativos.
+- **Inter, C6 Bank e Itaú:** perfis experimentais gerados a partir dos manuais oficiais de ajuda, combinando extratos de conta em OFX e faturas de cartão de crédito em PDF.
 
 Na aba **Extratos**, a seção **Contas** lista cada conta e cartão com o dono, que pode ser trocado a
 qualquer momento.

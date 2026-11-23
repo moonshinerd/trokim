@@ -246,6 +246,31 @@ class ApiClient {
     return _decode(response);
   }
 
+  /// Retrato da biblioteca como texto JSON, para o app guardar no aparelho.
+  Future<String> getLibrarySnapshot() async {
+    final response = await _client
+        .get(Uri.parse('$baseUrl${ApiConstants.librarySnapshotEndpoint}'))
+        .timeout(uploadTimeout);
+    if (response.statusCode != 200) {
+      throw ApiException(response.statusCode, _detailOf(response));
+    }
+    return utf8.decode(response.bodyBytes);
+  }
+
+  /// Devolve à API o retrato guardado no aparelho.
+  Future<void> putLibrarySnapshot(String json) async {
+    final response = await _client
+        .put(
+          Uri.parse('$baseUrl${ApiConstants.librarySnapshotEndpoint}'),
+          headers: {'Content-Type': 'application/json'},
+          body: utf8.encode(json),
+        )
+        .timeout(uploadTimeout);
+    if (response.statusCode != 200) {
+      throw ApiException(response.statusCode, _detailOf(response));
+    }
+  }
+
   /// Exporta a biblioteca em um arquivo `.trokim` criptografado com [passphrase].
   Future<List<int>> exportBackup(String passphrase) async {
     final response = await _client

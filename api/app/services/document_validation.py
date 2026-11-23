@@ -17,8 +17,10 @@ from typing import Any
 
 from app.domain.agents import IssueSeverity, ValidationIssue
 from app.domain.document import DocumentType, ExtractedDocument, ExtractedLine
+from app.domain.documents import ExtractedDocument as AgentDocument
 from app.domain.models import TransactionNature
 from app.services.agents.validation import ValidationIssueCode
+from app.services.document_adapter import from_agent_document
 from app.services.library_service import Library
 from app.services.statement_profiles import normalize_text
 from app.services.transfer_service import name_matches
@@ -102,6 +104,8 @@ def _get_doc(doc: Any) -> ExtractedDocument:
     """Garante instância de ExtractedDocument a partir de dict, modelo ou objeto duck-typed."""
     if isinstance(doc, ExtractedDocument):
         return doc
+    if isinstance(doc, AgentDocument):
+        return from_agent_document(doc)
     if isinstance(doc, dict):
         return ExtractedDocument.model_validate(doc)
     # Objeto genérico
@@ -713,7 +717,7 @@ def validate_document(
     - Avisos (IssueSeverity.WARNING): apenas destacam alertas para revisão humana.
 
     Parâmetros:
-        doc: ExtractedDocument, dicionário ou objeto com os campos extraídos.
+        doc: ExtractedDocument (da validação ou do agente), dicionário ou objeto com os campos.
         library: Biblioteca opcional da sessão (com lançamentos e transferências para conciliação).
         confidence_threshold: Limiar de confiança para emissão de avisos (padrão: 0.80).
         reference_date: Data base para checagem de datas futuras (padrão: date.today()).

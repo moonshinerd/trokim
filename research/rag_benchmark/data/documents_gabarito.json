@@ -1,0 +1,1653 @@
+{
+  "schema_version": 1,
+  "seed": 90,
+  "synthetic_only": true,
+  "personal_data": {
+    "name": "Pessoa Exemplo Fictícia",
+    "cpf": "000.000.000-00",
+    "account": "0000000-0",
+    "branch": "0000"
+  },
+  "cases": [
+    {
+      "id": "D01",
+      "family_id": "F01",
+      "path": "research/synthetic_data/document_images/D01.png",
+      "split": "calibration",
+      "kind": "pix_receipt",
+      "bank": "Nubank",
+      "media_type": "image/png",
+      "degradation": {
+        "type": "none",
+        "level": "none",
+        "parameters": {}
+      },
+      "expected_quality": "legible",
+      "expected_fields": {
+        "bank": "Nubank",
+        "amount": "546.40",
+        "counterparty": "Pessoa Exemplo Alfa",
+        "date": "2026-10-02"
+      },
+      "recoverable_fields": {
+        "bank": "Nubank",
+        "amount": "546.40",
+        "counterparty": "Pessoa Exemplo Alfa",
+        "date": "2026-10-02"
+      },
+      "expected_transactions": [],
+      "recoverable_transactions": [],
+      "demo": true,
+      "early_sample": true
+    },
+    {
+      "id": "D02",
+      "family_id": "F01",
+      "path": "research/synthetic_data/document_images/D02.png",
+      "split": "calibration",
+      "kind": "pix_receipt",
+      "bank": "Nubank",
+      "media_type": "image/png",
+      "degradation": {
+        "type": "blur",
+        "level": "mild",
+        "parameters": {
+          "radius": 0.45
+        }
+      },
+      "expected_quality": "legible",
+      "expected_fields": {
+        "bank": "Nubank",
+        "amount": "546.40",
+        "counterparty": "Pessoa Exemplo Alfa",
+        "date": "2026-10-02"
+      },
+      "recoverable_fields": {
+        "bank": "Nubank",
+        "amount": "546.40",
+        "counterparty": "Pessoa Exemplo Alfa",
+        "date": "2026-10-02"
+      },
+      "expected_transactions": [],
+      "recoverable_transactions": [],
+      "demo": false,
+      "early_sample": false
+    },
+    {
+      "id": "D03",
+      "family_id": "F02",
+      "path": "research/synthetic_data/document_images/D03.jpg",
+      "split": "calibration",
+      "kind": "boleto",
+      "bank": "Nu Empresas",
+      "media_type": "image/jpeg",
+      "degradation": {
+        "type": "none",
+        "level": "none",
+        "parameters": {}
+      },
+      "expected_quality": "legible",
+      "expected_fields": {
+        "bank": "Nu Empresas",
+        "amount": "1883.15",
+        "counterparty": "Pessoa Fictícia Beta",
+        "due_date": "2026-10-03"
+      },
+      "recoverable_fields": {
+        "bank": "Nu Empresas",
+        "amount": "1883.15",
+        "counterparty": "Pessoa Fictícia Beta",
+        "due_date": "2026-10-03"
+      },
+      "expected_transactions": [],
+      "recoverable_transactions": [],
+      "demo": true,
+      "early_sample": true
+    },
+    {
+      "id": "D04",
+      "family_id": "F02",
+      "path": "research/synthetic_data/document_images/D04.png",
+      "split": "calibration",
+      "kind": "boleto",
+      "bank": "Nu Empresas",
+      "media_type": "image/png",
+      "degradation": {
+        "type": "low_light",
+        "level": "mild",
+        "parameters": {
+          "brightness": 0.65
+        }
+      },
+      "expected_quality": "legible",
+      "expected_fields": {
+        "bank": "Nu Empresas",
+        "amount": "1883.15",
+        "counterparty": "Pessoa Fictícia Beta",
+        "due_date": "2026-10-03"
+      },
+      "recoverable_fields": {
+        "bank": "Nu Empresas",
+        "amount": "1883.15",
+        "counterparty": "Pessoa Fictícia Beta",
+        "due_date": "2026-10-03"
+      },
+      "expected_transactions": [],
+      "recoverable_transactions": [],
+      "demo": false,
+      "early_sample": false
+    },
+    {
+      "id": "D05",
+      "family_id": "F03",
+      "path": "research/synthetic_data/document_images/D05.pdf",
+      "split": "calibration",
+      "kind": "card_invoice",
+      "bank": "Banco do Brasil",
+      "media_type": "application/pdf",
+      "degradation": {
+        "type": "none",
+        "level": "none",
+        "parameters": {}
+      },
+      "expected_quality": "legible",
+      "expected_fields": {
+        "bank": "Banco do Brasil",
+        "due_date": "2026-10-19",
+        "total": "770.22"
+      },
+      "recoverable_fields": {
+        "bank": "Banco do Brasil",
+        "due_date": "2026-10-19",
+        "total": "770.22"
+      },
+      "expected_transactions": [
+        {
+          "date": "2026-10-04",
+          "description": "Mercado Exemplo",
+          "amount": "255.49",
+          "installment": null
+        },
+        {
+          "date": "2026-10-05",
+          "description": "Papelaria Fictícia",
+          "amount": "256.74",
+          "installment": null
+        },
+        {
+          "date": "2026-10-06",
+          "description": "Cinema Sintético",
+          "amount": "257.99",
+          "installment": null
+        }
+      ],
+      "recoverable_transactions": [
+        {
+          "date": "2026-10-04",
+          "description": "Mercado Exemplo",
+          "amount": "255.49",
+          "installment": null
+        },
+        {
+          "date": "2026-10-05",
+          "description": "Papelaria Fictícia",
+          "amount": "256.74",
+          "installment": null
+        },
+        {
+          "date": "2026-10-06",
+          "description": "Cinema Sintético",
+          "amount": "257.99",
+          "installment": null
+        }
+      ],
+      "demo": false,
+      "early_sample": false
+    },
+    {
+      "id": "D06",
+      "family_id": "F03",
+      "path": "research/synthetic_data/document_images/D06.jpg",
+      "split": "calibration",
+      "kind": "card_invoice",
+      "bank": "Banco do Brasil",
+      "media_type": "image/jpeg",
+      "degradation": {
+        "type": "rotation",
+        "level": "mild",
+        "parameters": {
+          "degrees": 1.0
+        }
+      },
+      "expected_quality": "legible",
+      "expected_fields": {
+        "bank": "Banco do Brasil",
+        "due_date": "2026-10-19",
+        "total": "770.22"
+      },
+      "recoverable_fields": {
+        "bank": "Banco do Brasil",
+        "due_date": "2026-10-19",
+        "total": "770.22"
+      },
+      "expected_transactions": [
+        {
+          "date": "2026-10-04",
+          "description": "Mercado Exemplo",
+          "amount": "255.49",
+          "installment": null
+        },
+        {
+          "date": "2026-10-05",
+          "description": "Papelaria Fictícia",
+          "amount": "256.74",
+          "installment": null
+        },
+        {
+          "date": "2026-10-06",
+          "description": "Cinema Sintético",
+          "amount": "257.99",
+          "installment": null
+        }
+      ],
+      "recoverable_transactions": [
+        {
+          "date": "2026-10-04",
+          "description": "Mercado Exemplo",
+          "amount": "255.49",
+          "installment": null
+        },
+        {
+          "date": "2026-10-05",
+          "description": "Papelaria Fictícia",
+          "amount": "256.74",
+          "installment": null
+        },
+        {
+          "date": "2026-10-06",
+          "description": "Cinema Sintético",
+          "amount": "257.99",
+          "installment": null
+        }
+      ],
+      "demo": false,
+      "early_sample": false
+    },
+    {
+      "id": "D07",
+      "family_id": "F04",
+      "path": "research/synthetic_data/document_images/D07.png",
+      "split": "validation",
+      "kind": "pix_receipt",
+      "bank": "Banco Horizonte Fictício",
+      "media_type": "image/png",
+      "degradation": {
+        "type": "none",
+        "level": "none",
+        "parameters": {}
+      },
+      "expected_quality": "legible",
+      "expected_fields": {
+        "bank": "Banco Horizonte Fictício",
+        "amount": "1273.48",
+        "counterparty": "Oficina Exemplo Delta",
+        "date": "2026-10-05"
+      },
+      "recoverable_fields": {
+        "bank": "Banco Horizonte Fictício",
+        "amount": "1273.48",
+        "counterparty": "Oficina Exemplo Delta",
+        "date": "2026-10-05"
+      },
+      "expected_transactions": [],
+      "recoverable_transactions": [],
+      "demo": false,
+      "early_sample": false
+    },
+    {
+      "id": "D08",
+      "family_id": "F04",
+      "path": "research/synthetic_data/document_images/D08.png",
+      "split": "validation",
+      "kind": "pix_receipt",
+      "bank": "Banco Horizonte Fictício",
+      "media_type": "image/png",
+      "degradation": {
+        "type": "perspective",
+        "level": "mild",
+        "parameters": {
+          "shear": 0.025
+        }
+      },
+      "expected_quality": "legible",
+      "expected_fields": {
+        "bank": "Banco Horizonte Fictício",
+        "amount": "1273.48",
+        "counterparty": "Oficina Exemplo Delta",
+        "date": "2026-10-05"
+      },
+      "recoverable_fields": {
+        "bank": "Banco Horizonte Fictício",
+        "amount": "1273.48",
+        "counterparty": "Oficina Exemplo Delta",
+        "date": "2026-10-05"
+      },
+      "expected_transactions": [],
+      "recoverable_transactions": [],
+      "demo": false,
+      "early_sample": false
+    },
+    {
+      "id": "D09",
+      "family_id": "F05",
+      "path": "research/synthetic_data/document_images/D09.jpg",
+      "split": "validation",
+      "kind": "boleto",
+      "bank": "Nubank",
+      "media_type": "image/jpeg",
+      "degradation": {
+        "type": "none",
+        "level": "none",
+        "parameters": {}
+      },
+      "expected_quality": "legible",
+      "expected_fields": {
+        "bank": "Nubank",
+        "amount": "1741.28",
+        "counterparty": "Pessoa Exemplo Alfa",
+        "due_date": "2026-10-06"
+      },
+      "recoverable_fields": {
+        "bank": "Nubank",
+        "amount": "1741.28",
+        "counterparty": "Pessoa Exemplo Alfa",
+        "due_date": "2026-10-06"
+      },
+      "expected_transactions": [],
+      "recoverable_transactions": [],
+      "demo": false,
+      "early_sample": false
+    },
+    {
+      "id": "D10",
+      "family_id": "F05",
+      "path": "research/synthetic_data/document_images/D10.pdf",
+      "split": "validation",
+      "kind": "boleto",
+      "bank": "Nubank",
+      "media_type": "application/pdf",
+      "degradation": {
+        "type": "jpeg",
+        "level": "mild",
+        "parameters": {
+          "quality": 35
+        }
+      },
+      "expected_quality": "legible",
+      "expected_fields": {
+        "bank": "Nubank",
+        "amount": "1741.28",
+        "counterparty": "Pessoa Exemplo Alfa",
+        "due_date": "2026-10-06"
+      },
+      "recoverable_fields": {
+        "bank": "Nubank",
+        "amount": "1741.28",
+        "counterparty": "Pessoa Exemplo Alfa",
+        "due_date": "2026-10-06"
+      },
+      "expected_transactions": [],
+      "recoverable_transactions": [],
+      "demo": false,
+      "early_sample": false
+    },
+    {
+      "id": "D11",
+      "family_id": "F06",
+      "path": "research/synthetic_data/document_images/D11.png",
+      "split": "calibration",
+      "kind": "card_invoice",
+      "bank": "Nu Empresas",
+      "media_type": "image/png",
+      "degradation": {
+        "type": "none",
+        "level": "none",
+        "parameters": {}
+      },
+      "expected_quality": "legible",
+      "expected_fields": {
+        "bank": "Nu Empresas",
+        "due_date": "2026-10-22",
+        "total": "4560.12"
+      },
+      "recoverable_fields": {
+        "bank": "Nu Empresas",
+        "due_date": "2026-10-22",
+        "total": "4560.12"
+      },
+      "expected_transactions": [
+        {
+          "date": "2026-10-07",
+          "description": "Mercado Exemplo",
+          "amount": "1518.79",
+          "installment": null
+        },
+        {
+          "date": "2026-10-08",
+          "description": "Papelaria Fictícia",
+          "amount": "1520.04",
+          "installment": null
+        },
+        {
+          "date": "2026-10-09",
+          "description": "Cinema Sintético",
+          "amount": "1521.29",
+          "installment": null
+        }
+      ],
+      "recoverable_transactions": [
+        {
+          "date": "2026-10-07",
+          "description": "Mercado Exemplo",
+          "amount": "1518.79",
+          "installment": null
+        },
+        {
+          "date": "2026-10-08",
+          "description": "Papelaria Fictícia",
+          "amount": "1520.04",
+          "installment": null
+        },
+        {
+          "date": "2026-10-09",
+          "description": "Cinema Sintético",
+          "amount": "1521.29",
+          "installment": null
+        }
+      ],
+      "demo": false,
+      "early_sample": false
+    },
+    {
+      "id": "D12",
+      "family_id": "F06",
+      "path": "research/synthetic_data/document_images/D12.jpg",
+      "split": "calibration",
+      "kind": "card_invoice",
+      "bank": "Nu Empresas",
+      "media_type": "image/jpeg",
+      "degradation": {
+        "type": "crop",
+        "level": "moderate",
+        "parameters": {
+          "essential_field_hidden": true
+        }
+      },
+      "expected_quality": "partial",
+      "expected_fields": {
+        "bank": "Nu Empresas",
+        "due_date": "2026-10-22",
+        "total": "4560.12"
+      },
+      "recoverable_fields": {
+        "bank": "Nu Empresas",
+        "due_date": "2026-10-22"
+      },
+      "expected_transactions": [
+        {
+          "date": "2026-10-07",
+          "description": "Mercado Exemplo",
+          "amount": "1518.79",
+          "installment": null
+        },
+        {
+          "date": "2026-10-08",
+          "description": "Papelaria Fictícia",
+          "amount": "1520.04",
+          "installment": null
+        },
+        {
+          "date": "2026-10-09",
+          "description": "Cinema Sintético",
+          "amount": "1521.29",
+          "installment": null
+        }
+      ],
+      "recoverable_transactions": [
+        {
+          "date": "2026-10-07",
+          "description": "Mercado Exemplo",
+          "amount": "1518.79",
+          "installment": null
+        },
+        {
+          "date": "2026-10-08",
+          "description": "Papelaria Fictícia",
+          "amount": "1520.04",
+          "installment": null
+        },
+        {
+          "date": "2026-10-09",
+          "description": "Cinema Sintético",
+          "amount": "1521.29",
+          "installment": null
+        }
+      ],
+      "demo": false,
+      "early_sample": true
+    },
+    {
+      "id": "D13",
+      "family_id": "F07",
+      "path": "research/synthetic_data/document_images/D13.png",
+      "split": "calibration",
+      "kind": "pix_receipt",
+      "bank": "Banco do Brasil",
+      "media_type": "image/png",
+      "degradation": {
+        "type": "none",
+        "level": "none",
+        "parameters": {}
+      },
+      "expected_quality": "legible",
+      "expected_fields": {
+        "bank": "Banco do Brasil",
+        "amount": "1549.00",
+        "counterparty": "Loja Sintética Gama",
+        "date": "2026-10-08"
+      },
+      "recoverable_fields": {
+        "bank": "Banco do Brasil",
+        "amount": "1549.00",
+        "counterparty": "Loja Sintética Gama",
+        "date": "2026-10-08"
+      },
+      "expected_transactions": [],
+      "recoverable_transactions": [],
+      "demo": false,
+      "early_sample": false
+    },
+    {
+      "id": "D14",
+      "family_id": "F07",
+      "path": "research/synthetic_data/document_images/D14.png",
+      "split": "calibration",
+      "kind": "pix_receipt",
+      "bank": "Banco do Brasil",
+      "media_type": "image/png",
+      "degradation": {
+        "type": "reflection",
+        "level": "moderate",
+        "parameters": {
+          "essential_field_hidden": true
+        }
+      },
+      "expected_quality": "partial",
+      "expected_fields": {
+        "bank": "Banco do Brasil",
+        "amount": "1549.00",
+        "counterparty": "Loja Sintética Gama",
+        "date": "2026-10-08"
+      },
+      "recoverable_fields": {
+        "bank": "Banco do Brasil",
+        "amount": "1549.00",
+        "date": "2026-10-08"
+      },
+      "expected_transactions": [],
+      "recoverable_transactions": [],
+      "demo": false,
+      "early_sample": false
+    },
+    {
+      "id": "D15",
+      "family_id": "F08",
+      "path": "research/synthetic_data/document_images/D15.pdf",
+      "split": "calibration",
+      "kind": "boleto",
+      "bank": "Banco Horizonte Fictício",
+      "media_type": "application/pdf",
+      "degradation": {
+        "type": "none",
+        "level": "none",
+        "parameters": {}
+      },
+      "expected_quality": "legible",
+      "expected_fields": {
+        "bank": "Banco Horizonte Fictício",
+        "amount": "824.62",
+        "counterparty": "Oficina Exemplo Delta",
+        "due_date": "2026-10-09"
+      },
+      "recoverable_fields": {
+        "bank": "Banco Horizonte Fictício",
+        "amount": "824.62",
+        "counterparty": "Oficina Exemplo Delta",
+        "due_date": "2026-10-09"
+      },
+      "expected_transactions": [],
+      "recoverable_transactions": [],
+      "demo": false,
+      "early_sample": false
+    },
+    {
+      "id": "D16",
+      "family_id": "F08",
+      "path": "research/synthetic_data/document_images/D16.png",
+      "split": "calibration",
+      "kind": "boleto",
+      "bank": "Banco Horizonte Fictício",
+      "media_type": "image/png",
+      "degradation": {
+        "type": "crop",
+        "level": "moderate",
+        "parameters": {
+          "essential_field_hidden": true
+        }
+      },
+      "expected_quality": "partial",
+      "expected_fields": {
+        "bank": "Banco Horizonte Fictício",
+        "amount": "824.62",
+        "counterparty": "Oficina Exemplo Delta",
+        "due_date": "2026-10-09"
+      },
+      "recoverable_fields": {
+        "bank": "Banco Horizonte Fictício",
+        "amount": "824.62",
+        "counterparty": "Oficina Exemplo Delta"
+      },
+      "expected_transactions": [],
+      "recoverable_transactions": [],
+      "demo": false,
+      "early_sample": false
+    },
+    {
+      "id": "D17",
+      "family_id": "F09",
+      "path": "research/synthetic_data/document_images/D17.png",
+      "split": "calibration",
+      "kind": "card_invoice",
+      "bank": "Nubank",
+      "media_type": "image/png",
+      "degradation": {
+        "type": "none",
+        "level": "none",
+        "parameters": {}
+      },
+      "expected_quality": "legible",
+      "expected_fields": {
+        "bank": "Nubank",
+        "due_date": "2026-10-25",
+        "total": "5030.43"
+      },
+      "recoverable_fields": {
+        "bank": "Nubank",
+        "due_date": "2026-10-25",
+        "total": "5030.43"
+      },
+      "expected_transactions": [
+        {
+          "date": "2026-10-10",
+          "description": "Mercado Exemplo",
+          "amount": "1675.56",
+          "installment": null
+        },
+        {
+          "date": "2026-10-11",
+          "description": "Papelaria Fictícia",
+          "amount": "1676.81",
+          "installment": null
+        },
+        {
+          "date": "2026-10-12",
+          "description": "Cinema Sintético",
+          "amount": "1678.06",
+          "installment": null
+        }
+      ],
+      "recoverable_transactions": [
+        {
+          "date": "2026-10-10",
+          "description": "Mercado Exemplo",
+          "amount": "1675.56",
+          "installment": null
+        },
+        {
+          "date": "2026-10-11",
+          "description": "Papelaria Fictícia",
+          "amount": "1676.81",
+          "installment": null
+        },
+        {
+          "date": "2026-10-12",
+          "description": "Cinema Sintético",
+          "amount": "1678.06",
+          "installment": null
+        }
+      ],
+      "demo": false,
+      "early_sample": false
+    },
+    {
+      "id": "D18",
+      "family_id": "F09",
+      "path": "research/synthetic_data/document_images/D18.jpg",
+      "split": "calibration",
+      "kind": "card_invoice",
+      "bank": "Nubank",
+      "media_type": "image/jpeg",
+      "degradation": {
+        "type": "reflection",
+        "level": "moderate",
+        "parameters": {
+          "essential_field_hidden": true
+        }
+      },
+      "expected_quality": "partial",
+      "expected_fields": {
+        "bank": "Nubank",
+        "due_date": "2026-10-25",
+        "total": "5030.43"
+      },
+      "recoverable_fields": {
+        "bank": "Nubank",
+        "due_date": "2026-10-25"
+      },
+      "expected_transactions": [
+        {
+          "date": "2026-10-10",
+          "description": "Mercado Exemplo",
+          "amount": "1675.56",
+          "installment": null
+        },
+        {
+          "date": "2026-10-11",
+          "description": "Papelaria Fictícia",
+          "amount": "1676.81",
+          "installment": null
+        },
+        {
+          "date": "2026-10-12",
+          "description": "Cinema Sintético",
+          "amount": "1678.06",
+          "installment": null
+        }
+      ],
+      "recoverable_transactions": [
+        {
+          "date": "2026-10-10",
+          "description": "Mercado Exemplo",
+          "amount": "1675.56",
+          "installment": null
+        },
+        {
+          "date": "2026-10-11",
+          "description": "Papelaria Fictícia",
+          "amount": "1676.81",
+          "installment": null
+        },
+        {
+          "date": "2026-10-12",
+          "description": "Cinema Sintético",
+          "amount": "1678.06",
+          "installment": null
+        }
+      ],
+      "demo": false,
+      "early_sample": false
+    },
+    {
+      "id": "D19",
+      "family_id": "F10",
+      "path": "research/synthetic_data/document_images/D19.png",
+      "split": "validation",
+      "kind": "pix_receipt",
+      "bank": "Nu Empresas",
+      "media_type": "image/png",
+      "degradation": {
+        "type": "none",
+        "level": "none",
+        "parameters": {}
+      },
+      "expected_quality": "legible",
+      "expected_fields": {
+        "bank": "Nu Empresas",
+        "amount": "2336.22",
+        "counterparty": "Pessoa Fictícia Beta",
+        "date": "2026-10-11"
+      },
+      "recoverable_fields": {
+        "bank": "Nu Empresas",
+        "amount": "2336.22",
+        "counterparty": "Pessoa Fictícia Beta",
+        "date": "2026-10-11"
+      },
+      "expected_transactions": [],
+      "recoverable_transactions": [],
+      "demo": false,
+      "early_sample": false
+    },
+    {
+      "id": "D20",
+      "family_id": "F10",
+      "path": "research/synthetic_data/document_images/D20.pdf",
+      "split": "validation",
+      "kind": "pix_receipt",
+      "bank": "Nu Empresas",
+      "media_type": "application/pdf",
+      "degradation": {
+        "type": "crop",
+        "level": "moderate",
+        "parameters": {
+          "essential_field_hidden": true
+        }
+      },
+      "expected_quality": "partial",
+      "expected_fields": {
+        "bank": "Nu Empresas",
+        "amount": "2336.22",
+        "counterparty": "Pessoa Fictícia Beta",
+        "date": "2026-10-11"
+      },
+      "recoverable_fields": {
+        "bank": "Nu Empresas",
+        "amount": "2336.22",
+        "date": "2026-10-11"
+      },
+      "expected_transactions": [],
+      "recoverable_transactions": [],
+      "demo": false,
+      "early_sample": false
+    },
+    {
+      "id": "D21",
+      "family_id": "F11",
+      "path": "research/synthetic_data/document_images/D21.jpg",
+      "split": "validation",
+      "kind": "boleto",
+      "bank": "Banco do Brasil",
+      "media_type": "image/jpeg",
+      "degradation": {
+        "type": "none",
+        "level": "none",
+        "parameters": {}
+      },
+      "expected_quality": "legible",
+      "expected_fields": {
+        "bank": "Banco do Brasil",
+        "amount": "942.70",
+        "counterparty": "Loja Sintética Gama",
+        "due_date": "2026-10-12"
+      },
+      "recoverable_fields": {
+        "bank": "Banco do Brasil",
+        "amount": "942.70",
+        "counterparty": "Loja Sintética Gama",
+        "due_date": "2026-10-12"
+      },
+      "expected_transactions": [],
+      "recoverable_transactions": [],
+      "demo": false,
+      "early_sample": false
+    },
+    {
+      "id": "D22",
+      "family_id": "F11",
+      "path": "research/synthetic_data/document_images/D22.png",
+      "split": "validation",
+      "kind": "boleto",
+      "bank": "Banco do Brasil",
+      "media_type": "image/png",
+      "degradation": {
+        "type": "reflection",
+        "level": "moderate",
+        "parameters": {
+          "essential_field_hidden": true
+        }
+      },
+      "expected_quality": "partial",
+      "expected_fields": {
+        "bank": "Banco do Brasil",
+        "amount": "942.70",
+        "counterparty": "Loja Sintética Gama",
+        "due_date": "2026-10-12"
+      },
+      "recoverable_fields": {
+        "bank": "Banco do Brasil",
+        "amount": "942.70",
+        "counterparty": "Loja Sintética Gama"
+      },
+      "expected_transactions": [],
+      "recoverable_transactions": [],
+      "demo": false,
+      "early_sample": false
+    },
+    {
+      "id": "D23",
+      "family_id": "F12",
+      "path": "research/synthetic_data/document_images/D23.png",
+      "split": "validation",
+      "kind": "card_invoice",
+      "bank": "Banco Horizonte Fictício",
+      "media_type": "image/png",
+      "degradation": {
+        "type": "none",
+        "level": "none",
+        "parameters": {}
+      },
+      "expected_quality": "legible",
+      "expected_fields": {
+        "bank": "Banco Horizonte Fictício",
+        "due_date": "2026-10-28",
+        "total": "6371.82"
+      },
+      "recoverable_fields": {
+        "bank": "Banco Horizonte Fictício",
+        "due_date": "2026-10-28",
+        "total": "6371.82"
+      },
+      "expected_transactions": [
+        {
+          "date": "2026-10-13",
+          "description": "Mercado Exemplo",
+          "amount": "2122.69",
+          "installment": null
+        },
+        {
+          "date": "2026-10-14",
+          "description": "Papelaria Fictícia",
+          "amount": "2123.94",
+          "installment": null
+        },
+        {
+          "date": "2026-10-15",
+          "description": "Cinema Sintético",
+          "amount": "2125.19",
+          "installment": null
+        }
+      ],
+      "recoverable_transactions": [
+        {
+          "date": "2026-10-13",
+          "description": "Mercado Exemplo",
+          "amount": "2122.69",
+          "installment": null
+        },
+        {
+          "date": "2026-10-14",
+          "description": "Papelaria Fictícia",
+          "amount": "2123.94",
+          "installment": null
+        },
+        {
+          "date": "2026-10-15",
+          "description": "Cinema Sintético",
+          "amount": "2125.19",
+          "installment": null
+        }
+      ],
+      "demo": false,
+      "early_sample": false
+    },
+    {
+      "id": "D24",
+      "family_id": "F12",
+      "path": "research/synthetic_data/document_images/D24.jpg",
+      "split": "validation",
+      "kind": "card_invoice",
+      "bank": "Banco Horizonte Fictício",
+      "media_type": "image/jpeg",
+      "degradation": {
+        "type": "crop",
+        "level": "moderate",
+        "parameters": {
+          "essential_field_hidden": true
+        }
+      },
+      "expected_quality": "partial",
+      "expected_fields": {
+        "bank": "Banco Horizonte Fictício",
+        "due_date": "2026-10-28",
+        "total": "6371.82"
+      },
+      "recoverable_fields": {
+        "bank": "Banco Horizonte Fictício",
+        "due_date": "2026-10-28"
+      },
+      "expected_transactions": [
+        {
+          "date": "2026-10-13",
+          "description": "Mercado Exemplo",
+          "amount": "2122.69",
+          "installment": null
+        },
+        {
+          "date": "2026-10-14",
+          "description": "Papelaria Fictícia",
+          "amount": "2123.94",
+          "installment": null
+        },
+        {
+          "date": "2026-10-15",
+          "description": "Cinema Sintético",
+          "amount": "2125.19",
+          "installment": null
+        }
+      ],
+      "recoverable_transactions": [
+        {
+          "date": "2026-10-13",
+          "description": "Mercado Exemplo",
+          "amount": "2122.69",
+          "installment": null
+        },
+        {
+          "date": "2026-10-14",
+          "description": "Papelaria Fictícia",
+          "amount": "2123.94",
+          "installment": null
+        },
+        {
+          "date": "2026-10-15",
+          "description": "Cinema Sintético",
+          "amount": "2125.19",
+          "installment": null
+        }
+      ],
+      "demo": false,
+      "early_sample": false
+    },
+    {
+      "id": "D25",
+      "family_id": "F13",
+      "path": "research/synthetic_data/document_images/D25.pdf",
+      "split": "validation",
+      "kind": "pix_receipt",
+      "bank": "Nubank",
+      "media_type": "application/pdf",
+      "degradation": {
+        "type": "none",
+        "level": "none",
+        "parameters": {}
+      },
+      "expected_quality": "legible",
+      "expected_fields": {
+        "bank": "Nubank",
+        "amount": "1195.46",
+        "counterparty": "Pessoa Exemplo Alfa",
+        "date": "2026-10-14"
+      },
+      "recoverable_fields": {
+        "bank": "Nubank",
+        "amount": "1195.46",
+        "counterparty": "Pessoa Exemplo Alfa",
+        "date": "2026-10-14"
+      },
+      "expected_transactions": [],
+      "recoverable_transactions": [],
+      "demo": false,
+      "early_sample": false
+    },
+    {
+      "id": "D26",
+      "family_id": "F13",
+      "path": "research/synthetic_data/document_images/D26.png",
+      "split": "validation",
+      "kind": "pix_receipt",
+      "bank": "Nubank",
+      "media_type": "image/png",
+      "degradation": {
+        "type": "reflection",
+        "level": "moderate",
+        "parameters": {
+          "essential_field_hidden": true
+        }
+      },
+      "expected_quality": "partial",
+      "expected_fields": {
+        "bank": "Nubank",
+        "amount": "1195.46",
+        "counterparty": "Pessoa Exemplo Alfa",
+        "date": "2026-10-14"
+      },
+      "recoverable_fields": {
+        "bank": "Nubank",
+        "amount": "1195.46",
+        "date": "2026-10-14"
+      },
+      "expected_transactions": [],
+      "recoverable_transactions": [],
+      "demo": false,
+      "early_sample": false
+    },
+    {
+      "id": "D27",
+      "family_id": "F14",
+      "path": "research/synthetic_data/document_images/D27.jpg",
+      "split": "calibration",
+      "kind": "boleto",
+      "bank": "Nu Empresas",
+      "media_type": "image/jpeg",
+      "degradation": {
+        "type": "none",
+        "level": "none",
+        "parameters": {}
+      },
+      "expected_quality": "legible",
+      "expected_fields": {
+        "bank": "Nu Empresas",
+        "amount": "1523.26",
+        "counterparty": "Pessoa Fictícia Beta",
+        "due_date": "2026-10-15"
+      },
+      "recoverable_fields": {
+        "bank": "Nu Empresas",
+        "amount": "1523.26",
+        "counterparty": "Pessoa Fictícia Beta",
+        "due_date": "2026-10-15"
+      },
+      "expected_transactions": [],
+      "recoverable_transactions": [],
+      "demo": false,
+      "early_sample": false
+    },
+    {
+      "id": "D28",
+      "family_id": "F14",
+      "path": "research/synthetic_data/document_images/D28.png",
+      "split": "calibration",
+      "kind": "boleto",
+      "bank": "Nu Empresas",
+      "media_type": "image/png",
+      "degradation": {
+        "type": "blur",
+        "level": "severe",
+        "parameters": {
+          "radius": 14.0,
+          "brightness": 1.0
+        }
+      },
+      "expected_quality": "illegible",
+      "expected_fields": {
+        "bank": "Nu Empresas",
+        "amount": "1523.26",
+        "counterparty": "Pessoa Fictícia Beta",
+        "due_date": "2026-10-15"
+      },
+      "recoverable_fields": {},
+      "expected_transactions": [],
+      "recoverable_transactions": [],
+      "demo": true,
+      "early_sample": true
+    },
+    {
+      "id": "D29",
+      "family_id": "F15",
+      "path": "research/synthetic_data/document_images/D29.png",
+      "split": "calibration",
+      "kind": "card_invoice",
+      "bank": "Banco do Brasil",
+      "media_type": "image/png",
+      "degradation": {
+        "type": "none",
+        "level": "none",
+        "parameters": {}
+      },
+      "expected_quality": "legible",
+      "expected_fields": {
+        "bank": "Banco do Brasil",
+        "due_date": "2026-10-31",
+        "total": "7027.65"
+      },
+      "recoverable_fields": {
+        "bank": "Banco do Brasil",
+        "due_date": "2026-10-31",
+        "total": "7027.65"
+      },
+      "expected_transactions": [
+        {
+          "date": "2026-10-16",
+          "description": "Mercado Exemplo",
+          "amount": "2341.30",
+          "installment": null
+        },
+        {
+          "date": "2026-10-17",
+          "description": "Papelaria Fictícia",
+          "amount": "2342.55",
+          "installment": null
+        },
+        {
+          "date": "2026-10-18",
+          "description": "Cinema Sintético",
+          "amount": "2343.80",
+          "installment": null
+        }
+      ],
+      "recoverable_transactions": [
+        {
+          "date": "2026-10-16",
+          "description": "Mercado Exemplo",
+          "amount": "2341.30",
+          "installment": null
+        },
+        {
+          "date": "2026-10-17",
+          "description": "Papelaria Fictícia",
+          "amount": "2342.55",
+          "installment": null
+        },
+        {
+          "date": "2026-10-18",
+          "description": "Cinema Sintético",
+          "amount": "2343.80",
+          "installment": null
+        }
+      ],
+      "demo": false,
+      "early_sample": false
+    },
+    {
+      "id": "D30",
+      "family_id": "F15",
+      "path": "research/synthetic_data/document_images/D30.pdf",
+      "split": "calibration",
+      "kind": "card_invoice",
+      "bank": "Banco do Brasil",
+      "media_type": "application/pdf",
+      "degradation": {
+        "type": "blur",
+        "level": "severe",
+        "parameters": {
+          "radius": 12.0,
+          "brightness": 0.35
+        }
+      },
+      "expected_quality": "illegible",
+      "expected_fields": {
+        "bank": "Banco do Brasil",
+        "due_date": "2026-10-31",
+        "total": "7027.65"
+      },
+      "recoverable_fields": {},
+      "expected_transactions": [
+        {
+          "date": "2026-10-16",
+          "description": "Mercado Exemplo",
+          "amount": "2341.30",
+          "installment": null
+        },
+        {
+          "date": "2026-10-17",
+          "description": "Papelaria Fictícia",
+          "amount": "2342.55",
+          "installment": null
+        },
+        {
+          "date": "2026-10-18",
+          "description": "Cinema Sintético",
+          "amount": "2343.80",
+          "installment": null
+        }
+      ],
+      "recoverable_transactions": [],
+      "demo": true,
+      "early_sample": true
+    },
+    {
+      "id": "D31",
+      "family_id": "F16",
+      "path": "research/synthetic_data/document_images/D31.png",
+      "split": "calibration",
+      "kind": "pix_receipt",
+      "bank": "Banco Horizonte Fictício",
+      "media_type": "image/png",
+      "degradation": {
+        "type": "none",
+        "level": "none",
+        "parameters": {}
+      },
+      "expected_quality": "legible",
+      "expected_fields": {
+        "bank": "Banco Horizonte Fictício",
+        "amount": "2156.62",
+        "counterparty": "Oficina Exemplo Delta",
+        "date": "2026-10-17"
+      },
+      "recoverable_fields": {
+        "bank": "Banco Horizonte Fictício",
+        "amount": "2156.62",
+        "counterparty": "Oficina Exemplo Delta",
+        "date": "2026-10-17"
+      },
+      "expected_transactions": [],
+      "recoverable_transactions": [],
+      "demo": false,
+      "early_sample": false
+    },
+    {
+      "id": "D32",
+      "family_id": "F16",
+      "path": "research/synthetic_data/document_images/D32.png",
+      "split": "calibration",
+      "kind": "pix_receipt",
+      "bank": "Banco Horizonte Fictício",
+      "media_type": "image/png",
+      "degradation": {
+        "type": "blur",
+        "level": "severe",
+        "parameters": {
+          "radius": 13.0,
+          "brightness": 1.0
+        }
+      },
+      "expected_quality": "illegible",
+      "expected_fields": {
+        "bank": "Banco Horizonte Fictício",
+        "amount": "2156.62",
+        "counterparty": "Oficina Exemplo Delta",
+        "date": "2026-10-17"
+      },
+      "recoverable_fields": {},
+      "expected_transactions": [],
+      "recoverable_transactions": [],
+      "demo": false,
+      "early_sample": false
+    },
+    {
+      "id": "D33",
+      "family_id": "F17",
+      "path": "research/synthetic_data/document_images/D33.jpg",
+      "split": "validation",
+      "kind": "boleto",
+      "bank": "Nubank",
+      "media_type": "image/jpeg",
+      "degradation": {
+        "type": "none",
+        "level": "none",
+        "parameters": {}
+      },
+      "expected_quality": "legible",
+      "expected_fields": {
+        "bank": "Nubank",
+        "amount": "816.37",
+        "counterparty": "Pessoa Exemplo Alfa",
+        "due_date": "2026-10-18"
+      },
+      "recoverable_fields": {
+        "bank": "Nubank",
+        "amount": "816.37",
+        "counterparty": "Pessoa Exemplo Alfa",
+        "due_date": "2026-10-18"
+      },
+      "expected_transactions": [],
+      "recoverable_transactions": [],
+      "demo": false,
+      "early_sample": false
+    },
+    {
+      "id": "D34",
+      "family_id": "F17",
+      "path": "research/synthetic_data/document_images/D34.png",
+      "split": "validation",
+      "kind": "boleto",
+      "bank": "Nubank",
+      "media_type": "image/png",
+      "degradation": {
+        "type": "blur",
+        "level": "severe",
+        "parameters": {
+          "radius": 14.0,
+          "brightness": 0.35
+        }
+      },
+      "expected_quality": "illegible",
+      "expected_fields": {
+        "bank": "Nubank",
+        "amount": "816.37",
+        "counterparty": "Pessoa Exemplo Alfa",
+        "due_date": "2026-10-18"
+      },
+      "recoverable_fields": {},
+      "expected_transactions": [],
+      "recoverable_transactions": [],
+      "demo": false,
+      "early_sample": false
+    },
+    {
+      "id": "D35",
+      "family_id": "F18",
+      "path": "research/synthetic_data/document_images/D35.pdf",
+      "split": "validation",
+      "kind": "card_invoice",
+      "bank": "Nu Empresas",
+      "media_type": "application/pdf",
+      "degradation": {
+        "type": "none",
+        "level": "none",
+        "parameters": {}
+      },
+      "expected_quality": "legible",
+      "expected_fields": {
+        "bank": "Nu Empresas",
+        "due_date": "2026-11-03",
+        "total": "2123.13"
+      },
+      "recoverable_fields": {
+        "bank": "Nu Empresas",
+        "due_date": "2026-11-03",
+        "total": "2123.13"
+      },
+      "expected_transactions": [
+        {
+          "date": "2026-10-19",
+          "description": "Mercado Exemplo",
+          "amount": "706.46",
+          "installment": null
+        },
+        {
+          "date": "2026-10-20",
+          "description": "Papelaria Fictícia",
+          "amount": "707.71",
+          "installment": null
+        },
+        {
+          "date": "2026-10-21",
+          "description": "Cinema Sintético",
+          "amount": "708.96",
+          "installment": null
+        }
+      ],
+      "recoverable_transactions": [
+        {
+          "date": "2026-10-19",
+          "description": "Mercado Exemplo",
+          "amount": "706.46",
+          "installment": null
+        },
+        {
+          "date": "2026-10-20",
+          "description": "Papelaria Fictícia",
+          "amount": "707.71",
+          "installment": null
+        },
+        {
+          "date": "2026-10-21",
+          "description": "Cinema Sintético",
+          "amount": "708.96",
+          "installment": null
+        }
+      ],
+      "demo": false,
+      "early_sample": false
+    },
+    {
+      "id": "D36",
+      "family_id": "F18",
+      "path": "research/synthetic_data/document_images/D36.jpg",
+      "split": "validation",
+      "kind": "card_invoice",
+      "bank": "Nu Empresas",
+      "media_type": "image/jpeg",
+      "degradation": {
+        "type": "blur",
+        "level": "severe",
+        "parameters": {
+          "radius": 12.0,
+          "brightness": 1.0
+        }
+      },
+      "expected_quality": "illegible",
+      "expected_fields": {
+        "bank": "Nu Empresas",
+        "due_date": "2026-11-03",
+        "total": "2123.13"
+      },
+      "recoverable_fields": {},
+      "expected_transactions": [
+        {
+          "date": "2026-10-19",
+          "description": "Mercado Exemplo",
+          "amount": "706.46",
+          "installment": null
+        },
+        {
+          "date": "2026-10-20",
+          "description": "Papelaria Fictícia",
+          "amount": "707.71",
+          "installment": null
+        },
+        {
+          "date": "2026-10-21",
+          "description": "Cinema Sintético",
+          "amount": "708.96",
+          "installment": null
+        }
+      ],
+      "recoverable_transactions": [],
+      "demo": false,
+      "early_sample": false
+    },
+    {
+      "id": "D37",
+      "family_id": "F19",
+      "path": "research/synthetic_data/document_images/D37.png",
+      "split": "validation",
+      "kind": "pix_receipt",
+      "bank": "Banco do Brasil",
+      "media_type": "image/png",
+      "degradation": {
+        "type": "none",
+        "level": "none",
+        "parameters": {}
+      },
+      "expected_quality": "legible",
+      "expected_fields": {
+        "bank": "Banco do Brasil",
+        "amount": "1292.73",
+        "counterparty": "Loja Sintética Gama",
+        "date": "2026-10-20"
+      },
+      "recoverable_fields": {
+        "bank": "Banco do Brasil",
+        "amount": "1292.73",
+        "counterparty": "Loja Sintética Gama",
+        "date": "2026-10-20"
+      },
+      "expected_transactions": [],
+      "recoverable_transactions": [],
+      "demo": false,
+      "early_sample": false
+    },
+    {
+      "id": "D38",
+      "family_id": "F19",
+      "path": "research/synthetic_data/document_images/D38.png",
+      "split": "validation",
+      "kind": "pix_receipt",
+      "bank": "Banco do Brasil",
+      "media_type": "image/png",
+      "degradation": {
+        "type": "blur",
+        "level": "severe",
+        "parameters": {
+          "radius": 13.0,
+          "brightness": 0.35
+        }
+      },
+      "expected_quality": "illegible",
+      "expected_fields": {
+        "bank": "Banco do Brasil",
+        "amount": "1292.73",
+        "counterparty": "Loja Sintética Gama",
+        "date": "2026-10-20"
+      },
+      "recoverable_fields": {},
+      "expected_transactions": [],
+      "recoverable_transactions": [],
+      "demo": false,
+      "early_sample": false
+    },
+    {
+      "id": "D39",
+      "family_id": "F20",
+      "path": "research/synthetic_data/document_images/D39.jpg",
+      "split": "validation",
+      "kind": "boleto",
+      "bank": "Banco Horizonte Fictício",
+      "media_type": "image/jpeg",
+      "degradation": {
+        "type": "none",
+        "level": "none",
+        "parameters": {}
+      },
+      "expected_quality": "legible",
+      "expected_fields": {
+        "bank": "Banco Horizonte Fictício",
+        "amount": "727.70",
+        "counterparty": "Oficina Exemplo Delta",
+        "due_date": "2026-10-21"
+      },
+      "recoverable_fields": {
+        "bank": "Banco Horizonte Fictício",
+        "amount": "727.70",
+        "counterparty": "Oficina Exemplo Delta",
+        "due_date": "2026-10-21"
+      },
+      "expected_transactions": [],
+      "recoverable_transactions": [],
+      "demo": false,
+      "early_sample": false
+    },
+    {
+      "id": "D40",
+      "family_id": "F20",
+      "path": "research/synthetic_data/document_images/D40.pdf",
+      "split": "validation",
+      "kind": "boleto",
+      "bank": "Banco Horizonte Fictício",
+      "media_type": "application/pdf",
+      "degradation": {
+        "type": "blur",
+        "level": "severe",
+        "parameters": {
+          "radius": 14.0,
+          "brightness": 1.0
+        }
+      },
+      "expected_quality": "illegible",
+      "expected_fields": {
+        "bank": "Banco Horizonte Fictício",
+        "amount": "727.70",
+        "counterparty": "Oficina Exemplo Delta",
+        "due_date": "2026-10-21"
+      },
+      "recoverable_fields": {},
+      "expected_transactions": [],
+      "recoverable_transactions": [],
+      "demo": false,
+      "early_sample": false
+    }
+  ]
+}

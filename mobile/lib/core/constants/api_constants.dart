@@ -22,6 +22,7 @@ class ApiConstants {
   static const String transactionsSummaryEndpoint = '/transactions/summary';
   static const String transactionsUploadEndpoint = '/transactions/upload';
   static const String transactionsInspectEndpoint = '/transactions/inspect';
+  static const String librarySnapshotEndpoint = '/library/snapshot';
   static const String backupExportEndpoint = '/backup/export';
   static const String backupImportEndpoint = '/backup/import';
   static const String accountsEndpoint = '/accounts';

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import '../../../core/format.dart';
 import '../../../core/settings/settings_controller.dart';
@@ -42,6 +43,7 @@ class ImportFlowScreen extends StatefulWidget {
     this.pickFile,
     this.startAtPicker = false,
     this.initialFile,
+    this.onRequestSupport,
   });
 
   /// Troca o seletor de arquivos (testes).
@@ -52,6 +54,9 @@ class ImportFlowScreen extends StatefulWidget {
 
   /// Arquivo que já chegou (compartilhado de outro app): vai direto para a leitura.
   final PickedStatement? initialFile;
+
+  /// Callback opcional para pedir suporte a um banco (testes e extensão).
+  final VoidCallback? onRequestSupport;
 
   @override
   State<ImportFlowScreen> createState() => _ImportFlowScreenState();
@@ -193,13 +198,11 @@ class _ImportFlowScreenState extends State<ImportFlowScreen> {
     _pickAndInspect();
   }
 
-  List<GuideStep> get _guide => switch (_bank) {
-    GuideBank.bb => bbGuide(_kind ?? NubankStatementKind.card),
-    _ => nubankGuide(
-      _kind ?? NubankStatementKind.card,
-      business: _owner == AccountOwner.business,
-    ),
-  };
+  List<GuideStep> get _guide => getGuideForBank(
+    _bank ?? GuideBank.nubank,
+    _kind ?? NubankStatementKind.card,
+    business: _owner == AccountOwner.business,
+  );
 
   @override
   Widget build(BuildContext context) {
@@ -218,20 +221,21 @@ class _ImportFlowScreenState extends State<ImportFlowScreen> {
             key: ValueKey('$_phase-$_step'),
             child: switch (_phase) {
               _Phase.bank => _BankStep(
-                onNubank: () {
-                  _bank = GuideBank.nubank;
-                  _go(_Phase.product);
-                },
-                onBb: () {
-                  _bank = GuideBank.bb;
-                  _owner = AccountOwner.personal;
-                  _go(_Phase.kind);
+                onSelectBank: (bank) {
+                  _bank = bank;
+                  if (bank == GuideBank.nubank) {
+                    _go(_Phase.product);
+                  } else {
+                    _owner = AccountOwner.personal;
+                    _go(_Phase.kind);
+                  }
                 },
                 onOther: () {
                   _bank = GuideBank.other;
                   _pickAndInspect();
                 },
                 onHaveFile: _pickAndInspect,
+                onRequestSupport: widget.onRequestSupport,
               ),
               _Phase.product => _ProductStep(
                 onSelected: (owner) {
@@ -249,10 +253,12 @@ class _ImportFlowScreenState extends State<ImportFlowScreen> {
                   _phase = _Phase.tutorial;
                 }),
                 onSkip: _skipTutorial,
-                onBack: () =>
-                    _go(_bank == GuideBank.bb ? _Phase.bank : _Phase.product),
+                onBack: () => _go(
+                  _bank == GuideBank.nubank ? _Phase.product : _Phase.bank,
+                ),
               ),
               _Phase.tutorial => _TutorialStep(
+                bank: _bank ?? GuideBank.nubank,
                 steps: _guide,
                 index: _step,
                 dontShowAgain: _dontShowAgain,
@@ -418,51 +424,260 @@ class _OptionCard extends StatelessWidget {
   }
 }
 
-class _BankStep extends StatelessWidget {
-  const _BankStep({
-    required this.onNubank,
-    required this.onBb,
-    required this.onOther,
-    required this.onHaveFile,
-  });
+class _SupportedBankCard extends StatelessWidget {
+  const _SupportedBankCard({required this.bank, required this.onTap});
 
-  final VoidCallback onNubank;
-  final VoidCallback onBb;
-  final VoidCallback onOther;
-  final VoidCallback onHaveFile;
+  final SupportedBankInfo bank;
+  final VoidCallback onTap;
 
   @override
-  Widget build(BuildContext context) => _StepLayout(
-    title: 'De qual banco é o arquivo?',
-    subtitle: 'Mostramos como baixar o arquivo certo. Você pode pular.',
-    children: [
-      _OptionCard(
-        icon: Icons.account_balance_rounded,
-        title: 'Nubank',
-        subtitle: 'Conta e cartão, pessoal ou Empresas',
-        onTap: onNubank,
+  Widget build(BuildContext context) {
+    final c = context.colors;
+    final isExperimental = bank.isExperimental;
+    final badgeColor = isExperimental ? AppTheme.gold : AppTheme.positive;
+
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 12),
+      child: Semantics(
+        button: true,
+        label:
+            '${bank.name}, selo ${bank.supportLevel.label}. ${bank.description}. Formato aceito: ${bank.acceptedFormats}.',
+        child: Material(
+          color: c.tint,
+          borderRadius: BorderRadius.circular(20),
+          child: InkWell(
+            borderRadius: BorderRadius.circular(20),
+            onTap: onTap,
+            child: Padding(
+              padding: const EdgeInsets.all(16),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Icon(bank.icon, size: 28, color: c.accent),
+                      const SizedBox(width: 12),
+                      Expanded(
+                        child: Text(
+                          bank.name,
+                          style: const TextStyle(
+                            fontSize: 17,
+                            fontWeight: FontWeight.w800,
+                          ),
+                        ),
+                      ),
+                      Container(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 8,
+                          vertical: 4,
+                        ),
+                        decoration: BoxDecoration(
+                          color: badgeColor.withValues(alpha: 0.15),
+                          borderRadius: BorderRadius.circular(8),
+                          border: Border.all(
+                            color: badgeColor.withValues(alpha: 0.35),
+                            width: 1,
+                          ),
+                        ),
+                        child: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Icon(
+                              isExperimental
+                                  ? Icons.science_outlined
+                                  : Icons.verified_rounded,
+                              size: 14,
+                              color: badgeColor,
+                            ),
+                            const SizedBox(width: 4),
+                            Text(
+                              bank.supportLevel.label,
+                              style: TextStyle(
+                                color: badgeColor,
+                                fontWeight: FontWeight.w800,
+                                fontSize: 12,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 8),
+                  Text(
+                    bank.description,
+                    style: TextStyle(color: c.muted, fontSize: 13, height: 1.3),
+                  ),
+                  const SizedBox(height: 6),
+                  Row(
+                    children: [
+                      Icon(
+                        Icons.description_outlined,
+                        size: 14,
+                        color: c.muted,
+                      ),
+                      const SizedBox(width: 4),
+                      Expanded(
+                        child: Text(
+                          'Formato aceito: ${bank.acceptedFormats}',
+                          style: TextStyle(
+                            color: c.muted,
+                            fontSize: 12,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                  if (bank.experimentalNotice != null) ...[
+                    const SizedBox(height: 8),
+                    Container(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 10,
+                        vertical: 6,
+                      ),
+                      decoration: BoxDecoration(
+                        color: AppTheme.gold.withValues(alpha: 0.10),
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          const Icon(
+                            Icons.info_outline_rounded,
+                            size: 15,
+                            color: AppTheme.gold,
+                          ),
+                          const SizedBox(width: 6),
+                          Expanded(
+                            child: Text(
+                              bank.experimentalNotice!,
+                              style: TextStyle(
+                                color: c.ink,
+                                fontSize: 11,
+                                height: 1.3,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                  const SizedBox(height: 10),
+                  Align(
+                    alignment: Alignment.centerRight,
+                    child: OutlinedButton.icon(
+                      onPressed: onTap,
+                      icon: const Icon(Icons.arrow_forward_rounded, size: 16),
+                      label: const Text('Ver como exportar'),
+                      style: OutlinedButton.styleFrom(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 14,
+                          vertical: 8,
+                        ),
+                        visualDensity: VisualDensity.compact,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ),
       ),
-      _OptionCard(
-        icon: Icons.account_balance_rounded,
-        title: 'Banco do Brasil',
-        subtitle: 'Fatura Ourocard (PDF) e extrato da conta (OFX)',
-        onTap: onBb,
-      ),
-      _OptionCard(
-        icon: Icons.folder_open_rounded,
-        title: 'Outro banco',
-        subtitle: 'Arquivo OFX ou PDF que você já tem',
-        onTap: onOther,
-      ),
-    ],
-    actions: [
-      OutlinedButton.icon(
-        onPressed: onHaveFile,
-        icon: const Icon(Icons.upload_file_rounded),
-        label: const Text('Já tenho o arquivo'),
-      ),
-    ],
-  );
+    );
+  }
+}
+
+class _BankStep extends StatelessWidget {
+  const _BankStep({
+    required this.onSelectBank,
+    required this.onOther,
+    required this.onHaveFile,
+    this.onRequestSupport,
+  });
+
+  final ValueChanged<GuideBank> onSelectBank;
+  final VoidCallback onOther;
+  final VoidCallback onHaveFile;
+  final VoidCallback? onRequestSupport;
+
+  Future<void> _defaultRequestSupport() async {
+    final uri = Uri.parse('https://github.com/moonshinerd/trokim/issues/new');
+    try {
+      await launchUrl(uri, mode: LaunchMode.externalApplication);
+    } catch (_) {}
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final c = context.colors;
+    return _StepLayout(
+      title: 'Bancos suportados',
+      subtitle: 'De qual banco é o arquivo?',
+      children: [
+        for (final bank in supportedBanks)
+          _SupportedBankCard(bank: bank, onTap: () => onSelectBank(bank.bank)),
+        _OptionCard(
+          icon: Icons.folder_open_rounded,
+          title: 'Outro banco',
+          subtitle: 'Arquivo OFX ou PDF que você já tem',
+          onTap: onOther,
+        ),
+        Container(
+          margin: const EdgeInsets.only(top: 4, bottom: 8),
+          padding: const EdgeInsets.all(14),
+          decoration: BoxDecoration(
+            color: c.surface,
+            borderRadius: BorderRadius.circular(16),
+            border: Border.all(color: c.line),
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                children: [
+                  Icon(Icons.help_outline_rounded, size: 20, color: c.accent),
+                  const SizedBox(width: 8),
+                  const Expanded(
+                    child: Text(
+                      'Banco não reconhecido?',
+                      style: TextStyle(
+                        fontWeight: FontWeight.w700,
+                        fontSize: 14,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 6),
+              Text(
+                'Envie o arquivo pelo parser genérico e confira o resumo. O Trokim tenta extrair os lançamentos mesmo de outros formatos.',
+                style: TextStyle(color: c.muted, fontSize: 13, height: 1.4),
+              ),
+              const SizedBox(height: 8),
+              Align(
+                alignment: Alignment.centerLeft,
+                child: TextButton.icon(
+                  onPressed: onRequestSupport ?? _defaultRequestSupport,
+                  icon: const Icon(Icons.open_in_new_rounded, size: 16),
+                  label: const Text('Pedir suporte a um banco'),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ],
+      actions: [
+        OutlinedButton.icon(
+          onPressed: onHaveFile,
+          icon: const Icon(Icons.upload_file_rounded),
+          label: const Text('Já tenho o arquivo'),
+        ),
+      ],
+    );
+  }
 }
 
 class _ProductStep extends StatelessWidget {
@@ -516,27 +731,86 @@ class _KindStep extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final bb = bank == GuideBank.bb;
+    final info = getSupportedBankInfo(bank);
+    final subtitle = switch (bank) {
+      GuideBank.bb =>
+        'A fatura do cartão e o extrato da conta saem de apps diferentes.',
+      GuideBank.nubank =>
+        'Cada um é baixado de um lugar diferente no app do Nubank.',
+      GuideBank.picpay => 'Extrato da conta PicPay ou fatura do PicPay Card.',
+      GuideBank.mercadopago =>
+        'Extrato da conta Mercado Pago ou fatura do cartão.',
+      GuideBank.inter =>
+        'Extrato da conta em OFX ou fatura do cartão Inter em PDF.',
+      GuideBank.c6 =>
+        'Extrato da conta C6 em OFX ou fatura do cartão C6 em PDF.',
+      GuideBank.itau =>
+        'Extrato da conta corrente em OFX ou fatura do cartão Itaú em PDF.',
+      _ => 'Escolha o que você quer importar.',
+    };
+
+    final cardSub = switch (bank) {
+      GuideBank.bb => 'Cartão Ourocard (arquivo PDF)',
+      GuideBank.picpay => 'PicPay Card (arquivo PDF)',
+      GuideBank.mercadopago => 'Cartão Mercado Pago (arquivo PDF)',
+      GuideBank.inter => 'Cartão Inter (arquivo PDF)',
+      GuideBank.c6 => 'Cartão C6 Bank (arquivo PDF)',
+      GuideBank.itau => 'Cartão de crédito Itaú (arquivo PDF)',
+      _ => 'Compras, parcelas e pagamentos do cartão',
+    };
+
+    final accSub = switch (bank) {
+      GuideBank.bb => 'Conta corrente (arquivo OFX)',
+      GuideBank.picpay => 'Extrato da carteira PicPay (arquivo PDF)',
+      GuideBank.mercadopago => 'Extrato da conta Mercado Pago (arquivo PDF)',
+      GuideBank.inter => 'Conta corrente Inter (arquivo OFX)',
+      GuideBank.c6 => 'Conta corrente C6 (arquivo OFX)',
+      GuideBank.itau => 'Conta corrente Itaú (arquivo OFX)',
+      _ => 'Pix, compras no débito e movimentações',
+    };
+
     return _StepLayout(
       title: 'O que você quer importar?',
-      subtitle: bb
-          ? 'A fatura do cartão e o extrato da conta saem de apps diferentes.'
-          : 'Cada um é baixado de um lugar diferente no app do Nubank.',
+      subtitle: subtitle,
       children: [
+        if (info?.isExperimental == true) ...[
+          Container(
+            margin: const EdgeInsets.only(bottom: 14),
+            padding: const EdgeInsets.all(12),
+            decoration: BoxDecoration(
+              color: AppTheme.gold.withValues(alpha: 0.12),
+              borderRadius: BorderRadius.circular(12),
+              border: Border.all(color: AppTheme.gold.withValues(alpha: 0.3)),
+            ),
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const Icon(
+                  Icons.science_outlined,
+                  color: AppTheme.gold,
+                  size: 20,
+                ),
+                const SizedBox(width: 8),
+                Expanded(
+                  child: Text(
+                    info?.experimentalNotice ?? 'Suporte experimental: tutorial baseado na ajuda oficial do banco, ainda não testado em conta real.',
+                    style: const TextStyle(fontSize: 12, height: 1.35),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
         _OptionCard(
           icon: Icons.credit_card_rounded,
           title: 'Fatura do cartão',
-          subtitle: bb
-              ? 'Cartão Ourocard (arquivo PDF)'
-              : 'Compras, parcelas e pagamentos do cartão',
+          subtitle: cardSub,
           onTap: () => onSelected(NubankStatementKind.card),
         ),
         _OptionCard(
           icon: Icons.account_balance_wallet_rounded,
           title: 'Extrato da conta',
-          subtitle: bb
-              ? 'Conta corrente (arquivo OFX)'
-              : 'Pix, compras no débito e movimentações',
+          subtitle: accSub,
           onTap: () => onSelected(NubankStatementKind.account),
         ),
       ],
@@ -550,6 +824,7 @@ class _KindStep extends StatelessWidget {
 
 class _TutorialStep extends StatelessWidget {
   const _TutorialStep({
+    required this.bank,
     required this.steps,
     required this.index,
     required this.dontShowAgain,
@@ -560,6 +835,7 @@ class _TutorialStep extends StatelessWidget {
     required this.onPick,
   });
 
+  final GuideBank bank;
   final List<GuideStep> steps;
   final int index;
   final bool dontShowAgain;
@@ -572,11 +848,43 @@ class _TutorialStep extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final c = context.colors;
+    final info = getSupportedBankInfo(bank);
+    final isExperimental = info?.isExperimental ?? false;
     final step = steps[index];
     final last = index == steps.length - 1;
     return _StepLayout(
       title: step.title,
       children: [
+        if (isExperimental)
+          Padding(
+            padding: const EdgeInsets.only(bottom: 14),
+            child: Container(
+              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+              decoration: BoxDecoration(
+                color: AppTheme.gold.withValues(alpha: 0.12),
+                borderRadius: BorderRadius.circular(8),
+                border: Border.all(
+                  color: AppTheme.gold.withValues(alpha: 0.35),
+                ),
+              ),
+              child: const Row(
+                children: [
+                  Icon(Icons.science_outlined, size: 16, color: AppTheme.gold),
+                  SizedBox(width: 6),
+                  Expanded(
+                    child: Text(
+                      'Banco experimental — ajuda oficial (não testado em conta real)',
+                      style: TextStyle(
+                        fontSize: 11,
+                        fontWeight: FontWeight.w700,
+                        color: AppTheme.gold,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
         Semantics(
           label: 'Passo ${index + 1} de ${steps.length}',
           child: LinearProgressIndicator(
