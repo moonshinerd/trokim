@@ -2304,6 +2304,33 @@
 
                 
               
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../adr/0024-persistencia-local-e-backup-criptografado/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  0024 – Persistência Local e Backup Criptografado
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
             </ul>
           </nav>
         
@@ -2498,6 +2525,13 @@
 <td style="text-align: center;">18/11/2026</td>
 <td style="text-align: center;">Semana 4 (<em>Entrega 4</em>)</td>
 <td><strong>RF18</strong>, <strong>RF19</strong> e <strong>RF20</strong> passam a implementados, medidos no benchmark multiagente (#60). <strong>RF09</strong> ganha a categoria <code>impostos</code>, o conjunto de validação por formatos de vários bancos e a categorização pela atividade econômica (CNAE) com os dados abertos do CNPJ. Vinculação das ADRs 0019 (ORM e migrações numeradas) e 0020.</td>
+<td style="text-align: center;">Equipe Trokim</td>
+</tr>
+<tr>
+<td style="text-align: center;"><strong>v1.8.0</strong></td>
+<td style="text-align: center;">23/11/2026</td>
+<td style="text-align: center;">Semana 5 (<em>Persistência e backup</em>)</td>
+<td>Inclusão de <strong>RF31</strong> (persistência local da biblioteca) e <strong>RF32</strong> (backup criptografado), com a <a href="../adr/0024-persistencia-local-e-backup-criptografado/">ADR 0024</a>. A API passa a restaurar a biblioteca ao iniciar.</td>
 <td style="text-align: center;">Equipe Trokim</td>
 </tr>
 </tbody>
@@ -2760,6 +2794,24 @@
 <td style="text-align: center;"><span class="badge-should">Should have</span></td>
 <td style="text-align: center;"><a href="../pesquisa/guiding-questions/">GQ01</a>, <a href="../pesquisa/guiding-questions/">GQ03</a></td>
 <td style="text-align: center;"><a href="../adr/0018-contas-periodos-transferencias-e-visoes/">ADR 0018</a></td>
+<td style="text-align: center;"><span class="badge-must">Implementado</span></td>
+</tr>
+<tr>
+<td style="text-align: center;"><strong>RF31</strong></td>
+<td>Persistência local da biblioteca</td>
+<td>Lançamentos, contas, arquivos, transferências confirmadas e regras de categoria sobrevivem ao reinício da API, gravados no SQLite local atrás de uma porta de repositório, e só mudam quando o usuário altera algo.</td>
+<td style="text-align: center;"><span class="badge-must">Must have</span></td>
+<td style="text-align: center;"><a href="../pesquisa/guiding-questions/">GQ03</a>, <a href="../pesquisa/guiding-questions/">GQ06</a></td>
+<td style="text-align: center;"><a href="../adr/0024-persistencia-local-e-backup-criptografado/">ADR 0024</a></td>
+<td style="text-align: center;"><span class="badge-must">Implementado</span></td>
+</tr>
+<tr>
+<td style="text-align: center;"><strong>RF32</strong></td>
+<td>Backup criptografado e restauração</td>
+<td>O usuário exporta a biblioteca em um arquivo <code>.trokim</code> protegido por senha (AES-256-GCM, chave por scrypt) e a restaura em outro aparelho, substituindo ou mesclando sem duplicar. A senha nunca é gravada.</td>
+<td style="text-align: center;"><span class="badge-should">Should have</span></td>
+<td style="text-align: center;"><a href="../pesquisa/guiding-questions/">GQ03</a>, <a href="../pesquisa/guiding-questions/">GQ06</a></td>
+<td style="text-align: center;"><a href="../adr/0024-persistencia-local-e-backup-criptografado/">ADR 0024</a></td>
 <td style="text-align: center;"><span class="badge-must">Implementado</span></td>
 </tr>
 </tbody>
@@ -3066,6 +3118,20 @@
 <td style="text-align: center;"><a href="../adr/0018-contas-periodos-transferencias-e-visoes/">ADR 0018</a></td>
 <td><code>mobile/android/app/src/main/kotlin/br/com/trokim/trokim/MainActivity.kt</code>, <code>mobile/lib/core/sharing/</code></td>
 <td><code>mobile/test/shared_file_test.dart</code></td>
+</tr>
+<tr>
+<td style="text-align: center;"><strong>RF31</strong></td>
+<td style="text-align: center;">GQ03, GQ06</td>
+<td style="text-align: center;"><a href="../adr/0024-persistencia-local-e-backup-criptografado/">ADR 0024</a>, <a href="../adr/0019-orm-e-migracoes-numeradas/">0019</a></td>
+<td><code>api/app/services/library_store.py</code>, <code>api/app/clients/sqlite_library_repository.py</code>, <code>api/migrations/app/versions/002_biblioteca_persistente.py</code></td>
+<td><code>api/tests/test_persistencia_e_backup.py</code></td>
+</tr>
+<tr>
+<td style="text-align: center;"><strong>RF32</strong></td>
+<td style="text-align: center;">GQ03, GQ06</td>
+<td style="text-align: center;"><a href="../adr/0024-persistencia-local-e-backup-criptografado/">ADR 0024</a></td>
+<td><code>api/app/services/backup_service.py</code>, <code>api/app/routers/v1/backup.py</code>, <code>mobile/lib/features/backup/</code></td>
+<td><code>api/tests/test_persistencia_e_backup.py</code></td>
 </tr>
 <tr>
 <td style="text-align: center;"><strong>RF14</strong></td>

@@ -2482,6 +2482,33 @@
 
                 
               
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../adr/0024-persistencia-local-e-backup-criptografado/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  0024 – Persistência Local e Backup Criptografado
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
             </ul>
           </nav>
         
@@ -3269,7 +3296,7 @@ comprimido e preparado por <code>make build</code> (<a href="../adr/0020-categor
   sem revisor);</li>
 <li>política de escopo que reconheça previsões de preço (C27) e redação que aceite paráfrase com
   citação verificada, em vez de só frases literais;</li>
-<li>persistência dos lançamentos em SQLite (hoje ficam em memória na API);</li>
+<li>~~persistência dos lançamentos em SQLite (hoje ficam em memória na API)~~: resolvida em 23/11 pela <a href="../adr/0024-persistencia-local-e-backup-criptografado/">ADR 0024</a> (<a href="https://github.com/moonshinerd/trokim/issues/102">#102</a>);</li>
 <li>homologação do app em aparelho Android físico.</li>
 </ul>
 <hr />
@@ -3542,7 +3569,8 @@ comprimido e preparado por <code>make build</code> (<a href="../adr/0020-categor
 </tbody>
 </table>
 <p><strong>Revisão do MkDocs do início da semana</strong> (regra do <code>AGENTS.md</code>): o MkDocs foi conferido contra o código; os números de testes da API (418) batem com a execução, os links internos estão sem quebra e o <code>make docs-build</code> passa. A lacuna encontrada foi a referência dos endpoints, que não listava as rotas de contas, arquivos, parcelas, transferências, regras de categoria e cenários; ela entrou no <a href="../guia-de-uso/">Guia de Uso</a>. Não foi possível reexecutar os testes de pesquisa e do app Flutter neste ambiente, então esses dois números seguem como informados na Entrega 4. As issues da semana foram abertas <strong>antes</strong> desta revisão, o que contraria a ordem do <code>AGENTS.md</code>, e o desvio fica registrado aqui.</p>
-<p><strong>Pendências herdadas da Semana 4</strong> e ainda não atribuídas a uma issue: revisão humana dos casos sinalizados, política de escopo para previsão de preço (C27) e redação que aceite paráfrase com citação verificada, e <strong>persistência dos lançamentos em SQLite</strong> (hoje ficam em memória na API). A decisão de incluir ou não a persistência nesta semana está em aberto.</p>
+<p><strong>Persistência e backup (já em <code>main</code> antes da Fase 1):</strong> a biblioteca do usuário passou a ser gravada no SQLite local e restaurada ao iniciar a API, com backup criptografado <code>.trokim</code> (<a href="https://github.com/moonshinerd/trokim/issues/102">#102</a>, <a href="../adr/0024-persistencia-local-e-backup-criptografado/">ADR 0024</a>). Por isso as issues da semana já nascem sobre dados duráveis. As telas de backup já estão em Ajustes; fica para a Semana 6 o armazenamento no aparelho (SQLCipher, com a API sem estado).</p>
+<p><strong>Pendências herdadas da Semana 4</strong> e ainda não atribuídas a uma issue: revisão humana dos casos sinalizados e política de escopo para previsão de preço (C27) e redação que aceite paráfrase com citação verificada.</p>
 
 
 

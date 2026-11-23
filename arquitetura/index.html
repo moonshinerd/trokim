@@ -2274,6 +2274,33 @@
 
                 
               
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../adr/0024-persistencia-local-e-backup-criptografado/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  0024 – Persistência Local e Backup Criptografado
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
             </ul>
           </nav>
         
@@ -2379,7 +2406,7 @@
 <li><strong>Camada Backend (FastAPI / Python 3.12+):</strong></li>
 <li>Construída com FastAPI pela alta performance assíncrona e tipagem robusta com Pydantic v2.</li>
 <li>Gerenciamento de dependências ultra-rápido com <code>uv</code>.</li>
-<li>Banco de dados embutido <strong>SQLite</strong> garantindo funcionamento 100% <em>local-first</em> sem necessidade de servidores externos. As tabelas são modelos SQLAlchemy e o esquema evolui por migrações Alembic numeradas, aplicadas ao abrir cada banco (<a href="../adr/0019-orm-e-migracoes-numeradas/">ADR 0019</a>). Os lançamentos importados ainda ficam em memória na API; a persistência deles em SQLite é pendência da Semana 5.</li>
+<li>Banco de dados embutido <strong>SQLite</strong> garantindo funcionamento 100% <em>local-first</em> sem necessidade de servidores externos. As tabelas são modelos SQLAlchemy e o esquema evolui por migrações Alembic numeradas, aplicadas ao abrir cada banco (<a href="../adr/0019-orm-e-migracoes-numeradas/">ADR 0019</a>). A biblioteca do usuário (lançamentos, contas e decisões) é gravada no SQLite local e restaurada ao iniciar a API, com backup criptografado (<a href="../adr/0024-persistencia-local-e-backup-criptografado/">ADR 0024</a>).</li>
 <li><strong>Mecanismo RAG Híbrido e Banco Vetorial (Semana 2):</strong></li>
 <li>Embeddings multilíngues gerados localmente pelo modelo <code>sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2</code> (384 dimensões) via <strong>FastEmbed</strong>.</li>
 <li>Persistência e indexação vetorial nativa em SQLite com a extensão <strong>sqlite-vec</strong> (tabela virtual <code>vec0</code>).</li>

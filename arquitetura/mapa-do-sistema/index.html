@@ -2318,6 +2318,33 @@
 
                 
               
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../adr/0024-persistencia-local-e-backup-criptografado/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  0024 – Persistência Local e Backup Criptografado
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
             </ul>
           </nav>
         
@@ -2476,7 +2503,7 @@
     end
 
     subgraph "Serviço Backend Local (Python / FastAPI)"
-        APIEntry["Routers v1&lt;br/&gt;(/transactions, /accounts, /statements, /installments,&lt;br/&gt;/transfers, /chat, /budgets, /health, /agents)"]
+        APIEntry["Routers v1&lt;br/&gt;(/transactions, /accounts, /statements, /installments,&lt;br/&gt;/transfers, /backup, /chat, /budgets, /health, /agents)"]
         AgentAsk["POST /v1/agents/ask&lt;br/&gt;(MultiAgentResponse)"]
 
         Parser["Parser de Documentos&lt;br/&gt;(OFX &amp; PDF, perfis Nubank e BB)"]
@@ -2555,7 +2582,7 @@
     StateManagement --&gt;|HTTP / JSON Local| APIEntry</code></pre>
 <hr />
 <h2 id="2-fluxo-de-importacao-de-extratos-e-resumo">2. Fluxo de Importação de Extratos e Resumo<a class="headerlink" href="#2-fluxo-de-importacao-de-extratos-e-resumo" title="Permanent link">&para;</a></h2>
-<p>Pagamento de fatura, resgates e transferências próprias ficam fora dos totais e o estorno abate a despesa (<a href="../../adr/0017-perfis-de-banco-e-natureza-do-lancamento/">ADR 0017</a>). Contas, situação do período, transferências entre contas próprias, parcelamentos e regras de categoria seguem a <a href="../../adr/0018-contas-periodos-transferencias-e-visoes/">ADR 0018</a>. Os lançamentos importados ficam na <strong>memória da API</strong> (somem ao reiniciá-la, <a href="../../adr/0015-dados-reais-importacao-e-endereco-da-api/">ADR 0015</a>). O app só exibe o que o backend calculou. A categoria de cada gasto segue a ordem descrita em <a href="../categorias/">Categorias</a>: regras por palavra, dicionário de redes e atividade econômica (CNAE) pelo CNPJ do recebedor, com o índice local da <a href="../../adr/0020-categorizacao-por-cnae/">ADR 0020</a>. Os bancos SQLite (aplicação e base vetorial) usam SQLAlchemy e migrações numeradas do Alembic, aplicadas ao abrir cada banco (<a href="../../adr/0019-orm-e-migracoes-numeradas/">ADR 0019</a>).</p>
+<p>Pagamento de fatura, resgates e transferências próprias ficam fora dos totais e o estorno abate a despesa (<a href="../../adr/0017-perfis-de-banco-e-natureza-do-lancamento/">ADR 0017</a>). Contas, situação do período, transferências entre contas próprias, parcelamentos e regras de categoria seguem a <a href="../../adr/0018-contas-periodos-transferencias-e-visoes/">ADR 0018</a>. A biblioteca do usuário é gravada no SQLite local atrás de uma porta de repositório, restaurada ao iniciar a API e exportável em backup criptografado <code>.trokim</code> (<a href="../../adr/0024-persistencia-local-e-backup-criptografado/">ADR 0024</a>). O app só exibe o que o backend calculou. A categoria de cada gasto segue a ordem descrita em <a href="../categorias/">Categorias</a>: regras por palavra, dicionário de redes e atividade econômica (CNAE) pelo CNPJ do recebedor, com o índice local da <a href="../../adr/0020-categorizacao-por-cnae/">ADR 0020</a>. Os bancos SQLite (aplicação e base vetorial) usam SQLAlchemy e migrações numeradas do Alembic, aplicadas ao abrir cada banco (<a href="../../adr/0019-orm-e-migracoes-numeradas/">ADR 0019</a>).</p>
 <pre class="mermaid"><code>sequenceDiagram
     autonumber
     actor User as Usuário (Android)

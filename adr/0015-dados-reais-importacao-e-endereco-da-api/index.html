@@ -2285,6 +2285,33 @@
 
                 
               
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../0024-persistencia-local-e-backup-criptografado/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  0024 – Persistência Local e Backup Criptografado
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
             </ul>
           </nav>
         
@@ -2427,7 +2454,7 @@ calculados pelo backend, nunca pelo aplicativo.</p>
 </ul>
 <h2 id="consequencias">Consequências<a class="headerlink" href="#consequencias" title="Permanent link">&para;</a></h2>
 <p>O primeiro quadro do Resumo já traz os números quando a API está no ar. Os lançamentos
-continuam <strong>na memória da API</strong> (<code>_LOCAL_TRANSACTIONS</code>), então somem quando ela reinicia; o
+continuam <strong>na memória da API</strong> (<code>_LOCAL_TRANSACTIONS</code>), então somem quando ela reinicia (superado pela <a href="../0024-persistencia-local-e-backup-criptografado/">ADR 0024</a>, que grava a biblioteca no SQLite local); o
 texto da tela de Extratos diz isso. A persistência em SQLite dos lançamentos segue pendente
 e está fora desta decisão. O seletor de arquivos do Android não conhece o tipo de <code>.ofx</code> e deixa o arquivo desabilitado
 quando se filtra por extensão (observado em emulador). Por isso o app abre o seletor sem filtro
