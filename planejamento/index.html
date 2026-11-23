@@ -3458,7 +3458,7 @@ comprimido e preparado por <code>make build</code> (<a href="../adr/0020-categor
 </ul>
 <hr />
 <h2 id="7-semana-5-multimodalidade-sprint-ativa">7. Semana 5 — Multimodalidade (Sprint Ativa)<a class="headerlink" href="#7-semana-5-multimodalidade-sprint-ativa" title="Permanent link">&para;</a></h2>
-<p>O entregável oficial da <strong>Semana 5 (23/11 a 27/11)</strong> é o <em>agente multimodal</em>: o Trokim passa a ler <strong>foto ou PDF escaneado</strong> de fatura, comprovante de Pix e boleto, extrai os campos, valida por código e <strong>mostra ao usuário para revisão antes de virar lançamento</strong>. A equipe deixa <strong>tudo pronto na quarta-feira, 25/11/2026</strong> e <strong>entrega na sexta-feira, 27/11</strong>. As tarefas estão na milestone <strong>"Semana 5 — Multimodalidade (Agente Multimodal)"</strong>, com o épico <a href="https://github.com/moonshinerd/trokim/issues/86">#86</a> e o contrato do documento extraído.</p>
+<p>O entregável oficial da <strong>Semana 5 (23/11 a 27/11)</strong> é o <em>agente multimodal</em>: o Trokim passa a ler <strong>foto ou PDF escaneado</strong> de fatura, comprovante de Pix e boleto, extrai os campos, valida por código e <strong>mostra ao usuário para revisão antes de virar lançamento</strong>. A equipe deixa <strong>tudo pronto na quarta-feira, 25/11/2026</strong> e <strong>entrega até a segunda-feira, 30/11, às 8h00</strong>, na pasta da equipe no Teams (canal "Segundo Desafio"). O texto da entrega pede, no mínimo, <strong>duas modalidades</strong> (aqui, texto no chat e imagem ou PDF no agente de documento), a documentação de <strong>modalidades suportadas, limitações conhecidas e casos de falha com mitigação</strong>, e uma <strong>demonstração</strong> de um fluxo com duas modalidades que mostre como a informação vira resposta. As tarefas estão na milestone <strong>"Semana 5 — Multimodalidade (Agente Multimodal)"</strong>, com o épico <a href="https://github.com/moonshinerd/trokim/issues/86">#86</a> e o contrato do documento extraído.</p>
 <p>Além do entregável, a semana leva duas frentes do projeto: <strong>suporte a mais bancos, com tutorial</strong> (PicPay e Mercado Pago testados com arquivos reais; Inter, C6 e Itaú como <strong>experimentais</strong>) e o <strong>chat respondendo sobre as contas, parcelas e dívidas</strong> que o usuário importou.</p>
 <p><strong>Hipóteses a medir:</strong> (1) acerto por campo de pelo menos 90% em documentos legíveis; (2) abstenção em 100% das imagens ilegíveis, sem campo inventado; (3) comparação entre OCR local, VLM local e VLM via OpenRouter (nuvem só com dado sintético); (4) o chat acerta os números de conta, parcela e dívida contra o <code>CalculationService</code>, sem número inventado.</p>
 <p><strong>Decisões de projeto:</strong> motores de leitura <strong>modulares</strong> atrás de portas (<code>OcrProvider</code> e <code>VisionProvider</code>, no padrão do <code>LLMProvider</code>), OCR local por padrão, VLM opcional pela camada LiteLLM (Ollama local ou OpenRouter) e <strong>provedor remoto só com consentimento explícito</strong>. ADRs previstas: 0021 (visão e OCR modulares), 0022 (registro de perfis de banco e níveis de suporte) e 0023 (contexto do usuário no chat).</p>
@@ -3493,8 +3493,13 @@ comprimido e preparado por <code>make build</code> (<a href="../adr/0020-categor
 <td><a href="https://github.com/moonshinerd/trokim/issues/100">#100</a></td>
 </tr>
 <tr>
-<td><strong>Sexta 27/11</strong></td>
-<td><strong>Entrega</strong></td>
+<td><strong>Sexta 27/11 a domingo 29/11</strong></td>
+<td>Margem de segurança: ensaio, correção do que quebra a demonstração e conferência do envio (sem funcionalidade nova)</td>
+<td>—</td>
+</tr>
+<tr>
+<td><strong>Segunda 30/11, 8h00</strong></td>
+<td><strong>Entrega</strong> no Teams</td>
 <td>—</td>
 </tr>
 </tbody>
