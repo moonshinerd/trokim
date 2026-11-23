@@ -246,6 +246,44 @@ class ApiClient {
     return _decode(response);
   }
 
+  /// Exporta a biblioteca em um arquivo `.trokim` criptografado com [passphrase].
+  Future<List<int>> exportBackup(String passphrase) async {
+    final response = await _client
+        .post(
+          Uri.parse('$baseUrl${ApiConstants.backupExportEndpoint}'),
+          headers: {'Content-Type': 'application/json'},
+          body: jsonEncode({'passphrase': passphrase}),
+        )
+        .timeout(uploadTimeout);
+    if (response.statusCode != 200) {
+      throw ApiException(response.statusCode, _detailOf(response));
+    }
+    return response.bodyBytes;
+  }
+
+  /// Restaura um backup. [mode]: `substituir` ou `mesclar`.
+  Future<Map<String, dynamic>> importBackup(
+    String filename,
+    List<int> bytes, {
+    required String passphrase,
+    String mode = 'mesclar',
+  }) async {
+    final request =
+        http.MultipartRequest(
+            'POST',
+            Uri.parse('$baseUrl${ApiConstants.backupImportEndpoint}'),
+          )
+          ..files.add(
+            http.MultipartFile.fromBytes('file', bytes, filename: filename),
+          )
+          ..fields['passphrase'] = passphrase
+          ..fields['mode'] = mode;
+    final response = await http.Response.fromStream(
+      await _client.send(request).timeout(uploadTimeout),
+    );
+    return _decode(response);
+  }
+
   Future<Map<String, dynamic>> askAssistant(String message) async {
     final response = await _client
         .post(

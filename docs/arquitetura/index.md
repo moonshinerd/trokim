@@ -14,7 +14,7 @@ A arquitetura do **Trokim** foi concebida para atender aos requisitos de alta pe
 2. **Camada Backend (FastAPI / Python 3.12+):**
    - Construída com FastAPI pela alta performance assíncrona e tipagem robusta com Pydantic v2.
    - Gerenciamento de dependências ultra-rápido com `uv`.
-   - Banco de dados embutido **SQLite** garantindo funcionamento 100% *local-first* sem necessidade de servidores externos. As tabelas são modelos SQLAlchemy e o esquema evolui por migrações Alembic numeradas, aplicadas ao abrir cada banco ([ADR 0019](../adr/0019-orm-e-migracoes-numeradas.md)). Os lançamentos importados ainda ficam em memória na API; a persistência deles em SQLite é pendência da Semana 5.
+   - Banco de dados embutido **SQLite** garantindo funcionamento 100% *local-first* sem necessidade de servidores externos. As tabelas são modelos SQLAlchemy e o esquema evolui por migrações Alembic numeradas, aplicadas ao abrir cada banco ([ADR 0019](../adr/0019-orm-e-migracoes-numeradas.md)). A biblioteca do usuário (lançamentos, contas e decisões) é gravada no SQLite local e restaurada ao iniciar a API, com backup criptografado ([ADR 0024](../adr/0024-persistencia-local-e-backup-criptografado.md)).
 3. **Mecanismo RAG Híbrido e Banco Vetorial (Semana 2):**
    - Embeddings multilíngues gerados localmente pelo modelo `sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2` (384 dimensões) via **FastEmbed**.
    - Persistência e indexação vetorial nativa em SQLite com a extensão **sqlite-vec** (tabela virtual `vec0`).

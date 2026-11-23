@@ -13,6 +13,8 @@ class Settings(BaseSettings):
     HOST: str = "127.0.0.1"
 
     DATABASE_URL: str = "sqlite+aiosqlite:///trokim.db"
+    # Grava a biblioteca do usuário (lançamentos, contas e decisões) no SQLite a cada alteração.
+    LIBRARY_PERSISTENCE: bool = True
 
     # Provedores: "litellm" (qualquer modelo), "ollama" (cliente direto) ou "mock".
     LLM_PROVIDER: str = "litellm"

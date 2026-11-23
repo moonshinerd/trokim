@@ -40,7 +40,7 @@ calculados pelo backend, nunca pelo aplicativo.
 ## Consequências
 
 O primeiro quadro do Resumo já traz os números quando a API está no ar. Os lançamentos
-continuam **na memória da API** (`_LOCAL_TRANSACTIONS`), então somem quando ela reinicia; o
+continuam **na memória da API** (`_LOCAL_TRANSACTIONS`), então somem quando ela reinicia (superado pela [ADR 0024](0024-persistencia-local-e-backup-criptografado.md), que grava a biblioteca no SQLite local); o
 texto da tela de Extratos diz isso. A persistência em SQLite dos lançamentos segue pendente
 e está fora desta decisão. O seletor de arquivos do Android não conhece o tipo de `.ofx` e deixa o arquivo desabilitado
 quando se filtra por extensão (observado em emulador). Por isso o app abre o seletor sem filtro

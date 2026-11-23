@@ -131,7 +131,7 @@ void main() {
       await _scrollTo(tester, 'Salvar endereço');
 
       await tester.enterText(
-        find.byType(TextField),
+        find.byType(TextField).first,
         '  http://192.168.0.10:8000/v1/  ',
       );
       await tester.tap(find.text('Salvar endereço'));
@@ -147,7 +147,10 @@ void main() {
       final settings = await openSettings(tester);
       await _scrollTo(tester, 'Salvar endereço');
 
-      await tester.enterText(find.byType(TextField), 'localhost sem esquema');
+      await tester.enterText(
+        find.byType(TextField).first,
+        'localhost sem esquema',
+      );
       await tester.tap(find.text('Salvar endereço'));
       await tester.pumpAndSettle();
 
