@@ -30,6 +30,8 @@ Este repositório registra formalmente todas as decisões de arquitetura e tecno
 | [**0020**](0020-categorizacao-por-cnae.md) | Categorização por Atividade Econômica (CNAE) com Dados Abertos do CNPJ | <span class="badge-must">Aceita</span> | 18/11/2026 | RF09, RNF01, GQ03, GQ07, GQ11 |
 | [**0021**](0021-visao-e-ocr-modulares.md) | Leitura de Imagem Modular: Portas de OCR e de Visão | <span class="badge-must">Aceita</span> | 23/11/2026 | RF27, RNF01, RNF12, GQ02, GQ03 |
 | [**0024**](0024-persistencia-local-e-backup-criptografado.md) | Persistência Local da Biblioteca e Backup Criptografado | <span class="badge-must">Aceita</span> | 23/11/2026 | RF31, RF32, RNF01, RNF05, GQ03, GQ06 |
+| [**0025**](0025-armazenamento-no-aparelho-e-api-sem-estado.md) | Armazenamento no Aparelho e API sem Estado | <span class="badge-must">Aceita</span> | 23/11/2026 | RF31, RF32, RNF01, RNF05, GQ03, GQ06 |
+| [**0025**](0025-armazenamento-no-aparelho-e-api-sem-estado.md) | Armazenamento no Aparelho e API sem Estado | <span class="badge-must">Aceita</span> | 23/11/2026 | RF31, RF32, RNF01, RNF05, GQ03, GQ06 |
 
 - [0006 — Curadoria rastreável e benchmark](0006-curadoria-benchmark.md)
 - [0007 — Banco vetorial local e embeddings densos no RAG](0007-banco-vetorial-embeddings.md)
@@ -48,3 +50,4 @@ Este repositório registra formalmente todas as decisões de arquitetura e tecno
 - [0020 — Categorização por CNAE com dados abertos do CNPJ](0020-categorizacao-por-cnae.md)
 - [0021 — Leitura de imagem modular (OCR e visão)](0021-visao-e-ocr-modulares.md)
 - [0024 — Persistência local da biblioteca e backup criptografado](0024-persistencia-local-e-backup-criptografado.md)
+- [0025 — Armazenamento no aparelho e API sem estado](0025-armazenamento-no-aparelho-e-api-sem-estado.md)

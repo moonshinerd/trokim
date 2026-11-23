@@ -337,4 +337,6 @@ Cada issue exige a atualização do MkDocs **no mesmo PR** (regra do `AGENTS.md`
 
 **Backend em contêiner (já em `main`):** `deploy/Dockerfile` e o `docker-compose.yml` sobem só a API com o OCR local e os embeddings já baixados, como usuário sem privilégios, com os dados em volume ([ADR 0021](adr/0021-visao-e-ocr-modulares.md), [#87](https://github.com/moonshinerd/trokim/issues/87)). O app Flutter segue instalado no aparelho.
 
-**Encaminhado para a Semana 6** (milestone "Semana 6 — Integração Completa"): armazenamento no aparelho com SQLCipher e API sem estado ([#104](https://github.com/moonshinerd/trokim/issues/104)); e as pendências herdadas da Semana 4, que são redação com paráfrase verificada, política de escopo para previsão de preço (C27) e revisão humana dos casos sinalizados ([#105](https://github.com/moonshinerd/trokim/issues/105)).
+**Armazenamento no aparelho e API sem estado (já em `main`):** o aparelho guarda a biblioteca cifrada e a API a mantém só em memória ([ADR 0025](adr/0025-armazenamento-no-aparelho-e-api-sem-estado.md), [#104](https://github.com/moonshinerd/trokim/issues/104)).
+
+**Encaminhado para a Semana 6** (milestone "Semana 6 — Integração Completa"): as pendências herdadas da Semana 4, que são redação com paráfrase verificada, política de escopo para previsão de preço (C27) e revisão humana dos casos sinalizados ([#105](https://github.com/moonshinerd/trokim/issues/105)).
