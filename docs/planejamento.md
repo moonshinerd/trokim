@@ -12,7 +12,7 @@ O desenvolvimento do **Trokim** segue a metodologia **Challenge Based Learning (
 | **Semana 2** | Base de conhecimento e recuperação | **Base de conhecimento + protótipo de recuperação:** Base curada com 20 documentos-fonte; chunking semântico; embeddings FastEmbed 384d; banco SQLite-Vec; chat Flutter e benchmark (98,78% Recall@3) | <span class="badge-must">Concluído</span> | 02/11 a 06/11 |
 | **Semana 3** | **Comparação LLM x RAG** | **Assistente baseado em evidências + relatório comparativo:** Avaliação empírica estruturada (LLM pura vs. LLM + RAG ingênuo vs. LLM + RAG estruturado do Trokim), métricas de alucinação e síntese generativa | <span class="badge-must">Concluído</span> | **09/11 a 13/11** |
 | **Semana 4** | Sistema multiagentes | Primeiro protótipo multiagente (Research, Analysis, Validation e Communication Agent) | <span class="badge-must">Concluída</span> | 16/11 a 20/11 |
-| **Semana 5** | Multimodalidade | Assistente multimodal (leitura de faturas PDF, extratos e comprovantes em imagem) | <span class="badge-should">Em planejamento</span> | 23/11 a 27/11 |
+| **Semana 5** | Multimodalidade | Assistente multimodal (leitura de faturas PDF, extratos e comprovantes em imagem) | <span class="badge-should">Sprint Ativa</span> | 23/11 a 27/11 |
 | **Semana 6** | Integração completa | Aplicação funcional ponta a ponta (Flutter + FastAPI + RAG + Banco Vetorial + Multiagente) | Previsto | 30/11 a 04/12 |
 | **Semana 7** | Testes e refinamento | Apresentação final e entrega consolidada do projeto e repositório | Previsto | 07/12 a 11/12 |
 
@@ -234,6 +234,103 @@ comprimido e preparado por `make build` ([ADR 0020](adr/0020-categorizacao-por-c
 - persistência dos lançamentos em SQLite (hoje ficam em memória na API);
 - homologação do app em aparelho Android físico.
 
-**Semana 5 (em planejamento):** multimodalidade (comprovantes e faturas em imagem). As issues
-serão abertas depois da revisão do MkDocs do início da semana, como pede o `AGENTS.md`.
+---
 
+## 7. Semana 5 — Multimodalidade (Sprint Ativa)
+
+O entregável oficial da **Semana 5 (23/11 a 27/11)** é o *agente multimodal*: o Trokim passa a ler **foto ou PDF escaneado** de fatura, comprovante de Pix e boleto, extrai os campos, valida por código e **mostra ao usuário para revisão antes de virar lançamento**. A equipe deixa **tudo pronto na quarta-feira, 25/11/2026** e **entrega na sexta-feira, 27/11**. As tarefas estão na milestone **"Semana 5 — Multimodalidade (Agente Multimodal)"**, com o épico [#86](https://github.com/moonshinerd/trokim/issues/86) e o contrato do documento extraído.
+
+Além do entregável, a semana leva duas frentes do projeto: **suporte a mais bancos, com tutorial** (PicPay e Mercado Pago testados com arquivos reais; Inter, C6 e Itaú como **experimentais**) e o **chat respondendo sobre as contas, parcelas e dívidas** que o usuário importou.
+
+**Hipóteses a medir:** (1) acerto por campo de pelo menos 90% em documentos legíveis; (2) abstenção em 100% das imagens ilegíveis, sem campo inventado; (3) comparação entre OCR local, VLM local e VLM via OpenRouter (nuvem só com dado sintético); (4) o chat acerta os números de conta, parcela e dívida contra o `CalculationService`, sem número inventado.
+
+**Decisões de projeto:** motores de leitura **modulares** atrás de portas (`OcrProvider` e `VisionProvider`, no padrão do `LLMProvider`), OCR local por padrão, VLM opcional pela camada LiteLLM (Ollama local ou OpenRouter) e **provedor remoto só com consentimento explícito**. ADRs previstas: 0021 (visão e OCR modulares), 0022 (registro de perfis de banco e níveis de suporte) e 0023 (contexto do usuário no chat).
+
+### 7.1 Cronograma
+
+| Quando | O que | Issues |
+|---|---|---|
+| **Segunda 23/11** | **Fase 1:** tarefas independentes, todas em paralelo | [#87](https://github.com/moonshinerd/trokim/issues/87), [#88](https://github.com/moonshinerd/trokim/issues/88), [#89](https://github.com/moonshinerd/trokim/issues/89), [#90](https://github.com/moonshinerd/trokim/issues/90), [#91](https://github.com/moonshinerd/trokim/issues/91), [#92](https://github.com/moonshinerd/trokim/issues/92), [#93](https://github.com/moonshinerd/trokim/issues/93), [#94](https://github.com/moonshinerd/trokim/issues/94) |
+| **Terça 24/11** | Revisão cruzada e merge da Fase 1; quem estiver desbloqueado adianta a Fase 2 | revisão dos PRs |
+| **Quarta 25/11** | **Fase 2:** integração, benchmark, documentação e **tudo pronto** (corte às 18h) | [#95](https://github.com/moonshinerd/trokim/issues/95), [#96](https://github.com/moonshinerd/trokim/issues/96), [#97](https://github.com/moonshinerd/trokim/issues/97), [#98](https://github.com/moonshinerd/trokim/issues/98), [#99](https://github.com/moonshinerd/trokim/issues/99) |
+| **Quinta 26/11** | Homologação em aparelho Android real, correções e ensaio | [#100](https://github.com/moonshinerd/trokim/issues/100) |
+| **Sexta 27/11** | **Entrega** | — |
+
+```mermaid
+flowchart TD
+    subgraph "Fase 1: segunda e terça (independentes)"
+        A["#87 Portas de visão e OCR<br/><b>@moonshinerd</b>"]
+        B["#88 Agente de documento<br/><b>@gabrielcrzojo</b>"]
+        C["#89 Validação dos campos<br/><b>@rebecaboncaputo</b>"]
+        D["#90 Dataset multimodal sintético<br/><b>@rebecaboncaputo</b>"]
+        E["#91 Mobile: captura e revisão<br/><b>@Luix3005</b>"]
+        F["#92 PicPay, Mercado Pago e mais bancos<br/><b>@moonshinerd</b>"]
+        G["#93 Tutoriais e bancos suportados<br/><b>@zainoca + @Luix3005</b>"]
+        H["#94 Consultas sobre os dados do usuário<br/><b>@rebecaboncaputo</b>"]
+    end
+    subgraph "Fase 2: quarta (bloqueadas)"
+        I["#95 Chat com contas e dívidas<br/><b>@gabrielcrzojo + @moonshinerd</b>"]
+        J["#96 Endpoint de documentos<br/><b>@moonshinerd + @gabrielcrzojo</b>"]
+        K["#97 Mobile: chat com contexto e documento<br/><b>@Luix3005 + @zainoca</b>"]
+        L["#98 Benchmark multimodal e do chat<br/><b>@rebecaboncaputo + @gabrielcrzojo</b>"]
+        M["#99 Docs e Entrega 5<br/><b>@moonshinerd + @zainoca</b>"]
+    end
+    A -->|bloqueia| J
+    B -->|bloqueia| J
+    C -->|bloqueia| J
+    H -->|bloqueia| I
+    I -->|bloqueia| K
+    J -->|bloqueia| K
+    E -->|bloqueia| K
+    D -->|bloqueia| L
+    I -->|bloqueia| L
+    J -->|bloqueia| L
+    K -->|bloqueia| M
+    L -->|bloqueia| M
+```
+
+### 7.2 Matriz de tarefas e responsabilidades
+
+| Issue | Escopo | Responsável | Fase | Precedência | Estimativa |
+|:---:|---|:---:|:---:|---|:---:|
+| [#87](https://github.com/moonshinerd/trokim/issues/87) | Portas `OcrProvider` e `VisionProvider`, adaptadores e ADR 0021 | @moonshinerd | 1 | **Não-bloqueante** | 3,5 h |
+| [#88](https://github.com/moonshinerd/trokim/issues/88) | Agente de documento (extração, qualidade e abstenção) | @gabrielcrzojo | 1 | Contrato do épico; **não-bloqueante** | 4 h |
+| [#89](https://github.com/moonshinerd/trokim/issues/89) | Validação dos campos extraídos e conciliação | @rebecaboncaputo | 1 | **Não-bloqueante** | 3 h |
+| [#90](https://github.com/moonshinerd/trokim/issues/90) | Dataset multimodal sintético e gabarito de campos | @rebecaboncaputo | 1 | **Não-bloqueante** | 4 h |
+| [#91](https://github.com/moonshinerd/trokim/issues/91) | Mobile: captura e revisão dos campos | @Luix3005 | 1 | Contrato do épico; **não-bloqueante** | 4 h |
+| [#92](https://github.com/moonshinerd/trokim/issues/92) | PicPay e Mercado Pago (reais) e Inter, C6 e Itaú (experimentais) | @moonshinerd | 1 | **Não-bloqueante** | 4,5 h |
+| [#93](https://github.com/moonshinerd/trokim/issues/93) | Tutoriais por banco e tela de bancos suportados | @zainoca, @Luix3005 | 1 | Lista de bancos da [#92](https://github.com/moonshinerd/trokim/issues/92) | 3 h |
+| [#94](https://github.com/moonshinerd/trokim/issues/94) | Consultas determinísticas sobre os dados do usuário | @rebecaboncaputo | 1 | **Não-bloqueante** | 4 h |
+| [#95](https://github.com/moonshinerd/trokim/issues/95) | Chat com contas, parcelas e dívidas | @gabrielcrzojo, @moonshinerd | 2 | **Bloqueada por [#94](https://github.com/moonshinerd/trokim/issues/94)** | 4 h |
+| [#96](https://github.com/moonshinerd/trokim/issues/96) | Endpoint de documentos, orquestração e importação | @moonshinerd, @gabrielcrzojo | 2 | **Bloqueada por [#87](https://github.com/moonshinerd/trokim/issues/87), [#88](https://github.com/moonshinerd/trokim/issues/88) e [#89](https://github.com/moonshinerd/trokim/issues/89)** | 3 h |
+| [#97](https://github.com/moonshinerd/trokim/issues/97) | Mobile: chat com contexto e documento ponta a ponta | @Luix3005, @zainoca | 2 | **Bloqueada por [#91](https://github.com/moonshinerd/trokim/issues/91), [#95](https://github.com/moonshinerd/trokim/issues/95) e [#96](https://github.com/moonshinerd/trokim/issues/96)** | 4 h |
+| [#98](https://github.com/moonshinerd/trokim/issues/98) | Benchmark multimodal e do chat com os dados do usuário | @rebecaboncaputo, @gabrielcrzojo | 2 | **Bloqueada por [#90](https://github.com/moonshinerd/trokim/issues/90), [#95](https://github.com/moonshinerd/trokim/issues/95) e [#96](https://github.com/moonshinerd/trokim/issues/96)** | 4 h |
+| [#99](https://github.com/moonshinerd/trokim/issues/99) | Docs, ADRs, resultados e documento da Entrega 5 | @moonshinerd, @zainoca | 2 | **Bloqueada por [#97](https://github.com/moonshinerd/trokim/issues/97) e [#98](https://github.com/moonshinerd/trokim/issues/98)** | 4 h |
+| [#100](https://github.com/moonshinerd/trokim/issues/100) | Homologação em aparelho real e congelamento | todos | 3 | Depende da Fase 2 | 3 h |
+
+**Revisão cruzada** (1 aprovação de outro membro por PR): [#87](https://github.com/moonshinerd/trokim/issues/87) por @gabrielcrzojo, [#88](https://github.com/moonshinerd/trokim/issues/88) por @moonshinerd, [#89](https://github.com/moonshinerd/trokim/issues/89) por @zainoca, [#90](https://github.com/moonshinerd/trokim/issues/90) por @gabrielcrzojo, [#91](https://github.com/moonshinerd/trokim/issues/91) por @zainoca, [#92](https://github.com/moonshinerd/trokim/issues/92) por @Luix3005, [#93](https://github.com/moonshinerd/trokim/issues/93) por @moonshinerd e [#94](https://github.com/moonshinerd/trokim/issues/94) por @gabrielcrzojo.
+
+### 7.3 MkDocs sempre atualizado
+
+Cada issue exige a atualização do MkDocs **no mesmo PR** (regra do `AGENTS.md`). Para não haver conflito, cada uma edita só as suas páginas:
+
+| Issue | Páginas do MkDocs que ela atualiza |
+|:---:|---|
+| [#87](https://github.com/moonshinerd/trokim/issues/87) | ADR 0021 (nova), [Mapa do Sistema](arquitetura/mapa-do-sistema.md), [Guia de Uso](guia-de-uso.md) (variáveis `OCR_PROVIDER` e `VISION_*`), [Requisitos](requisitos.md) (RNF12) |
+| [#88](https://github.com/moonshinerd/trokim/issues/88) | [Agentes](agentes/index.md), `agentes/document-agent.md` (nova), [Mapa do Sistema](arquitetura/mapa-do-sistema.md), [ADR 0016](adr/0016-arquitetura-multiagente.md) (nota) |
+| [#89](https://github.com/moonshinerd/trokim/issues/89) | [Validation Agent](agentes/validation-agent.md) (códigos novos) |
+| [#90](https://github.com/moonshinerd/trokim/issues/90) | `pesquisa/gabarito-multimodal.md` (nova), [Gabarito Multiagente](pesquisa/gabarito-multiagente.md), [ADR 0008](adr/0008-material-comparativo-versionado.md) (nota) |
+| [#91](https://github.com/moonshinerd/trokim/issues/91) | [Guia de Uso](guia-de-uso.md) (importar por foto), `mobile/README.md`, [Protótipo](prototipo.md) |
+| [#92](https://github.com/moonshinerd/trokim/issues/92) | ADR 0022 (nova), [Categorias](arquitetura/categorias.md), [Guia de Uso](guia-de-uso.md) (bancos suportados), [Requisitos](requisitos.md) (RF29), [ADR 0017](adr/0017-perfis-de-banco-e-natureza-do-lancamento.md) (nota) |
+| [#93](https://github.com/moonshinerd/trokim/issues/93) | [Guia de Uso](guia-de-uso.md) (tutorial por banco), [Protótipo](prototipo.md), `mobile/README.md` |
+| [#94](https://github.com/moonshinerd/trokim/issues/94) | [Analysis Agent](agentes/analysis-agent.md), [ADR 0004](adr/0004-calculos-deterministicos.md) (nota) |
+| [#95](https://github.com/moonshinerd/trokim/issues/95) | [Analysis](agentes/analysis-agent.md), [Communication](agentes/communication-agent.md) e [Validation](agentes/validation-agent.md), [Orquestrador](agentes/orquestrador.md), ADR 0023 (nova), [Requisitos](requisitos.md) (RF30) |
+| [#96](https://github.com/moonshinerd/trokim/issues/96) | `agentes/document-agent.md`, [Agentes](agentes/index.md), [Guia de Uso](guia-de-uso.md) (API), [Arquitetura](arquitetura/index.md), [Requisitos](requisitos.md) (RF27 e RF28) |
+| [#97](https://github.com/moonshinerd/trokim/issues/97) | [Guia de Uso](guia-de-uso.md) (chat com contas e importação por foto), `mobile/README.md`, [Protótipo](prototipo.md) |
+| [#98](https://github.com/moonshinerd/trokim/issues/98) | [Histórico de Resultados](pesquisa/resultados.md) (nova execução e gráficos), `pesquisa/gabarito-multimodal.md`, [Gabarito Multiagente](pesquisa/gabarito-multiagente.md) |
+| [#99](https://github.com/moonshinerd/trokim/issues/99) | **Varredura final de todo o MkDocs**: ADRs 0021 a 0023 aceitas, requisitos, planejamento, glossário, apresentação e atas |
+| [#100](https://github.com/moonshinerd/trokim/issues/100) | [Planejamento](planejamento.md) (homologação e pendências) |
+
+**Revisão do MkDocs do início da semana** (regra do `AGENTS.md`): o MkDocs foi conferido contra o código; os números de testes da API (418) batem com a execução, os links internos estão sem quebra e o `make docs-build` passa. A lacuna encontrada foi a referência dos endpoints, que não listava as rotas de contas, arquivos, parcelas, transferências, regras de categoria e cenários; ela entrou no [Guia de Uso](guia-de-uso.md). Não foi possível reexecutar os testes de pesquisa e do app Flutter neste ambiente, então esses dois números seguem como informados na Entrega 4. As issues da semana foram abertas **antes** desta revisão, o que contraria a ordem do `AGENTS.md`, e o desvio fica registrado aqui.
+
+**Pendências herdadas da Semana 4** e ainda não atribuídas a uma issue: revisão humana dos casos sinalizados, política de escopo para previsão de preço (C27) e redação que aceite paráfrase com citação verificada, e **persistência dos lançamentos em SQLite** (hoje ficam em memória na API). A decisão de incluir ou não a persistência nesta semana está em aberto.
