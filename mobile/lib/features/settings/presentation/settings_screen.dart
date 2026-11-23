@@ -9,16 +9,25 @@ import '../../../core/theme/app_theme.dart';
 import '../../../core/widgets/app_motion.dart';
 import '../../../core/widgets/screen_header.dart';
 import '../../../core/widgets/trokim_logo.dart';
+import '../../backup/presentation/backup_card.dart';
 import '../../finance/presentation/finance_controller.dart';
 
 const String appVersion = '0.1.0';
 
 class SettingsScreen extends StatelessWidget {
-  const SettingsScreen({super.key, this.controller, this.client});
+  const SettingsScreen({
+    super.key,
+    this.controller,
+    this.client,
+    this.saveBackup,
+    this.pickBackup,
+  });
 
   /// Injetáveis para teste; em produção usa o escopo do app.
   final SettingsController? controller;
   final http.Client? client;
+  final BackupSaver? saveBackup;
+  final BackupPicker? pickBackup;
 
   @override
   Widget build(BuildContext context) {
@@ -34,7 +43,8 @@ class SettingsScreen extends StatelessWidget {
               const Reveal(
                 child: ScreenHeader(
                   title: 'Ajustes',
-                  subtitle: 'Aparência, animações, conexão e privacidade.',
+                  subtitle:
+                      'Aparência, animações, conexão, backup e privacidade.',
                 ),
               ),
               _Section(
@@ -99,6 +109,15 @@ class SettingsScreen extends StatelessWidget {
               ),
               _Section(
                 index: 5,
+                title: 'Backup',
+                child: BackupCard(
+                  client: client,
+                  saveBackup: saveBackup,
+                  pickBackup: pickBackup,
+                ),
+              ),
+              _Section(
+                index: 6,
                 title: 'Privacidade',
                 child: const _InfoRow(
                   icon: Icons.lock_rounded,
@@ -108,7 +127,7 @@ class SettingsScreen extends StatelessWidget {
                       'apenas explica, com base em fontes oficiais.',
                 ),
               ),
-              Reveal(index: 6, child: const _About()),
+              Reveal(index: 7, child: const _About()),
             ],
           ),
         ),
