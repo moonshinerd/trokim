@@ -231,7 +231,7 @@ comprimido e preparado por `make build` ([ADR 0020](adr/0020-categorizacao-por-c
   sem revisor);
 - política de escopo que reconheça previsões de preço (C27) e redação que aceite paráfrase com
   citação verificada, em vez de só frases literais;
-- persistência dos lançamentos em SQLite (hoje ficam em memória na API);
+- ~~persistência dos lançamentos em SQLite (hoje ficam em memória na API)~~: resolvida em 23/11 pela [ADR 0024](adr/0024-persistencia-local-e-backup-criptografado.md) ([#102](https://github.com/moonshinerd/trokim/issues/102));
 - homologação do app em aparelho Android físico.
 
 ---
@@ -333,4 +333,6 @@ Cada issue exige a atualização do MkDocs **no mesmo PR** (regra do `AGENTS.md`
 
 **Revisão do MkDocs do início da semana** (regra do `AGENTS.md`): o MkDocs foi conferido contra o código; os números de testes da API (418) batem com a execução, os links internos estão sem quebra e o `make docs-build` passa. A lacuna encontrada foi a referência dos endpoints, que não listava as rotas de contas, arquivos, parcelas, transferências, regras de categoria e cenários; ela entrou no [Guia de Uso](guia-de-uso.md). Não foi possível reexecutar os testes de pesquisa e do app Flutter neste ambiente, então esses dois números seguem como informados na Entrega 4. As issues da semana foram abertas **antes** desta revisão, o que contraria a ordem do `AGENTS.md`, e o desvio fica registrado aqui.
 
-**Pendências herdadas da Semana 4** e ainda não atribuídas a uma issue: revisão humana dos casos sinalizados, política de escopo para previsão de preço (C27) e redação que aceite paráfrase com citação verificada, e **persistência dos lançamentos em SQLite** (hoje ficam em memória na API). A decisão de incluir ou não a persistência nesta semana está em aberto.
+**Persistência e backup (já em `main` antes da Fase 1):** a biblioteca do usuário passou a ser gravada no SQLite local e restaurada ao iniciar a API, com backup criptografado `.trokim` ([#102](https://github.com/moonshinerd/trokim/issues/102), [ADR 0024](adr/0024-persistencia-local-e-backup-criptografado.md)). Por isso as issues da semana já nascem sobre dados duráveis. Ficam para a Semana 6 o armazenamento no aparelho (SQLCipher, com a API sem estado) e as telas de backup no app.
+
+**Pendências herdadas da Semana 4** e ainda não atribuídas a uma issue: revisão humana dos casos sinalizados e política de escopo para previsão de preço (C27) e redação que aceite paráfrase com citação verificada.

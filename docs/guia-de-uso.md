@@ -55,6 +55,30 @@ Todos os caminhos começam em `/v1`. O contrato completo e interativo fica no Sw
 | Biblioteca | `GET /installments` | Parcelamentos agrupados |
 | Biblioteca | `GET /transfers`, `GET /transfers/suggestions`, `POST /transfers/{confirm,reject,unmark,undo}` | Transferências entre contas próprias |
 | Cenários | `POST /budgets/compare` | Compara dois cenários de orçamento |
+| Backup | `POST /backup/export`, `POST /backup/import` | Exporta e restaura a biblioteca em arquivo `.trokim` criptografado |
+
+### Backup e persistência
+
+A biblioteca (lançamentos, contas, arquivos, transferências e regras de categoria) é gravada no
+SQLite local (`trokim.db`) depois de cada alteração e restaurada quando a API inicia
+([ADR 0024](adr/0024-persistencia-local-e-backup-criptografado.md)). `LIBRARY_PERSISTENCE=false`
+desliga a gravação. O arquivo `trokim.db` não é criptografado; o **backup é sempre cifrado**
+(AES-256-GCM, chave derivada da sua senha por scrypt) e não pode ser aberto sem ela, nem
+recuperado se a senha for esquecida.
+
+```bash
+# Exportar (a senha tem pelo menos 8 caracteres e nunca é gravada)
+curl -X POST http://127.0.0.1:8000/v1/backup/export \
+  -H "Content-Type: application/json" -d '{"passphrase": "minha-senha-longa"}' \
+  -o meu-backup.trokim
+
+# Restaurar em outro aparelho: "substituir" apaga o que existe, "mesclar" só acrescenta o que falta
+curl -X POST http://127.0.0.1:8000/v1/backup/import \
+  -F "file=@meu-backup.trokim" -F "passphrase=minha-senha-longa" -F "mode=mesclar"
+```
+
+Senha errada ou arquivo adulterado devolvem `400` com a mensagem "Senha incorreta ou arquivo
+corrompido". As telas de exportar e importar no app entram na Semana 6.
 
 ---
 
@@ -257,7 +281,7 @@ calculou.
 
 Para usar a API em outro endereço (por exemplo, um aparelho físico na mesma rede), edite o
 **endereço da API** em **Ajustes** e toque em **Salvar endereço**; **Testar conexão** confere se
-ela responde. Os lançamentos ficam na memória da API e somem quando ela é reiniciada.
+ela responde. Os lançamentos ficam gravados no SQLite local e voltam quando a API reinicia (veja [Backup](#backup-e-persistencia)).
 
 ### 8.2. Importar do Nubank (conta e cartão)
 

@@ -125,3 +125,4 @@ nav:
       - "0018 – Contas, Períodos e Transferências": adr/0018-contas-periodos-transferencias-e-visoes.md
       - "0019 – ORM e Migrações Numeradas": adr/0019-orm-e-migracoes-numeradas.md
       - "0020 – Categorização por CNAE": adr/0020-categorizacao-por-cnae.md
+      - "0024 – Persistência Local e Backup Criptografado": adr/0024-persistencia-local-e-backup-criptografado.md

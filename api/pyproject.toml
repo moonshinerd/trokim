@@ -21,6 +21,7 @@ dependencies = [
     "fastembed>=0.9.1",
     "sqlite-vec>=0.1.9",
     "alembic>=1.13",
+    "cryptography>=43",
 ]
 
 [dependency-groups]

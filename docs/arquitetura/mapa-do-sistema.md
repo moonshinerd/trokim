@@ -25,7 +25,7 @@ graph TD
     end
 
     subgraph "Serviço Backend Local (Python / FastAPI)"
-        APIEntry["Routers v1<br/>(/transactions, /accounts, /statements, /installments,<br/>/transfers, /chat, /budgets, /health, /agents)"]
+        APIEntry["Routers v1<br/>(/transactions, /accounts, /statements, /installments,<br/>/transfers, /backup, /chat, /budgets, /health, /agents)"]
         AgentAsk["POST /v1/agents/ask<br/>(MultiAgentResponse)"]
         
         Parser["Parser de Documentos<br/>(OFX & PDF, perfis Nubank e BB)"]
@@ -108,7 +108,7 @@ graph TD
 
 ## 2. Fluxo de Importação de Extratos e Resumo
 
-Pagamento de fatura, resgates e transferências próprias ficam fora dos totais e o estorno abate a despesa ([ADR 0017](../adr/0017-perfis-de-banco-e-natureza-do-lancamento.md)). Contas, situação do período, transferências entre contas próprias, parcelamentos e regras de categoria seguem a [ADR 0018](../adr/0018-contas-periodos-transferencias-e-visoes.md). Os lançamentos importados ficam na **memória da API** (somem ao reiniciá-la, [ADR 0015](../adr/0015-dados-reais-importacao-e-endereco-da-api.md)). O app só exibe o que o backend calculou. A categoria de cada gasto segue a ordem descrita em [Categorias](categorias.md): regras por palavra, dicionário de redes e atividade econômica (CNAE) pelo CNPJ do recebedor, com o índice local da [ADR 0020](../adr/0020-categorizacao-por-cnae.md). Os bancos SQLite (aplicação e base vetorial) usam SQLAlchemy e migrações numeradas do Alembic, aplicadas ao abrir cada banco ([ADR 0019](../adr/0019-orm-e-migracoes-numeradas.md)).
+Pagamento de fatura, resgates e transferências próprias ficam fora dos totais e o estorno abate a despesa ([ADR 0017](../adr/0017-perfis-de-banco-e-natureza-do-lancamento.md)). Contas, situação do período, transferências entre contas próprias, parcelamentos e regras de categoria seguem a [ADR 0018](../adr/0018-contas-periodos-transferencias-e-visoes.md). A biblioteca do usuário é gravada no SQLite local atrás de uma porta de repositório, restaurada ao iniciar a API e exportável em backup criptografado `.trokim` ([ADR 0024](../adr/0024-persistencia-local-e-backup-criptografado.md)). O app só exibe o que o backend calculou. A categoria de cada gasto segue a ordem descrita em [Categorias](categorias.md): regras por palavra, dicionário de redes e atividade econômica (CNAE) pelo CNPJ do recebedor, com o índice local da [ADR 0020](../adr/0020-categorizacao-por-cnae.md). Os bancos SQLite (aplicação e base vetorial) usam SQLAlchemy e migrações numeradas do Alembic, aplicadas ao abrir cada banco ([ADR 0019](../adr/0019-orm-e-migracoes-numeradas.md)).
 
 ```mermaid
 sequenceDiagram

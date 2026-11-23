@@ -12,6 +12,18 @@ def biblioteca_limpa():
 
 
 @pytest.fixture(autouse=True)
+def sem_persistencia(monkeypatch):
+    """Os testes não gravam a biblioteca no ``trokim.db`` real; os de persistência passam
+    o próprio repositório."""
+    from app.services import library_store
+
+    library_store.configure(None)
+    monkeypatch.setattr(library_store.settings, "LIBRARY_PERSISTENCE", False)
+    yield
+    library_store.configure(None)
+
+
+@pytest.fixture(autouse=True)
 def sem_indice_cnpj(request, monkeypatch):
     """Por padrão, os testes não consultam o índice CNPJ real (versionado no repositório).
 
