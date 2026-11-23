@@ -5,10 +5,12 @@ confirmados: qualquer bloqueio recusa a criação. Reenviar o mesmo documento n�
 deduplicação existente (data, descrição e valor) responde "repetido" e nada é criado.
 """
 
+from dataclasses import replace
 from decimal import Decimal
+from threading import Lock
 
 from app.domain.agents import IssueSeverity, ValidationIssue
-from app.domain.document import DocumentType
+from app.domain.document import DocumentType, ExtractedLine
 from app.domain.document import ExtractedDocument as ValidationDocument
 from app.domain.documents import (
     DOCUMENT_SOURCE,
@@ -26,9 +28,9 @@ from app.domain.models import (
 from app.services.categorization_service import CategorizationService, CategoryRuleService
 from app.services.document_validation import validate_document
 from app.services.library_service import Library
-from app.services.parser_service import ParserService
 from app.services.statement_service import account_key
 
+_confirmation_lock = Lock()
 DOCUMENT_ACCOUNT = "documentos"
 
 _TYPES = {
@@ -57,9 +59,66 @@ def _nature(req: DocumentConfirmRequest) -> TransactionNature:
 
 
 def confirm_document(library: Library, req: DocumentConfirmRequest) -> DocumentConfirmResponse:
+    with _confirmation_lock:
+        if not req.transactions:
+            result = _confirm(library, req)
+            result.uids = [result.uid]
+            return result
+        document = ValidationDocument(
+            document_type=_TYPES.get(req.kind, DocumentType.OUTRO),
+            date=req.date,
+            due_date=req.due_date,
+            amount=req.amount,
+            merchant=req.description,
+            institution=req.bank,
+            lines=[ExtractedLine(**line.model_dump()) for line in req.transactions],
+        )
+        blockers = [
+            i for i in validate_document(document, None) if i.severity == IssueSeverity.BLOCKER
+        ]
+        if blockers:
+            raise ConfirmationBlocked(blockers)
+        staged = replace(
+            library, accounts=dict(library.accounts), transactions=list(library.transactions)
+        )
+        results = [
+            _confirm(staged, req.model_copy(update={**line.model_dump(), "transactions": []}))
+            for line in req.transactions
+        ]
+        if len({item.uid for item in results}) != len(results):
+            raise ConfirmationBlocked(
+                [
+                    ValidationIssue(
+                        code="POSSIBLE_DUPLICATE",
+                        severity=IssueSeverity.BLOCKER,
+                        message="Há linhas idênticas na fatura. Revise os itens.",
+                    )
+                ]
+            )
+        library.accounts.update(staged.accounts)
+        library.transactions.extend(staged.transactions[len(library.transactions) :])
+        result = results[0].model_copy()
+        result.uids = [item.uid for item in results]
+        if any(item.outcome == "criado" for item in results):
+            result.outcome = "criado"
+            result.message = "Lançamentos revisados confirmados."
+        return result
+
+
+def _confirm(library: Library, req: DocumentConfirmRequest) -> DocumentConfirmResponse:
     amount = req.amount.quantize(Decimal("0.01"))
     nature = _nature(req)
-    key = account_key(DOCUMENT_ACCOUNT, None)
+    key = req.account_id or account_key(DOCUMENT_ACCOUNT, None)
+    if req.account_id and key not in library.accounts:
+        raise ConfirmationBlocked(
+            [
+                ValidationIssue(
+                    code="UNKNOWN_ACCOUNT",
+                    severity=IssueSeverity.BLOCKER,
+                    message="Conta não encontrada.",
+                )
+            ]
+        )
     tx = Transaction(
         id=f"doc:{req.date.isoformat()}:{amount}:{req.description.casefold()}",
         account_id=key,
@@ -77,16 +136,19 @@ def confirm_document(library: Library, req: DocumentConfirmRequest) -> DocumentC
     )
 
     # Mesmo documento reenviado: a deduplicação existente decide, antes de validar de novo.
-    probe = tx.model_copy()
-    ParserService.deduplicate([probe], known=library.transactions)
-    if probe.is_duplicate:
-        existing = next(
-            t
-            for t in library.transactions
-            if not t.is_duplicate
-            and (t.date, t.description.casefold(), round(t.amount, 2))
-            == (tx.date, tx.description.casefold(), round(tx.amount, 2))
-        )
+    existing = next(
+        (
+            item
+            for item in library.transactions
+            if item.source_kind == DOCUMENT_SOURCE
+            and item.account_id == key
+            and item.id == tx.id
+            and item.type == tx.type
+            and not item.is_duplicate
+        ),
+        None,
+    )
+    if existing is not None:
         return DocumentConfirmResponse(
             outcome="repetido",
             uid=existing.uid,
@@ -103,6 +165,8 @@ def confirm_document(library: Library, req: DocumentConfirmRequest) -> DocumentC
                 amount=amount,
                 raw_amount=str(amount),
                 date=req.date,
+                due_date=req.due_date,
+                account_id=key,
                 recipient=req.description,
                 merchant=req.description,
                 institution=req.bank,

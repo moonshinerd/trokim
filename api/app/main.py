@@ -48,6 +48,7 @@ app.add_middleware(
 
 # Rotas que alteram a biblioteca do usuário: depois delas, a biblioteca é gravada (ADR 0024).
 _MUTATING_PREFIXES = (
+    "/v1/documents/confirm",
     "/v1/transactions",
     "/v1/accounts",
     "/v1/statements",

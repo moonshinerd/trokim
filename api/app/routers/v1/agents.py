@@ -18,6 +18,7 @@ router = APIRouter(prefix="/agents", tags=["Multi-Agent System"])
 
 
 class AgentAskRequest(BaseModel):
+    document_uid: str | None = Field(default=None, pattern=r"^[0-9a-f]{12}$")
     message: str = Field(
         min_length=1,
         max_length=1000,
@@ -58,7 +59,9 @@ async def ask_multiagent_system(
     try:
         response = await run_while_connected(
             connection,
-            orchestrator.run(request.message, transactions=transactions),
+            orchestrator.run(
+                request.message, transactions=transactions, document_uid=request.document_uid
+            ),
         )
     except RuntimeError as exc:
         raise HTTPException(

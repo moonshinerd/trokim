@@ -338,5 +338,4 @@ flowchart TD
 
 O [agente de documento](../agentes/document-agent.md) devolve campos e trilha sanitizada.
 Visão opcional exige proteção dos pixels e política de confiança; permanece bloqueada
-sem essas garantias. Validação financeira (#89), endpoints e confirmação (#96) ainda
-precisam ser integrados. Nenhum lançamento é criado por esse componente.
+sem essas garantias. A extração chama a validação financeira (#89) em memória. A confirmação (#96) revalida os campos revisados, verifica duplicatas e grava a biblioteca no SQLite.

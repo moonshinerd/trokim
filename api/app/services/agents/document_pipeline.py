@@ -45,7 +45,11 @@ class DocumentPipeline:
         self.agent = agent
 
     async def run(
-        self, content: bytes, media_type: str, library: Library | None = None
+        self,
+        content: bytes,
+        media_type: str,
+        library: Library | None = None,
+        account_id: str | None = None,
     ) -> DocumentExtractResponse:
         started = time.perf_counter()
         ctx = DocumentContext(content=content, media_type=media_type)  # type: ignore[arg-type]
@@ -58,7 +62,9 @@ class DocumentPipeline:
         issues = list(document.issues)
         if not document.abstained:
             t0 = time.perf_counter()
-            found = validate_document(from_agent_document(document), library)
+            review = from_agent_document(document)
+            review.account_id = account_id
+            found = validate_document(review, library)
             issues = _merge(issues, found)
             blockers = sum(1 for i in issues if i.severity == IssueSeverity.BLOCKER)
             steps.append(

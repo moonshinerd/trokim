@@ -83,10 +83,21 @@ class DocumentExtractResponse(BaseModel):
     total_ms: int = 0
 
 
+class ReviewedLine(BaseModel):
+    date: date
+    description: Annotated[
+        str, StringConstraints(strip_whitespace=True, min_length=1, max_length=120)
+    ]
+    amount: Annotated[Decimal, Field(gt=0, max_digits=12, decimal_places=2)]
+
+
 class DocumentConfirmRequest(BaseModel):
     """Campos **revisados pelo usuário**; o app manda o que está na tela, não o que o OCR leu."""
 
     model_config = ConfigDict(extra="forbid")
+    account_id: str | None = Field(default=None, min_length=1, max_length=160)
+    transactions: list[ReviewedLine] = Field(default_factory=list, max_length=500)
+    due_date: date | None = None
     kind: DocumentKind = DocumentKind.OTHER
     date: date
     amount: Annotated[Decimal, Field(gt=0, max_digits=12, decimal_places=2)]
@@ -99,6 +110,7 @@ class DocumentConfirmRequest(BaseModel):
 
 
 class DocumentConfirmResponse(BaseModel):
+    uids: list[str] = Field(default_factory=list)
     outcome: Literal["criado", "repetido"]
     uid: str
     account_id: str

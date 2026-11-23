@@ -1,4 +1,4 @@
-"""Endpoints de documentos (#96): extrair, revisar, confirmar e perguntar no chat. Só dados sintéticos."""
+"""Fluxo HTTP de documentos com dados sintéticos (#96)."""
 
 import logging
 from unittest.mock import AsyncMock
@@ -176,17 +176,41 @@ def test_ponta_a_ponta_extrair_confirmar_perguntar(client, tmp_path, monkeypatch
         communication=CommunicationAgent(llm_provider=llm),
         validation=ValidationAgent(),
     )
-    assert extract(client).json()["can_confirm"] is True
-    assert client.post("/v1/documents/confirm", json=CONFIRM).json()["outcome"] == "criado"
+    document = extract(client).json()["document"]
+    fields = {field["key"]: field["value"] for field in document["fields"]}
+    reviewed = {**CONFIRM, "amount": fields["amount"], "date": fields["date"]}
+    uid = client.post("/v1/documents/confirm", json=reviewed).json()["uid"]
+    client.post("/v1/documents/confirm", json={**reviewed, "description": "Outra loja"})
+    data = client.post(
+        "/v1/agents/ask", json={"message": "Quanto gastei nessa loja?", "document_uid": uid}
+    ).json()
+    assert data["status"] == "answered"
+    assert data["calculations"][0]["value"] == 12.5
+    assert uid in data["answer"]
+    assert data["steps"][0]["detail"]["document_uids"] == [uid]
+    assert "confirmado por você" in data["steps"][0]["summary"]
 
-    resp = client.post(
-        "/v1/agents/ask",
-        json={"message": "Com meu gasto total, como organizar o orçamento segundo o BCB?"},
-    )
-    assert resp.status_code == 200
-    data = resp.json()
-    assert data["calculations"], data
-    totals = {c["key"]: c["value"] for c in data["calculations"]}
-    assert totals["total_expenses"] == 12.5
-    assert totals["transaction_count"] == 1
-    assert any("foto ou PDF" in a for a in data["assumptions"])
+
+def test_fatura_revisada_total_e_reenvio(client):
+    lines = [
+        {"date": CONFIRM["date"], "description": name, "amount": "6.25"}
+        for name in ("Loja A", "Loja B")
+    ]
+    body = {**CONFIRM, "kind": "card_invoice", "due_date": "2026-11-30", "transactions": lines}
+    assert client.post("/v1/documents/confirm", json={**body, "amount": "12"}).status_code == 422
+    assert not LIBRARY.transactions
+    first = client.post("/v1/documents/confirm", json=body).json()
+    again = client.post("/v1/documents/confirm", json=body).json()
+    assert again["outcome"] == "repetido"
+    assert len(set(first["uids"])) == 2
+    assert again["uids"] == first["uids"]
+
+
+def test_upload_maior_que_spool_padrao_fica_em_memoria(client, monkeypatch):
+    from tempfile import SpooledTemporaryFile
+
+    def sem_disco(self):
+        pytest.fail("A imagem seria gravada em disco")
+
+    monkeypatch.setattr(SpooledTemporaryFile, "rollover", sem_disco)
+    assert extract(client, picture() + bytes(2 * 1024 * 1024)).status_code == 200

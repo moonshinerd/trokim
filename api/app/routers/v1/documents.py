@@ -2,7 +2,9 @@
 
 from typing import Annotated
 
-from fastapi import APIRouter, Depends, File, HTTPException, Request, UploadFile
+from fastapi import APIRouter, Depends, HTTPException, Request
+from starlette.datastructures import UploadFile
+from starlette.formparsers import MultiPartException, MultiPartParser
 
 from app.core.request_lifecycle import run_while_connected
 from app.domain.documents import (
@@ -11,6 +13,7 @@ from app.domain.documents import (
     DocumentExtractResponse,
 )
 from app.services.agents.document_pipeline import DocumentFailure, DocumentPipeline
+from app.services.agents.orchestrator import Orchestrator
 from app.services.document_confirmation import ConfirmationBlocked, confirm_document
 from app.services.document_factory import get_document_agent
 from app.services.document_reading import MAX_FILE_BYTES
@@ -26,6 +29,7 @@ _MAGIC = (
 )
 # Código seguro da falha -> (status HTTP, mensagem em pt-BR).
 _FAILURES = {
+    "OCR_TIMEOUT": (503, "O motor de leitura excedeu o tempo disponível."),
     "OCR_UNAVAILABLE": (503, "A leitura de imagens não está disponível neste computador."),
     "PDF_RENDERER_UNAVAILABLE": (503, "A leitura de PDF escaneado não está disponível."),
     "FILE_LIMIT": (413, "O arquivo é grande demais."),
@@ -47,36 +51,70 @@ def _media_type(content: bytes) -> str | None:
     return next((kind for magic, kind in _MAGIC if content.startswith(magic)), None)
 
 
-async def _read_limited(upload: UploadFile) -> bytes:
-    """Lê o arquivo parando no limite, para não carregar na memória um envio gigante."""
-    chunks: list[bytes] = []
-    size = 0
-    while chunk := await upload.read(1024 * 1024):
-        size += len(chunk)
-        if size > MAX_FILE_BYTES:
+async def _read_upload(request: Request) -> tuple[bytes, str | None]:
+    # Inclui espaço limitado para os cabeçalhos multipart e a conta opcional.
+    limit = MAX_FILE_BYTES + 65536
+
+    async def bounded_stream():
+        total = 0
+        async for chunk in request.stream():
+            total += len(chunk)
+            if total > limit:
+                raise HTTPException(
+                    413, detail={"code": "FILE_LIMIT", "message": _FAILURES["FILE_LIMIT"][1]}
+                )
+            yield chunk
+
+    parser = MultiPartParser(request.headers, bounded_stream(), max_files=1, max_fields=1)
+    parser.spool_max_size = limit
+    try:
+        form = await parser.parse()
+    except MultiPartException:
+        raise HTTPException(422, detail="Formulário multipart inválido.") from None
+    try:
+        upload = form.get("file")
+        account = form.get("account_id")
+        if not isinstance(upload, UploadFile) or (
+            account is not None and not isinstance(account, str)
+        ):
+            raise HTTPException(422, detail="Informe o arquivo e, opcionalmente, a conta.")
+        if upload.size is None or upload.size > MAX_FILE_BYTES:
             raise HTTPException(
-                status_code=413,
-                detail={"code": "FILE_LIMIT", "message": _FAILURES["FILE_LIMIT"][1]},
+                413, detail={"code": "FILE_LIMIT", "message": _FAILURES["FILE_LIMIT"][1]}
             )
-        chunks.append(chunk)
-    return b"".join(chunks)
+        return await upload.read(), account
+    finally:
+        await form.close()
 
 
 @router.post(
     "/extract",
     response_model=DocumentExtractResponse,
+    openapi_extra={
+        "requestBody": {
+            "required": True,
+            "content": {
+                "multipart/form-data": {
+                    "schema": {
+                        "type": "object",
+                        "required": ["file"],
+                        "properties": {
+                            "file": {"type": "string", "format": "binary"},
+                            "account_id": {"type": "string"},
+                        },
+                    }
+                }
+            },
+        }
+    },
     summary="Lê um comprovante, boleto ou fatura (foto ou PDF) e valida o resultado",
     responses={413: {}, 415: {}, 422: {}, 503: {}},
 )
 async def extract_document(
-    file: Annotated[UploadFile, File()],
     connection: Request,
     pipeline: Annotated[DocumentPipeline, Depends(get_document_pipeline)],
 ) -> DocumentExtractResponse:
-    try:
-        content = await _read_limited(file)
-    finally:
-        await file.close()  # apaga o arquivo temporário que o multipart pode ter criado
+    content, account_id = await _read_upload(connection)
     media_type = _media_type(content)
     if media_type is None:
         raise HTTPException(
@@ -84,7 +122,10 @@ async def extract_document(
             detail={"code": "UNSUPPORTED_TYPE", "message": _FAILURES["UNSUPPORTED_TYPE"][1]},
         )
     try:
-        return await run_while_connected(connection, pipeline.run(content, media_type, LIBRARY))
+        return await run_while_connected(
+            connection,
+            Orchestrator.run_document(pipeline, content, media_type, LIBRARY, account_id),
+        )
     except DocumentFailure as failure:
         status, message = _FAILURES.get(
             failure.code, (500, "Não foi possível processar o documento.")

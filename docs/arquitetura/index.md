@@ -56,3 +56,7 @@ clients/  (Adaptadores de persistência e LLM: SQLiteVectorStore, FastEmbed, Lit
 ```
 
 Essa estrutura permitiu acrescentar os agentes na Semana 4 sem mexer nas camadas existentes e deve receber da mesma forma a multimodalidade (Semana 5) e a integração completa (Semana 6).
+
+## Entrada de documentos
+
+O endpoint de extração recebe o arquivo em memória e devolve os passos de leitura e validação. A revisão humana precede a confirmação e a gravação no SQLite. A consulta do estabelecimento usa o serviço de cálculo local e cita o lançamento confirmado. Consulte o [contrato HTTP](../agentes/document-agent.md).

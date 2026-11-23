@@ -564,3 +564,25 @@ make validar-banco ARQUIVO=/caminho/do/arquivo.pdf   # ou .ofx, .csv
 ```
 
 O comando roda no seu computador e imprime só números agregados (banco reconhecido, quantidade, período, somas, naturezas e se o total do arquivo fecha). Não imprime descrições, nomes nem número de conta (só os 4 últimos dígitos). Compare as somas com o app do banco; se fecharem, abra uma issue com **esses números**, nunca com o arquivo.
+
+## Documentos por foto ou PDF
+
+Com a API local em execução, envie um comprovante sintético. A extração mostra os campos para revisão.
+
+```bash
+curl -F 'file=@comprovante.png' http://localhost:8000/v1/documents/extract
+```
+
+Após revisar os campos, confirme o lançamento. Informe `account_id` para escolher uma conta cadastrada.
+Quando omitido, o destino é a conta de documentos.
+
+```bash
+curl -H 'Content-Type: application/json' http://localhost:8000/v1/documents/confirm \
+  -d '{"kind":"pix_receipt","date":"2026-11-20","description":"Padaria Sintética","amount":"12.50"}'
+curl -H 'Content-Type: application/json' http://localhost:8000/v1/agents/ask \
+  -d '{"message":"Quanto gastei na Padaria Sintética?"}'
+```
+
+A consulta por nome exato soma os gastos do estabelecimento e identifica na trilha os documentos confirmados.
+
+Para perguntar “quanto gastei nessa loja?”, envie também `document_uid` com o `uid` retornado pela confirmação.

@@ -7,30 +7,28 @@ O **DocumentAgent** é responsável pela ingestão e extração multimodal do Tr
 
 ---
 
-## 1. Contrato de Extração (`ExtractedDocument`)
+## Contrato HTTP
 
-O resultado da extração multimodal é padronizado pelo modelo puro `ExtractedDocument` (`api/app/domain/document.py`), garantindo que todos os valores monetários sejam manipulados com precisão em centavos via `Decimal`:
+Envie JPEG, PNG ou PDF (até 20 MiB) como `file` multipart para
+`POST /v1/documents/extract`. O campo opcional `account_id` restringe a conciliação.
+O objeto `document` contém `kind`, qualidade, campos, linhas, motor e indicação de abstenção.
+O envelope inclui `validation_issues`, `can_confirm`, `steps` e `total_ms`.
+Por exemplo, um Pix legível retorna um campo como
+`{"key":"amount","value":"12.50","confidence":0.98,"source":"ocr"}`.
+O modelo interno da validação recebe esses dados por adaptador.
 
-| Campo | Tipo | Descrição |
-|---|---|---|
-| `document_type` | `DocumentType` | Tipo do documento: `fatura`, `pix`, `boleto` ou `outro`. |
-| `amount` | `Decimal` | Valor principal do documento ou transação. |
-| `total_amount` | `Decimal` | Valor total consolidado (em faturas com múltiplos lançamentos). |
-| `raw_amount` | `str` | Valor textual bruto extraído da imagem (usado para checagem de formato). |
-| `currency` | `str` | Moeda corrente (padrão: `"BRL"`). |
-| `date` | `date` | Data da operação ou comprovante. |
-| `issue_date` | `date` | Data de emissão do documento. |
-| `due_date` | `date` | Data de vencimento (obrigatória em boletos e faturas). |
-| `recipient` | `str` | Favorecido, recebedor ou beneficiário. |
-| `merchant` | `str` | Nome do estabelecimento comercial. |
-| `institution` | `str` | Banco ou instituição financeira emissora. |
-| `account_id` | `str` | Conta associada na biblioteca para conciliação. |
-| `barcode` | `str` | Linha digitável ou código de barras de boletos. |
-| `confidence` | `float` | Índice global de confiança da extração OCR/VLM (0.0 a 1.0). |
-| `lines` | `list[ExtractedLine]` | Lista de itens/lançamentos individuais da fatura. |
-| `is_invoice_payment` | `bool` | Sinaliza se o documento é comprovante de pagamento de fatura. |
+Na revisão, confira data, estabelecimento, valor, conta e vencimento de boleto ou fatura.
+Envie o resultado para `POST /v1/documents/confirm`. Para várias compras, envie
+`transactions` com data, descrição e valor de cada linha e o total em `amount`.
+A resposta contém `outcome` (`criado` ou `repetido`), `uid`, `uids`, conta, categoria e mensagem.
+Somente a confirmação altera a biblioteca persistida. Consulte os [exemplos HTTP](../guia-de-uso.md#documentos-por-foto-ou-pdf).
 
----
+| HTTP | Motivo |
+|---|---|
+| 413 | Limite de upload, páginas ou resolução excedido |
+| 415 | Conteúdo diferente de JPEG, PNG e PDF |
+| 422 | Documento inválido ou confirmação bloqueada |
+| 503 | Motor indisponível ou tempo de leitura excedido |
 
 ## 2. Pipeline de Validação e Conciliação
 
