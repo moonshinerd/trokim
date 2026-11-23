@@ -1,8 +1,7 @@
-import 'package:file_picker/file_picker.dart';
-import 'package:material_ui/material_ui.dart';
-
 import 'dart:typed_data';
 
+import 'package:file_picker/file_picker.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:image_picker/image_picker.dart';
 
 import '../data/document_repository.dart';
@@ -46,6 +45,7 @@ class _DocumentImportScreenState extends State<DocumentImportScreen> {
   DocumentSelection? selection;
   final edits = <String, String>{};
   final removedLines = <int>{};
+  bool _selecting = false;
 
   @override
   void dispose() {
@@ -77,6 +77,8 @@ class _DocumentImportScreenState extends State<DocumentImportScreen> {
   }
 
   Future<void> _select(DocumentPicker picker) async {
+    if (_selecting || controller.loading) return;
+    _selecting = true;
     try {
       final selected = await picker();
       if (selected == null || !mounted) return;
@@ -85,10 +87,11 @@ class _DocumentImportScreenState extends State<DocumentImportScreen> {
         edits.clear();
         removedLines.clear();
       });
-      controller.document = null;
-      controller.error = null;
+      controller.reset();
     } catch (_) {
-      _message('Não foi possível abrir a câmera ou o seletor.');
+      if (mounted) _message('Não foi possível abrir a câmera ou o seletor.');
+    } finally {
+      _selecting = false;
     }
   }
 
@@ -160,47 +163,37 @@ class _DocumentImportScreenState extends State<DocumentImportScreen> {
     ),
   );
 
-  Widget _entry() => Center(
-    child: Padding(
-      padding: const EdgeInsets.all(24),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          const Icon(Icons.document_scanner_outlined, size: 56),
-          const SizedBox(height: 16),
-          const Text(
-            'Fotografar ou escolher documento',
-            style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-          ),
-          const SizedBox(height: 12),
-          const Text(
-            'A imagem não é enviada nem guardada. Nesta fase, a leitura é simulada com dados sintéticos.',
-            textAlign: TextAlign.center,
-          ),
-          const SizedBox(height: 20),
-          FilledButton.icon(
-            onPressed: () => _select(
-              widget.cameraPicker ?? () => _image(ImageSource.camera),
-            ),
-            icon: const Icon(Icons.camera_alt_outlined),
-            label: const Text('Fotografar'),
-          ),
-          TextButton.icon(
-            onPressed: () => _select(
-              widget.galleryPicker ?? () => _image(ImageSource.gallery),
-            ),
-            icon: const Icon(Icons.photo_library_outlined),
-            label: const Text('Escolher imagem'),
-          ),
-          TextButton.icon(
-            onPressed: () => _select(widget.pdfPicker ?? _pdf),
-            icon: const Icon(Icons.picture_as_pdf_outlined),
-            label: const Text('Escolher PDF'),
-          ),
-        ],
-      ),
+  Widget _entry() => _status([
+    const Icon(Icons.document_scanner_outlined, size: 56),
+    const SizedBox(height: 16),
+    const Text(
+      'Fotografar ou escolher documento',
+      style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
     ),
-  );
+    const SizedBox(height: 12),
+    const Text(
+      'Leitura simulada com dados sintéticos. Nenhum lançamento será salvo. Fotos podem permanecer no cache temporário do sistema.',
+      textAlign: TextAlign.center,
+    ),
+    const SizedBox(height: 20),
+    FilledButton.icon(
+      onPressed: () =>
+          _select(widget.cameraPicker ?? () => _image(ImageSource.camera)),
+      icon: const Icon(Icons.camera_alt_outlined),
+      label: const Text('Fotografar'),
+    ),
+    TextButton.icon(
+      onPressed: () =>
+          _select(widget.galleryPicker ?? () => _image(ImageSource.gallery)),
+      icon: const Icon(Icons.photo_library_outlined),
+      label: const Text('Escolher imagem'),
+    ),
+    TextButton.icon(
+      onPressed: () => _select(widget.pdfPicker ?? _pdf),
+      icon: const Icon(Icons.picture_as_pdf_outlined),
+      label: const Text('Escolher PDF'),
+    ),
+  ]);
 
   Widget _preview() => ListView(
     padding: const EdgeInsets.all(20),
@@ -229,8 +222,9 @@ class _DocumentImportScreenState extends State<DocumentImportScreen> {
           title: Text('Documento PDF selecionado'),
         ),
       const SizedBox(height: 12),
+      Text(selection!.name),
       const Text(
-        'A imagem não é enviada nem guardada. A extração desta fase usa dados sintéticos.',
+        'A leitura é simulada. Fotos podem permanecer no cache temporário do sistema; o app não as adiciona à biblioteca.',
       ),
       const SizedBox(height: 16),
       OutlinedButton.icon(
@@ -242,49 +236,32 @@ class _DocumentImportScreenState extends State<DocumentImportScreen> {
     ],
   );
 
-  Widget _error() => Center(
-    child: Padding(
-      padding: const EdgeInsets.all(24),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Text(controller.error!),
-          FilledButton(onPressed: _read, child: const Text('Tentar novamente')),
-        ],
-      ),
-    ),
-  );
+  Widget _error() => _status([
+    Text(controller.error!),
+    FilledButton(onPressed: _read, child: const Text('Tentar novamente')),
+  ]);
 
-  Widget _unreadable(ExtractedDocument doc) => Center(
-    child: Padding(
-      padding: const EdgeInsets.all(24),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          const Icon(Icons.document_scanner_outlined, size: 52),
-          const Text(
-            'Não conseguimos ler este documento',
-            style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-          ),
-          Text(doc.reason ?? 'A imagem não permitiu uma leitura confiável.'),
-          ...doc.quality.reasons
-              .where((reason) => reason != doc.reason)
-              .map(Text.new),
-          const SizedBox(height: 16),
-          const Text(
-            'Enquadre o documento inteiro, use boa iluminação e evite reflexos.',
-          ),
-          FilledButton.icon(
-            onPressed: () => _select(
-              widget.cameraPicker ?? () => _image(ImageSource.camera),
-            ),
-            icon: const Icon(Icons.camera_alt_outlined),
-            label: const Text('Tirar outra foto'),
-          ),
-        ],
-      ),
+  Widget _unreadable(ExtractedDocument doc) => _status([
+    const Icon(Icons.document_scanner_outlined, size: 52),
+    const Text(
+      'Não conseguimos ler este documento',
+      style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
     ),
-  );
+    Text(doc.reason ?? 'A imagem não permitiu uma leitura confiável.'),
+    ...doc.quality.reasons
+        .where((reason) => reason != doc.reason)
+        .map(Text.new),
+    const SizedBox(height: 16),
+    const Text(
+      'Enquadre o documento inteiro, use boa iluminação e evite reflexos.',
+    ),
+    FilledButton.icon(
+      onPressed: () =>
+          _select(widget.cameraPicker ?? () => _image(ImageSource.camera)),
+      icon: const Icon(Icons.camera_alt_outlined),
+      label: const Text('Tirar outra foto'),
+    ),
+  ]);
 
   Widget _review(ExtractedDocument doc) => ListView(
     padding: const EdgeInsets.all(20),
@@ -295,32 +272,32 @@ class _DocumentImportScreenState extends State<DocumentImportScreen> {
       ),
       const SizedBox(height: 8),
       const Text(
-        'Revise e corrija os campos. Nada será confirmado até você tocar em Confirmar.',
+        'Revise e corrija os campos. Confirmar conclui esta simulação, sem salvar lançamentos.',
       ),
       const SizedBox(height: 12),
       ...doc.fields.map((field) {
         final key = field.key;
-        final value = edits[key] ?? (field.value?.toString() ?? '');
         final confidence = field.confidence;
         final fieldIssues = doc.issues.where((i) => i.fieldKey == key).toList();
-        final issue = fieldIssues.isEmpty ? null : fieldIssues.first;
-        final blocked = issue?.blocking == true && value.trim().isEmpty;
+        final error = doc.fieldError(field, edits);
+        final uncertain = confidence < .65 || fieldIssues.isNotEmpty;
         return Padding(
           padding: const EdgeInsets.only(bottom: 8),
           child: TextFormField(
             key: ValueKey(key),
-            initialValue: value,
+            initialValue: field.value?.toString() ?? '',
             decoration: InputDecoration(
               labelText: _label(key),
               helperText:
-                  'Confiança: ${_confidence(confidence)}${issue == null ? '' : ' • ${issue.message}'}',
-              errorText: blocked ? 'Corrija este campo para continuar' : null,
-              filled: confidence < .65 || issue?.blocking == true,
-              fillColor: issue?.blocking == true
+                  'Confiança: ${_confidence(confidence)}${fieldIssues.map((issue) => ' • ${issue.message}').join()}',
+              helperMaxLines: 5,
+              errorText: error,
+              filled: uncertain || error != null,
+              fillColor: error != null
                   ? Theme.of(context).colorScheme.errorContainer
                   : Theme.of(context).colorScheme.tertiaryContainer,
               prefixIcon: Icon(
-                confidence < .65
+                uncertain || error != null
                     ? Icons.warning_amber_rounded
                     : Icons.check_circle_outline,
               ),
@@ -331,7 +308,9 @@ class _DocumentImportScreenState extends State<DocumentImportScreen> {
         );
       }),
       ...doc.issues
-          .where((issue) => issue.fieldKey == null)
+          .where(
+            (issue) => !doc.fields.any((field) => field.key == issue.fieldKey),
+          )
           .map(
             (issue) => ListTile(
               leading: Icon(
@@ -360,15 +339,9 @@ class _DocumentImportScreenState extends State<DocumentImportScreen> {
             ),
       ],
       FilledButton(
-        onPressed:
-            doc.canConfirmAfter(edits) &&
-                doc.fields.every(
-                  (f) => (edits[f.key] ?? f.value?.toString() ?? '')
-                      .trim()
-                      .isNotEmpty,
-                )
+        onPressed: doc.canConfirmAfter(edits)
             ? () {
-                _message('Revisão confirmada.');
+                _message('Revisão concluída. Nenhum lançamento foi salvo.');
                 Navigator.pop(
                   context,
                   ReviewedDocument(
@@ -397,6 +370,20 @@ class _DocumentImportScreenState extends State<DocumentImportScreen> {
         child: const Text('Descartar'),
       ),
     ],
+  );
+
+  Widget _status(List<Widget> children) => LayoutBuilder(
+    builder: (context, constraints) => SingleChildScrollView(
+      child: ConstrainedBox(
+        constraints: BoxConstraints(minHeight: constraints.maxHeight),
+        child: Center(
+          child: Padding(
+            padding: const EdgeInsets.all(24),
+            child: Column(mainAxisSize: MainAxisSize.min, children: children),
+          ),
+        ),
+      ),
+    ),
   );
 
   String _label(String key) => switch (key) {

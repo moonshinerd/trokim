@@ -86,27 +86,60 @@ class ExtractedDocument {
   final String? reason;
   final String engine;
 
-  bool get canConfirm =>
-      !abstained &&
-      quality.quality != DocumentQuality.illegible &&
-      needsReview &&
-      !issues.any((issue) => issue.blocking);
+  bool get canConfirm => canConfirmAfter(const {});
+
+  /// A mesma validação controla os destaques e o botão de confirmação.
+  String? fieldError(ExtractedField field, Map<String, String> edits) {
+    final value = (edits[field.key] ?? field.value?.toString() ?? '').trim();
+    final blockers = issues.where(
+      (issue) => issue.blocking && issue.fieldKey == field.key,
+    );
+    if (value.isEmpty) {
+      final isRequired =
+          blockers.isNotEmpty ||
+          const {'amount', 'total', 'date'}.contains(field.key);
+      return isRequired ? 'Preencha este campo para continuar' : null;
+    }
+    if (field.key == 'amount' || field.key == 'total') {
+      final amount = double.tryParse(value.replaceAll(',', '.'));
+      if (!RegExp(r'^\d+([.,]\d{1,2})?$').hasMatch(value) ||
+          amount == null ||
+          !amount.isFinite ||
+          amount <= 0) {
+        return 'Informe um valor positivo, como 128,90';
+      }
+    }
+    if (field.key == 'date' || field.key == 'due_date') {
+      final iso = RegExp(r'^(\d{4})-(\d{2})-(\d{2})$').firstMatch(value);
+      final br = RegExp(r'^(\d{2})/(\d{2})/(\d{4})$').firstMatch(value);
+      if (iso == null && br == null) return 'Informe uma data válida';
+      final year = int.parse(iso?.group(1) ?? br!.group(3)!);
+      final month = int.parse(iso?.group(2) ?? br!.group(2)!);
+      final day = int.parse(iso?.group(3) ?? br!.group(1)!);
+      final date = DateTime.utc(year, month, day);
+      if (date.year != year || date.month != month || date.day != day) {
+        return 'Informe uma data válida';
+      }
+    }
+    if (blockers.isNotEmpty &&
+        (!edits.containsKey(field.key) ||
+            value == (field.value?.toString() ?? '').trim())) {
+      return 'Corrija este campo para continuar';
+    }
+    return null;
+  }
 
   bool canConfirmAfter(Map<String, String> edits) {
     if (abstained ||
         quality.quality == DocumentQuality.illegible ||
-        !needsReview) {
+        !needsReview ||
+        (fields.isEmpty && transactions.isEmpty) ||
+        fields.any((field) => fieldError(field, edits) != null)) {
       return false;
     }
     return issues.where((issue) => issue.blocking).every((issue) {
       final key = issue.fieldKey;
-      if (key == null) return false;
-      final fieldIndex = fields.indexWhere((field) => field.key == key);
-      final original = fieldIndex < 0
-          ? null
-          : fields[fieldIndex].value?.toString() ?? '';
-      final value = edits[key] ?? original;
-      return value != null && value.trim().isNotEmpty;
+      return key != null && fields.any((field) => field.key == key);
     });
   }
 }

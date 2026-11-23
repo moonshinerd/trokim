@@ -40,7 +40,8 @@ nuvem contraria a premissa local-first do projeto.
    o usuário visualiza uma prévia antes da leitura, vê cada campo extraído com seu nível de confiança
    (alta, média, baixa), edita dados duvidosos, resolve bloqueios e confirma ou descarta explicitamente.
    Linhas podem ser excluídas e bloqueios só são liberados quando os campos obrigatórios correspondentes
-   são corrigidos. Imagens ilegíveis orientam nova tentativa com dicas de enquadramento. Nenhum
+   são alterados para valores válidos; campos opcionais não bloqueiam. Bloqueios sem campo editável
+   continuam impedindo confirmar. Imagens ilegíveis orientam nova tentativa com dicas de enquadramento. Nenhum
    lançamento é criado sem confirmação humana ativa. A etapa inicial utiliza repositório de teste
    (mock) e a integração com o endpoint real pertence à issue #97.
 

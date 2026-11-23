@@ -5,6 +5,7 @@ import '../../../core/settings/settings_controller.dart';
 import '../../../core/theme/app_theme.dart';
 import '../../../core/widgets/app_motion.dart';
 import '../../categories/presentation/category_review_screen.dart';
+import '../../documents/presentation/document_import_button.dart';
 import '../../finance/domain/finance_models.dart';
 import '../../finance/domain/library_models.dart';
 import '../../finance/presentation/finance_controller.dart';
@@ -436,6 +437,7 @@ class _BankStep extends StatelessWidget {
     title: 'De qual banco é o arquivo?',
     subtitle: 'Mostramos como baixar o arquivo certo. Você pode pular.',
     actions: [
+      const DocumentImportButton(),
       OutlinedButton.icon(
         onPressed: onHaveFile,
         icon: const Icon(Icons.upload_file_rounded),

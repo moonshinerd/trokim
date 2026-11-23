@@ -5,8 +5,7 @@ import '../../../core/settings/settings_controller.dart';
 import '../../../core/theme/app_theme.dart';
 import '../../../core/widgets/app_motion.dart';
 import '../../../core/widgets/screen_header.dart';
-import '../../documents/domain/extracted_document.dart';
-import '../../documents/presentation/document_import_screen.dart';
+import '../../documents/presentation/document_import_button.dart';
 import '../../finance/domain/finance_models.dart';
 import '../../finance/domain/library_models.dart';
 import '../../finance/presentation/finance_controller.dart';
@@ -107,15 +106,7 @@ class TransactionsScreen extends StatelessWidget {
             const ShortcutsSection(),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 20),
-              child: OutlinedButton.icon(
-                onPressed: () => Navigator.of(context).push<ReviewedDocument>(
-                  MaterialPageRoute(
-                    builder: (_) => const DocumentImportScreen(),
-                  ),
-                ),
-                icon: const Icon(Icons.document_scanner_outlined),
-                label: const Text('Fotografar ou escolher documento'),
-              ),
+              child: const DocumentImportButton(),
             ),
             const Padding(
               padding: EdgeInsets.fromLTRB(20, 20, 20, 10),

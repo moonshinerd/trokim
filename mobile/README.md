@@ -159,7 +159,9 @@ Na importação por documento, a câmera só é aberta depois que a pessoa toca 
 **Fotografar**; nenhum acesso é solicitado na inicialização. No Android, a
 câmera e os seletores de imagem/PDF são abertos por intents e seletores do
 sistema, sem permissão ampla de armazenamento no app. A foto fica no dispositivo
-durante a revisão e não é persistida pelo app.
+no cache temporário criado pelo seletor; o app não a adiciona à biblioteca.
+A leitura é simulada e **Confirmar** apenas devolve os campos revisados, sem
+criar lançamentos. A extração real e a persistência ficam para a issue #97.
 
 Conecte o celular e o computador à mesma rede confiável. Como `make api-run`
 escuta apenas em `127.0.0.1`, para permitir acesso pela rede inicie o backend

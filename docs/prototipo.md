@@ -20,3 +20,12 @@ Todos os lançamentos, saldos, categorias, mensagens, fontes associadas à conve
 O layout se adapta a telas estreitas e largas; em desktop, a interface fica centralizada. Os arquivos são HTML, CSS e JavaScript estáticos, sem bibliotecas externas, CDN ou fontes remotas. O contorno de foco visível permite navegar pelos controles usando teclado.
 
 O iframe usa um caminho relativo compatível com a página publicada em `/prototipo/`, inclusive quando o site está em um subdiretório. Os endereços `#resumo`, `#extratos`, `#assistente`, `#cenarios` e `#ajustes` abrem a tela correspondente; um fragmento desconhecido retorna ao Resumo.
+
+## Captura e revisão de documentos no app
+
+O aplicativo também oferece **Fotografar ou escolher documento** em **Extratos**
+e no primeiro passo de **Importar extrato**. Esse fluxo ainda não é interativo
+no protótipo estático: a [seção de documentos do Guia de Uso](guia-de-uso.md#810-fotografar-ou-escolher-documento)
+mostra a captura sintética da tela e descreve prévia, confiança, correções,
+bloqueios e descarte. No app, a leitura desta fase é simulada, sem criar
+lançamentos; a integração real pertence à issue #97.

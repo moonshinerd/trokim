@@ -64,6 +64,19 @@ class _Harness {
 }
 
 void main() {
+  testWidgets('fluxo de importação também oferece a revisão de documentos', (
+    tester,
+  ) async {
+    final h = _Harness();
+    await h.open(tester);
+    await tester.tap(find.text('Importar extrato'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Fotografar ou escolher documento').last);
+    await tester.pumpAndSettle();
+    expect(find.text('Importar documento'), findsOneWidget);
+    expect(find.text('Fotografar'), findsOneWidget);
+  });
+
   testWidgets('tutorial do cartão: passo a passo até escolher o arquivo', (
     tester,
   ) async {

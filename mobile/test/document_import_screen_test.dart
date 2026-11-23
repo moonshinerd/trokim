@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:material_ui/material_ui.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:trokim/core/theme/app_theme.dart';
@@ -59,7 +61,7 @@ const _readable = ExtractedDocument(
 
 class _Repo implements DocumentRepository {
   _Repo(this.result);
-  final ExtractedDocument Function(List<int> bytes) result;
+  final FutureOr<ExtractedDocument> Function(List<int> bytes) result;
   @override
   Future<ExtractedDocument> extract(String filename, List<int> bytes) async =>
       result(bytes);
@@ -174,6 +176,114 @@ void main() {
       '30/11/2026',
     );
     expect(reviewed.transactions, isEmpty);
+  });
+
+  testWidgets('documento legível aceita campo opcional vazio sem persistir', (
+    tester,
+  ) async {
+    Object? result;
+    await tester.pumpWidget(
+      _app(
+        repo: _Repo(
+          (_) => ExtractedDocument(
+            kind: DocumentKind.pixReceipt,
+            quality: const QualityReport(
+              quality: DocumentQuality.legible,
+              sharpness: .9,
+              resolution: (1200, 1800),
+            ),
+            fields: [
+              _readable.fields.first,
+              const ExtractedField(
+                key: 'document_id',
+                value: null,
+                confidence: .9,
+                source: FieldSource.ocr,
+              ),
+            ],
+            engine: 'mock',
+          ),
+        ),
+        camera: () async => const DocumentSelection(
+          name: 'pix-sintetico.png',
+          bytes: [1],
+          isImage: true,
+        ),
+        onResult: (value) => result = value,
+      ),
+    );
+    await tester.tap(find.text('Abrir importação'));
+    await tester.pumpAndSettle();
+    await _chooseAndRead(tester);
+    expect(result, isNull);
+    await tester.ensureVisible(find.widgetWithText(FilledButton, 'Confirmar'));
+    await tester.tap(find.text('Confirmar'));
+    await tester.pumpAndSettle();
+    expect(result, isA<ReviewedDocument>());
+  });
+
+  testWidgets('cancelar o seletor não inicia leitura', (tester) async {
+    var calls = 0;
+    await tester.pumpWidget(
+      _app(
+        repo: _Repo((_) {
+          calls++;
+          return _readable;
+        }),
+        camera: () async => null,
+      ),
+    );
+    await tester.tap(find.text('Abrir importação'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Fotografar'));
+    await tester.pumpAndSettle();
+    expect(find.text('Pré-visualização'), findsNothing);
+    expect(calls, 0);
+  });
+
+  testWidgets('sair durante a leitura ignora a resposta tardia', (
+    tester,
+  ) async {
+    final pending = Completer<ExtractedDocument>();
+    await tester.pumpWidget(
+      _app(
+        repo: _Repo((_) => pending.future),
+        camera: () async => const DocumentSelection(
+          name: 'pix-sintetico.png',
+          bytes: [1],
+          isImage: true,
+        ),
+      ),
+    );
+    await tester.tap(find.text('Abrir importação'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Fotografar'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Ler documento'));
+    await tester.pump();
+    await tester.pageBack();
+    await tester.pumpAndSettle();
+    pending.complete(_readable);
+    await tester.pumpAndSettle();
+    expect(tester.takeException(), isNull);
+    expect(find.text('Abrir importação'), findsOneWidget);
+  });
+
+  testWidgets('erro do seletor após sair da tela não usa contexto descartado', (
+    tester,
+  ) async {
+    final pending = Completer<DocumentSelection?>();
+    await tester.pumpWidget(
+      _app(repo: _Repo((_) => _readable), camera: () => pending.future),
+    );
+    await tester.tap(find.text('Abrir importação'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Fotografar'));
+    await tester.pageBack();
+    await tester.pumpAndSettle();
+    pending.completeError(Exception('permissão negada'));
+    await tester.pumpAndSettle();
+    expect(tester.takeException(), isNull);
   });
 
   testWidgets('descartar fecha a revisão sem devolver campos', (tester) async {

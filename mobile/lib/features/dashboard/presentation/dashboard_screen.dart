@@ -549,11 +549,7 @@ class _BalanceCard extends StatelessWidget {
         gradient: const LinearGradient(
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
-          colors: [
-            Color(0xFF3F6666),
-            Color(0xFF2F4F4F),
-            Color(0xFF1B3232),
-          ],
+          colors: [Color(0xFF3F6666), Color(0xFF2F4F4F), Color(0xFF1B3232)],
         ),
         boxShadow: [
           BoxShadow(

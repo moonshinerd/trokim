@@ -340,3 +340,11 @@ Cada issue exige a atualização do MkDocs **no mesmo PR** (regra do `AGENTS.md`
 **Armazenamento no aparelho e API sem estado (já em `main`):** o aparelho guarda a biblioteca cifrada e a API a mantém só em memória ([ADR 0025](adr/0025-armazenamento-no-aparelho-e-api-sem-estado.md), [#104](https://github.com/moonshinerd/trokim/issues/104)).
 
 **Encaminhado para a Semana 6** (milestone "Semana 6 — Integração Completa"): as pendências herdadas da Semana 4, que são redação com paráfrase verificada, política de escopo para previsão de preço (C27) e revisão humana dos casos sinalizados ([#105](https://github.com/moonshinerd/trokim/issues/105)).
+
+### Revisão da captura de documentos (#91)
+
+A PR #110 implementa o fluxo com repositório falso e revisão humana. A revisão
+acrescenta validação única para o formulário e a confirmação, tratamento de
+respostas após fechar a tela, acesso pelo fluxo de importação e testes de
+regressão. Confirmar ainda não cria lançamentos: extração e persistência reais
+continuam na integração #97.
