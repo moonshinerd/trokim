@@ -355,3 +355,5 @@ bancos, seus tutoriais e o pedido de suporte, junto ao acesso à revisão de
 documentos. Os testes de bancos suportados verificam a coexistência dessas
 entradas. A configuração de backup continua recebendo o cliente e os seletores
 fornecidos pela tela de Ajustes.
+
+Na #96, a consulta local do estabelecimento cita os documentos confirmados. As consultas por conta, período, parcelas e dívidas permanecem nas #94 e #95.

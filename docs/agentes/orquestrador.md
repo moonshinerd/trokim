@@ -3,13 +3,18 @@
 !!! success "Status: Implementado"
     Implementado na issue [#51](https://github.com/moonshinerd/trokim/issues/51). O contrato de mensagens é estrito e a orquestração segue um fluxo linear defensivo com revisão única em caso de bloqueio.
 
-Coordena os quatro agentes especializados e constrói a trilha de auditoria (`steps`). O código está estruturado em:
+Coordena os quatro agentes especializados do fluxo educacional e constrói a trilha de auditoria (`steps`). O código está estruturado em:
 
 - `api/app/domain/agents.py`: contrato puro de domínio (Pydantic v2), sem dependências de frameworks externos ou rede.
 - `api/app/services/agents/base.py`: protocolo assíncrono `Agent`.
 - `api/app/services/agents/orchestrator.py`: classe `Orchestrator` e função de roteamento `needs_analysis`.
 
 ## Regras de Execução
+
+Essas regras descrevem o fluxo educacional. Antes dele, `AgentQueryService` resolve as
+consultas locais de estabelecimentos identificados em documentos confirmados. Esse fluxo
+tem cálculo determinístico e validação independente, sem pesquisa institucional nem LLM;
+veja a [ADR 0026](../adr/0026-confirmacao-e-consulta-de-documentos.md).
 
 1. **Research Agent (Primeira Linha de Defesa):** Recupera evidências institucionais. Se `abstain_reason` for preenchido (fora de escopo ou sem evidência suficiente), o orquestrador encerra a execução com status `abstained` e devolve a mensagem fixa de abstenção imediatamente, sem acionar o LLM.
 2. **Analysis Agent (Cálculo Determinístico):** É executado somente se a pergunta demandar números ou raciocínio orçamentário sobre extratos (`needs_analysis`). Caso contrário, o passo é marcado como `skipped`.

@@ -564,3 +564,32 @@ make validar-banco ARQUIVO=/caminho/do/arquivo.pdf   # ou .ofx, .csv
 ```
 
 O comando roda no seu computador e imprime só números agregados (banco reconhecido, quantidade, período, somas, naturezas e se o total do arquivo fecha). Não imprime descrições, nomes nem número de conta (só os 4 últimos dígitos). Compare as somas com o app do banco; se fecharem, abra uma issue com **esses números**, nunca com o arquivo.
+
+## Documentos por foto ou PDF
+
+Com a API local em execução, envie um comprovante sintético. A extração mostra os campos para revisão.
+
+```bash
+curl -F 'file=@comprovante.png' http://localhost:8000/v1/documents/extract
+```
+
+Após revisar os campos, confirme o lançamento. Informe `account_id` para escolher uma conta cadastrada.
+Quando omitido, faturas vão para a conta de cartão `documentos:cartao`; os demais
+documentos vão para `documentos:sem_conta`. Sem conta explícita, a conciliação procura
+duplicatas em toda a biblioteca. Qualquer bloqueio retorna `422` sem aplicar parte do lote,
+inclusive no reenvio de um documento já confirmado.
+
+```bash
+curl -H 'Content-Type: application/json' http://localhost:8000/v1/documents/confirm \
+  -d '{"kind":"pix_receipt","date":"2026-11-20","description":"Padaria Sintética","amount":"12.50"}'
+curl -H 'Content-Type: application/json' http://localhost:8000/v1/agents/ask \
+  -d '{"message":"Quanto gastei na Padaria Sintética?"}'
+```
+
+A consulta por nome exato soma só as despesas dos documentos confirmados daquele estabelecimento (o total, a citação e a origem falam dos mesmos lançamentos) e identifica na trilha esses documentos. Perguntas que não casam com um estabelecimento de documento, como “quanto gastei em janeiro?”, seguem para o assistente normal.
+
+Para perguntar “quanto gastei nessa loja?”, envie também `document_uid` com o `uid` retornado pela confirmação.
+
+A consulta tem passos de cálculo e validação e cita a biblioteca local; ela não precisa de
+redação por LLM. Sem referência válida para “nessa loja”, o sistema pede esclarecimento.
+Veja [respostas completas, reenvio e exemplo de bloqueio](agentes/document-agent.md#exemplos-completos-de-requisicao-e-resposta).

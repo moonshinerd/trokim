@@ -31,6 +31,7 @@ Este repositório registra formalmente todas as decisões de arquitetura e tecno
 | [**0021**](0021-visao-e-ocr-modulares.md) | Leitura de Imagem Modular: Portas de OCR e de Visão e Revisão Humana de Documentos | <span class="badge-must">Aceita</span> | 23/11/2026 | RF27, RF28, RNF01, RNF10, RNF12, GQ01, GQ02, GQ03 |
 | [**0024**](0024-persistencia-local-e-backup-criptografado.md) | Persistência Local da Biblioteca e Backup Criptografado | <span class="badge-must">Aceita</span> | 23/11/2026 | RF31, RF32, RNF01, RNF05, GQ03, GQ06 |
 | [**0025**](0025-armazenamento-no-aparelho-e-api-sem-estado.md) | Armazenamento no Aparelho e API sem Estado | <span class="badge-must">Aceita</span> | 23/11/2026 | RF31, RF32, RNF01, RNF05, GQ03, GQ06 |
+| [**0026**](0026-confirmacao-e-consulta-de-documentos.md) | Confirmação Integral e Consulta Local de Documentos | <span class="badge-must">Aceita</span> | 25/11/2026 | RF27, RF28, RF31, RNF12, GQ02, GQ03, GQ05 |
 
 - [0006 — Curadoria rastreável e benchmark](0006-curadoria-benchmark.md)
 - [0007 — Banco vetorial local e embeddings densos no RAG](0007-banco-vetorial-embeddings.md)
@@ -50,3 +51,4 @@ Este repositório registra formalmente todas as decisões de arquitetura e tecno
 - [0021 — Leitura de imagem modular (OCR e visão) e revisão humana de documentos](0021-visao-e-ocr-modulares.md)
 - [0024 — Persistência local da biblioteca e backup criptografado](0024-persistencia-local-e-backup-criptografado.md)
 - [0025 — Armazenamento no aparelho e API sem estado](0025-armazenamento-no-aparelho-e-api-sem-estado.md)
+- [0026 — Confirmação integral e consulta local de documentos](0026-confirmacao-e-consulta-de-documentos.md)
