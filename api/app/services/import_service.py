@@ -129,6 +129,7 @@ class ImportService:
             status=status,
             covered_until=covered_until,
             closes_on=closes_on,
+            due_date=parsed.due_date,
             ledger_balance=parsed.ledger_balance,
             imported_count=imported_active,
         )
@@ -139,6 +140,9 @@ class ImportService:
             statement.covered_until = previous.covered_until
         if outcome == "repetido" and previous is not None:
             statement = previous
+            # Reimportar o PDF é o jeito de passar a ter o vencimento de uma fatura antiga.
+            if statement.due_date is None and parsed.due_date is not None:
+                statement.due_date = parsed.due_date
         library.statements[sid] = statement
 
         TransferService.recompute(library)

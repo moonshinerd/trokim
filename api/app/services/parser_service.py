@@ -32,6 +32,8 @@ class OfxParseResult:
     meta: OfxMeta | None = None
     # PDF: o total do arquivo fecha com a soma dos lançamentos? (``None`` = sem como saber)
     reconciled: bool | None = None
+    # Vencimento da fatura, quando o arquivo o informa (``None`` = não informado)
+    due_date: date | None = None
 
 
 class ParserService:

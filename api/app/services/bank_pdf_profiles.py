@@ -80,6 +80,7 @@ def _result(
     end: date | None,
     reconciled: bool | None,
     ledger: float | None = None,
+    due_date: date | None = None,
 ) -> OfxParseResult:
     meta = OfxMeta(
         kind=kind,  # type: ignore[arg-type]
@@ -96,6 +97,7 @@ def _result(
         ledger_balance=ledger,
         meta=meta,
         reconciled=reconciled,
+        due_date=due_date,
     )
 
 
@@ -308,6 +310,7 @@ def parse_itau_fatura(text: str, filename: str) -> OfxParseResult | None:
         due_date,
         reconciled,
         -_money(total_m.group(1)) if total_m else None,
+        due_date=due_date,
     )
 
 
@@ -410,7 +413,7 @@ def parse_picpay_fatura(text: str, filename: str) -> OfxParseResult | None:
     if not txs:
         return None
     dates = [t.date for t in txs]
-    return _result("picpay", "cartao", "cartao", txs, min(dates), due_date, None)
+    return _result("picpay", "cartao", "cartao", txs, min(dates), due_date, None, due_date=due_date)
 
 
 PDF_PROFILES = (

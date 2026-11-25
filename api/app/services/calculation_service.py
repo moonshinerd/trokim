@@ -60,6 +60,7 @@ class CalculationService:
         transactions: Sequence[Transaction],
         view: str = "competencia",
         owner: str = "todas",
+        merchant_limit: int = 5,
     ) -> FinancialSummary:
         total_income = 0.0
         total_expenses = 0.0
@@ -137,7 +138,9 @@ class CalculationService:
             ],
             top_merchants=[
                 {"merchant": name, "total": round(total, 2)}
-                for name, total in sorted(by_merchant.items(), key=lambda kv: -kv[1])[:5]
+                for name, total in sorted(by_merchant.items(), key=lambda kv: -kv[1])[
+                    :merchant_limit
+                ]
                 if total > 0
             ],
         )
