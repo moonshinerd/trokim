@@ -162,6 +162,8 @@ class Statement(BaseModel):
     status: StatementStatus = StatementStatus.UNKNOWN
     covered_until: date | None = None
     closes_on: date | None = None
+    # Vencimento da fatura, quando o arquivo o informa (PDF do Itaú e do PicPay). OFX não traz.
+    due_date: date | None = None
     user_confirmed: bool = False
     ledger_balance: float | None = None
     imported_count: int = 0

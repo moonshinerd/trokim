@@ -22,3 +22,17 @@ Estabelecer uma divisão estrita de responsabilidades:
   - Baixa latência e economia expressiva de chamadas de LLM.
 - **Negativas / Riscos:**
   - Novas métricas de cálculo precisam ser programadas e expostas no serviço determinístico antes de poderem ser explicadas pelo assistente.
+
+## Atualização: consultas por conta, período e dívida (#94)
+
+A mesma regra vale para as perguntas sobre a vida financeira do usuário. O módulo
+`api/app/services/financial_query_service.py` calcula, sem LLM, o gasto e o saldo por conta e por
+dono, por período (mês, intervalo, fatura aberta, fechada e próxima), as parcelas em aberto, as
+dívidas e compromissos, os rankings de estabelecimentos e categorias, a comparação entre dois
+períodos e o efeito das transferências próprias. Os totais reaproveitam o `CalculationService`,
+então transferência própria e pagamento de fatura ficam fora, como na
+[ADR 0018](0018-contas-periodos-transferencias-e-visoes.md), e a soma final usa `Decimal`. Cada
+consulta devolve `CalculationResult`. A resolução de período e de conta a partir do texto também é
+código: se houver ambiguidade (dois cartões do mesmo banco, mês citado em mais de um ano), a função
+devolve uma pergunta de esclarecimento em vez de um número. O que sai é agregado, rótulo de conta
+(banco, tipo e dono) e estabelecimento.
