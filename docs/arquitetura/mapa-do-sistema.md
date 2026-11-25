@@ -40,6 +40,7 @@ graph TD
             Orchestrator["Orquestrador Determinístico"]
             ResearchAgent["Research Agent<br/>(evidências & escopo)"]
             AnalysisAgent["Analysis Agent<br/>(cálculos determinísticos)"]
+            FinancialQueries["Consultas financeiras tipadas<br/>(intenção, seleção e execução)"]
             CommAgent["Communication Agent<br/>(redação em pt-BR)"]
             ValidAgent["Validation Agent<br/>(auditoria defensiva)"]
         end
@@ -70,12 +71,16 @@ graph TD
         AgentTrace -. "habilitado em Ajustes" .-> AgentAsk
         AgentAsk --> Orchestrator
         
-        Orchestrator --> ResearchAgent
+        Orchestrator -->|orientação educativa| ResearchAgent
         Orchestrator --> AnalysisAgent
         Orchestrator --> CommAgent
         Orchestrator --> ValidAgent
         
         ResearchAgent --> RAGService
+        AnalysisAgent --> FinancialQueries
+        Library -->|snapshot local| FinancialQueries
+        FinancialQueries -->|somente agregados e limitações| CommAgent
+        FinancialQueries --> CalcService
         AnalysisAgent --> CalcService
         CommAgent --> LiteLLM
         CommAgent --> OllamaClient
@@ -107,6 +112,11 @@ graph TD
 ```
 
 ---
+
+Consultas pessoais aos arquivos importados pulam Research; perguntas de orientação mantêm a
+pesquisa institucional. A seleção de conta, dono e período é compartilhada com o fluxo local de
+documentos. Apenas resultados agregados chegam ao modelo, conforme a
+[ADR 0023](../adr/0023-contexto-do-usuario-no-chat.md).
 
 ## 2. Fluxo de Importação de Extratos e Resumo
 

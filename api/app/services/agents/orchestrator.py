@@ -2,11 +2,15 @@ import re
 import time
 import unicodedata
 from collections.abc import Sequence
+from datetime import date, datetime
+from zoneinfo import ZoneInfo
 
 from app.domain.agents import (
     AgentContext,
     AgentName,
     AgentStep,
+    FinancialContext,
+    FinancialFilters,
     IssueSeverity,
     MultiAgentResponse,
     MultiAgentStatus,
@@ -14,6 +18,8 @@ from app.domain.agents import (
 )
 from app.domain.models import Transaction
 from app.services.agents.base import Agent
+from app.services.financial_chat_intent import financial_intent, requires_guidance
+from app.services.library_service import Library
 
 ABSTENTION_MESSAGE = (
     "O Trokim não possui evidências suficientes nas diretrizes oficiais "
@@ -96,6 +102,25 @@ class Orchestrator:
         self.validation = validation
         self.max_revisions = max_revisions
 
+    @staticmethod
+    def _response(
+        ctx: AgentContext,
+        steps: list[AgentStep],
+        status: MultiAgentStatus,
+        answer: str,
+    ) -> MultiAgentResponse:
+        return MultiAgentResponse(
+            query=ctx.question,
+            status=status,
+            answer=answer,
+            model=ctx.model,
+            evidences=ctx.evidences,
+            calculations=ctx.calculations,
+            validation_issues=ctx.issues,
+            steps=steps,
+            total_ms=sum(step.duration_ms for step in steps),
+        )
+
     async def _safe_run(self, agent: Agent, ctx: AgentContext) -> AgentStep:
         t0 = time.perf_counter()
         try:
@@ -117,29 +142,46 @@ class Orchestrator:
         self,
         question: str,
         transactions: Sequence[Transaction] = (),
+        library: Library | None = None,
+        filters: FinancialFilters | None = None,
+        reference_date: date | None = None,
     ) -> MultiAgentResponse:
         steps: list[AgentStep] = []
+        # O contrato anterior recebe apenas lançamentos (também usado pelo benchmark).
+        # Contas, faturas e filtros exigem a biblioteca explícita da RF30.
+        intent = financial_intent(question) if library is not None else None
+        financial = None
+        if library is not None and intent is not None:
+            financial = FinancialContext(
+                intent=intent,
+                reference_date=reference_date or datetime.now(ZoneInfo("America/Sao_Paulo")).date(),
+                filters=filters or FinancialFilters(),
+                accounts={k: v.model_copy(deep=True) for k, v in library.accounts.items()},
+                statements={k: v.model_copy(deep=True) for k, v in library.statements.items()},
+            )
         ctx = AgentContext(
+            financial=financial,
             question=question.strip(),
-            transactions=list(transactions),
+            transactions=[
+                tx.model_copy(deep=True)
+                for tx in (library.transactions if library else transactions)
+            ],
         )
 
         # 1. Research Agent
-        research_step = await self._safe_run(self.research, ctx)
+        if intent and not requires_guidance(question):
+            research_step = AgentStep(
+                agent=AgentName.RESEARCH,
+                status=StepStatus.SKIPPED,
+                summary="Consulta aos dados importados; não requer orientação institucional.",
+                detail={"reason": "financial_query"},
+            )
+        else:
+            research_step = await self._safe_run(self.research, ctx)
         steps.append(research_step)
 
         if research_step.status == StepStatus.FAILED:
-            return MultiAgentResponse(
-                query=ctx.question,
-                status=MultiAgentStatus.REJECTED,
-                answer=REJECTION_MESSAGE,
-                model=ctx.model,
-                evidences=ctx.evidences,
-                calculations=ctx.calculations,
-                validation_issues=ctx.issues,
-                steps=steps,
-                total_ms=sum(s.duration_ms for s in steps),
-            )
+            return self._response(ctx, steps, MultiAgentStatus.REJECTED, REJECTION_MESSAGE)
 
         if research_step.status == StepStatus.ABSTAINED or ctx.abstain_reason:
             return MultiAgentResponse(
@@ -155,21 +197,11 @@ class Orchestrator:
             )
 
         # 2. Analysis Agent
-        if needs_analysis(ctx.question):
+        if intent or needs_analysis(ctx.question):
             analysis_step = await self._safe_run(self.analysis, ctx)
             steps.append(analysis_step)
             if analysis_step.status == StepStatus.FAILED:
-                return MultiAgentResponse(
-                    query=ctx.question,
-                    status=MultiAgentStatus.REJECTED,
-                    answer=REJECTION_MESSAGE,
-                    model=ctx.model,
-                    evidences=ctx.evidences,
-                    calculations=ctx.calculations,
-                    validation_issues=ctx.issues,
-                    steps=steps,
-                    total_ms=sum(s.duration_ms for s in steps),
-                )
+                return self._response(ctx, steps, MultiAgentStatus.REJECTED, REJECTION_MESSAGE)
         else:
             steps.append(
                 AgentStep(
@@ -181,22 +213,33 @@ class Orchestrator:
                 )
             )
 
+        if intent and not ctx.calculations:
+            ctx.draft_answer = "\n".join(ctx.assumptions)
+            steps.append(
+                AgentStep(
+                    agent=AgentName.COMMUNICATION,
+                    status=StepStatus.SKIPPED,
+                    summary="Esclarecimento ou dado ausente informado sem chamar o modelo.",
+                )
+            )
+            validation = await self._safe_run(self.validation, ctx)
+            steps.append(validation)
+            approved = validation.status == StepStatus.OK
+            return MultiAgentResponse(
+                query=ctx.question,
+                status=MultiAgentStatus.ABSTAINED if approved else MultiAgentStatus.REJECTED,
+                answer=ctx.draft_answer if approved else REJECTION_MESSAGE,
+                steps=steps,
+                validation_issues=ctx.issues,
+                total_ms=sum(s.duration_ms for s in steps),
+            )
+
         # 3. Communication & Validation Loop
         for revision in range(self.max_revisions + 1):
             comm_step = await self._safe_run(self.communication, ctx)
             steps.append(comm_step)
             if comm_step.status == StepStatus.FAILED:
-                return MultiAgentResponse(
-                    query=ctx.question,
-                    status=MultiAgentStatus.REJECTED,
-                    answer=REJECTION_MESSAGE,
-                    model=ctx.model,
-                    evidences=ctx.evidences,
-                    calculations=ctx.calculations,
-                    validation_issues=ctx.issues,
-                    steps=steps,
-                    total_ms=sum(s.duration_ms for s in steps),
-                )
+                return self._response(ctx, steps, MultiAgentStatus.REJECTED, REJECTION_MESSAGE)
 
             val_step = await self._safe_run(self.validation, ctx)
             steps.append(val_step)
@@ -206,40 +249,10 @@ class Orchestrator:
                     # Permite revisão do Communication Agent
                     continue
 
-                return MultiAgentResponse(
-                    query=ctx.question,
-                    status=MultiAgentStatus.REJECTED,
-                    answer=REJECTION_MESSAGE,
-                    model=ctx.model,
-                    evidences=ctx.evidences,
-                    calculations=ctx.calculations,
-                    validation_issues=ctx.issues,
-                    steps=steps,
-                    total_ms=sum(s.duration_ms for s in steps),
-                )
+                return self._response(ctx, steps, MultiAgentStatus.REJECTED, REJECTION_MESSAGE)
 
             # Validação aprovada (OK ou avisos informativos)
-            return MultiAgentResponse(
-                query=ctx.question,
-                status=MultiAgentStatus.ANSWERED,
-                answer=ctx.draft_answer or "",
-                model=ctx.model,
-                evidences=ctx.evidences,
-                calculations=ctx.calculations,
-                validation_issues=ctx.issues,
-                steps=steps,
-                total_ms=sum(s.duration_ms for s in steps),
-            )
+            return self._response(ctx, steps, MultiAgentStatus.ANSWERED, ctx.draft_answer or "")
 
         # Se esgotar revisões com rejeição
-        return MultiAgentResponse(
-            query=ctx.question,
-            status=MultiAgentStatus.REJECTED,
-            answer=REJECTION_MESSAGE,
-            model=ctx.model,
-            evidences=ctx.evidences,
-            calculations=ctx.calculations,
-            validation_issues=ctx.issues,
-            steps=steps,
-            total_ms=sum(s.duration_ms for s in steps),
-        )
+        return self._response(ctx, steps, MultiAgentStatus.REJECTED, REJECTION_MESSAGE)

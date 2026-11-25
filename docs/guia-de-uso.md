@@ -190,6 +190,22 @@ curl -X POST http://127.0.0.1:8000/v1/agents/ask \
   -d '{"message": "Como montar uma reserva de emergencia e quanto tempo leva com meus gastos?"}'
 ```
 
+#### Consultar os dados importados por dono e período
+
+```bash
+curl -X POST http://127.0.0.1:8000/v1/agents/ask \
+  -H 'Content-Type: application/json' \
+  -d '{"message":"Quanto gastei?","owner":"empresa","period":"2026-10"}'
+```
+
+Também é possível enviar `account_id` obtido em `GET /v1/accounts`. Sem filtros, pergunte por
+exemplo “Quanto falta pagar das minhas parcelas?” ou “Qual minha fatura fechada pessoal do
+Nubank?”. Banco ou ano ambíguo gera pedido de esclarecimento; ausência de dados informa o arquivo
+que falta importar. Conflito entre texto e filtros também pede esclarecimento, sem escolher um
+recorte silenciosamente. Veja os [formatos e limites dos filtros](agentes/orquestrador.md#filtros-do-endpoint).
+O chat considera somente os dados importados e avisa sobre períodos incompletos, datas estimadas
+de parcelas e limitações para identificar pagamentos. A interface de seleção de contexto é a #97.
+
 #### Título de uma conversa:
 ```bash
 curl -X POST http://127.0.0.1:8000/v1/chat/title \

@@ -12,7 +12,6 @@ import re
 import time
 import unicodedata
 from dataclasses import dataclass
-from decimal import Decimal, InvalidOperation
 from enum import StrEnum
 
 from app.domain.agents import (
@@ -25,6 +24,8 @@ from app.domain.agents import (
     ValidationIssue,
 )
 from app.domain.models import EvidenceChunk
+from app.services.financial_number_validation import check_financial_numbers
+from app.services.number_format import canonicalize_number
 
 
 class ValidationIssueCode(StrEnum):
@@ -247,33 +248,6 @@ def extract_numbers_from_text(text: str) -> list[tuple[float, str]]:
         if val is not None:
             res.append((val, f.raw_text))
     return res
-
-
-def canonicalize_number(raw: str) -> str:
-    """Converte representações numéricas pt-BR e internacionais para forma decimal canônica.
-
-    Exemplos:
-    - "1.234,56" -> "1234.56"
-    - "0,20" -> "0.2"
-    - "12,5" -> "12.5"
-    - "30" -> "30"
-    """
-    cleaned = raw.strip().replace(" ", "")
-    if "," in cleaned and "." in cleaned:
-        if cleaned.rfind(",") > cleaned.rfind("."):
-            cleaned = cleaned.replace(".", "").replace(",", ".")
-        else:
-            cleaned = cleaned.replace(",", "")
-    elif "," in cleaned:
-        cleaned = cleaned.replace(",", ".")
-    elif re.fullmatch(r"\d{1,3}(?:\.\d{3})+", cleaned):
-        cleaned = cleaned.replace(".", "")
-    try:
-        dec = Decimal(cleaned).normalize()
-        s = format(dec, "f")
-        return s.rstrip("0").rstrip(".") if "." in s else s
-    except (InvalidOperation, ValueError):
-        return cleaned
 
 
 def strip_citations(text: str) -> str:
@@ -665,7 +639,10 @@ class ValidationAgent:
         # Preserva o bloqueio local do Communication Agent para que um fallback
         # seguro não seja confundido com um rascunho gerado e aprovado pelo modelo.
         issues: list[ValidationIssue] = [
-            issue for issue in ctx.issues if issue.code == "DRAFT_NOT_GROUNDED"
+            issue
+            for issue in ctx.issues
+            if issue.code == "DRAFT_NOT_GROUNDED"
+            or (ctx.financial and issue.code == "NUMBER_NOT_SUPPORTED")
         ]
 
         # 1. Orientação fora de escopo ou promessa de retorno
@@ -678,16 +655,32 @@ class ValidationAgent:
         issues.extend(check_citations(draft, ctx.evidences))
 
         # 4. Cálculo numérico ausente em pergunta quantitativa
-        issues.extend(check_calculation_missing(ctx.question, draft, ctx.calculations))
+        if ctx.financial:
+            missing_response = " ".join("\n".join(ctx.assumptions).split())
+            if not ctx.calculations and (
+                not missing_response or " ".join(draft.split()) != missing_response
+            ):
+                issues.append(
+                    ValidationIssue(
+                        code=ValidationIssueCode.CALCULATION_MISSING,
+                        severity=IssueSeverity.BLOCKER,
+                        message="Consulta pessoal sem cálculo ou esclarecimento determinístico.",
+                    )
+                )
+        else:
+            issues.extend(check_calculation_missing(ctx.question, draft, ctx.calculations))
 
         # 5. Números sem suporte nas evidências ou cálculos
         supported_texts = [ctx.question] + [
             f"{e.document_title} {e.section} {e.content}" for e in ctx.evidences
         ]
-        issues.extend(check_number_support(draft, supported_texts, ctx.calculations))
+        if ctx.financial:
+            issues.extend(check_financial_numbers(draft, ctx.calculations, ctx.assumptions))
+        else:
+            issues.extend(check_number_support(draft, supported_texts, ctx.calculations))
 
         # Atualiza a lista de issues do contexto
-        ctx.issues = issues
+        ctx.issues = list({(issue.code, issue.message): issue for issue in issues}.values())
 
         # Determina o status do passo
         has_blocker = any(i.severity == IssueSeverity.BLOCKER for i in ctx.issues)

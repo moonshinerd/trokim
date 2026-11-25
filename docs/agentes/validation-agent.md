@@ -12,6 +12,23 @@ Se qualquer inconformidade de severidade `BLOCKER` for detectada, o agente anota
 
 ---
 
+## Consultas pessoais da RF30
+
+Desde a #95, consultas pessoais usam `check_financial_numbers`, em
+`api/app/services/financial_number_validation.py`. A normalização decimal compartilhada está em
+`number_format.py`, sem dependência entre os agentes de comunicação e validação. A pergunta e os documentos do RAG
+não autorizam valores financeiros do usuário: cada número precisa corresponder a um cálculo,
+com sinal e unidade compatíveis. Datas e números nos rótulos ou limitações só são aceitos como
+metadados literais; não autorizam um novo valor monetário. O validador usa a posição do metadado
+no texto, sem apagar substrings que poderiam alterar o número auditado. Sinais negativos com
+espaços ou Unicode, moedas diferentes, unidades contraditórias e números malformados são
+verificados. Datas não autorizam valores em dinheiro. Isso vale tanto para a saída original
+do modelo quanto para a resposta segura montada pelo sistema.
+
+Sem cálculo, só é aceita a mensagem determinística de esclarecimento ou de dado ausente.
+Uma resposta substantiva sem cálculo gera `CALCULATION_MISSING`. O fluxo educativo mantém as
+regras anteriores, inclusive o caso C30 e os testes históricos abaixo.
+
 ## 1. Tabela de Regras e Severidades — Rascunhos de Resposta (Semana 4)
 
 Todas as regras são implementadas como **funções puras, isoladas e testáveis**, retornando códigos padronizados e mensagens diagnósticas claras em pt-BR:
@@ -149,3 +166,10 @@ Para evitar duplicidade de contabilidade entre a conta corrente de débito e a f
 ### 6.4. Prevenção do Padrão de Milhar em Inglês (`R$ 6,000`)
 
 Durante as medições do benchmark da Semana 4, observou-se que modelos generativos por vezes transcrevem milhares com vírgula no padrão anglo-saxão (`R$ 6,000` em vez de `R$ 6.000,00`), o que na convenção brasileira poderia ser interpretado de forma desastrosa como R$ 6,00. A regra `AMOUNT_FORMAT` utiliza expressão regular dedicada para detectar a presença de vírgula como separador de milhar, bloqueando o documento antes que ele atinja o saldo do usuário.
+
+### Testes da política de números pessoais
+
+`api/tests/test_financial_number_validation.py` verifica resultados legítimos e bloqueios da RF30.
+`api/tests/test_financial_quality.py` inclui regressões para metadados, sinais negativos,
+unidades divergentes e reconhecimento de alvos. Os testes históricos desta página permanecem
+separados e não representam uma nova execução dos benchmarks com modelos.

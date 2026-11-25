@@ -263,6 +263,17 @@ def _guard(library: Library, scope: Scope | None, *periods: Period | None) -> Qu
 # ------------------------------------------------------------------------ consultas
 
 
+def mentioned_owners(text: str) -> set[AccountOwner]:
+    """Donos citados no texto; a mesma política atende consultas e filtros do chat."""
+    normalized = normalize_text(text)
+    owners: set[AccountOwner] = set()
+    if re.search(r"\b(?:empresa|empresas|pj|cnpj)\b", normalized):
+        owners.add(AccountOwner.BUSINESS)
+    if re.search(r"\b(?:pessoal|pessoais|pf|pessoa fisica)\b", normalized):
+        owners.add(AccountOwner.PERSONAL)
+    return owners
+
+
 class FinancialQueryService:
     """Consultas puras sobre a biblioteca local; cada uma devolve ``QueryResult``."""
 
@@ -810,11 +821,10 @@ class FinancialQueryService:
     def resolve_scope(text: str, library: Library) -> Scope | Clarification:
         """Conta e dono citados no texto (“fatura do Nubank”, “empresa”). Ambíguo: pergunta."""
         norm = normalize_text(text)
-        owner = "todas"
-        if re.search(r"\b(?:empresa|empresas|pj|cnpj)\b", norm):
-            owner = "empresa"
-        elif re.search(r"\b(?:pessoal|pessoais|pf|pessoa fisica)\b", norm):
-            owner = "pessoal"
+        owners = mentioned_owners(norm)
+        if len(owners) > 1:
+            return Clarification("Você quer as contas pessoais, da empresa ou todas?")
+        owner = next(iter(owners)).value if owners else "todas"
         wants_card = bool(re.search(r"\b(?:cartao|fatura|faturas)\b", norm))
         explicit_account = bool(re.search(r"\bconta (?:corrente|do|da)\b|\bextrato\b", norm))
         bare_account = bool(re.search(r"\bconta\b", norm))

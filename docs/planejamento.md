@@ -356,4 +356,12 @@ documentos. Os testes de bancos suportados verificam a coexistência dessas
 entradas. A configuração de backup continua recebendo o cliente e os seletores
 fornecidos pela tela de Ajustes.
 
-Na #96, a consulta local do estabelecimento cita os documentos confirmados. As consultas por conta, período, parcelas e dívidas permanecem nas #94 e #95.
+Na #96, a consulta local do estabelecimento cita os documentos confirmados. A #94 fornece as consultas determinísticas; a #95 integra conta, período, parcelas e dívidas ao chat, com filtros e contexto agregado.
+
+### Atualização de implementação da #95 — 25/11/2026
+
+Integração implementada sobre a #94 e a #96: roteamento determinístico, filtros do endpoint,
+esclarecimentos sem modelo, validação de números pessoais e prompt agregado. A
+[ADR 0023](adr/0023-contexto-do-usuario-no-chat.md) registra o limite de privacidade.
+As dependências na tabela acima descrevem a ordem planejada; a #94 já foi integrada.
+A integração visual (#97), o benchmark ampliado (#98) e a homologação (#100) seguem separados.
