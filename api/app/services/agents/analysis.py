@@ -10,7 +10,7 @@ from app.domain.agents import (
     CalculationResult,
     StepStatus,
 )
-from app.domain.documents import DOCUMENT_SOURCE
+from app.domain.models import TransactionOrigin
 from app.services.calculation_service import CalculationService
 
 
@@ -154,7 +154,7 @@ class AnalysisAgent:
                 from_documents = sum(
                     1
                     for t in ctx.transactions
-                    if t.source_kind == DOCUMENT_SOURCE and not t.is_duplicate
+                    if t.origin == TransactionOrigin.DOCUMENT and not t.is_duplicate
                 )
                 if from_documents:
                     ctx.assumptions.append(

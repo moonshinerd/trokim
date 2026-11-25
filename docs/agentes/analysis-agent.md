@@ -3,7 +3,7 @@
 !!! success "Status: Implementado"
     Implementado na issue [#53](https://github.com/moonshinerd/trokim/issues/53). O motor determinístico de cálculo financeiro elimina alucinações aritméticas e assegura conformidade estrita com a ADR 0004.
 
-O **Analysis Agent** (`api/app/services/agents/analysis.py`) é o responsável exclusivo por computar quaisquer grandezas numéricas sobre os lançamentos da sessão ou sobre parâmetros informados pelo usuário. Ele nunca utiliza modelos generativos (LLMs).
+O **Analysis Agent** (`api/app/services/agents/analysis.py`) computa grandezas numéricas no fluxo educacional, usando `CalculationService`, sem modelos generativos (LLMs). A consulta local de um estabelecimento confirmado usa o mesmo serviço de cálculo em `AgentQueryService`, com validação independente antes da resposta.
 
 ## Intenções Suportadas e Fórmulas
 
@@ -70,3 +70,13 @@ O comportamento do Analysis Agent e as rotinas matemáticas são cobertos em:
 ## Limitações
 
 - O cálculo de meta atual assume aporte fixo e linear sem juros compostos ou inflação. Essa premissa é explicitada nas `assumptions` entregues ao Communication Agent.
+
+## Documentos confirmados
+
+“Quanto gastei nessa loja?” recebe `document_uid`; também é aceito o nome exato do
+estabelecimento, sem distinção de acentos, espaços repetidos ou maiúsculas.
+`AgentQueryService` exclui duplicatas e transferências próprias, soma pelo
+`CalculationService` e produz passos `analysis` e `validation`. A resposta cita a
+biblioteca local e a origem “lido de foto ou PDF, confirmado por você”, sem enviar os
+lançamentos ao LLM. Sem documento identificado, pede esclarecimento.
+Veja os [exemplos completos](document-agent.md#consulta-do-lancamento-confirmado).

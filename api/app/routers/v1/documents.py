@@ -13,7 +13,6 @@ from app.domain.documents import (
     DocumentExtractResponse,
 )
 from app.services.agents.document_pipeline import DocumentFailure, DocumentPipeline
-from app.services.agents.orchestrator import Orchestrator
 from app.services.document_confirmation import ConfirmationBlocked, confirm_document
 from app.services.document_factory import get_document_agent
 from app.services.document_reading import MAX_FILE_BYTES
@@ -124,7 +123,7 @@ async def extract_document(
     try:
         return await run_while_connected(
             connection,
-            Orchestrator.run_document(pipeline, content, media_type, LIBRARY, account_id),
+            pipeline.run(content, media_type, LIBRARY, account_id),
         )
     except DocumentFailure as failure:
         status, message = _FAILURES.get(

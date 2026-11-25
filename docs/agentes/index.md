@@ -164,3 +164,8 @@ O quinto agente tem contexto próprio, distinto do chat: lê documentos e devolv
 para revisão. Veja [Agente de documento](document-agent.md) para escopo, abstenção,
 privacidade, exemplos HTTP e erros de extração e confirmação. O [dataset multimodal](../pesquisa/gabarito-multimodal.md) da #90 verifica os limites visuais
 em famílias separadas e fornece o ensaio reproduzível de OCR real.
+
+A API expõe `POST /v1/documents/extract` e `/v1/documents/confirm`; os
+[exemplos completos de requisição, resposta e erros](document-agent.md#exemplos-completos-de-requisicao-e-resposta)
+mostram o ciclo. A consulta local de um documento confirmado passa por cálculo e validação,
+com citação da biblioteca local. A extração não persiste arquivo nem lançamento.

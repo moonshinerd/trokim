@@ -10,9 +10,6 @@ from pydantic import BaseModel, ConfigDict, Field, StringConstraints
 from app.domain.agents import AgentStep, ValidationIssue
 from app.domain.models import TransactionCategory, TransactionType
 
-# Transaction.source_kind dos lançamentos criados a partir de um documento confirmado.
-DOCUMENT_SOURCE = "documento"
-
 
 class DocumentKind(StrEnum):
     PIX_RECEIPT = "pix_receipt"

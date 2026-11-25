@@ -7,18 +7,13 @@ from app.domain.agents import (
     AgentContext,
     AgentName,
     AgentStep,
-    CalculationResult,
     IssueSeverity,
     MultiAgentResponse,
     MultiAgentStatus,
     StepStatus,
 )
-from app.domain.documents import DOCUMENT_SOURCE
 from app.domain.models import Transaction
 from app.services.agents.base import Agent
-from app.services.agents.document_pipeline import DocumentPipeline
-from app.services.calculation_service import CalculationService
-from app.services.library_service import Library
 
 ABSTENTION_MESSAGE = (
     "O Trokim não possui evidências suficientes nas diretrizes oficiais "
@@ -101,16 +96,6 @@ class Orchestrator:
         self.validation = validation
         self.max_revisions = max_revisions
 
-    @staticmethod
-    async def run_document(
-        pipeline: DocumentPipeline,
-        content: bytes,
-        media_type: str,
-        library: Library,
-        account_id: str | None = None,
-    ):
-        return await pipeline.run(content, media_type, library, account_id)
-
     async def _safe_run(self, agent: Agent, ctx: AgentContext) -> AgentStep:
         t0 = time.perf_counter()
         try:
@@ -132,7 +117,6 @@ class Orchestrator:
         self,
         question: str,
         transactions: Sequence[Transaction] = (),
-        document_uid: str | None = None,
     ) -> MultiAgentResponse:
         steps: list[AgentStep] = []
         ctx = AgentContext(
@@ -140,61 +124,6 @@ class Orchestrator:
             transactions=list(transactions),
         )
 
-        # Consulta local restrita a um estabelecimento identificado em documento confirmado.
-        match = re.fullmatch(r"quanto gastei (?:na|no|em) (.+?)\??", question.strip(), re.I)
-        name = _strip_accents(match[1].strip().casefold()) if match else None
-        if document_uid and re.fullmatch(r"quanto gastei nessa loja\??", question.strip(), re.I):
-            reference = next(
-                (
-                    tx
-                    for tx in transactions
-                    if tx.uid == document_uid and tx.source_kind == DOCUMENT_SOURCE
-                ),
-                None,
-            )
-            if reference:
-                name = _strip_accents((reference.merchant or reference.description).casefold())
-        if name:
-            selected = [
-                tx
-                for tx in transactions
-                if tx.counts_in_totals
-                and _strip_accents((tx.merchant or tx.description).casefold()) == name
-            ]
-            documents = [tx.uid for tx in selected if tx.source_kind == DOCUMENT_SOURCE]
-            if documents:
-                start = time.perf_counter()
-                value = CalculationService.calculate_summary(selected).total_expenses
-                formatted = f"{value:.2f}".replace(".", ",")
-                origin = "Lido de foto ou PDF, confirmado por você."
-                calc = CalculationResult(
-                    key="document_expenses",
-                    label="Gasto no estabelecimento",
-                    value=value,
-                    unit="BRL",
-                    source="CalculationService.calculate_summary",
-                )
-                return MultiAgentResponse(
-                    query=question,
-                    status=MultiAgentStatus.ANSWERED,
-                    answer=f"Gasto no estabelecimento: R$ {formatted}. "
-                    f"Lançamento(s): {', '.join(documents)}. {origin}",
-                    model=None,
-                    calculations=[calc],
-                    steps=[
-                        AgentStep(
-                            agent=AgentName.ANALYSIS,
-                            status=StepStatus.OK,
-                            summary=origin,
-                            duration_ms=max(1, int((time.perf_counter() - start) * 1000)),
-                            detail={
-                                "document_uids": documents,
-                                "transaction_uids": [tx.uid for tx in selected],
-                                "source": calc.source,
-                            },
-                        )
-                    ],
-                )
         # 1. Research Agent
         research_step = await self._safe_run(self.research, ctx)
         steps.append(research_step)

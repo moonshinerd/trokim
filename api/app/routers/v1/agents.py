@@ -7,6 +7,7 @@ from app.clients.llm_factory import get_llm_provider
 from app.core.request_lifecycle import run_while_connected
 from app.domain.agents import MultiAgentResponse
 from app.routers.v1.transactions import get_imported_transactions
+from app.services.agent_query_service import AgentQueryService
 from app.services.agents.analysis import AnalysisAgent
 from app.services.agents.communication import CommunicationAgent
 from app.services.agents.orchestrator import Orchestrator
@@ -59,7 +60,7 @@ async def ask_multiagent_system(
     try:
         response = await run_while_connected(
             connection,
-            orchestrator.run(
+            AgentQueryService(orchestrator).run(
                 request.message, transactions=transactions, document_uid=request.document_uid
             ),
         )

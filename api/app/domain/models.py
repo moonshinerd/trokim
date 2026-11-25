@@ -10,6 +10,11 @@ class TransactionType(StrEnum):
     DEBIT = "debit"  # Despesa
 
 
+class TransactionOrigin(StrEnum):
+    IMPORT = "importacao"
+    DOCUMENT = "documento"
+
+
 class TransactionCategory(StrEnum):
     HOUSING = "moradia"
     FOOD = "alimentacao"
@@ -84,6 +89,7 @@ class Transaction(BaseModel):
     type: TransactionType
     category: TransactionCategory = TransactionCategory.OTHER
     source_file: str | None = None
+    origin: TransactionOrigin = TransactionOrigin.IMPORT
     is_duplicate: bool = False
     nature: TransactionNature = TransactionNature.OTHER
     merchant: str | None = None

@@ -574,7 +574,10 @@ curl -F 'file=@comprovante.png' http://localhost:8000/v1/documents/extract
 ```
 
 Após revisar os campos, confirme o lançamento. Informe `account_id` para escolher uma conta cadastrada.
-Quando omitido, o destino é a conta de documentos.
+Quando omitido, faturas vão para a conta de cartão `documentos:cartao`; os demais
+documentos vão para `documentos:sem_conta`. Sem conta explícita, a conciliação procura
+duplicatas em toda a biblioteca. Qualquer bloqueio retorna `422` sem aplicar parte do lote,
+inclusive no reenvio de um documento já confirmado.
 
 ```bash
 curl -H 'Content-Type: application/json' http://localhost:8000/v1/documents/confirm \
@@ -586,3 +589,7 @@ curl -H 'Content-Type: application/json' http://localhost:8000/v1/agents/ask \
 A consulta por nome exato soma os gastos do estabelecimento e identifica na trilha os documentos confirmados.
 
 Para perguntar “quanto gastei nessa loja?”, envie também `document_uid` com o `uid` retornado pela confirmação.
+
+A consulta tem passos de cálculo e validação e cita a biblioteca local; ela não precisa de
+redação por LLM. Sem referência válida para “nessa loja”, o sistema pede esclarecimento.
+Veja [respostas completas, reenvio e exemplo de bloqueio](agentes/document-agent.md#exemplos-completos-de-requisicao-e-resposta).

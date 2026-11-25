@@ -163,3 +163,8 @@ e testes. Estes requisitos não são declarados concluídos de ponta a ponta nes
 
 O [gabarito multimodal](pesquisa/gabarito-multimodal.md) rastreia RF14/RF27/RF28 a GQ02, GQ03 e GQ05.
 A política de revisão não autoriza confirmar documentos antes da validação financeira da #89.
+
+Na #96, `api/tests/documents/` cobre conciliação sem conta, reenvio com campos inválidos,
+fatura já conciliada, aplicação integral do lote, categorias aprendidas em Pix, caixa versus
+competência, procedência após restauração SQLite e validação da consulta com citação.
+A consulta local não substitui os filtros por conta, dono e período das #94 e #95.

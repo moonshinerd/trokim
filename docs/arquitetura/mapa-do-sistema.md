@@ -339,3 +339,8 @@ flowchart TD
 O [agente de documento](../agentes/document-agent.md) devolve campos e trilha sanitizada.
 Visão opcional exige proteção dos pixels e política de confiança; permanece bloqueada
 sem essas garantias. A extração chama a validação financeira (#89) em memória. A confirmação (#96) revalida os campos revisados, verifica duplicatas e grava a biblioteca no SQLite.
+
+A confirmação revalida também o total contra os pagamentos de fatura já conciliados e
+mantém o lote indivisível. `origin` registra a procedência sem substituir o tipo financeiro.
+O chat encaminha consultas de documentos ao `AgentQueryService` (cálculo e validação);
+a orientação educacional segue no orquestrador.

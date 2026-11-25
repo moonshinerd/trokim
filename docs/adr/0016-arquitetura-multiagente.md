@@ -113,7 +113,9 @@ Benchmark da [#60](https://github.com/moonshinerd/trokim/issues/60), com duas ro
 `AgentName.DOCUMENT` e `DocumentAgent.run(DocumentContext)` acrescentam um passo de leitura
 com o mesmo `AgentStep`, sem executar o pipeline de pesquisa e comunicação do chat.
 O contexto próprio exclui os bytes de serialização e representação; a operação apaga sua
-referência ao arquivo ao terminar. A integração ao orquestrador HTTP pertence à #96.
+referência ao arquivo ao terminar. Na #96, `DocumentPipeline` coordena a leitura e a validação
+HTTP, e `AgentQueryService` trata a consulta local do lançamento confirmado, conforme a
+[ADR 0026](0026-confirmacao-e-consulta-de-documentos.md).
 O contrato público do épico #86 fica em `domain/documents.py` e deve ser compartilhado
 com a #89. O agente usa diretamente as portas `OcrProvider` e `VisionProvider` da #87
 (ADR 0021), com seus resultados tipados e suas fábricas configuráveis.

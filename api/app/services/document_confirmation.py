@@ -1,43 +1,32 @@
-"""Confirmação de um documento revisado: vira um lançamento na biblioteca (#96).
-
-Só chega aqui o que o usuário revisou e aprovou. A validação (#89) roda de novo sobre os campos
-confirmados: qualquer bloqueio recusa a criação. Reenviar o mesmo documento não duplica: a
-deduplicação existente (data, descrição e valor) responde "repetido" e nada é criado.
-"""
+"""Valida o documento revisado e aplica seus lançamentos de uma só vez (#96)."""
 
 from dataclasses import replace
-from decimal import Decimal
 from threading import Lock
 
 from app.domain.agents import IssueSeverity, ValidationIssue
-from app.domain.document import DocumentType, ExtractedLine
-from app.domain.document import ExtractedDocument as ValidationDocument
 from app.domain.documents import (
-    DOCUMENT_SOURCE,
     DocumentConfirmRequest,
     DocumentConfirmResponse,
     DocumentKind,
+    ReviewedLine,
 )
 from app.domain.models import (
     Account,
     AccountKind,
     Transaction,
     TransactionNature,
+    TransactionOrigin,
     TransactionType,
 )
 from app.services.categorization_service import CategorizationService, CategoryRuleService
+from app.services.document_adapter import from_reviewed_document
 from app.services.document_validation import validate_document
 from app.services.library_service import Library
+from app.services.statement_profiles import guess_counterparty_kind
 from app.services.statement_service import account_key
 
 _confirmation_lock = Lock()
 DOCUMENT_ACCOUNT = "documentos"
-
-_TYPES = {
-    DocumentKind.PIX_RECEIPT: DocumentType.PIX,
-    DocumentKind.BOLETO: DocumentType.BOLETO,
-    DocumentKind.CARD_INVOICE: DocumentType.FATURA,
-}
 
 
 class ConfirmationBlocked(Exception):
@@ -46,153 +35,105 @@ class ConfirmationBlocked(Exception):
         super().__init__("; ".join(i.code for i in issues))
 
 
-def _nature(req: DocumentConfirmRequest) -> TransactionNature:
-    if req.kind == DocumentKind.PIX_RECEIPT:
-        return (
+def _block(code: str, message: str) -> None:
+    raise ConfirmationBlocked(
+        [ValidationIssue(code=code, severity=IssueSeverity.BLOCKER, message=message)]
+    )
+
+
+def _transaction(req: DocumentConfirmRequest, line: ReviewedLine, account: Account) -> Transaction:
+    is_pix = req.kind == DocumentKind.PIX_RECEIPT
+    if is_pix:
+        nature = (
             TransactionNature.PIX_OUT
             if req.type == TransactionType.DEBIT
             else TransactionNature.PIX_IN
         )
-    return (
-        TransactionNature.PURCHASE if req.type == TransactionType.DEBIT else TransactionNature.OTHER
+    else:
+        nature = (
+            TransactionNature.PURCHASE
+            if req.type == TransactionType.DEBIT
+            else TransactionNature.OTHER
+        )
+    source_kind = AccountKind.CARD if req.kind == DocumentKind.CARD_INVOICE else account.kind
+    return Transaction(
+        id=f"doc:{line.date.isoformat()}:{line.amount:.2f}:{line.description.casefold()}",
+        account_id=account.id,
+        description=line.description,
+        amount=float(line.amount),
+        date=line.date,
+        type=req.type,
+        nature=nature,
+        merchant=line.description,
+        counterparty_kind=guess_counterparty_kind(line.description) if is_pix else None,
+        category=req.category
+        or CategorizationService.categorize(line.description, tx_type=req.type, nature=nature),
+        source_file="documento lido por foto ou PDF",
+        source_kind=source_kind.value if source_kind else None,
+        origin=TransactionOrigin.DOCUMENT,
+        institution=req.bank or account.institution,
     )
+
+
+def _identity(tx: Transaction) -> tuple[str, str | None, TransactionType]:
+    return tx.account_id, tx.id, tx.type
 
 
 def confirm_document(library: Library, req: DocumentConfirmRequest) -> DocumentConfirmResponse:
     with _confirmation_lock:
-        if not req.transactions:
-            result = _confirm(library, req)
-            result.uids = [result.uid]
-            return result
-        document = ValidationDocument(
-            document_type=_TYPES.get(req.kind, DocumentType.OUTRO),
-            date=req.date,
-            due_date=req.due_date,
-            amount=req.amount,
-            merchant=req.description,
-            institution=req.bank,
-            lines=[ExtractedLine(**line.model_dump()) for line in req.transactions],
+        kind = AccountKind.CARD if req.kind == DocumentKind.CARD_INVOICE else AccountKind.CHECKING
+        key = req.account_id or account_key(
+            DOCUMENT_ACCOUNT, "cartao" if kind == AccountKind.CARD else None
         )
-        blockers = [
-            i for i in validate_document(document, None) if i.severity == IssueSeverity.BLOCKER
-        ]
-        if blockers:
-            raise ConfirmationBlocked(blockers)
-        staged = replace(
-            library, accounts=dict(library.accounts), transactions=list(library.transactions)
-        )
-        results = [
-            _confirm(staged, req.model_copy(update={**line.model_dump(), "transactions": []}))
-            for line in req.transactions
-        ]
-        if len({item.uid for item in results}) != len(results):
-            raise ConfirmationBlocked(
-                [
-                    ValidationIssue(
-                        code="POSSIBLE_DUPLICATE",
-                        severity=IssueSeverity.BLOCKER,
-                        message="Há linhas idênticas na fatura. Revise os itens.",
-                    )
-                ]
-            )
-        library.accounts.update(staged.accounts)
-        library.transactions.extend(staged.transactions[len(library.transactions) :])
-        result = results[0].model_copy()
-        result.uids = [item.uid for item in results]
-        if any(item.outcome == "criado" for item in results):
-            result.outcome = "criado"
-            result.message = "Lançamentos revisados confirmados."
-        return result
-
-
-def _confirm(library: Library, req: DocumentConfirmRequest) -> DocumentConfirmResponse:
-    amount = req.amount.quantize(Decimal("0.01"))
-    nature = _nature(req)
-    key = req.account_id or account_key(DOCUMENT_ACCOUNT, None)
-    if req.account_id and key not in library.accounts:
-        raise ConfirmationBlocked(
-            [
-                ValidationIssue(
-                    code="UNKNOWN_ACCOUNT",
-                    severity=IssueSeverity.BLOCKER,
-                    message="Conta não encontrada.",
-                )
-            ]
-        )
-    tx = Transaction(
-        id=f"doc:{req.date.isoformat()}:{amount}:{req.description.casefold()}",
-        account_id=key,
-        description=req.description,
-        amount=float(amount),
-        date=req.date,
-        type=req.type,
-        nature=nature,
-        merchant=req.description if nature == TransactionNature.PURCHASE else None,
-        category=req.category
-        or CategorizationService.categorize(req.description, tx_type=req.type, nature=nature),
-        source_file="documento lido por foto ou PDF",
-        source_kind=DOCUMENT_SOURCE,
-        institution=req.bank or DOCUMENT_ACCOUNT,
-    )
-
-    # Mesmo documento reenviado: a deduplicação existente decide, antes de validar de novo.
-    existing = next(
-        (
-            item
-            for item in library.transactions
-            if item.source_kind == DOCUMENT_SOURCE
-            and item.account_id == key
-            and item.id == tx.id
-            and item.type == tx.type
-            and not item.is_duplicate
-        ),
-        None,
-    )
-    if existing is not None:
-        return DocumentConfirmResponse(
-            outcome="repetido",
-            uid=existing.uid,
-            account_id=existing.account_id,
-            category=existing.category,
-            message="Este lançamento já existe; nada foi criado de novo.",
-        )
-
-    blockers = [
-        i
-        for i in validate_document(
-            ValidationDocument(
-                document_type=_TYPES.get(req.kind, DocumentType.OUTRO),
-                amount=amount,
-                raw_amount=str(amount),
-                date=req.date,
-                due_date=req.due_date,
-                account_id=key,
-                recipient=req.description,
-                merchant=req.description,
-                institution=req.bank,
-            ),
-            library,
-        )
-        if i.severity == IssueSeverity.BLOCKER
-    ]
-    if blockers:
-        raise ConfirmationBlocked(blockers)
-
-    if key not in library.accounts:
-        library.accounts[key] = Account(
+        account = library.accounts.get(key)
+        if req.account_id and account is None:
+            _block("UNKNOWN_ACCOUNT", "Conta não encontrada.")
+        account = account or Account(
             id=key,
             institution=DOCUMENT_ACCOUNT,
             acct_id=DOCUMENT_ACCOUNT,
-            kind=AccountKind.CHECKING,
+            kind=kind,
             label="Documentos lidos (foto ou PDF)",
         )
-    library.transactions.append(tx)
-    if req.category is None:
-        CategoryRuleService.apply(library, [tx])  # regra que o usuário já ensinou
-    return DocumentConfirmResponse(
-        outcome="criado",
-        uid=tx.uid,
-        account_id=key,
-        category=tx.category,
-        message="Lançamento criado a partir do documento que você confirmou.",
-    )
+        lines = req.transactions or [
+            ReviewedLine(date=req.date, description=req.description, amount=req.amount)
+        ]
+        candidates = [_transaction(req, line, account) for line in lines]
+        identities = [_identity(tx) for tx in candidates]
+        if len(set(identities)) != len(identities):
+            _block("POSSIBLE_DUPLICATE", "Há linhas idênticas na fatura. Revise os itens.")
+
+        known = {
+            _identity(tx): tx
+            for tx in library.transactions
+            if tx.origin == TransactionOrigin.DOCUMENT and not tx.is_duplicate
+        }
+        repeated = {known[key].uid for key in identities if key in known}
+        # Só o reenvio exato sai da conciliação; os campos e o total continuam sendo validados.
+        review_library = replace(
+            library, transactions=[tx for tx in library.transactions if tx.uid not in repeated]
+        )
+        blockers = [
+            issue
+            for issue in validate_document(from_reviewed_document(req), review_library)
+            if issue.severity == IssueSeverity.BLOCKER
+        ]
+        if blockers:
+            raise ConfirmationBlocked(blockers)
+
+        new = [tx for tx in candidates if _identity(tx) not in known]
+        if req.category is None:
+            CategoryRuleService.apply(library, new)
+        results = [known.get(_identity(tx), tx) for tx in candidates]
+        library.accounts[key] = account
+        library.transactions.extend(new)
+        return DocumentConfirmResponse(
+            outcome="criado" if new else "repetido",
+            uid=results[0].uid,
+            uids=[tx.uid for tx in results],
+            account_id=key,
+            category=results[0].category,
+            message="Lançamentos revisados confirmados."
+            if new
+            else "Este lançamento já existe; nada foi criado de novo.",
+        )

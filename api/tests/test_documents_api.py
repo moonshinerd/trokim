@@ -101,7 +101,8 @@ def test_extrair_confirmar_cria_uma_vez_e_reenvio_e_repetido(client):
     assert again.json()["outcome"] == "repetido"
     assert again.json()["uid"] == first.json()["uid"]
     assert len(LIBRARY.transactions) == 1
-    assert LIBRARY.transactions[0].source_kind == "documento"
+    assert LIBRARY.transactions[0].origin == "documento"
+    assert LIBRARY.transactions[0].source_kind == "conta"
 
 
 def test_arquivo_grande_demais_413(client, monkeypatch):

@@ -10,7 +10,7 @@ from __future__ import annotations
 from decimal import Decimal, InvalidOperation
 
 from app.domain.document import DocumentType, ExtractedDocument, ExtractedLine
-from app.domain.documents import DocumentKind
+from app.domain.documents import DocumentConfirmRequest, DocumentKind
 from app.domain.documents import ExtractedDocument as AgentDocument
 
 _TYPES = {
@@ -20,6 +20,20 @@ _TYPES = {
     DocumentKind.BANK_STATEMENT: DocumentType.OUTRO,
     DocumentKind.OTHER: DocumentType.OUTRO,
 }
+
+
+def from_reviewed_document(doc: DocumentConfirmRequest) -> ExtractedDocument:
+    """Mantém o documento completo e a conta escolhida na revalidação da confirmação."""
+    return ExtractedDocument(
+        document_type=_TYPES[doc.kind],
+        amount=doc.amount,
+        date=doc.date,
+        due_date=doc.due_date,
+        merchant=doc.description,
+        institution=doc.bank,
+        account_id=doc.account_id,
+        lines=[ExtractedLine(**line.model_dump()) for line in doc.transactions],
+    )
 
 
 def _decimal(value: object) -> Decimal | None:
