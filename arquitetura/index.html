@@ -1245,6 +1245,17 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#entrada-de-documentos" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Entrada de documentos
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     
   
@@ -2436,6 +2447,33 @@
 
                 
               
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../adr/0026-confirmacao-e-consulta-de-documentos/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  0026 – Confirmação e Consulta de Documentos
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
             </ul>
           </nav>
         
@@ -2501,6 +2539,17 @@
     <span class="md-ellipsis">
       <span class="md-typeset">
         Camadas do Backend (<code>api/</code>)
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#entrada-de-documentos" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Entrada de documentos
       </span>
     </span>
   </a>
@@ -2578,6 +2627,13 @@
 </span><span id="__span-0-10"><a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>clients/  (Adaptadores de persistência e LLM: SQLiteVectorStore, FastEmbed, LiteLLMProvider, OllamaProvider, MockLLMProvider)
 </span></code></pre></div>
 <p>Essa estrutura permitiu acrescentar os agentes na Semana 4 sem mexer nas camadas existentes e deve receber da mesma forma a multimodalidade (Semana 5) e a integração completa (Semana 6).</p>
+<h2 id="entrada-de-documentos">Entrada de documentos<a class="headerlink" href="#entrada-de-documentos" title="Permanent link">&para;</a></h2>
+<p>O endpoint de extração recebe o arquivo em memória e devolve os passos de leitura e validação. A revisão humana precede a confirmação e a gravação no SQLite. A consulta do estabelecimento usa o serviço de cálculo local e cita o lançamento confirmado. Consulte o <a href="../agentes/document-agent/">contrato HTTP</a>.</p>
+<p>A confirmação prepara o lote, valida o documento completo e só então altera a biblioteca.
+A procedência <code>origin=documento</code> é independente de <code>source_kind=conta|cartao</code>.
+O <code>AgentQueryService</code> trata a consulta local com <code>CalculationService</code> e <code>ValidationAgent</code>,
+enquanto o <code>Orchestrator</code> coordena as perguntas educacionais. A
+<a href="../adr/0026-confirmacao-e-consulta-de-documentos/">ADR 0026</a> registra essas fronteiras.</p>
 
 
 

@@ -2530,6 +2530,33 @@
 
                 
               
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../adr/0026-confirmacao-e-consulta-de-documentos/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  0026 – Confirmação e Consulta de Documentos
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
             </ul>
           </nav>
         
@@ -2933,9 +2960,12 @@ com os números do sistema (protocolo corrigido de 19/11) e o C27 continua respo
 <h2 id="agente-de-documento-semana-5">Agente de documento (Semana 5)<a class="headerlink" href="#agente-de-documento-semana-5" title="Permanent link">&para;</a></h2>
 <p>O quinto agente tem contexto próprio, distinto do chat: lê documentos e devolve campos
 para revisão. Veja <a href="document-agent/">Agente de documento</a> para escopo, abstenção,
-privacidade e dependências ainda pendentes. O componente da #88 usa as portas e fábricas de OCR e visão da #87 e não adiciona endpoints;
-a ligação ao fluxo do app pertence à #96. O <a href="../pesquisa/gabarito-multimodal/">dataset multimodal</a> da #90 verifica os limites visuais
+privacidade, exemplos HTTP e erros de extração e confirmação. O <a href="../pesquisa/gabarito-multimodal/">dataset multimodal</a> da #90 verifica os limites visuais
 em famílias separadas e fornece o ensaio reproduzível de OCR real.</p>
+<p>A API expõe <code>POST /v1/documents/extract</code> e <code>/v1/documents/confirm</code>; os
+<a href="document-agent/#exemplos-completos-de-requisicao-e-resposta">exemplos completos de requisição, resposta e erros</a>
+mostram o ciclo. A consulta local de um documento confirmado passa por cálculo e validação,
+com citação da biblioteca local. A extração não persiste arquivo nem lançamento.</p>
 
 
 

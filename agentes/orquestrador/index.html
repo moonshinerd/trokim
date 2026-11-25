@@ -2480,6 +2480,33 @@
 
                 
               
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../adr/0026-confirmacao-e-consulta-de-documentos/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  0026 – Confirmação e Consulta de Documentos
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
             </ul>
           </nav>
         
@@ -2621,13 +2648,17 @@
 <p class="admonition-title">Status: Implementado</p>
 <p>Implementado na issue <a href="https://github.com/moonshinerd/trokim/issues/51">#51</a>. O contrato de mensagens é estrito e a orquestração segue um fluxo linear defensivo com revisão única em caso de bloqueio.</p>
 </div>
-<p>Coordena os quatro agentes especializados e constrói a trilha de auditoria (<code>steps</code>). O código está estruturado em:</p>
+<p>Coordena os quatro agentes especializados do fluxo educacional e constrói a trilha de auditoria (<code>steps</code>). O código está estruturado em:</p>
 <ul>
 <li><code>api/app/domain/agents.py</code>: contrato puro de domínio (Pydantic v2), sem dependências de frameworks externos ou rede.</li>
 <li><code>api/app/services/agents/base.py</code>: protocolo assíncrono <code>Agent</code>.</li>
 <li><code>api/app/services/agents/orchestrator.py</code>: classe <code>Orchestrator</code> e função de roteamento <code>needs_analysis</code>.</li>
 </ul>
 <h2 id="regras-de-execucao">Regras de Execução<a class="headerlink" href="#regras-de-execucao" title="Permanent link">&para;</a></h2>
+<p>Essas regras descrevem o fluxo educacional. Antes dele, <code>AgentQueryService</code> resolve as
+consultas locais de estabelecimentos identificados em documentos confirmados. Esse fluxo
+tem cálculo determinístico e validação independente, sem pesquisa institucional nem LLM;
+veja a <a href="../../adr/0026-confirmacao-e-consulta-de-documentos/">ADR 0026</a>.</p>
 <ol>
 <li><strong>Research Agent (Primeira Linha de Defesa):</strong> Recupera evidências institucionais. Se <code>abstain_reason</code> for preenchido (fora de escopo ou sem evidência suficiente), o orquestrador encerra a execução com status <code>abstained</code> e devolve a mensagem fixa de abstenção imediatamente, sem acionar o LLM.</li>
 <li><strong>Analysis Agent (Cálculo Determinístico):</strong> É executado somente se a pergunta demandar números ou raciocínio orçamentário sobre extratos (<code>needs_analysis</code>). Caso contrário, o passo é marcado como <code>skipped</code>.</li>

@@ -2491,6 +2491,33 @@
 
                 
               
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../adr/0026-confirmacao-e-consulta-de-documentos/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  0026 – Confirmação e Consulta de Documentos
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
             </ul>
           </nav>
         
@@ -2939,8 +2966,11 @@
     O --&gt; R</code></pre>
 <p>O <a href="../../agentes/document-agent/">agente de documento</a> devolve campos e trilha sanitizada.
 Visão opcional exige proteção dos pixels e política de confiança; permanece bloqueada
-sem essas garantias. Validação financeira (#89), endpoints e confirmação (#96) ainda
-precisam ser integrados. Nenhum lançamento é criado por esse componente.</p>
+sem essas garantias. A extração chama a validação financeira (#89) em memória. A confirmação (#96) revalida os campos revisados, verifica duplicatas e grava a biblioteca no SQLite.</p>
+<p>A confirmação revalida também o total contra os pagamentos de fatura já conciliados e
+mantém o lote indivisível. <code>origin</code> registra a procedência sem substituir o tipo financeiro.
+O chat encaminha consultas de documentos ao <code>AgentQueryService</code> (cálculo e validação);
+a orientação educacional segue no orquestrador.</p>
 
 
 

@@ -2477,6 +2477,33 @@
 
                 
               
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../adr/0026-confirmacao-e-consulta-de-documentos/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  0026 – Confirmação e Consulta de Documentos
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
             </ul>
           </nav>
         
@@ -2988,7 +3015,7 @@
 <td style="text-align: center;"><span class="badge-must">Must have</span></td>
 <td style="text-align: center;"><a href="../pesquisa/guiding-questions/">GQ01</a>, <a href="../pesquisa/guiding-questions/">GQ02</a>, <a href="../pesquisa/guiding-questions/">GQ03</a></td>
 <td style="text-align: center;"><a href="../adr/0021-visao-e-ocr-modulares/">ADR 0021</a></td>
-<td style="text-align: center;">Implementado no mobile (mock; integração real na #97)</td>
+<td style="text-align: center;">Backend HTTP implementado (#96); mobile com mock até a #97</td>
 </tr>
 <tr>
 <td style="text-align: center;"><strong>RF28</strong></td>
@@ -2997,7 +3024,7 @@
 <td style="text-align: center;"><span class="badge-must">Must have</span></td>
 <td style="text-align: center;"><a href="../pesquisa/guiding-questions/">GQ01</a>, <a href="../pesquisa/guiding-questions/">GQ02</a>, <a href="../pesquisa/guiding-questions/">GQ03</a></td>
 <td style="text-align: center;"><a href="../adr/0021-visao-e-ocr-modulares/">ADR 0021</a></td>
-<td style="text-align: center;">Implementado no mobile (mock; integração real na #97)</td>
+<td style="text-align: center;">Backend HTTP implementado (#96); mobile com mock até a #97</td>
 </tr>
 <tr>
 <td style="text-align: center;"><strong>RF29</strong></td>
@@ -3472,7 +3499,7 @@
 <tr>
 <td>RF28 — revisão humana e abstenção</td>
 <td>GQ02, GQ05</td>
-<td><code>needs_review=True</code>, abstenção e leitura parcial; confirmação no app depende da #96</td>
+<td><code>needs_review=True</code>, abstenção e leitura parcial; confirmação via API testada em <code>api/tests/test_documents_api.py</code>; integração do app na #97</td>
 </tr>
 </tbody>
 </table>
@@ -3480,6 +3507,10 @@
 e testes. Estes requisitos não são declarados concluídos de ponta a ponta nesta entrega parcial.</p>
 <p>O <a href="../pesquisa/gabarito-multimodal/">gabarito multimodal</a> rastreia RF14/RF27/RF28 a GQ02, GQ03 e GQ05.
 A política de revisão não autoriza confirmar documentos antes da validação financeira da #89.</p>
+<p>Na #96, <code>api/tests/documents/</code> cobre conciliação sem conta, reenvio com campos inválidos,
+fatura já conciliada, aplicação integral do lote, categorias aprendidas em Pix, caixa versus
+competência, procedência após restauração SQLite e validação da consulta com citação.
+A consulta local não substitui os filtros por conta, dono e período das #94 e #95.</p>
 
 
 

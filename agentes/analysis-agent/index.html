@@ -1512,6 +1512,17 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#documentos-confirmados" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Documentos confirmados
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     
   
@@ -2480,6 +2491,33 @@
 
                 
               
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../adr/0026-confirmacao-e-consulta-de-documentos/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  0026 – Confirmação e Consulta de Documentos
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
             </ul>
           </nav>
         
@@ -2595,6 +2633,17 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#documentos-confirmados" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Documentos confirmados
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     
   
@@ -2621,7 +2670,7 @@
 <p class="admonition-title">Status: Implementado</p>
 <p>Implementado na issue <a href="https://github.com/moonshinerd/trokim/issues/53">#53</a>. O motor determinístico de cálculo financeiro elimina alucinações aritméticas e assegura conformidade estrita com a ADR 0004.</p>
 </div>
-<p>O <strong>Analysis Agent</strong> (<code>api/app/services/agents/analysis.py</code>) é o responsável exclusivo por computar quaisquer grandezas numéricas sobre os lançamentos da sessão ou sobre parâmetros informados pelo usuário. Ele nunca utiliza modelos generativos (LLMs).</p>
+<p>O <strong>Analysis Agent</strong> (<code>api/app/services/agents/analysis.py</code>) computa grandezas numéricas no fluxo educacional, usando <code>CalculationService</code>, sem modelos generativos (LLMs). A consulta local de um estabelecimento confirmado usa o mesmo serviço de cálculo em <code>AgentQueryService</code>, com validação independente antes da resposta.</p>
 <h2 id="intencoes-suportadas-e-formulas">Intenções Suportadas e Fórmulas<a class="headerlink" href="#intencoes-suportadas-e-formulas" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
@@ -2715,6 +2764,17 @@
 <ul>
 <li>O cálculo de meta atual assume aporte fixo e linear sem juros compostos ou inflação. Essa premissa é explicitada nas <code>assumptions</code> entregues ao Communication Agent.</li>
 </ul>
+<h2 id="documentos-confirmados">Documentos confirmados<a class="headerlink" href="#documentos-confirmados" title="Permanent link">&para;</a></h2>
+<p>“Quanto gastei nessa loja?” recebe <code>document_uid</code>; também é aceito o nome exato do
+estabelecimento, sem distinção de acentos, espaços repetidos ou maiúsculas.
+<code>AgentQueryService</code> considera só despesas de documentos confirmados (o total, a citação e a
+origem falam dos mesmos lançamentos), exclui duplicatas e transferências próprias, soma pelo
+<code>CalculationService</code> e produz passos <code>analysis</code> e <code>validation</code>. A resposta cita a
+biblioteca local e a origem “lido de foto ou PDF, confirmado por você”, sem enviar os
+lançamentos ao LLM. Em “nessa loja” sem documento identificado, pede esclarecimento. Perguntas
+por nome que não casam com nenhum estabelecimento de documento (por exemplo, “quanto gastei em
+janeiro?”) seguem para o orquestrador.
+Veja os <a href="../document-agent/#consulta-do-lancamento-confirmado">exemplos completos</a>.</p>
 
 
 

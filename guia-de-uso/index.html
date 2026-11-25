@@ -1065,6 +1065,17 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#documentos-por-foto-ou-pdf" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Documentos por foto ou PDF
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     
   
@@ -2832,6 +2843,33 @@
 
                 
               
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../adr/0026-confirmacao-e-consulta-de-documentos/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  0026 – Confirmação e Consulta de Documentos
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
             </ul>
           </nav>
         
@@ -3296,6 +3334,17 @@
     <span class="md-ellipsis">
       <span class="md-typeset">
         Conferir um arquivo real de banco
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#documentos-por-foto-ou-pdf" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Documentos por foto ou PDF
       </span>
     </span>
   </a>
@@ -4081,6 +4130,25 @@ sistema. A integração ao endpoint e a criação dos lançamentos pertencem à 
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-16-1"><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a>make<span class="w"> </span>validar-banco<span class="w"> </span><span class="nv">ARQUIVO</span><span class="o">=</span>/caminho/do/arquivo.pdf<span class="w">   </span><span class="c1"># ou .ofx, .csv</span>
 </span></code></pre></div>
 <p>O comando roda no seu computador e imprime só números agregados (banco reconhecido, quantidade, período, somas, naturezas e se o total do arquivo fecha). Não imprime descrições, nomes nem número de conta (só os 4 últimos dígitos). Compare as somas com o app do banco; se fecharem, abra uma issue com <strong>esses números</strong>, nunca com o arquivo.</p>
+<h2 id="documentos-por-foto-ou-pdf">Documentos por foto ou PDF<a class="headerlink" href="#documentos-por-foto-ou-pdf" title="Permanent link">&para;</a></h2>
+<p>Com a API local em execução, envie um comprovante sintético. A extração mostra os campos para revisão.</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-17-1"><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a>curl<span class="w"> </span>-F<span class="w"> </span><span class="s1">'file=@comprovante.png'</span><span class="w"> </span>http://localhost:8000/v1/documents/extract
+</span></code></pre></div>
+<p>Após revisar os campos, confirme o lançamento. Informe <code>account_id</code> para escolher uma conta cadastrada.
+Quando omitido, faturas vão para a conta de cartão <code>documentos:cartao</code>; os demais
+documentos vão para <code>documentos:sem_conta</code>. Sem conta explícita, a conciliação procura
+duplicatas em toda a biblioteca. Qualquer bloqueio retorna <code>422</code> sem aplicar parte do lote,
+inclusive no reenvio de um documento já confirmado.</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-18-1"><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a>curl<span class="w"> </span>-H<span class="w"> </span><span class="s1">'Content-Type: application/json'</span><span class="w"> </span>http://localhost:8000/v1/documents/confirm<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-18-2"><a id="__codelineno-18-2" name="__codelineno-18-2" href="#__codelineno-18-2"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">'{"kind":"pix_receipt","date":"2026-11-20","description":"Padaria Sintética","amount":"12.50"}'</span>
+</span><span id="__span-18-3"><a id="__codelineno-18-3" name="__codelineno-18-3" href="#__codelineno-18-3"></a>curl<span class="w"> </span>-H<span class="w"> </span><span class="s1">'Content-Type: application/json'</span><span class="w"> </span>http://localhost:8000/v1/agents/ask<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-18-4"><a id="__codelineno-18-4" name="__codelineno-18-4" href="#__codelineno-18-4"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">'{"message":"Quanto gastei na Padaria Sintética?"}'</span>
+</span></code></pre></div>
+<p>A consulta por nome exato soma só as despesas dos documentos confirmados daquele estabelecimento (o total, a citação e a origem falam dos mesmos lançamentos) e identifica na trilha esses documentos. Perguntas que não casam com um estabelecimento de documento, como “quanto gastei em janeiro?”, seguem para o assistente normal.</p>
+<p>Para perguntar “quanto gastei nessa loja?”, envie também <code>document_uid</code> com o <code>uid</code> retornado pela confirmação.</p>
+<p>A consulta tem passos de cálculo e validação e cita a biblioteca local; ela não precisa de
+redação por LLM. Sem referência válida para “nessa loja”, o sistema pede esclarecimento.
+Veja <a href="../agentes/document-agent/#exemplos-completos-de-requisicao-e-resposta">respostas completas, reenvio e exemplo de bloqueio</a>.</p>
 
 
 

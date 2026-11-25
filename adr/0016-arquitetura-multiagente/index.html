@@ -2491,6 +2491,33 @@
 
                 
               
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../0026-confirmacao-e-consulta-de-documentos/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  0026 – Confirmação e Consulta de Documentos
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
             </ul>
           </nav>
         
@@ -2767,7 +2794,9 @@ em <code>api/app/services/agents/base.py</code>. O contrato completo está no é
 <p><code>AgentName.DOCUMENT</code> e <code>DocumentAgent.run(DocumentContext)</code> acrescentam um passo de leitura
 com o mesmo <code>AgentStep</code>, sem executar o pipeline de pesquisa e comunicação do chat.
 O contexto próprio exclui os bytes de serialização e representação; a operação apaga sua
-referência ao arquivo ao terminar. A integração ao orquestrador HTTP pertence à #96.
+referência ao arquivo ao terminar. Na #96, <code>DocumentPipeline</code> coordena a leitura e a validação
+HTTP, e <code>AgentQueryService</code> trata a consulta local do lançamento confirmado, conforme a
+<a href="../0026-confirmacao-e-consulta-de-documentos/">ADR 0026</a>.
 O contrato público do épico #86 fica em <code>domain/documents.py</code> e deve ser compartilhado
 com a #89. O agente usa diretamente as portas <code>OcrProvider</code> e <code>VisionProvider</code> da #87
 (ADR 0021), com seus resultados tipados e suas fábricas configuráveis.
