@@ -52,3 +52,8 @@ no escopo das #94 e #95.
 - Fatura de cartão só é lançada em conta de cartão (`ACCOUNT_KIND_MISMATCH`, 422).
 - O passo de validação da trilha usa `failed` quando há bloqueio.
 - Queda do cliente durante o envio responde 400, sem erro 500.
+- **Abstenção e confirmação manual:** a abstenção do `/extract` não cria nada, mas o `/confirm`
+  aceita os campos que o usuário revisou ou digitou, mesmo sem leitura bem-sucedida. A validação
+  determinística vale do mesmo jeito. Limitação conhecida: o lançamento digitado à mão fica com
+  `origin=documento` e o chat o descreve como "lido de foto ou PDF, confirmado por você". Exigir
+  uma leitura prévia ou distinguir a origem manual fica para uma issue própria.
