@@ -2746,6 +2746,13 @@
 <td>Inclusão de <strong>RF29</strong> (tutoriais por banco e tela de bancos suportados com selos Validado e Experimental), cobrindo Nubank, Banco do Brasil, PicPay, Mercado Pago, Banco Inter, C6 Bank e Itaú, com vinculação da <a href="../adr/0022-registro-de-perfis-e-niveis-de-suporte/">ADR 0022</a>.</td>
 <td style="text-align: center;">Equipe Trokim</td>
 </tr>
+<tr>
+<td style="text-align: center;"><strong>v1.12.0</strong></td>
+<td style="text-align: center;">25/11/2026</td>
+<td style="text-align: center;">Semana 5 (<em>Consultas determinísticas</em>)</td>
+<td>Inclusão de <strong>RF30</strong> (consultas determinísticas sobre os dados do usuário: por conta, dono, período, fatura aberta e fechada, parcelas, dívidas, ranking, comparação e transferências próprias), com vinculação da <a href="../adr/0004-calculos-deterministicos/">ADR 0004</a> e da <a href="../adr/0018-contas-periodos-transferencias-e-visoes/">ADR 0018</a>.</td>
+<td style="text-align: center;">Equipe Trokim</td>
+</tr>
 </tbody>
 </table>
 <hr />
@@ -2976,7 +2983,7 @@
 <td style="text-align: center;"><strong>RF23</strong></td>
 <td>Controle de parcelamentos</td>
 <td>O sistema agrupa a mesma compra parcelada entre faturas e mostra parcela atual, quanto falta e a projeção mensal do que já está comprometido.</td>
-<td style="text-align: center;"><span class="badge-should">Should have</span></td>
+<td style="text-align: center;"><span class="badge-must">Must have</span></td>
 <td style="text-align: center;"><a href="../pesquisa/guiding-questions/">GQ07</a>, <a href="../pesquisa/guiding-questions/">GQ09</a></td>
 <td style="text-align: center;"><a href="../adr/0018-contas-periodos-transferencias-e-visoes/">ADR 0018</a></td>
 <td style="text-align: center;"><span class="badge-must">Implementado</span></td>
@@ -3034,6 +3041,15 @@
 <td style="text-align: center;"><a href="../pesquisa/guiding-questions/">GQ01</a>, <a href="../pesquisa/guiding-questions/">GQ03</a></td>
 <td style="text-align: center;"><a href="../adr/0022-registro-de-perfis-e-niveis-de-suporte/">ADR 0022</a>, <a href="../adr/0017-perfis-de-banco-e-natureza-do-lancamento/">ADR 0017</a></td>
 <td style="text-align: center;">Implementado; PicPay, Mercado Pago, Inter, C6 e Itaú seguem experimentais (sem arquivo real).</td>
+</tr>
+<tr>
+<td style="text-align: center;"><strong>RF30</strong></td>
+<td>Consultas determinísticas sobre os dados do usuário</td>
+<td>O sistema responde, por código e sem LLM, gasto e saldo por conta e por dono; por período (mês, intervalo, fatura aberta, fechada e próxima); parcelas em aberto; dívidas e compromissos; top estabelecimentos e categorias; comparação entre dois períodos; e o efeito das transferências próprias. Período e conta são resolvidos a partir do texto, e a ambiguidade volta como pergunta de esclarecimento, nunca como palpite. Só saem agregados, rótulo de conta (banco, tipo e dono) e estabelecimento: nunca documento, agência, número da conta ou nome de pessoa física.</td>
+<td style="text-align: center;"><span class="badge-must">Must have</span></td>
+<td style="text-align: center;"><a href="../pesquisa/guiding-questions/">GQ07</a>, <a href="../pesquisa/guiding-questions/">GQ09</a>, <a href="../pesquisa/guiding-questions/">GQ13</a></td>
+<td style="text-align: center;"><a href="../adr/0004-calculos-deterministicos/">ADR 0004</a>, <a href="../adr/0018-contas-periodos-transferencias-e-visoes/">ADR 0018</a></td>
+<td style="text-align: center;">Camada de cálculo implementada (#94; prioridade P0); a ligação ao chat é a #95. O vencimento da fatura é guardado quando o PDF o informa (Itaú e PicPay).</td>
 </tr>
 <tr>
 <td style="text-align: center;"><strong>RF31</strong></td>
@@ -3383,17 +3399,17 @@
 </tr>
 <tr>
 <td style="text-align: center;"><strong>RF29</strong></td>
-<td style="text-align: center;">Bancos suportados, níveis de suporte e tutoriais</td>
-<td style="text-align: center;">O app lista os bancos suportados com selo <strong>Validado</strong> ou <strong>Experimental</strong>, tutorial de exportação por banco e aviso de que banco experimental ainda não foi conferido com arquivo real. A API expõe a lista em <code>GET /v1/banks</code> e reconhece o banco <strong>pelo conteúdo</strong> do arquivo (OFX, PDF ou CSV). Banco novo é um registro e um perfil, sem alterar os demais.</td>
-<td><span class="badge-should">Should have</span></td>
-<td><a href="../pesquisa/guiding-questions/">GQ01</a>, <a href="../pesquisa/guiding-questions/">GQ03</a></td>
-</tr>
-<tr>
-<td style="text-align: center;"><strong>RF29</strong></td>
 <td style="text-align: center;">GQ01, GQ03</td>
 <td style="text-align: center;"><a href="../adr/0022-registro-de-perfis-e-niveis-de-suporte/">ADR 0022</a>, <a href="../adr/0017-perfis-de-banco-e-natureza-do-lancamento/">0017</a></td>
 <td><code>api/app/services/bank_registry.py</code>, <code>bank_profiles.py</code>, <code>bank_pdf_profiles.py</code>, <code>bank_csv_profiles.py</code>, <code>api/app/routers/v1/banks.py</code>, <code>mobile/lib/features/import_guide/</code></td>
 <td><code>api/tests/test_bancos_experimentais.py</code>, <code>api/tests/test_validar_banco.py</code>, <code>mobile/test/supported_banks_test.dart</code></td>
+</tr>
+<tr>
+<td style="text-align: center;"><strong>RF30</strong></td>
+<td style="text-align: center;">GQ07, GQ09, GQ13</td>
+<td style="text-align: center;"><a href="../adr/0004-calculos-deterministicos/">ADR 0004</a>, <a href="../adr/0018-contas-periodos-transferencias-e-visoes/">0018</a></td>
+<td><code>api/app/services/financial_query_service.py</code>, <code>api/app/services/calculation_service.py</code>, <code>api/app/services/installment_service.py</code></td>
+<td><code>api/tests/test_financial_queries.py</code></td>
 </tr>
 <tr>
 <td style="text-align: center;"><strong>RF31</strong></td>
