@@ -30,10 +30,18 @@ retorna `repetido`, mas datas, vencimento e total continuam sujeitos à validaç
 `conta` ou `cartao`, preservando as visões de caixa e competência. As regras de categoria
 aprendidas também valem para o estabelecimento revisado de um Pix. Consulte os [exemplos HTTP](../guia-de-uso.md#documentos-por-foto-ou-pdf).
 
+Compras idênticas no mesmo dia dentro de um documento são válidas: cada ocorrência recebe seu
+próprio identificador, e o reenvio do mesmo documento continua retornando `repetido` linha a
+linha. Uma fatura de cartão só pode ser lançada em conta de cartão (`ACCOUNT_KIND_MISMATCH`,
+`422`). A abstenção do `/extract` não cria nada, mas o `/confirm` aceita campos revisados ou
+digitados à mão mesmo assim (limitação registrada na [ADR 0026](../adr/0026-confirmacao-e-consulta-de-documentos.md)).
+No `steps` da extração, o passo `validation` fica `failed` quando há bloqueio.
+
 | HTTP | Motivo |
 |---|---|
 | 413 | Limite de upload, páginas ou resolução excedido |
 | 415 | Conteúdo diferente de JPEG, PNG e PDF |
+| 400 | Envio interrompido (o cliente desconectou durante o upload) |
 | 422 | Documento inválido ou confirmação bloqueada |
 | 503 | Motor indisponível ou tempo de leitura excedido |
 

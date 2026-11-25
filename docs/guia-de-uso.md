@@ -586,7 +586,7 @@ curl -H 'Content-Type: application/json' http://localhost:8000/v1/agents/ask \
   -d '{"message":"Quanto gastei na Padaria Sintética?"}'
 ```
 
-A consulta por nome exato soma os gastos do estabelecimento e identifica na trilha os documentos confirmados.
+A consulta por nome exato soma só as despesas dos documentos confirmados daquele estabelecimento (o total, a citação e a origem falam dos mesmos lançamentos) e identifica na trilha esses documentos. Perguntas que não casam com um estabelecimento de documento, como “quanto gastei em janeiro?”, seguem para o assistente normal.
 
 Para perguntar “quanto gastei nessa loja?”, envie também `document_uid` com o `uid` retornado pela confirmação.
 
