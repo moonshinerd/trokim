@@ -107,3 +107,25 @@ async def test_nome_curto_do_estabelecimento_pode_ser_consultado(client, reviewe
     )
     assert response.status == "answered"
     assert uid in response.answer
+
+
+@pytest.mark.parametrize("question", ["Quanto gastei em janeiro?", "Quanto gastei em alimentação?"])
+async def test_pergunta_que_nao_e_de_loja_segue_para_o_orquestrador(
+    client, reviewed, orchestrator, question
+):
+    await client.post("/v1/documents/confirm", json=reviewed)
+    esperado = object()
+    orchestrator.run = AsyncMock(return_value=esperado)
+    resposta = await AgentQueryService(orchestrator).run(question, LIBRARY.transactions)
+    assert resposta is esperado
+
+
+async def test_total_soma_so_documentos_do_estabelecimento(client, reviewed, orchestrator):
+    uid = (await client.post("/v1/documents/confirm", json=reviewed)).json()["uid"]
+    importado = LIBRARY.transactions[0].model_copy(
+        update={"origin": "importacao", "amount": 100.0, "id": "ofx:1"}
+    )
+    resposta = await AgentQueryService(orchestrator).run(
+        "Quanto gastei nessa loja?", [*LIBRARY.transactions, importado], uid
+    )
+    assert resposta.calculations[0].value == 12.5

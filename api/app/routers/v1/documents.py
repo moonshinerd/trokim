@@ -5,6 +5,7 @@ from typing import Annotated
 from fastapi import APIRouter, Depends, HTTPException, Request
 from starlette.datastructures import UploadFile
 from starlette.formparsers import MultiPartException, MultiPartParser
+from starlette.requests import ClientDisconnect
 
 from app.core.request_lifecycle import run_while_connected
 from app.domain.documents import (
@@ -70,6 +71,9 @@ async def _read_upload(request: Request) -> tuple[bytes, str | None]:
         form = await parser.parse()
     except MultiPartException:
         raise HTTPException(422, detail="Formulário multipart inválido.") from None
+    except ClientDisconnect:
+        # O cliente caiu no meio do envio: não há a quem responder.
+        raise HTTPException(400, detail="Envio interrompido.") from None
     try:
         upload = form.get("file")
         account = form.get("account_id")

@@ -119,9 +119,20 @@ async def test_linha_invalida_nao_deixa_confirmacao_parcial(client, invoice):
     assert not LIBRARY.transactions
 
 
-async def test_linhas_identicas_sao_bloqueadas_sem_alterar_biblioteca(client, invoice):
-    invoice["transactions"][1] = dict(invoice["transactions"][0])
-    response = await client.post("/v1/documents/confirm", json=invoice)
+async def test_fatura_com_compras_identicas_no_mesmo_dia_e_confirmada(client, invoice):
+    linha = {"date": "2026-11-10", "description": "Loja A", "amount": "6.25"}
+    corpo = {**invoice, "transactions": [linha, linha], "amount": "12.50"}
+    response = await client.post("/v1/documents/confirm", json=corpo)
+    assert response.status_code == 200, response.text
+    assert len(set(response.json()["uids"])) == 2
+    reenvio = await client.post("/v1/documents/confirm", json=corpo)
+    assert reenvio.json()["outcome"] == "repetido"
+    assert len(LIBRARY.transactions) == 2
+
+
+async def test_fatura_de_cartao_em_conta_corrente_e_bloqueada(client, invoice):
+    LIBRARY.accounts["banco:1"] = Account(id="banco:1", acct_id="1", kind=AccountKind.CHECKING)
+    response = await client.post("/v1/documents/confirm", json={**invoice, "account_id": "banco:1"})
     assert response.status_code == 422
-    assert not LIBRARY.accounts
+    assert response.json()["detail"]["issues"][0]["code"] == "ACCOUNT_KIND_MISMATCH"
     assert not LIBRARY.transactions

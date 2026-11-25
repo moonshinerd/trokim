@@ -13,7 +13,7 @@ from app.domain.agents import (
     MultiAgentStatus,
     StepStatus,
 )
-from app.domain.models import EvidenceChunk, Transaction, TransactionOrigin
+from app.domain.models import EvidenceChunk, Transaction, TransactionOrigin, TransactionType
 from app.services.agents.orchestrator import REJECTION_MESSAGE, Orchestrator
 from app.services.calculation_service import CalculationService
 from app.services.statement_profiles import normalize_text
@@ -26,6 +26,7 @@ def _select_transactions(
 ) -> list[Transaction] | None:
     match = re.fullmatch(r"quanto gastei (?:na|no|em) (.+?)\??", question.strip(), re.I)
     name = match[1] if match else None
+    by_name = name is not None
     if re.fullmatch(r"quanto gastei nessa loja\??", question.strip(), re.I):
         reference = next(
             (
@@ -36,16 +37,24 @@ def _select_transactions(
             None,
         )
         name = (reference.merchant or reference.description) if reference else ""
+        by_name = False
     if name is None:
         return None
     normalized = normalize_text(name)
-    return [
+    # Só lançamentos de documento confirmado: o total, a citação e a origem falam da mesma coisa.
+    selected = [
         tx
         for tx in transactions
         if normalized
+        and tx.origin == TransactionOrigin.DOCUMENT
+        and tx.type == TransactionType.DEBIT
         and tx.counts_in_totals
         and normalize_text(tx.merchant or tx.description) == normalized
     ]
+    # "Quanto gastei em janeiro/alimentação?" não é de documento: segue para o orquestrador.
+    if by_name and not selected:
+        return None
+    return selected
 
 
 class AgentQueryService:

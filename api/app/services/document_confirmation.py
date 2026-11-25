@@ -41,7 +41,9 @@ def _block(code: str, message: str) -> None:
     )
 
 
-def _transaction(req: DocumentConfirmRequest, line: ReviewedLine, account: Account) -> Transaction:
+def _transaction(
+    req: DocumentConfirmRequest, line: ReviewedLine, account: Account, occurrence: int = 0
+) -> Transaction:
     is_pix = req.kind == DocumentKind.PIX_RECEIPT
     if is_pix:
         nature = (
@@ -57,7 +59,8 @@ def _transaction(req: DocumentConfirmRequest, line: ReviewedLine, account: Accou
         )
     source_kind = AccountKind.CARD if req.kind == DocumentKind.CARD_INVOICE else account.kind
     return Transaction(
-        id=f"doc:{line.date.isoformat()}:{line.amount:.2f}:{line.description.casefold()}",
+        id=f"doc:{line.date.isoformat()}:{line.amount:.2f}:{line.description.casefold()}"
+        + (f":{occurrence}" if occurrence else ""),
         account_id=account.id,
         description=line.description,
         amount=float(line.amount),
@@ -88,6 +91,10 @@ def confirm_document(library: Library, req: DocumentConfirmRequest) -> DocumentC
         account = library.accounts.get(key)
         if req.account_id and account is None:
             _block("UNKNOWN_ACCOUNT", "Conta não encontrada.")
+        if account is not None and kind == AccountKind.CARD and account.kind != AccountKind.CARD:
+            _block(
+                "ACCOUNT_KIND_MISMATCH", "Fatura de cartão só pode ser lançada em conta de cartão."
+            )
         account = account or Account(
             id=key,
             institution=DOCUMENT_ACCOUNT,
@@ -98,10 +105,15 @@ def confirm_document(library: Library, req: DocumentConfirmRequest) -> DocumentC
         lines = req.transactions or [
             ReviewedLine(date=req.date, description=req.description, amount=req.amount)
         ]
-        candidates = [_transaction(req, line, account) for line in lines]
+        # Compras idênticas no mesmo dia são legítimas: a n-ésima ocorrência ganha seu próprio id,
+        # e o reenvio do mesmo documento continua reconhecido linha a linha.
+        seen: dict[tuple, int] = {}
+        candidates = []
+        for line in lines:
+            base = (line.date, line.amount, line.description.casefold())
+            candidates.append(_transaction(req, line, account, seen.get(base, 0)))
+            seen[base] = seen.get(base, 0) + 1
         identities = [_identity(tx) for tx in candidates]
-        if len(set(identities)) != len(identities):
-            _block("POSSIBLE_DUPLICATE", "Há linhas idênticas na fatura. Revise os itens.")
 
         known = {
             _identity(tx): tx

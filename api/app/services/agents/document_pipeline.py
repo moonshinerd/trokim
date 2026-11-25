@@ -70,7 +70,7 @@ class DocumentPipeline:
             steps.append(
                 AgentStep(
                     agent=AgentName.VALIDATION,
-                    status=StepStatus.OK,
+                    status=StepStatus.FAILED if blockers else StepStatus.OK,
                     summary=f"Validação do documento: {blockers} bloqueio(s), "
                     f"{len(issues) - blockers} aviso(s).",
                     duration_ms=max(1, int((time.perf_counter() - t0) * 1000)),

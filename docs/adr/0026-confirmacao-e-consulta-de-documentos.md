@@ -43,3 +43,12 @@ manter cópias mutáveis da biblioteca. A origem sobrevive ao SQLite e ao backup
 nos cálculos existentes. Sem referência válida, a consulta local pede esclarecimento;
 um bloqueio do validador retém a resposta. A seleção por conta, dono e período continua
 no escopo das #94 e #95.
+
+## Ajustes da revisão
+
+- Compras idênticas no mesmo dia dentro de um documento recebem identificador próprio pela
+  ocorrência (`:1`, `:2`...); o reenvio do mesmo documento continua reconhecido linha a linha.
+  Duas confirmações separadas de um único lançamento idêntico seguem como “repetido”.
+- Fatura de cartão só é lançada em conta de cartão (`ACCOUNT_KIND_MISMATCH`, 422).
+- O passo de validação da trilha usa `failed` quando há bloqueio.
+- Queda do cliente durante o envio responde 400, sem erro 500.

@@ -75,8 +75,11 @@ O comportamento do Analysis Agent e as rotinas matemáticas são cobertos em:
 
 “Quanto gastei nessa loja?” recebe `document_uid`; também é aceito o nome exato do
 estabelecimento, sem distinção de acentos, espaços repetidos ou maiúsculas.
-`AgentQueryService` exclui duplicatas e transferências próprias, soma pelo
+`AgentQueryService` considera só despesas de documentos confirmados (o total, a citação e a
+origem falam dos mesmos lançamentos), exclui duplicatas e transferências próprias, soma pelo
 `CalculationService` e produz passos `analysis` e `validation`. A resposta cita a
 biblioteca local e a origem “lido de foto ou PDF, confirmado por você”, sem enviar os
-lançamentos ao LLM. Sem documento identificado, pede esclarecimento.
+lançamentos ao LLM. Em “nessa loja” sem documento identificado, pede esclarecimento. Perguntas
+por nome que não casam com nenhum estabelecimento de documento (por exemplo, “quanto gastei em
+janeiro?”) seguem para o orquestrador.
 Veja os [exemplos completos](document-agent.md#consulta-do-lancamento-confirmado).
