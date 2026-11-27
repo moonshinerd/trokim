@@ -103,8 +103,9 @@ remota, só é usada com o consentimento ligado pelo usuário em Ajustes (enviad
 requisição; sem ele a API recusa) e recebe a imagem com CPF, CNPJ, agência e conta tarjados. Nada lido vira lançamento sem a revisão do usuário
 ([ADR 0026](adr/0026-confirmacao-e-consulta-de-documentos.md)).
 
-**Modalidades suportadas:** texto no chat; foto (PNG, JPEG, WebP) e PDF de fatura de cartão,
-comprovante de Pix e boleto, até o limite de tamanho do endpoint.
+**Modalidades suportadas:** texto no chat; foto (JPEG ou PNG) e PDF de fatura de cartão, comprovante de
+Pix e boleto, até 20 MiB; extrato OFX e PDF com camada de texto, como antes. Áudio e vídeo não
+entram.
 
 **Limitações conhecidas e mitigação** ([Histórico de resultados, seção 11](pesquisa/resultados.md#11-semana-5-motores-de-leitura-e-chat-com-os-dados-do-usuario)):
 
@@ -117,20 +118,28 @@ comprovante de Pix e boleto, até o limite de tamanho do endpoint.
 | Mesmo Pix por comprovante e depois pelo extrato | O comprovante é conciliado e não conta duas vezes | Conciliação por tipo, data, valor e favorecido |
 | Modelo do chat cita número sem cálculo | A resposta é retida, nunca entregue com número errado | Validador de números; 27 de 32 valores entregues com o Qwen de 1,5 B |
 
-**Roteiro da demonstração (duas modalidades):**
+**Roteiro da demonstração (duas modalidades):** tudo com os arquivos sintéticos de
+`research/synthetic_data/`.
 
-1. No app, em **Extratos**, tocar em **Fotografar ou escolher documento** e escolher a foto sintética de um comprovante de Pix
-   (`research/synthetic_data/document_images/`), com o motor **OCR local**, e tocar em **Ler documento**.
-2. Conferir os campos na revisão (data, valor, favorecido, banco), corrigir o nome se o OCR
-   colou espaços e **Confirmar**.
-3. Em **Ajustes**, ligar o **Modo multiagente**. No **Assistente**, perguntar "Quanto gastei na <favorecido do comprovante>?": a resposta traz o
-   valor calculado e diz que o lançamento veio de foto ou PDF revisado pelo usuário.
-4. Perguntar "Quanto gastei em novembro de 2026?" com a conta e o período escolhidos no seletor:
-   a resposta mostra o card do cálculo daquela conta.
-5. Importar o extrato do mesmo mês com o mesmo Pix: a API devolve `documents_reconciled: 1` e o
-   total de gastos não muda.
-6. (Opcional) Repetir o passo 1 com o motor de visão remota para mostrar o
-   consentimento exigido em Ajustes.
+1. **Foto legível.** Em **Extratos**, tocar em **Fotografar ou escolher documento**, escolher
+   `document_images/D02.png` (Pix de R$ 546,40 a "Pessoa Exemplo Alfa"), manter o motor
+   **OCR local** e tocar em **Ler documento**.
+2. **Revisão.** Conferir data, valor, favorecido e banco; o OCR lê o nome como
+   `PessoaExemploAlfa`, que se corrige na tela antes de **Confirmar**.
+3. **Foto ilegível.** Repetir com `document_images/D32.png` (Pix muito desfocado): o app não mostra
+   campos, explica o motivo e pede nova foto; nada é criado.
+4. **Pergunta no chat.** Em **Ajustes**, ligar o **Modo multiagente**. No **Assistente**,
+   perguntar "Quanto gastei na Pessoa Exemplo Alfa?": a resposta traz R$ 546,40, o lançamento
+   e a frase "Lido de foto ou PDF, confirmado por você", com a trilha dos agentes. Escrever "na"
+   antes do nome: com "com" o chat devolve os totais gerais.
+5. **Dívidas.** Importar `fatura_nubank_aberta_pessoal.ofx` e perguntar, com o período em
+   "Todo o período", "Quais parcelas ainda tenho a pagar?": a resposta mostra R$ 1.351,24 a
+   pagar em 3 parcelamentos, até 2027-03. Com a fatura aberta no seletor, o chat pergunta se
+   o usuário quer o retrato das parcelas ou os gastos do período.
+6. **Banco novo.** Em **Ajustes → Bancos suportados**, abrir o tutorial do PicPay, marcado como
+   **Experimental**.
+7. (Opcional) Em **Ajustes → Leitura de documentos**, escolher o modelo de visão remoto e
+   mostrar o consentimento exigido antes do envio.
 
 ---
 
