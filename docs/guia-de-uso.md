@@ -621,16 +621,21 @@ O recorte escolhido viaja na pergunta como `account_id`, `owner` e `period` de
   no formato brasileiro), cada um com link para os **lançamentos de origem** usados
   na conta.
 - **Perguntas sugeridas** a partir do que já foi importado, como "quanto falta das
-  parcelas?" ou "quanto vence nos próximos 30 dias?".
+  parcelas?", "qual o total da fatura aberta?" ou os gastos do último mês com lançamentos.
+  Numa fatura aberta, esse mês é o da data de exportação, não o do fechamento: uma fatura
+  que fecha em 03/12, exportada em 14/11, sugere novembro.
 - A trilha **Como cheguei a essa resposta**, agora também com os cálculos que
   sustentam cada número.
 
-Sem nenhum dado importado, o chat não manda a pergunta: ele explica o que importar e
-oferece o atalho direto para o fluxo de importação (**Importar extrato** ou
-**Fotografar documento**).
+Sem nenhum dado importado, uma pergunta sobre os **próprios lançamentos** ("quanto
+gastei?", "qual o total da fatura?", "quanto falta das parcelas?") não é enviada: o chat
+explica o que importar e oferece o atalho para o fluxo de importação. Pergunta de
+educação financeira ("como montar uma reserva de emergência?") segue para o RAG mesmo com
+a biblioteca vazia.
 
-<!-- captura: chat com os seletores de conta e período e um cartão de cálculo -->
-<!-- captura: estado vazio do chat com o atalho para importação -->
+| Seletores e sugestões | Cartão de cálculo | Parcelas a pagar |
+|:---:|:---:|:---:|
+| ![Chat com os seletores de conta e período](assets/homologacao/semana-5/11-chat-seletores.webp){ width="220" } | ![Resposta com o lançamento lido da foto](assets/homologacao/semana-5/12-chat-documento.webp){ width="220" } | ![Parcelas a pagar calculadas por código](assets/homologacao/semana-5/13-chat-parcelas.webp){ width="220" } |
 
 
 ## Conferir um arquivo real de banco

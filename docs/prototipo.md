@@ -43,6 +43,6 @@ app, o modo multiagente adiciona acima da conversa os seletores de **conta e
 dono** (Tudo, Pessoal, Empresas ou uma conta) e de **período** (mês, fatura
 aberta ou fechada), além dos cartões de cálculo com link para os lançamentos de
 origem, das perguntas sugeridas pelos dados importados e do estado vazio que
-leva à importação — veja
+leva à importação quando a pergunta é sobre os próprios lançamentos — veja
 [Conversar com o contexto das contas](guia-de-uso.md#811-conversar-com-o-contexto-das-contas).
 Esses controles não existem na demonstração estática.
