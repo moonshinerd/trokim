@@ -45,6 +45,21 @@ nuvem contraria a premissa local-first do projeto.
    lançamento é criado sem confirmação humana ativa. A etapa inicial utiliza repositório de teste
    (mock) e a integração com o endpoint real pertence à issue #97.
 
+## Ajustes da Semana 5 (#97 e #98, 27/11/2026)
+
+- **Escolha do motor por requisição.** `GET /v1/documents/engines` informa o OCR local e, se o
+  servidor tiver um modelo de visão configurado, o modelo e se ele é remoto. O
+  `POST /v1/documents/extract` aceita `engine` (`ocr`, padrão, ou `vision`) e `allow_remote`
+  (`true` só com o consentimento salvo no app). Sem modelo de visão, `engine=vision` responde
+  `503 VISION_UNAVAILABLE`; com modelo remoto e sem `allow_remote=true`, `403
+  REMOTE_CONSENT_REQUIRED`. O consentimento passa a ser do usuário, por requisição; o
+  `VISION_ALLOW_REMOTE` só vale para os usos internos sem `engine` (testes e benchmark).
+- **Proteção dos pixels.** A visão é sempre complemento do OCR e só recebe a imagem depois do
+  `OcrMaskingSanitizer` (`app/services/vision_sanitizer.py`), que tarja CPF, CNPJ, agência e conta
+  usando as caixas que o OCR já leu na mesma página (inclusive o número ao lado de um rótulo
+  sozinho, como "Agência:" e "1234"). Valor e data continuam visíveis. Sem caixas do OCR, o
+  sanitizador devolve `None` e a visão fica bloqueada (`VISION_PRIVACY_BLOCKED`).
+
 ## Consequências
 
 - O agente de documento ([#88](https://github.com/moonshinerd/trokim/issues/88)) depende só das
@@ -54,6 +69,8 @@ nuvem contraria a premissa local-first do projeto.
   opcional e a imagem Docker é grande.
 - A confiança do OCR alimenta o porteiro de qualidade da imagem, que decide abster-se quando a
   foto não permite concluir.
+- A tarja depende do OCR: um número sensível que o OCR não leu não é tarjado. Por isso o envio
+  remoto exige consentimento explícito e o benchmark usa só documentos sintéticos.
 - A tela de revisão do app desacopla o motor de extração da confirmação do usuário; trocas de motor
   ou modelos não alteram o fluxo de conferência nem criam lançamentos de forma silenciosa.
 

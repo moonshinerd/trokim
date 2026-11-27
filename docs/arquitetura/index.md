@@ -62,7 +62,9 @@ Essa estrutura permitiu acrescentar os agentes na Semana 4 sem mexer nas camadas
 O endpoint de extração recebe o arquivo em memória e devolve os passos de leitura e validação. A revisão humana precede a confirmação e a gravação no SQLite. A consulta do estabelecimento usa o serviço de cálculo local e cita o lançamento confirmado. Consulte o [contrato HTTP](../agentes/document-agent.md).
 
 A confirmação prepara o lote, valida o documento completo e só então altera a biblioteca.
-A procedência `origin=documento` é independente de `source_kind=conta|cartao`.
+A procedência `origin` (`importacao`, `documento` ou `manual`, quando o usuário digitou sem
+leitura bem-sucedida) é independente de `source_kind=conta|cartao`. Um extrato importado depois
+concilia o lançamento do documento com o mesmo Pix ou compra, que vira duplicata.
 O `AgentQueryService` trata a consulta local com `CalculationService` e `ValidationAgent`,
 enquanto o `Orchestrator` coordena as perguntas educacionais. A
 [ADR 0026](../adr/0026-confirmacao-e-consulta-de-documentos.md) registra essas fronteiras.
