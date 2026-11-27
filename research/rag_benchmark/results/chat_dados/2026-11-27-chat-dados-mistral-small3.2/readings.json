@@ -1,0 +1,3533 @@
+[
+  {
+    "id": "C01",
+    "response": {
+      "query": "Quanto gastei?",
+      "status": "rejected",
+      "answer": "A resposta preliminar gerada pelo assistente não passou pelas regras de validação e segurança do Trokim (conformidade com cálculos auditáveis e diretrizes oficiais). Por segurança financeira, a resposta foi retida.",
+      "model": "ollama/mistral-small3.2:24b",
+      "evidences": [],
+      "calculations": [
+        {
+          "key": "total_expenses",
+          "label": "Gasto (Nubank conta (pessoal)) em setembro de 2026",
+          "value": 561.78,
+          "unit": "BRL",
+          "source": "FinancialQueryService"
+        },
+        {
+          "key": "total_income",
+          "label": "Receita (Nubank conta (pessoal)) em setembro de 2026",
+          "value": 7023.92,
+          "unit": "BRL",
+          "source": "FinancialQueryService"
+        },
+        {
+          "key": "net_balance",
+          "label": "Saldo (Nubank conta (pessoal)) em setembro de 2026",
+          "value": 6462.14,
+          "unit": "BRL",
+          "source": "FinancialQueryService"
+        }
+      ],
+      "validation_issues": [
+        {
+          "code": "NUMBER_NOT_SUPPORTED",
+          "severity": "blocker",
+          "message": "Número pessoal sem cálculo compatível: 2026."
+        },
+        {
+          "code": "NUMBER_NOT_SUPPORTED",
+          "severity": "blocker",
+          "message": "Número pessoal sem cálculo compatível: 1."
+        },
+        {
+          "code": "NUMBER_NOT_SUPPORTED",
+          "severity": "blocker",
+          "message": "Número pessoal sem cálculo compatível: 2."
+        },
+        {
+          "code": "NUMBER_NOT_SUPPORTED",
+          "severity": "blocker",
+          "message": "Número pessoal sem cálculo compatível: 3."
+        },
+        {
+          "code": "NUMBER_NOT_SUPPORTED",
+          "severity": "blocker",
+          "message": "Número pessoal sem cálculo compatível: - 561,78."
+        }
+      ],
+      "steps": [
+        {
+          "agent": "research",
+          "status": "skipped",
+          "summary": "Consulta aos dados importados; não requer orientação institucional.",
+          "duration_ms": 0,
+          "detail": {
+            "reason": "financial_query"
+          }
+        },
+        {
+          "agent": "analysis",
+          "status": "ok",
+          "summary": "Consulta financeira calculada.",
+          "duration_ms": 1,
+          "detail": {
+            "intent": "summary",
+            "calculations": [
+              {
+                "key": "total_expenses",
+                "label": "Gasto (Nubank conta (pessoal)) em setembro de 2026",
+                "value": 561.78,
+                "unit": "BRL",
+                "source": "FinancialQueryService"
+              },
+              {
+                "key": "total_income",
+                "label": "Receita (Nubank conta (pessoal)) em setembro de 2026",
+                "value": 7023.92,
+                "unit": "BRL",
+                "source": "FinancialQueryService"
+              },
+              {
+                "key": "net_balance",
+                "label": "Saldo (Nubank conta (pessoal)) em setembro de 2026",
+                "value": 6462.14,
+                "unit": "BRL",
+                "source": "FinancialQueryService"
+              }
+            ]
+          }
+        },
+        {
+          "agent": "communication",
+          "status": "ok",
+          "summary": "Rascunho substituído por conteúdo apoiado nos dados recebidos.",
+          "duration_ms": 6030,
+          "detail": {
+            "model": "ollama/mistral-small3.2:24b",
+            "attempt": 1,
+            "prompt_tokens": 1455,
+            "completion_tokens": 252,
+            "draft_guard": "safe_fallback"
+          }
+        },
+        {
+          "agent": "validation",
+          "status": "failed",
+          "summary": "Validação reprovada: 5 problema(s) impeditivo(s) encontrado(s).",
+          "duration_ms": 1,
+          "detail": {
+            "issues_count": 5,
+            "blockers_count": 5,
+            "warnings_count": 0,
+            "issues": [
+              {
+                "code": "NUMBER_NOT_SUPPORTED",
+                "severity": "blocker",
+                "message": "Número pessoal sem cálculo compatível: 2026."
+              },
+              {
+                "code": "NUMBER_NOT_SUPPORTED",
+                "severity": "blocker",
+                "message": "Número pessoal sem cálculo compatível: 1."
+              },
+              {
+                "code": "NUMBER_NOT_SUPPORTED",
+                "severity": "blocker",
+                "message": "Número pessoal sem cálculo compatível: 2."
+              },
+              {
+                "code": "NUMBER_NOT_SUPPORTED",
+                "severity": "blocker",
+                "message": "Número pessoal sem cálculo compatível: 3."
+              },
+              {
+                "code": "NUMBER_NOT_SUPPORTED",
+                "severity": "blocker",
+                "message": "Número pessoal sem cálculo compatível: - 561,78."
+              }
+            ]
+          }
+        },
+        {
+          "agent": "communication",
+          "status": "ok",
+          "summary": "Rascunho substituído por conteúdo apoiado nos dados recebidos.",
+          "duration_ms": 4982,
+          "detail": {
+            "model": "ollama/mistral-small3.2:24b",
+            "attempt": 2,
+            "prompt_tokens": 1630,
+            "completion_tokens": 266,
+            "draft_guard": "safe_fallback"
+          }
+        },
+        {
+          "agent": "validation",
+          "status": "failed",
+          "summary": "Validação reprovada: 5 problema(s) impeditivo(s) encontrado(s).",
+          "duration_ms": 1,
+          "detail": {
+            "issues_count": 5,
+            "blockers_count": 5,
+            "warnings_count": 0,
+            "issues": [
+              {
+                "code": "NUMBER_NOT_SUPPORTED",
+                "severity": "blocker",
+                "message": "Número pessoal sem cálculo compatível: 2026."
+              },
+              {
+                "code": "NUMBER_NOT_SUPPORTED",
+                "severity": "blocker",
+                "message": "Número pessoal sem cálculo compatível: 1."
+              },
+              {
+                "code": "NUMBER_NOT_SUPPORTED",
+                "severity": "blocker",
+                "message": "Número pessoal sem cálculo compatível: 2."
+              },
+              {
+                "code": "NUMBER_NOT_SUPPORTED",
+                "severity": "blocker",
+                "message": "Número pessoal sem cálculo compatível: 3."
+              },
+              {
+                "code": "NUMBER_NOT_SUPPORTED",
+                "severity": "blocker",
+                "message": "Número pessoal sem cálculo compatível: - 561,78."
+              }
+            ]
+          }
+        }
+      ],
+      "total_ms": 11015
+    },
+    "metrics": {
+      "numeric_expected": 3,
+      "calculation_correct": 3,
+      "numeric_correct": 0,
+      "rejected_by_validation": true,
+      "numeric_case_correct": false,
+      "raw_model_calls": 2,
+      "raw_model_calls_with_invented_numbers": 2,
+      "raw_model_invented_numbers": 10,
+      "final_invented_numbers": 0,
+      "abstention_expected": false,
+      "abstention_correct": false,
+      "validation_number_not_supported": 10,
+      "validation_calculation_missing": 0,
+      "validation_blocked": true,
+      "safe_fallbacks": 2,
+      "technical_failure": false
+    },
+    "elapsed_ms": 11019,
+    "model_calls": [
+      {
+        "content": "### Resposta:\n\nOs cálculos apresentados são baseados nos dados importados para a conta pessoal no Nubank em setembro de 2026. Aqui está o resumo:\n\n1. **Gasto total**: 561,78 BRL\n2. **Receita total**: 7.023,92 BRL\n3. **Saldo líquido**: 6.462,14 BRL\n\n#### Explicação dos cálculos:\nO saldo líquido é obtido subtraindo o gasto total da receita total:\n\\[ \\text{Saldo líquido} = \\text{Receita total} - \\text{Gasto total} \\]\n\\[ 6.462,14 = 7.023,92 - 561,78 \\]\n\n#### Limitações:\n- Os valores consideram apenas os arquivos importados. Períodos incompletos podem omitir gastos ou receitas não registradas.\n- O saldo é a diferença entre receitas e despesas desses lançamentos, não necessariamente o saldo bancário confirmado.\n\nSe precisar de mais detalhes ou ajustes, posso ajudar!",
+        "model": "ollama/mistral-small3.2:24b",
+        "prompt_tokens": 1455,
+        "completion_tokens": 252,
+        "elapsed_ms": 6030
+      },
+      {
+        "content": "### Resposta do Trokim:\n\nOlá! Vamos analisar os dados importados para a sua conta pessoal no Nubank em setembro de 2026.\n\n#### Cálculos:\n1. **Gasto total**: R$ 561,78 [Fonte: FinancialQueryService]\n2. **Receita total**: R$ 7.023,92 [Fonte: FinancialQueryService]\n3. **Saldo líquido**: R$ 6.462,14 [Fonte: FinancialQueryService]\n\n#### Explicação:\nO saldo líquido é calculado subtraindo os gastos totais das receitas totais:\n\\[ \\text{Saldo líquido} = \\text{Receita total} - \\text{Gasto total} \\]\n\\[ \\text{Saldo líquido} = 7.023,92 - 561,78 = 6.462,14 \\]\n\n#### Limitações:\n- Os valores consideram apenas os arquivos importados; períodos incompletos podem omitir gastos.\n- O saldo é a diferença entre receitas e despesas desses lançamentos.\n\nSe precisar de mais detalhes ou tiver outras dúvidas, estou à disposição!",
+        "model": "ollama/mistral-small3.2:24b",
+        "prompt_tokens": 1630,
+        "completion_tokens": 266,
+        "elapsed_ms": 4982
+      }
+    ],
+    "validation_contexts": [
+      {
+        "draft": "Gasto (Nubank conta (pessoal)) em setembro de 2026 (total_expenses): 561.78 BRL [Fonte auditável: FinancialQueryService]\nReceita (Nubank conta (pessoal)) em setembro de 2026 (total_income): 7023.92 BRL [Fonte auditável: FinancialQueryService]\nSaldo (Nubank conta (pessoal)) em setembro de 2026 (net_balance): 6462.14 BRL [Fonte auditável: FinancialQueryService]\nPremissas e limitações:\n- Os valores consideram apenas os arquivos importados; períodos incompletos podem omitir gastos. Saldo é a diferença entre receitas e despesas desses lançamentos.",
+        "notes": [
+          "Os valores consideram apenas os arquivos importados; períodos incompletos podem omitir gastos. Saldo é a diferença entre receitas e despesas desses lançamentos."
+        ],
+        "issues": [
+          {
+            "code": "NUMBER_NOT_SUPPORTED",
+            "severity": "blocker",
+            "message": "Número pessoal sem cálculo compatível: 2026."
+          },
+          {
+            "code": "NUMBER_NOT_SUPPORTED",
+            "severity": "blocker",
+            "message": "Número pessoal sem cálculo compatível: 1."
+          },
+          {
+            "code": "NUMBER_NOT_SUPPORTED",
+            "severity": "blocker",
+            "message": "Número pessoal sem cálculo compatível: 2."
+          },
+          {
+            "code": "NUMBER_NOT_SUPPORTED",
+            "severity": "blocker",
+            "message": "Número pessoal sem cálculo compatível: 3."
+          },
+          {
+            "code": "NUMBER_NOT_SUPPORTED",
+            "severity": "blocker",
+            "message": "Número pessoal sem cálculo compatível: - 561,78."
+          }
+        ],
+        "step": {
+          "agent": "validation",
+          "status": "failed",
+          "summary": "Validação reprovada: 5 problema(s) impeditivo(s) encontrado(s).",
+          "duration_ms": 1,
+          "detail": {
+            "issues_count": 5,
+            "blockers_count": 5,
+            "warnings_count": 0,
+            "issues": [
+              {
+                "code": "NUMBER_NOT_SUPPORTED",
+                "severity": "blocker",
+                "message": "Número pessoal sem cálculo compatível: 2026."
+              },
+              {
+                "code": "NUMBER_NOT_SUPPORTED",
+                "severity": "blocker",
+                "message": "Número pessoal sem cálculo compatível: 1."
+              },
+              {
+                "code": "NUMBER_NOT_SUPPORTED",
+                "severity": "blocker",
+                "message": "Número pessoal sem cálculo compatível: 2."
+              },
+              {
+                "code": "NUMBER_NOT_SUPPORTED",
+                "severity": "blocker",
+                "message": "Número pessoal sem cálculo compatível: 3."
+              },
+              {
+                "code": "NUMBER_NOT_SUPPORTED",
+                "severity": "blocker",
+                "message": "Número pessoal sem cálculo compatível: - 561,78."
+              }
+            ]
+          }
+        }
+      },
+      {
+        "draft": "Gasto (Nubank conta (pessoal)) em setembro de 2026 (total_expenses): 561.78 BRL [Fonte auditável: FinancialQueryService]\nReceita (Nubank conta (pessoal)) em setembro de 2026 (total_income): 7023.92 BRL [Fonte auditável: FinancialQueryService]\nSaldo (Nubank conta (pessoal)) em setembro de 2026 (net_balance): 6462.14 BRL [Fonte auditável: FinancialQueryService]\nPremissas e limitações:\n- Os valores consideram apenas os arquivos importados; períodos incompletos podem omitir gastos. Saldo é a diferença entre receitas e despesas desses lançamentos.",
+        "notes": [
+          "Os valores consideram apenas os arquivos importados; períodos incompletos podem omitir gastos. Saldo é a diferença entre receitas e despesas desses lançamentos."
+        ],
+        "issues": [
+          {
+            "code": "NUMBER_NOT_SUPPORTED",
+            "severity": "blocker",
+            "message": "Número pessoal sem cálculo compatível: 2026."
+          },
+          {
+            "code": "NUMBER_NOT_SUPPORTED",
+            "severity": "blocker",
+            "message": "Número pessoal sem cálculo compatível: 1."
+          },
+          {
+            "code": "NUMBER_NOT_SUPPORTED",
+            "severity": "blocker",
+            "message": "Número pessoal sem cálculo compatível: 2."
+          },
+          {
+            "code": "NUMBER_NOT_SUPPORTED",
+            "severity": "blocker",
+            "message": "Número pessoal sem cálculo compatível: 3."
+          },
+          {
+            "code": "NUMBER_NOT_SUPPORTED",
+            "severity": "blocker",
+            "message": "Número pessoal sem cálculo compatível: - 561,78."
+          }
+        ],
+        "step": {
+          "agent": "validation",
+          "status": "failed",
+          "summary": "Validação reprovada: 5 problema(s) impeditivo(s) encontrado(s).",
+          "duration_ms": 1,
+          "detail": {
+            "issues_count": 5,
+            "blockers_count": 5,
+            "warnings_count": 0,
+            "issues": [
+              {
+                "code": "NUMBER_NOT_SUPPORTED",
+                "severity": "blocker",
+                "message": "Número pessoal sem cálculo compatível: 2026."
+              },
+              {
+                "code": "NUMBER_NOT_SUPPORTED",
+                "severity": "blocker",
+                "message": "Número pessoal sem cálculo compatível: 1."
+              },
+              {
+                "code": "NUMBER_NOT_SUPPORTED",
+                "severity": "blocker",
+                "message": "Número pessoal sem cálculo compatível: 2."
+              },
+              {
+                "code": "NUMBER_NOT_SUPPORTED",
+                "severity": "blocker",
+                "message": "Número pessoal sem cálculo compatível: 3."
+              },
+              {
+                "code": "NUMBER_NOT_SUPPORTED",
+                "severity": "blocker",
+                "message": "Número pessoal sem cálculo compatível: - 561,78."
+              }
+            ]
+          }
+        }
+      }
+    ]
+  },
+  {
+    "id": "C02",
+    "response": {
+      "query": "Qual o saldo da conta?",
+      "status": "rejected",
+      "answer": "A resposta preliminar gerada pelo assistente não passou pelas regras de validação e segurança do Trokim (conformidade com cálculos auditáveis e diretrizes oficiais). Por segurança financeira, a resposta foi retida.",
+      "model": "ollama/mistral-small3.2:24b",
+      "evidences": [],
+      "calculations": [
+        {
+          "key": "total_expenses",
+          "label": "Gasto (Banco_Do_Brasil conta (empresa)) em outubro de 2026",
+          "value": 346.92,
+          "unit": "BRL",
+          "source": "FinancialQueryService"
+        },
+        {
+          "key": "total_income",
+          "label": "Receita (Banco_Do_Brasil conta (empresa)) em outubro de 2026",
+          "value": 7247.76,
+          "unit": "BRL",
+          "source": "FinancialQueryService"
+        },
+        {
+          "key": "net_balance",
+          "label": "Saldo (Banco_Do_Brasil conta (empresa)) em outubro de 2026",
+          "value": 6900.84,
+          "unit": "BRL",
+          "source": "FinancialQueryService"
+        }
+      ],
+      "validation_issues": [
+        {
+          "code": "NUMBER_NOT_SUPPORTED",
+          "severity": "blocker",
+          "message": "Número pessoal sem cálculo compatível: 2026."
+        },
+        {
+          "code": "NUMBER_NOT_SUPPORTED",
+          "severity": "blocker",
+          "message": "Número pessoal sem cálculo compatível: 1."
+        },
+        {
+          "code": "NUMBER_NOT_SUPPORTED",
+          "severity": "blocker",
+          "message": "Número pessoal sem cálculo compatível: 2."
+        },
+        {
+          "code": "NUMBER_NOT_SUPPORTED",
+          "severity": "blocker",
+          "message": "Número pessoal sem cálculo compatível: 3."
+        }
+      ],
+      "steps": [
+        {
+          "agent": "research",
+          "status": "skipped",
+          "summary": "Consulta aos dados importados; não requer orientação institucional.",
+          "duration_ms": 0,
+          "detail": {
+            "reason": "financial_query"
+          }
+        },
+        {
+          "agent": "analysis",
+          "status": "ok",
+          "summary": "Consulta financeira calculada.",
+          "duration_ms": 1,
+          "detail": {
+            "intent": "summary",
+            "calculations": [
+              {
+                "key": "total_expenses",
+                "label": "Gasto (Banco_Do_Brasil conta (empresa)) em outubro de 2026",
+                "value": 346.92,
+                "unit": "BRL",
+                "source": "FinancialQueryService"
+              },
+              {
+                "key": "total_income",
+                "label": "Receita (Banco_Do_Brasil conta (empresa)) em outubro de 2026",
+                "value": 7247.76,
+                "unit": "BRL",
+                "source": "FinancialQueryService"
+              },
+              {
+                "key": "net_balance",
+                "label": "Saldo (Banco_Do_Brasil conta (empresa)) em outubro de 2026",
+                "value": 6900.84,
+                "unit": "BRL",
+                "source": "FinancialQueryService"
+              }
+            ]
+          }
+        },
+        {
+          "agent": "communication",
+          "status": "ok",
+          "summary": "Rascunho substituído por conteúdo apoiado nos dados recebidos.",
+          "duration_ms": 4064,
+          "detail": {
+            "model": "ollama/mistral-small3.2:24b",
+            "attempt": 1,
+            "prompt_tokens": 1464,
+            "completion_tokens": 213,
+            "draft_guard": "safe_fallback"
+          }
+        },
+        {
+          "agent": "validation",
+          "status": "failed",
+          "summary": "Validação reprovada: 3 problema(s) impeditivo(s) encontrado(s).",
+          "duration_ms": 1,
+          "detail": {
+            "issues_count": 3,
+            "blockers_count": 3,
+            "warnings_count": 0,
+            "issues": [
+              {
+                "code": "NUMBER_NOT_SUPPORTED",
+                "severity": "blocker",
+                "message": "Número pessoal sem cálculo compatível: 2026."
+              },
+              {
+                "code": "NUMBER_NOT_SUPPORTED",
+                "severity": "blocker",
+                "message": "Número pessoal sem cálculo compatível: 1."
+              },
+              {
+                "code": "NUMBER_NOT_SUPPORTED",
+                "severity": "blocker",
+                "message": "Número pessoal sem cálculo compatível: 2."
+              }
+            ]
+          }
+        },
+        {
+          "agent": "communication",
+          "status": "ok",
+          "summary": "Rascunho substituído por conteúdo apoiado nos dados recebidos.",
+          "duration_ms": 3901,
+          "detail": {
+            "model": "ollama/mistral-small3.2:24b",
+            "attempt": 2,
+            "prompt_tokens": 1591,
+            "completion_tokens": 192,
+            "draft_guard": "safe_fallback"
+          }
+        },
+        {
+          "agent": "validation",
+          "status": "failed",
+          "summary": "Validação reprovada: 4 problema(s) impeditivo(s) encontrado(s).",
+          "duration_ms": 1,
+          "detail": {
+            "issues_count": 4,
+            "blockers_count": 4,
+            "warnings_count": 0,
+            "issues": [
+              {
+                "code": "NUMBER_NOT_SUPPORTED",
+                "severity": "blocker",
+                "message": "Número pessoal sem cálculo compatível: 2026."
+              },
+              {
+                "code": "NUMBER_NOT_SUPPORTED",
+                "severity": "blocker",
+                "message": "Número pessoal sem cálculo compatível: 1."
+              },
+              {
+                "code": "NUMBER_NOT_SUPPORTED",
+                "severity": "blocker",
+                "message": "Número pessoal sem cálculo compatível: 2."
+              },
+              {
+                "code": "NUMBER_NOT_SUPPORTED",
+                "severity": "blocker",
+                "message": "Número pessoal sem cálculo compatível: 3."
+              }
+            ]
+          }
+        }
+      ],
+      "total_ms": 7968
+    },
+    "metrics": {
+      "numeric_expected": 3,
+      "calculation_correct": 3,
+      "numeric_correct": 0,
+      "rejected_by_validation": true,
+      "numeric_case_correct": false,
+      "raw_model_calls": 2,
+      "raw_model_calls_with_invented_numbers": 2,
+      "raw_model_invented_numbers": 7,
+      "final_invented_numbers": 0,
+      "abstention_expected": false,
+      "abstention_correct": false,
+      "validation_number_not_supported": 7,
+      "validation_calculation_missing": 0,
+      "validation_blocked": true,
+      "safe_fallbacks": 2,
+      "technical_failure": false
+    },
+    "elapsed_ms": 7969,
+    "model_calls": [
+      {
+        "content": "### Resposta do Trokim:\n\nOlá! Vamos analisar os dados importados para a conta da empresa no Banco do Brasil em outubro de 2026.\n\n#### Cálculos:\n- **Gasto total**: 346,92 BRL\n- **Receita total**: 7.247,76 BRL\n- **Saldo líquido**: 6.900,84 BRL (diferença entre receitas e despesas).\n\n#### Limitações:\n1. **Período incompleto**: Os valores consideram apenas os lançamentos importados até o momento. Se houver transações não registradas, o saldo pode não refletir a realidade completa.\n2. **Fonte dos dados**: Os valores são provenientes do serviço `FinancialQueryService`, que consolida os dados importados.\n\nSe precisar de mais detalhes ou ajustes, podemos revisar os lançamentos ou importar novos dados. Estou à disposição para ajudar!",
+        "model": "ollama/mistral-small3.2:24b",
+        "prompt_tokens": 1464,
+        "completion_tokens": 213,
+        "elapsed_ms": 4064
+      },
+      {
+        "content": "### Resposta do Communication Agent:\n\nOlá! Vamos analisar os dados importados para a conta da empresa no Banco do Brasil em outubro de 2026.\n\n#### Cálculos:\n1. **Gasto total**: 346,92 BRL\n2. **Receita total**: 7.247,76 BRL\n3. **Saldo líquido**: 6.900,84 BRL (calculado como a diferença entre receitas e despesas).\n\n#### Limitações:\n- Os valores consideram apenas os arquivos importados. Períodos incompletos podem omitir gastos ou receitas não registradas.\n- O saldo é a diferença entre receitas e despesas desses lançamentos, mas não necessariamente reflete o saldo bancário real.\n\nSe precisar de mais detalhes ou tiver dúvidas, estou à disposição!",
+        "model": "ollama/mistral-small3.2:24b",
+        "prompt_tokens": 1591,
+        "completion_tokens": 192,
+        "elapsed_ms": 3901
+      }
+    ],
+    "validation_contexts": [
+      {
+        "draft": "Gasto (Banco_Do_Brasil conta (empresa)) em outubro de 2026 (total_expenses): 346.92 BRL [Fonte auditável: FinancialQueryService]\nReceita (Banco_Do_Brasil conta (empresa)) em outubro de 2026 (total_income): 7247.76 BRL [Fonte auditável: FinancialQueryService]\nSaldo (Banco_Do_Brasil conta (empresa)) em outubro de 2026 (net_balance): 6900.84 BRL [Fonte auditável: FinancialQueryService]\nPremissas e limitações:\n- Os valores consideram apenas os arquivos importados; períodos incompletos podem omitir gastos. Saldo é a diferença entre receitas e despesas desses lançamentos.",
+        "notes": [
+          "Os valores consideram apenas os arquivos importados; períodos incompletos podem omitir gastos. Saldo é a diferença entre receitas e despesas desses lançamentos."
+        ],
+        "issues": [
+          {
+            "code": "NUMBER_NOT_SUPPORTED",
+            "severity": "blocker",
+            "message": "Número pessoal sem cálculo compatível: 2026."
+          },
+          {
+            "code": "NUMBER_NOT_SUPPORTED",
+            "severity": "blocker",
+            "message": "Número pessoal sem cálculo compatível: 1."
+          },
+          {
+            "code": "NUMBER_NOT_SUPPORTED",
+            "severity": "blocker",
+            "message": "Número pessoal sem cálculo compatível: 2."
+          }
+        ],
+        "step": {
+          "agent": "validation",
+          "status": "failed",
+          "summary": "Validação reprovada: 3 problema(s) impeditivo(s) encontrado(s).",
+          "duration_ms": 1,
+          "detail": {
+            "issues_count": 3,
+            "blockers_count": 3,
+            "warnings_count": 0,
+            "issues": [
+              {
+                "code": "NUMBER_NOT_SUPPORTED",
+                "severity": "blocker",
+                "message": "Número pessoal sem cálculo compatível: 2026."
+              },
+              {
+                "code": "NUMBER_NOT_SUPPORTED",
+                "severity": "blocker",
+                "message": "Número pessoal sem cálculo compatível: 1."
+              },
+              {
+                "code": "NUMBER_NOT_SUPPORTED",
+                "severity": "blocker",
+                "message": "Número pessoal sem cálculo compatível: 2."
+              }
+            ]
+          }
+        }
+      },
+      {
+        "draft": "Gasto (Banco_Do_Brasil conta (empresa)) em outubro de 2026 (total_expenses): 346.92 BRL [Fonte auditável: FinancialQueryService]\nReceita (Banco_Do_Brasil conta (empresa)) em outubro de 2026 (total_income): 7247.76 BRL [Fonte auditável: FinancialQueryService]\nSaldo (Banco_Do_Brasil conta (empresa)) em outubro de 2026 (net_balance): 6900.84 BRL [Fonte auditável: FinancialQueryService]\nPremissas e limitações:\n- Os valores consideram apenas os arquivos importados; períodos incompletos podem omitir gastos. Saldo é a diferença entre receitas e despesas desses lançamentos.",
+        "notes": [
+          "Os valores consideram apenas os arquivos importados; períodos incompletos podem omitir gastos. Saldo é a diferença entre receitas e despesas desses lançamentos."
+        ],
+        "issues": [
+          {
+            "code": "NUMBER_NOT_SUPPORTED",
+            "severity": "blocker",
+            "message": "Número pessoal sem cálculo compatível: 2026."
+          },
+          {
+            "code": "NUMBER_NOT_SUPPORTED",
+            "severity": "blocker",
+            "message": "Número pessoal sem cálculo compatível: 1."
+          },
+          {
+            "code": "NUMBER_NOT_SUPPORTED",
+            "severity": "blocker",
+            "message": "Número pessoal sem cálculo compatível: 2."
+          },
+          {
+            "code": "NUMBER_NOT_SUPPORTED",
+            "severity": "blocker",
+            "message": "Número pessoal sem cálculo compatível: 3."
+          }
+        ],
+        "step": {
+          "agent": "validation",
+          "status": "failed",
+          "summary": "Validação reprovada: 4 problema(s) impeditivo(s) encontrado(s).",
+          "duration_ms": 1,
+          "detail": {
+            "issues_count": 4,
+            "blockers_count": 4,
+            "warnings_count": 0,
+            "issues": [
+              {
+                "code": "NUMBER_NOT_SUPPORTED",
+                "severity": "blocker",
+                "message": "Número pessoal sem cálculo compatível: 2026."
+              },
+              {
+                "code": "NUMBER_NOT_SUPPORTED",
+                "severity": "blocker",
+                "message": "Número pessoal sem cálculo compatível: 1."
+              },
+              {
+                "code": "NUMBER_NOT_SUPPORTED",
+                "severity": "blocker",
+                "message": "Número pessoal sem cálculo compatível: 2."
+              },
+              {
+                "code": "NUMBER_NOT_SUPPORTED",
+                "severity": "blocker",
+                "message": "Número pessoal sem cálculo compatível: 3."
+              }
+            ]
+          }
+        }
+      }
+    ]
+  },
+  {
+    "id": "C03",
+    "response": {
+      "query": "Quanto gastei?",
+      "status": "rejected",
+      "answer": "A resposta preliminar gerada pelo assistente não passou pelas regras de validação e segurança do Trokim (conformidade com cálculos auditáveis e diretrizes oficiais). Por segurança financeira, a resposta foi retida.",
+      "model": "ollama/mistral-small3.2:24b",
+      "evidences": [],
+      "calculations": [
+        {
+          "key": "total_expenses",
+          "label": "Gasto (pessoal) em novembro de 2026",
+          "value": 982.54,
+          "unit": "BRL",
+          "source": "FinancialQueryService"
+        },
+        {
+          "key": "total_income",
+          "label": "Receita (pessoal) em novembro de 2026",
+          "value": 8967.24,
+          "unit": "BRL",
+          "source": "FinancialQueryService"
+        },
+        {
+          "key": "net_balance",
+          "label": "Saldo (pessoal) em novembro de 2026",
+          "value": 7984.7,
+          "unit": "BRL",
+          "source": "FinancialQueryService"
+        }
+      ],
+      "validation_issues": [
+        {
+          "code": "NUMBER_NOT_SUPPORTED",
+          "severity": "blocker",
+          "message": "Número pessoal sem cálculo compatível: 2026."
+        }
+      ],
+      "steps": [
+        {
+          "agent": "research",
+          "status": "skipped",
+          "summary": "Consulta aos dados importados; não requer orientação institucional.",
+          "duration_ms": 0,
+          "detail": {
+            "reason": "financial_query"
+          }
+        },
+        {
+          "agent": "analysis",
+          "status": "ok",
+          "summary": "Consulta financeira calculada.",
+          "duration_ms": 1,
+          "detail": {
+            "intent": "summary",
+            "calculations": [
+              {
+                "key": "total_expenses",
+                "label": "Gasto (pessoal) em novembro de 2026",
+                "value": 982.54,
+                "unit": "BRL",
+                "source": "FinancialQueryService"
+              },
+              {
+                "key": "total_income",
+                "label": "Receita (pessoal) em novembro de 2026",
+                "value": 8967.24,
+                "unit": "BRL",
+                "source": "FinancialQueryService"
+              },
+              {
+                "key": "net_balance",
+                "label": "Saldo (pessoal) em novembro de 2026",
+                "value": 7984.7,
+                "unit": "BRL",
+                "source": "FinancialQueryService"
+              }
+            ]
+          }
+        },
+        {
+          "agent": "communication",
+          "status": "ok",
+          "summary": "Rascunho substituído por conteúdo apoiado nos dados recebidos.",
+          "duration_ms": 5833,
+          "detail": {
+            "model": "ollama/mistral-small3.2:24b",
+            "attempt": 1,
+            "prompt_tokens": 1439,
+            "completion_tokens": 325,
+            "draft_guard": "safe_fallback"
+          }
+        },
+        {
+          "agent": "validation",
+          "status": "failed",
+          "summary": "Validação reprovada: 5 problema(s) impeditivo(s) encontrado(s).",
+          "duration_ms": 1,
+          "detail": {
+            "issues_count": 5,
+            "blockers_count": 5,
+            "warnings_count": 0,
+            "issues": [
+              {
+                "code": "NUMBER_NOT_SUPPORTED",
+                "severity": "blocker",
+                "message": "Número pessoal sem cálculo compatível: 2026."
+              },
+              {
+                "code": "NUMBER_NOT_SUPPORTED",
+                "severity": "blocker",
+                "message": "Número pessoal sem cálculo compatível: 1."
+              },
+              {
+                "code": "NUMBER_NOT_SUPPORTED",
+                "severity": "blocker",
+                "message": "Número pessoal sem cálculo compatível: 2."
+              },
+              {
+                "code": "NUMBER_NOT_SUPPORTED",
+                "severity": "blocker",
+                "message": "Número pessoal sem cálculo compatível: 3."
+              },
+              {
+                "code": "NUMBER_NOT_SUPPORTED",
+                "severity": "blocker",
+                "message": "Número pessoal sem cálculo compatível: - 982,54 BRL."
+              }
+            ]
+          }
+        },
+        {
+          "agent": "communication",
+          "status": "ok",
+          "summary": "Rascunho substituído por conteúdo apoiado nos dados recebidos.",
+          "duration_ms": 3694,
+          "detail": {
+            "model": "ollama/mistral-small3.2:24b",
+            "attempt": 2,
+            "prompt_tokens": 1616,
+            "completion_tokens": 183,
+            "draft_guard": "safe_fallback"
+          }
+        },
+        {
+          "agent": "validation",
+          "status": "failed",
+          "summary": "Validação reprovada: 1 problema(s) impeditivo(s) encontrado(s).",
+          "duration_ms": 1,
+          "detail": {
+            "issues_count": 1,
+            "blockers_count": 1,
+            "warnings_count": 0,
+            "issues": [
+              {
+                "code": "NUMBER_NOT_SUPPORTED",
+                "severity": "blocker",
+                "message": "Número pessoal sem cálculo compatível: 2026."
+              }
+            ]
+          }
+        }
+      ],
+      "total_ms": 9530
+    },
+    "metrics": {
+      "numeric_expected": 3,
+      "calculation_correct": 3,
+      "numeric_correct": 0,
+      "rejected_by_validation": true,
+      "numeric_case_correct": false,
+      "raw_model_calls": 2,
+      "raw_model_calls_with_invented_numbers": 2,
+      "raw_model_invented_numbers": 8,
+      "final_invented_numbers": 0,
+      "abstention_expected": false,
+      "abstention_correct": false,
+      "validation_number_not_supported": 6,
+      "validation_calculation_missing": 0,
+      "validation_blocked": true,
+      "safe_fallbacks": 2,
+      "technical_failure": false
+    },
+    "elapsed_ms": 9532,
+    "model_calls": [
+      {
+        "content": "### Resposta:\n\nOs cálculos apresentados são baseados nos dados importados para novembro de 2026. Aqui está a explicação detalhada:\n\n1. **Gasto (pessoal) em novembro de 2026**: 982,54 BRL\n   - Este valor representa o total das despesas registradas no sistema para o mês de novembro de 2026.\n\n2. **Receita (pessoal) em novembro de 2026**: 8.967,24 BRL\n   - Este valor representa o total das receitas registradas no sistema para o mês de novembro de 2026.\n\n3. **Saldo (pessoal) em novembro de 2026**: 7.984,70 BRL\n   - Este valor é calculado como a diferença entre a receita e o gasto: `8.967,24 BRL - 982,54 BRL = 7.984,70 BRL`.\n\n### Limitações:\n- Os valores consideram apenas os arquivos importados; períodos incompletos podem omitir gastos.\n- O saldo é a diferença entre receitas e despesas desses lançamentos, mas não necessariamente reflete o saldo bancário real, pois pode haver transações não registradas ou em processamento.\n\nSe precisar de mais detalhes ou ajustes, por favor, forneça os dados adicionais necessários.",
+        "model": "ollama/mistral-small3.2:24b",
+        "prompt_tokens": 1439,
+        "completion_tokens": 325,
+        "elapsed_ms": 5833
+      },
+      {
+        "content": "### Resposta do Communication Agent do Trokim:\n\nOlá! Vamos analisar os dados importados para novembro de 2026.\n\n**Cálculos realizados:**\n- **Gasto total:** 982,54 BRL\n- **Receita total:** 8.967,24 BRL\n- **Saldo líquido:** 7.984,70 BRL (calculado como receita menos gastos)\n\n**Limitações importantes:**\n- Esses valores consideram apenas os lançamentos que você importou.\n- Períodos incompletos podem omitir gastos ou receitas não registradas.\n- O saldo é a diferença entre receitas e despesas dos lançamentos disponíveis, mas não representa necessariamente seu saldo bancário real.\n\nSe precisar de mais detalhes ou ajustes, é só avisar!",
+        "model": "ollama/mistral-small3.2:24b",
+        "prompt_tokens": 1616,
+        "completion_tokens": 183,
+        "elapsed_ms": 3694
+      }
+    ],
+    "validation_contexts": [
+      {
+        "draft": "Gasto (pessoal) em novembro de 2026 (total_expenses): 982.54 BRL [Fonte auditável: FinancialQueryService]\nReceita (pessoal) em novembro de 2026 (total_income): 8967.24 BRL [Fonte auditável: FinancialQueryService]\nSaldo (pessoal) em novembro de 2026 (net_balance): 7984.7 BRL [Fonte auditável: FinancialQueryService]\nPremissas e limitações:\n- Os valores consideram apenas os arquivos importados; períodos incompletos podem omitir gastos. Saldo é a diferença entre receitas e despesas desses lançamentos.",
+        "notes": [
+          "Os valores consideram apenas os arquivos importados; períodos incompletos podem omitir gastos. Saldo é a diferença entre receitas e despesas desses lançamentos."
+        ],
+        "issues": [
+          {
+            "code": "NUMBER_NOT_SUPPORTED",
+            "severity": "blocker",
+            "message": "Número pessoal sem cálculo compatível: 2026."
+          },
+          {
+            "code": "NUMBER_NOT_SUPPORTED",
+            "severity": "blocker",
+            "message": "Número pessoal sem cálculo compatível: 1."
+          },
+          {
+            "code": "NUMBER_NOT_SUPPORTED",
+            "severity": "blocker",
+            "message": "Número pessoal sem cálculo compatível: 2."
+          },
+          {
+            "code": "NUMBER_NOT_SUPPORTED",
+            "severity": "blocker",
+            "message": "Número pessoal sem cálculo compatível: 3."
+          },
+          {
+            "code": "NUMBER_NOT_SUPPORTED",
+            "severity": "blocker",
+            "message": "Número pessoal sem cálculo compatível: - 982,54 BRL."
+          }
+        ],
+        "step": {
+          "agent": "validation",
+          "status": "failed",
+          "summary": "Validação reprovada: 5 problema(s) impeditivo(s) encontrado(s).",
+          "duration_ms": 1,
+          "detail": {
+            "issues_count": 5,
+            "blockers_count": 5,
+            "warnings_count": 0,
+            "issues": [
+              {
+                "code": "NUMBER_NOT_SUPPORTED",
+                "severity": "blocker",
+                "message": "Número pessoal sem cálculo compatível: 2026."
+              },
+              {
+                "code": "NUMBER_NOT_SUPPORTED",
+                "severity": "blocker",
+                "message": "Número pessoal sem cálculo compatível: 1."
+              },
+              {
+                "code": "NUMBER_NOT_SUPPORTED",
+                "severity": "blocker",
+                "message": "Número pessoal sem cálculo compatível: 2."
+              },
+              {
+                "code": "NUMBER_NOT_SUPPORTED",
+                "severity": "blocker",
+                "message": "Número pessoal sem cálculo compatível: 3."
+              },
+              {
+                "code": "NUMBER_NOT_SUPPORTED",
+                "severity": "blocker",
+                "message": "Número pessoal sem cálculo compatível: - 982,54 BRL."
+              }
+            ]
+          }
+        }
+      },
+      {
+        "draft": "Gasto (pessoal) em novembro de 2026 (total_expenses): 982.54 BRL [Fonte auditável: FinancialQueryService]\nReceita (pessoal) em novembro de 2026 (total_income): 8967.24 BRL [Fonte auditável: FinancialQueryService]\nSaldo (pessoal) em novembro de 2026 (net_balance): 7984.7 BRL [Fonte auditável: FinancialQueryService]\nPremissas e limitações:\n- Os valores consideram apenas os arquivos importados; períodos incompletos podem omitir gastos. Saldo é a diferença entre receitas e despesas desses lançamentos.",
+        "notes": [
+          "Os valores consideram apenas os arquivos importados; períodos incompletos podem omitir gastos. Saldo é a diferença entre receitas e despesas desses lançamentos."
+        ],
+        "issues": [
+          {
+            "code": "NUMBER_NOT_SUPPORTED",
+            "severity": "blocker",
+            "message": "Número pessoal sem cálculo compatível: 2026."
+          }
+        ],
+        "step": {
+          "agent": "validation",
+          "status": "failed",
+          "summary": "Validação reprovada: 1 problema(s) impeditivo(s) encontrado(s).",
+          "duration_ms": 1,
+          "detail": {
+            "issues_count": 1,
+            "blockers_count": 1,
+            "warnings_count": 0,
+            "issues": [
+              {
+                "code": "NUMBER_NOT_SUPPORTED",
+                "severity": "blocker",
+                "message": "Número pessoal sem cálculo compatível: 2026."
+              }
+            ]
+          }
+        }
+      }
+    ]
+  },
+  {
+    "id": "C04",
+    "response": {
+      "query": "Quanto gastei?",
+      "status": "rejected",
+      "answer": "A resposta preliminar gerada pelo assistente não passou pelas regras de validação e segurança do Trokim (conformidade com cálculos auditáveis e diretrizes oficiais). Por segurança financeira, a resposta foi retida.",
+      "model": "ollama/mistral-small3.2:24b",
+      "evidences": [],
+      "calculations": [
+        {
+          "key": "total_expenses",
+          "label": "Gasto (empresa) em setembro de 2026",
+          "value": 410.31,
+          "unit": "BRL",
+          "source": "FinancialQueryService"
+        },
+        {
+          "key": "total_income",
+          "label": "Receita (empresa) em setembro de 2026",
+          "value": 8267.17,
+          "unit": "BRL",
+          "source": "FinancialQueryService"
+        },
+        {
+          "key": "net_balance",
+          "label": "Saldo (empresa) em setembro de 2026",
+          "value": 7856.86,
+          "unit": "BRL",
+          "source": "FinancialQueryService"
+        }
+      ],
+      "validation_issues": [
+        {
+          "code": "NUMBER_NOT_SUPPORTED",
+          "severity": "blocker",
+          "message": "Número pessoal sem cálculo compatível: 2026."
+        },
+        {
+          "code": "NUMBER_NOT_SUPPORTED",
+          "severity": "blocker",
+          "message": "Número pessoal sem cálculo compatível: 1."
+        },
+        {
+          "code": "NUMBER_NOT_SUPPORTED",
+          "severity": "blocker",
+          "message": "Número pessoal sem cálculo compatível: 2."
+        },
+        {
+          "code": "NUMBER_NOT_SUPPORTED",
+          "severity": "blocker",
+          "message": "Número pessoal sem cálculo compatível: 3."
+        },
+        {
+          "code": "NUMBER_NOT_SUPPORTED",
+          "severity": "blocker",
+          "message": "Número pessoal sem cálculo compatível: - 410,31 BRL."
+        }
+      ],
+      "steps": [
+        {
+          "agent": "research",
+          "status": "skipped",
+          "summary": "Consulta aos dados importados; não requer orientação institucional.",
+          "duration_ms": 0,
+          "detail": {
+            "reason": "financial_query"
+          }
+        },
+        {
+          "agent": "analysis",
+          "status": "ok",
+          "summary": "Consulta financeira calculada.",
+          "duration_ms": 1,
+          "detail": {
+            "intent": "summary",
+            "calculations": [
+              {
+                "key": "total_expenses",
+                "label": "Gasto (empresa) em setembro de 2026",
+                "value": 410.31,
+                "unit": "BRL",
+                "source": "FinancialQueryService"
+              },
+              {
+                "key": "total_income",
+                "label": "Receita (empresa) em setembro de 2026",
+                "value": 8267.17,
+                "unit": "BRL",
+                "source": "FinancialQueryService"
+              },
+              {
+                "key": "net_balance",
+                "label": "Saldo (empresa) em setembro de 2026",
+                "value": 7856.86,
+                "unit": "BRL",
+                "source": "FinancialQueryService"
+              }
+            ]
+          }
+        },
+        {
+          "agent": "communication",
+          "status": "ok",
+          "summary": "Rascunho substituído por conteúdo apoiado nos dados recebidos.",
+          "duration_ms": 5387,
+          "detail": {
+            "model": "ollama/mistral-small3.2:24b",
+            "attempt": 1,
+            "prompt_tokens": 1437,
+            "completion_tokens": 292,
+            "draft_guard": "safe_fallback"
+          }
+        },
+        {
+          "agent": "validation",
+          "status": "failed",
+          "summary": "Validação reprovada: 5 problema(s) impeditivo(s) encontrado(s).",
+          "duration_ms": 1,
+          "detail": {
+            "issues_count": 5,
+            "blockers_count": 5,
+            "warnings_count": 0,
+            "issues": [
+              {
+                "code": "NUMBER_NOT_SUPPORTED",
+                "severity": "blocker",
+                "message": "Número pessoal sem cálculo compatível: 2026."
+              },
+              {
+                "code": "NUMBER_NOT_SUPPORTED",
+                "severity": "blocker",
+                "message": "Número pessoal sem cálculo compatível: 1."
+              },
+              {
+                "code": "NUMBER_NOT_SUPPORTED",
+                "severity": "blocker",
+                "message": "Número pessoal sem cálculo compatível: 2."
+              },
+              {
+                "code": "NUMBER_NOT_SUPPORTED",
+                "severity": "blocker",
+                "message": "Número pessoal sem cálculo compatível: 3."
+              },
+              {
+                "code": "NUMBER_NOT_SUPPORTED",
+                "severity": "blocker",
+                "message": "Número pessoal sem cálculo compatível: - 410,31."
+              }
+            ]
+          }
+        },
+        {
+          "agent": "communication",
+          "status": "ok",
+          "summary": "Rascunho substituído por conteúdo apoiado nos dados recebidos.",
+          "duration_ms": 6050,
+          "detail": {
+            "model": "ollama/mistral-small3.2:24b",
+            "attempt": 2,
+            "prompt_tokens": 1612,
+            "completion_tokens": 324,
+            "draft_guard": "safe_fallback"
+          }
+        },
+        {
+          "agent": "validation",
+          "status": "failed",
+          "summary": "Validação reprovada: 5 problema(s) impeditivo(s) encontrado(s).",
+          "duration_ms": 1,
+          "detail": {
+            "issues_count": 5,
+            "blockers_count": 5,
+            "warnings_count": 0,
+            "issues": [
+              {
+                "code": "NUMBER_NOT_SUPPORTED",
+                "severity": "blocker",
+                "message": "Número pessoal sem cálculo compatível: 2026."
+              },
+              {
+                "code": "NUMBER_NOT_SUPPORTED",
+                "severity": "blocker",
+                "message": "Número pessoal sem cálculo compatível: 1."
+              },
+              {
+                "code": "NUMBER_NOT_SUPPORTED",
+                "severity": "blocker",
+                "message": "Número pessoal sem cálculo compatível: 2."
+              },
+              {
+                "code": "NUMBER_NOT_SUPPORTED",
+                "severity": "blocker",
+                "message": "Número pessoal sem cálculo compatível: 3."
+              },
+              {
+                "code": "NUMBER_NOT_SUPPORTED",
+                "severity": "blocker",
+                "message": "Número pessoal sem cálculo compatível: - 410,31 BRL."
+              }
+            ]
+          }
+        }
+      ],
+      "total_ms": 11440
+    },
+    "metrics": {
+      "numeric_expected": 3,
+      "calculation_correct": 3,
+      "numeric_correct": 0,
+      "rejected_by_validation": true,
+      "numeric_case_correct": false,
+      "raw_model_calls": 2,
+      "raw_model_calls_with_invented_numbers": 2,
+      "raw_model_invented_numbers": 12,
+      "final_invented_numbers": 0,
+      "abstention_expected": false,
+      "abstention_correct": false,
+      "validation_number_not_supported": 10,
+      "validation_calculation_missing": 0,
+      "validation_blocked": true,
+      "safe_fallbacks": 2,
+      "technical_failure": false
+    },
+    "elapsed_ms": 11442,
+    "model_calls": [
+      {
+        "content": "### Resposta:\n\nOs cálculos apresentados são baseados nos dados importados para o mês de setembro de 2026. Aqui está a explicação detalhada:\n\n1. **Gasto (empresa) em setembro de 2026**: 410,31 BRL\n2. **Receita (empresa) em setembro de 2026**: 8.267,17 BRL\n3. **Saldo (empresa) em setembro de 2026**: 7.856,86 BRL\n\nO saldo é calculado como a diferença entre a receita e o gasto:\n\\[ \\text{Saldo} = \\text{Receita} - \\text{Gasto} \\]\n\\[ \\text{Saldo} = 8.267,17 \\, \\text{BRL} - 410,31 \\, \\text{BRL} = 7.856,86 \\, \\text{BRL} \\]\n\n### Limitações:\n- Os valores consideram apenas os arquivos importados; períodos incompletos podem omitir gastos.\n- O saldo é a diferença entre receitas e despesas desses lançamentos, não necessariamente o saldo bancário confirmado.\n\nSe precisar de mais detalhes ou tiver outras perguntas, estou à disposição!",
+        "model": "ollama/mistral-small3.2:24b",
+        "prompt_tokens": 1437,
+        "completion_tokens": 292,
+        "elapsed_ms": 5387
+      },
+      {
+        "content": "### Resposta:\n\nOs cálculos apresentados são baseados nos dados importados para a empresa em setembro de 2026. Aqui está a explicação detalhada:\n\n1. **Gasto (empresa) em setembro de 2026**: 410,31 BRL\n   - Este valor representa o total das despesas registradas no sistema para o mês de setembro de 2026.\n\n2. **Receita (empresa) em setembro de 2026**: 8.267,17 BRL\n   - Este valor representa o total das receitas registradas no sistema para o mês de setembro de 2026.\n\n3. **Saldo (empresa) em setembro de 2026**: 7.856,86 BRL\n   - Este valor é calculado como a diferença entre a receita e o gasto: `8.267,17 BRL (receita) - 410,31 BRL (gasto) = 7.856,86 BRL`.\n\n### Limitações:\n- Os valores consideram apenas os arquivos importados; períodos incompletos podem omitir gastos.\n- O saldo é a diferença entre receitas e despesas dos lançamentos importados, não necessariamente o saldo bancário real.\n\nCaso queira verificar ou importar mais dados para ajustar esses cálculos, por favor, forneça os arquivos necessários.",
+        "model": "ollama/mistral-small3.2:24b",
+        "prompt_tokens": 1612,
+        "completion_tokens": 324,
+        "elapsed_ms": 6050
+      }
+    ],
+    "validation_contexts": [
+      {
+        "draft": "Gasto (empresa) em setembro de 2026 (total_expenses): 410.31 BRL [Fonte auditável: FinancialQueryService]\nReceita (empresa) em setembro de 2026 (total_income): 8267.17 BRL [Fonte auditável: FinancialQueryService]\nSaldo (empresa) em setembro de 2026 (net_balance): 7856.86 BRL [Fonte auditável: FinancialQueryService]\nPremissas e limitações:\n- Os valores consideram apenas os arquivos importados; períodos incompletos podem omitir gastos. Saldo é a diferença entre receitas e despesas desses lançamentos.",
+        "notes": [
+          "Os valores consideram apenas os arquivos importados; períodos incompletos podem omitir gastos. Saldo é a diferença entre receitas e despesas desses lançamentos."
+        ],
+        "issues": [
+          {
+            "code": "NUMBER_NOT_SUPPORTED",
+            "severity": "blocker",
+            "message": "Número pessoal sem cálculo compatível: 2026."
+          },
+          {
+            "code": "NUMBER_NOT_SUPPORTED",
+            "severity": "blocker",
+            "message": "Número pessoal sem cálculo compatível: 1."
+          },
+          {
+            "code": "NUMBER_NOT_SUPPORTED",
+            "severity": "blocker",
+            "message": "Número pessoal sem cálculo compatível: 2."
+          },
+          {
+            "code": "NUMBER_NOT_SUPPORTED",
+            "severity": "blocker",
+            "message": "Número pessoal sem cálculo compatível: 3."
+          },
+          {
+            "code": "NUMBER_NOT_SUPPORTED",
+            "severity": "blocker",
+            "message": "Número pessoal sem cálculo compatível: - 410,31."
+          }
+        ],
+        "step": {
+          "agent": "validation",
+          "status": "failed",
+          "summary": "Validação reprovada: 5 problema(s) impeditivo(s) encontrado(s).",
+          "duration_ms": 1,
+          "detail": {
+            "issues_count": 5,
+            "blockers_count": 5,
+            "warnings_count": 0,
+            "issues": [
+              {
+                "code": "NUMBER_NOT_SUPPORTED",
+                "severity": "blocker",
+                "message": "Número pessoal sem cálculo compatível: 2026."
+              },
+              {
+                "code": "NUMBER_NOT_SUPPORTED",
+                "severity": "blocker",
+                "message": "Número pessoal sem cálculo compatível: 1."
+              },
+              {
+                "code": "NUMBER_NOT_SUPPORTED",
+                "severity": "blocker",
+                "message": "Número pessoal sem cálculo compatível: 2."
+              },
+              {
+                "code": "NUMBER_NOT_SUPPORTED",
+                "severity": "blocker",
+                "message": "Número pessoal sem cálculo compatível: 3."
+              },
+              {
+                "code": "NUMBER_NOT_SUPPORTED",
+                "severity": "blocker",
+                "message": "Número pessoal sem cálculo compatível: - 410,31."
+              }
+            ]
+          }
+        }
+      },
+      {
+        "draft": "Gasto (empresa) em setembro de 2026 (total_expenses): 410.31 BRL [Fonte auditável: FinancialQueryService]\nReceita (empresa) em setembro de 2026 (total_income): 8267.17 BRL [Fonte auditável: FinancialQueryService]\nSaldo (empresa) em setembro de 2026 (net_balance): 7856.86 BRL [Fonte auditável: FinancialQueryService]\nPremissas e limitações:\n- Os valores consideram apenas os arquivos importados; períodos incompletos podem omitir gastos. Saldo é a diferença entre receitas e despesas desses lançamentos.",
+        "notes": [
+          "Os valores consideram apenas os arquivos importados; períodos incompletos podem omitir gastos. Saldo é a diferença entre receitas e despesas desses lançamentos."
+        ],
+        "issues": [
+          {
+            "code": "NUMBER_NOT_SUPPORTED",
+            "severity": "blocker",
+            "message": "Número pessoal sem cálculo compatível: 2026."
+          },
+          {
+            "code": "NUMBER_NOT_SUPPORTED",
+            "severity": "blocker",
+            "message": "Número pessoal sem cálculo compatível: 1."
+          },
+          {
+            "code": "NUMBER_NOT_SUPPORTED",
+            "severity": "blocker",
+            "message": "Número pessoal sem cálculo compatível: 2."
+          },
+          {
+            "code": "NUMBER_NOT_SUPPORTED",
+            "severity": "blocker",
+            "message": "Número pessoal sem cálculo compatível: 3."
+          },
+          {
+            "code": "NUMBER_NOT_SUPPORTED",
+            "severity": "blocker",
+            "message": "Número pessoal sem cálculo compatível: - 410,31 BRL."
+          }
+        ],
+        "step": {
+          "agent": "validation",
+          "status": "failed",
+          "summary": "Validação reprovada: 5 problema(s) impeditivo(s) encontrado(s).",
+          "duration_ms": 1,
+          "detail": {
+            "issues_count": 5,
+            "blockers_count": 5,
+            "warnings_count": 0,
+            "issues": [
+              {
+                "code": "NUMBER_NOT_SUPPORTED",
+                "severity": "blocker",
+                "message": "Número pessoal sem cálculo compatível: 2026."
+              },
+              {
+                "code": "NUMBER_NOT_SUPPORTED",
+                "severity": "blocker",
+                "message": "Número pessoal sem cálculo compatível: 1."
+              },
+              {
+                "code": "NUMBER_NOT_SUPPORTED",
+                "severity": "blocker",
+                "message": "Número pessoal sem cálculo compatível: 2."
+              },
+              {
+                "code": "NUMBER_NOT_SUPPORTED",
+                "severity": "blocker",
+                "message": "Número pessoal sem cálculo compatível: 3."
+              },
+              {
+                "code": "NUMBER_NOT_SUPPORTED",
+                "severity": "blocker",
+                "message": "Número pessoal sem cálculo compatível: - 410,31 BRL."
+              }
+            ]
+          }
+        }
+      }
+    ]
+  },
+  {
+    "id": "C05",
+    "response": {
+      "query": "Quanto gastei em setembro de 2026?",
+      "status": "rejected",
+      "answer": "A resposta preliminar gerada pelo assistente não passou pelas regras de validação e segurança do Trokim (conformidade com cálculos auditáveis e diretrizes oficiais). Por segurança financeira, a resposta foi retida.",
+      "model": "ollama/mistral-small3.2:24b",
+      "evidences": [],
+      "calculations": [
+        {
+          "key": "total_expenses",
+          "label": "Gasto (todas as contas) em setembro de 2026",
+          "value": 1540.62,
+          "unit": "BRL",
+          "source": "FinancialQueryService"
+        },
+        {
+          "key": "total_income",
+          "label": "Receita (todas as contas) em setembro de 2026",
+          "value": 15291.09,
+          "unit": "BRL",
+          "source": "FinancialQueryService"
+        },
+        {
+          "key": "net_balance",
+          "label": "Saldo (todas as contas) em setembro de 2026",
+          "value": 13750.47,
+          "unit": "BRL",
+          "source": "FinancialQueryService"
+        }
+      ],
+      "validation_issues": [
+        {
+          "code": "NUMBER_NOT_SUPPORTED",
+          "severity": "blocker",
+          "message": "Número pessoal sem cálculo compatível: 2026."
+        },
+        {
+          "code": "NUMBER_NOT_SUPPORTED",
+          "severity": "blocker",
+          "message": "Número pessoal sem cálculo compatível: 1."
+        },
+        {
+          "code": "NUMBER_NOT_SUPPORTED",
+          "severity": "blocker",
+          "message": "Número pessoal sem cálculo compatível: 2."
+        },
+        {
+          "code": "NUMBER_NOT_SUPPORTED",
+          "severity": "blocker",
+          "message": "Número pessoal sem cálculo compatível: 3."
+        },
+        {
+          "code": "NUMBER_NOT_SUPPORTED",
+          "severity": "blocker",
+          "message": "Número pessoal sem cálculo compatível: - 1.540,62."
+        }
+      ],
+      "steps": [
+        {
+          "agent": "research",
+          "status": "skipped",
+          "summary": "Consulta aos dados importados; não requer orientação institucional.",
+          "duration_ms": 0,
+          "detail": {
+            "reason": "financial_query"
+          }
+        },
+        {
+          "agent": "analysis",
+          "status": "ok",
+          "summary": "Consulta financeira calculada.",
+          "duration_ms": 1,
+          "detail": {
+            "intent": "summary",
+            "calculations": [
+              {
+                "key": "total_expenses",
+                "label": "Gasto (todas as contas) em setembro de 2026",
+                "value": 1540.62,
+                "unit": "BRL",
+                "source": "FinancialQueryService"
+              },
+              {
+                "key": "total_income",
+                "label": "Receita (todas as contas) em setembro de 2026",
+                "value": 15291.09,
+                "unit": "BRL",
+                "source": "FinancialQueryService"
+              },
+              {
+                "key": "net_balance",
+                "label": "Saldo (todas as contas) em setembro de 2026",
+                "value": 13750.47,
+                "unit": "BRL",
+                "source": "FinancialQueryService"
+              }
+            ]
+          }
+        },
+        {
+          "agent": "communication",
+          "status": "ok",
+          "summary": "Rascunho substituído por conteúdo apoiado nos dados recebidos.",
+          "duration_ms": 6031,
+          "detail": {
+            "model": "ollama/mistral-small3.2:24b",
+            "attempt": 1,
+            "prompt_tokens": 1449,
+            "completion_tokens": 324,
+            "draft_guard": "safe_fallback"
+          }
+        },
+        {
+          "agent": "validation",
+          "status": "failed",
+          "summary": "Validação reprovada: 5 problema(s) impeditivo(s) encontrado(s).",
+          "duration_ms": 1,
+          "detail": {
+            "issues_count": 5,
+            "blockers_count": 5,
+            "warnings_count": 0,
+            "issues": [
+              {
+                "code": "NUMBER_NOT_SUPPORTED",
+                "severity": "blocker",
+                "message": "Número pessoal sem cálculo compatível: 2026."
+              },
+              {
+                "code": "NUMBER_NOT_SUPPORTED",
+                "severity": "blocker",
+                "message": "Número pessoal sem cálculo compatível: 1."
+              },
+              {
+                "code": "NUMBER_NOT_SUPPORTED",
+                "severity": "blocker",
+                "message": "Número pessoal sem cálculo compatível: 2."
+              },
+              {
+                "code": "NUMBER_NOT_SUPPORTED",
+                "severity": "blocker",
+                "message": "Número pessoal sem cálculo compatível: 3."
+              },
+              {
+                "code": "NUMBER_NOT_SUPPORTED",
+                "severity": "blocker",
+                "message": "Número pessoal sem cálculo compatível: - 1.540,62 BRL."
+              }
+            ]
+          }
+        },
+        {
+          "agent": "communication",
+          "status": "ok",
+          "summary": "Rascunho substituído por conteúdo apoiado nos dados recebidos.",
+          "duration_ms": 5521,
+          "detail": {
+            "model": "ollama/mistral-small3.2:24b",
+            "attempt": 2,
+            "prompt_tokens": 1628,
+            "completion_tokens": 293,
+            "draft_guard": "safe_fallback"
+          }
+        },
+        {
+          "agent": "validation",
+          "status": "failed",
+          "summary": "Validação reprovada: 5 problema(s) impeditivo(s) encontrado(s).",
+          "duration_ms": 1,
+          "detail": {
+            "issues_count": 5,
+            "blockers_count": 5,
+            "warnings_count": 0,
+            "issues": [
+              {
+                "code": "NUMBER_NOT_SUPPORTED",
+                "severity": "blocker",
+                "message": "Número pessoal sem cálculo compatível: 2026."
+              },
+              {
+                "code": "NUMBER_NOT_SUPPORTED",
+                "severity": "blocker",
+                "message": "Número pessoal sem cálculo compatível: 1."
+              },
+              {
+                "code": "NUMBER_NOT_SUPPORTED",
+                "severity": "blocker",
+                "message": "Número pessoal sem cálculo compatível: 2."
+              },
+              {
+                "code": "NUMBER_NOT_SUPPORTED",
+                "severity": "blocker",
+                "message": "Número pessoal sem cálculo compatível: 3."
+              },
+              {
+                "code": "NUMBER_NOT_SUPPORTED",
+                "severity": "blocker",
+                "message": "Número pessoal sem cálculo compatível: - 1.540,62."
+              }
+            ]
+          }
+        }
+      ],
+      "total_ms": 11555
+    },
+    "metrics": {
+      "numeric_expected": 3,
+      "calculation_correct": 3,
+      "numeric_correct": 0,
+      "rejected_by_validation": true,
+      "numeric_case_correct": false,
+      "raw_model_calls": 2,
+      "raw_model_calls_with_invented_numbers": 2,
+      "raw_model_invented_numbers": 10,
+      "final_invented_numbers": 0,
+      "abstention_expected": false,
+      "abstention_correct": false,
+      "validation_number_not_supported": 10,
+      "validation_calculation_missing": 0,
+      "validation_blocked": true,
+      "safe_fallbacks": 2,
+      "technical_failure": false
+    },
+    "elapsed_ms": 11556,
+    "model_calls": [
+      {
+        "content": "### Resposta do Communication Agent do Trokim:\n\nOlá! Vamos analisar os dados financeiros importados para setembro de 2026.\n\n#### Cálculos Realizados:\n1. **Gasto Total (total_expenses)**: 1.540,62 BRL\n   - Representa o somatório de todas as despesas registradas nas contas importadas.\n\n2. **Receita Total (total_income)**: 15.291,09 BRL\n   - Representa o somatório de todas as receitas registradas nas contas importadas.\n\n3. **Saldo Líquido (net_balance)**: 13.750,47 BRL\n   - Calculado como a diferença entre a receita total e o gasto total:\n     **15.291,09 BRL (receita) - 1.540,62 BRL (gasto) = 13.750,47 BRL**.\n\n#### Limitações Importantes:\n- Os valores consideram **apenas os arquivos importados** até o momento. Períodos incompletos podem omitir gastos ou receitas não registrados.\n- O saldo líquido é a diferença entre receitas e despesas **dos lançamentos importados**, não necessariamente o saldo bancário real.\n\nSe precisar de mais detalhes ou ajustes, é importante verificar se há lançamentos pendentes ou contas não importadas. Posso ajudar em algo mais?",
+        "model": "ollama/mistral-small3.2:24b",
+        "prompt_tokens": 1449,
+        "completion_tokens": 324,
+        "elapsed_ms": 6031
+      },
+      {
+        "content": "### Resposta do Communication Agent do Trokim:\n\nOlá! Vamos analisar os dados financeiros importados para setembro de 2026.\n\n**Cálculos realizados:**\n1. **Gasto total (total_expenses):** R$ 1.540,62 BRL\n2. **Receita total (total_income):** R$ 15.291,09 BRL\n3. **Saldo líquido (net_balance):** R$ 13.750,47 BRL\n\n**Como esses valores são calculados?**\nO saldo líquido é obtido subtraindo os gastos totais da receita total:\n\\[ \\text{Saldo líquido} = \\text{Receita total} - \\text{Gasto total} \\]\n\\[ \\text{Saldo líquido} = 15.291,09 - 1.540,62 = 13.750,47 \\]\n\n**Limitações importantes:**\n- Esses valores consideram apenas os lançamentos financeiros importados até o momento.\n- Períodos incompletos podem omitir gastos ou receitas não registradas.\n- O saldo não representa necessariamente o valor disponível em sua conta, pois depende dos dados importados.\n\nSe precisar de mais detalhes ou tiver dúvidas, estou à disposição! 😊",
+        "model": "ollama/mistral-small3.2:24b",
+        "prompt_tokens": 1628,
+        "completion_tokens": 293,
+        "elapsed_ms": 5521
+      }
+    ],
+    "validation_contexts": [
+      {
+        "draft": "Gasto (todas as contas) em setembro de 2026 (total_expenses): 1540.62 BRL [Fonte auditável: FinancialQueryService]\nReceita (todas as contas) em setembro de 2026 (total_income): 15291.09 BRL [Fonte auditável: FinancialQueryService]\nSaldo (todas as contas) em setembro de 2026 (net_balance): 13750.47 BRL [Fonte auditável: FinancialQueryService]\nPremissas e limitações:\n- Os valores consideram apenas os arquivos importados; períodos incompletos podem omitir gastos. Saldo é a diferença entre receitas e despesas desses lançamentos.",
+        "notes": [
+          "Os valores consideram apenas os arquivos importados; períodos incompletos podem omitir gastos. Saldo é a diferença entre receitas e despesas desses lançamentos."
+        ],
+        "issues": [
+          {
+            "code": "NUMBER_NOT_SUPPORTED",
+            "severity": "blocker",
+            "message": "Número pessoal sem cálculo compatível: 2026."
+          },
+          {
+            "code": "NUMBER_NOT_SUPPORTED",
+            "severity": "blocker",
+            "message": "Número pessoal sem cálculo compatível: 1."
+          },
+          {
+            "code": "NUMBER_NOT_SUPPORTED",
+            "severity": "blocker",
+            "message": "Número pessoal sem cálculo compatível: 2."
+          },
+          {
+            "code": "NUMBER_NOT_SUPPORTED",
+            "severity": "blocker",
+            "message": "Número pessoal sem cálculo compatível: 3."
+          },
+          {
+            "code": "NUMBER_NOT_SUPPORTED",
+            "severity": "blocker",
+            "message": "Número pessoal sem cálculo compatível: - 1.540,62 BRL."
+          }
+        ],
+        "step": {
+          "agent": "validation",
+          "status": "failed",
+          "summary": "Validação reprovada: 5 problema(s) impeditivo(s) encontrado(s).",
+          "duration_ms": 1,
+          "detail": {
+            "issues_count": 5,
+            "blockers_count": 5,
+            "warnings_count": 0,
+            "issues": [
+              {
+                "code": "NUMBER_NOT_SUPPORTED",
+                "severity": "blocker",
+                "message": "Número pessoal sem cálculo compatível: 2026."
+              },
+              {
+                "code": "NUMBER_NOT_SUPPORTED",
+                "severity": "blocker",
+                "message": "Número pessoal sem cálculo compatível: 1."
+              },
+              {
+                "code": "NUMBER_NOT_SUPPORTED",
+                "severity": "blocker",
+                "message": "Número pessoal sem cálculo compatível: 2."
+              },
+              {
+                "code": "NUMBER_NOT_SUPPORTED",
+                "severity": "blocker",
+                "message": "Número pessoal sem cálculo compatível: 3."
+              },
+              {
+                "code": "NUMBER_NOT_SUPPORTED",
+                "severity": "blocker",
+                "message": "Número pessoal sem cálculo compatível: - 1.540,62 BRL."
+              }
+            ]
+          }
+        }
+      },
+      {
+        "draft": "Gasto (todas as contas) em setembro de 2026 (total_expenses): 1540.62 BRL [Fonte auditável: FinancialQueryService]\nReceita (todas as contas) em setembro de 2026 (total_income): 15291.09 BRL [Fonte auditável: FinancialQueryService]\nSaldo (todas as contas) em setembro de 2026 (net_balance): 13750.47 BRL [Fonte auditável: FinancialQueryService]\nPremissas e limitações:\n- Os valores consideram apenas os arquivos importados; períodos incompletos podem omitir gastos. Saldo é a diferença entre receitas e despesas desses lançamentos.",
+        "notes": [
+          "Os valores consideram apenas os arquivos importados; períodos incompletos podem omitir gastos. Saldo é a diferença entre receitas e despesas desses lançamentos."
+        ],
+        "issues": [
+          {
+            "code": "NUMBER_NOT_SUPPORTED",
+            "severity": "blocker",
+            "message": "Número pessoal sem cálculo compatível: 2026."
+          },
+          {
+            "code": "NUMBER_NOT_SUPPORTED",
+            "severity": "blocker",
+            "message": "Número pessoal sem cálculo compatível: 1."
+          },
+          {
+            "code": "NUMBER_NOT_SUPPORTED",
+            "severity": "blocker",
+            "message": "Número pessoal sem cálculo compatível: 2."
+          },
+          {
+            "code": "NUMBER_NOT_SUPPORTED",
+            "severity": "blocker",
+            "message": "Número pessoal sem cálculo compatível: 3."
+          },
+          {
+            "code": "NUMBER_NOT_SUPPORTED",
+            "severity": "blocker",
+            "message": "Número pessoal sem cálculo compatível: - 1.540,62."
+          }
+        ],
+        "step": {
+          "agent": "validation",
+          "status": "failed",
+          "summary": "Validação reprovada: 5 problema(s) impeditivo(s) encontrado(s).",
+          "duration_ms": 1,
+          "detail": {
+            "issues_count": 5,
+            "blockers_count": 5,
+            "warnings_count": 0,
+            "issues": [
+              {
+                "code": "NUMBER_NOT_SUPPORTED",
+                "severity": "blocker",
+                "message": "Número pessoal sem cálculo compatível: 2026."
+              },
+              {
+                "code": "NUMBER_NOT_SUPPORTED",
+                "severity": "blocker",
+                "message": "Número pessoal sem cálculo compatível: 1."
+              },
+              {
+                "code": "NUMBER_NOT_SUPPORTED",
+                "severity": "blocker",
+                "message": "Número pessoal sem cálculo compatível: 2."
+              },
+              {
+                "code": "NUMBER_NOT_SUPPORTED",
+                "severity": "blocker",
+                "message": "Número pessoal sem cálculo compatível: 3."
+              },
+              {
+                "code": "NUMBER_NOT_SUPPORTED",
+                "severity": "blocker",
+                "message": "Número pessoal sem cálculo compatível: - 1.540,62."
+              }
+            ]
+          }
+        }
+      }
+    ]
+  },
+  {
+    "id": "C06",
+    "response": {
+      "query": "Quanto gastei em outubro de 2026?",
+      "status": "rejected",
+      "answer": "A resposta preliminar gerada pelo assistente não passou pelas regras de validação e segurança do Trokim (conformidade com cálculos auditáveis e diretrizes oficiais). Por segurança financeira, a resposta foi retida.",
+      "model": "ollama/mistral-small3.2:24b",
+      "evidences": [],
+      "calculations": [
+        {
+          "key": "total_expenses",
+          "label": "Gasto (todas as contas) em outubro de 2026",
+          "value": 1496.31,
+          "unit": "BRL",
+          "source": "FinancialQueryService"
+        },
+        {
+          "key": "total_income",
+          "label": "Receita (todas as contas) em outubro de 2026",
+          "value": 13287.6,
+          "unit": "BRL",
+          "source": "FinancialQueryService"
+        },
+        {
+          "key": "net_balance",
+          "label": "Saldo (todas as contas) em outubro de 2026",
+          "value": 11791.29,
+          "unit": "BRL",
+          "source": "FinancialQueryService"
+        }
+      ],
+      "validation_issues": [
+        {
+          "code": "NUMBER_NOT_SUPPORTED",
+          "severity": "blocker",
+          "message": "Número pessoal sem cálculo compatível: 2026."
+        }
+      ],
+      "steps": [
+        {
+          "agent": "research",
+          "status": "skipped",
+          "summary": "Consulta aos dados importados; não requer orientação institucional.",
+          "duration_ms": 0,
+          "detail": {
+            "reason": "financial_query"
+          }
+        },
+        {
+          "agent": "analysis",
+          "status": "ok",
+          "summary": "Consulta financeira calculada.",
+          "duration_ms": 1,
+          "detail": {
+            "intent": "summary",
+            "calculations": [
+              {
+                "key": "total_expenses",
+                "label": "Gasto (todas as contas) em outubro de 2026",
+                "value": 1496.31,
+                "unit": "BRL",
+                "source": "FinancialQueryService"
+              },
+              {
+                "key": "total_income",
+                "label": "Receita (todas as contas) em outubro de 2026",
+                "value": 13287.6,
+                "unit": "BRL",
+                "source": "FinancialQueryService"
+              },
+              {
+                "key": "net_balance",
+                "label": "Saldo (todas as contas) em outubro de 2026",
+                "value": 11791.29,
+                "unit": "BRL",
+                "source": "FinancialQueryService"
+              }
+            ]
+          }
+        },
+        {
+          "agent": "communication",
+          "status": "ok",
+          "summary": "Rascunho substituído por conteúdo apoiado nos dados recebidos.",
+          "duration_ms": 5150,
+          "detail": {
+            "model": "ollama/mistral-small3.2:24b",
+            "attempt": 1,
+            "prompt_tokens": 1448,
+            "completion_tokens": 277,
+            "draft_guard": "safe_fallback"
+          }
+        },
+        {
+          "agent": "validation",
+          "status": "failed",
+          "summary": "Validação reprovada: 5 problema(s) impeditivo(s) encontrado(s).",
+          "duration_ms": 1,
+          "detail": {
+            "issues_count": 5,
+            "blockers_count": 5,
+            "warnings_count": 0,
+            "issues": [
+              {
+                "code": "NUMBER_NOT_SUPPORTED",
+                "severity": "blocker",
+                "message": "Número pessoal sem cálculo compatível: 2026."
+              },
+              {
+                "code": "NUMBER_NOT_SUPPORTED",
+                "severity": "blocker",
+                "message": "Número pessoal sem cálculo compatível: 1."
+              },
+              {
+                "code": "NUMBER_NOT_SUPPORTED",
+                "severity": "blocker",
+                "message": "Número pessoal sem cálculo compatível: 2."
+              },
+              {
+                "code": "NUMBER_NOT_SUPPORTED",
+                "severity": "blocker",
+                "message": "Número pessoal sem cálculo compatível: 3."
+              },
+              {
+                "code": "NUMBER_NOT_SUPPORTED",
+                "severity": "blocker",
+                "message": "Número pessoal sem cálculo compatível: - 1.496,31."
+              }
+            ]
+          }
+        },
+        {
+          "agent": "communication",
+          "status": "ok",
+          "summary": "Rascunho substituído por conteúdo apoiado nos dados recebidos.",
+          "duration_ms": 4628,
+          "detail": {
+            "model": "ollama/mistral-small3.2:24b",
+            "attempt": 2,
+            "prompt_tokens": 1625,
+            "completion_tokens": 241,
+            "draft_guard": "safe_fallback"
+          }
+        },
+        {
+          "agent": "validation",
+          "status": "failed",
+          "summary": "Validação reprovada: 1 problema(s) impeditivo(s) encontrado(s).",
+          "duration_ms": 1,
+          "detail": {
+            "issues_count": 1,
+            "blockers_count": 1,
+            "warnings_count": 0,
+            "issues": [
+              {
+                "code": "NUMBER_NOT_SUPPORTED",
+                "severity": "blocker",
+                "message": "Número pessoal sem cálculo compatível: 2026."
+              }
+            ]
+          }
+        }
+      ],
+      "total_ms": 9781
+    },
+    "metrics": {
+      "numeric_expected": 3,
+      "calculation_correct": 3,
+      "numeric_correct": 0,
+      "rejected_by_validation": true,
+      "numeric_case_correct": false,
+      "raw_model_calls": 2,
+      "raw_model_calls_with_invented_numbers": 2,
+      "raw_model_invented_numbers": 6,
+      "final_invented_numbers": 0,
+      "abstention_expected": false,
+      "abstention_correct": false,
+      "validation_number_not_supported": 6,
+      "validation_calculation_missing": 0,
+      "validation_blocked": true,
+      "safe_fallbacks": 2,
+      "technical_failure": false
+    },
+    "elapsed_ms": 9781,
+    "model_calls": [
+      {
+        "content": "### Resposta do Communication Agent do Trokim:\n\nOlá! Vamos analisar os dados financeiros importados para outubro de 2026.\n\n#### Cálculos:\n1. **Gasto total**: R$ 1.496,31\n2. **Receita total**: R$ 13.287,60\n3. **Saldo líquido**: R$ 11.791,29\n\nO saldo líquido é calculado subtraindo os gastos da receita:\n\\[ \\text{Saldo} = \\text{Receita} - \\text{Gasto} \\]\n\\[ \\text{Saldo} = 13.287,60 - 1.496,31 = 11.791,29 \\]\n\n#### Limitações:\n- Os valores consideram apenas os arquivos importados. Se houver períodos incompletos ou lançamentos não registrados, os gastos podem estar subestimados.\n- O saldo é a diferença entre receitas e despesas dos lançamentos importados, mas não representa necessariamente o saldo bancário real.\n\nSe precisar de mais detalhes ou ajustes, é importante verificar se todos os gastos e receitas foram devidamente registrados. Posso ajudar em algo mais?",
+        "model": "ollama/mistral-small3.2:24b",
+        "prompt_tokens": 1448,
+        "completion_tokens": 277,
+        "elapsed_ms": 5149
+      },
+      {
+        "content": "### Resposta do Trokim:\n\nOlá! Vamos analisar os dados financeiros importados para outubro de 2026.\n\n**Cálculos realizados:**\n- **Gasto total:** R$ 1.496,31 (soma de todas as despesas registradas) [Fonte: FinancialQueryService].\n- **Receita total:** R$ 13.287,60 (soma de todas as receitas registradas) [Fonte: FinancialQueryService].\n- **Saldo líquido:** R$ 11.791,29 (diferença entre receitas e despesas) [Fonte: FinancialQueryService].\n\n**Limitações importantes:**\n- Esses valores refletem apenas os lançamentos importados. Períodos incompletos podem omitir gastos ou receitas não registradas.\n- O saldo é calculado como a diferença entre receitas e despesas desses lançamentos, mas não representa necessariamente o saldo bancário real.\n\nSe precisar de mais detalhes ou ajustes, é só avisar! Estou aqui para ajudar. 😊",
+        "model": "ollama/mistral-small3.2:24b",
+        "prompt_tokens": 1625,
+        "completion_tokens": 241,
+        "elapsed_ms": 4628
+      }
+    ],
+    "validation_contexts": [
+      {
+        "draft": "Gasto (todas as contas) em outubro de 2026 (total_expenses): 1496.31 BRL [Fonte auditável: FinancialQueryService]\nReceita (todas as contas) em outubro de 2026 (total_income): 13287.6 BRL [Fonte auditável: FinancialQueryService]\nSaldo (todas as contas) em outubro de 2026 (net_balance): 11791.29 BRL [Fonte auditável: FinancialQueryService]\nPremissas e limitações:\n- Os valores consideram apenas os arquivos importados; períodos incompletos podem omitir gastos. Saldo é a diferença entre receitas e despesas desses lançamentos.",
+        "notes": [
+          "Os valores consideram apenas os arquivos importados; períodos incompletos podem omitir gastos. Saldo é a diferença entre receitas e despesas desses lançamentos."
+        ],
+        "issues": [
+          {
+            "code": "NUMBER_NOT_SUPPORTED",
+            "severity": "blocker",
+            "message": "Número pessoal sem cálculo compatível: 2026."
+          },
+          {
+            "code": "NUMBER_NOT_SUPPORTED",
+            "severity": "blocker",
+            "message": "Número pessoal sem cálculo compatível: 1."
+          },
+          {
+            "code": "NUMBER_NOT_SUPPORTED",
+            "severity": "blocker",
+            "message": "Número pessoal sem cálculo compatível: 2."
+          },
+          {
+            "code": "NUMBER_NOT_SUPPORTED",
+            "severity": "blocker",
+            "message": "Número pessoal sem cálculo compatível: 3."
+          },
+          {
+            "code": "NUMBER_NOT_SUPPORTED",
+            "severity": "blocker",
+            "message": "Número pessoal sem cálculo compatível: - 1.496,31."
+          }
+        ],
+        "step": {
+          "agent": "validation",
+          "status": "failed",
+          "summary": "Validação reprovada: 5 problema(s) impeditivo(s) encontrado(s).",
+          "duration_ms": 1,
+          "detail": {
+            "issues_count": 5,
+            "blockers_count": 5,
+            "warnings_count": 0,
+            "issues": [
+              {
+                "code": "NUMBER_NOT_SUPPORTED",
+                "severity": "blocker",
+                "message": "Número pessoal sem cálculo compatível: 2026."
+              },
+              {
+                "code": "NUMBER_NOT_SUPPORTED",
+                "severity": "blocker",
+                "message": "Número pessoal sem cálculo compatível: 1."
+              },
+              {
+                "code": "NUMBER_NOT_SUPPORTED",
+                "severity": "blocker",
+                "message": "Número pessoal sem cálculo compatível: 2."
+              },
+              {
+                "code": "NUMBER_NOT_SUPPORTED",
+                "severity": "blocker",
+                "message": "Número pessoal sem cálculo compatível: 3."
+              },
+              {
+                "code": "NUMBER_NOT_SUPPORTED",
+                "severity": "blocker",
+                "message": "Número pessoal sem cálculo compatível: - 1.496,31."
+              }
+            ]
+          }
+        }
+      },
+      {
+        "draft": "Gasto (todas as contas) em outubro de 2026 (total_expenses): 1496.31 BRL [Fonte auditável: FinancialQueryService]\nReceita (todas as contas) em outubro de 2026 (total_income): 13287.6 BRL [Fonte auditável: FinancialQueryService]\nSaldo (todas as contas) em outubro de 2026 (net_balance): 11791.29 BRL [Fonte auditável: FinancialQueryService]\nPremissas e limitações:\n- Os valores consideram apenas os arquivos importados; períodos incompletos podem omitir gastos. Saldo é a diferença entre receitas e despesas desses lançamentos.",
+        "notes": [
+          "Os valores consideram apenas os arquivos importados; períodos incompletos podem omitir gastos. Saldo é a diferença entre receitas e despesas desses lançamentos."
+        ],
+        "issues": [
+          {
+            "code": "NUMBER_NOT_SUPPORTED",
+            "severity": "blocker",
+            "message": "Número pessoal sem cálculo compatível: 2026."
+          }
+        ],
+        "step": {
+          "agent": "validation",
+          "status": "failed",
+          "summary": "Validação reprovada: 1 problema(s) impeditivo(s) encontrado(s).",
+          "duration_ms": 1,
+          "detail": {
+            "issues_count": 1,
+            "blockers_count": 1,
+            "warnings_count": 0,
+            "issues": [
+              {
+                "code": "NUMBER_NOT_SUPPORTED",
+                "severity": "blocker",
+                "message": "Número pessoal sem cálculo compatível: 2026."
+              }
+            ]
+          }
+        }
+      }
+    ]
+  },
+  {
+    "id": "C07",
+    "response": {
+      "query": "Quanto gastei em novembro de 2026?",
+      "status": "rejected",
+      "answer": "A resposta preliminar gerada pelo assistente não passou pelas regras de validação e segurança do Trokim (conformidade com cálculos auditáveis e diretrizes oficiais). Por segurança financeira, a resposta foi retida.",
+      "model": "ollama/mistral-small3.2:24b",
+      "evidences": [],
+      "calculations": [
+        {
+          "key": "total_expenses",
+          "label": "Gasto (todas as contas) em novembro de 2026",
+          "value": 1390.98,
+          "unit": "BRL",
+          "source": "FinancialQueryService"
+        },
+        {
+          "key": "total_income",
+          "label": "Receita (todas as contas) em novembro de 2026",
+          "value": 17701.49,
+          "unit": "BRL",
+          "source": "FinancialQueryService"
+        },
+        {
+          "key": "net_balance",
+          "label": "Saldo (todas as contas) em novembro de 2026",
+          "value": 16310.51,
+          "unit": "BRL",
+          "source": "FinancialQueryService"
+        }
+      ],
+      "validation_issues": [
+        {
+          "code": "NUMBER_NOT_SUPPORTED",
+          "severity": "blocker",
+          "message": "Número pessoal sem cálculo compatível: 2026."
+        },
+        {
+          "code": "NUMBER_NOT_SUPPORTED",
+          "severity": "blocker",
+          "message": "Número pessoal sem cálculo compatível: 1."
+        },
+        {
+          "code": "NUMBER_NOT_SUPPORTED",
+          "severity": "blocker",
+          "message": "Número pessoal sem cálculo compatível: 2."
+        },
+        {
+          "code": "NUMBER_NOT_SUPPORTED",
+          "severity": "blocker",
+          "message": "Número pessoal sem cálculo compatível: 3."
+        }
+      ],
+      "steps": [
+        {
+          "agent": "research",
+          "status": "skipped",
+          "summary": "Consulta aos dados importados; não requer orientação institucional.",
+          "duration_ms": 0,
+          "detail": {
+            "reason": "financial_query"
+          }
+        },
+        {
+          "agent": "analysis",
+          "status": "ok",
+          "summary": "Consulta financeira calculada.",
+          "duration_ms": 1,
+          "detail": {
+            "intent": "summary",
+            "calculations": [
+              {
+                "key": "total_expenses",
+                "label": "Gasto (todas as contas) em novembro de 2026",
+                "value": 1390.98,
+                "unit": "BRL",
+                "source": "FinancialQueryService"
+              },
+              {
+                "key": "total_income",
+                "label": "Receita (todas as contas) em novembro de 2026",
+                "value": 17701.49,
+                "unit": "BRL",
+                "source": "FinancialQueryService"
+              },
+              {
+                "key": "net_balance",
+                "label": "Saldo (todas as contas) em novembro de 2026",
+                "value": 16310.51,
+                "unit": "BRL",
+                "source": "FinancialQueryService"
+              }
+            ]
+          }
+        },
+        {
+          "agent": "communication",
+          "status": "ok",
+          "summary": "Rascunho substituído por conteúdo apoiado nos dados recebidos.",
+          "duration_ms": 5978,
+          "detail": {
+            "model": "ollama/mistral-small3.2:24b",
+            "attempt": 1,
+            "prompt_tokens": 1449,
+            "completion_tokens": 325,
+            "draft_guard": "safe_fallback"
+          }
+        },
+        {
+          "agent": "validation",
+          "status": "failed",
+          "summary": "Validação reprovada: 5 problema(s) impeditivo(s) encontrado(s).",
+          "duration_ms": 1,
+          "detail": {
+            "issues_count": 5,
+            "blockers_count": 5,
+            "warnings_count": 0,
+            "issues": [
+              {
+                "code": "NUMBER_NOT_SUPPORTED",
+                "severity": "blocker",
+                "message": "Número pessoal sem cálculo compatível: 2026."
+              },
+              {
+                "code": "NUMBER_NOT_SUPPORTED",
+                "severity": "blocker",
+                "message": "Número pessoal sem cálculo compatível: 1."
+              },
+              {
+                "code": "NUMBER_NOT_SUPPORTED",
+                "severity": "blocker",
+                "message": "Número pessoal sem cálculo compatível: 2."
+              },
+              {
+                "code": "NUMBER_NOT_SUPPORTED",
+                "severity": "blocker",
+                "message": "Número pessoal sem cálculo compatível: 3."
+              },
+              {
+                "code": "NUMBER_NOT_SUPPORTED",
+                "severity": "blocker",
+                "message": "Número pessoal sem cálculo compatível: - R$ 1.390,98."
+              }
+            ]
+          }
+        },
+        {
+          "agent": "communication",
+          "status": "ok",
+          "summary": "Rascunho substituído por conteúdo apoiado nos dados recebidos.",
+          "duration_ms": 4869,
+          "detail": {
+            "model": "ollama/mistral-small3.2:24b",
+            "attempt": 2,
+            "prompt_tokens": 1628,
+            "completion_tokens": 252,
+            "draft_guard": "safe_fallback"
+          }
+        },
+        {
+          "agent": "validation",
+          "status": "failed",
+          "summary": "Validação reprovada: 4 problema(s) impeditivo(s) encontrado(s).",
+          "duration_ms": 1,
+          "detail": {
+            "issues_count": 4,
+            "blockers_count": 4,
+            "warnings_count": 0,
+            "issues": [
+              {
+                "code": "NUMBER_NOT_SUPPORTED",
+                "severity": "blocker",
+                "message": "Número pessoal sem cálculo compatível: 2026."
+              },
+              {
+                "code": "NUMBER_NOT_SUPPORTED",
+                "severity": "blocker",
+                "message": "Número pessoal sem cálculo compatível: 1."
+              },
+              {
+                "code": "NUMBER_NOT_SUPPORTED",
+                "severity": "blocker",
+                "message": "Número pessoal sem cálculo compatível: 2."
+              },
+              {
+                "code": "NUMBER_NOT_SUPPORTED",
+                "severity": "blocker",
+                "message": "Número pessoal sem cálculo compatível: 3."
+              }
+            ]
+          }
+        }
+      ],
+      "total_ms": 10850
+    },
+    "metrics": {
+      "numeric_expected": 3,
+      "calculation_correct": 3,
+      "numeric_correct": 0,
+      "rejected_by_validation": true,
+      "numeric_case_correct": false,
+      "raw_model_calls": 2,
+      "raw_model_calls_with_invented_numbers": 2,
+      "raw_model_invented_numbers": 10,
+      "final_invented_numbers": 0,
+      "abstention_expected": false,
+      "abstention_correct": false,
+      "validation_number_not_supported": 9,
+      "validation_calculation_missing": 0,
+      "validation_blocked": true,
+      "safe_fallbacks": 2,
+      "technical_failure": false
+    },
+    "elapsed_ms": 10852,
+    "model_calls": [
+      {
+        "content": "### Resposta do Communication Agent do Trokim:\n\nOlá! Vamos analisar os dados financeiros importados para novembro de 2026.\n\n#### Cálculos Realizados:\n1. **Gasto total (total_expenses)**: R$ 1.390,98\n   - Este valor representa a soma de todas as despesas registradas em novembro de 2026.\n\n2. **Receita total (total_income)**: R$ 17.701,49\n   - Este valor representa a soma de todas as receitas registradas no mesmo período.\n\n3. **Saldo líquido (net_balance)**: R$ 16.310,51\n   - Este é o resultado da diferença entre a receita total e o gasto total: `R$ 17.701,49 - R$ 1.390,98 = R$ 16.310,51`.\n\n#### Limitações:\n- Os valores consideram apenas os arquivos importados. Se houver períodos incompletos ou lançamentos não registrados, os gastos podem estar subestimados.\n- O saldo líquido é calculado com base nos dados disponíveis e não representa necessariamente o saldo bancário real.\n\nCaso queira, podemos ajudar a importar mais dados ou ajustar as categorias para uma análise mais precisa. Basta nos informar!\n\nSe precisar de mais detalhes ou tiver outras dúvidas, estou à disposição. 😊",
+        "model": "ollama/mistral-small3.2:24b",
+        "prompt_tokens": 1449,
+        "completion_tokens": 325,
+        "elapsed_ms": 5978
+      },
+      {
+        "content": "### Resposta do Trokim:\n\nOlá! Vamos analisar os dados financeiros importados para novembro de 2026.\n\n#### Cálculos:\n1. **Gasto total**: R$ 1.390,98 (total_expenses) [Fonte: FinancialQueryService]\n2. **Receita total**: R$ 17.701,49 (total_income) [Fonte: FinancialQueryService]\n3. **Saldo líquido**: R$ 16.310,51 (net_balance) [Fonte: FinancialQueryService]\n\nO saldo líquido é calculado como a diferença entre a receita total e os gastos totais:\n\\[ \\text{Saldo líquido} = \\text{Receita total} - \\text{Gasto total} \\]\n\n#### Limitações:\n- Os valores consideram apenas os arquivos importados. Períodos incompletos podem omitir gastos ou receitas não registradas.\n- O saldo é a diferença entre receitas e despesas desses lançamentos, mas não representa necessariamente o saldo bancário real.\n\nSe precisar de mais detalhes ou ajustes, é só avisar!",
+        "model": "ollama/mistral-small3.2:24b",
+        "prompt_tokens": 1628,
+        "completion_tokens": 252,
+        "elapsed_ms": 4869
+      }
+    ],
+    "validation_contexts": [
+      {
+        "draft": "Gasto (todas as contas) em novembro de 2026 (total_expenses): 1390.98 BRL [Fonte auditável: FinancialQueryService]\nReceita (todas as contas) em novembro de 2026 (total_income): 17701.49 BRL [Fonte auditável: FinancialQueryService]\nSaldo (todas as contas) em novembro de 2026 (net_balance): 16310.51 BRL [Fonte auditável: FinancialQueryService]\nPremissas e limitações:\n- Os valores consideram apenas os arquivos importados; períodos incompletos podem omitir gastos. Saldo é a diferença entre receitas e despesas desses lançamentos.",
+        "notes": [
+          "Os valores consideram apenas os arquivos importados; períodos incompletos podem omitir gastos. Saldo é a diferença entre receitas e despesas desses lançamentos."
+        ],
+        "issues": [
+          {
+            "code": "NUMBER_NOT_SUPPORTED",
+            "severity": "blocker",
+            "message": "Número pessoal sem cálculo compatível: 2026."
+          },
+          {
+            "code": "NUMBER_NOT_SUPPORTED",
+            "severity": "blocker",
+            "message": "Número pessoal sem cálculo compatível: 1."
+          },
+          {
+            "code": "NUMBER_NOT_SUPPORTED",
+            "severity": "blocker",
+            "message": "Número pessoal sem cálculo compatível: 2."
+          },
+          {
+            "code": "NUMBER_NOT_SUPPORTED",
+            "severity": "blocker",
+            "message": "Número pessoal sem cálculo compatível: 3."
+          },
+          {
+            "code": "NUMBER_NOT_SUPPORTED",
+            "severity": "blocker",
+            "message": "Número pessoal sem cálculo compatível: - R$ 1.390,98."
+          }
+        ],
+        "step": {
+          "agent": "validation",
+          "status": "failed",
+          "summary": "Validação reprovada: 5 problema(s) impeditivo(s) encontrado(s).",
+          "duration_ms": 1,
+          "detail": {
+            "issues_count": 5,
+            "blockers_count": 5,
+            "warnings_count": 0,
+            "issues": [
+              {
+                "code": "NUMBER_NOT_SUPPORTED",
+                "severity": "blocker",
+                "message": "Número pessoal sem cálculo compatível: 2026."
+              },
+              {
+                "code": "NUMBER_NOT_SUPPORTED",
+                "severity": "blocker",
+                "message": "Número pessoal sem cálculo compatível: 1."
+              },
+              {
+                "code": "NUMBER_NOT_SUPPORTED",
+                "severity": "blocker",
+                "message": "Número pessoal sem cálculo compatível: 2."
+              },
+              {
+                "code": "NUMBER_NOT_SUPPORTED",
+                "severity": "blocker",
+                "message": "Número pessoal sem cálculo compatível: 3."
+              },
+              {
+                "code": "NUMBER_NOT_SUPPORTED",
+                "severity": "blocker",
+                "message": "Número pessoal sem cálculo compatível: - R$ 1.390,98."
+              }
+            ]
+          }
+        }
+      },
+      {
+        "draft": "Gasto (todas as contas) em novembro de 2026 (total_expenses): 1390.98 BRL [Fonte auditável: FinancialQueryService]\nReceita (todas as contas) em novembro de 2026 (total_income): 17701.49 BRL [Fonte auditável: FinancialQueryService]\nSaldo (todas as contas) em novembro de 2026 (net_balance): 16310.51 BRL [Fonte auditável: FinancialQueryService]\nPremissas e limitações:\n- Os valores consideram apenas os arquivos importados; períodos incompletos podem omitir gastos. Saldo é a diferença entre receitas e despesas desses lançamentos.",
+        "notes": [
+          "Os valores consideram apenas os arquivos importados; períodos incompletos podem omitir gastos. Saldo é a diferença entre receitas e despesas desses lançamentos."
+        ],
+        "issues": [
+          {
+            "code": "NUMBER_NOT_SUPPORTED",
+            "severity": "blocker",
+            "message": "Número pessoal sem cálculo compatível: 2026."
+          },
+          {
+            "code": "NUMBER_NOT_SUPPORTED",
+            "severity": "blocker",
+            "message": "Número pessoal sem cálculo compatível: 1."
+          },
+          {
+            "code": "NUMBER_NOT_SUPPORTED",
+            "severity": "blocker",
+            "message": "Número pessoal sem cálculo compatível: 2."
+          },
+          {
+            "code": "NUMBER_NOT_SUPPORTED",
+            "severity": "blocker",
+            "message": "Número pessoal sem cálculo compatível: 3."
+          }
+        ],
+        "step": {
+          "agent": "validation",
+          "status": "failed",
+          "summary": "Validação reprovada: 4 problema(s) impeditivo(s) encontrado(s).",
+          "duration_ms": 1,
+          "detail": {
+            "issues_count": 4,
+            "blockers_count": 4,
+            "warnings_count": 0,
+            "issues": [
+              {
+                "code": "NUMBER_NOT_SUPPORTED",
+                "severity": "blocker",
+                "message": "Número pessoal sem cálculo compatível: 2026."
+              },
+              {
+                "code": "NUMBER_NOT_SUPPORTED",
+                "severity": "blocker",
+                "message": "Número pessoal sem cálculo compatível: 1."
+              },
+              {
+                "code": "NUMBER_NOT_SUPPORTED",
+                "severity": "blocker",
+                "message": "Número pessoal sem cálculo compatível: 2."
+              },
+              {
+                "code": "NUMBER_NOT_SUPPORTED",
+                "severity": "blocker",
+                "message": "Número pessoal sem cálculo compatível: 3."
+              }
+            ]
+          }
+        }
+      }
+    ]
+  },
+  {
+    "id": "C08",
+    "response": {
+      "query": "Quanto está a fatura aberta?",
+      "status": "rejected",
+      "answer": "A resposta preliminar gerada pelo assistente não passou pelas regras de validação e segurança do Trokim (conformidade com cálculos auditáveis e diretrizes oficiais). Por segurança financeira, a resposta foi retida.",
+      "model": "ollama/mistral-small3.2:24b",
+      "evidences": [],
+      "calculations": [
+        {
+          "key": "statement_aberta",
+          "label": "Fatura aberta de Nubank cartão (pessoal)",
+          "value": 504.33,
+          "unit": "BRL",
+          "source": "FinancialQueryService"
+        }
+      ],
+      "validation_issues": [
+        {
+          "code": "NUMBER_NOT_SUPPORTED",
+          "severity": "blocker",
+          "message": "Número pessoal sem cálculo compatível: 30."
+        },
+        {
+          "code": "NUMBER_NOT_SUPPORTED",
+          "severity": "blocker",
+          "message": "Número pessoal sem cálculo compatível: 11."
+        },
+        {
+          "code": "NUMBER_NOT_SUPPORTED",
+          "severity": "blocker",
+          "message": "Número pessoal sem cálculo compatível: 2026."
+        },
+        {
+          "code": "NUMBER_NOT_SUPPORTED",
+          "severity": "blocker",
+          "message": "Número pessoal sem cálculo compatível: 1."
+        },
+        {
+          "code": "NUMBER_NOT_SUPPORTED",
+          "severity": "blocker",
+          "message": "Número pessoal sem cálculo compatível: 2."
+        }
+      ],
+      "steps": [
+        {
+          "agent": "research",
+          "status": "skipped",
+          "summary": "Consulta aos dados importados; não requer orientação institucional.",
+          "duration_ms": 0,
+          "detail": {
+            "reason": "financial_query"
+          }
+        },
+        {
+          "agent": "analysis",
+          "status": "ok",
+          "summary": "Consulta financeira calculada.",
+          "duration_ms": 1,
+          "detail": {
+            "intent": "statement",
+            "calculations": [
+              {
+                "key": "statement_aberta",
+                "label": "Fatura aberta de Nubank cartão (pessoal)",
+                "value": 504.33,
+                "unit": "BRL",
+                "source": "FinancialQueryService"
+              }
+            ]
+          }
+        },
+        {
+          "agent": "communication",
+          "status": "ok",
+          "summary": "Rascunho substituído por conteúdo apoiado nos dados recebidos.",
+          "duration_ms": 3541,
+          "detail": {
+            "model": "ollama/mistral-small3.2:24b",
+            "attempt": 1,
+            "prompt_tokens": 1405,
+            "completion_tokens": 170,
+            "draft_guard": "safe_fallback"
+          }
+        },
+        {
+          "agent": "validation",
+          "status": "failed",
+          "summary": "Validação reprovada: 4 problema(s) impeditivo(s) encontrado(s).",
+          "duration_ms": 1,
+          "detail": {
+            "issues_count": 4,
+            "blockers_count": 4,
+            "warnings_count": 0,
+            "issues": [
+              {
+                "code": "NUMBER_NOT_SUPPORTED",
+                "severity": "blocker",
+                "message": "Número pessoal sem cálculo compatível: 01."
+              },
+              {
+                "code": "NUMBER_NOT_SUPPORTED",
+                "severity": "blocker",
+                "message": "Número pessoal sem cálculo compatível: 11."
+              },
+              {
+                "code": "NUMBER_NOT_SUPPORTED",
+                "severity": "blocker",
+                "message": "Número pessoal sem cálculo compatível: 2026."
+              },
+              {
+                "code": "NUMBER_NOT_SUPPORTED",
+                "severity": "blocker",
+                "message": "Número pessoal sem cálculo compatível: 30."
+              }
+            ]
+          }
+        },
+        {
+          "agent": "communication",
+          "status": "ok",
+          "summary": "Rascunho substituído por conteúdo apoiado nos dados recebidos.",
+          "duration_ms": 4552,
+          "detail": {
+            "model": "ollama/mistral-small3.2:24b",
+            "attempt": 2,
+            "prompt_tokens": 1556,
+            "completion_tokens": 230,
+            "draft_guard": "safe_fallback"
+          }
+        },
+        {
+          "agent": "validation",
+          "status": "failed",
+          "summary": "Validação reprovada: 5 problema(s) impeditivo(s) encontrado(s).",
+          "duration_ms": 1,
+          "detail": {
+            "issues_count": 5,
+            "blockers_count": 5,
+            "warnings_count": 0,
+            "issues": [
+              {
+                "code": "NUMBER_NOT_SUPPORTED",
+                "severity": "blocker",
+                "message": "Número pessoal sem cálculo compatível: 30."
+              },
+              {
+                "code": "NUMBER_NOT_SUPPORTED",
+                "severity": "blocker",
+                "message": "Número pessoal sem cálculo compatível: 11."
+              },
+              {
+                "code": "NUMBER_NOT_SUPPORTED",
+                "severity": "blocker",
+                "message": "Número pessoal sem cálculo compatível: 2026."
+              },
+              {
+                "code": "NUMBER_NOT_SUPPORTED",
+                "severity": "blocker",
+                "message": "Número pessoal sem cálculo compatível: 1."
+              },
+              {
+                "code": "NUMBER_NOT_SUPPORTED",
+                "severity": "blocker",
+                "message": "Número pessoal sem cálculo compatível: 2."
+              }
+            ]
+          }
+        }
+      ],
+      "total_ms": 8096
+    },
+    "metrics": {
+      "numeric_expected": 1,
+      "calculation_correct": 1,
+      "numeric_correct": 0,
+      "rejected_by_validation": true,
+      "numeric_case_correct": false,
+      "raw_model_calls": 2,
+      "raw_model_calls_with_invented_numbers": 2,
+      "raw_model_invented_numbers": 14,
+      "final_invented_numbers": 0,
+      "abstention_expected": false,
+      "abstention_correct": false,
+      "validation_number_not_supported": 9,
+      "validation_calculation_missing": 0,
+      "validation_blocked": true,
+      "safe_fallbacks": 2,
+      "technical_failure": false
+    },
+    "elapsed_ms": 8097,
+    "model_calls": [
+      {
+        "content": "### Resposta:\n\nO valor da fatura aberta do Nubank para o período de 01/11/2026 a 30/11/2026 é de **R$ 504,33**.\n\n#### Explicação dos cálculos:\n- O valor é determinado pela diferença entre receitas e despesas lançadas no sistema.\n- A fatura fecha em **30/11/2026**.\n\n#### Limitações:\n- Os valores consideram apenas os arquivos importados.\n- Períodos incompletos podem omitir gastos.\n- O saldo não representa necessariamente o valor exato do extrato bancário, pois depende dos lançamentos disponíveis.\n\nSe precisar de mais detalhes ou ajustes, me avise!",
+        "model": "ollama/mistral-small3.2:24b",
+        "prompt_tokens": 1405,
+        "completion_tokens": 170,
+        "elapsed_ms": 3541
+      },
+      {
+        "content": "### Resposta do Communication Agent do Trokim:\n\nOlá! Vamos analisar os dados importados referentes ao seu cartão de crédito Nubank.\n\n**Cálculo Determinístico:**\n- **Fatura aberta:** R$ 504,33 (valor a ser pago até o fechamento da fatura em 30/11/2026).\n\n**Limitações do Cálculo:**\n1. **Período Incompleto:** Os valores consideram apenas os lançamentos importados até o momento. Isso significa que gastos não registrados ou períodos incompletos podem não estar incluídos.\n2. **Saldo Baseado em Lançamentos:** O saldo apresentado é a diferença entre receitas e despesas dos lançamentos importados, não necessariamente o saldo real da sua conta.\n\n**Observação Importante:**\nEste cálculo é informativo e não substitui a consulta direta no aplicativo do Nubank ou em seu extrato bancário.\n\nSe precisar de mais detalhes ou tiver dúvidas adicionais, estou à disposição!",
+        "model": "ollama/mistral-small3.2:24b",
+        "prompt_tokens": 1556,
+        "completion_tokens": 230,
+        "elapsed_ms": 4552
+      }
+    ],
+    "validation_contexts": [
+      {
+        "draft": "Fatura aberta de Nubank cartão (pessoal) (statement_aberta): 504.33 BRL [Fonte auditável: FinancialQueryService]\nPremissas e limitações:\n- Ciclo de 01/11/2026 a 30/11/2026.\n- A fatura fecha em 30/11/2026.\n- Os valores consideram apenas os arquivos importados; períodos incompletos podem omitir gastos. Saldo é a diferença entre receitas e despesas desses lançamentos.",
+        "notes": [
+          "Ciclo de 01/11/2026 a 30/11/2026.",
+          "A fatura fecha em 30/11/2026.",
+          "Os valores consideram apenas os arquivos importados; períodos incompletos podem omitir gastos. Saldo é a diferença entre receitas e despesas desses lançamentos."
+        ],
+        "issues": [
+          {
+            "code": "NUMBER_NOT_SUPPORTED",
+            "severity": "blocker",
+            "message": "Número pessoal sem cálculo compatível: 01."
+          },
+          {
+            "code": "NUMBER_NOT_SUPPORTED",
+            "severity": "blocker",
+            "message": "Número pessoal sem cálculo compatível: 11."
+          },
+          {
+            "code": "NUMBER_NOT_SUPPORTED",
+            "severity": "blocker",
+            "message": "Número pessoal sem cálculo compatível: 2026."
+          },
+          {
+            "code": "NUMBER_NOT_SUPPORTED",
+            "severity": "blocker",
+            "message": "Número pessoal sem cálculo compatível: 30."
+          }
+        ],
+        "step": {
+          "agent": "validation",
+          "status": "failed",
+          "summary": "Validação reprovada: 4 problema(s) impeditivo(s) encontrado(s).",
+          "duration_ms": 1,
+          "detail": {
+            "issues_count": 4,
+            "blockers_count": 4,
+            "warnings_count": 0,
+            "issues": [
+              {
+                "code": "NUMBER_NOT_SUPPORTED",
+                "severity": "blocker",
+                "message": "Número pessoal sem cálculo compatível: 01."
+              },
+              {
+                "code": "NUMBER_NOT_SUPPORTED",
+                "severity": "blocker",
+                "message": "Número pessoal sem cálculo compatível: 11."
+              },
+              {
+                "code": "NUMBER_NOT_SUPPORTED",
+                "severity": "blocker",
+                "message": "Número pessoal sem cálculo compatível: 2026."
+              },
+              {
+                "code": "NUMBER_NOT_SUPPORTED",
+                "severity": "blocker",
+                "message": "Número pessoal sem cálculo compatível: 30."
+              }
+            ]
+          }
+        }
+      },
+      {
+        "draft": "Fatura aberta de Nubank cartão (pessoal) (statement_aberta): 504.33 BRL [Fonte auditável: FinancialQueryService]\nPremissas e limitações:\n- Ciclo de 01/11/2026 a 30/11/2026.\n- A fatura fecha em 30/11/2026.\n- Os valores consideram apenas os arquivos importados; períodos incompletos podem omitir gastos. Saldo é a diferença entre receitas e despesas desses lançamentos.",
+        "notes": [
+          "Ciclo de 01/11/2026 a 30/11/2026.",
+          "A fatura fecha em 30/11/2026.",
+          "Os valores consideram apenas os arquivos importados; períodos incompletos podem omitir gastos. Saldo é a diferença entre receitas e despesas desses lançamentos."
+        ],
+        "issues": [
+          {
+            "code": "NUMBER_NOT_SUPPORTED",
+            "severity": "blocker",
+            "message": "Número pessoal sem cálculo compatível: 30."
+          },
+          {
+            "code": "NUMBER_NOT_SUPPORTED",
+            "severity": "blocker",
+            "message": "Número pessoal sem cálculo compatível: 11."
+          },
+          {
+            "code": "NUMBER_NOT_SUPPORTED",
+            "severity": "blocker",
+            "message": "Número pessoal sem cálculo compatível: 2026."
+          },
+          {
+            "code": "NUMBER_NOT_SUPPORTED",
+            "severity": "blocker",
+            "message": "Número pessoal sem cálculo compatível: 1."
+          },
+          {
+            "code": "NUMBER_NOT_SUPPORTED",
+            "severity": "blocker",
+            "message": "Número pessoal sem cálculo compatível: 2."
+          }
+        ],
+        "step": {
+          "agent": "validation",
+          "status": "failed",
+          "summary": "Validação reprovada: 5 problema(s) impeditivo(s) encontrado(s).",
+          "duration_ms": 1,
+          "detail": {
+            "issues_count": 5,
+            "blockers_count": 5,
+            "warnings_count": 0,
+            "issues": [
+              {
+                "code": "NUMBER_NOT_SUPPORTED",
+                "severity": "blocker",
+                "message": "Número pessoal sem cálculo compatível: 30."
+              },
+              {
+                "code": "NUMBER_NOT_SUPPORTED",
+                "severity": "blocker",
+                "message": "Número pessoal sem cálculo compatível: 11."
+              },
+              {
+                "code": "NUMBER_NOT_SUPPORTED",
+                "severity": "blocker",
+                "message": "Número pessoal sem cálculo compatível: 2026."
+              },
+              {
+                "code": "NUMBER_NOT_SUPPORTED",
+                "severity": "blocker",
+                "message": "Número pessoal sem cálculo compatível: 1."
+              },
+              {
+                "code": "NUMBER_NOT_SUPPORTED",
+                "severity": "blocker",
+                "message": "Número pessoal sem cálculo compatível: 2."
+              }
+            ]
+          }
+        }
+      }
+    ]
+  },
+  {
+    "id": "C09",
+    "response": {
+      "query": "Quanto está a fatura fechada?",
+      "status": "rejected",
+      "answer": "A resposta preliminar gerada pelo assistente não passou pelas regras de validação e segurança do Trokim (conformidade com cálculos auditáveis e diretrizes oficiais). Por segurança financeira, a resposta foi retida.",
+      "model": "ollama/mistral-small3.2:24b",
+      "evidences": [],
+      "calculations": [
+        {
+          "key": "statement_fechada",
+          "label": "Fatura fechada de Nubank cartão (pessoal)",
+          "value": 533.02,
+          "unit": "BRL",
+          "source": "FinancialQueryService"
+        }
+      ],
+      "validation_issues": [
+        {
+          "code": "NUMBER_NOT_SUPPORTED",
+          "severity": "blocker",
+          "message": "Número pessoal sem cálculo compatível: 01."
+        },
+        {
+          "code": "NUMBER_NOT_SUPPORTED",
+          "severity": "blocker",
+          "message": "Número pessoal sem cálculo compatível: 10."
+        },
+        {
+          "code": "NUMBER_NOT_SUPPORTED",
+          "severity": "blocker",
+          "message": "Número pessoal sem cálculo compatível: 2026."
+        },
+        {
+          "code": "NUMBER_NOT_SUPPORTED",
+          "severity": "blocker",
+          "message": "Número pessoal sem cálculo compatível: 31."
+        }
+      ],
+      "steps": [
+        {
+          "agent": "research",
+          "status": "skipped",
+          "summary": "Consulta aos dados importados; não requer orientação institucional.",
+          "duration_ms": 0,
+          "detail": {
+            "reason": "financial_query"
+          }
+        },
+        {
+          "agent": "analysis",
+          "status": "ok",
+          "summary": "Consulta financeira calculada.",
+          "duration_ms": 1,
+          "detail": {
+            "intent": "statement",
+            "calculations": [
+              {
+                "key": "statement_fechada",
+                "label": "Fatura fechada de Nubank cartão (pessoal)",
+                "value": 533.02,
+                "unit": "BRL",
+                "source": "FinancialQueryService"
+              }
+            ]
+          }
+        },
+        {
+          "agent": "communication",
+          "status": "ok",
+          "summary": "Rascunho substituído por conteúdo apoiado nos dados recebidos.",
+          "duration_ms": 3530,
+          "detail": {
+            "model": "ollama/mistral-small3.2:24b",
+            "attempt": 1,
+            "prompt_tokens": 1388,
+            "completion_tokens": 180,
+            "draft_guard": "safe_fallback"
+          }
+        },
+        {
+          "agent": "validation",
+          "status": "failed",
+          "summary": "Validação reprovada: 6 problema(s) impeditivo(s) encontrado(s).",
+          "duration_ms": 1,
+          "detail": {
+            "issues_count": 6,
+            "blockers_count": 6,
+            "warnings_count": 0,
+            "issues": [
+              {
+                "code": "NUMBER_NOT_SUPPORTED",
+                "severity": "blocker",
+                "message": "Número pessoal sem cálculo compatível: 01."
+              },
+              {
+                "code": "NUMBER_NOT_SUPPORTED",
+                "severity": "blocker",
+                "message": "Número pessoal sem cálculo compatível: 10."
+              },
+              {
+                "code": "NUMBER_NOT_SUPPORTED",
+                "severity": "blocker",
+                "message": "Número pessoal sem cálculo compatível: 2026."
+              },
+              {
+                "code": "NUMBER_NOT_SUPPORTED",
+                "severity": "blocker",
+                "message": "Número pessoal sem cálculo compatível: 31."
+              },
+              {
+                "code": "NUMBER_NOT_SUPPORTED",
+                "severity": "blocker",
+                "message": "Número pessoal sem cálculo compatível: 1."
+              },
+              {
+                "code": "NUMBER_NOT_SUPPORTED",
+                "severity": "blocker",
+                "message": "Número pessoal sem cálculo compatível: 2."
+              }
+            ]
+          }
+        },
+        {
+          "agent": "communication",
+          "status": "ok",
+          "summary": "Rascunho substituído por conteúdo apoiado nos dados recebidos.",
+          "duration_ms": 3491,
+          "detail": {
+            "model": "ollama/mistral-small3.2:24b",
+            "attempt": 2,
+            "prompt_tokens": 1581,
+            "completion_tokens": 171,
+            "draft_guard": "safe_fallback"
+          }
+        },
+        {
+          "agent": "validation",
+          "status": "failed",
+          "summary": "Validação reprovada: 4 problema(s) impeditivo(s) encontrado(s).",
+          "duration_ms": 1,
+          "detail": {
+            "issues_count": 4,
+            "blockers_count": 4,
+            "warnings_count": 0,
+            "issues": [
+              {
+                "code": "NUMBER_NOT_SUPPORTED",
+                "severity": "blocker",
+                "message": "Número pessoal sem cálculo compatível: 01."
+              },
+              {
+                "code": "NUMBER_NOT_SUPPORTED",
+                "severity": "blocker",
+                "message": "Número pessoal sem cálculo compatível: 10."
+              },
+              {
+                "code": "NUMBER_NOT_SUPPORTED",
+                "severity": "blocker",
+                "message": "Número pessoal sem cálculo compatível: 2026."
+              },
+              {
+                "code": "NUMBER_NOT_SUPPORTED",
+                "severity": "blocker",
+                "message": "Número pessoal sem cálculo compatível: 31."
+              }
+            ]
+          }
+        }
+      ],
+      "total_ms": 7024
+    },
+    "metrics": {
+      "numeric_expected": 1,
+      "calculation_correct": 1,
+      "numeric_correct": 0,
+      "rejected_by_validation": true,
+      "numeric_case_correct": false,
+      "raw_model_calls": 2,
+      "raw_model_calls_with_invented_numbers": 2,
+      "raw_model_invented_numbers": 14,
+      "final_invented_numbers": 0,
+      "abstention_expected": false,
+      "abstention_correct": false,
+      "validation_number_not_supported": 10,
+      "validation_calculation_missing": 0,
+      "validation_blocked": true,
+      "safe_fallbacks": 2,
+      "technical_failure": false
+    },
+    "elapsed_ms": 7024,
+    "model_calls": [
+      {
+        "content": "### Resposta:\n\nO valor da fatura fechada do Nubank para o período de 01/10/2026 a 31/10/2026 é de **R$ 533,02**.\n\n#### Como esse valor foi calculado?\nO saldo é a diferença entre as receitas e despesas dos lançamentos importados para esse período.\n\n#### Limitações:\n1. **Períodos incompletos**: Se houver lançamentos não importados ou períodos incompletos, o valor pode não refletir o total real da fatura.\n2. **Dados ausentes**: Apenas os arquivos importados foram considerados. Se houver transações não registradas nos arquivos, elas não estão incluídas nesse cálculo.\n\nSe precisar de mais detalhes ou ajustes, me avise!",
+        "model": "ollama/mistral-small3.2:24b",
+        "prompt_tokens": 1388,
+        "completion_tokens": 180,
+        "elapsed_ms": 3530
+      },
+      {
+        "content": "### Resposta:\n\nO valor da fatura fechada do Nubank para o cartão pessoal no período consultado é de **R$ 533,02** [Fonte auditável: FinancialQueryService].\n\n#### Explicação dos Cálculos:\n- O valor apresentado é a diferença entre as receitas e despesas registradas nos lançamentos importados para o período de **01/10/2026 a 31/10/2026**.\n- **Limitações**:\n  - O cálculo considera apenas os dados importados, podendo omitir gastos ou receitas não registrados.\n  - Períodos incompletos podem afetar a precisão do saldo apresentado.\n\nSe precisar de mais detalhes ou ajustes, me avise!",
+        "model": "ollama/mistral-small3.2:24b",
+        "prompt_tokens": 1581,
+        "completion_tokens": 171,
+        "elapsed_ms": 3491
+      }
+    ],
+    "validation_contexts": [
+      {
+        "draft": "Fatura fechada de Nubank cartão (pessoal) (statement_fechada): 533.02 BRL [Fonte auditável: FinancialQueryService]\nPremissas e limitações:\n- Ciclo de 01/10/2026 a 31/10/2026.\n- Os valores consideram apenas os arquivos importados; períodos incompletos podem omitir gastos. Saldo é a diferença entre receitas e despesas desses lançamentos.",
+        "notes": [
+          "Ciclo de 01/10/2026 a 31/10/2026.",
+          "Os valores consideram apenas os arquivos importados; períodos incompletos podem omitir gastos. Saldo é a diferença entre receitas e despesas desses lançamentos."
+        ],
+        "issues": [
+          {
+            "code": "NUMBER_NOT_SUPPORTED",
+            "severity": "blocker",
+            "message": "Número pessoal sem cálculo compatível: 01."
+          },
+          {
+            "code": "NUMBER_NOT_SUPPORTED",
+            "severity": "blocker",
+            "message": "Número pessoal sem cálculo compatível: 10."
+          },
+          {
+            "code": "NUMBER_NOT_SUPPORTED",
+            "severity": "blocker",
+            "message": "Número pessoal sem cálculo compatível: 2026."
+          },
+          {
+            "code": "NUMBER_NOT_SUPPORTED",
+            "severity": "blocker",
+            "message": "Número pessoal sem cálculo compatível: 31."
+          },
+          {
+            "code": "NUMBER_NOT_SUPPORTED",
+            "severity": "blocker",
+            "message": "Número pessoal sem cálculo compatível: 1."
+          },
+          {
+            "code": "NUMBER_NOT_SUPPORTED",
+            "severity": "blocker",
+            "message": "Número pessoal sem cálculo compatível: 2."
+          }
+        ],
+        "step": {
+          "agent": "validation",
+          "status": "failed",
+          "summary": "Validação reprovada: 6 problema(s) impeditivo(s) encontrado(s).",
+          "duration_ms": 1,
+          "detail": {
+            "issues_count": 6,
+            "blockers_count": 6,
+            "warnings_count": 0,
+            "issues": [
+              {
+                "code": "NUMBER_NOT_SUPPORTED",
+                "severity": "blocker",
+                "message": "Número pessoal sem cálculo compatível: 01."
+              },
+              {
+                "code": "NUMBER_NOT_SUPPORTED",
+                "severity": "blocker",
+                "message": "Número pessoal sem cálculo compatível: 10."
+              },
+              {
+                "code": "NUMBER_NOT_SUPPORTED",
+                "severity": "blocker",
+                "message": "Número pessoal sem cálculo compatível: 2026."
+              },
+              {
+                "code": "NUMBER_NOT_SUPPORTED",
+                "severity": "blocker",
+                "message": "Número pessoal sem cálculo compatível: 31."
+              },
+              {
+                "code": "NUMBER_NOT_SUPPORTED",
+                "severity": "blocker",
+                "message": "Número pessoal sem cálculo compatível: 1."
+              },
+              {
+                "code": "NUMBER_NOT_SUPPORTED",
+                "severity": "blocker",
+                "message": "Número pessoal sem cálculo compatível: 2."
+              }
+            ]
+          }
+        }
+      },
+      {
+        "draft": "Fatura fechada de Nubank cartão (pessoal) (statement_fechada): 533.02 BRL [Fonte auditável: FinancialQueryService]\nPremissas e limitações:\n- Ciclo de 01/10/2026 a 31/10/2026.\n- Os valores consideram apenas os arquivos importados; períodos incompletos podem omitir gastos. Saldo é a diferença entre receitas e despesas desses lançamentos.",
+        "notes": [
+          "Ciclo de 01/10/2026 a 31/10/2026.",
+          "Os valores consideram apenas os arquivos importados; períodos incompletos podem omitir gastos. Saldo é a diferença entre receitas e despesas desses lançamentos."
+        ],
+        "issues": [
+          {
+            "code": "NUMBER_NOT_SUPPORTED",
+            "severity": "blocker",
+            "message": "Número pessoal sem cálculo compatível: 01."
+          },
+          {
+            "code": "NUMBER_NOT_SUPPORTED",
+            "severity": "blocker",
+            "message": "Número pessoal sem cálculo compatível: 10."
+          },
+          {
+            "code": "NUMBER_NOT_SUPPORTED",
+            "severity": "blocker",
+            "message": "Número pessoal sem cálculo compatível: 2026."
+          },
+          {
+            "code": "NUMBER_NOT_SUPPORTED",
+            "severity": "blocker",
+            "message": "Número pessoal sem cálculo compatível: 31."
+          }
+        ],
+        "step": {
+          "agent": "validation",
+          "status": "failed",
+          "summary": "Validação reprovada: 4 problema(s) impeditivo(s) encontrado(s).",
+          "duration_ms": 1,
+          "detail": {
+            "issues_count": 4,
+            "blockers_count": 4,
+            "warnings_count": 0,
+            "issues": [
+              {
+                "code": "NUMBER_NOT_SUPPORTED",
+                "severity": "blocker",
+                "message": "Número pessoal sem cálculo compatível: 01."
+              },
+              {
+                "code": "NUMBER_NOT_SUPPORTED",
+                "severity": "blocker",
+                "message": "Número pessoal sem cálculo compatível: 10."
+              },
+              {
+                "code": "NUMBER_NOT_SUPPORTED",
+                "severity": "blocker",
+                "message": "Número pessoal sem cálculo compatível: 2026."
+              },
+              {
+                "code": "NUMBER_NOT_SUPPORTED",
+                "severity": "blocker",
+                "message": "Número pessoal sem cálculo compatível: 31."
+              }
+            ]
+          }
+        }
+      }
+    ]
+  },
+  {
+    "id": "C10",
+    "response": {
+      "query": "Quanto falta pagar em parcelas?",
+      "status": "rejected",
+      "answer": "A resposta preliminar gerada pelo assistente não passou pelas regras de validação e segurança do Trokim (conformidade com cálculos auditáveis e diretrizes oficiais). Por segurança financeira, a resposta foi retida.",
+      "model": "ollama/mistral-small3.2:24b",
+      "evidences": [],
+      "calculations": [
+        {
+          "key": "installments_remaining",
+          "label": "Falta pagar em parcelas",
+          "value": 936.75,
+          "unit": "BRL",
+          "source": "FinancialQueryService"
+        },
+        {
+          "key": "installments_monthly",
+          "label": "Valor mensal das parcelas em aberto",
+          "value": 187.35,
+          "unit": "BRL",
+          "source": "FinancialQueryService"
+        },
+        {
+          "key": "installments_ends_on",
+          "label": "Última parcela em aberto termina em",
+          "value": "2027-04",
+          "unit": null,
+          "source": "FinancialQueryService"
+        },
+        {
+          "key": "installments_active",
+          "label": "Parcelamentos em aberto",
+          "value": 1,
+          "unit": "un",
+          "source": "FinancialQueryService"
+        }
+      ],
+      "validation_issues": [
+        {
+          "code": "NUMBER_NOT_SUPPORTED",
+          "severity": "blocker",
+          "message": "Número pessoal sem cálculo compatível: 2."
+        },
+        {
+          "code": "NUMBER_NOT_SUPPORTED",
+          "severity": "blocker",
+          "message": "Número pessoal sem cálculo compatível: 3."
+        },
+        {
+          "code": "NUMBER_NOT_SUPPORTED",
+          "severity": "blocker",
+          "message": "Número pessoal sem cálculo compatível: 2027."
+        },
+        {
+          "code": "NUMBER_NOT_SUPPORTED",
+          "severity": "blocker",
+          "message": "Número pessoal sem cálculo compatível: 4."
+        }
+      ],
+      "steps": [
+        {
+          "agent": "research",
+          "status": "skipped",
+          "summary": "Consulta aos dados importados; não requer orientação institucional.",
+          "duration_ms": 0,
+          "detail": {
+            "reason": "financial_query"
+          }
+        },
+        {
+          "agent": "analysis",
+          "status": "ok",
+          "summary": "Consulta financeira calculada.",
+          "duration_ms": 1,
+          "detail": {
+            "intent": "installments",
+            "calculations": [
+              {
+                "key": "installments_remaining",
+                "label": "Falta pagar em parcelas",
+                "value": 936.75,
+                "unit": "BRL",
+                "source": "FinancialQueryService"
+              },
+              {
+                "key": "installments_monthly",
+                "label": "Valor mensal das parcelas em aberto",
+                "value": 187.35,
+                "unit": "BRL",
+                "source": "FinancialQueryService"
+              },
+              {
+                "key": "installments_ends_on",
+                "label": "Última parcela em aberto termina em",
+                "value": "2027-04",
+                "unit": null,
+                "source": "FinancialQueryService"
+              },
+              {
+                "key": "installments_active",
+                "label": "Parcelamentos em aberto",
+                "value": 1,
+                "unit": "un",
+                "source": "FinancialQueryService"
+              }
+            ]
+          }
+        },
+        {
+          "agent": "communication",
+          "status": "ok",
+          "summary": "Rascunho substituído por conteúdo apoiado nos dados recebidos.",
+          "duration_ms": 5950,
+          "detail": {
+            "model": "ollama/mistral-small3.2:24b",
+            "attempt": 1,
+            "prompt_tokens": 1461,
+            "completion_tokens": 324,
+            "draft_guard": "safe_fallback"
+          }
+        },
+        {
+          "agent": "validation",
+          "status": "failed",
+          "summary": "Validação reprovada: 4 problema(s) impeditivo(s) encontrado(s).",
+          "duration_ms": 1,
+          "detail": {
+            "issues_count": 4,
+            "blockers_count": 4,
+            "warnings_count": 0,
+            "issues": [
+              {
+                "code": "NUMBER_NOT_SUPPORTED",
+                "severity": "blocker",
+                "message": "Número pessoal sem cálculo compatível: 2027."
+              },
+              {
+                "code": "NUMBER_NOT_SUPPORTED",
+                "severity": "blocker",
+                "message": "Número pessoal sem cálculo compatível: 2."
+              },
+              {
+                "code": "NUMBER_NOT_SUPPORTED",
+                "severity": "blocker",
+                "message": "Número pessoal sem cálculo compatível: 3."
+              },
+              {
+                "code": "NUMBER_NOT_SUPPORTED",
+                "severity": "blocker",
+                "message": "Número pessoal sem cálculo compatível: 4."
+              }
+            ]
+          }
+        },
+        {
+          "agent": "communication",
+          "status": "ok",
+          "summary": "Rascunho substituído por conteúdo apoiado nos dados recebidos.",
+          "duration_ms": 5109,
+          "detail": {
+            "model": "ollama/mistral-small3.2:24b",
+            "attempt": 2,
+            "prompt_tokens": 1609,
+            "completion_tokens": 264,
+            "draft_guard": "safe_fallback"
+          }
+        },
+        {
+          "agent": "validation",
+          "status": "failed",
+          "summary": "Validação reprovada: 4 problema(s) impeditivo(s) encontrado(s).",
+          "duration_ms": 1,
+          "detail": {
+            "issues_count": 4,
+            "blockers_count": 4,
+            "warnings_count": 0,
+            "issues": [
+              {
+                "code": "NUMBER_NOT_SUPPORTED",
+                "severity": "blocker",
+                "message": "Número pessoal sem cálculo compatível: 2."
+              },
+              {
+                "code": "NUMBER_NOT_SUPPORTED",
+                "severity": "blocker",
+                "message": "Número pessoal sem cálculo compatível: 3."
+              },
+              {
+                "code": "NUMBER_NOT_SUPPORTED",
+                "severity": "blocker",
+                "message": "Número pessoal sem cálculo compatível: 2027."
+              },
+              {
+                "code": "NUMBER_NOT_SUPPORTED",
+                "severity": "blocker",
+                "message": "Número pessoal sem cálculo compatível: 4."
+              }
+            ]
+          }
+        }
+      ],
+      "total_ms": 11062
+    },
+    "metrics": {
+      "numeric_expected": 1,
+      "calculation_correct": 1,
+      "numeric_correct": 0,
+      "rejected_by_validation": true,
+      "numeric_case_correct": false,
+      "raw_model_calls": 2,
+      "raw_model_calls_with_invented_numbers": 2,
+      "raw_model_invented_numbers": 9,
+      "final_invented_numbers": 0,
+      "abstention_expected": false,
+      "abstention_correct": false,
+      "validation_number_not_supported": 8,
+      "validation_calculation_missing": 0,
+      "validation_blocked": true,
+      "safe_fallbacks": 2,
+      "technical_failure": false
+    },
+    "elapsed_ms": 11064,
+    "model_calls": [
+      {
+        "content": "### Resposta do Trokim:\n\nOlá! Vou explicar os dados sobre parcelamentos que você consultou.\n\n#### Dados Importados:\n- **Falta pagar em parcelas**: R$ 936,75\n- **Valor mensal das parcelas em aberto**: R$ 187,35\n- **Última parcela em aberto termina em**: Abril de 2027\n- **Parcelamentos em aberto**: 1\n\n#### Explicação dos Cálculos:\n1. **Falta pagar em parcelas (R$ 936,75)**: Esse valor representa o total ainda a ser pago em parcelas.\n2. **Valor mensal das parcelas (R$ 187,35)**: Esse é o valor que você precisa pagar mensalmente para quitar o parcelamento.\n3. **Término das parcelas (Abril de 2027)**: Essa é a estimativa do mês em que a última parcela será paga.\n4. **Parcelamentos em aberto (1)**: Você tem apenas 1 parcelamento ativo no momento.\n\n#### Limitações:\n- O término das parcelas é estimado com base no mês da última parcela vista.\n- Os valores consideram apenas os arquivos importados. Períodos incompletos podem omitir gastos.\n- O saldo é calculado como a diferença entre receitas e despesas dos lançamentos importados.\n\nSe precisar de mais detalhes ou tiver dúvidas, é só perguntar!",
+        "model": "ollama/mistral-small3.2:24b",
+        "prompt_tokens": 1461,
+        "completion_tokens": 324,
+        "elapsed_ms": 5950
+      },
+      {
+        "content": "### Resposta Final:\n\nOlá! Vou explicar os cálculos relacionados aos seus parcelamentos com base nos dados importados.\n\n1. **Falta pagar em parcelas**:\n   Você ainda tem um valor total de **R$ 936,75** para pagar em parcelas [Fonte auditável: FinancialQueryService].\n\n2. **Valor mensal das parcelas em aberto**:\n   O valor mensal que você precisa pagar é de **R$ 187,35** [Fonte auditável: FinancialQueryService].\n\n3. **Última parcela em aberto termina em**:\n   A última parcela em aberto termina em **abril de 2027** [Fonte auditável: FinancialQueryService].\n\n4. **Parcelamentos em aberto**:\n   Você possui **1 parcelamento** em aberto [Fonte auditável: FinancialQueryService].\n\n### Limitações dos cálculos:\n- O término das parcelas é estimado pelo mês da última parcela vista.\n- Os valores consideram apenas os arquivos importados; períodos incompletos podem omitir gastos. O saldo é a diferença entre receitas e despesas desses lançamentos.\n\nSe precisar de mais detalhes ou tiver dúvidas, estou à disposição!",
+        "model": "ollama/mistral-small3.2:24b",
+        "prompt_tokens": 1609,
+        "completion_tokens": 264,
+        "elapsed_ms": 5109
+      }
+    ],
+    "validation_contexts": [
+      {
+        "draft": "Falta pagar em parcelas (installments_remaining): 936.75 BRL [Fonte auditável: FinancialQueryService]\nValor mensal das parcelas em aberto (installments_monthly): 187.35 BRL [Fonte auditável: FinancialQueryService]\nÚltima parcela em aberto termina em (installments_ends_on): 2027-04 [Fonte auditável: FinancialQueryService]\nParcelamentos em aberto (installments_active): 1 un [Fonte auditável: FinancialQueryService]\nPremissas e limitações:\n- O término das parcelas é estimado pelo mês da última parcela vista.\n- Os valores consideram apenas os arquivos importados; períodos incompletos podem omitir gastos. Saldo é a diferença entre receitas e despesas desses lançamentos.",
+        "notes": [
+          "O término das parcelas é estimado pelo mês da última parcela vista.",
+          "Os valores consideram apenas os arquivos importados; períodos incompletos podem omitir gastos. Saldo é a diferença entre receitas e despesas desses lançamentos."
+        ],
+        "issues": [
+          {
+            "code": "NUMBER_NOT_SUPPORTED",
+            "severity": "blocker",
+            "message": "Número pessoal sem cálculo compatível: 2027."
+          },
+          {
+            "code": "NUMBER_NOT_SUPPORTED",
+            "severity": "blocker",
+            "message": "Número pessoal sem cálculo compatível: 2."
+          },
+          {
+            "code": "NUMBER_NOT_SUPPORTED",
+            "severity": "blocker",
+            "message": "Número pessoal sem cálculo compatível: 3."
+          },
+          {
+            "code": "NUMBER_NOT_SUPPORTED",
+            "severity": "blocker",
+            "message": "Número pessoal sem cálculo compatível: 4."
+          }
+        ],
+        "step": {
+          "agent": "validation",
+          "status": "failed",
+          "summary": "Validação reprovada: 4 problema(s) impeditivo(s) encontrado(s).",
+          "duration_ms": 1,
+          "detail": {
+            "issues_count": 4,
+            "blockers_count": 4,
+            "warnings_count": 0,
+            "issues": [
+              {
+                "code": "NUMBER_NOT_SUPPORTED",
+                "severity": "blocker",
+                "message": "Número pessoal sem cálculo compatível: 2027."
+              },
+              {
+                "code": "NUMBER_NOT_SUPPORTED",
+                "severity": "blocker",
+                "message": "Número pessoal sem cálculo compatível: 2."
+              },
+              {
+                "code": "NUMBER_NOT_SUPPORTED",
+                "severity": "blocker",
+                "message": "Número pessoal sem cálculo compatível: 3."
+              },
+              {
+                "code": "NUMBER_NOT_SUPPORTED",
+                "severity": "blocker",
+                "message": "Número pessoal sem cálculo compatível: 4."
+              }
+            ]
+          }
+        }
+      },
+      {
+        "draft": "Falta pagar em parcelas (installments_remaining): 936.75 BRL [Fonte auditável: FinancialQueryService]\nValor mensal das parcelas em aberto (installments_monthly): 187.35 BRL [Fonte auditável: FinancialQueryService]\nÚltima parcela em aberto termina em (installments_ends_on): 2027-04 [Fonte auditável: FinancialQueryService]\nParcelamentos em aberto (installments_active): 1 un [Fonte auditável: FinancialQueryService]\nPremissas e limitações:\n- O término das parcelas é estimado pelo mês da última parcela vista.\n- Os valores consideram apenas os arquivos importados; períodos incompletos podem omitir gastos. Saldo é a diferença entre receitas e despesas desses lançamentos.",
+        "notes": [
+          "O término das parcelas é estimado pelo mês da última parcela vista.",
+          "Os valores consideram apenas os arquivos importados; períodos incompletos podem omitir gastos. Saldo é a diferença entre receitas e despesas desses lançamentos."
+        ],
+        "issues": [
+          {
+            "code": "NUMBER_NOT_SUPPORTED",
+            "severity": "blocker",
+            "message": "Número pessoal sem cálculo compatível: 2."
+          },
+          {
+            "code": "NUMBER_NOT_SUPPORTED",
+            "severity": "blocker",
+            "message": "Número pessoal sem cálculo compatível: 3."
+          },
+          {
+            "code": "NUMBER_NOT_SUPPORTED",
+            "severity": "blocker",
+            "message": "Número pessoal sem cálculo compatível: 2027."
+          },
+          {
+            "code": "NUMBER_NOT_SUPPORTED",
+            "severity": "blocker",
+            "message": "Número pessoal sem cálculo compatível: 4."
+          }
+        ],
+        "step": {
+          "agent": "validation",
+          "status": "failed",
+          "summary": "Validação reprovada: 4 problema(s) impeditivo(s) encontrado(s).",
+          "duration_ms": 1,
+          "detail": {
+            "issues_count": 4,
+            "blockers_count": 4,
+            "warnings_count": 0,
+            "issues": [
+              {
+                "code": "NUMBER_NOT_SUPPORTED",
+                "severity": "blocker",
+                "message": "Número pessoal sem cálculo compatível: 2."
+              },
+              {
+                "code": "NUMBER_NOT_SUPPORTED",
+                "severity": "blocker",
+                "message": "Número pessoal sem cálculo compatível: 3."
+              },
+              {
+                "code": "NUMBER_NOT_SUPPORTED",
+                "severity": "blocker",
+                "message": "Número pessoal sem cálculo compatível: 2027."
+              },
+              {
+                "code": "NUMBER_NOT_SUPPORTED",
+                "severity": "blocker",
+                "message": "Número pessoal sem cálculo compatível: 4."
+              }
+            ]
+          }
+        }
+      }
+    ]
+  }
+]
