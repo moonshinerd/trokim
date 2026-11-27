@@ -7,7 +7,7 @@ O Communication Agent redige a resposta em pt-BR a partir do contexto do orquest
 
 ## Regras do prompt
 
-O prompt versionado está em `api/app/prompts/prompt_agente_comunicacao_v1.txt`. Ele instrui o modelo a:
+O prompt versionado está em `api/app/prompts/prompt_agente_comunicacao_v2.txt`. Ele instrui o modelo a:
 
 - responder em português do Brasil e usar apenas as evidências numeradas e os cálculos recebidos;
 - citar afirmações de fonte com a referência numérica correspondente;
@@ -22,9 +22,23 @@ Quando `ctx.issues` contém um `BLOCKER`, o prompt inclui código e mensagem par
 
 Após a geração, uma checagem determinística aceita somente frases completas copiadas das evidências com a citação correta e os resultados de cálculo exatamente como fornecidos. Citações inválidas, paráfrases, afirmações adicionais, valores divergentes, respostas incompletas ou premissas pendentes fazem o agente substituir o rascunho por uma montagem segura com as evidências citadas, os cálculos e as perguntas sobre dados faltantes. Se a saída bruta trouxer números sem suporte, o agente adiciona `DRAFT_NOT_GROUNDED`; a Validation Agent preserva o bloqueio e o orquestrador retém a resposta ou solicita a revisão prevista. O passo registra `draft_guard` como `accepted` ou `safe_fallback`.
 
-O prompt, a checagem e o fallback compartilham a mesma formatação tipada de cálculos e frases de evidência, normalizando espaços e quebras de linha. O suporte numérico não utiliza uma lista fixa de constantes: compara representações literais do contexto, incluindo sinal, precisão e unidade. Alterar `123.45 BRL` para `-123.45 BRL` ou `123.45%` gera bloqueio. Premissas são reproduzidas como condições ou limitações, com um pedido de esclarecimento; não são todas rotuladas como dados ausentes.
+O prompt, a checagem e o fallback compartilham a mesma formatação tipada de cálculos e frases de evidência, normalizando espaços e quebras de linha. O suporte numérico não utiliza uma lista fixa de constantes: compara representações literais do contexto, incluindo sinal, precisão e unidade. Alterar `123.45 BRL` para `-123.45 BRL` ou `123.45%` gera bloqueio. Premissas são reproduzidas como condições ou limitações. No fluxo educativo, há um pedido de esclarecimento; no fluxo pessoal, limitações não geram uma pergunta genérica quando já há cálculos.
 
 Esse filtro é conservador: uma paráfrase correta também pode ser substituída. Ele não substitui a revisão independente do Validation Agent. A integração dos agentes e do endpoint está no PR #72; a validação independente pertence à issue [#54](https://github.com/moonshinerd/trokim/issues/54).
+
+## Contexto pessoal agregado
+
+Na #95, a comunicação recebe somente totais, categorias, estabelecimentos e rótulos seguros de
+conta, além das limitações das consultas. A pergunta original é substituída no prompt por uma
+descrição da intenção: ids, descrições cruas e dados escritos pelo usuário não são repassados.
+Não há lista de transações no prompt nem nos `context_chunks`. Veja a
+[ADR 0023](../adr/0023-contexto-do-usuario-no-chat.md).
+
+O rascunho pessoal só é aceito se reproduzir a montagem segura, incluindo as limitações; caso
+contrário ela é usada como fallback. `check_financial_numbers` também audita os números do texto
+original do modelo: um valor sem cálculo correspondente gera `NUMBER_NOT_SUPPORTED`, mesmo que
+esteja na pergunta. O bloqueio é preservado na validação e pode ser corrigido na revisão seguinte.
+Dados ausentes ou ambíguos são respondidos em código, sem chamar o modelo.
 
 ## Validação manual com Qwen 2.5 1.5B
 

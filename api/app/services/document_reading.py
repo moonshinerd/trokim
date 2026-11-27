@@ -9,6 +9,7 @@ from typing import Protocol
 from PIL import Image, ImageOps, UnidentifiedImageError
 from pypdf import PdfReader
 
+from app.models.vision_provider import OcrWord
 from app.services.image_quality import MAX_PIXELS
 
 MAX_PAGES = 10
@@ -25,9 +26,12 @@ class DocumentReadError(Exception):
 
 
 class VisionSanitizer(Protocol):
-    """Deve garantir anonimização de pixels; None bloqueia o envio."""
+    """Deve garantir anonimização de pixels; None bloqueia o envio.
 
-    def sanitize(self, image: bytes) -> bytes | None: ...
+    ``words`` são as palavras que o OCR local já leu na página, com as caixas em pixels.
+    """
+
+    def sanitize(self, image: bytes, words: list[OcrWord] | None = None) -> bytes | None: ...
 
 
 @dataclass

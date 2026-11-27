@@ -54,6 +54,19 @@ no escopo das #94 e #95.
 - Queda do cliente durante o envio responde 400, sem erro 500.
 - **Abstenção e confirmação manual:** a abstenção do `/extract` não cria nada, mas o `/confirm`
   aceita os campos que o usuário revisou ou digitou, mesmo sem leitura bem-sucedida. A validação
-  determinística vale do mesmo jeito. Limitação conhecida: o lançamento digitado à mão fica com
-  `origin=documento` e o chat o descreve como "lido de foto ou PDF, confirmado por você". Exigir
-  uma leitura prévia ou distinguir a origem manual fica para uma issue própria.
+  determinística vale do mesmo jeito.
+
+## Ajustes da Semana 5 ([#117](https://github.com/moonshinerd/trokim/issues/117), 27/11/2026)
+
+- **Origem manual.** O `/confirm` recebe `origin`: `documento` (padrão, o usuário revisou o que
+  foi lido) ou `manual` (digitou sem leitura bem-sucedida, por exemplo depois de uma abstenção).
+  `Transaction.origin` ganha o valor `manual`, e o chat descreve esse lançamento como "digitado
+  por você na tela de documento, sem leitura de foto ou PDF". Exigir uma extração prévia foi
+  descartado: a API é sem estado ([ADR 0025](0025-armazenamento-no-aparelho-e-api-sem-estado.md))
+  e não guarda a leitura entre `/extract` e `/confirm`.
+- **Extrato depois do comprovante.** A conciliação deixava de valer quando o comprovante era
+  confirmado antes do extrato do mesmo Pix: os dois entravam nos totais. Agora a importação do
+  OFX procura, entre os lançamentos de documento (lidos ou digitados) ainda ativos, um com o
+  mesmo tipo, data, valor e favorecido (`payee_matches`, a mesma regra da validação de
+  duplicatas) e o marca como duplicata: o extrato do banco prevalece. Documento lançado numa
+  conta real só concilia com o extrato dessa conta. O upload informa `documents_reconciled`.

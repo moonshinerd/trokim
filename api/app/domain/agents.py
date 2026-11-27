@@ -1,9 +1,10 @@
+from datetime import date
 from enum import StrEnum
-from typing import Any
+from typing import Any, Literal
 
 from pydantic import BaseModel, Field
 
-from app.domain.models import EvidenceChunk, Transaction
+from app.domain.models import Account, EvidenceChunk, Statement, Transaction
 
 
 class AgentName(StrEnum):
@@ -40,8 +41,37 @@ class CalculationResult(BaseModel):
     source: str  # ex.: "CalculationService.calculate_summary"
 
 
+class FinancialIntent(StrEnum):
+    SUMMARY = "summary"
+    ACCOUNTS = "accounts"
+    COMPARISON = "comparison"
+    COMMITMENTS = "commitments"
+    INSTALLMENTS = "installments"
+    TRANSFERS = "transfers"
+    STATEMENT = "statement"
+    MERCHANTS = "merchants"
+    CATEGORIES = "categories"
+
+
+class FinancialFilters(BaseModel):
+    account_id: str | None = Field(default=None, min_length=1, max_length=200)
+    owner: Literal["pessoal", "empresa", "todas"] | None = None
+    period: str | None = Field(default=None, min_length=1, max_length=120)
+
+
+class FinancialContext(BaseModel):
+    """Contexto local coerente: intenção e data de referência são obrigatórias."""
+
+    intent: FinancialIntent
+    reference_date: date
+    filters: FinancialFilters = Field(default_factory=FinancialFilters)
+    accounts: dict[str, Account] = Field(default_factory=dict)
+    statements: dict[str, Statement] = Field(default_factory=dict)
+
+
 class AgentContext(BaseModel):
     question: str
+    financial: FinancialContext | None = Field(default=None, exclude=True)
     transactions: list[Transaction] = Field(default_factory=list)
     evidences: list[EvidenceChunk] = Field(default_factory=list)
     abstain_reason: str | None = None

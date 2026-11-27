@@ -1,6 +1,6 @@
 # Apresentação Executiva e Demonstração Interativa
 
-Este documento reúne a visão consolidada das **Entregas 1 a 4** do projeto **Trokim**, no âmbito do **Challenge 2 (TIC-IA 2026 — Big Idea: Qualidade de Vida)**.
+Este documento reúne a visão consolidada das **Entregas 1 a 5** do projeto **Trokim**, no âmbito do **Challenge 2 (TIC-IA 2026 — Big Idea: Qualidade de Vida)**.
 
 ---
 
@@ -14,7 +14,7 @@ Este documento reúne a visão consolidada das **Entregas 1 a 4** do projeto **T
 | **Abstenção Ética Ativa** | 100% | **100,00%** | Zero conselhos em apostas, ações ou especulação |
 | **Latência de Recuperação** | ≤ 50 ms | **12,4 ms** | Testado na CPU local (Mac Apple Silicon) |
 | **Cálculo Determinístico** | 0% de alucinação | **0% de erro numérico** | Serviço Python `calculation_service.py` |
-| **Testes Automatizados** | Passando | **418 (API), 161 (pesquisa) e 238 (app) verdes** | CI no GitHub Actions (jobs api, research, docs e mobile) |
+| **Testes Automatizados** | Passando | **826 (API), 271 (pesquisa) e 316 (app) verdes** | CI no GitHub Actions (jobs api, research, docs e mobile) |
 
 ---
 
@@ -93,13 +93,55 @@ só no computador dele, a parte categorizada foi de 56% para 67%
 
 ---
 
-## 5. Rastreabilidade das Entregas
+## 5. Agente multimodal (Semana 5)
+
+O Trokim passou a ler **duas modalidades**: texto no chat e **imagem ou PDF** (foto de fatura,
+comprovante de Pix ou boleto) no agente de documento
+([Agente de documento](agentes/document-agent.md), [ADR 0021](adr/0021-visao-e-ocr-modulares.md)).
+A leitura padrão é o OCR local; a visão (VLM) é opcional, só completa campo que faltou e, se for
+remota, só é usada com o consentimento ligado pelo usuário em Ajustes (enviado em cada
+requisição; sem ele a API recusa) e recebe a imagem com CPF, CNPJ, agência e conta tarjados. Nada lido vira lançamento sem a revisão do usuário
+([ADR 0026](adr/0026-confirmacao-e-consulta-de-documentos.md)).
+
+**Modalidades suportadas:** texto no chat; foto (PNG, JPEG, WebP) e PDF de fatura de cartão,
+comprovante de Pix e boleto, até o limite de tamanho do endpoint.
+
+**Limitações conhecidas e mitigação** ([Histórico de resultados, seção 11](pesquisa/resultados.md#11-semana-5-motores-de-leitura-e-chat-com-os-dados-do-usuario)):
+
+| Caso de falha | O que acontece | Mitigação |
+|---|---|---|
+| Foto ilegível, cortada ou escura | Abstenção: nenhum campo, pedido de nova foto (7 de 7 ilegíveis) | Orientação de captura e reenvio |
+| Nome com espaço colado ou sem acento (`NuEmpresas`) | Campo marcado para revisão | O usuário corrige na tela de revisão; valores e datas acertaram 61 de 61 |
+| Campo ausente no OCR | VLM opcional tenta completar; se a resposta sair fora do formato, é descartada | O OCR segue valendo; o campo fica vazio para o usuário preencher |
+| Imagem enviada para modelo remoto | Bloqueada sem consentimento (`403`) | Consentimento em Ajustes, conferido pela API a cada requisição, e tarja de documentos e contas |
+| Mesmo Pix por comprovante e depois pelo extrato | O comprovante é conciliado e não conta duas vezes | Conciliação por tipo, data, valor e favorecido |
+| Modelo do chat cita número sem cálculo | A resposta é retida, nunca entregue com número errado | Validador de números; 27 de 32 valores entregues com o Qwen de 1,5 B |
+
+**Roteiro da demonstração (duas modalidades):**
+
+1. No app, em **Extratos**, tocar em **Fotografar ou escolher documento** e escolher a foto sintética de um comprovante de Pix
+   (`research/synthetic_data/document_images/`), com o motor **OCR local**, e tocar em **Ler documento**.
+2. Conferir os campos na revisão (data, valor, favorecido, banco), corrigir o nome se o OCR
+   colou espaços e **Confirmar**.
+3. Em **Ajustes**, ligar o **Modo multiagente**. No **Assistente**, perguntar "Quanto gastei na <favorecido do comprovante>?": a resposta traz o
+   valor calculado e diz que o lançamento veio de foto ou PDF revisado pelo usuário.
+4. Perguntar "Quanto gastei em novembro de 2026?" com a conta e o período escolhidos no seletor:
+   a resposta mostra o card do cálculo daquela conta.
+5. Importar o extrato do mesmo mês com o mesmo Pix: a API devolve `documents_reconciled: 1` e o
+   total de gastos não muda.
+6. (Opcional) Repetir o passo 1 com o motor de visão remota para mostrar o
+   consentimento exigido em Ajustes.
+
+---
+
+## 6. Rastreabilidade das Entregas
 
 ```mermaid
 flowchart LR
     E1["Entrega 1: Concepção<br/>• EQ + 10 GQs<br/>• C4 Model + MoSCoW<br/>• ADRs 0001 a 0005"] --> E2["Entrega 2: RAG & Benchmark<br/>• 20 Docs Oficiais<br/>• SQLite-Vec + FastEmbed<br/>• Benchmark 98.78%<br/>• Chat Flutter Android"]
     E2 --> E3["Entrega 3: Comparação LLM<br/>• Relatório Comparativo<br/>• LLM Pura vs RAG Estruturado<br/>• Métricas de Alucinação"]
     E3 --> E4["Entrega 4: Multiagentes<br/>• Research, Analysis,<br/>Communication e Validation<br/>• Benchmark multiagente<br/>• Categorização por CNAE"]
+    E4 --> E5["Entrega 5: Multimodal<br/>• Foto e PDF de documentos<br/>• OCR local e VLM opcional<br/>• Chat com contas e dívidas<br/>• Benchmark de motores"]
 ```
 
 - [Acessar a Ata 01 (Semana 1)](atas/ata01.md)

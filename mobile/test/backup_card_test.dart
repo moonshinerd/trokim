@@ -41,11 +41,13 @@ Future<SettingsController> _open(
     300,
     scrollable: find.byType(Scrollable).first,
   );
+  await tester.ensureVisible(find.text('Exportar backup'));
   await tester.pumpAndSettle();
   return settings;
 }
 
 Future<void> _typePassphrase(WidgetTester tester, String text) async {
+  await tester.ensureVisible(find.byType(TextField).last);
   await tester.enterText(find.byType(TextField).last, text);
   await tester.pump();
 }

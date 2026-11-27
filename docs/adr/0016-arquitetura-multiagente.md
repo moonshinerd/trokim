@@ -25,7 +25,7 @@ Quatro agentes com papéis separados, coordenados por um orquestrador determiní
 | [Communication](../agentes/communication-agent.md) | Redige a resposta em pt-BR só a partir de evidências e cálculos | **Sim** |
 | [Validation](../agentes/validation-agent.md) | Confere o rascunho: números sem suporte, citações, escopo e abstenção | Não |
 
-O [orquestrador](../agentes/orquestrador.md) segue as regras: (1) Research; se houver motivo de
+No fluxo educativo, o [orquestrador](../agentes/orquestrador.md) segue as regras: (1) Research; se houver motivo de
 abstenção, encerra sem chamar o LLM; (2) Analysis só se a pergunta pede números; (3)
 Communication escreve o rascunho; (4) Validation confere, com **uma** revisão do Communication
 em caso de bloqueio e, persistindo o bloqueio, **rejeição segura** sem inventar conteúdo; (5) cada
@@ -39,13 +39,13 @@ em `api/app/services/agents/base.py`. O contrato completo está no épico [#50](
 
 ## Como foi implementado
 
-O contrato do épico foi implementado sem mudanças de campos. O que a implementação acrescentou:
+O contrato inicial do épico foi implementado; a extensão da #95 acrescenta contexto financeiro tipado. O que a implementação acrescentou:
 
 - **Communication extrativo.** O rascunho do modelo só é aceito se for composto de frases
   copiadas literalmente das evidências, cada uma com a citação `[n]` correta, e das linhas
   exatas dos cálculos do Analysis. Fora disso, o agente troca o texto por um rascunho seguro
   montado com os próprios trechos e cálculos; se o texto do modelo trouxer número sem suporte,
-  registra o bloqueio `DRAFT_NOT_GROUNDED`. O prompt é `api/app/prompts/prompt_agente_comunicacao_v1.txt`.
+  registra o bloqueio `DRAFT_NOT_GROUNDED`. O prompt é `api/app/prompts/prompt_agente_comunicacao_v2.txt`.
 - **Códigos do Validation:** `NUMBER_NOT_SUPPORTED`, `CITATION_INVALID`, `OUT_OF_SCOPE_ADVICE`,
   `ABSTENTION_MISMATCH`, `CALCULATION_MISSING` e `DRAFT_NOT_GROUNDED` (repassado do
   Communication). Todos são regras determinísticas, sem LLM.
@@ -120,3 +120,12 @@ O contrato público do épico #86 fica em `domain/documents.py` e deve ser compa
 com a #89. O agente usa diretamente as portas `OcrProvider` e `VisionProvider` da #87
 (ADR 0021), com seus resultados tipados e suas fábricas configuráveis.
 A leitura, os limites e as pendências estão no [Agente de documento](../agentes/document-agent.md).
+
+## Extensão: contexto financeiro no chat (#95)
+
+Analysis passa a rotear consultas à camada da #94 com filtros de conta, dono e período,
+registrando os cálculos na trilha. Consultas factuais pessoais pulam Research, sem depender de
+fontes educativas; perguntas que também pedem orientação mantêm a pesquisa institucional.
+Ambiguidade ou dado ausente gera esclarecimento sem modelo. O prompt v2 recebe somente
+agregados e limitações, com auditoria numérica independente e preservação das linhas exatas dos
+cálculos. A [ADR 0023](0023-contexto-do-usuario-no-chat.md) define o limite de privacidade.

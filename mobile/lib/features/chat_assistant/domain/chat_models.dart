@@ -124,11 +124,20 @@ final class AssistantReply {
   }
 }
 
+class ChatFilters {
+  const ChatFilters({this.accountId, this.owner, this.period});
+
+  final String? accountId;
+  final String? owner;
+  final String? period;
+}
+
 class ChatMessage {
   final bool isUser;
   final String text;
   final List<Evidence> evidences;
   final bool isError;
+  final bool isImportGuide;
   final AssistantStatus? status;
 
   /// Modelo que gerou a resposta (ex.: `ollama/qwen2.5`), se houver.
@@ -142,6 +151,7 @@ class ChatMessage {
     required this.text,
     List<Evidence> evidences = const [],
     this.isError = false,
+    this.isImportGuide = false,
     this.status,
     this.model,
     this.agentTrace,
@@ -155,6 +165,7 @@ class ChatMessage {
         .map((value) => Evidence.fromJson(value as Map<String, dynamic>))
         .toList(),
     isError: json['is_error'] as bool? ?? false,
+    isImportGuide: json['import_guide'] as bool? ?? false,
     status: switch (json['status']) {
       'grounded' => AssistantStatus.grounded,
       'abstained' => AssistantStatus.abstained,
@@ -169,6 +180,7 @@ class ChatMessage {
     'text': text,
     'evidences': evidences.map((e) => e.toJson()).toList(),
     'is_error': isError,
+    'import_guide': isImportGuide,
     'status': status?.name,
     'model': model,
     'agent_trace': agentTrace,

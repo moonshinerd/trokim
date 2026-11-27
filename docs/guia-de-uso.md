@@ -20,7 +20,7 @@ Clone o repositório e execute a automação inicial:
 # Prepara a aplicação: dependências (uv) e índice CNPJ descomprimido
 make build
 
-# Executa a bateria de testes automatizados (418 da API e 161 de pesquisa)
+# Executa a bateria de testes automatizados (826 da API e 271 de pesquisa)
 make test
 
 # Lint (ruff) e build estrito da documentação
@@ -69,11 +69,14 @@ O OCR é local (RapidOCR) e vem ligado. O modelo de visão é opcional e vem **d
 | `VISION_API_BASE` | vazio | Endereço do servidor do modelo |
 | `VISION_API_KEY` | vazio | Chave, só em variável de ambiente |
 | `VISION_TIMEOUT` | `120` | Segundos |
-| `VISION_ALLOW_REMOTE` | `false` | Consentimento para enviar a imagem para fora do aparelho |
+| `VISION_ALLOW_REMOTE` | `false` | Consentimento global, só para uso sem o app (benchmark, scripts) |
 
-Um modelo remoto, como o do OpenRouter, é **recusado** enquanto `VISION_ALLOW_REMOTE` não for
-`true`: a imagem de um documento financeiro sairia do aparelho. O consentimento é seu, e só
-material sintético vai à nuvem nos testes do projeto.
+A leitura padrão é só o OCR local. Um modelo remoto, como o do OpenRouter, recebe a imagem de um
+documento financeiro, então só é usado quando o app pede o motor `vision` **com**
+`allow_remote=true`, que ele envia apenas depois de você ligar o consentimento em **Ajustes →
+Leitura de documentos**. Sem isso a API responde `403 REMOTE_CONSENT_REQUIRED`. Antes do envio, CPF,
+CNPJ, agência e conta são tarjados nas posições lidas pelo OCR. Só material sintético vai à nuvem
+nos testes do projeto.
 
 ### Referência rápida da API
 
@@ -83,7 +86,8 @@ Todos os caminhos começam em `/v1`. O contrato completo e interativo fica no Sw
 |---|---|---|
 | Saúde | `GET /health` | Confere se a API está no ar |
 | Chat | `POST /chat/ask`, `POST /chat/generate`, `POST /chat/title` | Busca extrativa, síntese fundamentada e título da conversa |
-| Multiagente | `POST /agents/ask` | Pergunta pelo sistema de quatro agentes, com a trilha |
+| Multiagente | `POST /agents/ask` | Pergunta pelo sistema de quatro agentes, com a trilha (filtros `account_id`, `owner`, `period`, `document_uid`) |
+| Documentos | `GET /documents/engines`, `POST /documents/extract`, `POST /documents/confirm` | Motores de leitura disponíveis, leitura de foto/PDF (campos `engine` e `allow_remote`) e confirmação dos campos revisados (com `origin`) |
 | Lançamentos | `POST /transactions/inspect`, `POST /transactions/upload` | Inspeciona (sem gravar) e importa OFX ou PDF |
 | Lançamentos | `GET /transactions`, `GET /transactions/summary` | Lista e resumo (filtros `owner` e `view`) |
 | Categorias | `PATCH /transactions/{uid}/category`, `GET /transactions/category-rules`, `DELETE /transactions/category-rules/{merchant}` | Corrige categoria e gerencia as regras por estabelecimento |
@@ -190,6 +194,24 @@ curl -X POST http://127.0.0.1:8000/v1/agents/ask \
   -d '{"message": "Como montar uma reserva de emergencia e quanto tempo leva com meus gastos?"}'
 ```
 
+#### Consultar os dados importados por dono e período
+
+```bash
+curl -X POST http://127.0.0.1:8000/v1/agents/ask \
+  -H 'Content-Type: application/json' \
+  -d '{"message":"Quanto gastei?","owner":"empresa","period":"2026-10"}'
+```
+
+Também é possível enviar `account_id` obtido em `GET /v1/accounts`. Sem filtros, pergunte por
+exemplo “Quanto falta pagar das minhas parcelas?” ou “Qual minha fatura fechada pessoal do
+Nubank?”. Banco ou ano ambíguo gera pedido de esclarecimento; ausência de dados informa o arquivo
+que falta importar. Conflito entre texto e filtros também pede esclarecimento, sem escolher um
+recorte silenciosamente. Veja os [formatos e limites dos filtros](agentes/orquestrador.md#filtros-do-endpoint).
+O chat considera somente os dados importados e avisa sobre períodos incompletos, datas estimadas
+de parcelas e limitações para identificar pagamentos. No aplicativo, a seleção desse contexto é
+feita pelo seletor de conta e período do próprio chat (veja
+[Conversar com o contexto das contas](#811-conversar-com-o-contexto-das-contas)).
+
 #### Título de uma conversa:
 ```bash
 curl -X POST http://127.0.0.1:8000/v1/chat/title \
@@ -245,7 +267,11 @@ Nas respostas multiagente, toque em **Como cheguei a essa resposta** para abrir
 a linha do tempo de Pesquisa, Análise, Comunicação e Validação, com estado,
 resumo e duração. O painel também lista os cálculos (em reais, no formato brasileiro), as fontes consultadas e os avisos da validação; os
 cartões de evidência aparecem junto à resposta. Abstenções e respostas retidas
-explicam em linguagem simples por que não foram fornecidas orientações.
+explicam em linguagem simples por que não foram fornecidas orientações. Com o modo
+ligado, o chat também oferece os seletores de conta e período, os cartões de cálculo
+com link para os lançamentos de origem e as perguntas sugeridas a partir dos dados
+importados — veja
+[Conversar com o contexto das contas](#811-conversar-com-o-contexto-das-contas).
 
 Para conferir o fluxo, use dados sintéticos, ligue o modo, envie uma pergunta
 com evidência no corpus e abra a trilha:
@@ -330,7 +356,9 @@ calculou.
 
 Para usar a API em outro endereço (por exemplo, um aparelho físico na mesma rede), edite o
 **endereço da API** em **Ajustes** e toque em **Salvar endereço**; **Testar conexão** confere se
-ela responde. Os lançamentos ficam gravados no SQLite local e voltam quando a API reinicia (veja [Backup](#backup-e-persistencia)).
+ela responde. A biblioteca fica cifrada no aparelho e a API a mantém só em memória enquanto o app
+está aberto, então os dados voltam mesmo que a API seja reiniciada ou recriada (veja
+[Backup e persistência](#backup-e-persistencia)).
 
 ### 8.2. Importar por banco e bancos suportados (RF29)
 
@@ -540,19 +568,69 @@ As capturas desta seção usam o cenário sintético completo
 Na tela **Extratos** ou no primeiro passo de **Importar extrato**, toque em **Fotografar
 ou escolher documento**. Fotografe, selecione uma imagem ou escolha um PDF. A câmera é
 aberta somente após essa ação; a seleção usa os seletores do sistema. Confira a pré-
-visualização e toque em **Ler documento**. A revisão apresenta valor, data, favorecido,
-banco e vencimento, com seus níveis de confiança. Edite os campos destacados e remova
-linhas de fatura se necessário. Um bloqueio exige a correção explícita do campo; valores
-positivos e datas válidas são verificados no formulário. Campos opcionais podem ficar
-vazios. Bloqueios gerais ou sem campo editável mantêm a confirmação desabilitada.
-**Confirmar** exige ação explícita e apenas devolve os campos revisados nesta simulação:
-nenhum lançamento é salvo. **Descartar** abandona a leitura. Se o documento estiver
-ilegível, siga as dicas de enquadramento e toque em **Tirar outra foto**. Nesta fase, o
-repositório falso devolve dados sintéticos, sem OCR nem envio do arquivo. O app não
-adiciona a imagem à biblioteca; fotos capturadas podem permanecer no cache temporário do
-sistema. A integração ao endpoint e a criação dos lançamentos pertencem à issue #97.
+visualização e toque em **Ler documento**. O app envia o arquivo à sua API em
+`POST /v1/documents/extract`, junto com o motor escolhido nos Ajustes (`engine`) e, só
+com consentimento salvo, `allow_remote=true`.
 
-![Captura do emulador Android com a revisão de um comprovante sintético, campos editáveis e confiança baixa](assets/app/revisao-documento-sintetico.png)
+A revisão apresenta valor, data, favorecido, banco e vencimento, com seus níveis de
+confiança, e a **trilha da leitura**: qual motor foi usado (por exemplo, "lido por OCR
+local") e os passos registrados pela API (`document.engine` e `steps`). Edite os campos
+destacados e remova linhas de fatura se necessário. Um bloqueio exige a correção
+explícita do campo; valores positivos e datas válidas são verificados no formulário.
+Campos opcionais podem ficar vazios. Bloqueios gerais ou sem campo editável mantêm a
+confirmação desabilitada.
+
+**Confirmar** exige ação explícita e grava os lançamentos na biblioteca por
+`POST /v1/documents/confirm`: o app envia `origin: "documento"` quando você revisou o
+que foi lido e `origin: "manual"` quando digitou os campos depois de uma abstenção.
+**Descartar** abandona a leitura sem criar nada. Se a API se abstiver por documento
+ilegível, o app pede uma nova captura (**Tirar outra foto**) e nenhum lançamento é
+criado. Erros de arquivo (muito grande, formato não aceito), documento inválido, motor
+indisponível e falha de rede aparecem com mensagem clara e a ação **Tentar novamente**,
+que repete o envio do mesmo arquivo.
+
+<!-- captura: revisão de documento lido pela API, com trilha do motor e campos editáveis -->
+
+O **motor de leitura** é escolhido em Ajustes. O **OCR local** (RapidOCR, na API) é o
+padrão e mantém a imagem no seu ambiente. O **modelo de visão** só aparece como opção
+quando a API o oferece (`GET /v1/documents/engines`); se o provedor for remoto, o app
+exige um **consentimento explícito** — texto claro de que a imagem sai do aparelho —
+antes de habilitá-lo. Sem consentimento salvo, o app nunca envia `allow_remote=true` e a
+API responde `403 REMOTE_CONSENT_REQUIRED` se o remoto for pedido mesmo assim.
+
+O app não adiciona a imagem à biblioteca; fotos capturadas podem permanecer no cache
+temporário do sistema. O documento confirmado vira lançamento comum: entra nos totais do
+Resumo e pode ser consultado no chat (veja a seção
+[Documentos por foto ou PDF](#documentos-por-foto-ou-pdf)).
+
+### 8.11. Conversar com o contexto das contas
+
+Na aba **Assistente**, com o [Modo multiagente](#modo-multiagente-experimental) ativado,
+o chat do Trokim responde sobre **os seus dados**, não só sobre
+educação financeira. Acima da conversa, dois seletores definem o recorte da pergunta:
+
+- **Conta e dono:** **Tudo**, **Pessoal**, **Empresas** ou uma conta específica (a lista
+  vem de `GET /v1/accounts`, com o nome do banco e o dono de cada conta).
+- **Período:** o mês (por exemplo, "outubro de 2026"), a **fatura aberta** ou a
+  **fatura fechada** de um cartão.
+
+O recorte escolhido viaja na pergunta como `account_id`, `owner` e `period` de
+`POST /v1/agents/ask`. A resposta mostra:
+
+- **Cartões de cálculo** com os números exatos devolvidos em `calculations` (em reais,
+  no formato brasileiro), cada um com link para os **lançamentos de origem** usados
+  na conta.
+- **Perguntas sugeridas** a partir do que já foi importado, como "quanto falta das
+  parcelas?" ou "quanto vence nos próximos 30 dias?".
+- A trilha **Como cheguei a essa resposta**, agora também com os cálculos que
+  sustentam cada número.
+
+Sem nenhum dado importado, o chat não manda a pergunta: ele explica o que importar e
+oferece o atalho direto para o fluxo de importação (**Importar extrato** ou
+**Fotografar documento**).
+
+<!-- captura: chat com os seletores de conta e período e um cartão de cálculo -->
+<!-- captura: estado vazio do chat com o atalho para importação -->
 
 
 ## Conferir um arquivo real de banco
@@ -567,21 +645,35 @@ O comando roda no seu computador e imprime só números agregados (banco reconhe
 
 ## Documentos por foto ou PDF
 
-Com a API local em execução, envie um comprovante sintético. A extração mostra os campos para revisão.
+Com a API local em execução, envie um comprovante sintético. A extração mostra os campos
+para revisão, junto com o motor usado (`document.engine`), os passos da leitura (`steps`),
+os problemas de validação e `can_confirm`. O campo `engine` aceita `ocr` (padrão, local)
+ou `vision`; `allow_remote` só vale `"true"` quando o usuário consentiu com o provedor
+remoto — sem ele, um motor remoto responde `403 REMOTE_CONSENT_REQUIRED`.
+`GET /v1/documents/engines` informa quais motores estão disponíveis.
 
 ```bash
-curl -F 'file=@comprovante.png' http://localhost:8000/v1/documents/extract
+curl -F 'file=@comprovante.png' -F 'engine=ocr' -F 'allow_remote=false' \
+  http://localhost:8000/v1/documents/extract
 ```
 
-Após revisar os campos, confirme o lançamento. Informe `account_id` para escolher uma conta cadastrada.
+Após revisar os campos, confirme o lançamento. O corpo aceita `origin`: `"documento"`
+(padrão, quando a pessoa revisou o que foi lido) ou `"manual"` (quando digitou tudo após
+uma abstenção ou sem leitura). Informe `account_id` para escolher uma conta cadastrada.
 Quando omitido, faturas vão para a conta de cartão `documentos:cartao`; os demais
 documentos vão para `documentos:sem_conta`. Sem conta explícita, a conciliação procura
 duplicatas em toda a biblioteca. Qualquer bloqueio retorna `422` sem aplicar parte do lote,
 inclusive no reenvio de um documento já confirmado.
 
+Nos erros de documento, `detail` é um objeto `{code, message}`: `413` (`FILE_LIMIT`,
+`PIXEL_LIMIT`, `PAGE_LIMIT`), `415` (`UNSUPPORTED_TYPE`), `422` (validação), `503`
+(`OCR_UNAVAILABLE`, `OCR_TIMEOUT`, `PDF_RENDERER_UNAVAILABLE`, `VISION_UNAVAILABLE`) e
+`403` (`REMOTE_CONSENT_REQUIRED`). O app traduz cada um em mensagem clara com a opção de
+tentar de novo.
+
 ```bash
 curl -H 'Content-Type: application/json' http://localhost:8000/v1/documents/confirm \
-  -d '{"kind":"pix_receipt","date":"2026-11-20","description":"Padaria Sintética","amount":"12.50"}'
+  -d '{"kind":"pix_receipt","date":"2026-11-20","description":"Padaria Sintética","amount":"12.50","origin":"manual"}'
 curl -H 'Content-Type: application/json' http://localhost:8000/v1/agents/ask \
   -d '{"message":"Quanto gastei na Padaria Sintética?"}'
 ```

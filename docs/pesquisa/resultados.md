@@ -3,7 +3,7 @@
 Esta página reúne **todas as execuções registradas** do benchmark da comparação LLM x RAG
 (Semana 3), das execuções com o sistema multiagente (Semana 4, [seções 8 e 9](#8-semana-4-multiagente-nos-30-casos-da-comparacao)) e do
 benchmark de recuperação (Semana 2) e da calibração visual sintética de documentos
-(Semana 5, seção 10), com os gráficos de cada uma. Nenhuma
+(Semana 5, seções 10 e 11), com os gráficos de cada uma. Nenhuma
 execução é sobrescrita: se os resultados melhorarem, a nova execução entra como uma nova
 linha e uma nova pasta, e as antigas continuam acessíveis para comparação.
 
@@ -526,7 +526,7 @@ separadamente a abstenção vazia nos sete ilegíveis antes de chamar o OCR.
 
 O runner `calibrate_documents.py --ocr` e o job `research` do CI executam o motor real e guardam
 leituras brutas sintéticas e trilhas para auditoria. O primeiro ensaio real e sua repetição estão registrados na seção 10.1. A comparação dos três motores, a meta de acerto de 90% e os
-cenários de chat da #98 continuam pendentes. Para gerar novamente os gráficos: `make report-charts`.
+cenários de chat da #98 estão na [seção 11](#11-semana-5-motores-de-leitura-e-chat-com-os-dados-do-usuario). Para gerar novamente os gráficos: `make report-charts`.
 
 A execução preliminar `2026-11-23-quality-v1` permanece preservada com árvore alterada
 e os mesmos totais visuais; a v2 registra a repetição sobre código commitado e árvore limpa.
@@ -565,6 +565,139 @@ impedir que a mesma linha esperada valide duas linhas devolvidas.
 
 A verificação foi inspecionada durante esta revisão; a v2 é uma regressão de desenvolvimento,
 **não um novo teste cego**. O aumento de recuperação não comprova generalização. Revisão humana
-continua obrigatória. Não se afirma a meta global de 90%, e a comparação entre motores/chat
-permanece na #98. O ensaio resolve a pendência de executar OCR real da #88, com limitações
+continua obrigatória. Não se afirma a meta global de 90%, e a comparação entre motores e o chat
+estão na seção 11. O ensaio resolve a pendência de executar OCR real da #88, com limitações
 registradas; integração HTTP/app e validação financeira continuam nas #96/#89.
+
+
+## 11. Semana 5 — motores de leitura e chat com os dados do usuário
+
+Execuções da [#98](https://github.com/moonshinerd/trokim/issues/98), em 27/11/2026, sobre os
+mesmos 40 documentos sintéticos do [gabarito multimodal](gabarito-multimodal.md) (20 de
+calibração e 20 de verificação, 7 ilegíveis) e sobre os 20 cenários do
+[gabarito do chat com os dados](gabarito-chat-dados.md). Cada execução tem `run.json` (commit,
+árvore, pacotes, hashes do código e dos insumos, parâmetros e limitações) e as leituras ou
+respostas brutas em `readings.json`. Nada foi sobrescrito. Sem revisão humana cega.
+
+### 11.1. Execuções registradas
+
+| Execução | Motor ou modelo | Commit | Observação |
+|---|---|---|---|
+| `documents/2026-11-27-ocr` | RapidOCR local | `f280d9c` (árvore alterada) | Linha de base |
+| `documents/2026-11-27-vlm-mistral-small3.2` | OCR + Mistral Small 3.2 24B (Ollama, máquina do laboratório) | `ffd7580` | Instrução antiga da visão: **toda contribuição descartada** (achou o defeito, 11.3) |
+| `documents/2026-11-27-vlm-gemini-2.5-flash-lite` | OCR + Gemini 2.5 Flash Lite (OpenRouter) | `ffd7580` | Instrução antiga: mesmo defeito |
+| `documents/2026-11-27-vlm-mistral-small3.2-v2` | OCR + Mistral Small 3.2 24B | `712b583` (árvore limpa) | Instrução corrigida |
+| `documents/2026-11-27-vlm-gemini-2.5-flash-lite-v2` | OCR + Gemini 2.5 Flash Lite | `cc9a15c` | Instrução corrigida; árvore alterada só no runner do chat |
+| `chat_dados/2026-11-27-chat-dados-qwen2.5-1.5b` | Qwen 2.5 1,5 B (Ollama) | `9422144` | Avaliador antigo contava rejeição como falha técnica |
+| `chat_dados/2026-11-27-chat-dados-qwen2.5-1.5b-v2` | Qwen 2.5 1,5 B (Ollama) | `cc9a15c` | Avaliador corrigido |
+| `chat_dados/2026-11-27-chat-dados-mistral-small3.2` | Mistral Small 3.2 24B (Ollama) | `cc9a15c` | Modelo maior, mesmo protocolo; achou os falsos positivos do validador (11.5) |
+| `chat_dados/2026-11-27-chat-dados-qwen2.5-1.5b-v3` | Qwen 2.5 1,5 B (Ollama) | `15f0cdc` | Validador corrigido |
+| `chat_dados/2026-11-27-chat-dados-mistral-small3.2-v2` | Mistral Small 3.2 24B (Ollama) | `15f0cdc` | Validador corrigido |
+
+As três primeiras execuções de documentos foram **reavaliadas** (`--reavaliar`) depois que o
+avaliador passou a separar a falha só da visão (o agente descarta a contribuição e segue com o
+OCR) da falha técnica (documento não lido). As leituras brutas não mudaram; o `run.json`
+registra `reevaluated_at`.
+
+### 11.2. Leitura de documentos: OCR local x VLM local x VLM remota
+
+| Métrica | OCR local | OCR + VLM local (v2) | OCR + VLM remota (v2) |
+|---|---:|---:|---:|
+| Campos exatos, calibração | 47/57 (82,5%) | 47/57 (82,5%) | 47/57 (82,5%) |
+| Campos exatos, verificação | 44/57 (77,2%) | 44/57 (77,2%) | 44/57 (77,2%) |
+| Documentos inteiros corretos (calib. / verif.) | 4/20 · 8/20 | 4/20 · 7/20 | 4/20 · 8/20 |
+| Abstenção correta nos ilegíveis | 7/7 | 7/7 | 7/7 |
+| Falso aceite (ilegível lido) | 0 | 0 | 0 |
+| Campos sem suporte no gabarito | 0 | 1 | 0 |
+| Chamadas à visão | 0 | 8 | 8 |
+| Contribuição da visão descartada | — | 3 | 3 |
+| Latência média (calib. / verif.) | 4,7 s · 3,4 s | 4,6 s · 3,3 s | 3,4 s · 3,2 s |
+| Latência p95 (calib. / verif.) | 9,3 s · 6,7 s | 14,9 s · 7,2 s | 5,6 s · 4,9 s |
+| Custo estimado | 0 | 0 | US$ 0,0008 (8 chamadas, preço do OpenRouter: US$ 0,10/0,40 por milhão) |
+
+**Onde o OCR erra.** Os 23 campos errados do OCR são todos de nome (14 de banco, 9 de
+favorecido), por espaço colado (`NuEmpresas`, `Banco doBrasil`, `PessoaExemploAlfa`) ou acento
+perdido (`Ficticio`). **Valor, total, data e vencimento acertaram 61 de 61.** Comparando sem
+espaço e sem acento, o OCR acerta 57 de 57 campos nos dois conjuntos. Não houve troca de `0` por
+`O` nem erro de milhar e decimal, e a rotação leve não custou campo. Os documentos sem degradação
+também têm erros de nome (31/36 e 28/38 campos exatos); entre as degradações, o corte foi a que
+mais perdeu (3 de 5 nos dois conjuntos), seguido de desfoque leve, pouca luz e perspectiva (3 de 4)
+e reflexo (4 de 5 na calibração).
+
+**Por que a visão não mudou o acerto.** O agente só chama a VLM quando falta um campo esperado
+ou há conflito; os erros do OCR são de transcrição de nome, não de campo ausente, então a VLM
+foi consultada em 8 de 40 documentos e, quando respondeu dentro do formato, confirmou os mesmos
+valores do OCR. Em faturas de cartão, as duas VLMs repetiram a chave `amount` para cada linha, e a
+validação estrita descartou a contribuição inteira (3 casos por modelo). A VLM local acrescentou
+um favorecido que o gabarito não considera recuperável (D26).
+
+![Acerto por campo do OCR local](../assets/documentos/2026-11-27-ocr/campos.svg)
+
+![Latência por documento do OCR local](../assets/documentos/2026-11-27-ocr/latencia.svg)
+
+### 11.3. Defeito achado pelo benchmark: instrução da visão
+
+Na primeira rodada, as duas VLMs responderam com chaves em português (`"Banco"`), outra fonte
+(`text_layer`) e dentro de bloco markdown; o agente descartou **todas** as contribuições
+(`INVALID_VISION_OUTPUT`). A instrução enviada era uma frase e o JSON Schema do Pydantic. A
+correção (`VISION_INSTRUCTIONS` em `api/app/services/agents/document.py`) lista as chaves, os
+formatos e um exemplo e aceita o JSON dentro de bloco markdown; a validação estrita do resultado
+não mudou. Com ela, as respostas passaram a vir no formato (v2).
+
+### 11.4. Chat com os dados do usuário
+
+| Métrica | Qwen 1,5 B (v2) | Mistral 24B | Qwen 1,5 B (v3) | Mistral 24B (v2) |
+|---|---:|---:|---:|---:|
+| Validador | antigo | antigo | corrigido | corrigido |
+| Valores calculados corretamente | 32/32 | 32/32 | 32/32 | 32/32 |
+| Valores entregues na resposta final | 2/32 | 0/32 | **27/32** | **26/32** |
+| Perguntas com resposta completa e certa | 2/14 | 0/14 | **11/14** | **10/14** |
+| Respostas retidas pelo Validation | 12/14 | 14/14 | 3/14 | 4/14 |
+| Chamadas do modelo com número sem suporte | 25/27 | 28/28 | 8/19 | 8/18 |
+| Números inventados na resposta final | 0 | 0 | 0 | 0 |
+| Esclarecimento ou dado ausente corretos | 6/6 | 6/6 | 6/6 | 6/6 |
+| Falhas técnicas | 0 | 0 | 0 | 0 |
+| Latência média por pergunta | 2,9 s | 7,2 s | 2,1 s | 4,9 s |
+
+A parte determinística acerta todos os números (conta, dono, período, fatura aberta e
+fechada, parcelas e dívidas) em todas as execuções. A diferença está na entrega: a
+[ADR 0023](../adr/0023-contexto-do-usuario-no-chat.md) audita também o texto original do modelo
+e retém a resposta inteira se ele citar número sem cálculo compatível. Nenhum número inventado
+chegou à resposta final em nenhuma execução.
+
+![Desfechos do chat com o Qwen 2.5 1,5 B, validador corrigido](../assets/chat_dados/2026-11-27-chat-dados-qwen2.5-1.5b-v3/fig1-chat-dados-desfechos.png)
+
+### 11.5. Defeito achado pelo benchmark: falsos positivos do validador
+
+Com o validador antigo, o Mistral de 24 B teve **todas** as respostas retidas, embora a redação
+estivesse certa (por exemplo, "1. **Gasto total**: 561,78 BRL ... 6.462,14 = 7.023,92 - 561,78").
+O validador contava como número sem suporte o **ano** que já estava no rótulo do cálculo
+("setembro de 2026"), a **numeração de lista** ("1.", "2)") e o **"-" de uma subtração** entre
+valores ou de marcador de lista, lido como sinal negativo. A correção
+(`api/app/services/financial_number_validation.py`) aceita só essas formas: ano com moeda, ano
+fora dos rótulos, valor inventado em lista ou em operação e sinal negativo real continuam
+barrados (`api/tests/test_financial_number_validation.py`). A política de reter a resposta não
+mudou. As retenções que restam vêm de datas escritas no formato brasileiro ("30/11", "01") e de
+valores reformatados de forma errada pelo modelo ("15,291,09 BRL"), que são retenções corretas.
+
+### 11.6. Hipóteses do épico da Semana 5
+
+1. **Acerto por campo ≥ 90%: não atingido no critério exato** (82,5% na calibração e 77,2% na
+   verificação). Todos os erros são de espaço ou acento em nomes; sem esse critério, 100%. Os
+   números (valor, total e datas) acertam 100%.
+2. **Abstenção em 100% dos ilegíveis, sem inventar campo: sustentada** (7 de 7, nenhum falso
+   aceite, nenhum campo inventado pelo OCR).
+3. **OCR x VLM local x VLM remota: a visão não melhorou a qualidade neste corpus**, porque o
+   agente só a consulta para campo ausente. A VLM local aumentou o p95 (14,9 s contra 9,3 s); a
+   remota custou US$ 0,0008 em 8 chamadas e foi a mais rápida. O que **não** se sustenta: que a
+   VLM corrija os erros de nome do OCR no desenho atual.
+4. **O chat responde corretamente os números: sustentada com ressalva.** O cálculo acerta 32 de 32
+   valores e nenhum número inventado chega ao usuário. Com o validador corrigido, 27 de 32 valores
+   (Qwen 1,5 B) e 26 de 32 (Mistral 24B) chegam na resposta; o restante é retido por segurança
+   (data em formato brasileiro ou valor mal formatado pelo modelo), e o usuário recebe a
+   mensagem de resposta retida em vez de um número errado.
+
+**Limitações.** Documentos e extrato sintéticos, uma repetição, sem revisão humana cega; a
+verificação não é teste cego (o corpus foi inspecionado nas semanas anteriores). A VLM "local"
+roda no Ollama da máquina do laboratório por túnel SSH, não no aparelho. O custo remoto usa o
+preço informado na execução, porque a tabela do LiteLLM não tinha o modelo.

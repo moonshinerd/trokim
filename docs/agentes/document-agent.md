@@ -11,6 +11,12 @@ O **DocumentAgent** é responsável pela ingestão e extração multimodal do Tr
 
 Envie JPEG, PNG ou PDF (até 20 MiB) como `file` multipart para
 `POST /v1/documents/extract`. O campo opcional `account_id` restringe a conciliação.
+O campo `engine` escolhe o motor: `ocr` (padrão, só o OCR local) ou `vision` (OCR mais o modelo de
+visão configurado, que recebe a imagem com CPF, CNPJ, agência e conta tarjados). Com modelo de visão
+remoto, envie também `allow_remote=true`, e só depois do consentimento do usuário.
+`GET /v1/documents/engines` informa o que o servidor tem: `{"ocr": "rapidocr", "vision": null}` ou
+`{"ocr": "rapidocr", "vision": {"model": "...", "remote": false}}`
+([ADR 0021](../adr/0021-visao-e-ocr-modulares.md)).
 O objeto `document` contém `kind`, qualidade, campos, linhas, motor e indicação de abstenção.
 O envelope inclui `validation_issues`, `can_confirm`, `steps` e `total_ms`.
 Por exemplo, um Pix legível retorna um campo como
@@ -26,15 +32,18 @@ Somente a confirmação altera a biblioteca persistida. Sem `account_id`, fatura
 A confirmação valida o documento inteiro contra a biblioteca antes de inserir o lote;
 sem conta escolhida, a busca de duplicatas alcança todas as contas. O reenvio exato
 retorna `repetido`, mas datas, vencimento e total continuam sujeitos à validação.
-`origin="documento"` registra a procedência, enquanto `source_kind` continua indicando
+O campo `origin` do `/confirm` vale `documento` (padrão: o usuário revisou o que foi lido) ou
+`manual` (digitou sem leitura bem-sucedida) e vira a procedência do lançamento, enquanto `source_kind` continua indicando
 `conta` ou `cartao`, preservando as visões de caixa e competência. As regras de categoria
 aprendidas também valem para o estabelecimento revisado de um Pix. Consulte os [exemplos HTTP](../guia-de-uso.md#documentos-por-foto-ou-pdf).
 
 Compras idênticas no mesmo dia dentro de um documento são válidas: cada ocorrência recebe seu
 próprio identificador, e o reenvio do mesmo documento continua retornando `repetido` linha a
 linha. Uma fatura de cartão só pode ser lançada em conta de cartão (`ACCOUNT_KIND_MISMATCH`,
-`422`). A abstenção do `/extract` não cria nada, mas o `/confirm` aceita campos revisados ou
-digitados à mão mesmo assim (limitação registrada na [ADR 0026](../adr/0026-confirmacao-e-consulta-de-documentos.md)).
+`422`). A abstenção do `/extract` não cria nada; o `/confirm` aceita os campos digitados à mão
+depois dela, com `origin="manual"`, e o chat descreve esse lançamento como digitado, não como lido.
+Se o extrato do mesmo Pix ou compra for importado depois, o lançamento do documento vira duplicata
+e o do banco prevalece ([ADR 0026](../adr/0026-confirmacao-e-consulta-de-documentos.md)).
 No `steps` da extração, o passo `validation` fica `failed` quando há bloqueio.
 
 | HTTP | Motivo |
@@ -42,8 +51,9 @@ No `steps` da extração, o passo `validation` fica `failed` quando há bloqueio
 | 413 | Limite de upload, páginas ou resolução excedido |
 | 415 | Conteúdo diferente de JPEG, PNG e PDF |
 | 400 | Envio interrompido (o cliente desconectou durante o upload) |
+| 403 | `REMOTE_CONSENT_REQUIRED`: visão remota sem `allow_remote=true` |
 | 422 | Documento inválido ou confirmação bloqueada |
-| 503 | Motor indisponível ou tempo de leitura excedido |
+| 503 | Motor indisponível (`OCR_UNAVAILABLE`, `VISION_UNAVAILABLE`...) ou tempo de leitura excedido |
 
 ## 2. Pipeline de Validação e Conciliação
 

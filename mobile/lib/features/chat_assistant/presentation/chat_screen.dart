@@ -3,8 +3,12 @@ import 'package:material_ui/material_ui.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../../../core/theme/app_theme.dart';
+import '../../../core/format.dart';
 import '../../../core/widgets/app_motion.dart';
 import '../../../core/widgets/trokim_logo.dart';
+import '../../finance/presentation/finance_controller.dart';
+import '../../import_guide/presentation/import_flow_screen.dart';
+import '../../transactions/presentation/transactions_screen.dart';
 import '../domain/answer_format.dart';
 import '../domain/chat_models.dart';
 import '../domain/conversation.dart';
@@ -14,10 +18,28 @@ import 'chat_controller.dart';
 import 'history_screen.dart';
 import 'evidence_card.dart';
 
+const _monthNames = [
+  'janeiro',
+  'fevereiro',
+  'março',
+  'abril',
+  'maio',
+  'junho',
+  'julho',
+  'agosto',
+  'setembro',
+  'outubro',
+  'novembro',
+  'dezembro',
+];
+
 class ChatScreen extends StatefulWidget {
-  const ChatScreen({super.key, this.controller});
+  const ChatScreen({super.key, this.controller, this.importPicker});
 
   final ChatController? controller;
+
+  /// Troca o seletor de arquivos do fluxo de importação (testes).
+  final StatementPicker? importPicker;
 
   @override
   State<ChatScreen> createState() => _ChatScreenState();
@@ -28,6 +50,8 @@ class _ChatScreenState extends State<ChatScreen> {
   final ScrollController _scrollController = ScrollController();
   late ChatController _chat;
   bool _auditMode = false;
+  String _scopeKey = 'todas';
+  String _periodKey = 'todos';
 
   @override
   void initState() {
@@ -39,6 +63,11 @@ class _ChatScreenState extends State<ChatScreen> {
           store: PrefsConversationStore(),
           baseUrlProvider: settings == null ? null : () => settings.apiBaseUrl,
         );
+    _chat.hasImportedData = () {
+      final finance = FinanceScope.read(context);
+      if (finance == null) return true;
+      return finance.files.isNotEmpty || finance.status != FinanceStatus.ready;
+    };
     if (widget.controller == null) _chat.init();
     _chat.addListener(_scrollToLatest);
   }
@@ -60,6 +89,104 @@ class _ChatScreenState extends State<ChatScreen> {
     if (text.isEmpty || _chat.isLoading) return;
     _textController.clear();
     _chat.send(text);
+  }
+
+  void _applyFilters() {
+    String? accountId;
+    String? owner;
+    if (_scopeKey.startsWith('acc:')) {
+      accountId = _scopeKey.substring(4);
+    } else if (_scopeKey != 'todas') {
+      owner = _scopeKey;
+    }
+    String? period;
+    if (_periodKey.startsWith('mes:')) {
+      period = _periodKey.substring(4);
+    } else if (_periodKey != 'todos') {
+      period = _periodKey;
+    }
+    _chat.filters = ChatFilters(
+      accountId: accountId,
+      owner: owner,
+      period: period,
+    );
+  }
+
+  List<(String, String)> _periodOptions(FinanceController finance) {
+    final months = <String>{};
+    var hasCard = false;
+    for (final statement in finance.statements.statements) {
+      if (statement.isCard) hasCard = true;
+      final start = statement.periodStart;
+      final end = statement.periodEnd;
+      if (start == null) continue;
+      var year = start.year;
+      var month = start.month;
+      final lastYear = end?.year ?? year;
+      final lastMonth = end?.month ?? month;
+      while (year < lastYear || (year == lastYear && month <= lastMonth)) {
+        months.add('$year-${month.toString().padLeft(2, '0')}');
+        month++;
+        if (month > 12) {
+          month = 1;
+          year++;
+        }
+      }
+    }
+    final sorted = months.toList()..sort((a, b) => b.compareTo(a));
+    return [
+      ('todos', 'Todo o período'),
+      for (final month in sorted) ('mes:$month', monthLabel(month)),
+      if (hasCard) ('fatura aberta', 'Fatura aberta'),
+      if (hasCard) ('fatura fechada', 'Fatura fechada'),
+    ];
+  }
+
+  List<(String, String)> _suggestions(FinanceController finance) {
+    final out = <(String, String)>[];
+    if (finance.installments.activeCount > 0) {
+      out.add(('Parcelas em aberto', 'Quanto falta das parcelas?'));
+    }
+    final statements = finance.statements.statements;
+    if (statements.any((s) => s.isCard && s.status.isIncomplete)) {
+      out.add(('Fatura aberta', 'Qual o total da fatura aberta?'));
+    }
+    final latest = statements.where((s) => s.periodEnd != null).fold<DateTime?>(
+      null,
+      (max, s) {
+        final end = s.periodEnd!;
+        return max == null || end.isAfter(max) ? end : max;
+      },
+    );
+    if (latest != null) {
+      final name = _monthNames[latest.month - 1];
+      out.add((
+        'Gastos de ${monthLabel('${latest.year}-${latest.month.toString().padLeft(2, '0')}')}',
+        'Quanto gastei em $name de ${latest.year}?',
+      ));
+    }
+    if (out.isEmpty && finance.files.isNotEmpty) {
+      out.add(('Gastos do mês', 'Quanto gastei este mês?'));
+    }
+    return out;
+  }
+
+  void _openImport() {
+    final tutorial = SettingsScope.maybeOf(context)?.showImportTutorial ?? true;
+    Navigator.of(context).push(
+      MaterialPageRoute<void>(
+        builder: (_) => ImportFlowScreen(
+          pickFile: widget.importPicker,
+          startAtPicker: !tutorial,
+        ),
+      ),
+    );
+  }
+
+  void _openEntries() {
+    Navigator.of(
+      context,
+    ).push(MaterialPageRoute<void>(builder: (_) => const TransactionsScreen()));
   }
 
   @override
@@ -84,6 +211,32 @@ class _ChatScreenState extends State<ChatScreen> {
       _chat.generative = SettingsScope.of(context).generativeChat;
       _chat.multiAgent = SettingsScope.of(context).multiAgent;
     }
+    final finance = context
+        .dependOnInheritedWidgetOfExactType<FinanceScope>()
+        ?.notifier;
+    final hasData = finance != null && finance.files.isNotEmpty;
+    final periodOptions = hasData
+        ? _periodOptions(finance)
+        : const <(String, String)>[];
+    final scopeOptions = hasData
+        ? <(String, String)>[
+            ('todas', 'Tudo'),
+            ('pessoal', 'Pessoal'),
+            ('empresa', 'Empresas'),
+            for (final account in finance.accounts)
+              ('acc:${account.id}', account.displayLabel),
+          ]
+        : const <(String, String)>[];
+    final suggestions = hasData && _chat.messages.length <= 1
+        ? _suggestions(finance)
+        : const <(String, String)>[];
+    if (scopeOptions.every((option) => option.$1 != _scopeKey)) {
+      _scopeKey = 'todas';
+    }
+    if (periodOptions.every((option) => option.$1 != _periodKey)) {
+      _periodKey = 'todos';
+    }
+    _applyFilters();
     return Scaffold(
       appBar: AppBar(
         title: Row(
@@ -208,11 +361,67 @@ class _ChatScreenState extends State<ChatScreen> {
                         );
                         _sendMessage();
                       },
+                      onImport: _openImport,
+                      onOpenEntries: _openEntries,
                     );
                   },
                 ),
               ),
             ),
+            if (_chat.multiAgent && scopeOptions.length > 1)
+              Padding(
+                padding: const EdgeInsets.fromLTRB(16, 2, 16, 0),
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: _FilterPicker(
+                        key: const ValueKey('chat-scope-filter'),
+                        tooltip: 'Conta ou dono',
+                        value: _scopeKey,
+                        options: scopeOptions,
+                        onChanged: (value) => setState(() => _scopeKey = value),
+                      ),
+                    ),
+                    if (periodOptions.length > 1) ...[
+                      const SizedBox(width: 8),
+                      Expanded(
+                        child: _FilterPicker(
+                          key: const ValueKey('chat-period-filter'),
+                          tooltip: 'Período',
+                          value: _periodKey,
+                          options: periodOptions,
+                          onChanged: (value) =>
+                              setState(() => _periodKey = value),
+                        ),
+                      ),
+                    ],
+                  ],
+                ),
+              ),
+            if (suggestions.isNotEmpty && !_chat.isLoading)
+              Padding(
+                padding: const EdgeInsets.fromLTRB(16, 6, 16, 0),
+                child: Align(
+                  alignment: Alignment.centerLeft,
+                  child: Wrap(
+                    spacing: 6,
+                    runSpacing: 4,
+                    children: [
+                      for (final (label, question) in suggestions)
+                        _QuickQuestion(
+                          label: label,
+                          onPressed: () {
+                            _textController.text = question;
+                            _textController.selection = TextSelection.collapsed(
+                              offset: question.length,
+                            );
+                            _sendMessage();
+                          },
+                        ),
+                    ],
+                  ),
+                ),
+              ),
             Container(
               margin: const EdgeInsets.fromLTRB(16, 4, 16, 6),
               padding: const EdgeInsets.fromLTRB(18, 4, 6, 4),
@@ -293,6 +502,8 @@ class _MessageBubble extends StatefulWidget {
     required this.auditMode,
     this.onShowTrace,
     this.onQuickQuestion,
+    this.onImport,
+    this.onOpenEntries,
   });
 
   final ChatMessage message;
@@ -301,6 +512,8 @@ class _MessageBubble extends StatefulWidget {
   final bool auditMode;
   final VoidCallback? onShowTrace;
   final ValueChanged<String>? onQuickQuestion;
+  final VoidCallback? onImport;
+  final VoidCallback? onOpenEntries;
 
   @override
   State<_MessageBubble> createState() => _MessageBubbleState();
@@ -332,6 +545,8 @@ class _MessageBubbleState extends State<_MessageBubble> {
   bool get auditMode => widget.auditMode;
   VoidCallback? get onShowTrace => widget.onShowTrace;
   ValueChanged<String>? get onQuickQuestion => widget.onQuickQuestion;
+  VoidCallback? get onImport => widget.onImport;
+  VoidCallback? get onOpenEntries => widget.onOpenEntries;
 
   @override
   Widget build(BuildContext context) {
@@ -385,6 +600,20 @@ class _MessageBubbleState extends State<_MessageBubble> {
                 const SizedBox(height: 8),
               ],
               _MessageText(message: message, onSource: _goToSource),
+              if (message.isImportGuide && onImport != null)
+                Padding(
+                  padding: const EdgeInsets.only(top: 10),
+                  child: FilledButton.icon(
+                    onPressed: onImport,
+                    icon: const Icon(Icons.file_upload_outlined, size: 18),
+                    label: const Text('Importar extrato'),
+                  ),
+                ),
+              if (!message.isUser && !message.isError)
+                _CalculationCards(
+                  trace: message.agentTrace,
+                  onOpenEntries: onOpenEntries,
+                ),
               if (onShowTrace != null)
                 Align(
                   alignment: Alignment.centerLeft,
@@ -453,6 +682,140 @@ class _MessageBubbleState extends State<_MessageBubble> {
             ],
           ),
         ),
+      ),
+    );
+  }
+}
+
+class _FilterPicker extends StatelessWidget {
+  const _FilterPicker({
+    super.key,
+    required this.tooltip,
+    required this.value,
+    required this.options,
+    required this.onChanged,
+  });
+
+  final String tooltip;
+  final String value;
+  final List<(String, String)> options;
+  final ValueChanged<String> onChanged;
+
+  @override
+  Widget build(BuildContext context) {
+    return Tooltip(
+      message: tooltip,
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 10),
+        decoration: BoxDecoration(
+          color: context.colors.surface,
+          borderRadius: BorderRadius.circular(14),
+          border: Border.all(color: context.colors.line),
+        ),
+        child: DropdownButtonHideUnderline(
+          child: DropdownButton<String>(
+            value: value,
+            isExpanded: true,
+            isDense: true,
+            iconSize: 18,
+            style: TextStyle(
+              fontSize: 12.5,
+              fontWeight: FontWeight.w600,
+              color: context.colors.ink,
+            ),
+            items: [
+              for (final (key, label) in options)
+                DropdownMenuItem<String>(
+                  value: key,
+                  child: Text(
+                    label,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ),
+            ],
+            onChanged: (next) {
+              if (next != null) onChanged(next);
+            },
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class _CalculationCards extends StatelessWidget {
+  const _CalculationCards({required this.trace, required this.onOpenEntries});
+
+  final Map<String, dynamic>? trace;
+  final VoidCallback? onOpenEntries;
+
+  @override
+  Widget build(BuildContext context) {
+    final calculations = (trace?['calculations'] as List? ?? const [])
+        .whereType<Map>()
+        .toList();
+    if (calculations.isEmpty) return const SizedBox.shrink();
+    final c = context.colors;
+    return Container(
+      width: double.infinity,
+      margin: const EdgeInsets.only(top: 10),
+      padding: const EdgeInsets.all(12),
+      decoration: BoxDecoration(
+        color: c.tint,
+        borderRadius: BorderRadius.circular(14),
+        border: Border.all(color: c.line),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              Icon(Icons.calculate_outlined, size: 16, color: c.accent),
+              const SizedBox(width: 6),
+              Text(
+                'Números calculados',
+                style: TextStyle(
+                  fontWeight: FontWeight.w800,
+                  fontSize: 12,
+                  color: c.ink,
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 8),
+          for (final item in calculations)
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 3),
+              child: Row(
+                children: [
+                  Expanded(
+                    child: Text(
+                      '${item['label']}',
+                      style: TextStyle(fontSize: 12.5, color: c.ink),
+                    ),
+                  ),
+                  Text(
+                    _calculationText(item),
+                    style: TextStyle(
+                      fontWeight: FontWeight.w800,
+                      fontSize: 13,
+                      color: c.ink,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          if (onOpenEntries != null)
+            Align(
+              alignment: Alignment.centerLeft,
+              child: TextButton.icon(
+                onPressed: onOpenEntries,
+                icon: const Icon(Icons.receipt_long_outlined, size: 16),
+                label: const Text('Ver lançamentos'),
+              ),
+            ),
+        ],
       ),
     );
   }

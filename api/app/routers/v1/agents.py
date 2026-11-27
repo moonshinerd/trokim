@@ -1,24 +1,23 @@
 from typing import Annotated
 
 from fastapi import APIRouter, Depends, HTTPException, Request
-from pydantic import BaseModel, Field
+from pydantic import Field
 
 from app.clients.llm_factory import get_llm_provider
 from app.core.request_lifecycle import run_while_connected
-from app.domain.agents import MultiAgentResponse
-from app.routers.v1.transactions import get_imported_transactions
+from app.domain.agents import FinancialFilters, MultiAgentResponse
 from app.services.agent_query_service import AgentQueryService
 from app.services.agents.analysis import AnalysisAgent
 from app.services.agents.communication import CommunicationAgent
 from app.services.agents.orchestrator import Orchestrator
 from app.services.agents.research import ResearchAgent
 from app.services.agents.validation import ValidationAgent
-from app.services.rag_service import RAGService
+from app.services.library_service import LIBRARY
 
 router = APIRouter(prefix="/agents", tags=["Multi-Agent System"])
 
 
-class AgentAskRequest(BaseModel):
+class AgentAskRequest(FinancialFilters):
     document_uid: str | None = Field(default=None, pattern=r"^[0-9a-f]{12}$")
     message: str = Field(
         min_length=1,
@@ -33,7 +32,7 @@ class AgentAskRequest(BaseModel):
 def get_orchestrator() -> Orchestrator:
     """Fábrica de injeção de dependência que monta os 4 agentes do sistema multiagente."""
     return Orchestrator(
-        research=ResearchAgent(rag_service=RAGService()),
+        research=ResearchAgent(),
         analysis=AnalysisAgent(),
         communication=CommunicationAgent(llm_provider=get_llm_provider()),
         validation=ValidationAgent(),
@@ -55,13 +54,16 @@ async def ask_multiagent_system(
     connection: Request,
     orchestrator: Annotated[Orchestrator, Depends(get_orchestrator)],
 ) -> MultiAgentResponse:
-    transactions = get_imported_transactions()
-
     try:
         response = await run_while_connected(
             connection,
             AgentQueryService(orchestrator).run(
-                request.message, transactions=transactions, document_uid=request.document_uid
+                request.message,
+                document_uid=request.document_uid,
+                library=LIBRARY,
+                filters=FinancialFilters(
+                    account_id=request.account_id, owner=request.owner, period=request.period
+                ),
             ),
         )
     except RuntimeError as exc:

@@ -1,6 +1,7 @@
 """Agente de documento: leitura local, abstenção e trilha sanitizada (#88)."""
 
 import asyncio
+import re
 import time
 from dataclasses import dataclass, field
 from decimal import Decimal
@@ -19,7 +20,7 @@ from app.domain.documents import (
     FieldSource,
     QualityReport,
 )
-from app.models.vision_provider import OcrProvider, VisionProvider, VisionResult
+from app.models.vision_provider import OcrProvider, OcrWord, VisionProvider, VisionResult
 from app.services.document_fields import (
     EXPECTED,
     TEXT_CONFIDENCE,
@@ -51,6 +52,23 @@ class DocumentContext(BaseModel):
 class VisionFields(BaseModel):
     model_config = ConfigDict(extra="forbid")
     fields: list[ExtractedField] = Field(max_length=20)
+
+
+# Instrução explícita: chaves, formatos e exemplo. O JSON Schema do Pydantic sozinho não bastou:
+# no benchmark de 27/11, a VLM local respondeu com chaves em português ("Banco"), outra fonte e
+# dentro de bloco markdown, e toda contribuição foi descartada (#98).
+VISION_INSTRUCTIONS = (
+    "Leia a imagem deste comprovante, boleto ou fatura e extraia só os campos visíveis. "
+    "Responda apenas com JSON, sem markdown e sem texto fora do JSON, exatamente neste formato: "
+    '{"fields": [{"key": "amount", "value": "12.50", "confidence": 0.9, "source": "vlm"}]}. '
+    "Chaves permitidas (em inglês, exatamente assim): date (data da operação), due_date "
+    "(vencimento), amount (valor), total (total da fatura), counterparty (favorecido ou "
+    "estabelecimento) e bank (banco). Datas no formato AAAA-MM-DD; valores com ponto decimal e "
+    'duas casas, como texto. Use sempre "source": "vlm" e uma confiança entre 0 e 1. Omita o '
+    "campo que não conseguir ler; nunca invente. Não inclua CPF, CNPJ, conta, agência nem "
+    "trechos tarjados de preto."
+)
+_JSON_FENCE = re.compile(r"^\s*```(?:json)?\s*(.*?)\s*```\s*$", re.DOTALL)
 
 
 class PageTrace(TypedDict):
@@ -92,9 +110,12 @@ class DocumentAgent:
         vision: VisionProvider | None = None,
         sanitizer: VisionSanitizer | None = None,
         timeout: float = 30,
+        allow_remote: bool | None = None,
     ) -> None:
         self.ocr, self.vision, self.sanitizer = ocr, vision, sanitizer
         self.timeout = timeout
+        # Consentimento para visão remota: por requisição (app) ou, sem ela, a configuração.
+        self.allow_remote = settings.VISION_ALLOW_REMOTE if allow_remote is None else allow_remote
 
     async def run(self, ctx: DocumentContext) -> AgentStep:
         started = time.perf_counter()
@@ -256,7 +277,7 @@ class DocumentAgent:
                 and result.text.kind != DocumentKind.OTHER
                 and (expected - fields.values.keys() or fields.conflicts)
             ):
-                if await self._complement(image_bytes(image), fields, result.issues):
+                if await self._complement(image_bytes(image), fields, result.issues, reading.words):
                     result.engines.add("vlm")
             return result
         except DocumentReadError as error:
@@ -331,11 +352,12 @@ class DocumentAgent:
         image: bytes,
         fields: FieldCollection,
         issues: list[ValidationIssue],
+        words: list[OcrWord] | None = None,
     ) -> bool:
         vision = self.vision
         if vision is None:
             return False
-        if vision.is_remote and not settings.VISION_ALLOW_REMOTE:
+        if vision.is_remote and not self.allow_remote:
             issues.append(warning("VISION_REMOTE_BLOCKED", "Visão remota exige consentimento."))
             return False
         if self.sanitizer is None:
@@ -343,22 +365,19 @@ class DocumentAgent:
             return False
         called = False
         try:
-            safe_image = self.sanitizer.sanitize(image)
+            safe_image = self.sanitizer.sanitize(image, words)
             if safe_image is None:
                 issues.append(warning("VISION_PRIVACY_BLOCKED", "Visão bloqueada por privacidade."))
                 return False
             called = True
             raw = await asyncio.wait_for(
-                vision.extract(
-                    safe_image,
-                    "Extraia apenas os campos visíveis, sem CPF, conta ou agência.",
-                    VisionFields.model_json_schema(),
-                ),
+                vision.extract(safe_image, VISION_INSTRUCTIONS),
                 self.timeout,
             )
             if not isinstance(raw, VisionResult):
                 raise ValueError("INVALID_VISION_OUTPUT")
-            proposed = VisionFields.model_validate_json(raw.content)
+            fenced = _JSON_FENCE.match(raw.content)
+            proposed = VisionFields.model_validate_json(fenced[1] if fenced else raw.content)
             candidates: list[ExtractedField] = []
             keys: set[str] = set()
             # Valida e sanitiza tudo antes de modificar qualquer campo do OCR.

@@ -40,6 +40,7 @@ graph TD
             Orchestrator["Orquestrador Determinístico"]
             ResearchAgent["Research Agent<br/>(evidências & escopo)"]
             AnalysisAgent["Analysis Agent<br/>(cálculos determinísticos)"]
+            FinancialQueries["Consultas financeiras tipadas<br/>(intenção, seleção e execução)"]
             CommAgent["Communication Agent<br/>(redação em pt-BR)"]
             ValidAgent["Validation Agent<br/>(auditoria defensiva)"]
         end
@@ -70,12 +71,16 @@ graph TD
         AgentTrace -. "habilitado em Ajustes" .-> AgentAsk
         AgentAsk --> Orchestrator
         
-        Orchestrator --> ResearchAgent
+        Orchestrator -->|orientação educativa| ResearchAgent
         Orchestrator --> AnalysisAgent
         Orchestrator --> CommAgent
         Orchestrator --> ValidAgent
         
         ResearchAgent --> RAGService
+        AnalysisAgent --> FinancialQueries
+        Library -->|snapshot local| FinancialQueries
+        FinancialQueries -->|somente agregados e limitações| CommAgent
+        FinancialQueries --> CalcService
         AnalysisAgent --> CalcService
         CommAgent --> LiteLLM
         CommAgent --> OllamaClient
@@ -107,6 +112,11 @@ graph TD
 ```
 
 ---
+
+Consultas pessoais aos arquivos importados pulam Research; perguntas de orientação mantêm a
+pesquisa institucional. A seleção de conta, dono e período é compartilhada com o fluxo local de
+documentos. Apenas resultados agregados chegam ao modelo, conforme a
+[ADR 0023](../adr/0023-contexto-do-usuario-no-chat.md).
 
 ## 2. Fluxo de Importação de Extratos e Resumo
 
@@ -337,8 +347,9 @@ flowchart TD
 ```
 
 O [agente de documento](../agentes/document-agent.md) devolve campos e trilha sanitizada.
-Visão opcional exige proteção dos pixels e política de confiança; permanece bloqueada
-sem essas garantias. A extração chama a validação financeira (#89) em memória. A confirmação (#96) revalida os campos revisados, verifica duplicatas e grava a biblioteca no SQLite.
+A visão é opcional e escolhida pelo app por requisição (`engine=vision`); só recebe a imagem
+depois da tarja de CPF, CNPJ, agência e conta feita a partir das caixas do OCR, e um modelo
+remoto exige o consentimento do usuário ([ADR 0021](../adr/0021-visao-e-ocr-modulares.md)). A extração chama a validação financeira (#89) em memória. A confirmação (#96) revalida os campos revisados, verifica duplicatas e grava a biblioteca no SQLite.
 
 A confirmação revalida também o total contra os pagamentos de fatura já conciliados e
 mantém o lote indivisível. `origin` registra a procedência sem substituir o tipo financeiro.

@@ -8,11 +8,17 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:http/http.dart' as http;
 import 'package:trokim/core/network/api_client.dart';
 import 'package:trokim/core/theme/app_theme.dart';
+import 'package:trokim/core/settings/settings_controller.dart';
 import 'package:trokim/features/chat_assistant/data/chat_repository.dart';
 import 'package:trokim/features/chat_assistant/presentation/chat_controller.dart';
 import 'package:trokim/features/chat_assistant/presentation/chat_screen.dart';
+import 'package:trokim/features/finance/presentation/finance_controller.dart';
+import 'package:trokim/features/import_guide/presentation/import_flow_screen.dart';
+import 'package:trokim/features/transactions/presentation/transactions_screen.dart';
 
 import 'support/abortable_client.dart';
+import 'support/finance_fixtures.dart';
+import 'support/library_fixtures.dart';
 
 const question = 'Como montar uma reserva de emergência?';
 const answer = 'Priorize baixo risco e liquidez diária.';
@@ -75,6 +81,90 @@ Future<void> sendQuestion(WidgetTester tester) async {
   await tester.enterText(find.byType(TextField), question);
   await tester.tap(find.byTooltip('Enviar'));
 }
+
+Future<void> openChatWithFinance(
+  WidgetTester tester,
+  Future<http.Response> Function(http.Request) handler,
+  FakeFinanceApi api, {
+  bool multiAgent = true,
+}) async {
+  final repository = ChatRepository(
+    apiClient: ApiClient(client: abortableClient(handler)),
+  );
+  final controller = ChatController(
+    repository: repository,
+    multiAgent: multiAgent,
+  );
+  final finance = api.controller();
+  final settings = SettingsController.memory()..setReduceMotion(true);
+  addTearDown(repository.close);
+  addTearDown(controller.dispose);
+  addTearDown(finance.dispose);
+  addTearDown(settings.dispose);
+  await tester.pumpWidget(
+    SettingsScope(
+      controller: settings,
+      child: FinanceScope(
+        controller: finance,
+        child: MaterialApp(
+          theme: AppTheme.lightTheme,
+          home: ChatScreen(controller: controller),
+        ),
+      ),
+    ),
+  );
+  await tester.runAsync(finance.load);
+  await tester.pumpAndSettle();
+}
+
+FakeFinanceApi libraryApi() => FakeFinanceApi(
+  transactions: libraryTransactionsJson,
+  accounts: accountsJson,
+  statements: statementsJson,
+  installments: installmentsJson,
+  suggestions: suggestionsJson,
+  transfers: transfersJson,
+);
+
+http.Response multiAgentReply({List<Map<String, Object>>? calculations}) =>
+    http.Response.bytes(
+      utf8.encode(
+        jsonEncode({
+          'query': question,
+          'status': 'answered',
+          'answer': answer,
+          'model': 'qwen2.5',
+          'evidences': [
+            {
+              'id': 'local-1',
+              'source_name': 'Biblioteca local',
+              'document_title': 'Lançamentos confirmados',
+              'section': 'Origem dos dados',
+              'content': 'Lançamentos do período.',
+              'score': 1.0,
+            },
+          ],
+          'calculations': calculations ?? [],
+          'validation_issues': [],
+          'total_ms': 12,
+          'steps': [
+            {
+              'agent': 'analysis',
+              'status': 'ok',
+              'summary': 'Cálculo feito sobre os lançamentos.',
+              'duration_ms': 8,
+            },
+            {
+              'agent': 'validation',
+              'status': 'ok',
+              'summary': 'Resposta conferida.',
+              'duration_ms': 4,
+            },
+          ],
+        }),
+      ),
+      200,
+    );
 
 void main() {
   testWidgets('abre trilha e exibe cálculos da resposta multiagente', (
@@ -149,8 +239,8 @@ void main() {
     expect(find.text('Pesquisa'), findsOneWidget);
     expect(find.text('Validação'), findsOneWidget);
     expect(find.text('Fontes oficiais localizadas.\n4 ms'), findsOneWidget);
-    expect(find.text('Saldo do período'), findsOneWidget);
-    expect(find.text('R\$ 125,50'), findsOneWidget);
+    expect(find.text('Saldo do período'), findsNWidgets(2));
+    expect(find.text('R\$ 125,50'), findsNWidgets(2));
     expect(tester.takeException(), isNull);
   });
 
@@ -535,5 +625,134 @@ void main() {
         .state<ScrollableState>(find.byType(Scrollable).first)
         .position;
     expect(scroll.pixels, closeTo(scroll.maxScrollExtent, 1));
+  });
+
+  testWidgets('seletores de conta/dono e período viajam no POST', (
+    tester,
+  ) async {
+    final bodies = <Map<String, dynamic>>[];
+    await openChatWithFinance(tester, (request) async {
+      bodies.add(jsonDecode(request.body) as Map<String, dynamic>);
+      return multiAgentReply();
+    }, libraryApi());
+
+    expect(find.byKey(const ValueKey('chat-scope-filter')), findsOneWidget);
+    expect(find.byKey(const ValueKey('chat-period-filter')), findsOneWidget);
+
+    await tester.tap(find.byKey(const ValueKey('chat-scope-filter')));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Empresas').last);
+    await tester.pumpAndSettle();
+    await tester.tap(find.byKey(const ValueKey('chat-period-filter')));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Fatura aberta').last);
+    await tester.pumpAndSettle();
+
+    await sendQuestion(tester);
+    await tester.pumpAndSettle();
+    expect(bodies.single, {
+      'message': question,
+      'owner': 'empresa',
+      'period': 'fatura aberta',
+    });
+  });
+
+  testWidgets('seletor de conta envia account_id no POST', (tester) async {
+    final bodies = <Map<String, dynamic>>[];
+    await openChatWithFinance(tester, (request) async {
+      bodies.add(jsonDecode(request.body) as Map<String, dynamic>);
+      return multiAgentReply();
+    }, libraryApi());
+
+    await tester.tap(find.byKey(const ValueKey('chat-scope-filter')));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Nubank · cartão').last);
+    await tester.pumpAndSettle();
+
+    await sendQuestion(tester);
+    await tester.pumpAndSettle();
+    expect(bodies.single, {
+      'message': question,
+      'account_id': 'nubank:cartao-pf',
+    });
+  });
+
+  testWidgets('perguntas sugeridas vêm dos dados importados', (tester) async {
+    final bodies = <Map<String, dynamic>>[];
+    await openChatWithFinance(tester, (request) async {
+      bodies.add(jsonDecode(request.body) as Map<String, dynamic>);
+      return multiAgentReply();
+    }, libraryApi());
+
+    expect(find.text('Parcelas em aberto'), findsOneWidget);
+    expect(find.text('Fatura aberta'), findsWidgets);
+    expect(find.text('Gastos de dez/2026'), findsOneWidget);
+
+    await tester.tap(find.text('Parcelas em aberto'));
+    await tester.pumpAndSettle();
+    expect(bodies.single['message'], 'Quanto falta das parcelas?');
+
+    await tester.tap(find.text('Gastos de dez/2026'));
+    await tester.pumpAndSettle();
+    expect(bodies.last['message'], 'Quanto gastei em dezembro de 2026?');
+  });
+
+  testWidgets('estado vazio orienta a importação e não pergunta', (
+    tester,
+  ) async {
+    var requests = 0;
+    final api = FakeFinanceApi(transactions: []);
+    await openChatWithFinance(tester, (_) async {
+      requests++;
+      return multiAgentReply();
+    }, api);
+
+    expect(find.byKey(const ValueKey('chat-scope-filter')), findsNothing);
+    await sendQuestion(tester);
+    await tester.pumpAndSettle();
+
+    expect(requests, 0);
+    expect(
+      find.textContaining(RegExp(r'importe', caseSensitive: false)),
+      findsOneWidget,
+    );
+    expect(find.text('Importar extrato'), findsOneWidget);
+
+    await tester.tap(find.text('Importar extrato'));
+    await tester.pumpAndSettle();
+    expect(find.byType(ImportFlowScreen), findsOneWidget);
+    expect(requests, 0);
+  });
+
+  testWidgets('cards de cálculo mostram números e levam aos lançamentos', (
+    tester,
+  ) async {
+    await openChatWithFinance(
+      tester,
+      (_) async => multiAgentReply(
+        calculations: [
+          {
+            'key': 'gastos',
+            'label': 'Gastos do período',
+            'value': 308.76,
+            'unit': 'BRL',
+            'source': 'CalculationService.calculate_summary',
+          },
+        ],
+      ),
+      libraryApi(),
+    );
+    await sendQuestion(tester);
+    await tester.pumpAndSettle();
+
+    expect(find.text('Números calculados'), findsOneWidget);
+    expect(find.text('Gastos do período'), findsOneWidget);
+    expect(find.text('R\$ 308,76'), findsOneWidget);
+    expect(find.text('Ver lançamentos'), findsOneWidget);
+
+    await tester.tap(find.text('Ver lançamentos'));
+    await tester.pumpAndSettle();
+    expect(find.byType(TransactionsScreen), findsOneWidget);
+    expect(find.text('Extratos e faturas'), findsOneWidget);
   });
 }

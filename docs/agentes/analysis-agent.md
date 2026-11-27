@@ -3,24 +3,43 @@
 !!! success "Status: Implementado"
     Implementado na issue [#53](https://github.com/moonshinerd/trokim/issues/53). O motor determinístico de cálculo financeiro elimina alucinações aritméticas e assegura conformidade estrita com a ADR 0004.
 
-O **Analysis Agent** (`api/app/services/agents/analysis.py`) computa grandezas numéricas no fluxo educacional, usando `CalculationService`, sem modelos generativos (LLMs). A consulta local de um estabelecimento confirmado usa o mesmo serviço de cálculo em `AgentQueryService`, com validação independente antes da resposta.
+O **Analysis Agent** (`api/app/services/agents/analysis.py`) computa grandezas numéricas nos fluxos educacional e pessoal, usando `CalculationService` e as consultas da RF30, sem modelos generativos (LLMs). A consulta local de um estabelecimento confirmado usa o mesmo serviço de cálculo em `AgentQueryService`, com validação independente antes da resposta.
 
-## Intenções Suportadas e Fórmulas
+## Roteamento do chat e cálculos
 
-| Intenção | Palavras-chave | O que calcula | Função no `CalculationService` | Unidade |
-|---|---|---|---|:---:|
-| **Resumo** | `saldo`, `receita`, `despesa`, `gastei`, `resumo`, `balanco`, `total`, `poupança` | Receitas totais, despesas totais, saldo líquido e taxa de poupança | `calculate_summary` | `BRL`, `%` |
-| **Categorias** | `categoria`, `alimentacao`, `moradia`, `transporte`, `saude`, `lazer`, `educacao`, `servicos` | Total por categoria e participação percentual sobre as despesas totais | `category_shares` | `BRL`, `%` |
-| **Meta** | `meta`, `juntar`, `meses`, `tempo`, `objetivo`, `poupando` | Prazo em meses para alcançar um objetivo: $\lceil \text{meta} / \text{aporte} \rceil$ | `months_to_goal` | `meses` |
-| **Cenários** | `cenario`, `comparar`, `simulacao` | Margem operacional e delta de poupança entre propostas | `compare_budget_scenarios` | `BRL` |
+O chat usa `financial_chat_intent.py` para identificar intenções por regras com limites de
+palavras, `financial_chat_resolution.py` para resolver os filtros e `financial_chat_service.py`
+para executar a consulta por um mapa explícito de intenções tipadas. Consultas específicas têm prioridade sobre o
+resumo: comparação, compromissos, parcelas, transferências, fatura, estabelecimentos e categorias.
+“Cada conta” e “por conta” produzem a visão por conta. A simulação de meta mantém o fluxo anterior.
 
-## Princípio de Abstenção Numérica
+| Intenção | Consulta determinística |
+|---|---|
+| Resumo por conta, dono e período | `FinancialQueryService.totals` |
+| Cada conta | `FinancialQueryService.by_account` |
+| Fatura aberta, fechada ou próxima | `statement_total`, `next_statement` |
+| Parcelas e dívidas | `open_installments`, `commitments` |
+| Categorias e estabelecimentos | `top_categories`, `top_merchants` |
+| Comparação entre dois períodos | `compare_periods` |
+| Transferências próprias | `own_transfers_effect` |
+| Meta com objetivo e aporte | `CalculationService.months_to_goal` |
 
-Se a consulta exigir dados dos extratos e não houver lançamentos carregados na sessão da API, o agente:
+Filtros explícitos desambiguam conta e dono. Se contradizem o texto, o agente pede esclarecimento,
+sem escolher silenciosamente um recorte. O período aceita mês, intervalo e referência de fatura;
+expressões não suportadas pedem um mês e ano ou intervalo completo. A data relativa de referência
+usa `America/Sao_Paulo` e pode ser injetada nos testes.
 
-1. Registra a premissa explicativa em `ctx.assumptions`: *"Nenhum lançamento foi importado para calcular o resumo financeiro."*
-2. Emite o passo com status `skipped` sem chutar ou estimar grandezas.
-3. Garante que o Communication Agent receba a premissa e solicite a importação do extrato (OFX/PDF) ao usuário.
+## Dados ausentes e cobertura
+
+Sem dados para o recorte, o agente retorna `abstained` com a informação que falta, sem número
+financeiro e sem chamar o LLM. Uma conta ou ano ambíguo devolve pergunta e opções seguras.
+Um período sem lançamentos só admite zero quando há um arquivo importado cobrindo suas datas.
+Quando há lançamentos, o resultado descreve apenas o que foi importado e avisa que a cobertura
+pode ser incompleta. Saldo significa receitas menos despesas dos lançamentos, não saldo bancário.
+
+A trilha de Analysis registra intenção e os `CalculationResult` completos, com sua origem.
+O contexto bruto da biblioteca fica na API; somente os agregados chegam à comunicação
+([ADR 0023](../adr/0023-contexto-do-usuario-no-chat.md)).
 
 ## Extração de Metas em Linguagem Natural
 
@@ -75,10 +94,10 @@ ficam fora dos totais, [ADR 0018](../adr/0018-contas-periodos-transferencias-e-v
 | “E nas contas da empresa?” | `by_owner` | Gasto, receita e saldo do dono (`pessoal` ou `empresa`) |
 | “Quanto está a fatura aberta?” | `statement_total("aberta")` | Total da fatura e a data de fechamento |
 | “Quanto foi a fatura fechada?” | `statement_total("fechada")` | Total da última fatura fechada do cartão |
-| “Como será a próxima fatura?” | `next_statement` | Parcelas já contratadas do próximo ciclo (estimativa) |
+| “Qual será a minha próxima fatura?” | `next_statement` | Parcelas já contratadas do próximo ciclo (estimativa) |
 | “Quanto falta nas parcelas?” | `open_installments` | Quanto falta, valor mensal e quando termina |
-| “O que eu devo?” | `commitments` | Parcelas futuras, fatura fechada a pagar e estimativa dos próximos 30 dias |
-| “Onde mais gastei em setembro?” | `top_merchants`, `top_categories` | Ranking do período |
+| “Quanto devo?” | `commitments` | Parcelas futuras, fatura fechada a pagar e estimativa dos próximos 30 dias |
+| “Onde mais gastei em setembro?” | `top_merchants` | Ranking do período |
 | “Gastei mais em outubro ou em novembro?” | `compare_periods` | Gasto nos dois períodos, diferença e variação percentual |
 | “Quanto saiu só por transferência?” | `own_transfers_effect` | O que ficou fora dos totais |
 
@@ -126,7 +145,7 @@ corrente”, “conta do/da” e “extrato” restringem.
 Reimportar o PDF de uma fatura já importada grava o vencimento que faltava. As chaves por conta
 (`account_<hash>_*`) usam um hash curto do id da conta: estáveis e sem expor o número da conta.
 
-Ligar essas funções ao chat é a issue [#95](https://github.com/moonshinerd/trokim/issues/95).
+Essas consultas estão integradas ao chat pela issue [#95](https://github.com/moonshinerd/trokim/issues/95).
 
 ## Testes Automatizados
 
@@ -152,3 +171,21 @@ lançamentos ao LLM. Em “nessa loja” sem documento identificado, pede esclar
 por nome que não casam com nenhum estabelecimento de documento (por exemplo, “quanto gastei em
 janeiro?”) seguem para o orquestrador.
 Veja os [exemplos completos](document-agent.md#consulta-do-lancamento-confirmado).
+
+## Integração e testes da #95
+
+`POST /v1/agents/ask` aceita `account_id`, `owner` e `period`, todos opcionais.
+Os exemplos completos estão no [orquestrador](orquestrador.md#filtros-do-endpoint).
+`api/tests/test_agents_api.py` cobre valores esperados sintéticos, trilha, filtros, ambiguidades,
+dados ausentes, privacidade do prompt, números inventados e os endpoints antigos.
+Os testes puros de cálculo permanecem em `api/tests/test_financial_queries.py`.
+`api/tests/test_financial_quality.py` cobre os limites da resolução e do suporte numérico,
+incluindo moedas, sinais, metadados, lojas desconhecidas e colisões de nomes com intenções.
+Um estabelecimento só é reconhecido no complemento da consulta de gasto; seu nome não pode
+mudar a intenção de uma pergunta de saldo. Quando parte do alvo não é reconhecida, o sistema
+pede esclarecimento, sem devolver um total parcial como se fosse a resposta completa.
+
+Na classificação, parcelas e categorias não são ocultadas por palavras genéricas como “devo”
+ou “fatura”. Uma categoria solicitada por referência de fatura, sem intervalo de datas, pede
+esclarecimento. O total da fatura e o valor ainda a pagar têm intenções distintas. A detecção
+canônica de dono pede esclarecimento se a pergunta mistura contas pessoais e da empresa.

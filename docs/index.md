@@ -21,7 +21,7 @@ O **Trokim** é um assistente financeiro de código aberto (*open-source*) proje
 
 ---
 
-## Destaques do Projeto (Entregas 1 a 4 Concluídas)
+## Destaques do Projeto (Entregas 1 a 5 Concluídas)
 
 <div class="grid cards" markdown>
 
@@ -52,6 +52,20 @@ O **Trokim** é um assistente financeiro de código aberto (*open-source*) proje
 
     Research, Analysis, Communication e Validation Agent em sequência: o Validation barra número sem suporte e conselho fora de escopo, e as **5 armadilhas injetadas foram barradas** em todas as execuções.
     [:octicons-arrow-right-24: Ver Agentes](agentes/index.md)
+
+-   :material-camera-document:{ .lg .middle } **Leitura de Foto e PDF com Revisão**
+
+    ---
+
+    Fatura, comprovante de Pix e boleto lidos por OCR local, com visão opcional e consentimento para modelo remoto: valores e datas acertaram **61 de 61** e as fotos ilegíveis tiveram **abstenção em 7 de 7**.
+    [:octicons-arrow-right-24: Ver Agente de Documento](agentes/document-agent.md)
+
+-   :material-chat-processing:{ .lg .middle } **Chat com as Suas Contas**
+
+    ---
+
+    Perguntas sobre conta, período, fatura, parcelas e dívidas respondidas com os cálculos do sistema: **32 de 32** valores calculados certos e nenhum número inventado entregue.
+    [:octicons-arrow-right-24: Ver Resultados da Semana 5](pesquisa/resultados.md#11-semana-5-motores-de-leitura-e-chat-com-os-dados-do-usuario)
 
 -   :material-tag-multiple:{ .lg .middle } **Categorização pela Atividade da Loja**
 

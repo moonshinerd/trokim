@@ -12,6 +12,8 @@ class SettingsController extends ChangeNotifier {
       _generativeChat = _prefs?.getBool(_kGenerative) ?? true,
       _multiAgent = _prefs?.getBool(_kMultiAgent) ?? false,
       _importTutorial = _prefs?.getBool(_kImportTutorial) ?? true,
+      _documentEngine = _decodeEngine(_prefs?.getString(_kDocumentEngine)),
+      _remoteConsent = _prefs?.getBool(_kRemoteConsent) ?? false,
       _apiBaseUrl = _decodeUrl(_prefs?.getString(_kApiUrl));
 
   /// Sem persistência (testes).
@@ -23,6 +25,8 @@ class SettingsController extends ChangeNotifier {
       _generativeChat = true,
       _multiAgent = false,
       _importTutorial = true,
+      _documentEngine = ocrEngine,
+      _remoteConsent = false,
       _apiBaseUrl = ApiConstants.defaultBaseUrl;
 
   static const _kTheme = 'theme_mode';
@@ -32,6 +36,10 @@ class SettingsController extends ChangeNotifier {
   static const _kMultiAgent = 'multi_agent';
   static const _kImportTutorial = 'import_tutorial';
   static const _kApiUrl = 'api_base_url';
+  static const _kDocumentEngine = 'document_engine';
+  static const _kRemoteConsent = 'document_remote_consent';
+  static const ocrEngine = 'ocr';
+  static const visionEngine = 'vision';
 
   final SharedPreferences? _prefs;
   ThemeMode _themeMode;
@@ -40,6 +48,8 @@ class SettingsController extends ChangeNotifier {
   bool _generativeChat;
   bool _multiAgent;
   bool _importTutorial;
+  String _documentEngine;
+  bool _remoteConsent;
   String _apiBaseUrl;
 
   static Future<SettingsController> load() async =>
@@ -57,6 +67,11 @@ class SettingsController extends ChangeNotifier {
   /// Mostra o tutorial guiado ao importar um extrato (padrão). Desligado, o
   /// app abre direto o seletor de arquivos.
   bool get showImportTutorial => _importTutorial;
+
+  String get documentEngine => _documentEngine;
+  bool get remoteConsent => _remoteConsent;
+  bool get allowRemoteDocuments =>
+      _documentEngine == visionEngine && _remoteConsent;
 
   /// Endereço da API local (já normalizado). Padrão: o do emulador Android.
   String get apiBaseUrl => _apiBaseUrl;
@@ -96,6 +111,21 @@ class SettingsController extends ChangeNotifier {
     notifyListeners();
   }
 
+  void setDocumentEngine(String engine) {
+    final value = _decodeEngine(engine);
+    if (value == _documentEngine) return;
+    _documentEngine = value;
+    _prefs?.setString(_kDocumentEngine, value);
+    notifyListeners();
+  }
+
+  void setRemoteConsent(bool value) {
+    if (value == _remoteConsent) return;
+    _remoteConsent = value;
+    _prefs?.setBool(_kRemoteConsent, value);
+    notifyListeners();
+  }
+
   /// Salva o endereço da API. Devolve `false`, sem salvar, se for inválido.
   bool setApiBaseUrl(String value) {
     final normalized = ApiConstants.normalizeBaseUrl(value);
@@ -126,6 +156,9 @@ class SettingsController extends ChangeNotifier {
   static String _decodeUrl(String? stored) =>
       (stored == null ? null : ApiConstants.normalizeBaseUrl(stored)) ??
       ApiConstants.defaultBaseUrl;
+
+  static String _decodeEngine(String? stored) =>
+      stored == visionEngine ? visionEngine : ocrEngine;
 
   static ThemeMode _decodeMode(String? name) => ThemeMode.values.firstWhere(
     (m) => m.name == name,

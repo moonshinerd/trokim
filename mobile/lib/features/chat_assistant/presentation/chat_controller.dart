@@ -12,6 +12,11 @@ import '../../agents/domain/multi_agent_models.dart';
 const String welcomeText =
     'Olá! Sou o assistente do Trokim. Posso esclarecer dúvidas sobre organização financeira, reserva de emergência e metas com base nas diretrizes oficiais do Banco Central, CVM e CFPB.';
 
+const String importGuideText =
+    'Ainda não há dados importados para eu consultar. Importe um extrato OFX, '
+    'uma fatura PDF ou um CSV na aba Extratos (ou fotografe o documento) e '
+    'depois repita a pergunta aqui.';
+
 /// Título provisório: a primeira pergunta, encurtada, enquanto o LLM não nomeia.
 String placeholderTitle(String question) {
   final clean = question.replaceAll(RegExp(r'\s+'), ' ').trim();
@@ -32,6 +37,13 @@ class ChatController extends ChangeNotifier {
   /// Usa o LLM local (`/chat/generate`) em vez da busca extrativa.
   bool generative;
   bool multiAgent;
+
+  /// Filtros da próxima pergunta ao endpoint de agentes (`/agents/ask`).
+  ChatFilters filters = const ChatFilters();
+
+  /// Sem dados importados, devolve `false` e a pergunta vira orientação de
+  /// importação, sem chamar a API.
+  bool Function()? hasImportedData;
 
   final List<ChatMessage> _messages = [_welcome()];
   List<Conversation> _conversations = [];
@@ -133,6 +145,15 @@ class ChatController extends ChangeNotifier {
     _failedQuestion = null;
     _messages.add(ChatMessage(isUser: true, text: question));
     _ensureConversation(question);
+    if (hasImportedData?.call() == false) {
+      _messages.add(
+        ChatMessage(isUser: false, text: importGuideText, isImportGuide: true),
+      );
+      _syncCurrent();
+      notifyListeners();
+      unawaited(_persist());
+      return;
+    }
     await _ask(question);
   }
 
@@ -165,7 +186,12 @@ class ChatController extends ChangeNotifier {
     ChatMessage? answer;
     try {
       if (multiAgent) {
-        final reply = await _repository.askAgents(question);
+        final reply = await _repository.askAgents(
+          question,
+          accountId: filters.accountId,
+          owner: filters.owner,
+          period: filters.period,
+        );
         if (_isDisposed) return;
         answer = ChatMessage(
           isUser: false,

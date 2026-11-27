@@ -12,6 +12,8 @@ from app.domain.agents import (
 )
 from app.domain.models import TransactionOrigin
 from app.services.calculation_service import CalculationService
+from app.services.financial_chat_service import query_finances
+from app.services.library_service import Library
 
 
 def _strip_accents(text: str) -> str:
@@ -94,6 +96,35 @@ class AnalysisAgent:
 
     async def run(self, ctx: AgentContext) -> AgentStep:
         t0 = time.perf_counter()
+        if ctx.financial:
+            result = query_finances(
+                ctx.question,
+                ctx.financial.intent,
+                ctx.financial.filters,
+                Library(
+                    transactions=ctx.transactions,
+                    accounts=ctx.financial.accounts,
+                    statements=ctx.financial.statements,
+                ),
+                ctx.financial.reference_date,
+            )
+            ctx.calculations.extend(result.calculations)
+            ctx.assumptions.extend(result.notes)
+            if result.clarification:
+                ctx.assumptions.append(result.clarification.question)
+                ctx.assumptions.extend(result.clarification.options)
+            return AgentStep(
+                agent=self.name,
+                status=StepStatus.OK if result.calculations else StepStatus.ABSTAINED,
+                summary="Consulta financeira calculada."
+                if result.calculations
+                else "É necessário esclarecer a consulta ou importar dados.",
+                duration_ms=max(1, int((time.perf_counter() - t0) * 1000)),
+                detail={
+                    "intent": ctx.financial.intent,
+                    "calculations": [c.model_dump() for c in result.calculations],
+                },
+            )
         normalized_q = _strip_accents(ctx.question.lower())
 
         intents: list[str] = []
@@ -160,6 +191,16 @@ class AnalysisAgent:
                     ctx.assumptions.append(
                         f"{from_documents} lançamento(s) vieram de documentos que você enviou "
                         "por foto ou PDF e confirmou depois de revisar."
+                    )
+                typed = sum(
+                    1
+                    for t in ctx.transactions
+                    if t.origin == TransactionOrigin.MANUAL and not t.is_duplicate
+                )
+                if typed:
+                    ctx.assumptions.append(
+                        f"{typed} lançamento(s) foram digitados por você na tela de documento, "
+                        "sem leitura de foto ou PDF."
                     )
 
                 if has_summary_intent:

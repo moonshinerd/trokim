@@ -48,6 +48,17 @@ class FakeFinanceApi {
   FakeFinanceApi({
     this.summary = summaryJson,
     this.transactions = transactionsJson,
+    this.statements = const {'statements': [], 'coverage': {}},
+    this.installments = const {
+      'plans': [],
+      'active_count': 0,
+      'finished_count': 0,
+      'total_remaining': 0,
+      'monthly_projection': [],
+    },
+    this.accounts = const <Object>[],
+    this.suggestions = const <Object>[],
+    this.transfers = const <Object>[],
   });
 
   Object? summary;

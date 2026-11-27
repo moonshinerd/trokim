@@ -81,6 +81,7 @@ nav:
       - Histórico de Resultados e Gráficos: pesquisa/resultados.md
       - Gabarito Multiagente (Semana 4): pesquisa/gabarito-multiagente.md
       - Gabarito Multimodal (Semana 5): pesquisa/gabarito-multimodal.md
+      - Gabarito do Chat com os Dados (Semana 5): pesquisa/gabarito-chat-dados.md
       - Fontes e Referências: referencias.md
   - Requisitos: requisitos.md
   - Processo: processo/cbl.md
@@ -129,6 +130,7 @@ nav:
       - "0020 – Categorização por CNAE": adr/0020-categorizacao-por-cnae.md
       - "0021 – Leitura de Imagem Modular (OCR e Visão)": adr/0021-visao-e-ocr-modulares.md
       - "0022 – Perfis de Banco e Níveis de Suporte": adr/0022-registro-de-perfis-e-niveis-de-suporte.md
+      - "0023 – Contexto do Usuário no Chat": adr/0023-contexto-do-usuario-no-chat.md
       - "0024 – Persistência Local e Backup Criptografado": adr/0024-persistencia-local-e-backup-criptografado.md
       - "0025 – Armazenamento no Aparelho e API sem Estado": adr/0025-armazenamento-no-aparelho-e-api-sem-estado.md
       - "0026 – Confirmação e Consulta de Documentos": adr/0026-confirmacao-e-consulta-de-documentos.md

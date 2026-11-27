@@ -205,7 +205,7 @@ async def test_vision_blocked_without_sanitizer():
 
 
 class SyntheticSanitizer:
-    def sanitize(self, image):
+    def sanitize(self, image, words=None):
         return image
 
 

@@ -189,6 +189,7 @@ async def upload_statement(
             },
             "statement": result["statement"].model_dump(mode="json"),  # type: ignore[attr-defined]
             "auto_transfers": result["auto_transfers"],
+            "documents_reconciled": result["documents_reconciled"],
             "transfer_suggestions": result["suggestion_count"],
         }
     elif lower.endswith(".pdf"):
@@ -216,6 +217,7 @@ async def upload_statement(
             "account": None,
             "statement": None,
             "auto_transfers": 0,
+            "documents_reconciled": 0,
             "transfer_suggestions": 0,
         }
     else:

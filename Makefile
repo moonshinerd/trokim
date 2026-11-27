@@ -19,6 +19,8 @@ help:
 	@echo "  make document-images     - Recria os 40 documentos e o manifesto multimodal (#90)"
 	@echo "  make validar-banco ARQUIVO=<arquivo> - Confere um arquivo real de banco e imprime só totais (ADR 0022)"
 	@echo "  make document-calibrate RUN=<id> - Calibra e ensaia com OCR real (#88/#90)"
+	@echo "  make document-compare RUN=<id> ENGINE=<motor> [MODEL=<modelo>] - Compara leitura (#98)"
+	@echo "  make chat-dados-run RUN=<id> MODEL=<modelo> - Avalia chat com contas e dívidas (#98)"
 	@echo "  make comparison-validate - Valida integridade do material comparativo (Semana 3)"
 	@echo "  make comparison-eval     - Executa o benchmark comparativo das 3 abordagens (Semana 3)"
 	@echo "  make comparison-run RUN=<data>-<modelo> MODEL=<modelo litellm> - Execução completa e registrada"
@@ -89,13 +91,22 @@ ingest:
 synthetic-data:
 	cd api && uv run python ../research/synthetic_data/generate_datasets.py
 
-.PHONY: validar-banco document-images document-calibrate
+.PHONY: validar-banco document-images document-calibrate document-compare chat-dados-run
 validar-banco:
 	@test -n "$(ARQUIVO)" || (echo "uso: make validar-banco ARQUIVO=/caminho/do/arquivo"; exit 2)
 	cd api && uv run python -m scripts.validar_banco "$(abspath $(ARQUIVO))"
 
 document-images:
 	cd api && uv run python ../research/synthetic_data/generate_document_images.py
+
+document-compare:
+	@test -n "$(RUN)" -a -n "$(ENGINE)" || { echo "Uso: make document-compare RUN=<id> ENGINE=ocr|ocr+vlm-local|ocr+vlm-remoto [MODEL=<modelo>]"; exit 1; }
+	cd api && uv run --extra documents --extra ocr python ../research/rag_benchmark/compare_document_engines.py \
+		--run "$(RUN)" --engine "$(ENGINE)" $(if $(MODEL),--model "$(MODEL)") $(if $(PRICE),--price $(PRICE))
+
+chat-dados-run:
+	@test -n "$(RUN)" -a -n "$(MODEL)" || { echo "Uso: make chat-dados-run RUN=<id> MODEL=<modelo>"; exit 1; }
+	cd api && uv run python ../research/rag_benchmark/run_chat_dados.py --run "$(RUN)" --model "$(MODEL)"
 
 document-calibrate:
 	@test -n "$(RUN)" || { echo "Uso: make document-calibrate RUN=2026-11-23-rapidocr-v1"; exit 1; }

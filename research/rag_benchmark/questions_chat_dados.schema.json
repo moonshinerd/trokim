@@ -1,0 +1,35 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "array", "minItems": 20, "maxItems": 20,
+  "items": {
+    "type": "object", "additionalProperties": false,
+    "required": ["id", "topic", "question", "filters", "behavior", "recipe", "expected"],
+    "properties": {
+      "id": {"type": "string", "pattern": "^C(0[1-9]|1[0-9]|20)$"},
+      "topic": {"enum": ["conta", "dono", "periodo", "fatura", "parcelas", "dividas", "comparacao", "periodo_ambiguo", "dado_ausente"]},
+      "question": {"type": "string", "minLength": 1, "maxLength": 1000},
+      "behavior": {"enum": ["answer", "clarify", "abstain"]},
+      "filters": {"type": "object", "additionalProperties": false, "properties": {
+        "account_id": {"type": "string", "minLength": 1},
+        "owner": {"enum": ["pessoal", "empresa", "todas"]},
+        "period": {"type": "string", "minLength": 1}
+      }},
+      "recipe": {"type": "object", "additionalProperties": false, "required": ["kind"], "properties": {
+        "kind": {"enum": ["none", "summary", "statement", "comparison", "installments", "debt"]},
+        "account": {"type": "string"}, "owner": {"enum": ["pessoal", "empresa"]},
+        "month": {"type": "string", "pattern": "^2026-(09|10|11)$"},
+        "months": {"type": "array", "minItems": 2, "maxItems": 2, "items": {"type": "string", "pattern": "^2026-(09|10|11)$"}},
+        "key": {"enum": ["statement_aberta", "statement_fechada"]}
+      }},
+      "expected": {"type": "array", "items": {"type": "object", "additionalProperties": false,
+        "required": ["key", "value", "unit"], "properties": {
+          "key": {"type": "string", "minLength": 1}, "value": {"type": "number"}, "unit": {"const": "BRL"}
+        }}}
+    },
+    "allOf": [
+      {"if": {"properties": {"behavior": {"const": "answer"}}}, "then": {"properties": {"expected": {"minItems": 1}}}, "else": {"properties": {"expected": {"maxItems": 0}, "recipe": {"properties": {"kind": {"const": "none"}}}}}},
+      {"if": {"properties": {"recipe": {"properties": {"kind": {"const": "comparison"}}}}}, "then": {"properties": {"recipe": {"required": ["months"]}}}},
+      {"if": {"properties": {"recipe": {"properties": {"kind": {"const": "statement"}}}}}, "then": {"properties": {"recipe": {"required": ["account", "month", "key"]}}}}
+    ]
+  }
+}

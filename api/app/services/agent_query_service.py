@@ -3,22 +3,46 @@
 import re
 import time
 from collections.abc import Sequence
+from datetime import datetime
+from zoneinfo import ZoneInfo
 
 from app.domain.agents import (
     AgentContext,
     AgentName,
     AgentStep,
     CalculationResult,
+    FinancialFilters,
     MultiAgentResponse,
     MultiAgentStatus,
     StepStatus,
 )
-from app.domain.models import EvidenceChunk, Transaction, TransactionOrigin, TransactionType
+from app.domain.models import (
+    CONFIRMED_ORIGINS,
+    EvidenceChunk,
+    Transaction,
+    TransactionOrigin,
+    TransactionType,
+)
 from app.services.agents.orchestrator import REJECTION_MESSAGE, Orchestrator
 from app.services.calculation_service import CalculationService
+from app.services.financial_chat_resolution import resolve_chat_selection
+from app.services.financial_query_service import Clarification
+from app.services.library_service import Library
 from app.services.statement_profiles import normalize_text
 
 DOCUMENT_ORIGIN = "Lido de foto ou PDF, confirmado por você."
+MANUAL_ORIGIN = "Digitado por você na tela de documento, sem leitura de foto ou PDF."
+MIXED_ORIGIN = "Parte lida de foto ou PDF e parte digitada por você; tudo confirmado por você."
+
+
+def origin_text(transactions: Sequence[Transaction]) -> str:
+    """Como o chat descreve a procedência: lido de documento, digitado à mão ou os dois (#117)."""
+    origins = {tx.origin for tx in transactions}
+    if origins == {TransactionOrigin.MANUAL}:
+        return MANUAL_ORIGIN
+    if TransactionOrigin.MANUAL in origins:
+        return MIXED_ORIGIN
+    return DOCUMENT_ORIGIN
 
 
 def _select_transactions(
@@ -32,7 +56,7 @@ def _select_transactions(
             (
                 tx
                 for tx in transactions
-                if tx.uid == document_uid and tx.origin == TransactionOrigin.DOCUMENT
+                if tx.uid == document_uid and tx.origin in CONFIRMED_ORIGINS
             ),
             None,
         )
@@ -46,7 +70,7 @@ def _select_transactions(
         tx
         for tx in transactions
         if normalized
-        and tx.origin == TransactionOrigin.DOCUMENT
+        and tx.origin in CONFIRMED_ORIGINS
         and tx.type == TransactionType.DEBIT
         and tx.counts_in_totals
         and normalize_text(tx.merchant or tx.description) == normalized
@@ -62,13 +86,63 @@ class AgentQueryService:
         self.orchestrator = orchestrator
 
     async def run(
-        self, question: str, transactions: Sequence[Transaction], document_uid: str | None = None
+        self,
+        question: str,
+        transactions: Sequence[Transaction] = (),
+        document_uid: str | None = None,
+        library: Library | None = None,
+        filters: FinancialFilters | None = None,
     ) -> MultiAgentResponse:
         started = time.perf_counter()
+        transactions = library.transactions if library is not None else transactions
         selected = _select_transactions(question, transactions, document_uid)
         if selected is None:
-            return await self.orchestrator.run(question, transactions=transactions)
-        documents = [tx.uid for tx in selected if tx.origin == TransactionOrigin.DOCUMENT]
+            return await self.orchestrator.run(
+                question,
+                transactions=transactions,
+                library=library,
+                filters=filters,
+            )
+        if filters and any(filters.model_dump().values()):
+            snapshot = library or Library(transactions=list(transactions))
+            selection = resolve_chat_selection(
+                question,
+                filters,
+                snapshot,
+                datetime.now(ZoneInfo("America/Sao_Paulo")).date(),
+            )
+            reason = None
+            if isinstance(selection, Clarification):
+                reason = selection.question
+            elif len(selection.periods) > 1 or any(p.start is None for p in selection.periods):
+                reason = "Para um documento confirmado, use um mês ou intervalo de datas no filtro."
+            else:
+                allowed = {tx.uid for tx in selection.library.transactions}
+                period = selection.periods[0] if selection.periods else None
+                selected = [
+                    tx
+                    for tx in selected
+                    if tx.uid in allowed
+                    and (period is None or period.start <= tx.date <= period.end)
+                ]
+                if not selected:
+                    reason = (
+                        "Não há documento confirmado desse estabelecimento no recorte selecionado."
+                    )
+            if reason:
+                return MultiAgentResponse(
+                    query=question,
+                    status=MultiAgentStatus.ABSTAINED,
+                    answer=reason,
+                    steps=[
+                        AgentStep(
+                            agent=AgentName.ANALYSIS,
+                            status=StepStatus.ABSTAINED,
+                            summary="Documento ausente ou filtro ambíguo.",
+                        )
+                    ],
+                )
+        documents = [tx.uid for tx in selected if tx.origin in CONFIRMED_ORIGINS]
         if not documents:
             return MultiAgentResponse(
                 query=question,
@@ -94,12 +168,13 @@ class AgentQueryService:
             source="CalculationService.calculate_summary",
         )
         references = ", ".join(documents)
+        origin = origin_text(selected)
         evidence = EvidenceChunk(
             id="confirmed_documents",
             source_name="Biblioteca local",
             document_title="Lançamentos confirmados",
             section="Origem dos dados",
-            content=f"Lançamento(s): {references}. {DOCUMENT_ORIGIN}",
+            content=f"Lançamento(s): {references}. {origin}",
         )
         ctx = AgentContext(
             question=question,
@@ -107,13 +182,13 @@ class AgentQueryService:
             calculations=[calculation],
             evidences=[evidence],
             draft_answer=f"Gasto no estabelecimento: R$ {formatted}. "
-            + f"Lançamento(s): {references}. {DOCUMENT_ORIGIN} [1]",
+            + f"Lançamento(s): {references}. {origin} [1]",
         )
         steps = [
             AgentStep(
                 agent=AgentName.ANALYSIS,
                 status=StepStatus.OK,
-                summary=DOCUMENT_ORIGIN,
+                summary=origin,
                 duration_ms=max(1, int((time.perf_counter() - started) * 1000)),
                 detail={
                     "document_uids": documents,
