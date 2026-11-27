@@ -32,9 +32,24 @@ class _PendingRepository implements DocumentRepository {
   int calls = 0;
 
   @override
-  Future<ExtractedDocument> extract(String filename, List<int> bytes) {
+  Future<ExtractedDocument> extract(
+    String filename,
+    List<int> bytes, {
+    String engine = 'ocr',
+    bool allowRemote = false,
+  }) {
     calls++;
     return result.future;
+  }
+
+  @override
+  Future<DocumentConfirmation> confirm(ReviewedDocument reviewed) async {
+    return const DocumentConfirmation(
+      outcome: 'criado',
+      uid: 'doc-sintetico',
+      accountId: 'documentos',
+      message: 'Lançamento criado.',
+    );
   }
 }
 

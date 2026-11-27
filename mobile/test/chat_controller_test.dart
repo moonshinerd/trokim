@@ -6,6 +6,7 @@ import 'package:http/http.dart' as http;
 import 'package:http/testing.dart';
 import 'package:trokim/core/network/api_client.dart';
 import 'package:trokim/features/chat_assistant/data/chat_repository.dart';
+import 'package:trokim/features/chat_assistant/domain/chat_models.dart';
 import 'package:trokim/features/chat_assistant/presentation/chat_controller.dart';
 
 import 'support/abortable_client.dart';
@@ -162,6 +163,85 @@ void main() {
     await controller.send('Segunda');
     await controller.retry();
     expect(questions, ['Primeira', 'Segunda', 'Segunda']);
+  });
+
+  Map<String, dynamic> agentPayload() => <String, dynamic>{
+    'query': 'Quanto gastei?',
+    'status': 'abstained',
+    'answer': 'Sem dados no recorte.',
+    'model': null,
+    'evidences': <dynamic>[],
+    'calculations': <dynamic>[],
+    'validation_issues': <dynamic>[],
+    'steps': [
+      {
+        'agent': 'analysis',
+        'status': 'abstained',
+        'summary': 'Sem lançamentos no recorte.',
+        'duration_ms': 1,
+      },
+    ],
+    'total_ms': 1,
+  };
+
+  test('filtros de conta, dono e período viajam no modo multiagente', () async {
+    var bodies = 0;
+    final repository = ChatRepository(
+      apiClient: ApiClient(
+        client: abortableClient((request) async {
+          bodies++;
+          expect(request.url.path, '/v1/agents/ask');
+          expect(jsonDecode(request.body), {
+            'message': 'Quanto gastei?',
+            'owner': 'empresa',
+            'period': '2026-10',
+          });
+          return http.Response.bytes(
+            utf8.encode(jsonEncode(agentPayload())),
+            200,
+          );
+        }),
+      ),
+    );
+    final controller = ChatController(repository: repository, multiAgent: true);
+    addTearDown(repository.close);
+    addTearDown(controller.dispose);
+    controller.filters = const ChatFilters(owner: 'empresa', period: '2026-10');
+    await controller.send('Quanto gastei?');
+    expect(bodies, 1);
+    expect(controller.messages.last.text, 'Sem dados no recorte.');
+  });
+
+  test('sem dados importados orienta a importação e não pergunta', () async {
+    var requests = 0;
+    final controller = controllerFor((_) async {
+      requests++;
+      return response();
+    });
+    controller.hasImportedData = () => false;
+    await controller.send('Quanto gastei este mês?');
+    expect(requests, 0);
+    expect(controller.messages.length, 3);
+    expect(controller.messages[1].isUser, isTrue);
+    final guide = controller.messages.last;
+    expect(guide.isUser, isFalse);
+    expect(guide.isImportGuide, isTrue);
+    expect(guide.isError, isFalse);
+    expect(guide.text.toLowerCase(), contains('importe'));
+    await controller.retry();
+    expect(requests, 0);
+  });
+
+  test('volta a perguntar quando os dados chegam', () async {
+    var imported = false;
+    final controller = controllerFor((_) async => response());
+    controller.hasImportedData = () => imported;
+    await controller.send('Reserva?');
+    expect(controller.messages.last.isImportGuide, isTrue);
+    imported = true;
+    await controller.send('Reserva de novo?');
+    expect(controller.messages.last.text, 'Resposta oficial');
+    expect(controller.messages.last.isImportGuide, isFalse);
   });
 
   test('identifica mensagem de abstenção', () async {

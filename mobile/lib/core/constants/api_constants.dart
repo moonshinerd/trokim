@@ -40,5 +40,8 @@ class ApiConstants {
   static const String chatGenerateEndpoint = '/chat/generate';
   static const String chatTitleEndpoint = '/chat/title';
   static const String agentsAskEndpoint = '/agents/ask';
+  static const String documentsEnginesEndpoint = '/documents/engines';
+  static const String documentsExtractEndpoint = '/documents/extract';
+  static const String documentsConfirmEndpoint = '/documents/confirm';
   static const String budgetsCompareEndpoint = '/budgets/compare';
 }

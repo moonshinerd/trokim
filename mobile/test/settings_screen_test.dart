@@ -10,6 +10,7 @@ import 'package:trokim/features/settings/presentation/settings_screen.dart';
 Future<SettingsController> openSettings(
   WidgetTester tester, {
   http.Client? client,
+  http.Client? documentClient,
 }) async {
   final settings = SettingsController.memory();
   addTearDown(settings.dispose);
@@ -17,7 +18,11 @@ Future<SettingsController> openSettings(
     SettingsScope(
       controller: settings,
       child: MaterialApp(
-        home: SettingsScreen(controller: settings, client: client),
+        home: SettingsScreen(
+          controller: settings,
+          client: client,
+          documentClient: documentClient,
+        ),
       ),
     ),
   );
@@ -231,5 +236,77 @@ void main() {
         expect(ApiConstants.normalizeBaseUrl(bad), isNull, reason: bad);
       }
     });
+  });
+
+  group('motor de leitura de documentos e consentimento remoto (RNF12)', () {
+    testWidgets('quando visão não está disponível, mostra apenas o OCR local', (
+      tester,
+    ) async {
+      await openSettings(
+        tester,
+        documentClient: MockClient(
+          (_) async => http.Response('{"ocr":"rapidocr","vision":null}', 200),
+        ),
+      );
+      await _scrollTo(tester, 'OCR local (padrão)');
+      expect(find.text('OCR local (padrão)'), findsOneWidget);
+      expect(
+        find.text('Só o OCR local está disponível nesta API.'),
+        findsOneWidget,
+      );
+      expect(find.text('Modelo de visão remoto'), findsNothing);
+    });
+
+    testWidgets(
+      'visão remota exige consentimento explícito avisando que a imagem sai do aparelho',
+      (tester) async {
+        final settings = await openSettings(
+          tester,
+          documentClient: MockClient(
+            (_) async => http.Response(
+              '{"ocr":"rapidocr","vision":{"model":"ollama/vision-test","remote":true}}',
+              200,
+            ),
+          ),
+        );
+        await _scrollTo(tester, 'Modelo de visão remoto');
+        expect(settings.documentEngine, SettingsController.ocrEngine);
+        expect(settings.remoteConsent, isFalse);
+
+        // Tocar em modelo de visão remoto abre o diálogo de consentimento
+        await tester.tap(find.text('Modelo de visão remoto'));
+        await tester.pumpAndSettle();
+
+        expect(
+          find.text('Enviar documentos a um provedor remoto?'),
+          findsOneWidget,
+        );
+        expect(
+          find.textContaining('a imagem do documento sai do aparelho'),
+          findsOneWidget,
+        );
+
+        // Cancelar recusa o envio
+        await tester.tap(find.text('Cancelar'));
+        await tester.pumpAndSettle();
+        expect(settings.documentEngine, SettingsController.ocrEngine);
+        expect(settings.remoteConsent, isFalse);
+
+        // Tocar novamente e aceitar salva o consentimento
+        await tester.tap(find.text('Modelo de visão remoto'));
+        await tester.pumpAndSettle();
+        await tester.tap(find.text('Concordo com o envio'));
+        await tester.pumpAndSettle();
+
+        expect(settings.documentEngine, SettingsController.visionEngine);
+        expect(settings.remoteConsent, isTrue);
+
+        // Desligar o switch de consentimento volta para OCR local
+        await tester.tap(find.byType(Switch).last);
+        await tester.pumpAndSettle();
+        expect(settings.remoteConsent, isFalse);
+        expect(settings.documentEngine, SettingsController.ocrEngine);
+      },
+    );
   });
 }

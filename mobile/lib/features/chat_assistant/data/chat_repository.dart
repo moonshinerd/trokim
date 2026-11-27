@@ -78,9 +78,23 @@ class ChatRepository {
     }
   }
 
-  Future<MultiAgentResponse> askAgents(String message) async {
+  Future<MultiAgentResponse> askAgents(
+    String message, {
+    String? accountId,
+    String? owner,
+    String? period,
+    String? documentUid,
+  }) async {
     try {
-      return MultiAgentResponse.fromJson(await _apiClient.askAgents(message));
+      return MultiAgentResponse.fromJson(
+        await _apiClient.askAgents(
+          message,
+          accountId: accountId,
+          owner: owner,
+          period: period,
+          documentUid: documentUid,
+        ),
+      );
     } on TimeoutException {
       throw const ChatException(
         'Os agentes demoraram para responder. Tente novamente.',

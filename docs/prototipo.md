@@ -28,8 +28,21 @@ O iframe usa um caminho relativo compatível com a página publicada em `/protot
 ## Captura e revisão de documentos no app
 
 O aplicativo também oferece **Fotografar ou escolher documento** em **Extratos**
-e no primeiro passo de **Importar extrato**. Esse fluxo ainda não é interativo
-no protótipo estático: a [seção de documentos do Guia de Uso](guia-de-uso.md#810-fotografar-ou-escolher-documento)
-mostra a captura sintética da tela e descreve prévia, confiança, correções,
-bloqueios e descarte. No app, a leitura desta fase é simulada, sem criar
-lançamentos; a integração real pertence à issue #97.
+e no primeiro passo de **Importar extrato**. Esse fluxo não é interativo no
+protótipo estático: a
+[seção de documentos do Guia de Uso](guia-de-uso.md#810-fotografar-ou-escolher-documento)
+descreve prévia, leitura pela API (OCR local por padrão, visão só quando
+disponível e com consentimento), confiança, correções, bloqueios, trilha do
+motor, confirmação com `origin` e descarte. No app, **Confirmar** cria os
+lançamentos na biblioteca; documento ilegível pede nova foto e nada é criado.
+
+## Chat com contexto das contas
+
+O **Assistente** do protótipo mostra uma conversa com fonte institucional. No
+app, o modo multiagente adiciona acima da conversa os seletores de **conta e
+dono** (Tudo, Pessoal, Empresas ou uma conta) e de **período** (mês, fatura
+aberta ou fechada), além dos cartões de cálculo com link para os lançamentos de
+origem, das perguntas sugeridas pelos dados importados e do estado vazio que
+leva à importação — veja
+[Conversar com o contexto das contas](guia-de-uso.md#811-conversar-com-o-contexto-das-contas).
+Esses controles não existem na demonstração estática.

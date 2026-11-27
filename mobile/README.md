@@ -21,9 +21,9 @@ mobile/
 │   └── features/
 │       ├── dashboard/        # Resumo calculado pela API (receitas, despesas, poupança e categorias)
 │       ├── transactions/     # Importação por seletor de arquivos e lista de extratos OFX/PDF
-│       ├── documents/        # Captura, prévia e revisão de campos de comprovantes (fase 1 com repositório falso)
+│       ├── documents/        # Captura, prévia, leitura pela API e revisão de comprovantes (extract/confirm, motor e trilha)
 │       ├── finance/          # Modelos, repositório e controlador do resumo e da importação
-│       ├── chat_assistant/   # Chat com resposta fundamentada, fontes clicáveis e histórico de conversas
+│       ├── chat_assistant/   # Chat com contexto (conta, dono, período), perguntas sugeridas, cards de cálculo e histórico no aparelho
 │       ├── agents/           # Contratos Dart estritos para resposta e trilha multiagente
 │       ├── import_guide/     # Fluxo guiado de importação (banco, dono, tipo, tutoriais, detector e resumo)
 │       ├── categories/       # Revisão das categorias dos gastos (regra por estabelecimento)
@@ -86,6 +86,37 @@ trilha tipada dos agentes, duração, cálculos e validações. O botão **Como
 cheguei a essa resposta** abre as etapas e explica abstenções/rejeições em
 linguagem simples. Desligado, o fluxo configurado de chat continua igual.
 
+Com o modo multiagente, o chat ganha o **contexto das contas**: dois seletores
+acima da conversa escolhem a conta e o dono (**Tudo**, **Pessoal**, **Empresas**
+ou uma conta de `GET /v1/accounts`) e o período (mês, fatura aberta ou fatura
+fechada), enviados como `account_id`, `owner` e `period` no corpo do `ask`.
+A resposta exibe **cartões de cálculo** com os números de `calculations` e link
+para os lançamentos de origem, e **perguntas sugeridas** montadas a partir dos
+dados importados. Sem nenhum dado importado, o chat mostra o **estado vazio**:
+explica o que importar e oferece o atalho para o fluxo de importação, em vez de
+enviar a pergunta.
+
+### Importação por documento (foto ou PDF)
+
+**Extratos → Fotografar ou escolher documento** (também no primeiro passo de
+**Importar extrato**) abre a captura. A câmera só é aberta depois do toque; a
+seleção de imagem e PDF usa os seletores do sistema. **Ler documento** envia o
+arquivo a `POST /v1/documents/extract` com o `engine` escolhido em Ajustes e
+`allow_remote` — este último é sempre `false`, a menos que exista
+**consentimento explícito salvo** para o provedor remoto (o texto do
+consentimento avisa que a imagem sai do aparelho, RNF12). As opções de motor
+vêm de `GET /v1/documents/engines`: o OCR local (padrão) sempre aparece; o
+modelo de visão só aparece quando a API o oferece.
+
+A revisão mostra os campos com confiança e a trilha da leitura (`document.engine`
+e `steps`, por exemplo "lido por OCR local"). **Confirmar** envia
+`POST /v1/documents/confirm` com `origin: "documento"` (campos revisados) ou
+`"manual"` (digitados após abstenção). Abstenção por documento ilegível pede
+nova foto e nada é criado. Erros `403`, `413`, `415`, `422`, `503` e falha de
+rede viram mensagem clara com **Tentar novamente**, que reenvia o mesmo arquivo
+(`detail` dos documentos é o objeto `{code, message}`, tratado em
+`ApiClient._detailOf`).
+
 ### Importação guiada e bancos suportados (RF29, ADR 0022)
 
 **Extratos → Importar extrato** abre a tela de **Bancos suportados** (`features/import_guide/`):
@@ -95,10 +126,10 @@ Os bancos atualmente suportados são:
 
 - **Nubank (Validado):** OFX para cartão e conta corrente, cobrindo pessoa física e Nubank Empresas.
 - **Banco do Brasil (Validado):** fatura Ourocard em PDF pelo app do cartão e extrato da conta corrente em OFX.
-- **PicPay (Validado):** extrato da carteira e fatura do PicPay Card em PDF (testado com arquivos reais).
-- **Mercado Pago (Validado):** extrato da conta e fatura do cartão em PDF (testado com arquivos reais).
+- **PicPay (Experimental):** extrato da carteira e fatura do PicPay Card em PDF, baseado em layouts públicos (sem arquivo real para conciliar).
+- **Mercado Pago (Experimental):** extrato da conta em PDF (fatura do cartão ainda não), baseado em layout público (sem arquivo real para conciliar).
 - **Banco Inter (Experimental):** extrato em OFX e fatura em PDF, baseado na ajuda oficial (não testado em conta real).
-- **C6 Bank (Experimental):** extrato em OFX e fatura em PDF, baseado na ajuda oficial (não testado em conta real).
+- **C6 Bank (Experimental):** extrato em OFX e fatura em CSV (separador `;`), baseado na ajuda oficial (não testado em conta real).
 - **Itaú (Experimental):** extrato em OFX e fatura em PDF, baseado na ajuda oficial (não testado em conta real).
 
 Em toda tela há o atalho **Pular tutorial**, e na tela inicial de bancos o botão
@@ -203,8 +234,10 @@ Na importação por documento, a câmera só é aberta depois que a pessoa toca 
 câmera e os seletores de imagem/PDF são abertos por intents e seletores do
 sistema, sem permissão ampla de armazenamento no app. A foto fica no dispositivo
 no cache temporário criado pelo seletor; o app não a adiciona à biblioteca.
-A leitura é simulada e **Confirmar** apenas devolve os campos revisados, sem
-criar lançamentos. A extração real e a persistência ficam para a issue #97.
+O arquivo é enviado à sua API para a leitura (`extract`) e os lançamentos só são
+criados depois da revisão humana (`confirm`); provedor remoto de visão exige
+consentimento salvo (veja
+[Importação por documento](#importação-por-documento-foto-ou-pdf)).
 
 Conecte o celular e o computador à mesma rede confiável. Como `make api-run`
 escuta apenas em `127.0.0.1`, para permitir acesso pela rede inicie o backend
@@ -229,8 +262,9 @@ uma porta diferente se 8000 estiver ocupada.
 ## Chat e tratamento de falhas
 
 A funcionalidade separa modelos em `domain/`, acesso à API em `data/` e estado/
-interface em `presentation/`. O controlador mantém o histórico durante a sessão,
-impede envios simultâneos e preserva as boas-vindas. Mensagens podem ter até 1000
+interface em `presentation/`. O controlador mantém as conversas carregadas do
+armazenamento do aparelho (`ConversationStore`), impede envios simultâneos e
+preserva as boas-vindas. Mensagens podem ter até 1000
 caracteres. Respostas fundamentadas exibem cartões expansíveis com instituição,
 título, relevância, trecho recuperado e link para o documento oficial. O controle
 **Auditoria** mostra a origem da resposta com RAG e explica por que não apresenta
@@ -239,8 +273,12 @@ rápidas para temas permitidos, sem cartões de evidência. Falha de conexão, t
 da geração ou erro HTTP geram mensagem amigável e a ação **Tentar novamente**,
 que repete a última pergunta com erro sem duplicar seu balão.
 
-O histórico existe apenas na sessão visual: cada requisição envia a pergunta
-atual, sem mensagens anteriores, extratos ou saldos. O modelo não realiza os
+O histórico de conversas fica no aparelho, em JSON nas preferências do app
+(`PrefsConversationStore`, SharedPreferences), com no máximo 200 conversas e
+título dado pelo LLM local; sem o armazenamento, o chat funciona só em memória.
+Cada requisição envia a pergunta atual (e, no modo multiagente, os filtros de
+conta, dono e período escolhidos), sem mensagens anteriores, extratos ou saldos
+no corpo — os dados consultados já estão na biblioteca da API. O modelo não realiza os
 cálculos financeiros. A resposta é exibida integralmente após a geração, sem
 streaming. `grounded` indica uso de evidências recuperadas, sem certificar cada
 afirmação ou citação. Abrir um link oficial no navegador é um acesso externo
@@ -277,7 +315,11 @@ de vida do controlador, cartões expansíveis, abertura de URL, comparação de
 auditoria, abstenção, perguntas rápidas, carregamento e nova tentativa.
 O fluxo multiagente também cobre resposta aprovada, abstenção, rejeição,
 payload inválido, falha de rede, exibição da trilha e persistência do
-interruptor em Ajustes.
+interruptor em Ajustes. O contrato de documentos (motores, `extract` com
+`engine`/`allow_remote` e `confirm` com `origin`, além dos erros `{code,
+message}`) é coberto em `test/api_documents_contract_test.dart`; testes de
+widget cobrem os filtros de contexto, o estado vazio do chat, a revisão e a
+nova tentativa de erros de documento e o consentimento remoto.
 Testes e análise podem ser executados sem instalar plataformas ou aceitar
 licenças do SDK. O build do APK exige:
 

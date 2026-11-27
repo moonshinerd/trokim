@@ -4,6 +4,7 @@ import 'package:material_ui/material_ui.dart';
 import 'package:http/http.dart' as http;
 
 import '../../../core/constants/api_constants.dart';
+import '../../../core/network/api_client.dart';
 import '../../../core/settings/settings_controller.dart';
 import '../../../core/theme/app_theme.dart';
 import '../../../core/widgets/app_motion.dart';
@@ -19,6 +20,7 @@ class SettingsScreen extends StatelessWidget {
     super.key,
     this.controller,
     this.client,
+    this.documentClient,
     this.saveBackup,
     this.pickBackup,
   });
@@ -26,6 +28,7 @@ class SettingsScreen extends StatelessWidget {
   /// Injetáveis para teste; em produção usa o escopo do app.
   final SettingsController? controller;
   final http.Client? client;
+  final http.Client? documentClient;
   final BackupSaver? saveBackup;
   final BackupPicker? pickBackup;
 
@@ -116,8 +119,13 @@ class SettingsScreen extends StatelessWidget {
                   pickBackup: pickBackup,
                 ),
               ),
-              const _Section(
+              _Section(
                 index: 6,
+                title: 'Leitura de documentos',
+                child: _DocumentEngineCard(client: documentClient),
+              ),
+              const _Section(
+                index: 7,
                 title: 'Privacidade',
                 child: _InfoRow(
                   icon: Icons.lock_rounded,
@@ -127,7 +135,7 @@ class SettingsScreen extends StatelessWidget {
                       'apenas explica, com base em fontes oficiais.',
                 ),
               ),
-              const Reveal(index: 7, child: _About()),
+              const Reveal(index: 8, child: _About()),
             ],
           ),
         ),
@@ -343,6 +351,243 @@ class _InfoRow extends StatelessWidget {
       ],
     ),
   );
+}
+
+class _VisionEngine {
+  const _VisionEngine({required this.model, required this.remote});
+  final String model;
+  final bool remote;
+}
+
+class _DocumentEngineCard extends StatefulWidget {
+  const _DocumentEngineCard({this.client});
+  final http.Client? client;
+
+  @override
+  State<_DocumentEngineCard> createState() => _DocumentEngineCardState();
+}
+
+class _DocumentEngineCardState extends State<_DocumentEngineCard> {
+  bool _loading = true;
+  bool _failed = false;
+  String _ocr = 'OCR local';
+  _VisionEngine? _vision;
+  String? _loadedFrom;
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    final url = SettingsScope.of(context).apiBaseUrl;
+    if (url != _loadedFrom) {
+      _loadedFrom = url;
+      _loading = true;
+      _failed = false;
+      _fetch();
+    }
+  }
+
+  void _load() {
+    setState(() {
+      _loading = true;
+      _failed = false;
+    });
+    _fetch();
+  }
+
+  Future<void> _fetch() async {
+    final settings = SettingsScope.read(context) ?? SettingsController.memory();
+    final api = ApiClient(
+      baseUrlProvider: () => settings.apiBaseUrl,
+      client: widget.client,
+    );
+    try {
+      final engines = await api.getDocumentEngines();
+      if (!mounted) return;
+      final vision = engines['vision'];
+      setState(() {
+        _loading = false;
+        _ocr = engines['ocr']?.toString() ?? 'OCR local';
+        _vision = vision is Map
+            ? _VisionEngine(
+                model: vision['model']?.toString() ?? 'modelo de visão',
+                remote: vision['remote'] == true,
+              )
+            : null;
+      });
+      if (_vision == null &&
+          settings.documentEngine == SettingsController.visionEngine) {
+        settings.setDocumentEngine(SettingsController.ocrEngine);
+      }
+    } on Object {
+      if (mounted) {
+        setState(() {
+          _loading = false;
+          _failed = true;
+          _vision = null;
+        });
+      }
+    } finally {
+      if (widget.client == null) api.close();
+    }
+  }
+
+  Future<bool> _askConsent(String model) async {
+    final accepted = await showDialog<bool>(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Enviar documentos a um provedor remoto?'),
+        content: Text(
+          'Com o modelo de visão remoto ($model), a imagem do documento sai '
+          'do aparelho e do computador da API e é enviada a um serviço de '
+          'terceiros para leitura. Ela pode conter nomes, valores e dados '
+          'bancários. O OCR local continua disponível sem esse envio, e você '
+          'pode retirar o consentimento aqui a qualquer momento.',
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context, false),
+            child: const Text('Cancelar'),
+          ),
+          FilledButton(
+            onPressed: () => Navigator.pop(context, true),
+            child: const Text('Concordo com o envio'),
+          ),
+        ],
+      ),
+    );
+    return accepted ?? false;
+  }
+
+  Future<void> _choose(SettingsController settings, String engine) async {
+    final vision = _vision;
+    if (engine == SettingsController.visionEngine) {
+      if (vision == null) return;
+      if (vision.remote && !settings.remoteConsent) {
+        if (!await _askConsent(vision.model)) return;
+        settings.setRemoteConsent(true);
+      }
+    }
+    settings.setDocumentEngine(engine);
+  }
+
+  Future<void> _setConsent(SettingsController settings, bool value) async {
+    if (!value) {
+      settings.setRemoteConsent(false);
+      if (_vision?.remote ?? true) {
+        settings.setDocumentEngine(SettingsController.ocrEngine);
+      }
+      return;
+    }
+    if (await _askConsent(_vision?.model ?? 'modelo de visão')) {
+      settings.setRemoteConsent(true);
+    }
+  }
+
+  Widget _option(
+    SettingsController settings, {
+    required String engine,
+    required String title,
+    required String subtitle,
+  }) {
+    final selected = settings.documentEngine == engine;
+    return ListTile(
+      contentPadding: const EdgeInsets.fromLTRB(16, 4, 12, 4),
+      leading: Icon(
+        selected ? Icons.radio_button_checked : Icons.radio_button_off,
+        color: selected ? context.colors.accent : context.colors.muted,
+      ),
+      title: Text(
+        title,
+        style: const TextStyle(fontWeight: FontWeight.w700, fontSize: 15),
+      ),
+      subtitle: Text(
+        subtitle,
+        style: TextStyle(fontSize: 12.5, color: context.colors.muted),
+      ),
+      selected: selected,
+      onTap: () => _choose(settings, engine),
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final settings = SettingsScope.of(context);
+    final vision = _vision;
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        _option(
+          settings,
+          engine: SettingsController.ocrEngine,
+          title: 'OCR local (padrão)',
+          subtitle:
+              'Lê fotos e PDFs no computador da API ($_ocr), sem enviar a '
+              'imagem a terceiros.',
+        ),
+        if (vision != null) ...[
+          Divider(height: 1, color: context.colors.line),
+          _option(
+            settings,
+            engine: SettingsController.visionEngine,
+            title: vision.remote
+                ? 'Modelo de visão remoto'
+                : 'Modelo de visão local',
+            subtitle: vision.remote
+                ? '${vision.model}. A imagem sai do aparelho e vai para um '
+                      'provedor remoto; exige seu consentimento.'
+                : '${vision.model}. Roda no computador da API, sem provedor '
+                      'remoto.',
+          ),
+          if (vision.remote) ...[
+            Divider(height: 1, color: context.colors.line),
+            _SwitchRow(
+              title: 'Permitir envio a provedor remoto',
+              subtitle: settings.remoteConsent
+                  ? 'Consentimento salvo neste aparelho. Desligue para '
+                        'voltar a ler só com o OCR local.'
+                  : 'Sem consentimento salvo, nenhuma imagem é enviada a '
+                        'provedor remoto.',
+              value: settings.remoteConsent,
+              onChanged: (value) => _setConsent(settings, value),
+            ),
+          ],
+        ],
+        Padding(
+          padding: const EdgeInsets.fromLTRB(16, 4, 16, 14),
+          child: _loading
+              ? Text(
+                  'Consultando os motores disponíveis…',
+                  style: TextStyle(fontSize: 12.5, color: context.colors.muted),
+                )
+              : _failed
+              ? Row(
+                  children: [
+                    Expanded(
+                      child: Text(
+                        'Não foi possível consultar os motores na API; o OCR '
+                        'local continua como padrão.',
+                        style: TextStyle(
+                          fontSize: 12.5,
+                          color: context.colors.muted,
+                        ),
+                      ),
+                    ),
+                    TextButton(
+                      onPressed: _load,
+                      child: const Text('Tentar de novo'),
+                    ),
+                  ],
+                )
+              : vision == null
+              ? Text(
+                  'Só o OCR local está disponível nesta API.',
+                  style: TextStyle(fontSize: 12.5, color: context.colors.muted),
+                )
+              : const SizedBox.shrink(),
+        ),
+      ],
+    );
+  }
 }
 
 enum _Probe { idle, loading, ok, fail }

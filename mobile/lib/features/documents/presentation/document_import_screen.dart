@@ -1,9 +1,13 @@
+import 'dart:async';
 import 'dart:typed_data';
 
 import 'package:file_picker/file_picker.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:image_picker/image_picker.dart';
 
+import '../../../core/network/api_client.dart';
+import '../../../core/settings/settings_controller.dart';
+import '../../finance/presentation/finance_controller.dart';
 import '../data/document_repository.dart';
 import '../domain/extracted_document.dart';
 import 'document_review_controller.dart';
@@ -38,14 +42,20 @@ class DocumentImportScreen extends StatefulWidget {
 }
 
 class _DocumentImportScreenState extends State<DocumentImportScreen> {
+  late final SettingsController _settings =
+      SettingsScope.read(context) ?? SettingsController.memory();
   late final controller = DocumentReviewController(
-    widget.repository ?? FakeDocumentRepository(),
+    widget.repository ??
+        ApiDocumentRepository(
+          () => ApiClient(baseUrlProvider: () => _settings.apiBaseUrl),
+        ),
   );
   final picker = ImagePicker();
   DocumentSelection? selection;
   final edits = <String, String>{};
   final removedLines = <int>{};
   bool _selecting = false;
+  bool _manual = false;
 
   @override
   void dispose() {
@@ -84,6 +94,7 @@ class _DocumentImportScreenState extends State<DocumentImportScreen> {
       if (selected == null || !mounted) return;
       setState(() {
         selection = selected;
+        _manual = false;
         edits.clear();
         removedLines.clear();
       });
@@ -134,11 +145,68 @@ class _DocumentImportScreenState extends State<DocumentImportScreen> {
       ScaffoldMessenger.of(context)
           .showSnackBar(SnackBar(content: Text(value)));
 
-  Future<void> _read() async {
+  Future<void> _read({bool localOnly = false}) async {
     final selected = selection;
     if (selected == null) return;
-    await controller.read(selected.name, selected.bytes);
+    final engine = localOnly
+        ? SettingsController.ocrEngine
+        : _settings.documentEngine;
+    await controller.read(
+      selected.name,
+      selected.bytes,
+      engine: engine,
+      allowRemote: !localOnly && _settings.allowRemoteDocuments,
+    );
   }
+
+  void _typeManually() {
+    if (controller.loading || controller.confirming) return;
+    setState(() {
+      _manual = true;
+      edits.clear();
+      removedLines.clear();
+    });
+    controller.reset();
+  }
+
+  Future<void> _confirm(ExtractedDocument doc, DocumentOrigin origin) async {
+    final reviewed = ReviewedDocument(
+      fields: doc.fields
+          .map(
+            (field) => ExtractedField(
+              key: field.key,
+              value: edits[field.key] ?? field.value,
+              confidence: field.confidence,
+              source: field.source,
+            ),
+          )
+          .toList(growable: false),
+      transactions: doc.transactions.indexed
+          .where((entry) => !removedLines.contains(entry.$1))
+          .map((entry) => entry.$2)
+          .toList(growable: false),
+      kind: doc.kind,
+      bank: doc.bank,
+      origin: origin,
+    );
+    final result = await controller.confirm(reviewed);
+    if (result == null || !mounted) return;
+    final finance = FinanceScope.read(context);
+    if (finance != null) {
+      await finance.saveToDevice();
+      unawaited(finance.load());
+    }
+    if (!mounted) return;
+    _message(result.message);
+    Navigator.pop(context, reviewed.withConfirmation(result));
+  }
+
+  String get _engineText =>
+      _settings.documentEngine == SettingsController.visionEngine
+      ? _settings.remoteConsent
+            ? 'Motor de leitura: modelo de visão. Com o consentimento salvo em Ajustes, a imagem pode sair do aparelho para o provedor remoto.'
+            : 'Motor de leitura: modelo de visão, sem envio a provedor remoto.'
+      : 'Motor de leitura: OCR local (escolha em Ajustes).';
 
   @override
   Widget build(BuildContext context) => Scaffold(
@@ -147,6 +215,12 @@ class _DocumentImportScreenState extends State<DocumentImportScreen> {
       animation: controller,
       builder: (context, _) {
         final doc = controller.document;
+        if (_manual) {
+          return _review(
+            const ExtractedDocument.manual(),
+            DocumentOrigin.manual,
+          );
+        }
         if (selection == null) return _entry();
         if (controller.loading) {
           return const Center(
@@ -158,7 +232,7 @@ class _DocumentImportScreenState extends State<DocumentImportScreen> {
         if (doc.abstained || doc.quality.quality == DocumentQuality.illegible) {
           return _unreadable(doc);
         }
-        return _review(doc);
+        return _review(doc, DocumentOrigin.document);
       },
     ),
   );
@@ -172,9 +246,11 @@ class _DocumentImportScreenState extends State<DocumentImportScreen> {
     ),
     const SizedBox(height: 12),
     const Text(
-      'Leitura simulada com dados sintéticos. Nenhum lançamento será salvo. Fotos podem permanecer no cache temporário do sistema.',
+      'O arquivo vai para a API do Trokim configurada em Ajustes. Nada é salvo antes de você revisar e confirmar. Fotos podem permanecer no cache temporário do sistema.',
       textAlign: TextAlign.center,
     ),
+    const SizedBox(height: 8),
+    Text(_engineText, textAlign: TextAlign.center),
     const SizedBox(height: 20),
     FilledButton.icon(
       onPressed: () =>
@@ -192,6 +268,11 @@ class _DocumentImportScreenState extends State<DocumentImportScreen> {
       onPressed: () => _select(widget.pdfPicker ?? _pdf),
       icon: const Icon(Icons.picture_as_pdf_outlined),
       label: const Text('Escolher PDF'),
+    ),
+    TextButton.icon(
+      onPressed: _typeManually,
+      icon: const Icon(Icons.edit_outlined),
+      label: const Text('Digitar os dados à mão'),
     ),
   ]);
 
@@ -223,8 +304,9 @@ class _DocumentImportScreenState extends State<DocumentImportScreen> {
         ),
       const SizedBox(height: 12),
       Text(selection!.name),
+      Text(_engineText),
       const Text(
-        'A leitura é simulada. Fotos podem permanecer no cache temporário do sistema; o app não as adiciona à biblioteca.',
+        'Fotos podem permanecer no cache temporário do sistema; o app não as adiciona à biblioteca.',
       ),
       const SizedBox(height: 16),
       OutlinedButton.icon(
@@ -237,9 +319,50 @@ class _DocumentImportScreenState extends State<DocumentImportScreen> {
   );
 
   Widget _error() => _status([
-    Text(controller.error!),
+    const Icon(Icons.error_outline, size: 52),
+    const SizedBox(height: 12),
+    Text(controller.error!, textAlign: TextAlign.center),
+    const SizedBox(height: 16),
     FilledButton(onPressed: _read, child: const Text('Tentar novamente')),
+    if (controller.needsConsent)
+      TextButton(
+        onPressed: () => _read(localOnly: true),
+        child: const Text('Ler com OCR local'),
+      ),
+    OutlinedButton.icon(
+      onPressed: _chooseAnother,
+      icon: const Icon(Icons.refresh),
+      label: const Text('Escolher outro documento'),
+    ),
+    TextButton(
+      onPressed: _typeManually,
+      child: const Text('Digitar os dados à mão'),
+    ),
   ]);
+
+  Widget _trail(ExtractedDocument doc) => Card(
+    margin: const EdgeInsets.symmetric(vertical: 12),
+    child: Padding(
+      padding: const EdgeInsets.all(12),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const Text(
+            'Como li este documento',
+            style: TextStyle(fontWeight: FontWeight.bold),
+          ),
+          const SizedBox(height: 4),
+          Text('Lido por ${engineLabel(doc.engine)}'),
+          ...doc.steps.map(
+            (step) => Text(
+              '${step.agentLabel}: ${step.summary} (${step.durationMs} ms)',
+            ),
+          ),
+          if (doc.totalMs > 0) Text('Tempo total: ${doc.totalMs} ms'),
+        ],
+      ),
+    ),
+  );
 
   Widget _unreadable(ExtractedDocument doc) => _status([
     const Icon(Icons.document_scanner_outlined, size: 52),
@@ -261,19 +384,27 @@ class _DocumentImportScreenState extends State<DocumentImportScreen> {
       icon: const Icon(Icons.camera_alt_outlined),
       label: const Text('Tirar outra foto'),
     ),
+    TextButton(
+      onPressed: _typeManually,
+      child: const Text('Digitar os dados à mão'),
+    ),
+    _trail(doc),
   ]);
 
-  Widget _review(ExtractedDocument doc) => ListView(
+  Widget _review(ExtractedDocument doc, DocumentOrigin origin) => ListView(
     padding: const EdgeInsets.all(20),
     children: [
-      const Text(
-        'Confira o que o Trokim leu',
-        style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+      Text(
+        origin == DocumentOrigin.manual
+            ? 'Digite os dados do lançamento'
+            : 'Confira o que o Trokim leu',
+        style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
       ),
       const SizedBox(height: 8),
       const Text(
-        'Revise e corrija os campos. Confirmar conclui esta simulação, sem salvar lançamentos.',
+        'Revise e corrija os campos. Ao confirmar, o lançamento é criado com os valores desta tela.',
       ),
+      if (origin == DocumentOrigin.document) _trail(doc),
       const SizedBox(height: 12),
       ...doc.fields.map((field) {
         final key = field.key;
@@ -338,35 +469,22 @@ class _DocumentImportScreenState extends State<DocumentImportScreen> {
               ),
             ),
       ],
+      if (controller.confirmError != null)
+        Padding(
+          padding: const EdgeInsets.symmetric(vertical: 8),
+          child: Text(
+            controller.confirmError!,
+            style: TextStyle(color: Theme.of(context).colorScheme.error),
+          ),
+        ),
       FilledButton(
-        onPressed: doc.canConfirmAfter(edits)
-            ? () {
-                _message('Revisão concluída. Nenhum lançamento foi salvo.');
-                Navigator.pop(
-                  context,
-                  ReviewedDocument(
-                    fields: doc.fields
-                        .map(
-                          (field) => ExtractedField(
-                            key: field.key,
-                            value: edits[field.key] ?? field.value,
-                            confidence: field.confidence,
-                            source: field.source,
-                          ),
-                        )
-                        .toList(growable: false),
-                    transactions: doc.transactions.indexed
-                        .where((entry) => !removedLines.contains(entry.$1))
-                        .map((entry) => entry.$2)
-                        .toList(growable: false),
-                  ),
-                );
-              }
+        onPressed: doc.canConfirmAfter(edits) && !controller.confirming
+            ? () => _confirm(doc, origin)
             : null,
-        child: const Text('Confirmar'),
+        child: Text(controller.confirming ? 'Salvando…' : 'Confirmar'),
       ),
       TextButton(
-        onPressed: () => Navigator.pop(context),
+        onPressed: controller.confirming ? null : () => Navigator.pop(context),
         child: const Text('Descartar'),
       ),
     ],

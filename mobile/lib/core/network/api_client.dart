@@ -344,10 +344,49 @@ class ApiClient {
     }, 'Tempo limite da geração excedido.');
   }
 
-  Future<Map<String, dynamic>> askAgents(String message) async =>
-      _postAbortable(ApiConstants.agentsAskEndpoint, {
-        'message': message,
-      }, 'Tempo limite dos agentes excedido.');
+  Future<Map<String, dynamic>> askAgents(
+    String message, {
+    String? accountId,
+    String? owner,
+    String? period,
+    String? documentUid,
+  }) async => _postAbortable(ApiConstants.agentsAskEndpoint, {
+    'message': message,
+    if (accountId != null) 'account_id': accountId,
+    if (owner != null) 'owner': owner,
+    if (period != null) 'period': period,
+    if (documentUid != null) 'document_uid': documentUid,
+  }, 'Tempo limite dos agentes excedido.');
+
+  Future<Map<String, dynamic>> getDocumentEngines() =>
+      _getMap(ApiConstants.documentsEnginesEndpoint);
+
+  Future<Map<String, dynamic>> extractDocument(
+    String filename,
+    List<int> bytes, {
+    String? accountId,
+    String engine = 'ocr',
+    bool allowRemote = false,
+  }) async {
+    final request =
+        http.MultipartRequest(
+            'POST',
+            Uri.parse('$baseUrl${ApiConstants.documentsExtractEndpoint}'),
+          )
+          ..files.add(
+            http.MultipartFile.fromBytes('file', bytes, filename: filename),
+          )
+          ..fields['engine'] = engine
+          ..fields['allow_remote'] = allowRemote ? 'true' : 'false';
+    if (accountId != null) request.fields['account_id'] = accountId;
+    final response = await http.Response.fromStream(
+      await _client.send(request).timeout(uploadTimeout),
+    );
+    return _decode(response);
+  }
+
+  Future<Map<String, dynamic>> confirmDocument(Map<String, Object?> body) =>
+      _sendJson('POST', ApiConstants.documentsConfirmEndpoint, body);
 
   Future<Map<String, dynamic>> _postAbortable(
     String endpoint,
@@ -395,8 +434,12 @@ class ApiClient {
   String? _detailOf(http.Response response) {
     try {
       final body = jsonDecode(utf8.decode(response.bodyBytes));
-      if (body is Map && body['detail'] is String) {
-        return body['detail'] as String;
+      if (body is Map) {
+        final detail = body['detail'];
+        if (detail is String) return detail;
+        if (detail is Map && detail['message'] is String) {
+          return detail['message'] as String;
+        }
       }
     } on Object {
       // Corpo que não é JSON: segue sem detalhe.
