@@ -42,8 +42,9 @@ nuvem contraria a premissa local-first do projeto.
    Linhas podem ser excluídas e bloqueios só são liberados quando os campos obrigatórios correspondentes
    são alterados para valores válidos; campos opcionais não bloqueiam. Bloqueios sem campo editável
    continuam impedindo confirmar. Imagens ilegíveis orientam nova tentativa com dicas de enquadramento. Nenhum
-   lançamento é criado sem confirmação humana ativa. A etapa inicial utiliza repositório de teste
-   (mock) e a integração com o endpoint real pertence à issue #97.
+   lançamento é criado sem confirmação humana ativa. Na Semana 4 a etapa usava um repositório
+   simulado; desde a #97 o app lê e confirma pelo endpoint real (`/v1/documents/extract` e
+   `/v1/documents/confirm`), com o motor e o consentimento remoto escolhidos em Ajustes.
 
 ## Ajustes da Semana 5 (#97 e #98, 27/11/2026)
 

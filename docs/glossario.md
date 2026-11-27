@@ -55,7 +55,7 @@ Terminologia técnica e conceitos de domínio adotados no **Trokim**.
 - **OCR (reconhecimento óptico de caracteres):** Leitura do texto de uma imagem. No Trokim roda no próprio computador (RapidOCR) e é o motor padrão; devolve o texto e a caixa de cada trecho.
 - **VLM (modelo de visão e linguagem):** Modelo que recebe a imagem e responde em texto. É opcional, só completa campos que o OCR não achou e pode ser local (Ollama) ou remoto (OpenRouter).
 - **Motor de leitura:** O que lê o documento numa requisição: `ocr` (padrão) ou `vision` (OCR mais VLM). O app consulta os disponíveis em `GET /v1/documents/engines`.
-- **Consentimento remoto:** Autorização dada pelo usuário, por requisição (`allow_remote=true`), para a imagem sair do aparelho rumo a uma VLM remota. Sem ela a API responde `403 REMOTE_CONSENT_REQUIRED`.
+- **Consentimento remoto:** Autorização que o usuário liga em Ajustes para a imagem sair do aparelho rumo a uma VLM remota; o app a envia em cada requisição (`allow_remote=true`). Sem ela a API responde `403 REMOTE_CONSENT_REQUIRED`.
 - **Tarja:** Retângulo preto pintado sobre CPF, CNPJ, agência e conta, nas posições que o OCR leu, antes de a imagem ir para a VLM. Sem as posições do OCR, a visão não é chamada.
 - **Revisão humana do documento:** Tela em que o usuário confere e corrige os campos lidos antes de confirmar. Nada lido de imagem vira lançamento sem essa confirmação ([ADR 0026](adr/0026-confirmacao-e-consulta-de-documentos.md)).
 - **Origem do lançamento:** De onde veio o lançamento: `import` (extrato OFX ou PDF), `document` (lido de foto ou PDF e confirmado) ou `manual` (digitado pelo usuário na tela de documento).

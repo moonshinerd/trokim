@@ -179,4 +179,4 @@ e período sem gasto, esclarecimento e números pessoais restritos aos cálculos
 RF19 e RF20; GQ05, GQ07 e GQ09; [ADR 0023](adr/0023-contexto-do-usuario-no-chat.md).
 Na #97 (27/11/2026), a interface mobile ganhou os seletores de contexto (conta/dono e período),
 os cartões de cálculo com link para os lançamentos de origem, as perguntas sugeridas pelos dados
-importados e o estado vazio que direciona à importação; a avaliação ampliada segue na #98.
+importados e o estado vazio que direciona à importação; a avaliação ampliada da #98 está no [Histórico de resultados, seção 11](pesquisa/resultados.md#11-semana-5-motores-de-leitura-e-chat-com-os-dados-do-usuario).

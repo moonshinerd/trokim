@@ -20,7 +20,7 @@ Clone o repositório e execute a automação inicial:
 # Prepara a aplicação: dependências (uv) e índice CNPJ descomprimido
 make build
 
-# Executa a bateria de testes automatizados (418 da API e 161 de pesquisa)
+# Executa a bateria de testes automatizados (826 da API e 271 de pesquisa)
 make test
 
 # Lint (ruff) e build estrito da documentação
@@ -69,11 +69,14 @@ O OCR é local (RapidOCR) e vem ligado. O modelo de visão é opcional e vem **d
 | `VISION_API_BASE` | vazio | Endereço do servidor do modelo |
 | `VISION_API_KEY` | vazio | Chave, só em variável de ambiente |
 | `VISION_TIMEOUT` | `120` | Segundos |
-| `VISION_ALLOW_REMOTE` | `false` | Consentimento para enviar a imagem para fora do aparelho |
+| `VISION_ALLOW_REMOTE` | `false` | Consentimento global, só para uso sem o app (benchmark, scripts) |
 
-Um modelo remoto, como o do OpenRouter, é **recusado** enquanto `VISION_ALLOW_REMOTE` não for
-`true`: a imagem de um documento financeiro sairia do aparelho. O consentimento é seu, e só
-material sintético vai à nuvem nos testes do projeto.
+A leitura padrão é só o OCR local. Um modelo remoto, como o do OpenRouter, recebe a imagem de um
+documento financeiro, então só é usado quando o app pede o motor `vision` **com**
+`allow_remote=true`, que ele envia apenas depois de você ligar o consentimento em **Ajustes →
+Leitura de documentos**. Sem isso a API responde `403 REMOTE_CONSENT_REQUIRED`. Antes do envio, CPF,
+CNPJ, agência e conta são tarjados nas posições lidas pelo OCR. Só material sintético vai à nuvem
+nos testes do projeto.
 
 ### Referência rápida da API
 
