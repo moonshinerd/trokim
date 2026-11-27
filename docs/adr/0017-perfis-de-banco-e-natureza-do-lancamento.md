@@ -26,7 +26,8 @@ leitura, `1.250,00` virava `125,00` e compra sem sinal virava crédito.
 3. **Natureza do lançamento** (`TransactionNature`): compra, Pix enviado/recebido, pagamento de
    fatura, resgate e aplicação de investimento, transferência própria, estorno, tarifa, juros e
    outro. **Pagamento de fatura, resgate, aplicação e transferência própria não entram nos
-   totais** (`NATURES_EXCLUDED_FROM_TOTALS`), o que evita contar duas vezes. **Estorno abate a
+   totais** (`NATURES_EXCLUDED_FROM_TOTALS`), o que evita contar duas vezes. Boleto pago a
+   emissor de cartão (`ITAUCARD`, `NU PAGAMENTOS`...) também é pagamento de fatura. **Estorno abate a
    despesa** em vez de virar receita. A conta continua determinística
    ([ADR 0004](0004-calculos-deterministicos.md)).
 4. **Estabelecimento e privacidade.** O texto do lançamento é reescrito: o app e a API só

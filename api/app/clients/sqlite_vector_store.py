@@ -114,7 +114,10 @@ class SQLiteVectorStore:
                     select(ChunkRow).where(ChunkRow.rowid.in_([r.rowid for r in nearest]))
                 )
             }
-        return [(self._to_chunk(rows[r.rowid]), 1.0 - r.distance) for r in nearest]
+        # Vetor sem trecho (banco antigo ou gravação interrompida) fica de fora, como no JOIN.
+        return [
+            (self._to_chunk(rows[r.rowid]), 1.0 - r.distance) for r in nearest if r.rowid in rows
+        ]
 
     def count(self) -> int:
         with self._session() as session:

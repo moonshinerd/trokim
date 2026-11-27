@@ -55,3 +55,17 @@ def test_topk_e_consulta_em_store_vazio(tmp_path):
     assert store.search([1.0, 0.0], 5) == []
     store.add([make_chunk(0)], [[1.0, 0.0]])
     assert len(store.search([1.0, 0.0], 1)) == 1
+
+
+def test_vetor_sem_trecho_fica_de_fora_da_busca(tmp_path):
+    from sqlalchemy import delete
+
+    from app.clients.sqlite_vector_store import ChunkRow
+
+    store = SQLiteVectorStore(tmp_path / "orfao.db", dimension=2)
+    chunks = [make_chunk(i) for i in range(2)]
+    store.add(chunks, [[1.0, 0.0], [0.0, 1.0]])
+    with store._session() as session:
+        session.execute(delete(ChunkRow).where(ChunkRow.chunk_id == chunks[0].id))
+        session.commit()
+    assert [chunk.id for chunk, _ in store.search([1.0, 0.0], 2)] == [chunks[1].id]

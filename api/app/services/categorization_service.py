@@ -13,6 +13,7 @@ from functools import lru_cache
 from pathlib import Path
 
 from app.domain.models import (
+    CounterpartyKind,
     Transaction,
     TransactionCategory,
     TransactionNature,
@@ -237,7 +238,6 @@ _EXTRA: dict[TransactionCategory, tuple[str, ...]] = {
         "selfit",
         "wellhub",
         "gympass",
-        "totalpass",
         "total pass",
         "bodytech",
         "bio ritmo",
@@ -261,13 +261,10 @@ _EXTRA: dict[TransactionCategory, tuple[str, ...]] = {
         "exame",
         "exames",
         "dermatologia",
-        "pilates",
-        "crossfit",
     ),
     C.TRANSPORT: (
         "99app",
         "99ride",
-        "99pop",
         "indrive",
         "shell",
         "petrobras",
@@ -443,8 +440,6 @@ _EXTRA: dict[TransactionCategory, tuple[str, ...]] = {
         "coco bambu",
         "ragazzo",
         "jeronimo",
-        "lanches",
-        "lanchonete",
         "hortifruit",
         "feira",
         "dogueria",
@@ -513,22 +508,46 @@ _EXTRA: dict[TransactionCategory, tuple[str, ...]] = {
         "temu",
         "submarino",
         "fast shop",
-        "carrefour com",
-        "aliexpress",
     ),
 }
 
 # Vencem antes de tudo: nomes que contêm palavra de outra categoria ("show", "aluguel").
 _PRIORITY_RULES: list[tuple[TransactionCategory, tuple[str, ...]]] = [
     (C.FOOD, ("cacau show",)),
-    (C.TRANSPORT, ("movida", "localiza", "rent a car", "unidas", "aluguel de carro")),
+    (
+        C.TRANSPORT,
+        (
+            "movida",
+            "localiza",
+            "rent a car",
+            "unidas locadora",
+            "locadora unidas",
+            "unidas rent",
+            "unidas aluguel",
+            "aluguel de carro",
+        ),
+    ),
 ]
 
-_RULES = _PRIORITY_RULES + [
-    (category, phrases + _EXTRA.get(category, ())) for category, phrases in _RULES
-]
+
+def _with_extras(
+    rules: list[tuple[TransactionCategory, tuple[str, ...]]],
+) -> list[tuple[TransactionCategory, tuple[str, ...]]]:
+    """Junta os termos extras só à última regra de cada categoria (a geral). A regra de
+    delivery vem antes de tudo e, com os extras de alimentação, venceria saúde e transporte
+    ("DROGARIA EXTRA")."""
+    last = {category: i for i, (category, _) in enumerate(rules)}
+    return [
+        (category, phrases + (_EXTRA.get(category, ()) if last[category] == i else ()))
+        for i, (category, phrases) in enumerate(rules)
+    ]
+
+
+_BASE_RULES = _PRIORITY_RULES + _RULES
+_RULES = _PRIORITY_RULES + _with_extras(_RULES)
 
 # "mercado livre" é serviço de compras, e não alimentação: vence "mercado" se vier antes.
+# ("carrefour com" não entra: é também "Carrefour Comércio e Indústria", o supermercado.)
 _PRIORITY_FIRST = ("mercado livre", "mercadolivre", "mercadoliv")
 
 _EXCLUDED = {
@@ -548,8 +567,16 @@ _GLUED_TOKEN = 10
 _GLUED_PHRASE = 6
 
 
+# Palavras longas comuns em descrição de banco que contêm termo de categoria ("internet").
+_GLUED_IGNORE = frozenset({"internetbanking", "mobilebanking", "telebanking", "homebanking"})
+
+
 def _glued_match(normalized: str, phrases: tuple[str, ...]) -> bool:
-    tokens = [t for t in normalized.split() if len(t) >= _GLUED_TOKEN and t.isalpha()]
+    tokens = [
+        t
+        for t in normalized.split()
+        if len(t) >= _GLUED_TOKEN and t.isalpha() and t not in _GLUED_IGNORE
+    ]
     if not tokens:
         return False
     return any(
@@ -599,8 +626,9 @@ class CategorizationService:
         normalized: str,
         tx_type: TransactionType | None,
         match: Callable[[str, tuple[str, ...]], bool],
+        rules: list[tuple[TransactionCategory, tuple[str, ...]]] = _RULES,
     ) -> TransactionCategory | None:
-        for category, phrases in _RULES:
+        for category, phrases in rules:
             if category == C.INCOME and tx_type == TransactionType.DEBIT:
                 continue
             # Entrada da prefeitura ou do INSS é salário ou benefício, não imposto.
@@ -617,6 +645,7 @@ class CategorizationService:
         tx_type: TransactionType | None = None,
         nature: TransactionNature = TransactionNature.OTHER,
         cnpj: str | None = None,
+        counterparty_kind: CounterpartyKind | None = None,
     ) -> TransactionCategory:
         if nature in _EXCLUDED:
             return C.OTHER
@@ -624,10 +653,16 @@ class CategorizationService:
         normalized = re.sub(r"[^a-z0-9]+", " ", normalize_text(text)).strip()
         if _matches(normalized, _PRIORITY_FIRST):
             return C.SERVICES
-        category = CategorizationService._by_rules(normalized, tx_type, _matches)
+        # Pix para pessoa: o texto é o nome de alguém, e nomes de redes também são sobrenomes
+        # ("BRETAS", "MARISA", "VENANCIO"). Valem só as regras básicas, sem extras nem marcas.
+        to_person = nature == TransactionNature.PIX_OUT and (
+            counterparty_kind == CounterpartyKind.PERSON
+        )
+        rules = _BASE_RULES if to_person else _RULES
+        category = CategorizationService._by_rules(normalized, tx_type, _matches, rules)
         if category is None:
-            category = CategorizationService._by_rules(normalized, tx_type, _glued_match)
-        if category is None and tx_type != TransactionType.CREDIT:
+            category = CategorizationService._by_rules(normalized, tx_type, _glued_match, rules)
+        if category is None and tx_type != TransactionType.CREDIT and not to_person:
             category = _by_brand(normalized)
         if category is not None:
             return category
