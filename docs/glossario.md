@@ -46,3 +46,18 @@ Terminologia técnica e conceitos de domínio adotados no **Trokim**.
 - **Dicionário de redes:** Nomes fantasia de empresas com muitos estabelecimentos ativos, com a categoria da atividade. Reconhece redes regionais pelo nome, mesmo sem CNPJ no extrato.
 - **Conjunto de validação (holdout):** Casos rotulados escritos sem olhar as regras e sem ajuste depois da medição, para estimar o acerto da categorização em textos novos.
 
+
+---
+
+## Conceitos de Documentos e Multimodalidade (Semana 5)
+
+- **Modalidade:** Tipo de entrada que o Trokim entende. Na Entrega 5 são duas: texto no chat e imagem ou PDF (foto de fatura, comprovante de Pix ou boleto) no agente de documento ([ADR 0021](adr/0021-visao-e-ocr-modulares.md)).
+- **OCR (reconhecimento óptico de caracteres):** Leitura do texto de uma imagem. No Trokim roda no próprio computador (RapidOCR) e é o motor padrão; devolve o texto e a caixa de cada trecho.
+- **VLM (modelo de visão e linguagem):** Modelo que recebe a imagem e responde em texto. É opcional, só completa campos que o OCR não achou e pode ser local (Ollama) ou remoto (OpenRouter).
+- **Motor de leitura:** O que lê o documento numa requisição: `ocr` (padrão) ou `vision` (OCR mais VLM). O app consulta os disponíveis em `GET /v1/documents/engines`.
+- **Consentimento remoto:** Autorização dada pelo usuário, por requisição (`allow_remote=true`), para a imagem sair do aparelho rumo a uma VLM remota. Sem ela a API responde `403 REMOTE_CONSENT_REQUIRED`.
+- **Tarja:** Retângulo preto pintado sobre CPF, CNPJ, agência e conta, nas posições que o OCR leu, antes de a imagem ir para a VLM. Sem as posições do OCR, a visão não é chamada.
+- **Revisão humana do documento:** Tela em que o usuário confere e corrige os campos lidos antes de confirmar. Nada lido de imagem vira lançamento sem essa confirmação ([ADR 0026](adr/0026-confirmacao-e-consulta-de-documentos.md)).
+- **Origem do lançamento:** De onde veio o lançamento: `import` (extrato OFX ou PDF), `document` (lido de foto ou PDF e confirmado) ou `manual` (digitado pelo usuário na tela de documento).
+- **Conciliação com o extrato:** Ao importar um extrato, o comprovante já confirmado do mesmo Pix (mesmo tipo, data, valor e favorecido) é marcado como duplicado, para o gasto não contar duas vezes.
+- **Abstenção de leitura:** Documento ilegível devolvido sem campos, com o pedido de nova foto, em vez de um palpite.
