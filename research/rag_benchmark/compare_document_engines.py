@@ -50,7 +50,7 @@ def digest(path: Path) -> str:
 
 
 class SyntheticSanitizer:
-    def sanitize(self, image: bytes) -> bytes:
+    def sanitize(self, image: bytes, words=None) -> bytes:
         return image
 
 
