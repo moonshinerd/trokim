@@ -74,7 +74,9 @@ def _field_chart(run: dict, output: Path) -> None:
     chart.categoryAxis.categoryNames = [label for _, label in fields][::-1]
     chart.data = [
         tuple(
-            100 * summary[split]["per_field"][key]["correct"] / summary[split]["per_field"][key]["expected"]
+            100
+            * summary[split]["per_field"][key]["correct"]
+            / summary[split]["per_field"][key]["expected"]
             if summary[split]["per_field"].get(key, {}).get("expected")
             else 0
             for key, _ in fields
@@ -139,8 +141,7 @@ def _accuracy_chart(run: dict, output: Path) -> None:
     drawing.add(chart)
     for line, (split, split_label) in enumerate(SPLITS):
         counts = "; ".join(
-            f"{name} {summary[split][num]}/{summary[split][den]}"
-            for name, num, den in measures
+            f"{name} {summary[split][num]}/{summary[split][den]}" for name, num, den in measures
         )
         drawing.add(String(25, 45 - 14 * line, f"{split_label}: {counts}", fontSize=8))
     renderSVG.drawToFile(drawing, str(output / "acertos.svg"))
@@ -153,15 +154,11 @@ def _risk_chart(run: dict, output: Path) -> None:
         ("Campos inventados", "invented_fields"),
         ("Falhas técnicas", "technical_failures"),
     )
-    top_value = max(
-        (summary[split][key] for split, _ in SPLITS for _, key in measures), default=0
-    )
+    top_value = max((summary[split][key] for split, _ in SPLITS for _, key in measures), default=0)
     chart = HorizontalBarChart()
     chart.x, chart.y, chart.width, chart.height = 210, 65, 340, 120
     chart.categoryAxis.categoryNames = [name for name, _ in measures][::-1]
-    chart.data = [
-        tuple(summary[split][key] for _, key in measures)[::-1] for split, _ in SPLITS
-    ]
+    chart.data = [tuple(summary[split][key] for _, key in measures)[::-1] for split, _ in SPLITS]
     chart.valueAxis.valueMin = 0
     chart.valueAxis.valueMax = max(4, top_value)
     chart.valueAxis.valueStep = max(1, round(max(4, top_value) / 4))
@@ -195,14 +192,11 @@ def _risk_chart(run: dict, output: Path) -> None:
 def _degradation_chart(run: dict, output: Path) -> None:
     summary = run["summary"]
     names = sorted(
-        {
-            name
-            for split, _ in SPLITS
-            for name in summary[split].get("by_degradation", {})
-        }
+        {name for split, _ in SPLITS for name in summary[split].get("by_degradation", {})}
     )
     if not names:
         return
+
     def rate(split, name):
         group = summary[split].get("by_degradation", {}).get(name, {})
         den = group.get("recoverable_fields", 0)
@@ -211,9 +205,7 @@ def _degradation_chart(run: dict, output: Path) -> None:
     chart = HorizontalBarChart()
     chart.x, chart.y, chart.width, chart.height = 170, 65, 380, 22 * len(names) + 30
     chart.categoryAxis.categoryNames = names[::-1]
-    chart.data = [
-        tuple(rate(split, name) for name in names)[::-1] for split, _ in SPLITS
-    ]
+    chart.data = [tuple(rate(split, name) for name in names)[::-1] for split, _ in SPLITS]
     chart.valueAxis.valueMin, chart.valueAxis.valueMax, chart.valueAxis.valueStep = 0, 100, 25
     chart.bars[0].fillColor = HexColor("#2a78d6")
     chart.bars[1].fillColor = HexColor("#eb6834")
@@ -229,9 +221,7 @@ def _degradation_chart(run: dict, output: Path) -> None:
             fontSize=14,
         )
     )
-    drawing.add(
-        String(25, height - 45, "Azul: calibração • Laranja: verificação", fontSize=10)
-    )
+    drawing.add(String(25, height - 45, "Azul: calibração • Laranja: verificação", fontSize=10))
     drawing.add(chart)
     for line, (split, split_label) in enumerate(SPLITS):
         counts = "  ".join(
@@ -269,7 +259,9 @@ def _latency_chart(run: dict, output: Path) -> None:
     top = 165 + 40 * len(pairs)
     model = run.get("model") or "sem visão"
     drawing.add(
-        String(25, top - 25, f"Motor {run['engine']} ({model}) — latência por documento", fontSize=14)
+        String(
+            25, top - 25, f"Motor {run['engine']} ({model}) — latência por documento", fontSize=14
+        )
     )
     drawing.add(String(25, top - 45, "Milissegundos; média e p95 por conjunto.", fontSize=10))
     drawing.add(chart)
@@ -330,7 +322,9 @@ def gate_chart(run: dict, output: Path) -> None:
             fontSize=10,
         )
     )
-    drawing.add(String(25, 18, "Vermelho: ilegível aceito • Verde: ilegível rejeitado", fontSize=10))
+    drawing.add(
+        String(25, 18, "Vermelho: ilegível aceito • Verde: ilegível rejeitado", fontSize=10)
+    )
     renderSVG.drawToFile(drawing, str(output / "qualidade.svg"))
 
 

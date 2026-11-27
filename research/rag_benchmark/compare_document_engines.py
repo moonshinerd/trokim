@@ -34,14 +34,18 @@ DocumentAgent, DocumentContext = document_module.DocumentAgent, document_module.
 litellm = importlib.import_module("litellm")
 
 ENGINES = ("ocr", "ocr+vlm-local", "ocr+vlm-remoto")
+# Falha técnica: o documento não foi lido (sem resultado ou OCR indisponível).
 TECHNICAL_CODES = {
     "OCR_TIMEOUT",
     "OCR_UNAVAILABLE",
+    "DOCUMENT_PROCESSING_FAILED",
+}
+# Falha da visão: o agente descarta a contribuição e segue com o OCR; os campos contam normalmente.
+VISION_FAILURE_CODES = {
     "VISION_UNAVAILABLE",
     "INVALID_VISION_OUTPUT",
     "VISION_REMOTE_BLOCKED",
     "VISION_PRIVACY_BLOCKED",
-    "DOCUMENT_PROCESSING_FAILED",
 }
 
 
@@ -72,9 +76,12 @@ class AuditedOcr(RapidOcrProvider):
 
 
 class AuditedVision(LiteLLMVisionProvider):
-    def __init__(self, **kwargs):
+    def __init__(self, price: tuple[float, float] | None = None, **kwargs):
         super().__init__(**kwargs)
         self.readings = []
+        # US$ por milhão de tokens (entrada, saída), informado na execução quando o litellm
+        # não tem o preço do modelo (devolve zero para modelos do OpenRouter que não conhece).
+        self.price = price
 
     async def extract(self, image, instructions, schema=None):
         item = {"input_sha256": hashlib.sha256(image).hexdigest()}
@@ -82,6 +89,15 @@ class AuditedVision(LiteLLMVisionProvider):
         try:
             result = await super().extract(image, instructions, schema)
             item["result"] = result.model_dump(mode="json")
+            if self.price is not None:
+                item["estimated_cost_usd"] = (
+                    result.prompt_tokens * self.price[0] + result.completion_tokens * self.price[1]
+                ) / 1_000_000
+                item["cost_status"] = (
+                    f"preço informado na execução: US$ {self.price[0]}/{self.price[1]} por "
+                    "milhão de tokens de entrada/saída"
+                )
+                return result
             try:
                 prompt_cost, completion_cost = litellm.cost_per_token(
                     model=self.model,
@@ -101,7 +117,13 @@ class AuditedVision(LiteLLMVisionProvider):
             raise
 
 
-def build_agent(engine: str, model: str | None, api_base: str | None, timeout: float):
+def build_agent(
+    engine: str,
+    model: str | None,
+    api_base: str | None,
+    timeout: float,
+    price: tuple[float, float] | None = None,
+):
     if engine not in ENGINES:
         raise ValueError("Motor inválido.")
     ocr = AuditedOcr()
@@ -125,10 +147,28 @@ def build_agent(engine: str, model: str | None, api_base: str | None, timeout: f
             or ("https://openrouter.ai/api/v1" if remote else "http://127.0.0.1:11434"),
             api_key=os.environ.get("OPENROUTER_API_KEY") if remote else "",
             timeout=timeout,
+            price=price,
         )
         if vision.is_remote != remote:
             raise ValueError("Endereço incompatível com a modalidade local/remota.")
     return DocumentAgent(ocr=ocr, vision=vision, sanitizer=SyntheticSanitizer(), timeout=timeout)
+
+
+def split_failures(row: dict) -> tuple[set[str], set[str]]:
+    """Separa falha técnica (documento não lido) de falha só da visão (o OCR seguiu).
+
+    Também reclassifica leituras gravadas antes desta separação, em que a falha da visão
+    aparecia entre as técnicas.
+    """
+    recorded = set(row.get("technical_failures", []))
+    vision = set(row.get("vision_failures", [])) | (recorded & VISION_FAILURE_CODES)
+    technical = recorded - VISION_FAILURE_CODES
+    if "PROVIDER_CALL_FAILED" in technical and not any(
+        "error_type" in call for call in row.get("ocr", [])
+    ):
+        technical.discard("PROVIDER_CALL_FAILED")
+        vision.add("PROVIDER_CALL_FAILED")
+    return technical, vision
 
 
 def metrics(cases: list[dict], readings: list[dict]) -> dict:
@@ -144,6 +184,8 @@ def metrics(cases: list[dict], readings: list[dict]) -> dict:
             "invented_fields",
             "correct_documents",
             "technical_failures",
+            "vision_failures",
+            "vision_contributions",
             "illegible_documents",
             "safe_abstentions",
             "false_accepts",
@@ -161,8 +203,14 @@ def metrics(cases: list[dict], readings: list[dict]) -> dict:
         if row is None:
             continue
         doc = row.get("document")
-        failed = bool(row.get("technical_failures")) or doc is None
+        technical, vision_failed = split_failures(row)
+        failed = bool(technical) or doc is None
         totals["technical_failures"] += failed
+        totals["vision_failures"] += bool(vision_failed)
+        # Documento em que a visão teve ao menos um campo aceito pelo agente.
+        totals["vision_contributions"] += bool(
+            doc and any(field.get("source") == "vlm" for field in doc["fields"])
+        )
         expected = case["recoverable_fields"]
         actual = {field["key"]: field["value"] for field in doc["fields"]} if doc else {}
         totals["recoverable_fields"] += len(expected)
@@ -310,7 +358,7 @@ def atomic_json(path, value):
     temporary.replace(path)
 
 
-async def run(output: Path, engine: str, model=None, api_base=None, timeout=600):
+async def run(output: Path, engine: str, model=None, api_base=None, timeout=600, price=None):
     if output.exists():
         raise ValueError(
             "Execução já existe; escolha outro RUN. Checkpoints existentes não são sobrescritos."
@@ -318,7 +366,7 @@ async def run(output: Path, engine: str, model=None, api_base=None, timeout=600)
     data = load_dataset()
     if data.get("synthetic_only") is not True:
         raise ValueError("Somente dados sintéticos são permitidos.")
-    agent = build_agent(engine, model, api_base, timeout)
+    agent = build_agent(engine, model, api_base, timeout, price)
     metadata = {
         **provenance(),
         "created_at": datetime.now(UTC).isoformat(),
@@ -334,7 +382,8 @@ async def run(output: Path, engine: str, model=None, api_base=None, timeout=600)
             "Sem revisão humana cega; documentos sintéticos.",
             "Inventados: chaves sem suporte recuperável; valores errados em contador separado.",
             "Custo estimado pela tabela do litellm quando há preço do modelo; senão nulo.",
-            "Falhas técnicas não contam como acerto nem abstenção correta.",
+            "Falhas técnicas (documento não lido) não contam como acerto nem abstenção correta;"
+            " falha só da visão é contada à parte e os campos do OCR valem normalmente.",
         ],
     }
     readings = []
@@ -366,6 +415,7 @@ async def run(output: Path, engine: str, model=None, api_base=None, timeout=600)
                 codes & TECHNICAL_CODES
                 | ({"DOCUMENT_PROCESSING_FAILED"} if ctx.result is None else set())
             )
+            row["vision_failures"] = sorted(codes & VISION_FAILURE_CODES)
         except Exception as error:
             row.update(document=None, technical_failures=[type(error).__name__])
         row.update(
@@ -373,9 +423,13 @@ async def run(output: Path, engine: str, model=None, api_base=None, timeout=600)
             ocr=agent.ocr.readings,
             vision=agent.vision.readings if agent.vision else [],
         )
-        if any("error_type" in call for call in row["ocr"] + row["vision"]):
+        if any("error_type" in call for call in row["ocr"]):
             row["technical_failures"] = sorted(
                 set(row["technical_failures"]) | {"PROVIDER_CALL_FAILED"}
+            )
+        if any("error_type" in call for call in row["vision"]):
+            row["vision_failures"] = sorted(
+                set(row.get("vision_failures", [])) | {"PROVIDER_CALL_FAILED"}
             )
         readings.append(row)
         atomic_json(output / "readings.json", readings)
@@ -391,22 +445,54 @@ async def run(output: Path, engine: str, model=None, api_base=None, timeout=600)
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--run", required=True)
-    parser.add_argument("--engine", choices=ENGINES, required=True)
+    parser.add_argument("--engine", choices=ENGINES)
     parser.add_argument("--model")
     parser.add_argument("--api-base")
     parser.add_argument("--timeout", type=float, default=600)
+    parser.add_argument(
+        "--price",
+        nargs=2,
+        type=float,
+        metavar=("ENTRADA", "SAIDA"),
+        help="US$ por milhão de tokens, quando o litellm não tem o preço do modelo",
+    )
+    parser.add_argument(
+        "--reavaliar",
+        action="store_true",
+        help="Recalcula o resumo de uma execução existente a partir de readings.json",
+    )
     args = parser.parse_args()
     if Path(args.run).name != args.run or args.run in {".", ".."} or args.timeout <= 0:
         parser.error("RUN deve ser um nome simples e timeout deve ser positivo.")
+    output = ROOT / "research/rag_benchmark/results/documents" / args.run
+    if args.reavaliar:
+        reevaluate(output)
+        return
+    if args.engine is None:
+        parser.error("Informe --engine (ou --reavaliar para refazer o resumo).")
     asyncio.run(
         run(
-            ROOT / "research/rag_benchmark/results/documents" / args.run,
+            output,
             args.engine,
             args.model,
             args.api_base,
             args.timeout,
+            tuple(args.price) if args.price else None,
         )
     )
+
+
+def reevaluate(output: Path) -> None:
+    """Refaz só o resumo com o avaliador atual; as leituras brutas não mudam."""
+    metadata = json.loads((output / "run.json").read_text(encoding="utf-8"))
+    readings = json.loads((output / "readings.json").read_text(encoding="utf-8"))
+    metadata["summary"] = summarize(load_dataset()["cases"], readings)
+    metadata["reevaluated_at"] = datetime.now(UTC).isoformat()
+    metadata["reevaluation_note"] = (
+        "Resumo recalculado com o avaliador que separa falha da visão de falha técnica; "
+        "readings.json intacto."
+    )
+    atomic_json(output / "run.json", metadata)
 
 
 if __name__ == "__main__":

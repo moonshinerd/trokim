@@ -535,10 +535,7 @@ def chat_scenario_map() -> dict:
     path = ROOT / "research/rag_benchmark/questions_chat_dados.json"
     if not path.exists():
         return {}
-    return {
-        question["id"]: question
-        for question in json.loads(path.read_text(encoding="utf-8"))
-    }
+    return {question["id"]: question for question in json.loads(path.read_text(encoding="utf-8"))}
 
 
 def fig_chat_outcomes(record: dict, readings: list, questions: dict, out: Path) -> None:
@@ -556,7 +553,9 @@ def fig_chat_outcomes(record: dict, readings: list, questions: dict, out: Path) 
             if behavior == "answer"
             else reading["metrics"].get("abstention_correct")
         )
-        groups.setdefault(behavior, {"answered": 0, "abstained": 0, "technical": 0, "ok": 0, "n": 0})
+        groups.setdefault(
+            behavior, {"answered": 0, "abstained": 0, "technical": 0, "ok": 0, "n": 0}
+        )
         groups[behavior]["n"] += 1
         groups[behavior]["ok"] += bool(ok)
         if reading["metrics"].get("technical_failure") or status == "technical_failure":
@@ -568,8 +567,11 @@ def fig_chat_outcomes(record: dict, readings: list, questions: dict, out: Path) 
     behaviors = [b for b in CHAT_BEHAVIORS if b in groups] + [
         b for b in groups if b not in CHAT_BEHAVIORS
     ]
-    segments = [("answered", "Respondida", BLUE), ("abstained", "Absteve-se", ORANGE),
-                ("technical", "Falha técnica", "#b02030")]
+    segments = [
+        ("answered", "Respondida", BLUE),
+        ("abstained", "Absteve-se", ORANGE),
+        ("technical", "Falha técnica", "#b02030"),
+    ]
     fig, ax = plt.subplots(figsize=(6.8, 3.2), facecolor=SURFACE)
     style(ax)
     for x, behavior in enumerate(behaviors):
@@ -577,21 +579,46 @@ def fig_chat_outcomes(record: dict, readings: list, questions: dict, out: Path) 
         bottom = 0
         for key, _, color in segments:
             if group[key]:
-                ax.bar(x, group[key], 0.5, bottom=bottom, color=color, edgecolor=SURFACE,
-                       linewidth=2)
-                ax.text(x, bottom + group[key] / 2, str(group[key]), ha="center", va="center",
-                        fontsize=9, color=INK, fontweight="bold",
-                        bbox={"facecolor": SURFACE, "edgecolor": "none", "pad": 1.0})
+                ax.bar(
+                    x, group[key], 0.5, bottom=bottom, color=color, edgecolor=SURFACE, linewidth=2
+                )
+                ax.text(
+                    x,
+                    bottom + group[key] / 2,
+                    str(group[key]),
+                    ha="center",
+                    va="center",
+                    fontsize=9,
+                    color=INK,
+                    fontweight="bold",
+                    bbox={"facecolor": SURFACE, "edgecolor": "none", "pad": 1.0},
+                )
                 bottom += group[key]
-        ax.text(x, bottom + 0.1, f"correto: {group['ok']}/{group['n']}", ha="center",
-                va="bottom", fontsize=8, color=INK_2)
-    ax.set_xticks(range(len(behaviors)),
-                  [f"{CHAT_BEHAVIORS.get(b, b)}\n(de {groups[b]['n']})" for b in behaviors])
+        ax.text(
+            x,
+            bottom + 0.1,
+            f"correto: {group['ok']}/{group['n']}",
+            ha="center",
+            va="bottom",
+            fontsize=8,
+            color=INK_2,
+        )
+    ax.set_xticks(
+        range(len(behaviors)),
+        [f"{CHAT_BEHAVIORS.get(b, b)}\n(de {groups[b]['n']})" for b in behaviors],
+    )
     ax.set_ylim(0, max(groups[b]["n"] for b in behaviors) + 2)
     ax.set_ylabel("Cenários", color=INK_2, fontsize=8.5)
     handles = [plt.Rectangle((0, 0), 1, 1, color=c, label=label) for _, label, c in segments]
-    ax.legend(handles=handles, ncol=3, frameon=False, fontsize=8, labelcolor=INK_2,
-              loc="lower left", bbox_to_anchor=(0, 1.0))
+    ax.legend(
+        handles=handles,
+        ncol=3,
+        frameon=False,
+        fontsize=8,
+        labelcolor=INK_2,
+        loc="lower left",
+        bbox_to_anchor=(0, 1.0),
+    )
     save(fig, out / "fig1-chat-dados-desfechos.png")
 
 
@@ -614,11 +641,18 @@ def fig_chat_numbers(record: dict, readings: list, questions: dict, out: Path) -
     items = [
         ("Números corretos", metrics.get("numeric_correct", 0), metrics.get("numeric_expected", 0)),
         ("Cenários com todos\nos números", metrics.get("numeric_case_correct", 0), n_answer),
-        ("Abstenções corretas", metrics.get("abstention_correct", 0),
-         metrics.get("abstention_expected", 0)),
+        (
+            "Abstenções corretas",
+            metrics.get("abstention_correct", 0),
+            metrics.get("abstention_expected", 0),
+        ),
         ("Inventados no rascunho\n(meta 0)", metrics.get("raw_model_invented_numbers", 0), None),
         ("Inventados na resposta\n(meta 0)", metrics.get("final_invented_numbers", 0), None),
-        ("Bloqueios\nNUMBER_NOT_SUPPORTED", metrics.get("validation_number_not_supported", 0), None),
+        (
+            "Bloqueios\nNUMBER_NOT_SUPPORTED",
+            metrics.get("validation_number_not_supported", 0),
+            None,
+        ),
         ("Bloqueios\nCALCULATION_MISSING", metrics.get("validation_calculation_missing", 0), None),
         ("Falhas técnicas", metrics.get("technical_failure", 0), None),
     ]
@@ -637,7 +671,8 @@ def fig_chat_numbers(record: dict, readings: list, questions: dict, out: Path) -
     ax.set_xlabel(
         f"Ocorrências em {record.get('scenarios', len(readings))} cenários; "
         f"{record.get('model', 'modelo desconhecido')}",
-        color=INK_2, fontsize=8.5,
+        color=INK_2,
+        fontsize=8.5,
     )
     save(fig, out / "fig2-chat-dados-numeros.png")
 
@@ -660,21 +695,35 @@ def fig_chat_latency(record: dict, readings: list, questions: dict, out: Path) -
     ax.barh(ypos, values, 0.6, color=colors, edgecolor=SURFACE)
     ax.set_yticks(ypos, [r["id"] for r in order])
     for y, value in zip(ypos, values, strict=True):
-        ax.text(value + max(values, default=1) * 0.01, y, f"{value:,} ms".replace(",", "."),
-                va="center", fontsize=7, color=INK)
+        ax.text(
+            value + max(values, default=1) * 0.01,
+            y,
+            f"{value:,} ms".replace(",", "."),
+            va="center",
+            fontsize=7,
+            color=INK,
+        )
     ax.set_xlim(0, max(values, default=1) * 1.2)
     ax.set_xlabel(
         f"Latência por cenário (ms); {record.get('model', 'modelo desconhecido')}, "
         f"execução {record.get('run', '')}",
-        color=INK_2, fontsize=8.5,
+        color=INK_2,
+        fontsize=8.5,
     )
     handles = [
         plt.Rectangle((0, 0), 1, 1, color=BLUE, label="Respondida"),
         plt.Rectangle((0, 0), 1, 1, color=ORANGE, label="Absteve-se"),
         plt.Rectangle((0, 0), 1, 1, color="#b02030", label="Falha técnica"),
     ]
-    ax.legend(handles=handles, ncol=3, frameon=False, fontsize=8, labelcolor=INK_2,
-              loc="lower left", bbox_to_anchor=(0, 1.0))
+    ax.legend(
+        handles=handles,
+        ncol=3,
+        frameon=False,
+        fontsize=8,
+        labelcolor=INK_2,
+        loc="lower left",
+        bbox_to_anchor=(0, 1.0),
+    )
     save(fig, out / "fig3-chat-dados-latencia.png")
 
 
@@ -685,9 +734,7 @@ def chat_dados_charts(results: Path = RESULTS, out_base: Path | None = None) -> 
         record = json.loads(path.read_text(encoding="utf-8"))
         readings_path = path.parent / "readings.json"
         readings = (
-            json.loads(readings_path.read_text(encoding="utf-8"))
-            if readings_path.exists()
-            else []
+            json.loads(readings_path.read_text(encoding="utf-8")) if readings_path.exists() else []
         )
         out = out_base / path.parent.name
         if readings:

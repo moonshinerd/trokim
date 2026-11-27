@@ -102,7 +102,7 @@ document-images:
 document-compare:
 	@test -n "$(RUN)" -a -n "$(ENGINE)" || { echo "Uso: make document-compare RUN=<id> ENGINE=ocr|ocr+vlm-local|ocr+vlm-remoto [MODEL=<modelo>]"; exit 1; }
 	cd api && uv run --extra documents --extra ocr python ../research/rag_benchmark/compare_document_engines.py \
-		--run "$(RUN)" --engine "$(ENGINE)" $(if $(MODEL),--model "$(MODEL)")
+		--run "$(RUN)" --engine "$(ENGINE)" $(if $(MODEL),--model "$(MODEL)") $(if $(PRICE),--price $(PRICE))
 
 chat-dados-run:
 	@test -n "$(RUN)" -a -n "$(MODEL)" || { echo "Uso: make chat-dados-run RUN=<id> MODEL=<modelo>"; exit 1; }

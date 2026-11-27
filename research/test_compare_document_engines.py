@@ -26,7 +26,7 @@ def row(identifier="D01", bad=False, failed=False):
     return {
         "id": identifier,
         "latency_ms": 10,
-        "technical_failures": ["VISION_UNAVAILABLE"] if failed else [],
+        "technical_failures": ["OCR_UNAVAILABLE"] if failed else [],
         "document": {
             "abstained": bad,
             "fields": [] if bad else [{"key": "amount", "value": "10.00"}],
@@ -41,6 +41,28 @@ def test_technical_failure_never_counts_as_success():
     assert score["technical_failures"] == 1
     score = benchmark.metrics([case(bad=True)], [row(bad=True, failed=True)])
     assert score["safe_abstentions"] == 0
+
+
+def test_falha_so_da_visao_nao_zera_os_campos_do_ocr():
+    # Leitura antiga: a falha da visão aparecia entre as técnicas; o avaliador a reclassifica.
+    antiga = row()
+    antiga["technical_failures"] = ["INVALID_VISION_OUTPUT"]
+    nova = row()
+    nova["vision_failures"] = ["INVALID_VISION_OUTPUT"]
+    for leitura in (antiga, nova):
+        score = benchmark.metrics([case()], [leitura])
+        assert score["technical_failures"] == 0
+        assert score["vision_failures"] == 1
+        assert score["correct_fields"] == score["recoverable_fields"]
+
+
+def test_falha_na_chamada_da_visao_nao_e_tecnica():
+    leitura = row()
+    leitura["technical_failures"] = ["PROVIDER_CALL_FAILED"]
+    leitura["vision"] = [{"error_type": "Timeout"}]
+    leitura["ocr"] = [{}]
+    score = benchmark.metrics([case()], [leitura])
+    assert score["technical_failures"] == 0 and score["vision_failures"] == 1
 
 
 def test_false_accept_invented_and_wrong_are_separate():

@@ -50,31 +50,33 @@
     "calibration": {
       "documents": 20,
       "completed_documents": 20,
-      "correct_fields": 40,
+      "correct_fields": 47,
       "recoverable_fields": 57,
       "wrong_fields": 10,
       "missing_fields": 0,
       "invented_fields": 0,
       "correct_documents": 4,
-      "technical_failures": 4,
+      "technical_failures": 0,
+      "vision_failures": 4,
+      "vision_contributions": 0,
       "illegible_documents": 3,
       "safe_abstentions": 3,
       "false_accepts": 0,
       "per_field": {
         "amount": {
-          "correct": 8,
+          "correct": 10,
           "expected": 10,
-          "accuracy": 0.8
+          "accuracy": 1.0
         },
         "date": {
-          "correct": 4,
+          "correct": 5,
           "expected": 5,
-          "accuracy": 0.8
+          "accuracy": 1.0
         },
         "counterparty": {
-          "correct": 4,
+          "correct": 5,
           "expected": 9,
-          "accuracy": 0.4444444444444444
+          "accuracy": 0.5555555555555556
         },
         "total": {
           "correct": 5,
@@ -82,17 +84,17 @@
           "accuracy": 1.0
         },
         "due_date": {
-          "correct": 9,
+          "correct": 11,
           "expected": 11,
-          "accuracy": 0.8181818181818182
+          "accuracy": 1.0
         },
         "bank": {
-          "correct": 10,
+          "correct": 11,
           "expected": 17,
-          "accuracy": 0.5882352941176471
+          "accuracy": 0.6470588235294118
         }
       },
-      "field_accuracy": 0.7017543859649122,
+      "field_accuracy": 0.8245614035087719,
       "document_accuracy": 0.2,
       "safe_abstention_rate": 1.0,
       "latency_ms": {
@@ -117,6 +119,8 @@
           "invented_fields": 0,
           "correct_documents": 0,
           "technical_failures": 0,
+          "vision_failures": 0,
+          "vision_contributions": 0,
           "illegible_documents": 0,
           "safe_abstentions": 0,
           "false_accepts": 0,
@@ -177,6 +181,8 @@
           "invented_fields": 0,
           "correct_documents": 3,
           "technical_failures": 0,
+          "vision_failures": 0,
+          "vision_contributions": 0,
           "illegible_documents": 3,
           "safe_abstentions": 3,
           "false_accepts": 0,
@@ -230,21 +236,23 @@
         "crop:moderate": {
           "documents": 2,
           "completed_documents": 2,
-          "correct_fields": 0,
+          "correct_fields": 3,
           "recoverable_fields": 5,
           "wrong_fields": 2,
           "missing_fields": 0,
           "invented_fields": 0,
           "correct_documents": 0,
-          "technical_failures": 2,
+          "technical_failures": 0,
+          "vision_failures": 2,
+          "vision_contributions": 0,
           "illegible_documents": 0,
           "safe_abstentions": 0,
           "false_accepts": 0,
           "per_field": {
             "amount": {
-              "correct": 0,
+              "correct": 1,
               "expected": 1,
-              "accuracy": 0.0
+              "accuracy": 1.0
             },
             "date": {
               "correct": 0,
@@ -252,9 +260,9 @@
               "accuracy": null
             },
             "counterparty": {
-              "correct": 0,
+              "correct": 1,
               "expected": 1,
-              "accuracy": 0.0
+              "accuracy": 1.0
             },
             "total": {
               "correct": 0,
@@ -262,9 +270,9 @@
               "accuracy": null
             },
             "due_date": {
-              "correct": 0,
+              "correct": 1,
               "expected": 1,
-              "accuracy": 0.0
+              "accuracy": 1.0
             },
             "bank": {
               "correct": 0,
@@ -272,7 +280,7 @@
               "accuracy": 0.0
             }
           },
-          "field_accuracy": 0.0,
+          "field_accuracy": 0.6,
           "document_accuracy": 0.0,
           "safe_abstention_rate": null,
           "latency_ms": {
@@ -297,6 +305,8 @@
           "invented_fields": 0,
           "correct_documents": 0,
           "technical_failures": 0,
+          "vision_failures": 0,
+          "vision_contributions": 0,
           "illegible_documents": 0,
           "safe_abstentions": 0,
           "false_accepts": 0,
@@ -357,6 +367,8 @@
           "invented_fields": 0,
           "correct_documents": 1,
           "technical_failures": 0,
+          "vision_failures": 0,
+          "vision_contributions": 0,
           "illegible_documents": 0,
           "safe_abstentions": 0,
           "false_accepts": 0,
@@ -410,26 +422,28 @@
         "reflection:moderate": {
           "documents": 2,
           "completed_documents": 2,
-          "correct_fields": 0,
+          "correct_fields": 4,
           "recoverable_fields": 5,
           "wrong_fields": 1,
           "missing_fields": 0,
           "invented_fields": 0,
           "correct_documents": 0,
-          "technical_failures": 2,
+          "technical_failures": 0,
+          "vision_failures": 2,
+          "vision_contributions": 0,
           "illegible_documents": 0,
           "safe_abstentions": 0,
           "false_accepts": 0,
           "per_field": {
             "amount": {
-              "correct": 0,
+              "correct": 1,
               "expected": 1,
-              "accuracy": 0.0
+              "accuracy": 1.0
             },
             "date": {
-              "correct": 0,
+              "correct": 1,
               "expected": 1,
-              "accuracy": 0.0
+              "accuracy": 1.0
             },
             "counterparty": {
               "correct": 0,
@@ -442,17 +456,17 @@
               "accuracy": null
             },
             "due_date": {
-              "correct": 0,
+              "correct": 1,
               "expected": 1,
-              "accuracy": 0.0
+              "accuracy": 1.0
             },
             "bank": {
-              "correct": 0,
+              "correct": 1,
               "expected": 2,
-              "accuracy": 0.0
+              "accuracy": 0.5
             }
           },
-          "field_accuracy": 0.0,
+          "field_accuracy": 0.8,
           "document_accuracy": 0.0,
           "safe_abstention_rate": null,
           "latency_ms": {
@@ -477,6 +491,8 @@
           "invented_fields": 0,
           "correct_documents": 0,
           "technical_failures": 0,
+          "vision_failures": 0,
+          "vision_contributions": 0,
           "illegible_documents": 0,
           "safe_abstentions": 0,
           "false_accepts": 0,
@@ -532,31 +548,33 @@
     "validation": {
       "documents": 20,
       "completed_documents": 20,
-      "correct_fields": 35,
+      "correct_fields": 44,
       "recoverable_fields": 57,
       "wrong_fields": 13,
       "missing_fields": 0,
       "invented_fields": 0,
-      "correct_documents": 6,
-      "technical_failures": 4,
+      "correct_documents": 8,
+      "technical_failures": 0,
+      "vision_failures": 4,
+      "vision_contributions": 0,
       "illegible_documents": 4,
       "safe_abstentions": 4,
       "false_accepts": 0,
       "per_field": {
         "amount": {
-          "correct": 10,
+          "correct": 13,
           "expected": 13,
-          "accuracy": 0.7692307692307693
+          "accuracy": 1.0
         },
         "date": {
-          "correct": 5,
+          "correct": 7,
           "expected": 7,
-          "accuracy": 0.7142857142857143
+          "accuracy": 1.0
         },
         "counterparty": {
-          "correct": 5,
+          "correct": 6,
           "expected": 11,
-          "accuracy": 0.45454545454545453
+          "accuracy": 0.5454545454545454
         },
         "total": {
           "correct": 2,
@@ -564,18 +582,18 @@
           "accuracy": 1.0
         },
         "due_date": {
-          "correct": 7,
+          "correct": 8,
           "expected": 8,
-          "accuracy": 0.875
+          "accuracy": 1.0
         },
         "bank": {
-          "correct": 6,
+          "correct": 8,
           "expected": 16,
-          "accuracy": 0.375
+          "accuracy": 0.5
         }
       },
-      "field_accuracy": 0.6140350877192983,
-      "document_accuracy": 0.3,
+      "field_accuracy": 0.7719298245614035,
+      "document_accuracy": 0.4,
       "safe_abstention_rate": 1.0,
       "latency_ms": {
         "mean": 4985.281,
@@ -599,6 +617,8 @@
           "invented_fields": 0,
           "correct_documents": 4,
           "technical_failures": 0,
+          "vision_failures": 0,
+          "vision_contributions": 0,
           "illegible_documents": 4,
           "safe_abstentions": 4,
           "false_accepts": 0,
@@ -652,26 +672,28 @@
         "crop:moderate": {
           "documents": 2,
           "completed_documents": 2,
-          "correct_fields": 0,
+          "correct_fields": 3,
           "recoverable_fields": 5,
           "wrong_fields": 2,
           "missing_fields": 0,
           "invented_fields": 0,
           "correct_documents": 0,
-          "technical_failures": 2,
+          "technical_failures": 0,
+          "vision_failures": 2,
+          "vision_contributions": 0,
           "illegible_documents": 0,
           "safe_abstentions": 0,
           "false_accepts": 0,
           "per_field": {
             "amount": {
-              "correct": 0,
+              "correct": 1,
               "expected": 1,
-              "accuracy": 0.0
+              "accuracy": 1.0
             },
             "date": {
-              "correct": 0,
+              "correct": 1,
               "expected": 1,
-              "accuracy": 0.0
+              "accuracy": 1.0
             },
             "counterparty": {
               "correct": 0,
@@ -684,9 +706,9 @@
               "accuracy": null
             },
             "due_date": {
-              "correct": 0,
+              "correct": 1,
               "expected": 1,
-              "accuracy": 0.0
+              "accuracy": 1.0
             },
             "bank": {
               "correct": 0,
@@ -694,7 +716,7 @@
               "accuracy": 0.0
             }
           },
-          "field_accuracy": 0.0,
+          "field_accuracy": 0.6,
           "document_accuracy": 0.0,
           "safe_abstention_rate": null,
           "latency_ms": {
@@ -719,6 +741,8 @@
           "invented_fields": 0,
           "correct_documents": 1,
           "technical_failures": 0,
+          "vision_failures": 0,
+          "vision_contributions": 0,
           "illegible_documents": 0,
           "safe_abstentions": 0,
           "false_accepts": 0,
@@ -779,6 +803,8 @@
           "invented_fields": 0,
           "correct_documents": 1,
           "technical_failures": 0,
+          "vision_failures": 0,
+          "vision_contributions": 0,
           "illegible_documents": 0,
           "safe_abstentions": 0,
           "false_accepts": 0,
@@ -839,6 +865,8 @@
           "invented_fields": 0,
           "correct_documents": 0,
           "technical_failures": 0,
+          "vision_failures": 0,
+          "vision_contributions": 0,
           "illegible_documents": 0,
           "safe_abstentions": 0,
           "false_accepts": 0,
@@ -892,31 +920,33 @@
         "reflection:moderate": {
           "documents": 2,
           "completed_documents": 2,
-          "correct_fields": 0,
+          "correct_fields": 6,
           "recoverable_fields": 6,
           "wrong_fields": 0,
           "missing_fields": 0,
           "invented_fields": 0,
-          "correct_documents": 0,
-          "technical_failures": 2,
+          "correct_documents": 2,
+          "technical_failures": 0,
+          "vision_failures": 2,
+          "vision_contributions": 0,
           "illegible_documents": 0,
           "safe_abstentions": 0,
           "false_accepts": 0,
           "per_field": {
             "amount": {
-              "correct": 0,
+              "correct": 2,
               "expected": 2,
-              "accuracy": 0.0
+              "accuracy": 1.0
             },
             "date": {
-              "correct": 0,
+              "correct": 1,
               "expected": 1,
-              "accuracy": 0.0
+              "accuracy": 1.0
             },
             "counterparty": {
-              "correct": 0,
+              "correct": 1,
               "expected": 1,
-              "accuracy": 0.0
+              "accuracy": 1.0
             },
             "total": {
               "correct": 0,
@@ -929,13 +959,13 @@
               "accuracy": null
             },
             "bank": {
-              "correct": 0,
+              "correct": 2,
               "expected": 2,
-              "accuracy": 0.0
+              "accuracy": 1.0
             }
           },
-          "field_accuracy": 0.0,
-          "document_accuracy": 0.0,
+          "field_accuracy": 1.0,
+          "document_accuracy": 1.0,
           "safe_abstention_rate": null,
           "latency_ms": {
             "mean": 9677.395,
@@ -952,5 +982,7 @@
       }
     }
   },
-  "finished_at": "2026-11-27T04:11:05.907049+00:00"
+  "finished_at": "2026-11-27T04:11:05.907049+00:00",
+  "reevaluated_at": "2026-11-27T04:15:55.531594+00:00",
+  "reevaluation_note": "Resumo recalculado com o avaliador que separa falha da visão de falha técnica; readings.json intacto."
 }
