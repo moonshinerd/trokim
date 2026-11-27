@@ -1,0 +1,3262 @@
+[
+  {
+    "id": "C01",
+    "response": {
+      "query": "Quanto gastei?",
+      "status": "answered",
+      "answer": "Gasto (Nubank conta (pessoal)) em setembro de 2026 (total_expenses): 561.78 BRL [Fonte auditável: FinancialQueryService]\nReceita (Nubank conta (pessoal)) em setembro de 2026 (total_income): 7023.92 BRL [Fonte auditável: FinancialQueryService]\nSaldo (Nubank conta (pessoal)) em setembro de 2026 (net_balance): 6462.14 BRL [Fonte auditável: FinancialQueryService]\nPremissas e limitações:\n- Os valores consideram apenas os arquivos importados; períodos incompletos podem omitir gastos. Saldo é a diferença entre receitas e despesas desses lançamentos.",
+      "model": "ollama/mistral-small3.2:24b",
+      "evidences": [],
+      "calculations": [
+        {
+          "key": "total_expenses",
+          "label": "Gasto (Nubank conta (pessoal)) em setembro de 2026",
+          "value": 561.78,
+          "unit": "BRL",
+          "source": "FinancialQueryService"
+        },
+        {
+          "key": "total_income",
+          "label": "Receita (Nubank conta (pessoal)) em setembro de 2026",
+          "value": 7023.92,
+          "unit": "BRL",
+          "source": "FinancialQueryService"
+        },
+        {
+          "key": "net_balance",
+          "label": "Saldo (Nubank conta (pessoal)) em setembro de 2026",
+          "value": 6462.14,
+          "unit": "BRL",
+          "source": "FinancialQueryService"
+        }
+      ],
+      "validation_issues": [],
+      "steps": [
+        {
+          "agent": "research",
+          "status": "skipped",
+          "summary": "Consulta aos dados importados; não requer orientação institucional.",
+          "duration_ms": 0,
+          "detail": {
+            "reason": "financial_query"
+          }
+        },
+        {
+          "agent": "analysis",
+          "status": "ok",
+          "summary": "Consulta financeira calculada.",
+          "duration_ms": 1,
+          "detail": {
+            "intent": "summary",
+            "calculations": [
+              {
+                "key": "total_expenses",
+                "label": "Gasto (Nubank conta (pessoal)) em setembro de 2026",
+                "value": 561.78,
+                "unit": "BRL",
+                "source": "FinancialQueryService"
+              },
+              {
+                "key": "total_income",
+                "label": "Receita (Nubank conta (pessoal)) em setembro de 2026",
+                "value": 7023.92,
+                "unit": "BRL",
+                "source": "FinancialQueryService"
+              },
+              {
+                "key": "net_balance",
+                "label": "Saldo (Nubank conta (pessoal)) em setembro de 2026",
+                "value": 6462.14,
+                "unit": "BRL",
+                "source": "FinancialQueryService"
+              }
+            ]
+          }
+        },
+        {
+          "agent": "communication",
+          "status": "ok",
+          "summary": "Rascunho substituído por conteúdo apoiado nos dados recebidos.",
+          "duration_ms": 6434,
+          "detail": {
+            "model": "ollama/mistral-small3.2:24b",
+            "attempt": 1,
+            "prompt_tokens": 1455,
+            "completion_tokens": 308,
+            "draft_guard": "safe_fallback"
+          }
+        },
+        {
+          "agent": "validation",
+          "status": "ok",
+          "summary": "Validação aprovada: resposta em conformidade com as regras de integridade (0 avisos).",
+          "duration_ms": 1,
+          "detail": {
+            "issues_count": 0,
+            "blockers_count": 0,
+            "warnings_count": 0,
+            "issues": []
+          }
+        }
+      ],
+      "total_ms": 6436
+    },
+    "metrics": {
+      "numeric_expected": 3,
+      "calculation_correct": 3,
+      "numeric_correct": 3,
+      "rejected_by_validation": false,
+      "numeric_case_correct": true,
+      "raw_model_calls": 1,
+      "raw_model_calls_with_invented_numbers": 0,
+      "raw_model_invented_numbers": 0,
+      "final_invented_numbers": 0,
+      "abstention_expected": false,
+      "abstention_correct": false,
+      "validation_number_not_supported": 0,
+      "validation_calculation_missing": 0,
+      "validation_blocked": false,
+      "safe_fallbacks": 1,
+      "technical_failure": false
+    },
+    "elapsed_ms": 6441,
+    "model_calls": [
+      {
+        "content": "### Resposta:\n\nOs cálculos apresentados são baseados nos dados importados para a conta pessoal no Nubank em setembro de 2026. Aqui está a explicação detalhada:\n\n1. **Gasto Total (total_expenses)**: 561,78 BRL\n   - Representa o somatório de todas as despesas registradas no período.\n\n2. **Receita Total (total_income)**: 7.023,92 BRL\n   - Representa o somatório de todas as receitas registradas no período.\n\n3. **Saldo Líquido (net_balance)**: 6.462,14 BRL\n   - Calculado como a diferença entre a receita total e o gasto total:\n     \\[\n     \\text{net\\_balance} = \\text{total\\_income} - \\text{total\\_expenses} = 7.023,92 - 561,78 = 6.462,14 \\text{ BRL}\n     \\]\n\n### Limitações:\n- Os valores consideram apenas os arquivos importados. Períodos incompletos podem omitir gastos ou receitas não registradas.\n- O saldo é a diferença entre receitas e despesas dos lançamentos importados, não necessariamente o saldo bancário atualizado.\n\nSe precisar de mais detalhes ou ajustes, posso ajudar!",
+        "model": "ollama/mistral-small3.2:24b",
+        "prompt_tokens": 1455,
+        "completion_tokens": 308,
+        "elapsed_ms": 6434
+      }
+    ],
+    "validation_contexts": [
+      {
+        "draft": "Gasto (Nubank conta (pessoal)) em setembro de 2026 (total_expenses): 561.78 BRL [Fonte auditável: FinancialQueryService]\nReceita (Nubank conta (pessoal)) em setembro de 2026 (total_income): 7023.92 BRL [Fonte auditável: FinancialQueryService]\nSaldo (Nubank conta (pessoal)) em setembro de 2026 (net_balance): 6462.14 BRL [Fonte auditável: FinancialQueryService]\nPremissas e limitações:\n- Os valores consideram apenas os arquivos importados; períodos incompletos podem omitir gastos. Saldo é a diferença entre receitas e despesas desses lançamentos.",
+        "notes": [
+          "Os valores consideram apenas os arquivos importados; períodos incompletos podem omitir gastos. Saldo é a diferença entre receitas e despesas desses lançamentos."
+        ],
+        "issues": [],
+        "step": {
+          "agent": "validation",
+          "status": "ok",
+          "summary": "Validação aprovada: resposta em conformidade com as regras de integridade (0 avisos).",
+          "duration_ms": 1,
+          "detail": {
+            "issues_count": 0,
+            "blockers_count": 0,
+            "warnings_count": 0,
+            "issues": []
+          }
+        }
+      }
+    ]
+  },
+  {
+    "id": "C02",
+    "response": {
+      "query": "Qual o saldo da conta?",
+      "status": "answered",
+      "answer": "Gasto (Banco_Do_Brasil conta (empresa)) em outubro de 2026 (total_expenses): 346.92 BRL [Fonte auditável: FinancialQueryService]\nReceita (Banco_Do_Brasil conta (empresa)) em outubro de 2026 (total_income): 7247.76 BRL [Fonte auditável: FinancialQueryService]\nSaldo (Banco_Do_Brasil conta (empresa)) em outubro de 2026 (net_balance): 6900.84 BRL [Fonte auditável: FinancialQueryService]\nPremissas e limitações:\n- Os valores consideram apenas os arquivos importados; períodos incompletos podem omitir gastos. Saldo é a diferença entre receitas e despesas desses lançamentos.",
+      "model": "ollama/mistral-small3.2:24b",
+      "evidences": [],
+      "calculations": [
+        {
+          "key": "total_expenses",
+          "label": "Gasto (Banco_Do_Brasil conta (empresa)) em outubro de 2026",
+          "value": 346.92,
+          "unit": "BRL",
+          "source": "FinancialQueryService"
+        },
+        {
+          "key": "total_income",
+          "label": "Receita (Banco_Do_Brasil conta (empresa)) em outubro de 2026",
+          "value": 7247.76,
+          "unit": "BRL",
+          "source": "FinancialQueryService"
+        },
+        {
+          "key": "net_balance",
+          "label": "Saldo (Banco_Do_Brasil conta (empresa)) em outubro de 2026",
+          "value": 6900.84,
+          "unit": "BRL",
+          "source": "FinancialQueryService"
+        }
+      ],
+      "validation_issues": [],
+      "steps": [
+        {
+          "agent": "research",
+          "status": "skipped",
+          "summary": "Consulta aos dados importados; não requer orientação institucional.",
+          "duration_ms": 0,
+          "detail": {
+            "reason": "financial_query"
+          }
+        },
+        {
+          "agent": "analysis",
+          "status": "ok",
+          "summary": "Consulta financeira calculada.",
+          "duration_ms": 1,
+          "detail": {
+            "intent": "summary",
+            "calculations": [
+              {
+                "key": "total_expenses",
+                "label": "Gasto (Banco_Do_Brasil conta (empresa)) em outubro de 2026",
+                "value": 346.92,
+                "unit": "BRL",
+                "source": "FinancialQueryService"
+              },
+              {
+                "key": "total_income",
+                "label": "Receita (Banco_Do_Brasil conta (empresa)) em outubro de 2026",
+                "value": 7247.76,
+                "unit": "BRL",
+                "source": "FinancialQueryService"
+              },
+              {
+                "key": "net_balance",
+                "label": "Saldo (Banco_Do_Brasil conta (empresa)) em outubro de 2026",
+                "value": 6900.84,
+                "unit": "BRL",
+                "source": "FinancialQueryService"
+              }
+            ]
+          }
+        },
+        {
+          "agent": "communication",
+          "status": "ok",
+          "summary": "Rascunho substituído por conteúdo apoiado nos dados recebidos.",
+          "duration_ms": 4643,
+          "detail": {
+            "model": "ollama/mistral-small3.2:24b",
+            "attempt": 1,
+            "prompt_tokens": 1464,
+            "completion_tokens": 250,
+            "draft_guard": "safe_fallback"
+          }
+        },
+        {
+          "agent": "validation",
+          "status": "ok",
+          "summary": "Validação aprovada: resposta em conformidade com as regras de integridade (0 avisos).",
+          "duration_ms": 1,
+          "detail": {
+            "issues_count": 0,
+            "blockers_count": 0,
+            "warnings_count": 0,
+            "issues": []
+          }
+        }
+      ],
+      "total_ms": 4645
+    },
+    "metrics": {
+      "numeric_expected": 3,
+      "calculation_correct": 3,
+      "numeric_correct": 3,
+      "rejected_by_validation": false,
+      "numeric_case_correct": true,
+      "raw_model_calls": 1,
+      "raw_model_calls_with_invented_numbers": 0,
+      "raw_model_invented_numbers": 0,
+      "final_invented_numbers": 0,
+      "abstention_expected": false,
+      "abstention_correct": false,
+      "validation_number_not_supported": 0,
+      "validation_calculation_missing": 0,
+      "validation_blocked": false,
+      "safe_fallbacks": 1,
+      "technical_failure": false
+    },
+    "elapsed_ms": 4646,
+    "model_calls": [
+      {
+        "content": "### Resposta:\n\nOs cálculos apresentados são baseados nos dados importados para a conta da empresa no Banco do Brasil em outubro de 2026. Aqui está o resumo:\n\n1. **Gasto total**: 346,92 BRL\n2. **Receita total**: 7.247,76 BRL\n3. **Saldo líquido**: 6.900,84 BRL\n\n#### Explicação dos cálculos:\nO saldo líquido é obtido subtraindo os gastos totais das receitas totais:\n\\[ \\text{Saldo líquido} = \\text{Receita total} - \\text{Gasto total} \\]\n\\[ 6.900,84 = 7.247,76 - 346,92 \\]\n\n#### Limitações:\n- Os valores consideram apenas os arquivos importados; períodos incompletos podem omitir gastos.\n- O saldo é a diferença entre receitas e despesas desses lançamentos, não necessariamente o saldo bancário confirmado.\n\nSe precisar de mais detalhes ou ajustes, por favor, me avise!",
+        "model": "ollama/mistral-small3.2:24b",
+        "prompt_tokens": 1464,
+        "completion_tokens": 250,
+        "elapsed_ms": 4643
+      }
+    ],
+    "validation_contexts": [
+      {
+        "draft": "Gasto (Banco_Do_Brasil conta (empresa)) em outubro de 2026 (total_expenses): 346.92 BRL [Fonte auditável: FinancialQueryService]\nReceita (Banco_Do_Brasil conta (empresa)) em outubro de 2026 (total_income): 7247.76 BRL [Fonte auditável: FinancialQueryService]\nSaldo (Banco_Do_Brasil conta (empresa)) em outubro de 2026 (net_balance): 6900.84 BRL [Fonte auditável: FinancialQueryService]\nPremissas e limitações:\n- Os valores consideram apenas os arquivos importados; períodos incompletos podem omitir gastos. Saldo é a diferença entre receitas e despesas desses lançamentos.",
+        "notes": [
+          "Os valores consideram apenas os arquivos importados; períodos incompletos podem omitir gastos. Saldo é a diferença entre receitas e despesas desses lançamentos."
+        ],
+        "issues": [],
+        "step": {
+          "agent": "validation",
+          "status": "ok",
+          "summary": "Validação aprovada: resposta em conformidade com as regras de integridade (0 avisos).",
+          "duration_ms": 1,
+          "detail": {
+            "issues_count": 0,
+            "blockers_count": 0,
+            "warnings_count": 0,
+            "issues": []
+          }
+        }
+      }
+    ]
+  },
+  {
+    "id": "C03",
+    "response": {
+      "query": "Quanto gastei?",
+      "status": "answered",
+      "answer": "Gasto (pessoal) em novembro de 2026 (total_expenses): 982.54 BRL [Fonte auditável: FinancialQueryService]\nReceita (pessoal) em novembro de 2026 (total_income): 8967.24 BRL [Fonte auditável: FinancialQueryService]\nSaldo (pessoal) em novembro de 2026 (net_balance): 7984.7 BRL [Fonte auditável: FinancialQueryService]\nPremissas e limitações:\n- Os valores consideram apenas os arquivos importados; períodos incompletos podem omitir gastos. Saldo é a diferença entre receitas e despesas desses lançamentos.",
+      "model": "ollama/mistral-small3.2:24b",
+      "evidences": [],
+      "calculations": [
+        {
+          "key": "total_expenses",
+          "label": "Gasto (pessoal) em novembro de 2026",
+          "value": 982.54,
+          "unit": "BRL",
+          "source": "FinancialQueryService"
+        },
+        {
+          "key": "total_income",
+          "label": "Receita (pessoal) em novembro de 2026",
+          "value": 8967.24,
+          "unit": "BRL",
+          "source": "FinancialQueryService"
+        },
+        {
+          "key": "net_balance",
+          "label": "Saldo (pessoal) em novembro de 2026",
+          "value": 7984.7,
+          "unit": "BRL",
+          "source": "FinancialQueryService"
+        }
+      ],
+      "validation_issues": [],
+      "steps": [
+        {
+          "agent": "research",
+          "status": "skipped",
+          "summary": "Consulta aos dados importados; não requer orientação institucional.",
+          "duration_ms": 0,
+          "detail": {
+            "reason": "financial_query"
+          }
+        },
+        {
+          "agent": "analysis",
+          "status": "ok",
+          "summary": "Consulta financeira calculada.",
+          "duration_ms": 1,
+          "detail": {
+            "intent": "summary",
+            "calculations": [
+              {
+                "key": "total_expenses",
+                "label": "Gasto (pessoal) em novembro de 2026",
+                "value": 982.54,
+                "unit": "BRL",
+                "source": "FinancialQueryService"
+              },
+              {
+                "key": "total_income",
+                "label": "Receita (pessoal) em novembro de 2026",
+                "value": 8967.24,
+                "unit": "BRL",
+                "source": "FinancialQueryService"
+              },
+              {
+                "key": "net_balance",
+                "label": "Saldo (pessoal) em novembro de 2026",
+                "value": 7984.7,
+                "unit": "BRL",
+                "source": "FinancialQueryService"
+              }
+            ]
+          }
+        },
+        {
+          "agent": "communication",
+          "status": "ok",
+          "summary": "Rascunho substituído por conteúdo apoiado nos dados recebidos.",
+          "duration_ms": 5576,
+          "detail": {
+            "model": "ollama/mistral-small3.2:24b",
+            "attempt": 1,
+            "prompt_tokens": 1439,
+            "completion_tokens": 306,
+            "draft_guard": "safe_fallback"
+          }
+        },
+        {
+          "agent": "validation",
+          "status": "ok",
+          "summary": "Validação aprovada: resposta em conformidade com as regras de integridade (0 avisos).",
+          "duration_ms": 1,
+          "detail": {
+            "issues_count": 0,
+            "blockers_count": 0,
+            "warnings_count": 0,
+            "issues": []
+          }
+        }
+      ],
+      "total_ms": 5578
+    },
+    "metrics": {
+      "numeric_expected": 3,
+      "calculation_correct": 3,
+      "numeric_correct": 3,
+      "rejected_by_validation": false,
+      "numeric_case_correct": true,
+      "raw_model_calls": 1,
+      "raw_model_calls_with_invented_numbers": 0,
+      "raw_model_invented_numbers": 0,
+      "final_invented_numbers": 0,
+      "abstention_expected": false,
+      "abstention_correct": false,
+      "validation_number_not_supported": 0,
+      "validation_calculation_missing": 0,
+      "validation_blocked": false,
+      "safe_fallbacks": 1,
+      "technical_failure": false
+    },
+    "elapsed_ms": 5580,
+    "model_calls": [
+      {
+        "content": "### Resposta:\n\nOs cálculos apresentados são baseados nos dados importados para novembro de 2026. Aqui está a explicação detalhada:\n\n1. **Gasto (pessoal) em novembro de 2026**: 982,54 BRL\n   - Este valor representa o total das despesas registradas no sistema para o mês de novembro de 2026.\n\n2. **Receita (pessoal) em novembro de 2026**: 8.967,24 BRL\n   - Este valor representa o total das receitas registradas no sistema para o mês de novembro de 2026.\n\n3. **Saldo (pessoal) em novembro de 2026**: 7.984,70 BRL\n   - Este valor é calculado como a diferença entre a receita e o gasto: `8.967,24 BRL - 982,54 BRL = 7.984,70 BRL`.\n\n### Limitações:\n- Os valores consideram apenas os arquivos importados; períodos incompletos podem omitir gastos.\n- O saldo é a diferença entre receitas e despesas dos lançamentos importados, não necessariamente o saldo bancário real.\n\nSe precisar de mais detalhes ou ajustes, por favor, me avise!",
+        "model": "ollama/mistral-small3.2:24b",
+        "prompt_tokens": 1439,
+        "completion_tokens": 306,
+        "elapsed_ms": 5576
+      }
+    ],
+    "validation_contexts": [
+      {
+        "draft": "Gasto (pessoal) em novembro de 2026 (total_expenses): 982.54 BRL [Fonte auditável: FinancialQueryService]\nReceita (pessoal) em novembro de 2026 (total_income): 8967.24 BRL [Fonte auditável: FinancialQueryService]\nSaldo (pessoal) em novembro de 2026 (net_balance): 7984.7 BRL [Fonte auditável: FinancialQueryService]\nPremissas e limitações:\n- Os valores consideram apenas os arquivos importados; períodos incompletos podem omitir gastos. Saldo é a diferença entre receitas e despesas desses lançamentos.",
+        "notes": [
+          "Os valores consideram apenas os arquivos importados; períodos incompletos podem omitir gastos. Saldo é a diferença entre receitas e despesas desses lançamentos."
+        ],
+        "issues": [],
+        "step": {
+          "agent": "validation",
+          "status": "ok",
+          "summary": "Validação aprovada: resposta em conformidade com as regras de integridade (0 avisos).",
+          "duration_ms": 1,
+          "detail": {
+            "issues_count": 0,
+            "blockers_count": 0,
+            "warnings_count": 0,
+            "issues": []
+          }
+        }
+      }
+    ]
+  },
+  {
+    "id": "C04",
+    "response": {
+      "query": "Quanto gastei?",
+      "status": "rejected",
+      "answer": "A resposta preliminar gerada pelo assistente não passou pelas regras de validação e segurança do Trokim (conformidade com cálculos auditáveis e diretrizes oficiais). Por segurança financeira, a resposta foi retida.",
+      "model": "ollama/mistral-small3.2:24b",
+      "evidences": [],
+      "calculations": [
+        {
+          "key": "total_expenses",
+          "label": "Gasto (empresa) em setembro de 2026",
+          "value": 410.31,
+          "unit": "BRL",
+          "source": "FinancialQueryService"
+        },
+        {
+          "key": "total_income",
+          "label": "Receita (empresa) em setembro de 2026",
+          "value": 8267.17,
+          "unit": "BRL",
+          "source": "FinancialQueryService"
+        },
+        {
+          "key": "net_balance",
+          "label": "Saldo (empresa) em setembro de 2026",
+          "value": 7856.86,
+          "unit": "BRL",
+          "source": "FinancialQueryService"
+        }
+      ],
+      "validation_issues": [
+        {
+          "code": "NUMBER_NOT_SUPPORTED",
+          "severity": "blocker",
+          "message": "Número pessoal sem cálculo compatível: - 410,31."
+        }
+      ],
+      "steps": [
+        {
+          "agent": "research",
+          "status": "skipped",
+          "summary": "Consulta aos dados importados; não requer orientação institucional.",
+          "duration_ms": 0,
+          "detail": {
+            "reason": "financial_query"
+          }
+        },
+        {
+          "agent": "analysis",
+          "status": "ok",
+          "summary": "Consulta financeira calculada.",
+          "duration_ms": 1,
+          "detail": {
+            "intent": "summary",
+            "calculations": [
+              {
+                "key": "total_expenses",
+                "label": "Gasto (empresa) em setembro de 2026",
+                "value": 410.31,
+                "unit": "BRL",
+                "source": "FinancialQueryService"
+              },
+              {
+                "key": "total_income",
+                "label": "Receita (empresa) em setembro de 2026",
+                "value": 8267.17,
+                "unit": "BRL",
+                "source": "FinancialQueryService"
+              },
+              {
+                "key": "net_balance",
+                "label": "Saldo (empresa) em setembro de 2026",
+                "value": 7856.86,
+                "unit": "BRL",
+                "source": "FinancialQueryService"
+              }
+            ]
+          }
+        },
+        {
+          "agent": "communication",
+          "status": "ok",
+          "summary": "Rascunho substituído por conteúdo apoiado nos dados recebidos.",
+          "duration_ms": 6233,
+          "detail": {
+            "model": "ollama/mistral-small3.2:24b",
+            "attempt": 1,
+            "prompt_tokens": 1437,
+            "completion_tokens": 344,
+            "draft_guard": "safe_fallback"
+          }
+        },
+        {
+          "agent": "validation",
+          "status": "failed",
+          "summary": "Validação reprovada: 1 problema(s) impeditivo(s) encontrado(s).",
+          "duration_ms": 1,
+          "detail": {
+            "issues_count": 1,
+            "blockers_count": 1,
+            "warnings_count": 0,
+            "issues": [
+              {
+                "code": "NUMBER_NOT_SUPPORTED",
+                "severity": "blocker",
+                "message": "Número pessoal sem cálculo compatível: - 410,31."
+              }
+            ]
+          }
+        },
+        {
+          "agent": "communication",
+          "status": "ok",
+          "summary": "Rascunho substituído por conteúdo apoiado nos dados recebidos.",
+          "duration_ms": 5395,
+          "detail": {
+            "model": "ollama/mistral-small3.2:24b",
+            "attempt": 2,
+            "prompt_tokens": 1525,
+            "completion_tokens": 289,
+            "draft_guard": "safe_fallback"
+          }
+        },
+        {
+          "agent": "validation",
+          "status": "failed",
+          "summary": "Validação reprovada: 1 problema(s) impeditivo(s) encontrado(s).",
+          "duration_ms": 1,
+          "detail": {
+            "issues_count": 1,
+            "blockers_count": 1,
+            "warnings_count": 0,
+            "issues": [
+              {
+                "code": "NUMBER_NOT_SUPPORTED",
+                "severity": "blocker",
+                "message": "Número pessoal sem cálculo compatível: - 410,31."
+              }
+            ]
+          }
+        }
+      ],
+      "total_ms": 11631
+    },
+    "metrics": {
+      "numeric_expected": 3,
+      "calculation_correct": 3,
+      "numeric_correct": 0,
+      "rejected_by_validation": true,
+      "numeric_case_correct": false,
+      "raw_model_calls": 2,
+      "raw_model_calls_with_invented_numbers": 2,
+      "raw_model_invented_numbers": 2,
+      "final_invented_numbers": 0,
+      "abstention_expected": false,
+      "abstention_correct": false,
+      "validation_number_not_supported": 2,
+      "validation_calculation_missing": 0,
+      "validation_blocked": true,
+      "safe_fallbacks": 2,
+      "technical_failure": false
+    },
+    "elapsed_ms": 11632,
+    "model_calls": [
+      {
+        "content": "### Resposta:\n\nOs cálculos apresentados são determinísticos e baseados nos dados importados para o período de setembro de 2026. Aqui está a explicação detalhada:\n\n1. **Gasto (empresa) em setembro de 2026**: 410,31 BRL\n   - Este valor representa o total das despesas registradas para o mês.\n\n2. **Receita (empresa) em setembro de 2026**: 8.267,17 BRL\n   - Este valor representa o total das receitas registradas para o mês.\n\n3. **Saldo (empresa) em setembro de 2026**: 7.856,86 BRL\n   - Este saldo é calculado como a diferença entre a receita e o gasto:\n     \\[\n     \\text{Saldo} = \\text{Receita} - \\text{Gasto} = 8.267,17\\, \\text{BRL} - 410,31\\, \\text{BRL} = 7.856,86\\, \\text{BRL}\n     \\]\n\n### Limitações:\n- Os valores consideram apenas os arquivos importados. Períodos incompletos podem omitir gastos ou receitas não registradas.\n- O saldo é a diferença entre as receitas e despesas dos lançamentos importados, não necessariamente o saldo bancário real.\n\nCaso queira verificar ou complementar os dados, por favor, importe os arquivos necessários para uma análise mais completa.",
+        "model": "ollama/mistral-small3.2:24b",
+        "prompt_tokens": 1437,
+        "completion_tokens": 344,
+        "elapsed_ms": 6233
+      },
+      {
+        "content": "### Resposta:\n\nOs cálculos apresentados são baseados nos dados importados para a empresa em setembro de 2026. Aqui está a explicação detalhada:\n\n1. **Gasto (empresa) em setembro de 2026**: 410,31 BRL\n2. **Receita (empresa) em setembro de 2026**: 8.267,17 BRL\n3. **Saldo (empresa) em setembro de 2026**: 7.856,86 BRL\n\nO saldo é calculado como a diferença entre a receita e os gastos:\n\\[ \\text{Saldo} = \\text{Receita} - \\text{Gasto} \\]\n\\[ \\text{Saldo} = 8.267,17 \\, \\text{BRL} - 410,31 \\, \\text{BRL} = 7.856,86 \\, \\text{BRL} \\]\n\n### Limitações:\n- Os valores consideram apenas os arquivos importados; períodos incompletos podem omitir gastos.\n- O saldo é a diferença entre receitas e despesas desses lançamentos, não necessariamente o saldo bancário confirmado.\n\nSe precisar de mais detalhes ou ajustes, por favor, informe!",
+        "model": "ollama/mistral-small3.2:24b",
+        "prompt_tokens": 1525,
+        "completion_tokens": 289,
+        "elapsed_ms": 5395
+      }
+    ],
+    "validation_contexts": [
+      {
+        "draft": "Gasto (empresa) em setembro de 2026 (total_expenses): 410.31 BRL [Fonte auditável: FinancialQueryService]\nReceita (empresa) em setembro de 2026 (total_income): 8267.17 BRL [Fonte auditável: FinancialQueryService]\nSaldo (empresa) em setembro de 2026 (net_balance): 7856.86 BRL [Fonte auditável: FinancialQueryService]\nPremissas e limitações:\n- Os valores consideram apenas os arquivos importados; períodos incompletos podem omitir gastos. Saldo é a diferença entre receitas e despesas desses lançamentos.",
+        "notes": [
+          "Os valores consideram apenas os arquivos importados; períodos incompletos podem omitir gastos. Saldo é a diferença entre receitas e despesas desses lançamentos."
+        ],
+        "issues": [
+          {
+            "code": "NUMBER_NOT_SUPPORTED",
+            "severity": "blocker",
+            "message": "Número pessoal sem cálculo compatível: - 410,31."
+          }
+        ],
+        "step": {
+          "agent": "validation",
+          "status": "failed",
+          "summary": "Validação reprovada: 1 problema(s) impeditivo(s) encontrado(s).",
+          "duration_ms": 1,
+          "detail": {
+            "issues_count": 1,
+            "blockers_count": 1,
+            "warnings_count": 0,
+            "issues": [
+              {
+                "code": "NUMBER_NOT_SUPPORTED",
+                "severity": "blocker",
+                "message": "Número pessoal sem cálculo compatível: - 410,31."
+              }
+            ]
+          }
+        }
+      },
+      {
+        "draft": "Gasto (empresa) em setembro de 2026 (total_expenses): 410.31 BRL [Fonte auditável: FinancialQueryService]\nReceita (empresa) em setembro de 2026 (total_income): 8267.17 BRL [Fonte auditável: FinancialQueryService]\nSaldo (empresa) em setembro de 2026 (net_balance): 7856.86 BRL [Fonte auditável: FinancialQueryService]\nPremissas e limitações:\n- Os valores consideram apenas os arquivos importados; períodos incompletos podem omitir gastos. Saldo é a diferença entre receitas e despesas desses lançamentos.",
+        "notes": [
+          "Os valores consideram apenas os arquivos importados; períodos incompletos podem omitir gastos. Saldo é a diferença entre receitas e despesas desses lançamentos."
+        ],
+        "issues": [
+          {
+            "code": "NUMBER_NOT_SUPPORTED",
+            "severity": "blocker",
+            "message": "Número pessoal sem cálculo compatível: - 410,31."
+          }
+        ],
+        "step": {
+          "agent": "validation",
+          "status": "failed",
+          "summary": "Validação reprovada: 1 problema(s) impeditivo(s) encontrado(s).",
+          "duration_ms": 1,
+          "detail": {
+            "issues_count": 1,
+            "blockers_count": 1,
+            "warnings_count": 0,
+            "issues": [
+              {
+                "code": "NUMBER_NOT_SUPPORTED",
+                "severity": "blocker",
+                "message": "Número pessoal sem cálculo compatível: - 410,31."
+              }
+            ]
+          }
+        }
+      }
+    ]
+  },
+  {
+    "id": "C05",
+    "response": {
+      "query": "Quanto gastei em setembro de 2026?",
+      "status": "answered",
+      "answer": "Gasto (todas as contas) em setembro de 2026 (total_expenses): 1540.62 BRL [Fonte auditável: FinancialQueryService]\nReceita (todas as contas) em setembro de 2026 (total_income): 15291.09 BRL [Fonte auditável: FinancialQueryService]\nSaldo (todas as contas) em setembro de 2026 (net_balance): 13750.47 BRL [Fonte auditável: FinancialQueryService]\nPremissas e limitações:\n- Os valores consideram apenas os arquivos importados; períodos incompletos podem omitir gastos. Saldo é a diferença entre receitas e despesas desses lançamentos.",
+      "model": "ollama/mistral-small3.2:24b",
+      "evidences": [],
+      "calculations": [
+        {
+          "key": "total_expenses",
+          "label": "Gasto (todas as contas) em setembro de 2026",
+          "value": 1540.62,
+          "unit": "BRL",
+          "source": "FinancialQueryService"
+        },
+        {
+          "key": "total_income",
+          "label": "Receita (todas as contas) em setembro de 2026",
+          "value": 15291.09,
+          "unit": "BRL",
+          "source": "FinancialQueryService"
+        },
+        {
+          "key": "net_balance",
+          "label": "Saldo (todas as contas) em setembro de 2026",
+          "value": 13750.47,
+          "unit": "BRL",
+          "source": "FinancialQueryService"
+        }
+      ],
+      "validation_issues": [],
+      "steps": [
+        {
+          "agent": "research",
+          "status": "skipped",
+          "summary": "Consulta aos dados importados; não requer orientação institucional.",
+          "duration_ms": 0,
+          "detail": {
+            "reason": "financial_query"
+          }
+        },
+        {
+          "agent": "analysis",
+          "status": "ok",
+          "summary": "Consulta financeira calculada.",
+          "duration_ms": 1,
+          "detail": {
+            "intent": "summary",
+            "calculations": [
+              {
+                "key": "total_expenses",
+                "label": "Gasto (todas as contas) em setembro de 2026",
+                "value": 1540.62,
+                "unit": "BRL",
+                "source": "FinancialQueryService"
+              },
+              {
+                "key": "total_income",
+                "label": "Receita (todas as contas) em setembro de 2026",
+                "value": 15291.09,
+                "unit": "BRL",
+                "source": "FinancialQueryService"
+              },
+              {
+                "key": "net_balance",
+                "label": "Saldo (todas as contas) em setembro de 2026",
+                "value": 13750.47,
+                "unit": "BRL",
+                "source": "FinancialQueryService"
+              }
+            ]
+          }
+        },
+        {
+          "agent": "communication",
+          "status": "ok",
+          "summary": "Rascunho substituído por conteúdo apoiado nos dados recebidos.",
+          "duration_ms": 6124,
+          "detail": {
+            "model": "ollama/mistral-small3.2:24b",
+            "attempt": 1,
+            "prompt_tokens": 1449,
+            "completion_tokens": 335,
+            "draft_guard": "safe_fallback"
+          }
+        },
+        {
+          "agent": "validation",
+          "status": "ok",
+          "summary": "Validação aprovada: resposta em conformidade com as regras de integridade (0 avisos).",
+          "duration_ms": 1,
+          "detail": {
+            "issues_count": 0,
+            "blockers_count": 0,
+            "warnings_count": 0,
+            "issues": []
+          }
+        }
+      ],
+      "total_ms": 6126
+    },
+    "metrics": {
+      "numeric_expected": 3,
+      "calculation_correct": 3,
+      "numeric_correct": 3,
+      "rejected_by_validation": false,
+      "numeric_case_correct": true,
+      "raw_model_calls": 1,
+      "raw_model_calls_with_invented_numbers": 0,
+      "raw_model_invented_numbers": 0,
+      "final_invented_numbers": 0,
+      "abstention_expected": false,
+      "abstention_correct": false,
+      "validation_number_not_supported": 0,
+      "validation_calculation_missing": 0,
+      "validation_blocked": false,
+      "safe_fallbacks": 1,
+      "technical_failure": false
+    },
+    "elapsed_ms": 6128,
+    "model_calls": [
+      {
+        "content": "### Resposta:\n\nOs cálculos apresentados são baseados nos dados importados para o mês de setembro de 2026. Aqui está a explicação detalhada:\n\n1. **Gasto total (total_expenses)**: 1.540,62 BRL\n   - Representa o somatório de todas as despesas registradas nas contas importadas para o período.\n\n2. **Receita total (total_income)**: 15.291,09 BRL\n   - Representa o somatório de todas as receitas registradas nas contas importadas para o período.\n\n3. **Saldo líquido (net_balance)**: 13.750,47 BRL\n   - Calculado como a diferença entre a receita total e o gasto total:\n     \\[\n     \\text{net\\_balance} = \\text{total\\_income} - \\text{total\\_expenses} = 15.291,09 - 1.540,62 = 13.750,47 \\text{ BRL}\n     \\]\n\n### Limitações:\n- Os valores consideram apenas os arquivos importados; períodos incompletos podem omitir gastos.\n- O saldo é a diferença entre receitas e despesas desses lançamentos, mas não necessariamente reflete o saldo bancário real, pois pode haver transações não registradas ou em processamento.\n\nSe precisar de mais detalhes ou ajustes, por favor, forneça os dados adicionais necessários.",
+        "model": "ollama/mistral-small3.2:24b",
+        "prompt_tokens": 1449,
+        "completion_tokens": 335,
+        "elapsed_ms": 6123
+      }
+    ],
+    "validation_contexts": [
+      {
+        "draft": "Gasto (todas as contas) em setembro de 2026 (total_expenses): 1540.62 BRL [Fonte auditável: FinancialQueryService]\nReceita (todas as contas) em setembro de 2026 (total_income): 15291.09 BRL [Fonte auditável: FinancialQueryService]\nSaldo (todas as contas) em setembro de 2026 (net_balance): 13750.47 BRL [Fonte auditável: FinancialQueryService]\nPremissas e limitações:\n- Os valores consideram apenas os arquivos importados; períodos incompletos podem omitir gastos. Saldo é a diferença entre receitas e despesas desses lançamentos.",
+        "notes": [
+          "Os valores consideram apenas os arquivos importados; períodos incompletos podem omitir gastos. Saldo é a diferença entre receitas e despesas desses lançamentos."
+        ],
+        "issues": [],
+        "step": {
+          "agent": "validation",
+          "status": "ok",
+          "summary": "Validação aprovada: resposta em conformidade com as regras de integridade (0 avisos).",
+          "duration_ms": 1,
+          "detail": {
+            "issues_count": 0,
+            "blockers_count": 0,
+            "warnings_count": 0,
+            "issues": []
+          }
+        }
+      }
+    ]
+  },
+  {
+    "id": "C06",
+    "response": {
+      "query": "Quanto gastei em outubro de 2026?",
+      "status": "answered",
+      "answer": "Gasto (todas as contas) em outubro de 2026 (total_expenses): 1496.31 BRL [Fonte auditável: FinancialQueryService]\nReceita (todas as contas) em outubro de 2026 (total_income): 13287.6 BRL [Fonte auditável: FinancialQueryService]\nSaldo (todas as contas) em outubro de 2026 (net_balance): 11791.29 BRL [Fonte auditável: FinancialQueryService]\nPremissas e limitações:\n- Os valores consideram apenas os arquivos importados; períodos incompletos podem omitir gastos. Saldo é a diferença entre receitas e despesas desses lançamentos.",
+      "model": "ollama/mistral-small3.2:24b",
+      "evidences": [],
+      "calculations": [
+        {
+          "key": "total_expenses",
+          "label": "Gasto (todas as contas) em outubro de 2026",
+          "value": 1496.31,
+          "unit": "BRL",
+          "source": "FinancialQueryService"
+        },
+        {
+          "key": "total_income",
+          "label": "Receita (todas as contas) em outubro de 2026",
+          "value": 13287.6,
+          "unit": "BRL",
+          "source": "FinancialQueryService"
+        },
+        {
+          "key": "net_balance",
+          "label": "Saldo (todas as contas) em outubro de 2026",
+          "value": 11791.29,
+          "unit": "BRL",
+          "source": "FinancialQueryService"
+        }
+      ],
+      "validation_issues": [],
+      "steps": [
+        {
+          "agent": "research",
+          "status": "skipped",
+          "summary": "Consulta aos dados importados; não requer orientação institucional.",
+          "duration_ms": 0,
+          "detail": {
+            "reason": "financial_query"
+          }
+        },
+        {
+          "agent": "analysis",
+          "status": "ok",
+          "summary": "Consulta financeira calculada.",
+          "duration_ms": 1,
+          "detail": {
+            "intent": "summary",
+            "calculations": [
+              {
+                "key": "total_expenses",
+                "label": "Gasto (todas as contas) em outubro de 2026",
+                "value": 1496.31,
+                "unit": "BRL",
+                "source": "FinancialQueryService"
+              },
+              {
+                "key": "total_income",
+                "label": "Receita (todas as contas) em outubro de 2026",
+                "value": 13287.6,
+                "unit": "BRL",
+                "source": "FinancialQueryService"
+              },
+              {
+                "key": "net_balance",
+                "label": "Saldo (todas as contas) em outubro de 2026",
+                "value": 11791.29,
+                "unit": "BRL",
+                "source": "FinancialQueryService"
+              }
+            ]
+          }
+        },
+        {
+          "agent": "communication",
+          "status": "ok",
+          "summary": "Rascunho substituído por conteúdo apoiado nos dados recebidos.",
+          "duration_ms": 5545,
+          "detail": {
+            "model": "ollama/mistral-small3.2:24b",
+            "attempt": 1,
+            "prompt_tokens": 1448,
+            "completion_tokens": 302,
+            "draft_guard": "safe_fallback"
+          }
+        },
+        {
+          "agent": "validation",
+          "status": "ok",
+          "summary": "Validação aprovada: resposta em conformidade com as regras de integridade (0 avisos).",
+          "duration_ms": 4,
+          "detail": {
+            "issues_count": 0,
+            "blockers_count": 0,
+            "warnings_count": 0,
+            "issues": []
+          }
+        }
+      ],
+      "total_ms": 5550
+    },
+    "metrics": {
+      "numeric_expected": 3,
+      "calculation_correct": 3,
+      "numeric_correct": 3,
+      "rejected_by_validation": false,
+      "numeric_case_correct": true,
+      "raw_model_calls": 1,
+      "raw_model_calls_with_invented_numbers": 0,
+      "raw_model_invented_numbers": 0,
+      "final_invented_numbers": 0,
+      "abstention_expected": false,
+      "abstention_correct": false,
+      "validation_number_not_supported": 0,
+      "validation_calculation_missing": 0,
+      "validation_blocked": false,
+      "safe_fallbacks": 1,
+      "technical_failure": false
+    },
+    "elapsed_ms": 5559,
+    "model_calls": [
+      {
+        "content": "### Resposta:\n\nOs cálculos apresentados são baseados nos dados importados para outubro de 2026. Aqui está a explicação detalhada:\n\n1. **Gasto total (total_expenses)**: 1.496,31 BRL\n   - Representa o somatório de todas as despesas registradas nas contas importadas para o mês de outubro de 2026.\n\n2. **Receita total (total_income)**: 13.287,60 BRL\n   - Representa o somatório de todas as receitas registradas nas contas importadas para o mês de outubro de 2026.\n\n3. **Saldo líquido (net_balance)**: 11.791,29 BRL\n   - Calculado como a diferença entre a receita total e o gasto total: `13.287,60 BRL - 1.496,31 BRL = 11.791,29 BRL`.\n\n### Limitações:\n- Os valores consideram apenas os arquivos importados. Períodos incompletos podem omitir gastos ou receitas não registradas.\n- O saldo é a diferença entre receitas e despesas dos lançamentos importados, não necessariamente o saldo bancário real.\n\nSe precisar de mais detalhes ou ajustes, posso ajudar!",
+        "model": "ollama/mistral-small3.2:24b",
+        "prompt_tokens": 1448,
+        "completion_tokens": 302,
+        "elapsed_ms": 5545
+      }
+    ],
+    "validation_contexts": [
+      {
+        "draft": "Gasto (todas as contas) em outubro de 2026 (total_expenses): 1496.31 BRL [Fonte auditável: FinancialQueryService]\nReceita (todas as contas) em outubro de 2026 (total_income): 13287.6 BRL [Fonte auditável: FinancialQueryService]\nSaldo (todas as contas) em outubro de 2026 (net_balance): 11791.29 BRL [Fonte auditável: FinancialQueryService]\nPremissas e limitações:\n- Os valores consideram apenas os arquivos importados; períodos incompletos podem omitir gastos. Saldo é a diferença entre receitas e despesas desses lançamentos.",
+        "notes": [
+          "Os valores consideram apenas os arquivos importados; períodos incompletos podem omitir gastos. Saldo é a diferença entre receitas e despesas desses lançamentos."
+        ],
+        "issues": [],
+        "step": {
+          "agent": "validation",
+          "status": "ok",
+          "summary": "Validação aprovada: resposta em conformidade com as regras de integridade (0 avisos).",
+          "duration_ms": 4,
+          "detail": {
+            "issues_count": 0,
+            "blockers_count": 0,
+            "warnings_count": 0,
+            "issues": []
+          }
+        }
+      }
+    ]
+  },
+  {
+    "id": "C07",
+    "response": {
+      "query": "Quanto gastei em novembro de 2026?",
+      "status": "answered",
+      "answer": "Gasto (todas as contas) em novembro de 2026 (total_expenses): 1390.98 BRL [Fonte auditável: FinancialQueryService]\nReceita (todas as contas) em novembro de 2026 (total_income): 17701.49 BRL [Fonte auditável: FinancialQueryService]\nSaldo (todas as contas) em novembro de 2026 (net_balance): 16310.51 BRL [Fonte auditável: FinancialQueryService]\nPremissas e limitações:\n- Os valores consideram apenas os arquivos importados; períodos incompletos podem omitir gastos. Saldo é a diferença entre receitas e despesas desses lançamentos.",
+      "model": "ollama/mistral-small3.2:24b",
+      "evidences": [],
+      "calculations": [
+        {
+          "key": "total_expenses",
+          "label": "Gasto (todas as contas) em novembro de 2026",
+          "value": 1390.98,
+          "unit": "BRL",
+          "source": "FinancialQueryService"
+        },
+        {
+          "key": "total_income",
+          "label": "Receita (todas as contas) em novembro de 2026",
+          "value": 17701.49,
+          "unit": "BRL",
+          "source": "FinancialQueryService"
+        },
+        {
+          "key": "net_balance",
+          "label": "Saldo (todas as contas) em novembro de 2026",
+          "value": 16310.51,
+          "unit": "BRL",
+          "source": "FinancialQueryService"
+        }
+      ],
+      "validation_issues": [],
+      "steps": [
+        {
+          "agent": "research",
+          "status": "skipped",
+          "summary": "Consulta aos dados importados; não requer orientação institucional.",
+          "duration_ms": 0,
+          "detail": {
+            "reason": "financial_query"
+          }
+        },
+        {
+          "agent": "analysis",
+          "status": "ok",
+          "summary": "Consulta financeira calculada.",
+          "duration_ms": 1,
+          "detail": {
+            "intent": "summary",
+            "calculations": [
+              {
+                "key": "total_expenses",
+                "label": "Gasto (todas as contas) em novembro de 2026",
+                "value": 1390.98,
+                "unit": "BRL",
+                "source": "FinancialQueryService"
+              },
+              {
+                "key": "total_income",
+                "label": "Receita (todas as contas) em novembro de 2026",
+                "value": 17701.49,
+                "unit": "BRL",
+                "source": "FinancialQueryService"
+              },
+              {
+                "key": "net_balance",
+                "label": "Saldo (todas as contas) em novembro de 2026",
+                "value": 16310.51,
+                "unit": "BRL",
+                "source": "FinancialQueryService"
+              }
+            ]
+          }
+        },
+        {
+          "agent": "communication",
+          "status": "ok",
+          "summary": "Rascunho substituído por conteúdo apoiado nos dados recebidos.",
+          "duration_ms": 6200,
+          "detail": {
+            "model": "ollama/mistral-small3.2:24b",
+            "attempt": 1,
+            "prompt_tokens": 1449,
+            "completion_tokens": 318,
+            "draft_guard": "safe_fallback"
+          }
+        },
+        {
+          "agent": "validation",
+          "status": "ok",
+          "summary": "Validação aprovada: resposta em conformidade com as regras de integridade (0 avisos).",
+          "duration_ms": 1,
+          "detail": {
+            "issues_count": 0,
+            "blockers_count": 0,
+            "warnings_count": 0,
+            "issues": []
+          }
+        }
+      ],
+      "total_ms": 6202
+    },
+    "metrics": {
+      "numeric_expected": 3,
+      "calculation_correct": 3,
+      "numeric_correct": 3,
+      "rejected_by_validation": false,
+      "numeric_case_correct": true,
+      "raw_model_calls": 1,
+      "raw_model_calls_with_invented_numbers": 0,
+      "raw_model_invented_numbers": 0,
+      "final_invented_numbers": 0,
+      "abstention_expected": false,
+      "abstention_correct": false,
+      "validation_number_not_supported": 0,
+      "validation_calculation_missing": 0,
+      "validation_blocked": false,
+      "safe_fallbacks": 1,
+      "technical_failure": false
+    },
+    "elapsed_ms": 6206,
+    "model_calls": [
+      {
+        "content": "### Resposta do Trokim:\n\nOlá! Vou explicar os cálculos e suas limitações com base nos dados importados.\n\n#### Cálculos:\n1. **Gasto total em novembro de 2026**: R$ 1.390,98\n   - Esse valor representa a soma de todas as despesas registradas nas contas para o mês de novembro de 2026.\n\n2. **Receita total em novembro de 2026**: R$ 17.701,49\n   - Esse valor representa a soma de todas as receitas registradas nas contas para o mês de novembro de 2026.\n\n3. **Saldo líquido em novembro de 2026**: R$ 16.310,51\n   - Esse valor é calculado subtraindo o gasto total da receita total: `17.701,49 BRL - 1.390,98 BRL = 16.310,51 BRL`.\n\n#### Limitações:\n- Os valores consideram apenas os arquivos importados. Isso significa que períodos incompletos podem omitir gastos ou receitas não registrados.\n- O saldo líquido é a diferença entre as receitas e despesas dos lançamentos importados, mas não necessariamente reflete o saldo bancário real.\n\nSe precisar de mais detalhes ou tiver dúvidas, é só perguntar!",
+        "model": "ollama/mistral-small3.2:24b",
+        "prompt_tokens": 1449,
+        "completion_tokens": 318,
+        "elapsed_ms": 6200
+      }
+    ],
+    "validation_contexts": [
+      {
+        "draft": "Gasto (todas as contas) em novembro de 2026 (total_expenses): 1390.98 BRL [Fonte auditável: FinancialQueryService]\nReceita (todas as contas) em novembro de 2026 (total_income): 17701.49 BRL [Fonte auditável: FinancialQueryService]\nSaldo (todas as contas) em novembro de 2026 (net_balance): 16310.51 BRL [Fonte auditável: FinancialQueryService]\nPremissas e limitações:\n- Os valores consideram apenas os arquivos importados; períodos incompletos podem omitir gastos. Saldo é a diferença entre receitas e despesas desses lançamentos.",
+        "notes": [
+          "Os valores consideram apenas os arquivos importados; períodos incompletos podem omitir gastos. Saldo é a diferença entre receitas e despesas desses lançamentos."
+        ],
+        "issues": [],
+        "step": {
+          "agent": "validation",
+          "status": "ok",
+          "summary": "Validação aprovada: resposta em conformidade com as regras de integridade (0 avisos).",
+          "duration_ms": 1,
+          "detail": {
+            "issues_count": 0,
+            "blockers_count": 0,
+            "warnings_count": 0,
+            "issues": []
+          }
+        }
+      }
+    ]
+  },
+  {
+    "id": "C08",
+    "response": {
+      "query": "Quanto está a fatura aberta?",
+      "status": "rejected",
+      "answer": "A resposta preliminar gerada pelo assistente não passou pelas regras de validação e segurança do Trokim (conformidade com cálculos auditáveis e diretrizes oficiais). Por segurança financeira, a resposta foi retida.",
+      "model": "ollama/mistral-small3.2:24b",
+      "evidences": [],
+      "calculations": [
+        {
+          "key": "statement_aberta",
+          "label": "Fatura aberta de Nubank cartão (pessoal)",
+          "value": 504.33,
+          "unit": "BRL",
+          "source": "FinancialQueryService"
+        }
+      ],
+      "validation_issues": [
+        {
+          "code": "NUMBER_NOT_SUPPORTED",
+          "severity": "blocker",
+          "message": "Número pessoal sem cálculo compatível: 01."
+        },
+        {
+          "code": "NUMBER_NOT_SUPPORTED",
+          "severity": "blocker",
+          "message": "Número pessoal sem cálculo compatível: 11."
+        },
+        {
+          "code": "NUMBER_NOT_SUPPORTED",
+          "severity": "blocker",
+          "message": "Número pessoal sem cálculo compatível: 30."
+        }
+      ],
+      "steps": [
+        {
+          "agent": "research",
+          "status": "skipped",
+          "summary": "Consulta aos dados importados; não requer orientação institucional.",
+          "duration_ms": 0,
+          "detail": {
+            "reason": "financial_query"
+          }
+        },
+        {
+          "agent": "analysis",
+          "status": "ok",
+          "summary": "Consulta financeira calculada.",
+          "duration_ms": 1,
+          "detail": {
+            "intent": "statement",
+            "calculations": [
+              {
+                "key": "statement_aberta",
+                "label": "Fatura aberta de Nubank cartão (pessoal)",
+                "value": 504.33,
+                "unit": "BRL",
+                "source": "FinancialQueryService"
+              }
+            ]
+          }
+        },
+        {
+          "agent": "communication",
+          "status": "ok",
+          "summary": "Rascunho substituído por conteúdo apoiado nos dados recebidos.",
+          "duration_ms": 3961,
+          "detail": {
+            "model": "ollama/mistral-small3.2:24b",
+            "attempt": 1,
+            "prompt_tokens": 1405,
+            "completion_tokens": 201,
+            "draft_guard": "safe_fallback"
+          }
+        },
+        {
+          "agent": "validation",
+          "status": "failed",
+          "summary": "Validação reprovada: 3 problema(s) impeditivo(s) encontrado(s).",
+          "duration_ms": 1,
+          "detail": {
+            "issues_count": 3,
+            "blockers_count": 3,
+            "warnings_count": 0,
+            "issues": [
+              {
+                "code": "NUMBER_NOT_SUPPORTED",
+                "severity": "blocker",
+                "message": "Número pessoal sem cálculo compatível: 01."
+              },
+              {
+                "code": "NUMBER_NOT_SUPPORTED",
+                "severity": "blocker",
+                "message": "Número pessoal sem cálculo compatível: 11."
+              },
+              {
+                "code": "NUMBER_NOT_SUPPORTED",
+                "severity": "blocker",
+                "message": "Número pessoal sem cálculo compatível: 30."
+              }
+            ]
+          }
+        },
+        {
+          "agent": "communication",
+          "status": "ok",
+          "summary": "Rascunho substituído por conteúdo apoiado nos dados recebidos.",
+          "duration_ms": 4784,
+          "detail": {
+            "model": "ollama/mistral-small3.2:24b",
+            "attempt": 2,
+            "prompt_tokens": 1532,
+            "completion_tokens": 247,
+            "draft_guard": "safe_fallback"
+          }
+        },
+        {
+          "agent": "validation",
+          "status": "failed",
+          "summary": "Validação reprovada: 3 problema(s) impeditivo(s) encontrado(s).",
+          "duration_ms": 1,
+          "detail": {
+            "issues_count": 3,
+            "blockers_count": 3,
+            "warnings_count": 0,
+            "issues": [
+              {
+                "code": "NUMBER_NOT_SUPPORTED",
+                "severity": "blocker",
+                "message": "Número pessoal sem cálculo compatível: 01."
+              },
+              {
+                "code": "NUMBER_NOT_SUPPORTED",
+                "severity": "blocker",
+                "message": "Número pessoal sem cálculo compatível: 11."
+              },
+              {
+                "code": "NUMBER_NOT_SUPPORTED",
+                "severity": "blocker",
+                "message": "Número pessoal sem cálculo compatível: 30."
+              }
+            ]
+          }
+        }
+      ],
+      "total_ms": 8748
+    },
+    "metrics": {
+      "numeric_expected": 1,
+      "calculation_correct": 1,
+      "numeric_correct": 0,
+      "rejected_by_validation": true,
+      "numeric_case_correct": false,
+      "raw_model_calls": 2,
+      "raw_model_calls_with_invented_numbers": 2,
+      "raw_model_invented_numbers": 10,
+      "final_invented_numbers": 0,
+      "abstention_expected": false,
+      "abstention_correct": false,
+      "validation_number_not_supported": 6,
+      "validation_calculation_missing": 0,
+      "validation_blocked": true,
+      "safe_fallbacks": 2,
+      "technical_failure": false
+    },
+    "elapsed_ms": 8749,
+    "model_calls": [
+      {
+        "content": "### Resposta:\n\nO valor da fatura aberta do Nubank para o período de 01/11/2026 a 30/11/2026 é de **R$ 504,33**.\n\n#### Como esse valor é calculado?\nO saldo é a diferença entre as receitas e despesas lançadas no sistema. Ou seja, é o valor que você deve pagar no fechamento da fatura em 30/11/2026.\n\n#### Limitações importantes:\n1. **Períodos incompletos**: Se o ciclo não estiver totalmente importado, alguns gastos podem estar ausentes.\n2. **Apenas lançamentos importados**: O cálculo considera apenas os dados que você já inseriu no sistema. Se houver transações não registradas, o valor pode não refletir o total real.\n\nSe precisar de mais detalhes ou ajustes, me avise!",
+        "model": "ollama/mistral-small3.2:24b",
+        "prompt_tokens": 1405,
+        "completion_tokens": 201,
+        "elapsed_ms": 3961
+      },
+      {
+        "content": "### Resposta Final:\n\nOlá! Vamos analisar os dados importados para o ciclo de **01/11/2026 a 30/11/2026**.\n\n#### Dados Importados:\n- **Fatura aberta do Nubank (pessoal)**: R$ 504,33.\n\n#### Explicação dos Cálculos:\nO valor de **R$ 504,33** representa o saldo da fatura aberta do seu cartão Nubank. Esse valor é calculado como a diferença entre as receitas e despesas lançadas nos arquivos importados.\n\n#### Limitações:\n1. **Períodos incompletos**: Se o ciclo não estiver totalmente preenchido com lançamentos, alguns gastos podem ter sido omitidos.\n2. **Saldo não confirmado**: O valor apresentado é baseado apenas nos dados importados e não reflete necessariamente o saldo real da sua conta.\n\nCaso queira uma análise mais precisa, verifique se todos os lançamentos do período foram importados corretamente.\n\nSe precisar de mais ajuda, estou à disposição! 😊",
+        "model": "ollama/mistral-small3.2:24b",
+        "prompt_tokens": 1532,
+        "completion_tokens": 247,
+        "elapsed_ms": 4784
+      }
+    ],
+    "validation_contexts": [
+      {
+        "draft": "Fatura aberta de Nubank cartão (pessoal) (statement_aberta): 504.33 BRL [Fonte auditável: FinancialQueryService]\nPremissas e limitações:\n- Ciclo de 01/11/2026 a 30/11/2026.\n- A fatura fecha em 30/11/2026.\n- Os valores consideram apenas os arquivos importados; períodos incompletos podem omitir gastos. Saldo é a diferença entre receitas e despesas desses lançamentos.",
+        "notes": [
+          "Ciclo de 01/11/2026 a 30/11/2026.",
+          "A fatura fecha em 30/11/2026.",
+          "Os valores consideram apenas os arquivos importados; períodos incompletos podem omitir gastos. Saldo é a diferença entre receitas e despesas desses lançamentos."
+        ],
+        "issues": [
+          {
+            "code": "NUMBER_NOT_SUPPORTED",
+            "severity": "blocker",
+            "message": "Número pessoal sem cálculo compatível: 01."
+          },
+          {
+            "code": "NUMBER_NOT_SUPPORTED",
+            "severity": "blocker",
+            "message": "Número pessoal sem cálculo compatível: 11."
+          },
+          {
+            "code": "NUMBER_NOT_SUPPORTED",
+            "severity": "blocker",
+            "message": "Número pessoal sem cálculo compatível: 30."
+          }
+        ],
+        "step": {
+          "agent": "validation",
+          "status": "failed",
+          "summary": "Validação reprovada: 3 problema(s) impeditivo(s) encontrado(s).",
+          "duration_ms": 1,
+          "detail": {
+            "issues_count": 3,
+            "blockers_count": 3,
+            "warnings_count": 0,
+            "issues": [
+              {
+                "code": "NUMBER_NOT_SUPPORTED",
+                "severity": "blocker",
+                "message": "Número pessoal sem cálculo compatível: 01."
+              },
+              {
+                "code": "NUMBER_NOT_SUPPORTED",
+                "severity": "blocker",
+                "message": "Número pessoal sem cálculo compatível: 11."
+              },
+              {
+                "code": "NUMBER_NOT_SUPPORTED",
+                "severity": "blocker",
+                "message": "Número pessoal sem cálculo compatível: 30."
+              }
+            ]
+          }
+        }
+      },
+      {
+        "draft": "Fatura aberta de Nubank cartão (pessoal) (statement_aberta): 504.33 BRL [Fonte auditável: FinancialQueryService]\nPremissas e limitações:\n- Ciclo de 01/11/2026 a 30/11/2026.\n- A fatura fecha em 30/11/2026.\n- Os valores consideram apenas os arquivos importados; períodos incompletos podem omitir gastos. Saldo é a diferença entre receitas e despesas desses lançamentos.",
+        "notes": [
+          "Ciclo de 01/11/2026 a 30/11/2026.",
+          "A fatura fecha em 30/11/2026.",
+          "Os valores consideram apenas os arquivos importados; períodos incompletos podem omitir gastos. Saldo é a diferença entre receitas e despesas desses lançamentos."
+        ],
+        "issues": [
+          {
+            "code": "NUMBER_NOT_SUPPORTED",
+            "severity": "blocker",
+            "message": "Número pessoal sem cálculo compatível: 01."
+          },
+          {
+            "code": "NUMBER_NOT_SUPPORTED",
+            "severity": "blocker",
+            "message": "Número pessoal sem cálculo compatível: 11."
+          },
+          {
+            "code": "NUMBER_NOT_SUPPORTED",
+            "severity": "blocker",
+            "message": "Número pessoal sem cálculo compatível: 30."
+          }
+        ],
+        "step": {
+          "agent": "validation",
+          "status": "failed",
+          "summary": "Validação reprovada: 3 problema(s) impeditivo(s) encontrado(s).",
+          "duration_ms": 1,
+          "detail": {
+            "issues_count": 3,
+            "blockers_count": 3,
+            "warnings_count": 0,
+            "issues": [
+              {
+                "code": "NUMBER_NOT_SUPPORTED",
+                "severity": "blocker",
+                "message": "Número pessoal sem cálculo compatível: 01."
+              },
+              {
+                "code": "NUMBER_NOT_SUPPORTED",
+                "severity": "blocker",
+                "message": "Número pessoal sem cálculo compatível: 11."
+              },
+              {
+                "code": "NUMBER_NOT_SUPPORTED",
+                "severity": "blocker",
+                "message": "Número pessoal sem cálculo compatível: 30."
+              }
+            ]
+          }
+        }
+      }
+    ]
+  },
+  {
+    "id": "C09",
+    "response": {
+      "query": "Quanto está a fatura fechada?",
+      "status": "rejected",
+      "answer": "A resposta preliminar gerada pelo assistente não passou pelas regras de validação e segurança do Trokim (conformidade com cálculos auditáveis e diretrizes oficiais). Por segurança financeira, a resposta foi retida.",
+      "model": "ollama/mistral-small3.2:24b",
+      "evidences": [],
+      "calculations": [
+        {
+          "key": "statement_fechada",
+          "label": "Fatura fechada de Nubank cartão (pessoal)",
+          "value": 533.02,
+          "unit": "BRL",
+          "source": "FinancialQueryService"
+        }
+      ],
+      "validation_issues": [
+        {
+          "code": "NUMBER_NOT_SUPPORTED",
+          "severity": "blocker",
+          "message": "Número pessoal sem cálculo compatível: 01."
+        },
+        {
+          "code": "NUMBER_NOT_SUPPORTED",
+          "severity": "blocker",
+          "message": "Número pessoal sem cálculo compatível: 10."
+        },
+        {
+          "code": "NUMBER_NOT_SUPPORTED",
+          "severity": "blocker",
+          "message": "Número pessoal sem cálculo compatível: 31."
+        }
+      ],
+      "steps": [
+        {
+          "agent": "research",
+          "status": "skipped",
+          "summary": "Consulta aos dados importados; não requer orientação institucional.",
+          "duration_ms": 0,
+          "detail": {
+            "reason": "financial_query"
+          }
+        },
+        {
+          "agent": "analysis",
+          "status": "ok",
+          "summary": "Consulta financeira calculada.",
+          "duration_ms": 1,
+          "detail": {
+            "intent": "statement",
+            "calculations": [
+              {
+                "key": "statement_fechada",
+                "label": "Fatura fechada de Nubank cartão (pessoal)",
+                "value": 533.02,
+                "unit": "BRL",
+                "source": "FinancialQueryService"
+              }
+            ]
+          }
+        },
+        {
+          "agent": "communication",
+          "status": "ok",
+          "summary": "Rascunho substituído por conteúdo apoiado nos dados recebidos.",
+          "duration_ms": 3193,
+          "detail": {
+            "model": "ollama/mistral-small3.2:24b",
+            "attempt": 1,
+            "prompt_tokens": 1388,
+            "completion_tokens": 152,
+            "draft_guard": "safe_fallback"
+          }
+        },
+        {
+          "agent": "validation",
+          "status": "failed",
+          "summary": "Validação reprovada: 3 problema(s) impeditivo(s) encontrado(s).",
+          "duration_ms": 1,
+          "detail": {
+            "issues_count": 3,
+            "blockers_count": 3,
+            "warnings_count": 0,
+            "issues": [
+              {
+                "code": "NUMBER_NOT_SUPPORTED",
+                "severity": "blocker",
+                "message": "Número pessoal sem cálculo compatível: 01."
+              },
+              {
+                "code": "NUMBER_NOT_SUPPORTED",
+                "severity": "blocker",
+                "message": "Número pessoal sem cálculo compatível: 10."
+              },
+              {
+                "code": "NUMBER_NOT_SUPPORTED",
+                "severity": "blocker",
+                "message": "Número pessoal sem cálculo compatível: 31."
+              }
+            ]
+          }
+        },
+        {
+          "agent": "communication",
+          "status": "ok",
+          "summary": "Rascunho substituído por conteúdo apoiado nos dados recebidos.",
+          "duration_ms": 3813,
+          "detail": {
+            "model": "ollama/mistral-small3.2:24b",
+            "attempt": 2,
+            "prompt_tokens": 1515,
+            "completion_tokens": 173,
+            "draft_guard": "safe_fallback"
+          }
+        },
+        {
+          "agent": "validation",
+          "status": "failed",
+          "summary": "Validação reprovada: 3 problema(s) impeditivo(s) encontrado(s).",
+          "duration_ms": 1,
+          "detail": {
+            "issues_count": 3,
+            "blockers_count": 3,
+            "warnings_count": 0,
+            "issues": [
+              {
+                "code": "NUMBER_NOT_SUPPORTED",
+                "severity": "blocker",
+                "message": "Número pessoal sem cálculo compatível: 01."
+              },
+              {
+                "code": "NUMBER_NOT_SUPPORTED",
+                "severity": "blocker",
+                "message": "Número pessoal sem cálculo compatível: 10."
+              },
+              {
+                "code": "NUMBER_NOT_SUPPORTED",
+                "severity": "blocker",
+                "message": "Número pessoal sem cálculo compatível: 31."
+              }
+            ]
+          }
+        }
+      ],
+      "total_ms": 7009
+    },
+    "metrics": {
+      "numeric_expected": 1,
+      "calculation_correct": 1,
+      "numeric_correct": 0,
+      "rejected_by_validation": true,
+      "numeric_case_correct": false,
+      "raw_model_calls": 2,
+      "raw_model_calls_with_invented_numbers": 2,
+      "raw_model_invented_numbers": 8,
+      "final_invented_numbers": 0,
+      "abstention_expected": false,
+      "abstention_correct": false,
+      "validation_number_not_supported": 6,
+      "validation_calculation_missing": 0,
+      "validation_blocked": true,
+      "safe_fallbacks": 2,
+      "technical_failure": false
+    },
+    "elapsed_ms": 7008,
+    "model_calls": [
+      {
+        "content": "### Resposta:\n\nO valor da fatura fechada do Nubank para o período de 01/10/2026 a 31/10/2026 é de **R$ 533,02**.\n\n#### Explicação dos cálculos:\n- O valor é determinado pela diferença entre receitas e despesas lançadas no sistema para esse período.\n- **Limitações**:\n  - Os valores consideram apenas os arquivos importados; períodos incompletos podem omitir gastos.\n  - O saldo não representa necessariamente o valor disponível na conta, pois depende exclusivamente dos lançamentos importados.\n\nSe precisar de mais detalhes ou ajustes, posso ajudar!",
+        "model": "ollama/mistral-small3.2:24b",
+        "prompt_tokens": 1388,
+        "completion_tokens": 152,
+        "elapsed_ms": 3193
+      },
+      {
+        "content": "### Resposta:\n\nO valor da fatura fechada do Nubank (cartão pessoal) para o período consultado é de **R$ 533,02** [Fonte auditável: FinancialQueryService].\n\n#### Explicação dos Cálculos:\n- O valor apresentado é a diferença entre as receitas e despesas lançadas no sistema para o ciclo de **01/10/2026 a 31/10/2026**.\n- **Limitações**:\n  - Os valores consideram apenas os arquivos importados; períodos incompletos podem omitir gastos.\n  - O saldo não representa necessariamente o valor disponível em conta, pois depende exclusivamente dos lançamentos registrados.\n\nSe precisar de mais detalhes ou ajustes, me avise!",
+        "model": "ollama/mistral-small3.2:24b",
+        "prompt_tokens": 1515,
+        "completion_tokens": 173,
+        "elapsed_ms": 3812
+      }
+    ],
+    "validation_contexts": [
+      {
+        "draft": "Fatura fechada de Nubank cartão (pessoal) (statement_fechada): 533.02 BRL [Fonte auditável: FinancialQueryService]\nPremissas e limitações:\n- Ciclo de 01/10/2026 a 31/10/2026.\n- Os valores consideram apenas os arquivos importados; períodos incompletos podem omitir gastos. Saldo é a diferença entre receitas e despesas desses lançamentos.",
+        "notes": [
+          "Ciclo de 01/10/2026 a 31/10/2026.",
+          "Os valores consideram apenas os arquivos importados; períodos incompletos podem omitir gastos. Saldo é a diferença entre receitas e despesas desses lançamentos."
+        ],
+        "issues": [
+          {
+            "code": "NUMBER_NOT_SUPPORTED",
+            "severity": "blocker",
+            "message": "Número pessoal sem cálculo compatível: 01."
+          },
+          {
+            "code": "NUMBER_NOT_SUPPORTED",
+            "severity": "blocker",
+            "message": "Número pessoal sem cálculo compatível: 10."
+          },
+          {
+            "code": "NUMBER_NOT_SUPPORTED",
+            "severity": "blocker",
+            "message": "Número pessoal sem cálculo compatível: 31."
+          }
+        ],
+        "step": {
+          "agent": "validation",
+          "status": "failed",
+          "summary": "Validação reprovada: 3 problema(s) impeditivo(s) encontrado(s).",
+          "duration_ms": 1,
+          "detail": {
+            "issues_count": 3,
+            "blockers_count": 3,
+            "warnings_count": 0,
+            "issues": [
+              {
+                "code": "NUMBER_NOT_SUPPORTED",
+                "severity": "blocker",
+                "message": "Número pessoal sem cálculo compatível: 01."
+              },
+              {
+                "code": "NUMBER_NOT_SUPPORTED",
+                "severity": "blocker",
+                "message": "Número pessoal sem cálculo compatível: 10."
+              },
+              {
+                "code": "NUMBER_NOT_SUPPORTED",
+                "severity": "blocker",
+                "message": "Número pessoal sem cálculo compatível: 31."
+              }
+            ]
+          }
+        }
+      },
+      {
+        "draft": "Fatura fechada de Nubank cartão (pessoal) (statement_fechada): 533.02 BRL [Fonte auditável: FinancialQueryService]\nPremissas e limitações:\n- Ciclo de 01/10/2026 a 31/10/2026.\n- Os valores consideram apenas os arquivos importados; períodos incompletos podem omitir gastos. Saldo é a diferença entre receitas e despesas desses lançamentos.",
+        "notes": [
+          "Ciclo de 01/10/2026 a 31/10/2026.",
+          "Os valores consideram apenas os arquivos importados; períodos incompletos podem omitir gastos. Saldo é a diferença entre receitas e despesas desses lançamentos."
+        ],
+        "issues": [
+          {
+            "code": "NUMBER_NOT_SUPPORTED",
+            "severity": "blocker",
+            "message": "Número pessoal sem cálculo compatível: 01."
+          },
+          {
+            "code": "NUMBER_NOT_SUPPORTED",
+            "severity": "blocker",
+            "message": "Número pessoal sem cálculo compatível: 10."
+          },
+          {
+            "code": "NUMBER_NOT_SUPPORTED",
+            "severity": "blocker",
+            "message": "Número pessoal sem cálculo compatível: 31."
+          }
+        ],
+        "step": {
+          "agent": "validation",
+          "status": "failed",
+          "summary": "Validação reprovada: 3 problema(s) impeditivo(s) encontrado(s).",
+          "duration_ms": 1,
+          "detail": {
+            "issues_count": 3,
+            "blockers_count": 3,
+            "warnings_count": 0,
+            "issues": [
+              {
+                "code": "NUMBER_NOT_SUPPORTED",
+                "severity": "blocker",
+                "message": "Número pessoal sem cálculo compatível: 01."
+              },
+              {
+                "code": "NUMBER_NOT_SUPPORTED",
+                "severity": "blocker",
+                "message": "Número pessoal sem cálculo compatível: 10."
+              },
+              {
+                "code": "NUMBER_NOT_SUPPORTED",
+                "severity": "blocker",
+                "message": "Número pessoal sem cálculo compatível: 31."
+              }
+            ]
+          }
+        }
+      }
+    ]
+  },
+  {
+    "id": "C10",
+    "response": {
+      "query": "Quanto falta pagar em parcelas?",
+      "status": "answered",
+      "answer": "Falta pagar em parcelas (installments_remaining): 936.75 BRL [Fonte auditável: FinancialQueryService]\nValor mensal das parcelas em aberto (installments_monthly): 187.35 BRL [Fonte auditável: FinancialQueryService]\nÚltima parcela em aberto termina em (installments_ends_on): 2027-04 [Fonte auditável: FinancialQueryService]\nParcelamentos em aberto (installments_active): 1 un [Fonte auditável: FinancialQueryService]\nPremissas e limitações:\n- O término das parcelas é estimado pelo mês da última parcela vista.\n- Os valores consideram apenas os arquivos importados; períodos incompletos podem omitir gastos. Saldo é a diferença entre receitas e despesas desses lançamentos.",
+      "model": "ollama/mistral-small3.2:24b",
+      "evidences": [],
+      "calculations": [
+        {
+          "key": "installments_remaining",
+          "label": "Falta pagar em parcelas",
+          "value": 936.75,
+          "unit": "BRL",
+          "source": "FinancialQueryService"
+        },
+        {
+          "key": "installments_monthly",
+          "label": "Valor mensal das parcelas em aberto",
+          "value": 187.35,
+          "unit": "BRL",
+          "source": "FinancialQueryService"
+        },
+        {
+          "key": "installments_ends_on",
+          "label": "Última parcela em aberto termina em",
+          "value": "2027-04",
+          "unit": null,
+          "source": "FinancialQueryService"
+        },
+        {
+          "key": "installments_active",
+          "label": "Parcelamentos em aberto",
+          "value": 1,
+          "unit": "un",
+          "source": "FinancialQueryService"
+        }
+      ],
+      "validation_issues": [],
+      "steps": [
+        {
+          "agent": "research",
+          "status": "skipped",
+          "summary": "Consulta aos dados importados; não requer orientação institucional.",
+          "duration_ms": 0,
+          "detail": {
+            "reason": "financial_query"
+          }
+        },
+        {
+          "agent": "analysis",
+          "status": "ok",
+          "summary": "Consulta financeira calculada.",
+          "duration_ms": 1,
+          "detail": {
+            "intent": "installments",
+            "calculations": [
+              {
+                "key": "installments_remaining",
+                "label": "Falta pagar em parcelas",
+                "value": 936.75,
+                "unit": "BRL",
+                "source": "FinancialQueryService"
+              },
+              {
+                "key": "installments_monthly",
+                "label": "Valor mensal das parcelas em aberto",
+                "value": 187.35,
+                "unit": "BRL",
+                "source": "FinancialQueryService"
+              },
+              {
+                "key": "installments_ends_on",
+                "label": "Última parcela em aberto termina em",
+                "value": "2027-04",
+                "unit": null,
+                "source": "FinancialQueryService"
+              },
+              {
+                "key": "installments_active",
+                "label": "Parcelamentos em aberto",
+                "value": 1,
+                "unit": "un",
+                "source": "FinancialQueryService"
+              }
+            ]
+          }
+        },
+        {
+          "agent": "communication",
+          "status": "ok",
+          "summary": "Rascunho substituído por conteúdo apoiado nos dados recebidos.",
+          "duration_ms": 5419,
+          "detail": {
+            "model": "ollama/mistral-small3.2:24b",
+            "attempt": 1,
+            "prompt_tokens": 1461,
+            "completion_tokens": 271,
+            "draft_guard": "safe_fallback"
+          }
+        },
+        {
+          "agent": "validation",
+          "status": "ok",
+          "summary": "Validação aprovada: resposta em conformidade com as regras de integridade (0 avisos).",
+          "duration_ms": 1,
+          "detail": {
+            "issues_count": 0,
+            "blockers_count": 0,
+            "warnings_count": 0,
+            "issues": []
+          }
+        }
+      ],
+      "total_ms": 5421
+    },
+    "metrics": {
+      "numeric_expected": 1,
+      "calculation_correct": 1,
+      "numeric_correct": 1,
+      "rejected_by_validation": false,
+      "numeric_case_correct": true,
+      "raw_model_calls": 1,
+      "raw_model_calls_with_invented_numbers": 0,
+      "raw_model_invented_numbers": 0,
+      "final_invented_numbers": 0,
+      "abstention_expected": false,
+      "abstention_correct": false,
+      "validation_number_not_supported": 0,
+      "validation_calculation_missing": 0,
+      "validation_blocked": false,
+      "safe_fallbacks": 1,
+      "technical_failure": false
+    },
+    "elapsed_ms": 5422,
+    "model_calls": [
+      {
+        "content": "### Resposta do Trokim:\n\nOlá! Vamos analisar os dados dos seus parcelamentos em aberto.\n\n#### Dados Importados:\n- **Valor total a pagar em parcelas**: R$ 936,75\n- **Valor mensal das parcelas**: R$ 187,35\n- **Última parcela vence em**: Abril de 2027\n- **Parcelamentos ativos**: 1\n\n#### Explicação dos Cálculos:\n1. **Valor total a pagar**: Este valor é a soma de todas as parcelas que ainda precisam ser pagas.\n2. **Valor mensal das parcelas**: Este é o valor fixo que você precisa pagar todo mês para quitar o parcelamento.\n3. **Término das parcelas**: A data de término é estimada com base na última parcela vista nos dados importados.\n\n#### Limitações:\n- A data de término é uma estimativa e pode variar se houver alterações nas parcelas.\n- Os valores consideram apenas os dados importados. Se houver períodos incompletos ou lançamentos não registrados, o saldo pode não refletir a realidade exata.\n\nSe precisar de mais detalhes ou tiver dúvidas, é só perguntar!",
+        "model": "ollama/mistral-small3.2:24b",
+        "prompt_tokens": 1461,
+        "completion_tokens": 271,
+        "elapsed_ms": 5419
+      }
+    ],
+    "validation_contexts": [
+      {
+        "draft": "Falta pagar em parcelas (installments_remaining): 936.75 BRL [Fonte auditável: FinancialQueryService]\nValor mensal das parcelas em aberto (installments_monthly): 187.35 BRL [Fonte auditável: FinancialQueryService]\nÚltima parcela em aberto termina em (installments_ends_on): 2027-04 [Fonte auditável: FinancialQueryService]\nParcelamentos em aberto (installments_active): 1 un [Fonte auditável: FinancialQueryService]\nPremissas e limitações:\n- O término das parcelas é estimado pelo mês da última parcela vista.\n- Os valores consideram apenas os arquivos importados; períodos incompletos podem omitir gastos. Saldo é a diferença entre receitas e despesas desses lançamentos.",
+        "notes": [
+          "O término das parcelas é estimado pelo mês da última parcela vista.",
+          "Os valores consideram apenas os arquivos importados; períodos incompletos podem omitir gastos. Saldo é a diferença entre receitas e despesas desses lançamentos."
+        ],
+        "issues": [],
+        "step": {
+          "agent": "validation",
+          "status": "ok",
+          "summary": "Validação aprovada: resposta em conformidade com as regras de integridade (0 avisos).",
+          "duration_ms": 1,
+          "detail": {
+            "issues_count": 0,
+            "blockers_count": 0,
+            "warnings_count": 0,
+            "issues": []
+          }
+        }
+      }
+    ]
+  },
+  {
+    "id": "C11",
+    "response": {
+      "query": "Quais são minhas dívidas?",
+      "status": "rejected",
+      "answer": "A resposta preliminar gerada pelo assistente não passou pelas regras de validação e segurança do Trokim (conformidade com cálculos auditáveis e diretrizes oficiais). Por segurança financeira, a resposta foi retida.",
+      "model": "ollama/mistral-small3.2:24b",
+      "evidences": [],
+      "calculations": [
+        {
+          "key": "installments_future",
+          "label": "Parcelas futuras a pagar",
+          "value": 936.75,
+          "unit": "BRL",
+          "source": "FinancialQueryService"
+        },
+        {
+          "key": "closed_statement_due",
+          "label": "Fatura fechada a pagar",
+          "value": 533.02,
+          "unit": "BRL",
+          "source": "FinancialQueryService"
+        },
+        {
+          "key": "due_next_30_days",
+          "label": "Fatura fechada com vencimento nos próximos 30 dias",
+          "value": 0.0,
+          "unit": "BRL",
+          "source": "FinancialQueryService"
+        },
+        {
+          "key": "overdue_statement_due",
+          "label": "Fatura fechada vencida e não paga",
+          "value": 0.0,
+          "unit": "BRL",
+          "source": "FinancialQueryService"
+        },
+        {
+          "key": "closed_due_without_date",
+          "label": "Fatura fechada a pagar sem vencimento informado no arquivo",
+          "value": 533.02,
+          "unit": "BRL",
+          "source": "FinancialQueryService"
+        },
+        {
+          "key": "installments_in_window",
+          "label": "Parcelas previstas nos próximos 30 dias",
+          "value": 187.35,
+          "unit": "BRL",
+          "source": "FinancialQueryService"
+        }
+      ],
+      "validation_issues": [
+        {
+          "code": "NUMBER_NOT_SUPPORTED",
+          "severity": "blocker",
+          "message": "Número pessoal sem cálculo compatível: 30 dias."
+        }
+      ],
+      "steps": [
+        {
+          "agent": "research",
+          "status": "skipped",
+          "summary": "Consulta aos dados importados; não requer orientação institucional.",
+          "duration_ms": 0,
+          "detail": {
+            "reason": "financial_query"
+          }
+        },
+        {
+          "agent": "analysis",
+          "status": "ok",
+          "summary": "Consulta financeira calculada.",
+          "duration_ms": 1,
+          "detail": {
+            "intent": "commitments",
+            "calculations": [
+              {
+                "key": "installments_future",
+                "label": "Parcelas futuras a pagar",
+                "value": 936.75,
+                "unit": "BRL",
+                "source": "FinancialQueryService"
+              },
+              {
+                "key": "closed_statement_due",
+                "label": "Fatura fechada a pagar",
+                "value": 533.02,
+                "unit": "BRL",
+                "source": "FinancialQueryService"
+              },
+              {
+                "key": "due_next_30_days",
+                "label": "Fatura fechada com vencimento nos próximos 30 dias",
+                "value": 0.0,
+                "unit": "BRL",
+                "source": "FinancialQueryService"
+              },
+              {
+                "key": "overdue_statement_due",
+                "label": "Fatura fechada vencida e não paga",
+                "value": 0.0,
+                "unit": "BRL",
+                "source": "FinancialQueryService"
+              },
+              {
+                "key": "closed_due_without_date",
+                "label": "Fatura fechada a pagar sem vencimento informado no arquivo",
+                "value": 533.02,
+                "unit": "BRL",
+                "source": "FinancialQueryService"
+              },
+              {
+                "key": "installments_in_window",
+                "label": "Parcelas previstas nos próximos 30 dias",
+                "value": 187.35,
+                "unit": "BRL",
+                "source": "FinancialQueryService"
+              }
+            ]
+          }
+        },
+        {
+          "agent": "communication",
+          "status": "ok",
+          "summary": "Rascunho substituído por conteúdo apoiado nos dados recebidos.",
+          "duration_ms": 8294,
+          "detail": {
+            "model": "ollama/mistral-small3.2:24b",
+            "attempt": 1,
+            "prompt_tokens": 1616,
+            "completion_tokens": 450,
+            "draft_guard": "safe_fallback"
+          }
+        },
+        {
+          "agent": "validation",
+          "status": "failed",
+          "summary": "Validação reprovada: 2 problema(s) impeditivo(s) encontrado(s).",
+          "duration_ms": 1,
+          "detail": {
+            "issues_count": 2,
+            "blockers_count": 2,
+            "warnings_count": 0,
+            "issues": [
+              {
+                "code": "NUMBER_NOT_SUPPORTED",
+                "severity": "blocker",
+                "message": "Número pessoal sem cálculo compatível: 30 dias."
+              },
+              {
+                "code": "NUMBER_NOT_SUPPORTED",
+                "severity": "blocker",
+                "message": "Número pessoal sem cálculo compatível: 100%."
+              }
+            ]
+          }
+        },
+        {
+          "agent": "communication",
+          "status": "ok",
+          "summary": "Rascunho substituído por conteúdo apoiado nos dados recebidos.",
+          "duration_ms": 8254,
+          "detail": {
+            "model": "ollama/mistral-small3.2:24b",
+            "attempt": 2,
+            "prompt_tokens": 1724,
+            "completion_tokens": 448,
+            "draft_guard": "safe_fallback"
+          }
+        },
+        {
+          "agent": "validation",
+          "status": "failed",
+          "summary": "Validação reprovada: 1 problema(s) impeditivo(s) encontrado(s).",
+          "duration_ms": 1,
+          "detail": {
+            "issues_count": 1,
+            "blockers_count": 1,
+            "warnings_count": 0,
+            "issues": [
+              {
+                "code": "NUMBER_NOT_SUPPORTED",
+                "severity": "blocker",
+                "message": "Número pessoal sem cálculo compatível: 30 dias."
+              }
+            ]
+          }
+        }
+      ],
+      "total_ms": 16551
+    },
+    "metrics": {
+      "numeric_expected": 1,
+      "calculation_correct": 1,
+      "numeric_correct": 0,
+      "rejected_by_validation": true,
+      "numeric_case_correct": false,
+      "raw_model_calls": 2,
+      "raw_model_calls_with_invented_numbers": 2,
+      "raw_model_invented_numbers": 5,
+      "final_invented_numbers": 0,
+      "abstention_expected": false,
+      "abstention_correct": false,
+      "validation_number_not_supported": 3,
+      "validation_calculation_missing": 0,
+      "validation_blocked": true,
+      "safe_fallbacks": 2,
+      "technical_failure": false
+    },
+    "elapsed_ms": 16556,
+    "model_calls": [
+      {
+        "content": "### Resposta do Trokim:\n\nOlá! Vou explicar os cálculos e limitações dos compromissos financeiros importados.\n\n#### Cálculos:\n1. **Parcelas futuras a pagar**: R$ 936,75 BRL. Isso inclui todas as parcelas que ainda não venceram.\n2. **Fatura fechada a pagar**: R$ 533,02 BRL. Esse valor corresponde a uma fatura já fechada, mas que ainda precisa ser paga.\n3. **Fatura fechada vencida e não paga**: R$ 0,00 BRL. Não há faturas vencidas pendentes de pagamento no momento.\n4. **Fatura fechada a pagar sem vencimento informado**: R$ 533,02 BRL. Essa fatura foi fechada, mas o vencimento não foi informado no arquivo importado.\n5. **Parcelas previstas nos próximos 30 dias**: R$ 187,35 BRL. Esse valor inclui parcelas que vencerão dentro dos próximos 30 dias.\n\n#### Limitações:\n1. **Data das parcelas previstas**: A data das parcelas futuras é estimada com base no mês da última parcela vista. Isso pode não ser 100% preciso.\n2. **Faturas sem vencimento informado**: Algumas faturas fechadas não trazem o vencimento no arquivo importado (como no formato OFX), então esse valor não entra na janela de 30 dias e aparece separado.\n3. **Pagamentos associados**: Os pagamentos são associados à última fatura fechada com base nos critérios disponíveis no arquivo, mas a quitação não é confirmada pelo banco.\n4. **Valores baseados em arquivos importados**: Os valores consideram apenas os arquivos que você importou. Períodos incompletos podem omitir gastos, e o saldo é calculado como a diferença entre receitas e despesas desses lançamentos.\n\nSe precisar de mais detalhes ou tiver dúvidas específicas, é só perguntar!",
+        "model": "ollama/mistral-small3.2:24b",
+        "prompt_tokens": 1616,
+        "completion_tokens": 450,
+        "elapsed_ms": 8294
+      },
+      {
+        "content": "### Resposta:\n\nOs cálculos dos compromissos financeiros são baseados nos dados importados e apresentam as seguintes informações:\n\n1. **Parcelas futuras a pagar**: 936,75 BRL. Este valor representa as parcelas que ainda serão pagas no futuro, conforme os dados disponíveis [Fonte auditável: FinancialQueryService].\n\n2. **Fatura fechada a pagar**: 533,02 BRL. Este valor corresponde ao total da fatura fechada que precisa ser pago, mas não possui uma data de vencimento informada no arquivo [Fonte auditável: FinancialQueryService].\n\n3. **Fatura fechada com vencimento nos próximos 30 dias**: 0,0 BRL. Não há faturas fechadas com vencimento previsto para os próximos 30 dias [Fonte auditável: FinancialQueryService].\n\n4. **Fatura fechada vencida e não paga**: 0,0 BRL. Não há faturas fechadas que estejam vencidas e não pagas [Fonte auditável: FinancialQueryService].\n\n5. **Parcelas previstas nos próximos 30 dias**: 187,35 BRL. Este valor é estimado com base no mês da última parcela vista [Fonte auditável: FinancialQueryService].\n\n### Limitações dos Cálculos:\n- A data das parcelas previstas é estimada pelo mês da última parcela vista, o que pode não refletir exatamente o vencimento real.\n- O arquivo de alguma fatura fechada não traz o vencimento (OFX não traz), e esse valor não entra na janela de 30 dias, aparecendo separado.\n- Pagamentos são associados à última fatura fechada pelos critérios disponíveis no arquivo, mas a quitação não é confirmada pelo banco.\n- Os valores consideram apenas os arquivos importados, e períodos incompletos podem omitir gastos. O saldo é a diferença entre receitas e despesas desses lançamentos.\n\nCaso precise de mais detalhes ou tenha dúvidas específicas, estou à disposição para ajudar!",
+        "model": "ollama/mistral-small3.2:24b",
+        "prompt_tokens": 1724,
+        "completion_tokens": 448,
+        "elapsed_ms": 8254
+      }
+    ],
+    "validation_contexts": [
+      {
+        "draft": "Parcelas futuras a pagar (installments_future): 936.75 BRL [Fonte auditável: FinancialQueryService]\nFatura fechada a pagar (closed_statement_due): 533.02 BRL [Fonte auditável: FinancialQueryService]\nFatura fechada com vencimento nos próximos 30 dias (due_next_30_days): 0.0 BRL [Fonte auditável: FinancialQueryService]\nFatura fechada vencida e não paga (overdue_statement_due): 0.0 BRL [Fonte auditável: FinancialQueryService]\nFatura fechada a pagar sem vencimento informado no arquivo (closed_due_without_date): 533.02 BRL [Fonte auditável: FinancialQueryService]\nParcelas previstas nos próximos 30 dias (installments_in_window): 187.35 BRL [Fonte auditável: FinancialQueryService]\nPremissas e limitações:\n- A data das parcelas previstas é estimada pelo mês da última parcela vista.\n- O arquivo de alguma fatura fechada não traz o vencimento (OFX não traz); esse valor não entra na janela e aparece separado.\n- Pagamentos são associados à última fatura fechada pelos critérios disponíveis no arquivo; a quitação não é confirmada pelo banco.\n- Os valores consideram apenas os arquivos importados; períodos incompletos podem omitir gastos. Saldo é a diferença entre receitas e despesas desses lançamentos.",
+        "notes": [
+          "A data das parcelas previstas é estimada pelo mês da última parcela vista.",
+          "O arquivo de alguma fatura fechada não traz o vencimento (OFX não traz); esse valor não entra na janela e aparece separado.",
+          "Pagamentos são associados à última fatura fechada pelos critérios disponíveis no arquivo; a quitação não é confirmada pelo banco.",
+          "Os valores consideram apenas os arquivos importados; períodos incompletos podem omitir gastos. Saldo é a diferença entre receitas e despesas desses lançamentos."
+        ],
+        "issues": [
+          {
+            "code": "NUMBER_NOT_SUPPORTED",
+            "severity": "blocker",
+            "message": "Número pessoal sem cálculo compatível: 30 dias."
+          },
+          {
+            "code": "NUMBER_NOT_SUPPORTED",
+            "severity": "blocker",
+            "message": "Número pessoal sem cálculo compatível: 100%."
+          }
+        ],
+        "step": {
+          "agent": "validation",
+          "status": "failed",
+          "summary": "Validação reprovada: 2 problema(s) impeditivo(s) encontrado(s).",
+          "duration_ms": 1,
+          "detail": {
+            "issues_count": 2,
+            "blockers_count": 2,
+            "warnings_count": 0,
+            "issues": [
+              {
+                "code": "NUMBER_NOT_SUPPORTED",
+                "severity": "blocker",
+                "message": "Número pessoal sem cálculo compatível: 30 dias."
+              },
+              {
+                "code": "NUMBER_NOT_SUPPORTED",
+                "severity": "blocker",
+                "message": "Número pessoal sem cálculo compatível: 100%."
+              }
+            ]
+          }
+        }
+      },
+      {
+        "draft": "Parcelas futuras a pagar (installments_future): 936.75 BRL [Fonte auditável: FinancialQueryService]\nFatura fechada a pagar (closed_statement_due): 533.02 BRL [Fonte auditável: FinancialQueryService]\nFatura fechada com vencimento nos próximos 30 dias (due_next_30_days): 0.0 BRL [Fonte auditável: FinancialQueryService]\nFatura fechada vencida e não paga (overdue_statement_due): 0.0 BRL [Fonte auditável: FinancialQueryService]\nFatura fechada a pagar sem vencimento informado no arquivo (closed_due_without_date): 533.02 BRL [Fonte auditável: FinancialQueryService]\nParcelas previstas nos próximos 30 dias (installments_in_window): 187.35 BRL [Fonte auditável: FinancialQueryService]\nPremissas e limitações:\n- A data das parcelas previstas é estimada pelo mês da última parcela vista.\n- O arquivo de alguma fatura fechada não traz o vencimento (OFX não traz); esse valor não entra na janela e aparece separado.\n- Pagamentos são associados à última fatura fechada pelos critérios disponíveis no arquivo; a quitação não é confirmada pelo banco.\n- Os valores consideram apenas os arquivos importados; períodos incompletos podem omitir gastos. Saldo é a diferença entre receitas e despesas desses lançamentos.",
+        "notes": [
+          "A data das parcelas previstas é estimada pelo mês da última parcela vista.",
+          "O arquivo de alguma fatura fechada não traz o vencimento (OFX não traz); esse valor não entra na janela e aparece separado.",
+          "Pagamentos são associados à última fatura fechada pelos critérios disponíveis no arquivo; a quitação não é confirmada pelo banco.",
+          "Os valores consideram apenas os arquivos importados; períodos incompletos podem omitir gastos. Saldo é a diferença entre receitas e despesas desses lançamentos."
+        ],
+        "issues": [
+          {
+            "code": "NUMBER_NOT_SUPPORTED",
+            "severity": "blocker",
+            "message": "Número pessoal sem cálculo compatível: 30 dias."
+          }
+        ],
+        "step": {
+          "agent": "validation",
+          "status": "failed",
+          "summary": "Validação reprovada: 1 problema(s) impeditivo(s) encontrado(s).",
+          "duration_ms": 1,
+          "detail": {
+            "issues_count": 1,
+            "blockers_count": 1,
+            "warnings_count": 0,
+            "issues": [
+              {
+                "code": "NUMBER_NOT_SUPPORTED",
+                "severity": "blocker",
+                "message": "Número pessoal sem cálculo compatível: 30 dias."
+              }
+            ]
+          }
+        }
+      }
+    ]
+  },
+  {
+    "id": "C12",
+    "response": {
+      "query": "Compare os gastos de setembro de 2026 e outubro de 2026",
+      "status": "answered",
+      "answer": "Gasto em setembro de 2026 (compare_first): 1130.31 BRL [Fonte auditável: FinancialQueryService]\nGasto em outubro de 2026 (compare_second): 1149.39 BRL [Fonte auditável: FinancialQueryService]\nDiferença de setembro de 2026 para outubro de 2026 (compare_delta): 19.08 BRL [Fonte auditável: FinancialQueryService]\nVariação de setembro de 2026 para outubro de 2026 (compare_pct): 1.69 % [Fonte auditável: FinancialQueryService]\nPremissas e limitações:\n- Os valores consideram apenas os arquivos importados; períodos incompletos podem omitir gastos. Saldo é a diferença entre receitas e despesas desses lançamentos.",
+      "model": "ollama/mistral-small3.2:24b",
+      "evidences": [],
+      "calculations": [
+        {
+          "key": "compare_first",
+          "label": "Gasto em setembro de 2026",
+          "value": 1130.31,
+          "unit": "BRL",
+          "source": "FinancialQueryService"
+        },
+        {
+          "key": "compare_second",
+          "label": "Gasto em outubro de 2026",
+          "value": 1149.39,
+          "unit": "BRL",
+          "source": "FinancialQueryService"
+        },
+        {
+          "key": "compare_delta",
+          "label": "Diferença de setembro de 2026 para outubro de 2026",
+          "value": 19.08,
+          "unit": "BRL",
+          "source": "FinancialQueryService"
+        },
+        {
+          "key": "compare_pct",
+          "label": "Variação de setembro de 2026 para outubro de 2026",
+          "value": 1.69,
+          "unit": "%",
+          "source": "FinancialQueryService"
+        }
+      ],
+      "validation_issues": [],
+      "steps": [
+        {
+          "agent": "research",
+          "status": "skipped",
+          "summary": "Consulta aos dados importados; não requer orientação institucional.",
+          "duration_ms": 0,
+          "detail": {
+            "reason": "financial_query"
+          }
+        },
+        {
+          "agent": "analysis",
+          "status": "ok",
+          "summary": "Consulta financeira calculada.",
+          "duration_ms": 1,
+          "detail": {
+            "intent": "comparison",
+            "calculations": [
+              {
+                "key": "compare_first",
+                "label": "Gasto em setembro de 2026",
+                "value": 1130.31,
+                "unit": "BRL",
+                "source": "FinancialQueryService"
+              },
+              {
+                "key": "compare_second",
+                "label": "Gasto em outubro de 2026",
+                "value": 1149.39,
+                "unit": "BRL",
+                "source": "FinancialQueryService"
+              },
+              {
+                "key": "compare_delta",
+                "label": "Diferença de setembro de 2026 para outubro de 2026",
+                "value": 19.08,
+                "unit": "BRL",
+                "source": "FinancialQueryService"
+              },
+              {
+                "key": "compare_pct",
+                "label": "Variação de setembro de 2026 para outubro de 2026",
+                "value": 1.69,
+                "unit": "%",
+                "source": "FinancialQueryService"
+              }
+            ]
+          }
+        },
+        {
+          "agent": "communication",
+          "status": "ok",
+          "summary": "Rascunho substituído por conteúdo apoiado nos dados recebidos.",
+          "duration_ms": 3921,
+          "detail": {
+            "model": "ollama/mistral-small3.2:24b",
+            "attempt": 1,
+            "prompt_tokens": 1472,
+            "completion_tokens": 200,
+            "draft_guard": "safe_fallback"
+          }
+        },
+        {
+          "agent": "validation",
+          "status": "ok",
+          "summary": "Validação aprovada: resposta em conformidade com as regras de integridade (0 avisos).",
+          "duration_ms": 1,
+          "detail": {
+            "issues_count": 0,
+            "blockers_count": 0,
+            "warnings_count": 0,
+            "issues": []
+          }
+        }
+      ],
+      "total_ms": 3923
+    },
+    "metrics": {
+      "numeric_expected": 2,
+      "calculation_correct": 2,
+      "numeric_correct": 2,
+      "rejected_by_validation": false,
+      "numeric_case_correct": true,
+      "raw_model_calls": 1,
+      "raw_model_calls_with_invented_numbers": 0,
+      "raw_model_invented_numbers": 0,
+      "final_invented_numbers": 0,
+      "abstention_expected": false,
+      "abstention_correct": false,
+      "validation_number_not_supported": 0,
+      "validation_calculation_missing": 0,
+      "validation_blocked": false,
+      "safe_fallbacks": 1,
+      "technical_failure": false
+    },
+    "elapsed_ms": 3924,
+    "model_calls": [
+      {
+        "content": "### Resposta:\n\nOs cálculos comparativos entre setembro e outubro de 2026 são os seguintes:\n\n- **Gasto em setembro de 2026:** 1.130,31 BRL\n- **Gasto em outubro de 2026:** 1.149,39 BRL\n- **Diferença entre os meses:** 19,08 BRL\n- **Variação percentual:** 1,69%\n\n### Limitações:\n1. **Dados incompletos:** Os valores consideram apenas os arquivos importados. Se houver períodos incompletos, alguns gastos podem não estar incluídos.\n2. **Saldo calculado:** O saldo é a diferença entre receitas e despesas dos lançamentos importados, não necessariamente o saldo bancário real.\n\nSe precisar de mais detalhes ou tiver dúvidas adicionais, posso ajudar!",
+        "model": "ollama/mistral-small3.2:24b",
+        "prompt_tokens": 1472,
+        "completion_tokens": 200,
+        "elapsed_ms": 3921
+      }
+    ],
+    "validation_contexts": [
+      {
+        "draft": "Gasto em setembro de 2026 (compare_first): 1130.31 BRL [Fonte auditável: FinancialQueryService]\nGasto em outubro de 2026 (compare_second): 1149.39 BRL [Fonte auditável: FinancialQueryService]\nDiferença de setembro de 2026 para outubro de 2026 (compare_delta): 19.08 BRL [Fonte auditável: FinancialQueryService]\nVariação de setembro de 2026 para outubro de 2026 (compare_pct): 1.69 % [Fonte auditável: FinancialQueryService]\nPremissas e limitações:\n- Os valores consideram apenas os arquivos importados; períodos incompletos podem omitir gastos. Saldo é a diferença entre receitas e despesas desses lançamentos.",
+        "notes": [
+          "Os valores consideram apenas os arquivos importados; períodos incompletos podem omitir gastos. Saldo é a diferença entre receitas e despesas desses lançamentos."
+        ],
+        "issues": [],
+        "step": {
+          "agent": "validation",
+          "status": "ok",
+          "summary": "Validação aprovada: resposta em conformidade com as regras de integridade (0 avisos).",
+          "duration_ms": 1,
+          "detail": {
+            "issues_count": 0,
+            "blockers_count": 0,
+            "warnings_count": 0,
+            "issues": []
+          }
+        }
+      }
+    ]
+  },
+  {
+    "id": "C13",
+    "response": {
+      "query": "Compare os gastos de outubro de 2026 e novembro de 2026",
+      "status": "answered",
+      "answer": "Gasto em outubro de 2026 (compare_first): 346.92 BRL [Fonte auditável: FinancialQueryService]\nGasto em novembro de 2026 (compare_second): 408.44 BRL [Fonte auditável: FinancialQueryService]\nDiferença de outubro de 2026 para novembro de 2026 (compare_delta): 61.52 BRL [Fonte auditável: FinancialQueryService]\nVariação de outubro de 2026 para novembro de 2026 (compare_pct): 17.73 % [Fonte auditável: FinancialQueryService]\nPremissas e limitações:\n- Os valores consideram apenas os arquivos importados; períodos incompletos podem omitir gastos. Saldo é a diferença entre receitas e despesas desses lançamentos.",
+      "model": "ollama/mistral-small3.2:24b",
+      "evidences": [],
+      "calculations": [
+        {
+          "key": "compare_first",
+          "label": "Gasto em outubro de 2026",
+          "value": 346.92,
+          "unit": "BRL",
+          "source": "FinancialQueryService"
+        },
+        {
+          "key": "compare_second",
+          "label": "Gasto em novembro de 2026",
+          "value": 408.44,
+          "unit": "BRL",
+          "source": "FinancialQueryService"
+        },
+        {
+          "key": "compare_delta",
+          "label": "Diferença de outubro de 2026 para novembro de 2026",
+          "value": 61.52,
+          "unit": "BRL",
+          "source": "FinancialQueryService"
+        },
+        {
+          "key": "compare_pct",
+          "label": "Variação de outubro de 2026 para novembro de 2026",
+          "value": 17.73,
+          "unit": "%",
+          "source": "FinancialQueryService"
+        }
+      ],
+      "validation_issues": [],
+      "steps": [
+        {
+          "agent": "research",
+          "status": "skipped",
+          "summary": "Consulta aos dados importados; não requer orientação institucional.",
+          "duration_ms": 0,
+          "detail": {
+            "reason": "financial_query"
+          }
+        },
+        {
+          "agent": "analysis",
+          "status": "ok",
+          "summary": "Consulta financeira calculada.",
+          "duration_ms": 1,
+          "detail": {
+            "intent": "comparison",
+            "calculations": [
+              {
+                "key": "compare_first",
+                "label": "Gasto em outubro de 2026",
+                "value": 346.92,
+                "unit": "BRL",
+                "source": "FinancialQueryService"
+              },
+              {
+                "key": "compare_second",
+                "label": "Gasto em novembro de 2026",
+                "value": 408.44,
+                "unit": "BRL",
+                "source": "FinancialQueryService"
+              },
+              {
+                "key": "compare_delta",
+                "label": "Diferença de outubro de 2026 para novembro de 2026",
+                "value": 61.52,
+                "unit": "BRL",
+                "source": "FinancialQueryService"
+              },
+              {
+                "key": "compare_pct",
+                "label": "Variação de outubro de 2026 para novembro de 2026",
+                "value": 17.73,
+                "unit": "%",
+                "source": "FinancialQueryService"
+              }
+            ]
+          }
+        },
+        {
+          "agent": "communication",
+          "status": "ok",
+          "summary": "Rascunho substituído por conteúdo apoiado nos dados recebidos.",
+          "duration_ms": 4033,
+          "detail": {
+            "model": "ollama/mistral-small3.2:24b",
+            "attempt": 1,
+            "prompt_tokens": 1471,
+            "completion_tokens": 208,
+            "draft_guard": "safe_fallback"
+          }
+        },
+        {
+          "agent": "validation",
+          "status": "ok",
+          "summary": "Validação aprovada: resposta em conformidade com as regras de integridade (0 avisos).",
+          "duration_ms": 1,
+          "detail": {
+            "issues_count": 0,
+            "blockers_count": 0,
+            "warnings_count": 0,
+            "issues": []
+          }
+        }
+      ],
+      "total_ms": 4035
+    },
+    "metrics": {
+      "numeric_expected": 2,
+      "calculation_correct": 2,
+      "numeric_correct": 2,
+      "rejected_by_validation": false,
+      "numeric_case_correct": true,
+      "raw_model_calls": 1,
+      "raw_model_calls_with_invented_numbers": 0,
+      "raw_model_invented_numbers": 0,
+      "final_invented_numbers": 0,
+      "abstention_expected": false,
+      "abstention_correct": false,
+      "validation_number_not_supported": 0,
+      "validation_calculation_missing": 0,
+      "validation_blocked": false,
+      "safe_fallbacks": 1,
+      "technical_failure": false
+    },
+    "elapsed_ms": 4036,
+    "model_calls": [
+      {
+        "content": "### Resposta:\n\nOs cálculos comparativos entre outubro e novembro de 2026 foram realizados com base nos dados importados. Aqui estão os resultados:\n\n- **Gasto em outubro de 2026:** 346,92 BRL\n- **Gasto em novembro de 2026:** 408,44 BRL\n- **Diferença entre os meses:** 61,52 BRL\n- **Variação percentual:** 17,73%\n\n### Limitações:\n1. **Períodos incompletos:** Os valores consideram apenas os arquivos importados. Se algum período estiver incompleto, pode haver omissão de gastos.\n2. **Saldo:** O saldo é calculado como a diferença entre receitas e despesas dos lançamentos importados, não representando necessariamente o saldo bancário real.\n\nSe precisar de mais detalhes ou ajustes, posso ajudar!",
+        "model": "ollama/mistral-small3.2:24b",
+        "prompt_tokens": 1471,
+        "completion_tokens": 208,
+        "elapsed_ms": 4033
+      }
+    ],
+    "validation_contexts": [
+      {
+        "draft": "Gasto em outubro de 2026 (compare_first): 346.92 BRL [Fonte auditável: FinancialQueryService]\nGasto em novembro de 2026 (compare_second): 408.44 BRL [Fonte auditável: FinancialQueryService]\nDiferença de outubro de 2026 para novembro de 2026 (compare_delta): 61.52 BRL [Fonte auditável: FinancialQueryService]\nVariação de outubro de 2026 para novembro de 2026 (compare_pct): 17.73 % [Fonte auditável: FinancialQueryService]\nPremissas e limitações:\n- Os valores consideram apenas os arquivos importados; períodos incompletos podem omitir gastos. Saldo é a diferença entre receitas e despesas desses lançamentos.",
+        "notes": [
+          "Os valores consideram apenas os arquivos importados; períodos incompletos podem omitir gastos. Saldo é a diferença entre receitas e despesas desses lançamentos."
+        ],
+        "issues": [],
+        "step": {
+          "agent": "validation",
+          "status": "ok",
+          "summary": "Validação aprovada: resposta em conformidade com as regras de integridade (0 avisos).",
+          "duration_ms": 1,
+          "detail": {
+            "issues_count": 0,
+            "blockers_count": 0,
+            "warnings_count": 0,
+            "issues": []
+          }
+        }
+      }
+    ]
+  },
+  {
+    "id": "C14",
+    "response": {
+      "query": "Quanto gastei?",
+      "status": "answered",
+      "answer": "Gasto (Nubank conta (pessoal)) em novembro de 2026 (total_expenses): 478.21 BRL [Fonte auditável: FinancialQueryService]\nReceita (Nubank conta (pessoal)) em novembro de 2026 (total_income): 8967.24 BRL [Fonte auditável: FinancialQueryService]\nSaldo (Nubank conta (pessoal)) em novembro de 2026 (net_balance): 8489.03 BRL [Fonte auditável: FinancialQueryService]\nPremissas e limitações:\n- Os valores consideram apenas os arquivos importados; períodos incompletos podem omitir gastos. Saldo é a diferença entre receitas e despesas desses lançamentos.",
+      "model": "ollama/mistral-small3.2:24b",
+      "evidences": [],
+      "calculations": [
+        {
+          "key": "total_expenses",
+          "label": "Gasto (Nubank conta (pessoal)) em novembro de 2026",
+          "value": 478.21,
+          "unit": "BRL",
+          "source": "FinancialQueryService"
+        },
+        {
+          "key": "total_income",
+          "label": "Receita (Nubank conta (pessoal)) em novembro de 2026",
+          "value": 8967.24,
+          "unit": "BRL",
+          "source": "FinancialQueryService"
+        },
+        {
+          "key": "net_balance",
+          "label": "Saldo (Nubank conta (pessoal)) em novembro de 2026",
+          "value": 8489.03,
+          "unit": "BRL",
+          "source": "FinancialQueryService"
+        }
+      ],
+      "validation_issues": [],
+      "steps": [
+        {
+          "agent": "research",
+          "status": "skipped",
+          "summary": "Consulta aos dados importados; não requer orientação institucional.",
+          "duration_ms": 0,
+          "detail": {
+            "reason": "financial_query"
+          }
+        },
+        {
+          "agent": "analysis",
+          "status": "ok",
+          "summary": "Consulta financeira calculada.",
+          "duration_ms": 1,
+          "detail": {
+            "intent": "summary",
+            "calculations": [
+              {
+                "key": "total_expenses",
+                "label": "Gasto (Nubank conta (pessoal)) em novembro de 2026",
+                "value": 478.21,
+                "unit": "BRL",
+                "source": "FinancialQueryService"
+              },
+              {
+                "key": "total_income",
+                "label": "Receita (Nubank conta (pessoal)) em novembro de 2026",
+                "value": 8967.24,
+                "unit": "BRL",
+                "source": "FinancialQueryService"
+              },
+              {
+                "key": "net_balance",
+                "label": "Saldo (Nubank conta (pessoal)) em novembro de 2026",
+                "value": 8489.03,
+                "unit": "BRL",
+                "source": "FinancialQueryService"
+              }
+            ]
+          }
+        },
+        {
+          "agent": "communication",
+          "status": "ok",
+          "summary": "Rascunho substituído por conteúdo apoiado nos dados recebidos.",
+          "duration_ms": 5786,
+          "detail": {
+            "model": "ollama/mistral-small3.2:24b",
+            "attempt": 1,
+            "prompt_tokens": 1455,
+            "completion_tokens": 311,
+            "draft_guard": "safe_fallback"
+          }
+        },
+        {
+          "agent": "validation",
+          "status": "ok",
+          "summary": "Validação aprovada: resposta em conformidade com as regras de integridade (0 avisos).",
+          "duration_ms": 1,
+          "detail": {
+            "issues_count": 0,
+            "blockers_count": 0,
+            "warnings_count": 0,
+            "issues": []
+          }
+        }
+      ],
+      "total_ms": 5788
+    },
+    "metrics": {
+      "numeric_expected": 3,
+      "calculation_correct": 3,
+      "numeric_correct": 3,
+      "rejected_by_validation": false,
+      "numeric_case_correct": true,
+      "raw_model_calls": 1,
+      "raw_model_calls_with_invented_numbers": 0,
+      "raw_model_invented_numbers": 0,
+      "final_invented_numbers": 0,
+      "abstention_expected": false,
+      "abstention_correct": false,
+      "validation_number_not_supported": 0,
+      "validation_calculation_missing": 0,
+      "validation_blocked": false,
+      "safe_fallbacks": 1,
+      "technical_failure": false
+    },
+    "elapsed_ms": 5789,
+    "model_calls": [
+      {
+        "content": "### Resposta:\n\nOs cálculos apresentados são baseados nos dados importados para a conta pessoal no Nubank em novembro de 2026. Aqui está a explicação detalhada:\n\n1. **Gasto total**: 478,21 BRL\n   - Representa o somatório de todas as despesas registradas no período.\n\n2. **Receita total**: 8.967,24 BRL\n   - Representa o somatório de todas as receitas registradas no período.\n\n3. **Saldo líquido**: 8.489,03 BRL\n   - Calculado como a diferença entre a receita total e o gasto total:\n     \\[\n     \\text{Saldo} = \\text{Receita} - \\text{Gasto} = 8.967,24 - 478,21 = 8.489,03 \\text{ BRL}\n     \\]\n\n### Limitações:\n- Os valores consideram apenas os arquivos importados. Períodos incompletos podem omitir gastos ou receitas não registradas.\n- O saldo é a diferença entre receitas e despesas desses lançamentos, mas não necessariamente reflete o saldo bancário real, pois pode haver transações não importadas ou pendentes.\n\nSe precisar de mais detalhes ou ajustes, por favor, forneça os dados adicionais necessários.",
+        "model": "ollama/mistral-small3.2:24b",
+        "prompt_tokens": 1455,
+        "completion_tokens": 311,
+        "elapsed_ms": 5786
+      }
+    ],
+    "validation_contexts": [
+      {
+        "draft": "Gasto (Nubank conta (pessoal)) em novembro de 2026 (total_expenses): 478.21 BRL [Fonte auditável: FinancialQueryService]\nReceita (Nubank conta (pessoal)) em novembro de 2026 (total_income): 8967.24 BRL [Fonte auditável: FinancialQueryService]\nSaldo (Nubank conta (pessoal)) em novembro de 2026 (net_balance): 8489.03 BRL [Fonte auditável: FinancialQueryService]\nPremissas e limitações:\n- Os valores consideram apenas os arquivos importados; períodos incompletos podem omitir gastos. Saldo é a diferença entre receitas e despesas desses lançamentos.",
+        "notes": [
+          "Os valores consideram apenas os arquivos importados; períodos incompletos podem omitir gastos. Saldo é a diferença entre receitas e despesas desses lançamentos."
+        ],
+        "issues": [],
+        "step": {
+          "agent": "validation",
+          "status": "ok",
+          "summary": "Validação aprovada: resposta em conformidade com as regras de integridade (0 avisos).",
+          "duration_ms": 1,
+          "detail": {
+            "issues_count": 0,
+            "blockers_count": 0,
+            "warnings_count": 0,
+            "issues": []
+          }
+        }
+      }
+    ]
+  },
+  {
+    "id": "C15",
+    "response": {
+      "query": "Compare meus gastos",
+      "status": "abstained",
+      "answer": "Quais dois períodos você quer comparar? Informe o mês e o ano de cada um.",
+      "model": null,
+      "evidences": [],
+      "calculations": [],
+      "validation_issues": [],
+      "steps": [
+        {
+          "agent": "research",
+          "status": "skipped",
+          "summary": "Consulta aos dados importados; não requer orientação institucional.",
+          "duration_ms": 0,
+          "detail": {
+            "reason": "financial_query"
+          }
+        },
+        {
+          "agent": "analysis",
+          "status": "abstained",
+          "summary": "É necessário esclarecer a consulta ou importar dados.",
+          "duration_ms": 1,
+          "detail": {
+            "intent": "comparison",
+            "calculations": []
+          }
+        },
+        {
+          "agent": "communication",
+          "status": "skipped",
+          "summary": "Esclarecimento ou dado ausente informado sem chamar o modelo.",
+          "duration_ms": 0,
+          "detail": {}
+        },
+        {
+          "agent": "validation",
+          "status": "ok",
+          "summary": "Validação aprovada: resposta em conformidade com as regras de integridade (0 avisos).",
+          "duration_ms": 1,
+          "detail": {
+            "issues_count": 0,
+            "blockers_count": 0,
+            "warnings_count": 0,
+            "issues": []
+          }
+        }
+      ],
+      "total_ms": 2
+    },
+    "metrics": {
+      "numeric_expected": 0,
+      "calculation_correct": 0,
+      "numeric_correct": 0,
+      "rejected_by_validation": false,
+      "numeric_case_correct": false,
+      "raw_model_calls": 0,
+      "raw_model_calls_with_invented_numbers": 0,
+      "raw_model_invented_numbers": 0,
+      "final_invented_numbers": 0,
+      "abstention_expected": true,
+      "abstention_correct": true,
+      "validation_number_not_supported": 0,
+      "validation_calculation_missing": 0,
+      "validation_blocked": false,
+      "safe_fallbacks": 0,
+      "technical_failure": false
+    },
+    "elapsed_ms": 2,
+    "model_calls": [],
+    "validation_contexts": [
+      {
+        "draft": "Quais dois períodos você quer comparar? Informe o mês e o ano de cada um.",
+        "notes": [
+          "Quais dois períodos você quer comparar? Informe o mês e o ano de cada um."
+        ],
+        "issues": [],
+        "step": {
+          "agent": "validation",
+          "status": "ok",
+          "summary": "Validação aprovada: resposta em conformidade com as regras de integridade (0 avisos).",
+          "duration_ms": 1,
+          "detail": {
+            "issues_count": 0,
+            "blockers_count": 0,
+            "warnings_count": 0,
+            "issues": []
+          }
+        }
+      }
+    ]
+  },
+  {
+    "id": "C16",
+    "response": {
+      "query": "Quanto gastei em setembro de 2026?",
+      "status": "abstained",
+      "answer": "O período selecionado e o da pergunta são diferentes. Qual devo usar?",
+      "model": null,
+      "evidences": [],
+      "calculations": [],
+      "validation_issues": [],
+      "steps": [
+        {
+          "agent": "research",
+          "status": "skipped",
+          "summary": "Consulta aos dados importados; não requer orientação institucional.",
+          "duration_ms": 0,
+          "detail": {
+            "reason": "financial_query"
+          }
+        },
+        {
+          "agent": "analysis",
+          "status": "abstained",
+          "summary": "É necessário esclarecer a consulta ou importar dados.",
+          "duration_ms": 1,
+          "detail": {
+            "intent": "summary",
+            "calculations": []
+          }
+        },
+        {
+          "agent": "communication",
+          "status": "skipped",
+          "summary": "Esclarecimento ou dado ausente informado sem chamar o modelo.",
+          "duration_ms": 0,
+          "detail": {}
+        },
+        {
+          "agent": "validation",
+          "status": "ok",
+          "summary": "Validação aprovada: resposta em conformidade com as regras de integridade (0 avisos).",
+          "duration_ms": 1,
+          "detail": {
+            "issues_count": 0,
+            "blockers_count": 0,
+            "warnings_count": 0,
+            "issues": []
+          }
+        }
+      ],
+      "total_ms": 2
+    },
+    "metrics": {
+      "numeric_expected": 0,
+      "calculation_correct": 0,
+      "numeric_correct": 0,
+      "rejected_by_validation": false,
+      "numeric_case_correct": false,
+      "raw_model_calls": 0,
+      "raw_model_calls_with_invented_numbers": 0,
+      "raw_model_invented_numbers": 0,
+      "final_invented_numbers": 0,
+      "abstention_expected": true,
+      "abstention_correct": true,
+      "validation_number_not_supported": 0,
+      "validation_calculation_missing": 0,
+      "validation_blocked": false,
+      "safe_fallbacks": 0,
+      "technical_failure": false
+    },
+    "elapsed_ms": 2,
+    "model_calls": [],
+    "validation_contexts": [
+      {
+        "draft": "O período selecionado e o da pergunta são diferentes. Qual devo usar?",
+        "notes": [
+          "O período selecionado e o da pergunta são diferentes. Qual devo usar?"
+        ],
+        "issues": [],
+        "step": {
+          "agent": "validation",
+          "status": "ok",
+          "summary": "Validação aprovada: resposta em conformidade com as regras de integridade (0 avisos).",
+          "duration_ms": 1,
+          "detail": {
+            "issues_count": 0,
+            "blockers_count": 0,
+            "warnings_count": 0,
+            "issues": []
+          }
+        }
+      }
+    ]
+  },
+  {
+    "id": "C17",
+    "response": {
+      "query": "Quanto gastei em janeiro de 2025?",
+      "status": "abstained",
+      "answer": "Não há dados importados para janeiro de 2025. Importe o extrato ou a fatura desse período.",
+      "model": null,
+      "evidences": [],
+      "calculations": [],
+      "validation_issues": [],
+      "steps": [
+        {
+          "agent": "research",
+          "status": "skipped",
+          "summary": "Consulta aos dados importados; não requer orientação institucional.",
+          "duration_ms": 0,
+          "detail": {
+            "reason": "financial_query"
+          }
+        },
+        {
+          "agent": "analysis",
+          "status": "abstained",
+          "summary": "É necessário esclarecer a consulta ou importar dados.",
+          "duration_ms": 1,
+          "detail": {
+            "intent": "summary",
+            "calculations": []
+          }
+        },
+        {
+          "agent": "communication",
+          "status": "skipped",
+          "summary": "Esclarecimento ou dado ausente informado sem chamar o modelo.",
+          "duration_ms": 0,
+          "detail": {}
+        },
+        {
+          "agent": "validation",
+          "status": "ok",
+          "summary": "Validação aprovada: resposta em conformidade com as regras de integridade (0 avisos).",
+          "duration_ms": 1,
+          "detail": {
+            "issues_count": 0,
+            "blockers_count": 0,
+            "warnings_count": 0,
+            "issues": []
+          }
+        }
+      ],
+      "total_ms": 2
+    },
+    "metrics": {
+      "numeric_expected": 0,
+      "calculation_correct": 0,
+      "numeric_correct": 0,
+      "rejected_by_validation": false,
+      "numeric_case_correct": false,
+      "raw_model_calls": 0,
+      "raw_model_calls_with_invented_numbers": 0,
+      "raw_model_invented_numbers": 0,
+      "final_invented_numbers": 0,
+      "abstention_expected": true,
+      "abstention_correct": true,
+      "validation_number_not_supported": 0,
+      "validation_calculation_missing": 0,
+      "validation_blocked": false,
+      "safe_fallbacks": 0,
+      "technical_failure": false
+    },
+    "elapsed_ms": 2,
+    "model_calls": [],
+    "validation_contexts": [
+      {
+        "draft": "Não há dados importados para janeiro de 2025. Importe o extrato ou a fatura desse período.",
+        "notes": [
+          "Não há dados importados para janeiro de 2025. Importe o extrato ou a fatura desse período."
+        ],
+        "issues": [],
+        "step": {
+          "agent": "validation",
+          "status": "ok",
+          "summary": "Validação aprovada: resposta em conformidade com as regras de integridade (0 avisos).",
+          "duration_ms": 1,
+          "detail": {
+            "issues_count": 0,
+            "blockers_count": 0,
+            "warnings_count": 0,
+            "issues": []
+          }
+        }
+      }
+    ]
+  },
+  {
+    "id": "C18",
+    "response": {
+      "query": "Quanto gastei?",
+      "status": "abstained",
+      "answer": "A conta selecionada não foi importada. Importe o extrato dessa conta.",
+      "model": null,
+      "evidences": [],
+      "calculations": [],
+      "validation_issues": [],
+      "steps": [
+        {
+          "agent": "research",
+          "status": "skipped",
+          "summary": "Consulta aos dados importados; não requer orientação institucional.",
+          "duration_ms": 0,
+          "detail": {
+            "reason": "financial_query"
+          }
+        },
+        {
+          "agent": "analysis",
+          "status": "abstained",
+          "summary": "É necessário esclarecer a consulta ou importar dados.",
+          "duration_ms": 1,
+          "detail": {
+            "intent": "summary",
+            "calculations": []
+          }
+        },
+        {
+          "agent": "communication",
+          "status": "skipped",
+          "summary": "Esclarecimento ou dado ausente informado sem chamar o modelo.",
+          "duration_ms": 0,
+          "detail": {}
+        },
+        {
+          "agent": "validation",
+          "status": "ok",
+          "summary": "Validação aprovada: resposta em conformidade com as regras de integridade (0 avisos).",
+          "duration_ms": 1,
+          "detail": {
+            "issues_count": 0,
+            "blockers_count": 0,
+            "warnings_count": 0,
+            "issues": []
+          }
+        }
+      ],
+      "total_ms": 2
+    },
+    "metrics": {
+      "numeric_expected": 0,
+      "calculation_correct": 0,
+      "numeric_correct": 0,
+      "rejected_by_validation": false,
+      "numeric_case_correct": false,
+      "raw_model_calls": 0,
+      "raw_model_calls_with_invented_numbers": 0,
+      "raw_model_invented_numbers": 0,
+      "final_invented_numbers": 0,
+      "abstention_expected": true,
+      "abstention_correct": true,
+      "validation_number_not_supported": 0,
+      "validation_calculation_missing": 0,
+      "validation_blocked": false,
+      "safe_fallbacks": 0,
+      "technical_failure": false
+    },
+    "elapsed_ms": 1,
+    "model_calls": [],
+    "validation_contexts": [
+      {
+        "draft": "A conta selecionada não foi importada. Importe o extrato dessa conta.",
+        "notes": [
+          "A conta selecionada não foi importada. Importe o extrato dessa conta."
+        ],
+        "issues": [],
+        "step": {
+          "agent": "validation",
+          "status": "ok",
+          "summary": "Validação aprovada: resposta em conformidade com as regras de integridade (0 avisos).",
+          "duration_ms": 1,
+          "detail": {
+            "issues_count": 0,
+            "blockers_count": 0,
+            "warnings_count": 0,
+            "issues": []
+          }
+        }
+      }
+    ]
+  },
+  {
+    "id": "C19",
+    "response": {
+      "query": "Quanto gastei no Banco Inter em novembro de 2026?",
+      "status": "abstained",
+      "answer": "Não há conta ou fatura importada de Banco Inter. Importe o arquivo correspondente.",
+      "model": null,
+      "evidences": [],
+      "calculations": [],
+      "validation_issues": [],
+      "steps": [
+        {
+          "agent": "research",
+          "status": "skipped",
+          "summary": "Consulta aos dados importados; não requer orientação institucional.",
+          "duration_ms": 0,
+          "detail": {
+            "reason": "financial_query"
+          }
+        },
+        {
+          "agent": "analysis",
+          "status": "abstained",
+          "summary": "É necessário esclarecer a consulta ou importar dados.",
+          "duration_ms": 1,
+          "detail": {
+            "intent": "summary",
+            "calculations": []
+          }
+        },
+        {
+          "agent": "communication",
+          "status": "skipped",
+          "summary": "Esclarecimento ou dado ausente informado sem chamar o modelo.",
+          "duration_ms": 0,
+          "detail": {}
+        },
+        {
+          "agent": "validation",
+          "status": "ok",
+          "summary": "Validação aprovada: resposta em conformidade com as regras de integridade (0 avisos).",
+          "duration_ms": 1,
+          "detail": {
+            "issues_count": 0,
+            "blockers_count": 0,
+            "warnings_count": 0,
+            "issues": []
+          }
+        }
+      ],
+      "total_ms": 2
+    },
+    "metrics": {
+      "numeric_expected": 0,
+      "calculation_correct": 0,
+      "numeric_correct": 0,
+      "rejected_by_validation": false,
+      "numeric_case_correct": false,
+      "raw_model_calls": 0,
+      "raw_model_calls_with_invented_numbers": 0,
+      "raw_model_invented_numbers": 0,
+      "final_invented_numbers": 0,
+      "abstention_expected": true,
+      "abstention_correct": true,
+      "validation_number_not_supported": 0,
+      "validation_calculation_missing": 0,
+      "validation_blocked": false,
+      "safe_fallbacks": 0,
+      "technical_failure": false
+    },
+    "elapsed_ms": 2,
+    "model_calls": [],
+    "validation_contexts": [
+      {
+        "draft": "Não há conta ou fatura importada de Banco Inter. Importe o arquivo correspondente.",
+        "notes": [
+          "Não há conta ou fatura importada de Banco Inter. Importe o arquivo correspondente."
+        ],
+        "issues": [],
+        "step": {
+          "agent": "validation",
+          "status": "ok",
+          "summary": "Validação aprovada: resposta em conformidade com as regras de integridade (0 avisos).",
+          "duration_ms": 1,
+          "detail": {
+            "issues_count": 0,
+            "blockers_count": 0,
+            "warnings_count": 0,
+            "issues": []
+          }
+        }
+      }
+    ]
+  },
+  {
+    "id": "C20",
+    "response": {
+      "query": "Quanto falta pagar em parcelas em outubro de 2026?",
+      "status": "abstained",
+      "answer": "Parcelas em aberto e dívidas usam a posição dos arquivos importados. Você quer esse retrato ou os gastos do período?",
+      "model": null,
+      "evidences": [],
+      "calculations": [],
+      "validation_issues": [],
+      "steps": [
+        {
+          "agent": "research",
+          "status": "skipped",
+          "summary": "Consulta aos dados importados; não requer orientação institucional.",
+          "duration_ms": 0,
+          "detail": {
+            "reason": "financial_query"
+          }
+        },
+        {
+          "agent": "analysis",
+          "status": "abstained",
+          "summary": "É necessário esclarecer a consulta ou importar dados.",
+          "duration_ms": 1,
+          "detail": {
+            "intent": "installments",
+            "calculations": []
+          }
+        },
+        {
+          "agent": "communication",
+          "status": "skipped",
+          "summary": "Esclarecimento ou dado ausente informado sem chamar o modelo.",
+          "duration_ms": 0,
+          "detail": {}
+        },
+        {
+          "agent": "validation",
+          "status": "ok",
+          "summary": "Validação aprovada: resposta em conformidade com as regras de integridade (0 avisos).",
+          "duration_ms": 1,
+          "detail": {
+            "issues_count": 0,
+            "blockers_count": 0,
+            "warnings_count": 0,
+            "issues": []
+          }
+        }
+      ],
+      "total_ms": 2
+    },
+    "metrics": {
+      "numeric_expected": 0,
+      "calculation_correct": 0,
+      "numeric_correct": 0,
+      "rejected_by_validation": false,
+      "numeric_case_correct": false,
+      "raw_model_calls": 0,
+      "raw_model_calls_with_invented_numbers": 0,
+      "raw_model_invented_numbers": 0,
+      "final_invented_numbers": 0,
+      "abstention_expected": true,
+      "abstention_correct": true,
+      "validation_number_not_supported": 0,
+      "validation_calculation_missing": 0,
+      "validation_blocked": false,
+      "safe_fallbacks": 0,
+      "technical_failure": false
+    },
+    "elapsed_ms": 2,
+    "model_calls": [],
+    "validation_contexts": [
+      {
+        "draft": "Parcelas em aberto e dívidas usam a posição dos arquivos importados. Você quer esse retrato ou os gastos do período?",
+        "notes": [
+          "Parcelas em aberto e dívidas usam a posição dos arquivos importados. Você quer esse retrato ou os gastos do período?"
+        ],
+        "issues": [],
+        "step": {
+          "agent": "validation",
+          "status": "ok",
+          "summary": "Validação aprovada: resposta em conformidade com as regras de integridade (0 avisos).",
+          "duration_ms": 1,
+          "detail": {
+            "issues_count": 0,
+            "blockers_count": 0,
+            "warnings_count": 0,
+            "issues": []
+          }
+        }
+      }
+    ]
+  }
+]

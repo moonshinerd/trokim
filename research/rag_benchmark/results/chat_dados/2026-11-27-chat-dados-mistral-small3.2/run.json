@@ -124,5 +124,29 @@
     "Relógio real registrado; expectativas de dívidas independem da janela relativa."
   ],
   "run": "2026-11-27-chat-dados-mistral-small3.2",
-  "status": "running"
+  "status": "completed",
+  "finished_at": "2026-11-27T04:25:07.658930+00:00",
+  "scenarios": 20,
+  "metrics": {
+    "numeric_expected": 32,
+    "calculation_correct": 32,
+    "numeric_correct": 0,
+    "rejected_by_validation": 14,
+    "numeric_case_correct": 0,
+    "raw_model_calls": 28,
+    "raw_model_calls_with_invented_numbers": 28,
+    "raw_model_invented_numbers": 142,
+    "final_invented_numbers": 0,
+    "abstention_expected": 6,
+    "abstention_correct": 6,
+    "validation_number_not_supported": 121,
+    "validation_calculation_missing": 0,
+    "validation_blocked": 14,
+    "safe_fallbacks": 28,
+    "technical_failure": 0
+  },
+  "statuses": {
+    "rejected": 14,
+    "abstained": 6
+  }
 }

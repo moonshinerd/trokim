@@ -590,7 +590,9 @@ respostas brutas em `readings.json`. Nada foi sobrescrito. Sem revisão humana c
 | `documents/2026-11-27-vlm-gemini-2.5-flash-lite-v2` | OCR + Gemini 2.5 Flash Lite | `cc9a15c` | Instrução corrigida; árvore alterada só no runner do chat |
 | `chat_dados/2026-11-27-chat-dados-qwen2.5-1.5b` | Qwen 2.5 1,5 B (Ollama) | `9422144` | Avaliador antigo contava rejeição como falha técnica |
 | `chat_dados/2026-11-27-chat-dados-qwen2.5-1.5b-v2` | Qwen 2.5 1,5 B (Ollama) | `cc9a15c` | Avaliador corrigido |
-| `chat_dados/2026-11-27-chat-dados-mistral-small3.2` | Mistral Small 3.2 24B (Ollama) | `cc9a15c` | Modelo maior, mesmo protocolo |
+| `chat_dados/2026-11-27-chat-dados-mistral-small3.2` | Mistral Small 3.2 24B (Ollama) | `cc9a15c` | Modelo maior, mesmo protocolo; achou os falsos positivos do validador (11.5) |
+| `chat_dados/2026-11-27-chat-dados-qwen2.5-1.5b-v3` | Qwen 2.5 1,5 B (Ollama) | `15f0cdc` | Validador corrigido |
+| `chat_dados/2026-11-27-chat-dados-mistral-small3.2-v2` | Mistral Small 3.2 24B (Ollama) | `15f0cdc` | Validador corrigido |
 
 As três primeiras execuções de documentos foram **reavaliadas** (`--reavaliar`) depois que o
 avaliador passou a separar a falha só da visão (o agente descarta a contribuição e segue com o
@@ -644,29 +646,41 @@ não mudou. Com ela, as respostas passaram a vir no formato (v2).
 
 ### 11.4. Chat com os dados do usuário
 
-| Métrica | Qwen 2.5 1,5 B (v2) | Mistral Small 3.2 24B |
-|---|---:|---:|
-| Valores esperados calculados corretamente | 32/32 | MISTRAL_CALC |
-| Valores entregues na resposta final | 2/32 | MISTRAL_ENTREGUE |
-| Respostas retidas pelo Validation | 12 de 14 | MISTRAL_RETIDAS |
-| Chamadas do modelo com número inventado | 25 de 27 | MISTRAL_INVENTADAS |
-| Números inventados na resposta final | 0 | MISTRAL_FINAL |
-| Esclarecimento ou dado ausente corretos | 6/6 | MISTRAL_ABST |
-| Falhas técnicas | 0 | MISTRAL_TEC |
-| Latência média por pergunta | 2,9 s | MISTRAL_LAT |
+| Métrica | Qwen 1,5 B (v2) | Mistral 24B | Qwen 1,5 B (v3) | Mistral 24B (v2) |
+|---|---:|---:|---:|---:|
+| Validador | antigo | antigo | corrigido | corrigido |
+| Valores calculados corretamente | 32/32 | 32/32 | 32/32 | 32/32 |
+| Valores entregues na resposta final | 2/32 | 0/32 | **27/32** | **26/32** |
+| Perguntas com resposta completa e certa | 2/14 | 0/14 | **11/14** | **10/14** |
+| Respostas retidas pelo Validation | 12/14 | 14/14 | 3/14 | 4/14 |
+| Chamadas do modelo com número sem suporte | 25/27 | 28/28 | 8/19 | 8/18 |
+| Números inventados na resposta final | 0 | 0 | 0 | 0 |
+| Esclarecimento ou dado ausente corretos | 6/6 | 6/6 | 6/6 | 6/6 |
+| Falhas técnicas | 0 | 0 | 0 | 0 |
+| Latência média por pergunta | 2,9 s | 7,2 s | 2,1 s | 4,9 s |
 
-A parte determinística acerta todos os números: conta, dono, período, fatura aberta e fechada,
-parcelas e dívidas. O que não chega ao usuário é a redação: a
-[ADR 0023](../adr/0023-contexto-do-usuario-no-chat.md) audita também o texto original do
-modelo e, se ele inventar um número, **retém a resposta inteira**, mesmo quando o rascunho
-seguro (só com as linhas exatas dos cálculos) está correto. Com o Qwen de 1,5 B, quase toda
-redação traz número sem suporte (anos, numeração de lista, valores reformatados como
-`R$ 7,023,92`), e o usuário recebe "a resposta foi retida". Nenhum número inventado chegou à
-resposta final.
+A parte determinística acerta todos os números (conta, dono, período, fatura aberta e
+fechada, parcelas e dívidas) em todas as execuções. A diferença está na entrega: a
+[ADR 0023](../adr/0023-contexto-do-usuario-no-chat.md) audita também o texto original do modelo
+e retém a resposta inteira se ele citar número sem cálculo compatível. Nenhum número inventado
+chegou à resposta final em nenhuma execução.
 
-![Desfechos do chat com o Qwen 2.5 1,5 B](../assets/chat_dados/2026-11-27-chat-dados-qwen2.5-1.5b-v2/fig1-chat-dados-desfechos.png)
+![Desfechos do chat com o Qwen 2.5 1,5 B, validador corrigido](../assets/chat_dados/2026-11-27-chat-dados-qwen2.5-1.5b-v3/fig1-chat-dados-desfechos.png)
 
-### 11.5. Hipóteses do épico da Semana 5
+### 11.5. Defeito achado pelo benchmark: falsos positivos do validador
+
+Com o validador antigo, o Mistral de 24 B teve **todas** as respostas retidas, embora a redação
+estivesse certa (por exemplo, "1. **Gasto total**: 561,78 BRL ... 6.462,14 = 7.023,92 - 561,78").
+O validador contava como número sem suporte o **ano** que já estava no rótulo do cálculo
+("setembro de 2026"), a **numeração de lista** ("1.", "2)") e o **"-" de uma subtração** entre
+valores ou de marcador de lista, lido como sinal negativo. A correção
+(`api/app/services/financial_number_validation.py`) aceita só essas formas: ano com moeda, ano
+fora dos rótulos, valor inventado em lista ou em operação e sinal negativo real continuam
+barrados (`api/tests/test_financial_number_validation.py`). A política de reter a resposta não
+mudou. As retenções que restam vêm de datas escritas no formato brasileiro ("30/11", "01") e de
+valores reformatados de forma errada pelo modelo ("15,291,09 BRL"), que são retenções corretas.
+
+### 11.6. Hipóteses do épico da Semana 5
 
 1. **Acerto por campo ≥ 90%: não atingido no critério exato** (82,5% na calibração e 77,2% na
    verificação). Todos os erros são de espaço ou acento em nomes; sem esse critério, 100%. Os
@@ -677,10 +691,11 @@ resposta final.
    agente só a consulta para campo ausente. A VLM local aumentou o p95 (14,9 s contra 9,3 s); a
    remota custou US$ 0,0008 em 8 chamadas e foi a mais rápida. O que **não** se sustenta: que a
    VLM corrija os erros de nome do OCR no desenho atual.
-4. **O chat responde corretamente os números: sustentado no cálculo, não na entrega com modelo
-   pequeno.** 32 de 32 valores certos e nenhum número inventado na resposta final; com o Qwen de
-   1,5 B só 2 de 32 valores chegaram ao usuário, porque a política da ADR 0023 retém a resposta
-   quando o modelo inventa.
+4. **O chat responde corretamente os números: sustentada com ressalva.** O cálculo acerta 32 de 32
+   valores e nenhum número inventado chega ao usuário. Com o validador corrigido, 27 de 32 valores
+   (Qwen 1,5 B) e 26 de 32 (Mistral 24B) chegam na resposta; o restante é retido por segurança
+   (data em formato brasileiro ou valor mal formatado pelo modelo), e o usuário recebe a
+   mensagem de resposta retida em vez de um número errado.
 
 **Limitações.** Documentos e extrato sintéticos, uma repetição, sem revisão humana cega; a
 verificação não é teste cego (o corpus foi inspecionado nas semanas anteriores). A VLM "local"
