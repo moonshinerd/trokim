@@ -3,12 +3,15 @@
 import re
 import time
 from collections.abc import Sequence
+from datetime import datetime
+from zoneinfo import ZoneInfo
 
 from app.domain.agents import (
     AgentContext,
     AgentName,
     AgentStep,
     CalculationResult,
+    FinancialFilters,
     MultiAgentResponse,
     MultiAgentStatus,
     StepStatus,
@@ -16,6 +19,9 @@ from app.domain.agents import (
 from app.domain.models import EvidenceChunk, Transaction, TransactionOrigin, TransactionType
 from app.services.agents.orchestrator import REJECTION_MESSAGE, Orchestrator
 from app.services.calculation_service import CalculationService
+from app.services.financial_chat_resolution import resolve_chat_selection
+from app.services.financial_query_service import Clarification
+from app.services.library_service import Library
 from app.services.statement_profiles import normalize_text
 
 DOCUMENT_ORIGIN = "Lido de foto ou PDF, confirmado por você."
@@ -62,12 +68,62 @@ class AgentQueryService:
         self.orchestrator = orchestrator
 
     async def run(
-        self, question: str, transactions: Sequence[Transaction], document_uid: str | None = None
+        self,
+        question: str,
+        transactions: Sequence[Transaction] = (),
+        document_uid: str | None = None,
+        library: Library | None = None,
+        filters: FinancialFilters | None = None,
     ) -> MultiAgentResponse:
         started = time.perf_counter()
+        transactions = library.transactions if library is not None else transactions
         selected = _select_transactions(question, transactions, document_uid)
         if selected is None:
-            return await self.orchestrator.run(question, transactions=transactions)
+            return await self.orchestrator.run(
+                question,
+                transactions=transactions,
+                library=library,
+                filters=filters,
+            )
+        if filters and any(filters.model_dump().values()):
+            snapshot = library or Library(transactions=list(transactions))
+            selection = resolve_chat_selection(
+                question,
+                filters,
+                snapshot,
+                datetime.now(ZoneInfo("America/Sao_Paulo")).date(),
+            )
+            reason = None
+            if isinstance(selection, Clarification):
+                reason = selection.question
+            elif len(selection.periods) > 1 or any(p.start is None for p in selection.periods):
+                reason = "Para um documento confirmado, use um mês ou intervalo de datas no filtro."
+            else:
+                allowed = {tx.uid for tx in selection.library.transactions}
+                period = selection.periods[0] if selection.periods else None
+                selected = [
+                    tx
+                    for tx in selected
+                    if tx.uid in allowed
+                    and (period is None or period.start <= tx.date <= period.end)
+                ]
+                if not selected:
+                    reason = (
+                        "Não há documento confirmado desse estabelecimento no recorte selecionado."
+                    )
+            if reason:
+                return MultiAgentResponse(
+                    query=question,
+                    status=MultiAgentStatus.ABSTAINED,
+                    answer=reason,
+                    steps=[
+                        AgentStep(
+                            agent=AgentName.ANALYSIS,
+                            status=StepStatus.ABSTAINED,
+                            summary="Documento ausente ou filtro ambíguo.",
+                        )
+                    ],
+                )
         documents = [tx.uid for tx in selected if tx.origin == TransactionOrigin.DOCUMENT]
         if not documents:
             return MultiAgentResponse(

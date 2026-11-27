@@ -11,12 +11,14 @@ class ResearchAgent:
 
     name = agents.AgentName.RESEARCH
 
-    def __init__(self, rag_service: RAGService) -> None:
+    def __init__(self, rag_service: RAGService | None = None) -> None:
         self.rag_service = rag_service
 
     async def run(self, ctx: agents.AgentContext) -> agents.AgentStep:
         """Atualiza apenas o resultado da pesquisa e devolve sua trilha de execução."""
         started = perf_counter()
+        if self.rag_service is None:
+            self.rag_service = RAGService()
         ctx.evidences = []
         ctx.abstain_reason = None
 

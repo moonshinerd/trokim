@@ -17,13 +17,14 @@ from app.domain.agents import (
 )
 from app.domain.models import EvidenceChunk
 from app.models.llm_provider import LLMProvider, LLMResponse
+from app.services.financial_number_validation import check_financial_numbers
 
 MODEL_UNAVAILABLE_MESSAGE = "Modelo de linguagem indisponível; não foi possível redigir a resposta."
 DRAFT_NOT_GROUNDED_CODE = "DRAFT_NOT_GROUNDED"
 _CITATION_PATTERN = re.compile(r"\[(\d+)\]")
 
 PROMPTS_DIR = Path(__file__).resolve().parents[2] / "prompts"
-DEFAULT_PROMPT_PATH = PROMPTS_DIR / "prompt_agente_comunicacao_v1.txt"
+DEFAULT_PROMPT_PATH = PROMPTS_DIR / "prompt_agente_comunicacao_v2.txt"
 
 FALLBACK_TEMPLATE = (
     "Você é o assistente financeiro educativo do Trokim.\n"
@@ -112,7 +113,11 @@ class CommunicationAgent:
     def _is_supported_draft(cls, draft: str, ctx: AgentContext) -> bool:
         """Aceita apenas frases literais citadas e resultados determinísticos exatos."""
         remaining = " ".join(draft.split())
-        if not remaining or ctx.assumptions:
+        if not remaining:
+            return False
+        if ctx.financial:
+            return remaining == " ".join(cls._safe_draft(ctx).split())
+        if ctx.assumptions:
             return False
 
         citations = [int(value) for value in _CITATION_PATTERN.findall(remaining)]
@@ -152,7 +157,8 @@ class CommunicationAgent:
         if ctx.assumptions:
             parts.append("Premissas e limitações:")
             parts.extend(f"- {assumption}" for assumption in ctx.assumptions)
-            parts.append("Você pode esclarecer essas premissas ou fornecer os dados indicados?")
+            if not ctx.financial:
+                parts.append("Você pode esclarecer essas premissas ou fornecer os dados indicados?")
         if not parts:
             return "Não recebi evidências, cálculos ou premissas suficientes para responder."
         return "\n".join(parts)
@@ -214,7 +220,12 @@ class CommunicationAgent:
             calculations=self._format_calculations(ctx.calculations),
             assumptions=self._format_assumptions(ctx.assumptions),
             revision_notes=self._format_revision_notes(ctx.issues, ctx.attempt),
-            question=ctx.question,
+            question=(
+                f"Consulta de dados importados: {ctx.financial.intent.value}. "
+                "Explique os cálculos e suas limitações."
+                if ctx.financial
+                else ctx.question
+            ),
         )
 
         try:
@@ -241,8 +252,15 @@ class CommunicationAgent:
         generated_answer = response.content.strip()
         answer_supported = self._is_supported_draft(generated_answer, ctx)
         ctx.draft_answer = generated_answer if answer_supported else self._safe_draft(ctx)
-        ctx.issues = [issue for issue in ctx.issues if issue.code != DRAFT_NOT_GROUNDED_CODE]
-        if not answer_supported and self._has_unsupported_numbers(generated_answer, ctx):
+        replaced_codes = {DRAFT_NOT_GROUNDED_CODE}
+        if ctx.financial:
+            replaced_codes.add("NUMBER_NOT_SUPPORTED")
+        ctx.issues = [issue for issue in ctx.issues if issue.code not in replaced_codes]
+        if (
+            not ctx.financial
+            and not answer_supported
+            and self._has_unsupported_numbers(generated_answer, ctx)
+        ):
             ctx.issues.append(
                 ValidationIssue(
                     code=DRAFT_NOT_GROUNDED_CODE,
@@ -252,6 +270,10 @@ class CommunicationAgent:
                         "e dos resultados de cálculo fornecidos."
                     ),
                 )
+            )
+        if ctx.financial:
+            ctx.issues.extend(
+                check_financial_numbers(generated_answer, ctx.calculations, ctx.assumptions)
             )
         ctx.model = response.model
         ctx.attempt += 1

@@ -29,6 +29,7 @@ Este repositório registra formalmente todas as decisões de arquitetura e tecno
 | [**0019**](0019-orm-e-migracoes-numeradas.md) | ORM (SQLAlchemy) e Migrações Numeradas (Alembic) nos Bancos SQLite | <span class="badge-must">Aceita</span> | 18/11/2026 | RF12, RNF01, RNF05, RNF07, GQ03, GQ06 |
 | [**0020**](0020-categorizacao-por-cnae.md) | Categorização por Atividade Econômica (CNAE) com Dados Abertos do CNPJ | <span class="badge-must">Aceita</span> | 18/11/2026 | RF09, RNF01, GQ03, GQ07, GQ11 |
 | [**0021**](0021-visao-e-ocr-modulares.md) | Leitura de Imagem Modular: Portas de OCR e de Visão e Revisão Humana de Documentos | <span class="badge-must">Aceita</span> | 23/11/2026 | RF27, RF28, RNF01, RNF10, RNF12, GQ01, GQ02, GQ03 |
+| [**0023**](0023-contexto-do-usuario-no-chat.md) | Contexto do usuário no chat | <span class="badge-must">Aceita</span> | 25/11/2026 | RF18, RF19, RF20, RF30; GQ05, GQ07, GQ09 |
 | [**0024**](0024-persistencia-local-e-backup-criptografado.md) | Persistência Local da Biblioteca e Backup Criptografado | <span class="badge-must">Aceita</span> | 23/11/2026 | RF31, RF32, RNF01, RNF05, GQ03, GQ06 |
 | [**0025**](0025-armazenamento-no-aparelho-e-api-sem-estado.md) | Armazenamento no Aparelho e API sem Estado | <span class="badge-must">Aceita</span> | 23/11/2026 | RF31, RF32, RNF01, RNF05, GQ03, GQ06 |
 | [**0026**](0026-confirmacao-e-consulta-de-documentos.md) | Confirmação Integral e Consulta Local de Documentos | <span class="badge-must">Aceita</span> | 25/11/2026 | RF27, RF28, RF31, RNF12, GQ02, GQ03, GQ05 |

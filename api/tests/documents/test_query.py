@@ -85,7 +85,9 @@ async def test_pergunta_educacional_continua_no_orquestrador(orchestrator):
     orchestrator.run = AsyncMock(return_value="resposta do fluxo geral")
     result = await AgentQueryService(orchestrator).run("Como montar uma reserva?", [])
     assert result == "resposta do fluxo geral"
-    orchestrator.run.assert_awaited_once_with("Como montar uma reserva?", transactions=[])
+    orchestrator.run.assert_awaited_once_with(
+        "Como montar uma reserva?", transactions=[], library=None, filters=None
+    )
 
 
 async def test_valor_com_milhar_preserva_validacao_e_formato_pt_br(client, reviewed, orchestrator):
@@ -129,3 +131,28 @@ async def test_total_soma_so_documentos_do_estabelecimento(client, reviewed, orc
         "Quanto gastei nessa loja?", [*LIBRARY.transactions, importado], uid
     )
     assert resposta.calculations[0].value == 12.5
+
+
+async def test_filtro_de_periodo_se_aplica_ao_documento(client, reviewed, orchestrator):
+    from app.domain.agents import FinancialFilters
+
+    uid = (await client.post("/v1/documents/confirm", json=reviewed)).json()["uid"]
+    period = LIBRARY.transactions[0].date.strftime("%Y-%m")
+    response = await AgentQueryService(orchestrator).run(
+        "Quanto gastei nessa loja?",
+        LIBRARY.transactions,
+        uid,
+        library=LIBRARY,
+        filters=FinancialFilters(period=period),
+    )
+    assert response.status == "answered"
+    assert response.calculations[0].value == 12.5
+    response = await AgentQueryService(orchestrator).run(
+        "Quanto gastei nessa loja?",
+        LIBRARY.transactions,
+        uid,
+        library=LIBRARY,
+        filters=FinancialFilters(period="2000-01"),
+    )
+    assert response.status == "abstained"
+    assert not response.calculations
