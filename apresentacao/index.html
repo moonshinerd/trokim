@@ -2937,8 +2937,9 @@ A leitura padrão é o OCR local; a visão (VLM) é opcional, só completa campo
 remota, só é usada com o consentimento ligado pelo usuário em Ajustes (enviado em cada
 requisição; sem ele a API recusa) e recebe a imagem com CPF, CNPJ, agência e conta tarjados. Nada lido vira lançamento sem a revisão do usuário
 (<a href="../adr/0026-confirmacao-e-consulta-de-documentos/">ADR 0026</a>).</p>
-<p><strong>Modalidades suportadas:</strong> texto no chat; foto (PNG, JPEG, WebP) e PDF de fatura de cartão,
-comprovante de Pix e boleto, até o limite de tamanho do endpoint.</p>
+<p><strong>Modalidades suportadas:</strong> texto no chat; foto (JPEG ou PNG) e PDF de fatura de cartão, comprovante de
+Pix e boleto, até 20 MiB; extrato OFX e PDF com camada de texto, como antes. Áudio e vídeo não
+entram.</p>
 <p><strong>Limitações conhecidas e mitigação</strong> (<a href="../pesquisa/resultados/#11-semana-5-motores-de-leitura-e-chat-com-os-dados-do-usuario">Histórico de resultados, seção 11</a>):</p>
 <table>
 <thead>
@@ -2981,20 +2982,28 @@ comprovante de Pix e boleto, até o limite de tamanho do endpoint.</p>
 </tr>
 </tbody>
 </table>
-<p><strong>Roteiro da demonstração (duas modalidades):</strong></p>
+<p><strong>Roteiro da demonstração (duas modalidades):</strong> tudo com os arquivos sintéticos de
+<code>research/synthetic_data/</code>.</p>
 <ol>
-<li>No app, em <strong>Extratos</strong>, tocar em <strong>Fotografar ou escolher documento</strong> e escolher a foto sintética de um comprovante de Pix
-   (<code>research/synthetic_data/document_images/</code>), com o motor <strong>OCR local</strong>, e tocar em <strong>Ler documento</strong>.</li>
-<li>Conferir os campos na revisão (data, valor, favorecido, banco), corrigir o nome se o OCR
-   colou espaços e <strong>Confirmar</strong>.</li>
-<li>Em <strong>Ajustes</strong>, ligar o <strong>Modo multiagente</strong>. No <strong>Assistente</strong>, perguntar "Quanto gastei na <favorecido do comprovante>?": a resposta traz o
-   valor calculado e diz que o lançamento veio de foto ou PDF revisado pelo usuário.</li>
-<li>Perguntar "Quanto gastei em novembro de 2026?" com a conta e o período escolhidos no seletor:
-   a resposta mostra o card do cálculo daquela conta.</li>
-<li>Importar o extrato do mesmo mês com o mesmo Pix: a API devolve <code>documents_reconciled: 1</code> e o
-   total de gastos não muda.</li>
-<li>(Opcional) Repetir o passo 1 com o motor de visão remota para mostrar o
-   consentimento exigido em Ajustes.</li>
+<li><strong>Foto legível.</strong> Em <strong>Extratos</strong>, tocar em <strong>Fotografar ou escolher documento</strong>, escolher
+   <code>document_images/D02.png</code> (Pix de R$ 546,40 a "Pessoa Exemplo Alfa"), manter o motor
+   <strong>OCR local</strong> e tocar em <strong>Ler documento</strong>.</li>
+<li><strong>Revisão.</strong> Conferir data, valor, favorecido e banco; o OCR lê o nome como
+   <code>PessoaExemploAlfa</code>, que se corrige na tela antes de <strong>Confirmar</strong>.</li>
+<li><strong>Foto ilegível.</strong> Repetir com <code>document_images/D32.png</code> (Pix muito desfocado): o app não mostra
+   campos, explica o motivo e pede nova foto; nada é criado.</li>
+<li><strong>Pergunta no chat.</strong> Em <strong>Ajustes</strong>, ligar o <strong>Modo multiagente</strong>. No <strong>Assistente</strong>,
+   perguntar "Quanto gastei na Pessoa Exemplo Alfa?": a resposta traz R$ 546,40, o lançamento
+   e a frase "Lido de foto ou PDF, confirmado por você", com a trilha dos agentes. Escrever "na"
+   antes do nome: com "com" o chat devolve os totais gerais.</li>
+<li><strong>Dívidas.</strong> Importar <code>fatura_nubank_aberta_pessoal.ofx</code> e perguntar, com o período em
+   "Todo o período", "Quais parcelas ainda tenho a pagar?": a resposta mostra R$ 1.351,24 a
+   pagar em 3 parcelamentos, até 2027-03. Com a fatura aberta no seletor, o chat pergunta se
+   o usuário quer o retrato das parcelas ou os gastos do período.</li>
+<li><strong>Banco novo.</strong> Em <strong>Ajustes → Bancos suportados</strong>, abrir o tutorial do PicPay, marcado como
+   <strong>Experimental</strong>.</li>
+<li>(Opcional) Em <strong>Ajustes → Leitura de documentos</strong>, escolher o modelo de visão remoto e
+   mostrar o consentimento exigido antes do envio.</li>
 </ol>
 <hr />
 <h2 id="6-rastreabilidade-das-entregas">6. Rastreabilidade das Entregas<a class="headerlink" href="#6-rastreabilidade-das-entregas" title="Permanent link">&para;</a></h2>
