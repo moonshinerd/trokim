@@ -96,8 +96,10 @@ def _field_chart(run: dict, output: Path) -> None:
     drawing.add(String(25, top - 45, "Azul: calibração • Laranja: verificação", fontSize=10))
     drawing.add(chart)
     for line, (split, split_label) in enumerate(SPLITS):
+        per_field = summary[split]["per_field"]
         counts = "  ".join(
-            f"{label} {summary[split]['per_field'].get(key, {}).get('correct', 0)}/{summary[split]['per_field'].get(key, {}).get('expected', 0)}"
+            f"{label} {per_field.get(key, {}).get('correct', 0)}"
+            f"/{per_field.get(key, {}).get('expected', 0)}"
             for key, label in fields
         )
         drawing.add(String(25, 40 - 14 * line, f"{split_label}: {counts}", fontSize=8))
@@ -224,9 +226,10 @@ def _degradation_chart(run: dict, output: Path) -> None:
     drawing.add(String(25, height - 45, "Azul: calibração • Laranja: verificação", fontSize=10))
     drawing.add(chart)
     for line, (split, split_label) in enumerate(SPLITS):
+        by_degradation = summary[split].get("by_degradation", {})
         counts = "  ".join(
-            f"{name} {summary[split].get('by_degradation', {}).get(name, {}).get('correct_fields', 0)}"
-            f"/{summary[split].get('by_degradation', {}).get(name, {}).get('recoverable_fields', 0)}"
+            f"{name} {by_degradation.get(name, {}).get('correct_fields', 0)}"
+            f"/{by_degradation.get(name, {}).get('recoverable_fields', 0)}"
             for name in names
         )
         drawing.add(String(25, 55 - 14 * line, f"{split_label}: {counts}", fontSize=8))

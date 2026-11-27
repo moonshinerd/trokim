@@ -92,6 +92,15 @@ def contains_value(text: str, expected: dict) -> bool:
 def evaluate(question, response, calls, contexts):
     notes = contexts[-1]["notes"] if contexts else [response.answer]
     calculations = {c.key: c for c in response.calculations}
+    # Cálculo determinístico certo, independentemente de a resposta ter sido entregue.
+    computed = [
+        bool(
+            calculations.get(expected["key"])
+            and calculations[expected["key"]].unit == expected["unit"]
+            and abs(float(calculations[expected["key"]].value) - expected["value"]) < 0.005
+        )
+        for expected in question["expected"]
+    ]
     hits = []
     for expected in question["expected"]:
         actual = calculations.get(expected["key"])
@@ -122,12 +131,16 @@ def evaluate(question, response, calls, contexts):
         and not calls
         and (clarification if expected_behavior == "clarify" else missing)
     )
+    # Rejeição do Validation é decisão de segurança, não falha técnica: só conta como técnica
+    # a chamada ao modelo que falhou ou um passo que não seja a validação.
     technical = any("error_type" in c for c in calls) or any(
-        s.status == "failed" for s in response.steps
+        s.status == "failed" and s.agent != "validation" for s in response.steps
     )
     return {
         "numeric_expected": len(hits),
+        "calculation_correct": sum(computed),
         "numeric_correct": sum(hits),
+        "rejected_by_validation": response.status == "rejected",
         "numeric_case_correct": bool(hits) and all(hits) and not technical,
         "raw_model_calls": len(raw_issues),
         "raw_model_calls_with_invented_numbers": sum(bool(i) for i in raw_issues),

@@ -5,7 +5,7 @@
     "research/rag_benchmark/chat_dados.py": "6d44911ddaea5dac6d00c35f8aadea3ea065e4b86b9da66388babf576c691e14",
     "research/rag_benchmark/questions_chat_dados.json": "e4215d354d0f6ab3b9e1dbb7467b19a5343460ab77ce47d8c827616ad6b8760d",
     "research/rag_benchmark/questions_chat_dados.schema.json": "8cdb7d0c7996c0d20b1b6361de57fdb1fbdc52c9fb0ee91fe0c84833e17dcac3",
-    "research/rag_benchmark/run_chat_dados.py": "62b04959263fad76d8aae4458290651b2c8582d003ee06f5aae377401f38deaa",
+    "research/rag_benchmark/run_chat_dados.py": "716e51fb1e115741c8297f37616a3beab844ebcaa1c4eae6b02a8a852069299f",
     "research/synthetic_data/generate_chat_dados.py": "97f986faeda4df27d47c19ab21d1eb0402906f62a905b1c9d5bac73499d5899a",
     "research/synthetic_data/ledger_chat_dados.json": "ac81438f506930a79df6237b0866cfb5f8531b7b18f4b71a191138b7a0c74525"
   }
