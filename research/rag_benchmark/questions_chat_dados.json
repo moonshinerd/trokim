@@ -1,0 +1,458 @@
+[
+  {
+    "id": "C01",
+    "topic": "conta",
+    "question": "Quanto gastei?",
+    "filters": {
+      "account_id": "sintetica-pf",
+      "period": "setembro de 2026"
+    },
+    "behavior": "answer",
+    "recipe": {
+      "kind": "summary",
+      "account": "sintetica-pf",
+      "month": "2026-09"
+    },
+    "expected": [
+      {
+        "key": "total_expenses",
+        "value": 561.78,
+        "unit": "BRL"
+      },
+      {
+        "key": "total_income",
+        "value": 7023.92,
+        "unit": "BRL"
+      },
+      {
+        "key": "net_balance",
+        "value": 6462.14,
+        "unit": "BRL"
+      }
+    ]
+  },
+  {
+    "id": "C02",
+    "topic": "conta",
+    "question": "Qual o saldo da conta?",
+    "filters": {
+      "account_id": "sintetica-pj",
+      "period": "outubro de 2026"
+    },
+    "behavior": "answer",
+    "recipe": {
+      "kind": "summary",
+      "account": "sintetica-pj",
+      "month": "2026-10"
+    },
+    "expected": [
+      {
+        "key": "total_expenses",
+        "value": 346.92,
+        "unit": "BRL"
+      },
+      {
+        "key": "total_income",
+        "value": 7247.76,
+        "unit": "BRL"
+      },
+      {
+        "key": "net_balance",
+        "value": 6900.84,
+        "unit": "BRL"
+      }
+    ]
+  },
+  {
+    "id": "C03",
+    "topic": "dono",
+    "question": "Quanto gastei?",
+    "filters": {
+      "owner": "pessoal",
+      "period": "novembro de 2026"
+    },
+    "behavior": "answer",
+    "recipe": {
+      "kind": "summary",
+      "owner": "pessoal",
+      "month": "2026-11"
+    },
+    "expected": [
+      {
+        "key": "total_expenses",
+        "value": 982.54,
+        "unit": "BRL"
+      },
+      {
+        "key": "total_income",
+        "value": 8967.24,
+        "unit": "BRL"
+      },
+      {
+        "key": "net_balance",
+        "value": 7984.7,
+        "unit": "BRL"
+      }
+    ]
+  },
+  {
+    "id": "C04",
+    "topic": "dono",
+    "question": "Quanto gastei?",
+    "filters": {
+      "owner": "empresa",
+      "period": "setembro de 2026"
+    },
+    "behavior": "answer",
+    "recipe": {
+      "kind": "summary",
+      "owner": "empresa",
+      "month": "2026-09"
+    },
+    "expected": [
+      {
+        "key": "total_expenses",
+        "value": 410.31,
+        "unit": "BRL"
+      },
+      {
+        "key": "total_income",
+        "value": 8267.17,
+        "unit": "BRL"
+      },
+      {
+        "key": "net_balance",
+        "value": 7856.86,
+        "unit": "BRL"
+      }
+    ]
+  },
+  {
+    "id": "C05",
+    "topic": "periodo",
+    "question": "Quanto gastei em setembro de 2026?",
+    "filters": {},
+    "behavior": "answer",
+    "recipe": {
+      "kind": "summary",
+      "month": "2026-09"
+    },
+    "expected": [
+      {
+        "key": "total_expenses",
+        "value": 1540.62,
+        "unit": "BRL"
+      },
+      {
+        "key": "total_income",
+        "value": 15291.09,
+        "unit": "BRL"
+      },
+      {
+        "key": "net_balance",
+        "value": 13750.47,
+        "unit": "BRL"
+      }
+    ]
+  },
+  {
+    "id": "C06",
+    "topic": "periodo",
+    "question": "Quanto gastei em outubro de 2026?",
+    "filters": {},
+    "behavior": "answer",
+    "recipe": {
+      "kind": "summary",
+      "month": "2026-10"
+    },
+    "expected": [
+      {
+        "key": "total_expenses",
+        "value": 1496.31,
+        "unit": "BRL"
+      },
+      {
+        "key": "total_income",
+        "value": 13287.6,
+        "unit": "BRL"
+      },
+      {
+        "key": "net_balance",
+        "value": 11791.29,
+        "unit": "BRL"
+      }
+    ]
+  },
+  {
+    "id": "C07",
+    "topic": "periodo",
+    "question": "Quanto gastei em novembro de 2026?",
+    "filters": {},
+    "behavior": "answer",
+    "recipe": {
+      "kind": "summary",
+      "month": "2026-11"
+    },
+    "expected": [
+      {
+        "key": "total_expenses",
+        "value": 1390.98,
+        "unit": "BRL"
+      },
+      {
+        "key": "total_income",
+        "value": 17701.49,
+        "unit": "BRL"
+      },
+      {
+        "key": "net_balance",
+        "value": 16310.51,
+        "unit": "BRL"
+      }
+    ]
+  },
+  {
+    "id": "C08",
+    "topic": "fatura",
+    "question": "Quanto está a fatura aberta?",
+    "filters": {
+      "account_id": "sintetica-card"
+    },
+    "behavior": "answer",
+    "recipe": {
+      "kind": "statement",
+      "account": "sintetica-card",
+      "month": "2026-11",
+      "key": "statement_aberta"
+    },
+    "expected": [
+      {
+        "key": "statement_aberta",
+        "value": 504.33,
+        "unit": "BRL"
+      }
+    ]
+  },
+  {
+    "id": "C09",
+    "topic": "fatura",
+    "question": "Quanto está a fatura fechada?",
+    "filters": {
+      "account_id": "sintetica-card"
+    },
+    "behavior": "answer",
+    "recipe": {
+      "kind": "statement",
+      "account": "sintetica-card",
+      "month": "2026-10",
+      "key": "statement_fechada"
+    },
+    "expected": [
+      {
+        "key": "statement_fechada",
+        "value": 533.02,
+        "unit": "BRL"
+      }
+    ]
+  },
+  {
+    "id": "C10",
+    "topic": "parcelas",
+    "question": "Quanto falta pagar em parcelas?",
+    "filters": {
+      "account_id": "sintetica-card"
+    },
+    "behavior": "answer",
+    "recipe": {
+      "kind": "installments",
+      "account": "sintetica-card"
+    },
+    "expected": [
+      {
+        "key": "installments_remaining",
+        "value": 936.75,
+        "unit": "BRL"
+      }
+    ]
+  },
+  {
+    "id": "C11",
+    "topic": "dividas",
+    "question": "Quais são minhas dívidas?",
+    "filters": {
+      "account_id": "sintetica-card"
+    },
+    "behavior": "answer",
+    "recipe": {
+      "kind": "debt",
+      "account": "sintetica-card"
+    },
+    "expected": [
+      {
+        "key": "closed_statement_due",
+        "value": 533.02,
+        "unit": "BRL"
+      }
+    ]
+  },
+  {
+    "id": "C12",
+    "topic": "comparacao",
+    "question": "Compare os gastos de setembro de 2026 e outubro de 2026",
+    "filters": {
+      "owner": "pessoal"
+    },
+    "behavior": "answer",
+    "recipe": {
+      "kind": "comparison",
+      "owner": "pessoal",
+      "months": [
+        "2026-09",
+        "2026-10"
+      ]
+    },
+    "expected": [
+      {
+        "key": "compare_first",
+        "value": 1130.31,
+        "unit": "BRL"
+      },
+      {
+        "key": "compare_second",
+        "value": 1149.39,
+        "unit": "BRL"
+      }
+    ]
+  },
+  {
+    "id": "C13",
+    "topic": "comparacao",
+    "question": "Compare os gastos de outubro de 2026 e novembro de 2026",
+    "filters": {
+      "owner": "empresa"
+    },
+    "behavior": "answer",
+    "recipe": {
+      "kind": "comparison",
+      "owner": "empresa",
+      "months": [
+        "2026-10",
+        "2026-11"
+      ]
+    },
+    "expected": [
+      {
+        "key": "compare_first",
+        "value": 346.92,
+        "unit": "BRL"
+      },
+      {
+        "key": "compare_second",
+        "value": 408.44,
+        "unit": "BRL"
+      }
+    ]
+  },
+  {
+    "id": "C14",
+    "topic": "conta",
+    "question": "Quanto gastei?",
+    "filters": {
+      "account_id": "sintetica-pf",
+      "period": "novembro de 2026"
+    },
+    "behavior": "answer",
+    "recipe": {
+      "kind": "summary",
+      "account": "sintetica-pf",
+      "month": "2026-11"
+    },
+    "expected": [
+      {
+        "key": "total_expenses",
+        "value": 478.21,
+        "unit": "BRL"
+      },
+      {
+        "key": "total_income",
+        "value": 8967.24,
+        "unit": "BRL"
+      },
+      {
+        "key": "net_balance",
+        "value": 8489.03,
+        "unit": "BRL"
+      }
+    ]
+  },
+  {
+    "id": "C15",
+    "topic": "periodo_ambiguo",
+    "question": "Compare meus gastos",
+    "filters": {},
+    "behavior": "clarify",
+    "recipe": {
+      "kind": "none"
+    },
+    "expected": []
+  },
+  {
+    "id": "C16",
+    "topic": "periodo_ambiguo",
+    "question": "Quanto gastei em setembro de 2026?",
+    "filters": {
+      "period": "outubro de 2026"
+    },
+    "behavior": "clarify",
+    "recipe": {
+      "kind": "none"
+    },
+    "expected": []
+  },
+  {
+    "id": "C17",
+    "topic": "dado_ausente",
+    "question": "Quanto gastei em janeiro de 2025?",
+    "filters": {},
+    "behavior": "abstain",
+    "recipe": {
+      "kind": "none"
+    },
+    "expected": []
+  },
+  {
+    "id": "C18",
+    "topic": "dado_ausente",
+    "question": "Quanto gastei?",
+    "filters": {
+      "account_id": "conta-nao-importada"
+    },
+    "behavior": "abstain",
+    "recipe": {
+      "kind": "none"
+    },
+    "expected": []
+  },
+  {
+    "id": "C19",
+    "topic": "dado_ausente",
+    "question": "Quanto gastei no Banco Inter em novembro de 2026?",
+    "filters": {},
+    "behavior": "abstain",
+    "recipe": {
+      "kind": "none"
+    },
+    "expected": []
+  },
+  {
+    "id": "C20",
+    "topic": "periodo_ambiguo",
+    "question": "Quanto falta pagar em parcelas em outubro de 2026?",
+    "filters": {},
+    "behavior": "clarify",
+    "recipe": {
+      "kind": "none"
+    },
+    "expected": []
+  }
+]

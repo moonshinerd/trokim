@@ -1,0 +1,6950 @@
+[
+  {
+    "id": "D01",
+    "input_sha256": "b9b1ec79de268509677a8c25cbb49f920656ed01d34c9d41c679ec418e79ddf8",
+    "split": "calibration",
+    "degradation": {
+      "type": "none",
+      "level": "none",
+      "parameters": {}
+    },
+    "trace": {
+      "agent": "document",
+      "status": "ok",
+      "summary": "Leitura encerrada; confira os avisos antes de confirmar.",
+      "duration_ms": 3836,
+      "detail": {
+        "engine": "rapidocr",
+        "pages": [
+          {
+            "page": 1,
+            "status": "rapidocr"
+          }
+        ],
+        "fields": 4,
+        "issues": []
+      }
+    },
+    "document": {
+      "kind": "pix_receipt",
+      "bank": "Nubank",
+      "quality": {
+        "quality": "legible",
+        "sharpness": 1036.0282536226298,
+        "resolution": [
+          1000,
+          1250
+        ],
+        "mean_ocr_confidence": 0.9863996399030016,
+        "reasons": []
+      },
+      "fields": [
+        {
+          "key": "bank",
+          "value": "Nubank",
+          "confidence": 0.9980392914551955,
+          "source": "ocr"
+        },
+        {
+          "key": "amount",
+          "value": "546.40",
+          "confidence": 0.9825123324990273,
+          "source": "ocr"
+        },
+        {
+          "key": "date",
+          "value": "2026-10-02",
+          "confidence": 0.9981261054674785,
+          "source": "ocr"
+        },
+        {
+          "key": "counterparty",
+          "value": "Pessoa Exemplo Alfa",
+          "confidence": 0.9826129813989003,
+          "source": "ocr"
+        }
+      ],
+      "transactions": [],
+      "issues": [],
+      "needs_review": true,
+      "abstained": false,
+      "reason": null,
+      "engine": "rapidocr"
+    },
+    "technical_failures": [],
+    "vision_failures": [],
+    "latency_ms": 3836.25,
+    "ocr": [
+      {
+        "input_sha256": "a4b296a1c57ebb932a0ddb292f6d8be321a3020500ca8638b74133bccfb3f717",
+        "result": {
+          "words": [
+            {
+              "text": "Comprovante Pix",
+              "confidence": 0.979537284374237,
+              "box": [
+                68,
+                54,
+                375,
+                90
+              ]
+            },
+            {
+              "text": "AREADEDEMONSTRACAO·SEMVALIDADEBANCARIA",
+              "confidence": 0.9878829639208945,
+              "box": [
+                77,
+                130,
+                599,
+                150
+              ]
+            },
+            {
+              "text": "Banco: Nubank",
+              "confidence": 0.9980392914551955,
+              "box": [
+                65,
+                225,
+                273,
+                255
+              ]
+            },
+            {
+              "text": "Valor: R$ 546,40",
+              "confidence": 0.9825123324990273,
+              "box": [
+                64,
+                291,
+                294,
+                322
+              ]
+            },
+            {
+              "text": "Data:02/10/2026",
+              "confidence": 0.9981261054674785,
+              "box": [
+                66,
+                358,
+                303,
+                385
+              ]
+            },
+            {
+              "text": "Favorecido:Pessoa Exemplo Alfa",
+              "confidence": 0.9826129813989003,
+              "box": [
+                63,
+                421,
+                517,
+                452
+              ]
+            },
+            {
+              "text": "Titular:PessoaExemploFicticia",
+              "confidence": 0.995782036205818,
+              "box": [
+                65,
+                951,
+                365,
+                974
+              ]
+            },
+            {
+              "text": "CPF:000.000.000-00",
+              "confidence": 0.9966692494021522,
+              "box": [
+                65,
+                985,
+                266,
+                1008
+              ]
+            },
+            {
+              "text": "Agencia: 0000 Conta: 0000000-0",
+              "confidence": 0.9627157191435496,
+              "box": [
+                62,
+                1018,
+                393,
+                1046
+              ]
+            },
+            {
+              "text": "DADOSINVENTADOS·NAO PAGAR·NAO COMPROVA TRANSFERENCIA",
+              "confidence": 0.9801184351627643,
+              "box": [
+                62,
+                1132,
+                750,
+                1159
+              ]
+            }
+          ],
+          "engine": "rapidocr"
+        }
+      }
+    ],
+    "vision": []
+  },
+  {
+    "id": "D02",
+    "input_sha256": "3f55b3034a4fa6710f78dc99c92910e9bb323e2f4158f1bf0df3cb950c283ed6",
+    "split": "calibration",
+    "degradation": {
+      "type": "blur",
+      "level": "mild",
+      "parameters": {
+        "radius": 0.45
+      }
+    },
+    "trace": {
+      "agent": "document",
+      "status": "ok",
+      "summary": "Leitura encerrada; confira os avisos antes de confirmar.",
+      "duration_ms": 2183,
+      "detail": {
+        "engine": "rapidocr",
+        "pages": [
+          {
+            "page": 1,
+            "status": "rapidocr"
+          }
+        ],
+        "fields": 4,
+        "issues": []
+      }
+    },
+    "document": {
+      "kind": "pix_receipt",
+      "bank": "Nubank",
+      "quality": {
+        "quality": "legible",
+        "sharpness": 560.3552168439443,
+        "resolution": [
+          1000,
+          1250
+        ],
+        "mean_ocr_confidence": 0.9895475619244245,
+        "reasons": []
+      },
+      "fields": [
+        {
+          "key": "bank",
+          "value": "Nubank",
+          "confidence": 0.9927049554311312,
+          "source": "ocr"
+        },
+        {
+          "key": "amount",
+          "value": "546.40",
+          "confidence": 0.9681776277720928,
+          "source": "ocr"
+        },
+        {
+          "key": "date",
+          "value": "2026-10-02",
+          "confidence": 0.9974475502967834,
+          "source": "ocr"
+        },
+        {
+          "key": "counterparty",
+          "value": "PessoaExemploAlfa",
+          "confidence": 0.9982071220874786,
+          "source": "ocr"
+        }
+      ],
+      "transactions": [],
+      "issues": [],
+      "needs_review": true,
+      "abstained": false,
+      "reason": null,
+      "engine": "rapidocr"
+    },
+    "technical_failures": [],
+    "vision_failures": [],
+    "latency_ms": 2183.86,
+    "ocr": [
+      {
+        "input_sha256": "18be2953b8972f866f2b39f61a46dd59cccd00dd44d5739e5a47e1fcbf3dc0a1",
+        "result": {
+          "words": [
+            {
+              "text": "Comprovante Pix",
+              "confidence": 0.9940286755561829,
+              "box": [
+                68,
+                54,
+                375,
+                90
+              ]
+            },
+            {
+              "text": "AREADEDEMONSTRACAO·SEMVALIDADEBANCARIA",
+              "confidence": 0.9811680191441586,
+              "box": [
+                76,
+                128,
+                600,
+                151
+              ]
+            },
+            {
+              "text": "Banco: Nubank",
+              "confidence": 0.9927049554311312,
+              "box": [
+                66,
+                225,
+                273,
+                255
+              ]
+            },
+            {
+              "text": "Valor: R$ 546,40",
+              "confidence": 0.9681776277720928,
+              "box": [
+                64,
+                291,
+                294,
+                322
+              ]
+            },
+            {
+              "text": "Data:02/10/2026",
+              "confidence": 0.9974475502967834,
+              "box": [
+                66,
+                358,
+                302,
+                385
+              ]
+            },
+            {
+              "text": "Favorecido:PessoaExemploAlfa",
+              "confidence": 0.9982071220874786,
+              "box": [
+                63,
+                421,
+                517,
+                452
+              ]
+            },
+            {
+              "text": "Titular:PessoaExemploFicticia",
+              "confidence": 0.9946873989598505,
+              "box": [
+                65,
+                951,
+                365,
+                974
+              ]
+            },
+            {
+              "text": "CPF:000.000.000-00",
+              "confidence": 0.99630516105228,
+              "box": [
+                65,
+                985,
+                266,
+                1008
+              ]
+            },
+            {
+              "text": "Agencia:0000 Conta:0000000-0",
+              "confidence": 0.9899647874491555,
+              "box": [
+                62,
+                1018,
+                393,
+                1046
+              ]
+            },
+            {
+              "text": "DADOSINVENTADOS·NAO PAGAR·NAO COMPROVATRANSFERENCIA",
+              "confidence": 0.982784321495131,
+              "box": [
+                62,
+                1132,
+                750,
+                1159
+              ]
+            }
+          ],
+          "engine": "rapidocr"
+        }
+      }
+    ],
+    "vision": []
+  },
+  {
+    "id": "D03",
+    "input_sha256": "e5beaa2f8d434d584ff8e023f633052dab1bb61a38c9abb9ce5fb1cc5fbe2b1a",
+    "split": "calibration",
+    "degradation": {
+      "type": "none",
+      "level": "none",
+      "parameters": {}
+    },
+    "trace": {
+      "agent": "document",
+      "status": "ok",
+      "summary": "Leitura encerrada; confira os avisos antes de confirmar.",
+      "duration_ms": 3349,
+      "detail": {
+        "engine": "rapidocr",
+        "pages": [
+          {
+            "page": 1,
+            "status": "rapidocr"
+          }
+        ],
+        "fields": 4,
+        "issues": []
+      }
+    },
+    "document": {
+      "kind": "boleto",
+      "bank": "Nu Empresas",
+      "quality": {
+        "quality": "legible",
+        "sharpness": 1028.917463131391,
+        "resolution": [
+          1000,
+          1250
+        ],
+        "mean_ocr_confidence": 0.9825171589243846,
+        "reasons": []
+      },
+      "fields": [
+        {
+          "key": "bank",
+          "value": "Nu Empresas",
+          "confidence": 0.9802107004558339,
+          "source": "ocr"
+        },
+        {
+          "key": "amount",
+          "value": "1883.15",
+          "confidence": 0.9719300170739492,
+          "source": "ocr"
+        },
+        {
+          "key": "counterparty",
+          "value": "PessoaFicticiaBeta",
+          "confidence": 0.9936516552135862,
+          "source": "ocr"
+        },
+        {
+          "key": "due_date",
+          "value": "2026-10-03",
+          "confidence": 0.9980314572652181,
+          "source": "ocr"
+        }
+      ],
+      "transactions": [],
+      "issues": [],
+      "needs_review": true,
+      "abstained": false,
+      "reason": null,
+      "engine": "rapidocr"
+    },
+    "technical_failures": [],
+    "vision_failures": [],
+    "latency_ms": 3350.34,
+    "ocr": [
+      {
+        "input_sha256": "2210acd4b02aa81cbd32c8c4c49c5020764ad1ffb38cf3744a8e452759012c68",
+        "result": {
+          "words": [
+            {
+              "text": "Boleto",
+              "confidence": 0.9989749491214752,
+              "box": [
+                64,
+                52,
+                183,
+                90
+              ]
+            },
+            {
+              "text": "AREADEDEMONSTRACAO·SEMVALIDADEBANCARIA",
+              "confidence": 0.9552332978499564,
+              "box": [
+                76,
+                128,
+                600,
+                151
+              ]
+            },
+            {
+              "text": "Banco:Nu Empresas",
+              "confidence": 0.9802107004558339,
+              "box": [
+                64,
+                225,
+                348,
+                257
+              ]
+            },
+            {
+              "text": "Valor: R$ 1.883,15",
+              "confidence": 0.9719300170739492,
+              "box": [
+                64,
+                291,
+                320,
+                322
+              ]
+            },
+            {
+              "text": "Favorecido:PessoaFicticiaBeta",
+              "confidence": 0.9936516552135862,
+              "box": [
+                65,
+                357,
+                508,
+                386
+              ]
+            },
+            {
+              "text": "Vencimento:03/10/2026",
+              "confidence": 0.9980314572652181,
+              "box": [
+                64,
+                422,
+                401,
+                451
+              ]
+            },
+            {
+              "text": "Titular:PessoaExemploFicticia",
+              "confidence": 0.9930962118609198,
+              "box": [
+                65,
+                951,
+                365,
+                974
+              ]
+            },
+            {
+              "text": "CPF:000.000.000-00",
+              "confidence": 0.9904869695504507,
+              "box": [
+                65,
+                985,
+                266,
+                1008
+              ]
+            },
+            {
+              "text": "Agencia:0000 Conta:0000000-0",
+              "confidence": 0.9845743434769767,
+              "box": [
+                62,
+                1018,
+                393,
+                1046
+              ]
+            },
+            {
+              "text": "DADOSINVENTADOS·NAO PAGAR·NAO COMPROVA TRANSFERENCIA",
+              "confidence": 0.9589819873754795,
+              "box": [
+                65,
+                1134,
+                749,
+                1157
+              ]
+            }
+          ],
+          "engine": "rapidocr"
+        }
+      }
+    ],
+    "vision": []
+  },
+  {
+    "id": "D04",
+    "input_sha256": "37aa34ee06876f65579f9b32fbed758c0935760dc9f87183eb533ffcc1e11869",
+    "split": "calibration",
+    "degradation": {
+      "type": "low_light",
+      "level": "mild",
+      "parameters": {
+        "brightness": 0.65
+      }
+    },
+    "trace": {
+      "agent": "document",
+      "status": "ok",
+      "summary": "Leitura encerrada; confira os avisos antes de confirmar.",
+      "duration_ms": 3112,
+      "detail": {
+        "engine": "rapidocr",
+        "pages": [
+          {
+            "page": 1,
+            "status": "rapidocr"
+          }
+        ],
+        "fields": 4,
+        "issues": []
+      }
+    },
+    "document": {
+      "kind": "boleto",
+      "bank": "Nu Empresas",
+      "quality": {
+        "quality": "legible",
+        "sharpness": 429.58733171471147,
+        "resolution": [
+          1000,
+          1250
+        ],
+        "mean_ocr_confidence": 0.9855951551850801,
+        "reasons": []
+      },
+      "fields": [
+        {
+          "key": "bank",
+          "value": "Nu Empresas",
+          "confidence": 0.9991992314656576,
+          "source": "ocr"
+        },
+        {
+          "key": "amount",
+          "value": "1883.15",
+          "confidence": 0.9853148327933418,
+          "source": "ocr"
+        },
+        {
+          "key": "counterparty",
+          "value": "Pessoa Ficticia Beta",
+          "confidence": 0.9915070831775665,
+          "source": "ocr"
+        },
+        {
+          "key": "due_date",
+          "value": "2026-10-03",
+          "confidence": 0.9992077106779272,
+          "source": "ocr"
+        }
+      ],
+      "transactions": [],
+      "issues": [],
+      "needs_review": true,
+      "abstained": false,
+      "reason": null,
+      "engine": "rapidocr"
+    },
+    "technical_failures": [],
+    "vision_failures": [],
+    "latency_ms": 3112.39,
+    "ocr": [
+      {
+        "input_sha256": "e9c4c50bd585aeb0d2a37eeb948a3c50fb32420e3a90c7c9a64f00d2ef6ccf5d",
+        "result": {
+          "words": [
+            {
+              "text": "Boleto",
+              "confidence": 0.9986411929130554,
+              "box": [
+                64,
+                52,
+                183,
+                90
+              ]
+            },
+            {
+              "text": "AREADEDEMONSTRACAO·SEMVALIDADEBANCARIA",
+              "confidence": 0.9741460931928534,
+              "box": [
+                76,
+                128,
+                601,
+                151
+              ]
+            },
+            {
+              "text": "Banco: Nu Empresas",
+              "confidence": 0.9991992314656576,
+              "box": [
+                66,
+                227,
+                350,
+                257
+              ]
+            },
+            {
+              "text": "Valor: R$ 1.883,15",
+              "confidence": 0.9853148327933418,
+              "box": [
+                63,
+                290,
+                321,
+                323
+              ]
+            },
+            {
+              "text": "Favorecido: Pessoa Ficticia Beta",
+              "confidence": 0.9915070831775665,
+              "box": [
+                63,
+                356,
+                510,
+                387
+              ]
+            },
+            {
+              "text": "Vencimento: 03/10/2026",
+              "confidence": 0.9992077106779272,
+              "box": [
+                63,
+                421,
+                402,
+                452
+              ]
+            },
+            {
+              "text": "Titular:Pessoa ExemploFicticia",
+              "confidence": 0.9829385081926981,
+              "box": [
+                65,
+                951,
+                366,
+                974
+              ]
+            },
+            {
+              "text": "CPF:000.000.000-00",
+              "confidence": 0.9939966532919142,
+              "box": [
+                65,
+                985,
+                266,
+                1008
+              ]
+            },
+            {
+              "text": "Agencia: 0000 Conta: 0000000-0",
+              "confidence": 0.9694543202718099,
+              "box": [
+                62,
+                1018,
+                393,
+                1046
+              ]
+            },
+            {
+              "text": "DADOSINVENTADOS·NAO PAGAR·NAO COMPROVA TRANSFERENCIA",
+              "confidence": 0.9615459258739765,
+              "box": [
+                65,
+                1134,
+                749,
+                1157
+              ]
+            }
+          ],
+          "engine": "rapidocr"
+        }
+      }
+    ],
+    "vision": []
+  },
+  {
+    "id": "D05",
+    "input_sha256": "79f21669930e1ce53f192e0ec173607d955c0505bcb12be646f11c1a4980106e",
+    "split": "calibration",
+    "degradation": {
+      "type": "none",
+      "level": "none",
+      "parameters": {}
+    },
+    "trace": {
+      "agent": "document",
+      "status": "ok",
+      "summary": "Leitura encerrada; confira os avisos antes de confirmar.",
+      "duration_ms": 3896,
+      "detail": {
+        "engine": "rapidocr",
+        "pages": [
+          {
+            "page": 1,
+            "status": "rapidocr"
+          }
+        ],
+        "fields": 3,
+        "issues": []
+      }
+    },
+    "document": {
+      "kind": "card_invoice",
+      "bank": "Banco do Brasil",
+      "quality": {
+        "quality": "legible",
+        "sharpness": 1454.6526370047789,
+        "resolution": [
+          1000,
+          1250
+        ],
+        "mean_ocr_confidence": 0.9822791309845714,
+        "reasons": []
+      },
+      "fields": [
+        {
+          "key": "bank",
+          "value": "Banco do Brasil",
+          "confidence": 0.9783056811852888,
+          "source": "ocr"
+        },
+        {
+          "key": "due_date",
+          "value": "2026-10-19",
+          "confidence": 0.9954219108278101,
+          "source": "ocr"
+        },
+        {
+          "key": "total",
+          "value": "770.22",
+          "confidence": 0.9655744954943657,
+          "source": "ocr"
+        }
+      ],
+      "transactions": [
+        {
+          "date": "2026-10-04",
+          "description": "Mercado Exemplo",
+          "amount": 255.49,
+          "installment": null,
+          "confidence": 0.9620717030305129
+        },
+        {
+          "date": "2026-10-05",
+          "description": "Papelaria Ficticia",
+          "amount": 256.74,
+          "installment": null,
+          "confidence": 0.9620717030305129
+        },
+        {
+          "date": "2026-10-06",
+          "description": "Cinema Sintético",
+          "amount": 257.99,
+          "installment": null,
+          "confidence": 0.9620717030305129
+        }
+      ],
+      "issues": [],
+      "needs_review": true,
+      "abstained": false,
+      "reason": null,
+      "engine": "rapidocr"
+    },
+    "technical_failures": [],
+    "vision_failures": [],
+    "latency_ms": 3896.27,
+    "ocr": [
+      {
+        "input_sha256": "638e28cce6799613c179cd087ba7eab178f1edef6634505cb0c6d515fff90e28",
+        "result": {
+          "words": [
+            {
+              "text": "Fatura de cartao",
+              "confidence": 0.9768193513154984,
+              "box": [
+                66,
+                54,
+                364,
+                87
+              ]
+            },
+            {
+              "text": "AREADE DEMONSTRACAO·SEMVALIDADEBANCARIA",
+              "confidence": 0.9620717030305129,
+              "box": [
+                76,
+                128,
+                600,
+                151
+              ]
+            },
+            {
+              "text": "Banco: Banco do Brasil",
+              "confidence": 0.9783056811852888,
+              "box": [
+                64,
+                224,
+                383,
+                258
+              ]
+            },
+            {
+              "text": "Vencimento: 19/10/2026",
+              "confidence": 0.9954219108278101,
+              "box": [
+                65,
+                290,
+                399,
+                320
+              ]
+            },
+            {
+              "text": "Lancamento: 04/10/2026| Mercado Exemplo|255,49",
+              "confidence": 0.9858168894829957,
+              "box": [
+                62,
+                355,
+                655,
+                384
+              ]
+            },
+            {
+              "text": "Lancamento: 05/10/2026|Papelaria Ficticia|256,74",
+              "confidence": 0.9870862575868765,
+              "box": [
+                65,
+                421,
+                644,
+                447
+              ]
+            },
+            {
+              "text": "Lancamento: 06/10/2026|Cinema Sintético|257,99",
+              "confidence": 0.9820497567239015,
+              "box": [
+                65,
+                486,
+                646,
+                512
+              ]
+            },
+            {
+              "text": "Total: R$ 770,22",
+              "confidence": 0.9655744954943657,
+              "box": [
+                62,
+                552,
+                294,
+                582
+              ]
+            },
+            {
+              "text": "Titular:PessoaExemploFicticia",
+              "confidence": 0.9958119371841694,
+              "box": [
+                65,
+                951,
+                365,
+                974
+              ]
+            },
+            {
+              "text": "CPF:000.000.000-00",
+              "confidence": 0.9966688321696388,
+              "box": [
+                65,
+                985,
+                266,
+                1008
+              ]
+            },
+            {
+              "text": "Agencia:0000 Conta:0000000-0",
+              "confidence": 0.9882625256265912,
+              "box": [
+                64,
+                1020,
+                393,
+                1046
+              ]
+            },
+            {
+              "text": "DADOS INVENTADOS·NAO PAGAR·NAO COMPROVA TRANSFERENCIA",
+              "confidence": 0.9734602311872086,
+              "box": [
+                62,
+                1132,
+                749,
+                1159
+              ]
+            }
+          ],
+          "engine": "rapidocr"
+        }
+      }
+    ],
+    "vision": []
+  },
+  {
+    "id": "D06",
+    "input_sha256": "d3340c883a8a97e3e4fc8e3d70b266a530b465f5932393ef7a5ca44cfd9db2c0",
+    "split": "calibration",
+    "degradation": {
+      "type": "rotation",
+      "level": "mild",
+      "parameters": {
+        "degrees": 1.0
+      }
+    },
+    "trace": {
+      "agent": "document",
+      "status": "ok",
+      "summary": "Leitura encerrada; confira os avisos antes de confirmar.",
+      "duration_ms": 3716,
+      "detail": {
+        "engine": "rapidocr",
+        "pages": [
+          {
+            "page": 1,
+            "status": "rapidocr"
+          }
+        ],
+        "fields": 3,
+        "issues": []
+      }
+    },
+    "document": {
+      "kind": "card_invoice",
+      "bank": "Banco do Brasil",
+      "quality": {
+        "quality": "legible",
+        "sharpness": 1167.6489728564213,
+        "resolution": [
+          1000,
+          1250
+        ],
+        "mean_ocr_confidence": 0.9699315015625807,
+        "reasons": []
+      },
+      "fields": [
+        {
+          "key": "bank",
+          "value": "Banco do Brasil",
+          "confidence": 0.9767642183737322,
+          "source": "ocr"
+        },
+        {
+          "key": "due_date",
+          "value": "2026-10-19",
+          "confidence": 0.9881283397024329,
+          "source": "ocr"
+        },
+        {
+          "key": "total",
+          "value": "770.22",
+          "confidence": 0.9886927045881748,
+          "source": "ocr"
+        }
+      ],
+      "transactions": [
+        {
+          "date": "2026-10-04",
+          "description": "MercadoExemplo",
+          "amount": 255.49,
+          "installment": null,
+          "confidence": 0.91905720366372
+        },
+        {
+          "date": "2026-10-05",
+          "description": "PapelariaFicticia",
+          "amount": 256.74,
+          "installment": null,
+          "confidence": 0.91905720366372
+        },
+        {
+          "date": "2026-10-06",
+          "description": "CinemaSintético",
+          "amount": 257.99,
+          "installment": null,
+          "confidence": 0.91905720366372
+        }
+      ],
+      "issues": [],
+      "needs_review": true,
+      "abstained": false,
+      "reason": null,
+      "engine": "rapidocr"
+    },
+    "technical_failures": [],
+    "vision_failures": [],
+    "latency_ms": 3716.92,
+    "ocr": [
+      {
+        "input_sha256": "b0d8981e3b9ee483d80cc6ca55837b62ac7dcb93ae4eaef0a1bd4cd255f2176c",
+        "result": {
+          "words": [
+            {
+              "text": "Fatura de cartao",
+              "confidence": 0.9776832684874535,
+              "box": [
+                55,
+                56,
+                354,
+                95
+              ]
+            },
+            {
+              "text": "AREA DEDEMONSTRACAO·SEMVALIDADEBANCARIA",
+              "confidence": 0.9306930364706577,
+              "box": [
+                64,
+                124,
+                593,
+                160
+              ]
+            },
+            {
+              "text": "Banco: Banco do Brasil",
+              "confidence": 0.9767642183737322,
+              "box": [
+                57,
+                227,
+                376,
+                265
+              ]
+            },
+            {
+              "text": "Vencimento: 19/10/2026",
+              "confidence": 0.9881283397024329,
+              "box": [
+                58,
+                292,
+                396,
+                330
+              ]
+            },
+            {
+              "text": "Lancamento:04/10/2026|MercadoExemplo|255,49",
+              "confidence": 0.9801627272783324,
+              "box": [
+                58,
+                351,
+                651,
+                391
+              ]
+            },
+            {
+              "text": "Lancamento:05/10/2026|PapelariaFicticia|256,74",
+              "confidence": 0.9712774468504864,
+              "box": [
+                60,
+                417,
+                641,
+                455
+              ]
+            },
+            {
+              "text": "Lancamento:06/10/2026|CinemaSintético|257,99",
+              "confidence": 0.967479098926891,
+              "box": [
+                60,
+                483,
+                643,
+                520
+              ]
+            },
+            {
+              "text": "Total: R$ 770,22",
+              "confidence": 0.9886927045881748,
+              "box": [
+                60,
+                555,
+                294,
+                589
+              ]
+            },
+            {
+              "text": "Titular:Pessoa ExemploFicticia",
+              "confidence": 0.9816360195477803,
+              "box": [
+                67,
+                951,
+                372,
+                982
+              ]
+            },
+            {
+              "text": "CPF:000.000.000-00",
+              "confidence": 0.9939820932017432,
+              "box": [
+                69,
+                987,
+                272,
+                1016
+              ]
+            },
+            {
+              "text": "Agencia:000oConta:0000000-0",
+              "confidence": 0.91905720366372,
+              "box": [
+                70,
+                1018,
+                400,
+                1053
+              ]
+            },
+            {
+              "text": "DADOSINVENTADOS·NAO PAGAR·NAO COMPROVA TRANSFERENCIA",
+              "confidence": 0.9636218616595635,
+              "box": [
+                71,
+                1128,
+                759,
+                1166
+              ]
+            }
+          ],
+          "engine": "rapidocr"
+        }
+      }
+    ],
+    "vision": []
+  },
+  {
+    "id": "D07",
+    "input_sha256": "2ec5b8994734d18097c20d430bfcf5bf09ff95be9aeac10a2940cade33a9b4c3",
+    "split": "validation",
+    "degradation": {
+      "type": "none",
+      "level": "none",
+      "parameters": {}
+    },
+    "trace": {
+      "agent": "document",
+      "status": "ok",
+      "summary": "Leitura encerrada; confira os avisos antes de confirmar.",
+      "duration_ms": 3184,
+      "detail": {
+        "engine": "rapidocr",
+        "pages": [
+          {
+            "page": 1,
+            "status": "rapidocr"
+          }
+        ],
+        "fields": 4,
+        "issues": []
+      }
+    },
+    "document": {
+      "kind": "pix_receipt",
+      "bank": "Banco Horizonte Ficticio",
+      "quality": {
+        "quality": "legible",
+        "sharpness": 1007.9262001567237,
+        "resolution": [
+          1000,
+          1250
+        ],
+        "mean_ocr_confidence": 0.979312134120001,
+        "reasons": []
+      },
+      "fields": [
+        {
+          "key": "bank",
+          "value": "Banco Horizonte Ficticio",
+          "confidence": 0.9878821795986544,
+          "source": "ocr"
+        },
+        {
+          "key": "amount",
+          "value": "1273.48",
+          "confidence": 0.9912843240631951,
+          "source": "ocr"
+        },
+        {
+          "key": "date",
+          "value": "2026-10-05",
+          "confidence": 0.997775423526764,
+          "source": "ocr"
+        },
+        {
+          "key": "counterparty",
+          "value": "Oficina Exemplo Delta",
+          "confidence": 0.982577945246841,
+          "source": "ocr"
+        }
+      ],
+      "transactions": [],
+      "issues": [],
+      "needs_review": true,
+      "abstained": false,
+      "reason": null,
+      "engine": "rapidocr"
+    },
+    "technical_failures": [],
+    "vision_failures": [],
+    "latency_ms": 3184.4,
+    "ocr": [
+      {
+        "input_sha256": "59202b37e250e483e5660fc862a92ef3bf4c8714782e7fcae156da0a26303381",
+        "result": {
+          "words": [
+            {
+              "text": "Comprovante Pix",
+              "confidence": 0.9742195685704549,
+              "box": [
+                68,
+                54,
+                375,
+                90
+              ]
+            },
+            {
+              "text": "AREA DE DEMONSTRACAO·SEMVALIDADEBANCARIA",
+              "confidence": 0.9462485104799271,
+              "box": [
+                76,
+                128,
+                600,
+                151
+              ]
+            },
+            {
+              "text": "Banco: Banco Horizonte Ficticio",
+              "confidence": 0.9878821795986544,
+              "box": [
+                66,
+                226,
+                500,
+                255
+              ]
+            },
+            {
+              "text": "Valor: R$ 1.273,48",
+              "confidence": 0.9912843240631951,
+              "box": [
+                66,
+                292,
+                320,
+                320
+              ]
+            },
+            {
+              "text": "Data:05/10/2026",
+              "confidence": 0.997775423526764,
+              "box": [
+                66,
+                358,
+                302,
+                385
+              ]
+            },
+            {
+              "text": "Favorecido: Oficina Exemplo Delta",
+              "confidence": 0.982577945246841,
+              "box": [
+                63,
+                421,
+                538,
+                452
+              ]
+            },
+            {
+              "text": "Titular:Pessoa ExemploFicticia",
+              "confidence": 0.9818230787913005,
+              "box": [
+                65,
+                951,
+                365,
+                974
+              ]
+            },
+            {
+              "text": "CPF:000.000.000-00",
+              "confidence": 0.9967437750763364,
+              "box": [
+                65,
+                985,
+                266,
+                1008
+              ]
+            },
+            {
+              "text": "Agencia: 0000 Conta:0000000-0",
+              "confidence": 0.9603787187872261,
+              "box": [
+                62,
+                1018,
+                393,
+                1046
+              ]
+            },
+            {
+              "text": "DADOSINVENTADOS·NAO PAGAR·NAO COMPROVATRANSFERENCIA",
+              "confidence": 0.9741878170593112,
+              "box": [
+                65,
+                1134,
+                749,
+                1157
+              ]
+            }
+          ],
+          "engine": "rapidocr"
+        }
+      }
+    ],
+    "vision": []
+  },
+  {
+    "id": "D08",
+    "input_sha256": "405bdb6b8e0ad8a0e35520e6776b74089be9c2ac46123fd1b08f78e3b183cc21",
+    "split": "validation",
+    "degradation": {
+      "type": "perspective",
+      "level": "mild",
+      "parameters": {
+        "shear": 0.025
+      }
+    },
+    "trace": {
+      "agent": "document",
+      "status": "ok",
+      "summary": "Leitura encerrada; confira os avisos antes de confirmar.",
+      "duration_ms": 2487,
+      "detail": {
+        "engine": "rapidocr",
+        "pages": [
+          {
+            "page": 1,
+            "status": "rapidocr"
+          }
+        ],
+        "fields": 4,
+        "issues": []
+      }
+    },
+    "document": {
+      "kind": "pix_receipt",
+      "bank": "Banco Horizonte Ficticio",
+      "quality": {
+        "quality": "legible",
+        "sharpness": 789.1229815142178,
+        "resolution": [
+          1000,
+          1250
+        ],
+        "mean_ocr_confidence": 0.9804166919226613,
+        "reasons": []
+      },
+      "fields": [
+        {
+          "key": "bank",
+          "value": "Banco Horizonte Ficticio",
+          "confidence": 0.9772473977458093,
+          "source": "ocr"
+        },
+        {
+          "key": "amount",
+          "value": "1273.48",
+          "confidence": 0.9880698621273041,
+          "source": "ocr"
+        },
+        {
+          "key": "date",
+          "value": "2026-10-05",
+          "confidence": 0.9971489469210307,
+          "source": "ocr"
+        },
+        {
+          "key": "counterparty",
+          "value": "Oficina Exemplo Delta",
+          "confidence": 0.9819997747739156,
+          "source": "ocr"
+        }
+      ],
+      "transactions": [],
+      "issues": [],
+      "needs_review": true,
+      "abstained": false,
+      "reason": null,
+      "engine": "rapidocr"
+    },
+    "technical_failures": [],
+    "vision_failures": [],
+    "latency_ms": 2487.89,
+    "ocr": [
+      {
+        "input_sha256": "62d8501a82ea040f308d88fa83253724372e5e12428d3fd39129fc5501311974",
+        "result": {
+          "words": [
+            {
+              "text": "Comprovante Pix",
+              "confidence": 0.9709951003392537,
+              "box": [
+                91,
+                53,
+                398,
+                89
+              ]
+            },
+            {
+              "text": "AREADEDEMONSTRACAO·SEMVALIDADEBANCARIA",
+              "confidence": 0.9649690593543806,
+              "box": [
+                97,
+                129,
+                625,
+                152
+              ]
+            },
+            {
+              "text": "Banco: Banco Horizonte Ficticio",
+              "confidence": 0.9772473977458093,
+              "box": [
+                86,
+                227,
+                522,
+                256
+              ]
+            },
+            {
+              "text": "Valor: R$ 1.273,48",
+              "confidence": 0.9880698621273041,
+              "box": [
+                81,
+                290,
+                339,
+                323
+              ]
+            },
+            {
+              "text": "Data:05/10/2026",
+              "confidence": 0.9971489469210307,
+              "box": [
+                82,
+                359,
+                319,
+                386
+              ]
+            },
+            {
+              "text": "Favorecido: Oficina Exemplo Delta",
+              "confidence": 0.9819997747739156,
+              "box": [
+                77,
+                421,
+                555,
+                454
+              ]
+            },
+            {
+              "text": "Titular:Pessoa Exemplo Ficticia",
+              "confidence": 0.9762434978638926,
+              "box": [
+                63,
+                948,
+                369,
+                978
+              ]
+            },
+            {
+              "text": "CPF:000.000.000-00",
+              "confidence": 0.9954055017895169,
+              "box": [
+                65,
+                987,
+                266,
+                1010
+              ]
+            },
+            {
+              "text": "Agencia:0000 Conta:0000000-0",
+              "confidence": 0.982037678360939,
+              "box": [
+                62,
+                1021,
+                393,
+                1047
+              ]
+            },
+            {
+              "text": "DADOSINVENTADOS·NAO PAGAR·NAO COMPROVA TRANSFERENCIA",
+              "confidence": 0.9700500999505703,
+              "box": [
+                58,
+                1134,
+                751,
+                1167
+              ]
+            }
+          ],
+          "engine": "rapidocr"
+        }
+      }
+    ],
+    "vision": []
+  },
+  {
+    "id": "D09",
+    "input_sha256": "c6c4fe1ef8ce936c6e4b020baa639a4bc80b220ab2234799512a7d1744c749f6",
+    "split": "validation",
+    "degradation": {
+      "type": "none",
+      "level": "none",
+      "parameters": {}
+    },
+    "trace": {
+      "agent": "document",
+      "status": "ok",
+      "summary": "Leitura encerrada; confira os avisos antes de confirmar.",
+      "duration_ms": 2424,
+      "detail": {
+        "engine": "rapidocr",
+        "pages": [
+          {
+            "page": 1,
+            "status": "rapidocr"
+          }
+        ],
+        "fields": 4,
+        "issues": []
+      }
+    },
+    "document": {
+      "kind": "boleto",
+      "bank": "Nubank",
+      "quality": {
+        "quality": "legible",
+        "sharpness": 1030.9872019680386,
+        "resolution": [
+          1000,
+          1250
+        ],
+        "mean_ocr_confidence": 0.9806602386233052,
+        "reasons": []
+      },
+      "fields": [
+        {
+          "key": "bank",
+          "value": "Nubank",
+          "confidence": 0.9943604667981466,
+          "source": "ocr"
+        },
+        {
+          "key": "amount",
+          "value": "1741.28",
+          "confidence": 0.9690160718229082,
+          "source": "ocr"
+        },
+        {
+          "key": "counterparty",
+          "value": "PessoaExemploAlfa",
+          "confidence": 0.9943466037511826,
+          "source": "ocr"
+        },
+        {
+          "key": "due_date",
+          "value": "2026-10-06",
+          "confidence": 0.9982422874087379,
+          "source": "ocr"
+        }
+      ],
+      "transactions": [],
+      "issues": [],
+      "needs_review": true,
+      "abstained": false,
+      "reason": null,
+      "engine": "rapidocr"
+    },
+    "technical_failures": [],
+    "vision_failures": [],
+    "latency_ms": 2425.53,
+    "ocr": [
+      {
+        "input_sha256": "aa0e6da278d27df9fe2701750de346a09aaef57f955dab256020019474d4ccfc",
+        "result": {
+          "words": [
+            {
+              "text": "Boleto",
+              "confidence": 0.9989749491214752,
+              "box": [
+                64,
+                52,
+                183,
+                90
+              ]
+            },
+            {
+              "text": "AREA DE DEMONSTRACAO·SEMVALIDADE BANCARIA",
+              "confidence": 0.9231204564978437,
+              "box": [
+                76,
+                128,
+                600,
+                151
+              ]
+            },
+            {
+              "text": "Banco:Nubank",
+              "confidence": 0.9943604667981466,
+              "box": [
+                67,
+                227,
+                272,
+                254
+              ]
+            },
+            {
+              "text": "Valor: R$ 1.741,28",
+              "confidence": 0.9690160718229082,
+              "box": [
+                64,
+                291,
+                321,
+                322
+              ]
+            },
+            {
+              "text": "Favorecido:PessoaExemploAlfa",
+              "confidence": 0.9943466037511826,
+              "box": [
+                63,
+                356,
+                517,
+                387
+              ]
+            },
+            {
+              "text": "Vencimento:06/10/2026",
+              "confidence": 0.9982422874087379,
+              "box": [
+                64,
+                422,
+                402,
+                451
+              ]
+            },
+            {
+              "text": "Titular:PessoaExemploFicticia",
+              "confidence": 0.9930810702258143,
+              "box": [
+                65,
+                951,
+                365,
+                974
+              ]
+            },
+            {
+              "text": "CPF:000.000.000-00",
+              "confidence": 0.9904869695504507,
+              "box": [
+                65,
+                985,
+                266,
+                1008
+              ]
+            },
+            {
+              "text": "Agencia:0000 Conta:0000000-0",
+              "confidence": 0.9845743434769767,
+              "box": [
+                62,
+                1018,
+                393,
+                1046
+              ]
+            },
+            {
+              "text": "DADOS INVENTADOS · NAO PAGAR · NAO COMPROVA TRANSFERENCIA",
+              "confidence": 0.960399167579517,
+              "box": [
+                62,
+                1132,
+                750,
+                1159
+              ]
+            }
+          ],
+          "engine": "rapidocr"
+        }
+      }
+    ],
+    "vision": []
+  },
+  {
+    "id": "D10",
+    "input_sha256": "aa2d6a55d6282e61462fd8f9d7a7fa57ad4e75aab40b9b3c51491f0dafdeb7e1",
+    "split": "validation",
+    "degradation": {
+      "type": "jpeg",
+      "level": "mild",
+      "parameters": {
+        "quality": 35
+      }
+    },
+    "trace": {
+      "agent": "document",
+      "status": "ok",
+      "summary": "Leitura encerrada; confira os avisos antes de confirmar.",
+      "duration_ms": 3063,
+      "detail": {
+        "engine": "rapidocr",
+        "pages": [
+          {
+            "page": 1,
+            "status": "rapidocr"
+          }
+        ],
+        "fields": 4,
+        "issues": []
+      }
+    },
+    "document": {
+      "kind": "boleto",
+      "bank": "Nubank",
+      "quality": {
+        "quality": "legible",
+        "sharpness": 1017.3353405529007,
+        "resolution": [
+          1000,
+          1250
+        ],
+        "mean_ocr_confidence": 0.988142059167763,
+        "reasons": []
+      },
+      "fields": [
+        {
+          "key": "bank",
+          "value": "Nubank",
+          "confidence": 0.9990743398666382,
+          "source": "ocr"
+        },
+        {
+          "key": "amount",
+          "value": "1741.28",
+          "confidence": 0.985678321785397,
+          "source": "ocr"
+        },
+        {
+          "key": "counterparty",
+          "value": "Pessoa Exemplo Alfa",
+          "confidence": 0.9827053268750509,
+          "source": "ocr"
+        },
+        {
+          "key": "due_date",
+          "value": "2026-10-06",
+          "confidence": 0.9976423897526481,
+          "source": "ocr"
+        }
+      ],
+      "transactions": [],
+      "issues": [],
+      "needs_review": true,
+      "abstained": false,
+      "reason": null,
+      "engine": "rapidocr"
+    },
+    "technical_failures": [],
+    "vision_failures": [],
+    "latency_ms": 3063.51,
+    "ocr": [
+      {
+        "input_sha256": "040c438e705b254bb9310c293c4adeb31eb5ae69534be24dd0028695d52c6c71",
+        "result": {
+          "words": [
+            {
+              "text": "Boleto",
+              "confidence": 0.9996549586455027,
+              "box": [
+                64,
+                52,
+                183,
+                90
+              ]
+            },
+            {
+              "text": "AREADEDEMONSTRACAO·SEMVALIDADEBANCARIA",
+              "confidence": 0.9813798148381082,
+              "box": [
+                76,
+                128,
+                600,
+                151
+              ]
+            },
+            {
+              "text": "Banco:Nubank",
+              "confidence": 0.9990743398666382,
+              "box": [
+                67,
+                227,
+                272,
+                254
+              ]
+            },
+            {
+              "text": "Valor: R$ 1.741,28",
+              "confidence": 0.985678321785397,
+              "box": [
+                64,
+                291,
+                321,
+                322
+              ]
+            },
+            {
+              "text": "Favorecido:Pessoa Exemplo Alfa",
+              "confidence": 0.9827053268750509,
+              "box": [
+                63,
+                356,
+                517,
+                387
+              ]
+            },
+            {
+              "text": "Vencimento: 06/10/2026",
+              "confidence": 0.9976423897526481,
+              "box": [
+                64,
+                422,
+                401,
+                451
+              ]
+            },
+            {
+              "text": "Titular:PessoaExemploFicticia",
+              "confidence": 0.995782036205818,
+              "box": [
+                65,
+                951,
+                365,
+                974
+              ]
+            },
+            {
+              "text": "CPF:000.000.000-00",
+              "confidence": 0.9966692494021522,
+              "box": [
+                65,
+                985,
+                266,
+                1008
+              ]
+            },
+            {
+              "text": "Agencia: 0000 Conta: 0000000-0",
+              "confidence": 0.9627157191435496,
+              "box": [
+                62,
+                1018,
+                393,
+                1046
+              ]
+            },
+            {
+              "text": "DADOSINVENTADOS·NAO PAGAR·NAO COMPROVA TRANSFERENCIA",
+              "confidence": 0.9801184351627643,
+              "box": [
+                62,
+                1132,
+                750,
+                1159
+              ]
+            }
+          ],
+          "engine": "rapidocr"
+        }
+      }
+    ],
+    "vision": []
+  },
+  {
+    "id": "D11",
+    "input_sha256": "6de95614ce275ef94f62ef58e43708d9e11de5c529312dae850d1358a5e4ae66",
+    "split": "calibration",
+    "degradation": {
+      "type": "none",
+      "level": "none",
+      "parameters": {}
+    },
+    "trace": {
+      "agent": "document",
+      "status": "ok",
+      "summary": "Leitura encerrada; confira os avisos antes de confirmar.",
+      "duration_ms": 4188,
+      "detail": {
+        "engine": "rapidocr",
+        "pages": [
+          {
+            "page": 1,
+            "status": "rapidocr"
+          }
+        ],
+        "fields": 3,
+        "issues": []
+      }
+    },
+    "document": {
+      "kind": "card_invoice",
+      "bank": "Nu Empresas",
+      "quality": {
+        "quality": "legible",
+        "sharpness": 1514.1791001875547,
+        "resolution": [
+          1000,
+          1250
+        ],
+        "mean_ocr_confidence": 0.9838719610322353,
+        "reasons": []
+      },
+      "fields": [
+        {
+          "key": "bank",
+          "value": "Nu Empresas",
+          "confidence": 0.9832897020710839,
+          "source": "ocr"
+        },
+        {
+          "key": "due_date",
+          "value": "2026-10-22",
+          "confidence": 0.9807457788424059,
+          "source": "ocr"
+        },
+        {
+          "key": "total",
+          "value": "4560.12",
+          "confidence": 0.9777701563305325,
+          "source": "ocr"
+        }
+      ],
+      "transactions": [
+        {
+          "date": "2026-10-07",
+          "description": "Mercado Exemplo",
+          "amount": 1518.79,
+          "installment": null,
+          "confidence": 0.9768193513154984
+        },
+        {
+          "date": "2026-10-08",
+          "description": "Papelaria Ficticia",
+          "amount": 1520.04,
+          "installment": null,
+          "confidence": 0.9768193513154984
+        },
+        {
+          "date": "2026-10-09",
+          "description": "Cinema Sintético",
+          "amount": 1521.29,
+          "installment": null,
+          "confidence": 0.9768193513154984
+        }
+      ],
+      "issues": [],
+      "needs_review": true,
+      "abstained": false,
+      "reason": null,
+      "engine": "rapidocr"
+    },
+    "technical_failures": [],
+    "vision_failures": [],
+    "latency_ms": 4188.51,
+    "ocr": [
+      {
+        "input_sha256": "3f6d70806fd68dcfccb16c8c3e1a4782cdfcc8edea7f93fedb8bd5b2b891d7ef",
+        "result": {
+          "words": [
+            {
+              "text": "Fatura de cartao",
+              "confidence": 0.9768193513154984,
+              "box": [
+                66,
+                54,
+                364,
+                87
+              ]
+            },
+            {
+              "text": "AREADEDEMONSTRACAO·SEMVALIDADEBANCARIA",
+              "confidence": 0.9849660898509779,
+              "box": [
+                77,
+                130,
+                599,
+                150
+              ]
+            },
+            {
+              "text": "Banco: Nu Empresas",
+              "confidence": 0.9832897020710839,
+              "box": [
+                64,
+                226,
+                349,
+                258
+              ]
+            },
+            {
+              "text": "Vencimento: 22/10/2026",
+              "confidence": 0.9807457788424059,
+              "box": [
+                65,
+                290,
+                399,
+                320
+              ]
+            },
+            {
+              "text": "Lancamento: 07/10/2026 | Mercado Exemplo | 1.518,79",
+              "confidence": 0.9810561783173505,
+              "box": [
+                61,
+                353,
+                676,
+                384
+              ]
+            },
+            {
+              "text": "Lancamento: 08/10/2026| Papelaria Ficticia|1.520,04",
+              "confidence": 0.9803055115774566,
+              "box": [
+                65,
+                421,
+                665,
+                447
+              ]
+            },
+            {
+              "text": "Lancamento: 09/10/2026| Cinema Sintético|1.521,29",
+              "confidence": 0.9812088328964856,
+              "box": [
+                65,
+                486,
+                667,
+                512
+              ]
+            },
+            {
+              "text": "Total: R$ 4.560,12",
+              "confidence": 0.9777701563305325,
+              "box": [
+                61,
+                551,
+                319,
+                581
+              ]
+            },
+            {
+              "text": "Titular:PessoaExemploFicticia",
+              "confidence": 0.9957140478594549,
+              "box": [
+                65,
+                951,
+                364,
+                974
+              ]
+            },
+            {
+              "text": "CPF:000.000.000-00",
+              "confidence": 0.9966688321696388,
+              "box": [
+                65,
+                985,
+                266,
+                1008
+              ]
+            },
+            {
+              "text": "Agencia:0000 Conta:0000000-0",
+              "confidence": 0.9882625256265912,
+              "box": [
+                64,
+                1020,
+                393,
+                1046
+              ]
+            },
+            {
+              "text": "DADOSINVENTADOS·NAO PAGAR·NAO COMPROVA TRANSFERENCIA",
+              "confidence": 0.9796565255293479,
+              "box": [
+                62,
+                1132,
+                750,
+                1159
+              ]
+            }
+          ],
+          "engine": "rapidocr"
+        }
+      }
+    ],
+    "vision": []
+  },
+  {
+    "id": "D12",
+    "input_sha256": "8f1b985a2ea6773723239c614faf87678178f035acb8c2f22b349ac74b990d6a",
+    "split": "calibration",
+    "degradation": {
+      "type": "crop",
+      "level": "moderate",
+      "parameters": {
+        "essential_field_hidden": true
+      }
+    },
+    "trace": {
+      "agent": "document",
+      "status": "ok",
+      "summary": "Leitura encerrada; confira os avisos antes de confirmar.",
+      "duration_ms": 18709,
+      "detail": {
+        "engine": "rapidocr+vlm",
+        "pages": [
+          {
+            "page": 1,
+            "status": "rapidocr+vlm"
+          }
+        ],
+        "fields": 2,
+        "issues": [
+          "INVALID_VISION_OUTPUT",
+          "INCOMPLETE_EXTRACTION"
+        ]
+      }
+    },
+    "document": {
+      "kind": "card_invoice",
+      "bank": "NuEmpresas",
+      "quality": {
+        "quality": "partial",
+        "sharpness": 2622.1842284938202,
+        "resolution": [
+          1000,
+          545
+        ],
+        "mean_ocr_confidence": 0.9801535147365427,
+        "reasons": []
+      },
+      "fields": [
+        {
+          "key": "bank",
+          "value": "NuEmpresas",
+          "confidence": 0.9945911690592766,
+          "source": "ocr"
+        },
+        {
+          "key": "due_date",
+          "value": "2026-10-22",
+          "confidence": 0.991548980985369,
+          "source": "ocr"
+        }
+      ],
+      "transactions": [
+        {
+          "date": "2026-10-07",
+          "description": "MercadoExemplo",
+          "amount": 1518.79,
+          "installment": null,
+          "confidence": 0.9603567907684728
+        },
+        {
+          "date": "2026-10-08",
+          "description": "PapelariaFicticia",
+          "amount": 1520.04,
+          "installment": null,
+          "confidence": 0.9603567907684728
+        },
+        {
+          "date": "2026-10-09",
+          "description": "CinemaSintético",
+          "amount": 1521.29,
+          "installment": null,
+          "confidence": 0.9603567907684728
+        }
+      ],
+      "issues": [
+        {
+          "code": "INVALID_VISION_OUTPUT",
+          "severity": "warning",
+          "message": "Contribuição de visão descartada."
+        },
+        {
+          "code": "INCOMPLETE_EXTRACTION",
+          "severity": "warning",
+          "message": "Leitura incompleta; revise os campos."
+        }
+      ],
+      "needs_review": true,
+      "abstained": false,
+      "reason": null,
+      "engine": "rapidocr+vlm"
+    },
+    "technical_failures": [],
+    "vision_failures": [
+      "INVALID_VISION_OUTPUT"
+    ],
+    "latency_ms": 18709.68,
+    "ocr": [
+      {
+        "input_sha256": "1364862fac5d8ed6818362def4c95a6b9158a70f0c6c3396e5f12e0e3f832c24",
+        "result": {
+          "words": [
+            {
+              "text": "Faturadecartao",
+              "confidence": 0.9893330122743335,
+              "box": [
+                68,
+                57,
+                362,
+                86
+              ]
+            },
+            {
+              "text": "AREADEDEMONSTRACAO·SEMVALIDADEBANCARIA",
+              "confidence": 0.9603567907684728,
+              "box": [
+                74,
+                129,
+                600,
+                150
+              ]
+            },
+            {
+              "text": "Banco:NuEmpresas",
+              "confidence": 0.9945911690592766,
+              "box": [
+                65,
+                227,
+                348,
+                256
+              ]
+            },
+            {
+              "text": "Vencimento:22/10/2026",
+              "confidence": 0.991548980985369,
+              "box": [
+                65,
+                291,
+                400,
+                321
+              ]
+            },
+            {
+              "text": "Lancamento:07/10/2026|MercadoExemplo|1.518,79",
+              "confidence": 0.9845599187744989,
+              "box": [
+                63,
+                355,
+                676,
+                382
+              ]
+            },
+            {
+              "text": "Lancamento:08/10/2026|PapelariaFicticia|1.520,04",
+              "confidence": 0.965881689141194,
+              "box": [
+                65,
+                423,
+                664,
+                445
+              ]
+            },
+            {
+              "text": "Lancamento:09/10/2026|CinemaSintético|1.521,29",
+              "confidence": 0.9748030421526536,
+              "box": [
+                64,
+                486,
+                667,
+                511
+              ]
+            }
+          ],
+          "engine": "rapidocr"
+        }
+      }
+    ],
+    "vision": [
+      {
+        "input_sha256": "1364862fac5d8ed6818362def4c95a6b9158a70f0c6c3396e5f12e0e3f832c24",
+        "result": {
+          "content": "```json\n{\n  \"fields\": [\n    {\"key\": \"bank\", \"value\": \"Nu Empresas\", \"confidence\": 1.0, \"source\": \"vlm\"},\n    {\"key\": \"due_date\", \"value\": \"2026-10-22\", \"confidence\": 1.0, \"source\": \"vlm\"},\n    {\"key\": \"date\", \"value\": \"2026-10-07\", \"confidence\": 1.0, \"source\": \"vlm\"},\n    {\"key\": \"counterparty\", \"value\": \"Mercado Exemplo\", \"confidence\": 1.0, \"source\": \"vlm\"},\n    {\"key\": \"amount\", \"value\": \"1518.79\", \"confidence\": 1.0, \"source\": \"vlm\"},\n    {\"key\": \"date\", \"value\": \"2026-10-08\", \"confidence\": 1.0, \"source\": \"vlm\"},\n    {\"key\": \"counterparty\", \"value\": \"Papelaria Fictícia\", \"confidence\": 1.0, \"source\": \"vlm\"},\n    {\"key\": \"amount\", \"value\": \"1520.04\", \"confidence\": 1.0, \"source\": \"vlm\"},\n    {\"key\": \"date\", \"value\": \"2026-10-09\", \"confidence\": 1.0, \"source\": \"vlm\"},\n    {\"key\": \"counterparty\", \"value\": \"Cinema Sintético\", \"confidence\": 1.0, \"source\": \"vlm\"},\n    {\"key\": \"amount\", \"value\": \"1521.29\", \"confidence\": 1.0, \"source\": \"vlm\"}\n  ]\n}\n```",
+          "model": "ollama/mistral-small3.2:24b",
+          "prompt_tokens": 1422,
+          "completion_tokens": 405
+        },
+        "estimated_cost_usd": 0.0,
+        "cost_status": "estimado pela tabela de preços do litellm"
+      }
+    ]
+  },
+  {
+    "id": "D13",
+    "input_sha256": "245b3d01113947361990502e558d27acc88e370402353a8bb675fd6534cb149c",
+    "split": "calibration",
+    "degradation": {
+      "type": "none",
+      "level": "none",
+      "parameters": {}
+    },
+    "trace": {
+      "agent": "document",
+      "status": "ok",
+      "summary": "Leitura encerrada; confira os avisos antes de confirmar.",
+      "duration_ms": 2777,
+      "detail": {
+        "engine": "rapidocr",
+        "pages": [
+          {
+            "page": 1,
+            "status": "rapidocr"
+          }
+        ],
+        "fields": 4,
+        "issues": []
+      }
+    },
+    "document": {
+      "kind": "pix_receipt",
+      "bank": "Banco doBrasil",
+      "quality": {
+        "quality": "legible",
+        "sharpness": 996.6210979651611,
+        "resolution": [
+          1000,
+          1250
+        ],
+        "mean_ocr_confidence": 0.9811286425543617,
+        "reasons": []
+      },
+      "fields": [
+        {
+          "key": "bank",
+          "value": "Banco doBrasil",
+          "confidence": 0.9904900044202805,
+          "source": "ocr"
+        },
+        {
+          "key": "amount",
+          "value": "1549.00",
+          "confidence": 0.9735625187555949,
+          "source": "ocr"
+        },
+        {
+          "key": "date",
+          "value": "2026-10-08",
+          "confidence": 0.9977331479390462,
+          "source": "ocr"
+        },
+        {
+          "key": "counterparty",
+          "value": "Loja Sintética Gama",
+          "confidence": 0.9795297576535132,
+          "source": "ocr"
+        }
+      ],
+      "transactions": [],
+      "issues": [],
+      "needs_review": true,
+      "abstained": false,
+      "reason": null,
+      "engine": "rapidocr"
+    },
+    "technical_failures": [],
+    "vision_failures": [],
+    "latency_ms": 2778.11,
+    "ocr": [
+      {
+        "input_sha256": "c33f7b3fe32a8035b6baedab9523d1ae4c19b022c6868e908aca94e66ee9340e",
+        "result": {
+          "words": [
+            {
+              "text": "Comprovante Pix",
+              "confidence": 0.979537284374237,
+              "box": [
+                68,
+                54,
+                375,
+                90
+              ]
+            },
+            {
+              "text": "AREADE DEMONSTRACAO·SEMVALIDADEBANCARIA",
+              "confidence": 0.9607903544719403,
+              "box": [
+                76,
+                128,
+                600,
+                151
+              ]
+            },
+            {
+              "text": "Banco:Banco doBrasil",
+              "confidence": 0.9904900044202805,
+              "box": [
+                67,
+                227,
+                381,
+                254
+              ]
+            },
+            {
+              "text": "Valor: R$ 1.549,00",
+              "confidence": 0.9735625187555949,
+              "box": [
+                65,
+                291,
+                318,
+                319
+              ]
+            },
+            {
+              "text": "Data:08/10/2026",
+              "confidence": 0.9977331479390462,
+              "box": [
+                66,
+                358,
+                302,
+                385
+              ]
+            },
+            {
+              "text": "Favorecido: Loja Sintética Gama",
+              "confidence": 0.9795297576535132,
+              "box": [
+                65,
+                422,
+                510,
+                452
+              ]
+            },
+            {
+              "text": "Titular:PessoaExemploFicticia",
+              "confidence": 0.995782036205818,
+              "box": [
+                65,
+                951,
+                365,
+                974
+              ]
+            },
+            {
+              "text": "CPF:000.000.000-00",
+              "confidence": 0.9966692494021522,
+              "box": [
+                65,
+                985,
+                266,
+                1008
+              ]
+            },
+            {
+              "text": "Agencia: 0000 Conta: 0000000-0",
+              "confidence": 0.9627157191435496,
+              "box": [
+                62,
+                1018,
+                393,
+                1046
+              ]
+            },
+            {
+              "text": "DADOS INVENTADOS·NAO PAGAR·NAO COMPROVA TRANSFERENCIA",
+              "confidence": 0.9744763531774845,
+              "box": [
+                62,
+                1132,
+                750,
+                1159
+              ]
+            }
+          ],
+          "engine": "rapidocr"
+        }
+      }
+    ],
+    "vision": []
+  },
+  {
+    "id": "D14",
+    "input_sha256": "d10aca0608065c73e04c700136b4df37705fdc213fcedb72b100b1eb9e20e23e",
+    "split": "calibration",
+    "degradation": {
+      "type": "reflection",
+      "level": "moderate",
+      "parameters": {
+        "essential_field_hidden": true
+      }
+    },
+    "trace": {
+      "agent": "document",
+      "status": "ok",
+      "summary": "Leitura encerrada; confira os avisos antes de confirmar.",
+      "duration_ms": 6251,
+      "detail": {
+        "engine": "rapidocr+vlm",
+        "pages": [
+          {
+            "page": 1,
+            "status": "rapidocr+vlm"
+          }
+        ],
+        "fields": 2,
+        "issues": [
+          "VISION_REVIEW_REQUIRED",
+          "FIELD_CONFLICT",
+          "INCOMPLETE_EXTRACTION"
+        ]
+      }
+    },
+    "document": {
+      "kind": "pix_receipt",
+      "bank": null,
+      "quality": {
+        "quality": "partial",
+        "sharpness": 855.3644966213835,
+        "resolution": [
+          1000,
+          1250
+        ],
+        "mean_ocr_confidence": 0.985057118858594,
+        "reasons": []
+      },
+      "fields": [
+        {
+          "key": "amount",
+          "value": "1549.00",
+          "confidence": 0.9927537507481046,
+          "source": "ocr"
+        },
+        {
+          "key": "date",
+          "value": "2026-10-08",
+          "confidence": 0.9979569753011067,
+          "source": "ocr"
+        }
+      ],
+      "transactions": [],
+      "issues": [
+        {
+          "code": "VISION_REVIEW_REQUIRED",
+          "severity": "warning",
+          "message": "Leitura de visão exige revisão."
+        },
+        {
+          "code": "FIELD_CONFLICT",
+          "severity": "warning",
+          "message": "Campo divergente entre leituras; revise."
+        },
+        {
+          "code": "INCOMPLETE_EXTRACTION",
+          "severity": "warning",
+          "message": "Leitura incompleta; revise os campos."
+        }
+      ],
+      "needs_review": true,
+      "abstained": false,
+      "reason": null,
+      "engine": "rapidocr+vlm"
+    },
+    "technical_failures": [],
+    "vision_failures": [],
+    "latency_ms": 6251.39,
+    "ocr": [
+      {
+        "input_sha256": "6426163d579d1cec2804ffbb38043362ff8a3b2a2cfaf37952540d1208ea6e9b",
+        "result": {
+          "words": [
+            {
+              "text": "Comprovante Pix",
+              "confidence": 0.9939885179201762,
+              "box": [
+                68,
+                53,
+                374,
+                89
+              ]
+            },
+            {
+              "text": "AREADE DEMONSTRACAO·SEMVALIDADEBANCARIA",
+              "confidence": 0.9607903544719403,
+              "box": [
+                76,
+                128,
+                600,
+                151
+              ]
+            },
+            {
+              "text": "Banco:Banco doBrasil",
+              "confidence": 0.9904900044202805,
+              "box": [
+                67,
+                227,
+                381,
+                254
+              ]
+            },
+            {
+              "text": "Valor: R$ 1.549,00",
+              "confidence": 0.9927537507481046,
+              "box": [
+                65,
+                291,
+                320,
+                322
+              ]
+            },
+            {
+              "text": "Data:08/10/2026",
+              "confidence": 0.9979569753011067,
+              "box": [
+                66,
+                358,
+                303,
+                385
+              ]
+            },
+            {
+              "text": "Titular:PessoaExemploFicticia",
+              "confidence": 0.995782036205818,
+              "box": [
+                65,
+                951,
+                365,
+                974
+              ]
+            },
+            {
+              "text": "CPF:000.000.000-00",
+              "confidence": 0.9965603583388858,
+              "box": [
+                65,
+                985,
+                265,
+                1008
+              ]
+            },
+            {
+              "text": "Agencia: 0000 Conta: 0000000-0",
+              "confidence": 0.9627157191435496,
+              "box": [
+                62,
+                1018,
+                393,
+                1046
+              ]
+            },
+            {
+              "text": "DADOS INVENTADOS·NAO PAGAR·NAO COMPROVA TRANSFERENCIA",
+              "confidence": 0.9744763531774845,
+              "box": [
+                62,
+                1132,
+                750,
+                1159
+              ]
+            }
+          ],
+          "engine": "rapidocr"
+        }
+      }
+    ],
+    "vision": [
+      {
+        "input_sha256": "6426163d579d1cec2804ffbb38043362ff8a3b2a2cfaf37952540d1208ea6e9b",
+        "result": {
+          "content": "```json\n{\n  \"fields\": [\n    {\n      \"key\": \"amount\",\n      \"value\": \"1549.00\",\n      \"confidence\": 0.9,\n      \"source\": \"vlm\"\n    },\n    {\n      \"key\": \"date\",\n      \"value\": \"2026-10-08\",\n      \"confidence\": 0.9,\n      \"source\": \"vlm\"\n    },\n    {\n      \"key\": \"bank\",\n      \"value\": \"Banco do Brasil\",\n      \"confidence\": 0.9,\n      \"source\": \"vlm\"\n    }\n  ]\n}\n```",
+          "model": "ollama/mistral-small3.2:24b",
+          "prompt_tokens": 1734,
+          "completion_tokens": 140
+        },
+        "estimated_cost_usd": 0.0,
+        "cost_status": "estimado pela tabela de preços do litellm"
+      }
+    ]
+  },
+  {
+    "id": "D15",
+    "input_sha256": "016d13a80d67fb026f25fbcbfc1a54f3e2161f422dc5309a20934c59d79bacdb",
+    "split": "calibration",
+    "degradation": {
+      "type": "none",
+      "level": "none",
+      "parameters": {}
+    },
+    "trace": {
+      "agent": "document",
+      "status": "ok",
+      "summary": "Leitura encerrada; confira os avisos antes de confirmar.",
+      "duration_ms": 3859,
+      "detail": {
+        "engine": "rapidocr",
+        "pages": [
+          {
+            "page": 1,
+            "status": "rapidocr"
+          }
+        ],
+        "fields": 4,
+        "issues": []
+      }
+    },
+    "document": {
+      "kind": "boleto",
+      "bank": "Banco Horizonte Ficticio",
+      "quality": {
+        "quality": "legible",
+        "sharpness": 984.5500006423102,
+        "resolution": [
+          1000,
+          1250
+        ],
+        "mean_ocr_confidence": 0.9830700757920813,
+        "reasons": []
+      },
+      "fields": [
+        {
+          "key": "bank",
+          "value": "Banco Horizonte Ficticio",
+          "confidence": 0.9911739749293174,
+          "source": "ocr"
+        },
+        {
+          "key": "amount",
+          "value": "824.62",
+          "confidence": 0.9857611507177353,
+          "source": "ocr"
+        },
+        {
+          "key": "counterparty",
+          "value": "Oficina Exemplo Delta",
+          "confidence": 0.9825768651384296,
+          "source": "ocr"
+        },
+        {
+          "key": "due_date",
+          "value": "2026-10-09",
+          "confidence": 0.9977877681905573,
+          "source": "ocr"
+        }
+      ],
+      "transactions": [],
+      "issues": [],
+      "needs_review": true,
+      "abstained": false,
+      "reason": null,
+      "engine": "rapidocr"
+    },
+    "technical_failures": [],
+    "vision_failures": [],
+    "latency_ms": 3859.19,
+    "ocr": [
+      {
+        "input_sha256": "84e3e86486937efac76cc6428097d5bb721e53e0ba87076b7fca37f976543b19",
+        "result": {
+          "words": [
+            {
+              "text": "Boleto",
+              "confidence": 0.9996108909447988,
+              "box": [
+                64,
+                52,
+                183,
+                90
+              ]
+            },
+            {
+              "text": "AREA DE DEMONSTRACAO·SEMVALIDADEBANCARIA",
+              "confidence": 0.9462485104799271,
+              "box": [
+                76,
+                128,
+                600,
+                151
+              ]
+            },
+            {
+              "text": "Banco: Banco Horizonte Ficticio",
+              "confidence": 0.9911739749293174,
+              "box": [
+                66,
+                226,
+                501,
+                255
+              ]
+            },
+            {
+              "text": "Valor: R$ 824,62",
+              "confidence": 0.9857611507177353,
+              "box": [
+                64,
+                291,
+                294,
+                322
+              ]
+            },
+            {
+              "text": "Favorecido: Oficina Exemplo Delta",
+              "confidence": 0.9825768651384296,
+              "box": [
+                63,
+                356,
+                538,
+                387
+              ]
+            },
+            {
+              "text": "Vencimento: 09/10/2026",
+              "confidence": 0.9977877681905573,
+              "box": [
+                64,
+                422,
+                402,
+                451
+              ]
+            },
+            {
+              "text": "Titular:Pessoa ExemploFicticia",
+              "confidence": 0.9818230787913005,
+              "box": [
+                65,
+                951,
+                365,
+                974
+              ]
+            },
+            {
+              "text": "CPF:000.000.000-00",
+              "confidence": 0.9967437750763364,
+              "box": [
+                65,
+                985,
+                266,
+                1008
+              ]
+            },
+            {
+              "text": "Agencia:0000 Conta:0000000-0",
+              "confidence": 0.9747869265930993,
+              "box": [
+                62,
+                1018,
+                393,
+                1046
+              ]
+            },
+            {
+              "text": "DADOSINVENTADOS·NAO PAGAR·NAO COMPROVATRANSFERENCIA",
+              "confidence": 0.9741878170593112,
+              "box": [
+                65,
+                1134,
+                749,
+                1157
+              ]
+            }
+          ],
+          "engine": "rapidocr"
+        }
+      }
+    ],
+    "vision": []
+  },
+  {
+    "id": "D16",
+    "input_sha256": "04de5821df415804e124e9a1ec142e3ab586da898938db5527d7f733e1e5a8eb",
+    "split": "calibration",
+    "degradation": {
+      "type": "crop",
+      "level": "moderate",
+      "parameters": {
+        "essential_field_hidden": true
+      }
+    },
+    "trace": {
+      "agent": "document",
+      "status": "ok",
+      "summary": "Leitura encerrada; confira os avisos antes de confirmar.",
+      "duration_ms": 8083,
+      "detail": {
+        "engine": "rapidocr+vlm",
+        "pages": [
+          {
+            "page": 1,
+            "status": "rapidocr+vlm"
+          }
+        ],
+        "fields": 2,
+        "issues": [
+          "VISION_REVIEW_REQUIRED",
+          "FIELD_CONFLICT",
+          "INCOMPLETE_EXTRACTION"
+        ]
+      }
+    },
+    "document": {
+      "kind": "boleto",
+      "bank": null,
+      "quality": {
+        "quality": "partial",
+        "sharpness": 1814.2416988941563,
+        "resolution": [
+          1000,
+          415
+        ],
+        "mean_ocr_confidence": 0.9846317393252425,
+        "reasons": []
+      },
+      "fields": [
+        {
+          "key": "amount",
+          "value": "824.62",
+          "confidence": 0.9800927937030792,
+          "source": "ocr"
+        },
+        {
+          "key": "counterparty",
+          "value": "Oficina Exemplo Delta",
+          "confidence": 0.9753315523266792,
+          "source": "ocr"
+        }
+      ],
+      "transactions": [],
+      "issues": [
+        {
+          "code": "VISION_REVIEW_REQUIRED",
+          "severity": "warning",
+          "message": "Leitura de visão exige revisão."
+        },
+        {
+          "code": "FIELD_CONFLICT",
+          "severity": "warning",
+          "message": "Campo divergente entre leituras; revise."
+        },
+        {
+          "code": "INCOMPLETE_EXTRACTION",
+          "severity": "warning",
+          "message": "Leitura incompleta; revise os campos."
+        }
+      ],
+      "needs_review": true,
+      "abstained": false,
+      "reason": null,
+      "engine": "rapidocr+vlm"
+    },
+    "technical_failures": [],
+    "vision_failures": [],
+    "latency_ms": 8083.28,
+    "ocr": [
+      {
+        "input_sha256": "6e3e6d25d247b8e7d93b3a645dba4d9d2fb78aef29bf5eea52976c2a6815b5d7",
+        "result": {
+          "words": [
+            {
+              "text": "Boleto",
+              "confidence": 0.9985073308149973,
+              "box": [
+                65,
+                54,
+                181,
+                88
+              ]
+            },
+            {
+              "text": "AREADEDEMONSTRACAO·SEMVALIDADEBANCARIA",
+              "confidence": 0.971910978618421,
+              "box": [
+                75,
+                130,
+                599,
+                149
+              ]
+            },
+            {
+              "text": "Banco:BancoHorizonteFicticio",
+              "confidence": 0.9973160411630358,
+              "box": [
+                66,
+                228,
+                498,
+                253
+              ]
+            },
+            {
+              "text": "Valor:R$824,62",
+              "confidence": 0.9800927937030792,
+              "box": [
+                64,
+                293,
+                292,
+                321
+              ]
+            },
+            {
+              "text": "Favorecido:Oficina Exemplo Delta",
+              "confidence": 0.9753315523266792,
+              "box": [
+                65,
+                357,
+                538,
+                387
+              ]
+            }
+          ],
+          "engine": "rapidocr"
+        }
+      }
+    ],
+    "vision": [
+      {
+        "input_sha256": "6e3e6d25d247b8e7d93b3a645dba4d9d2fb78aef29bf5eea52976c2a6815b5d7",
+        "result": {
+          "content": "```json\n{\n  \"fields\": [\n    {\n      \"key\": \"amount\",\n      \"value\": \"824.62\",\n      \"confidence\": 0.9,\n      \"source\": \"vlm\"\n    },\n    {\n      \"key\": \"counterparty\",\n      \"value\": \"Oficina Exemplo Delta\",\n      \"confidence\": 0.9,\n      \"source\": \"vlm\"\n    },\n    {\n      \"key\": \"bank\",\n      \"value\": \"Banco Horizonte Fictício\",\n      \"confidence\": 0.9,\n      \"source\": \"vlm\"\n    }\n  ]\n}\n```",
+          "model": "ollama/mistral-small3.2:24b",
+          "prompt_tokens": 1274,
+          "completion_tokens": 138
+        },
+        "estimated_cost_usd": 0.0,
+        "cost_status": "estimado pela tabela de preços do litellm"
+      }
+    ]
+  },
+  {
+    "id": "D17",
+    "input_sha256": "656664bf654a7756ced775d8ee724de3c505d30398c026b9114a43cf0f9ed060",
+    "split": "calibration",
+    "degradation": {
+      "type": "none",
+      "level": "none",
+      "parameters": {}
+    },
+    "trace": {
+      "agent": "document",
+      "status": "ok",
+      "summary": "Leitura encerrada; confira os avisos antes de confirmar.",
+      "duration_ms": 4056,
+      "detail": {
+        "engine": "rapidocr",
+        "pages": [
+          {
+            "page": 1,
+            "status": "rapidocr"
+          }
+        ],
+        "fields": 3,
+        "issues": []
+      }
+    },
+    "document": {
+      "kind": "card_invoice",
+      "bank": "Nubank",
+      "quality": {
+        "quality": "legible",
+        "sharpness": 1510.2178282847747,
+        "resolution": [
+          1000,
+          1250
+        ],
+        "mean_ocr_confidence": 0.9845209148259434,
+        "reasons": []
+      },
+      "fields": [
+        {
+          "key": "bank",
+          "value": "Nubank",
+          "confidence": 0.9985458392363328,
+          "source": "ocr"
+        },
+        {
+          "key": "due_date",
+          "value": "2026-10-25",
+          "confidence": 0.9991087175550915,
+          "source": "ocr"
+        },
+        {
+          "key": "total",
+          "value": "5030.43",
+          "confidence": 0.9585011767016517,
+          "source": "ocr"
+        }
+      ],
+      "transactions": [
+        {
+          "date": "2026-10-10",
+          "description": "Mercado Exemplo",
+          "amount": 1675.56,
+          "installment": null,
+          "confidence": 0.9585011767016517
+        },
+        {
+          "date": "2026-10-11",
+          "description": "Papelaria Ficticia",
+          "amount": 1676.81,
+          "installment": null,
+          "confidence": 0.9585011767016517
+        },
+        {
+          "date": "2026-10-12",
+          "description": "Cinema Sintético",
+          "amount": 1678.06,
+          "installment": null,
+          "confidence": 0.9585011767016517
+        }
+      ],
+      "issues": [],
+      "needs_review": true,
+      "abstained": false,
+      "reason": null,
+      "engine": "rapidocr"
+    },
+    "technical_failures": [],
+    "vision_failures": [],
+    "latency_ms": 4056.72,
+    "ocr": [
+      {
+        "input_sha256": "707728109ee8602e04c29d43460ccc4330e81f3ca323b13d6a87a9bd974bdbe3",
+        "result": {
+          "words": [
+            {
+              "text": "Fatura de cartao",
+              "confidence": 0.9768193513154984,
+              "box": [
+                66,
+                54,
+                364,
+                87
+              ]
+            },
+            {
+              "text": "AREADEDEMONSTRACAO·SEMVALIDADEBANCARIA",
+              "confidence": 0.9878829639208945,
+              "box": [
+                77,
+                130,
+                599,
+                150
+              ]
+            },
+            {
+              "text": "Banco: Nubank",
+              "confidence": 0.9985458392363328,
+              "box": [
+                63,
+                225,
+                274,
+                257
+              ]
+            },
+            {
+              "text": "Vencimento:25/10/2026",
+              "confidence": 0.9991087175550915,
+              "box": [
+                65,
+                291,
+                400,
+                321
+              ]
+            },
+            {
+              "text": "Lancamento: 10/10/2026 | Mercado Exemplo | 1.675,56",
+              "confidence": 0.9835320208586898,
+              "box": [
+                64,
+                355,
+                677,
+                384
+              ]
+            },
+            {
+              "text": "Lancamento: 11/10/2026 | Papelaria Ficticia |1.676,81",
+              "confidence": 0.9748678094935868,
+              "box": [
+                65,
+                421,
+                665,
+                447
+              ]
+            },
+            {
+              "text": "Lancamento: 12/10/2026| Cinema Sintético| 1.678,06",
+              "confidence": 0.9741612696647644,
+              "box": [
+                65,
+                486,
+                668,
+                512
+              ]
+            },
+            {
+              "text": "Total: R$ 5.030,43",
+              "confidence": 0.9585011767016517,
+              "box": [
+                62,
+                552,
+                320,
+                582
+              ]
+            },
+            {
+              "text": "Titular:PessoaExemploFicticia",
+              "confidence": 0.995782036205818,
+              "box": [
+                65,
+                951,
+                365,
+                974
+              ]
+            },
+            {
+              "text": "CPF:000.000.000-00",
+              "confidence": 0.9966688321696388,
+              "box": [
+                65,
+                985,
+                266,
+                1008
+              ]
+            },
+            {
+              "text": "Agencia:0000 Conta:0000000-0",
+              "confidence": 0.9882625256265912,
+              "box": [
+                64,
+                1020,
+                393,
+                1046
+              ]
+            },
+            {
+              "text": "DADOSINVENTADOS·NAO PAGAR·NAO COMPROVA TRANSFERENCIA",
+              "confidence": 0.9801184351627643,
+              "box": [
+                62,
+                1132,
+                750,
+                1159
+              ]
+            }
+          ],
+          "engine": "rapidocr"
+        }
+      }
+    ],
+    "vision": []
+  },
+  {
+    "id": "D18",
+    "input_sha256": "aecef6ab53c8b3521164ba9ec5501b718f517ede350582b3bd255ce9ef94e907",
+    "split": "calibration",
+    "degradation": {
+      "type": "reflection",
+      "level": "moderate",
+      "parameters": {
+        "essential_field_hidden": true
+      }
+    },
+    "trace": {
+      "agent": "document",
+      "status": "ok",
+      "summary": "Leitura encerrada; confira os avisos antes de confirmar.",
+      "duration_ms": 14942,
+      "detail": {
+        "engine": "rapidocr+vlm",
+        "pages": [
+          {
+            "page": 1,
+            "status": "rapidocr+vlm"
+          }
+        ],
+        "fields": 2,
+        "issues": [
+          "INVALID_VISION_OUTPUT",
+          "INCOMPLETE_EXTRACTION"
+        ]
+      }
+    },
+    "document": {
+      "kind": "card_invoice",
+      "bank": "Nubank",
+      "quality": {
+        "quality": "partial",
+        "sharpness": 1451.3005803273213,
+        "resolution": [
+          1000,
+          1250
+        ],
+        "mean_ocr_confidence": 0.9780410949625457,
+        "reasons": []
+      },
+      "fields": [
+        {
+          "key": "bank",
+          "value": "Nubank",
+          "confidence": 0.9967994689941406,
+          "source": "ocr"
+        },
+        {
+          "key": "due_date",
+          "value": "2026-10-25",
+          "confidence": 0.9958295595078241,
+          "source": "ocr"
+        }
+      ],
+      "transactions": [
+        {
+          "date": "2026-10-10",
+          "description": "MercadoExemplo",
+          "amount": 1675.56,
+          "installment": null,
+          "confidence": 0.9556279030500674
+        },
+        {
+          "date": "2026-10-11",
+          "description": "Papelaria Ficticia",
+          "amount": 1676.81,
+          "installment": null,
+          "confidence": 0.9556279030500674
+        },
+        {
+          "date": "2026-10-12",
+          "description": "Cinema Sintético",
+          "amount": 1678.06,
+          "installment": null,
+          "confidence": 0.9556279030500674
+        }
+      ],
+      "issues": [
+        {
+          "code": "INVALID_VISION_OUTPUT",
+          "severity": "warning",
+          "message": "Contribuição de visão descartada."
+        },
+        {
+          "code": "INCOMPLETE_EXTRACTION",
+          "severity": "warning",
+          "message": "Leitura incompleta; revise os campos."
+        }
+      ],
+      "needs_review": true,
+      "abstained": false,
+      "reason": null,
+      "engine": "rapidocr+vlm"
+    },
+    "technical_failures": [],
+    "vision_failures": [
+      "INVALID_VISION_OUTPUT"
+    ],
+    "latency_ms": 14942.88,
+    "ocr": [
+      {
+        "input_sha256": "ca6e862fbd61cca0af1b4e83a20f00638bdd65c6c94ffea9d18bb8967a6ff5a0",
+        "result": {
+          "words": [
+            {
+              "text": "Fatura de cartao",
+              "confidence": 0.9579330235719681,
+              "box": [
+                66,
+                54,
+                364,
+                87
+              ]
+            },
+            {
+              "text": "AREADEDEMONSTRACAO·SEMVALIDADEBANCARIA",
+              "confidence": 0.9700656533241272,
+              "box": [
+                77,
+                130,
+                599,
+                150
+              ]
+            },
+            {
+              "text": "Banco:Nubank",
+              "confidence": 0.9967994689941406,
+              "box": [
+                63,
+                225,
+                274,
+                257
+              ]
+            },
+            {
+              "text": "Vencimento:25/10/2026",
+              "confidence": 0.9958295595078241,
+              "box": [
+                65,
+                291,
+                400,
+                321
+              ]
+            },
+            {
+              "text": "Lancamento:10/10/2026|MercadoExemplo|1.675,56",
+              "confidence": 0.9860548694928487,
+              "box": [
+                63,
+                355,
+                676,
+                383
+              ]
+            },
+            {
+              "text": "Lancamento: 11/10/2026|Papelaria Ficticia | 1.676,81",
+              "confidence": 0.9712619964893048,
+              "box": [
+                62,
+                419,
+                666,
+                449
+              ]
+            },
+            {
+              "text": "Lancamento: 12/10/2026 | Cinema Sintético |1.678,06",
+              "confidence": 0.9556279030500674,
+              "box": [
+                64,
+                485,
+                669,
+                514
+              ]
+            },
+            {
+              "text": "Titular:PessoaExemploFicticia",
+              "confidence": 0.992572034227437,
+              "box": [
+                65,
+                951,
+                364,
+                974
+              ]
+            },
+            {
+              "text": "CPF:000.000.000-00",
+              "confidence": 0.9905922479099698,
+              "box": [
+                65,
+                985,
+                265,
+                1008
+              ]
+            },
+            {
+              "text": "Agencia:0000 Conta:0000000-0",
+              "confidence": 0.9760381260088512,
+              "box": [
+                64,
+                1020,
+                393,
+                1046
+              ]
+            },
+            {
+              "text": "DADOS INVENTADOS · NAO PAGAR · NAO COMPROVA TRANSFERENCIA",
+              "confidence": 0.9656771620114645,
+              "box": [
+                64,
+                1133,
+                750,
+                1159
+              ]
+            }
+          ],
+          "engine": "rapidocr"
+        }
+      }
+    ],
+    "vision": [
+      {
+        "input_sha256": "ca6e862fbd61cca0af1b4e83a20f00638bdd65c6c94ffea9d18bb8967a6ff5a0",
+        "result": {
+          "content": "```json\n{\n  \"fields\": [\n    {\n      \"key\": \"due_date\",\n      \"value\": \"2026-10-25\",\n      \"confidence\": 0.9,\n      \"source\": \"vlm\"\n    },\n    {\n      \"key\": \"date\",\n      \"value\": \"2026-10-10\",\n      \"confidence\": 0.9,\n      \"source\": \"vlm\"\n    },\n    {\n      \"key\": \"amount\",\n      \"value\": \"1.675,56\",\n      \"confidence\": 0.9,\n      \"source\": \"vlm\"\n    },\n    {\n      \"key\": \"date\",\n      \"value\": \"2026-10-11\",\n      \"confidence\": 0.9,\n      \"source\": \"vlm\"\n    },\n    {\n      \"key\": \"amount\",\n      \"value\": \"1.676,81\",\n      \"confidence\": 0.9,\n      \"source\": \"vlm\"\n    },\n    {\n      \"key\": \"date\",\n      \"value\": \"2026-10-12\",\n      \"confidence\": 0.9,\n      \"source\": \"vlm\"\n    },\n    {\n      \"key\": \"amount\",\n      \"value\": \"1.678,06\",\n      \"confidence\": 0.9,\n      \"source\": \"vlm\"\n    },\n    {\n      \"key\": \"counterparty\",\n      \"value\": \"Mercado Exemplo\",\n      \"confidence\": 0.9,\n      \"source\": \"vlm\"\n    },\n    {\n      \"key\": \"counterparty\",\n      \"value\": \"Papelaria Fictícia\",\n      \"confidence\": 0.9,\n      \"source\": \"vlm\"\n    },\n    {\n      \"key\": \"counterparty\",\n      \"value\": \"Cinema Sintético\",\n      \"confidence\": 0.9,\n      \"source\": \"vlm\"\n    },\n    {\n      \"key\": \"bank\",\n      \"value\": \"Nubank\",\n      \"confidence\": 0.9,\n      \"source\": \"vlm\"\n    }\n  ]\n}\n```",
+          "model": "ollama/mistral-small3.2:24b",
+          "prompt_tokens": 1734,
+          "completion_tokens": 484
+        },
+        "estimated_cost_usd": 0.0,
+        "cost_status": "estimado pela tabela de preços do litellm"
+      }
+    ]
+  },
+  {
+    "id": "D19",
+    "input_sha256": "06c9358f5c4cc802348c2988a9a86fe53031e587367e600bd842e50712572d5e",
+    "split": "validation",
+    "degradation": {
+      "type": "none",
+      "level": "none",
+      "parameters": {}
+    },
+    "trace": {
+      "agent": "document",
+      "status": "ok",
+      "summary": "Leitura encerrada; confira os avisos antes de confirmar.",
+      "duration_ms": 2809,
+      "detail": {
+        "engine": "rapidocr",
+        "pages": [
+          {
+            "page": 1,
+            "status": "rapidocr"
+          }
+        ],
+        "fields": 4,
+        "issues": []
+      }
+    },
+    "document": {
+      "kind": "pix_receipt",
+      "bank": "Nu Empresas",
+      "quality": {
+        "quality": "legible",
+        "sharpness": 1035.628094329685,
+        "resolution": [
+          1000,
+          1250
+        ],
+        "mean_ocr_confidence": 0.9865525800523492,
+        "reasons": []
+      },
+      "fields": [
+        {
+          "key": "bank",
+          "value": "Nu Empresas",
+          "confidence": 0.99840823147032,
+          "source": "ocr"
+        },
+        {
+          "key": "amount",
+          "value": "2336.22",
+          "confidence": 0.9822527236408658,
+          "source": "ocr"
+        },
+        {
+          "key": "date",
+          "value": "2026-10-11",
+          "confidence": 0.9973004976908366,
+          "source": "ocr"
+        },
+        {
+          "key": "counterparty",
+          "value": "Pessoa Ficticia Beta",
+          "confidence": 0.9821490813046694,
+          "source": "ocr"
+        }
+      ],
+      "transactions": [],
+      "issues": [],
+      "needs_review": true,
+      "abstained": false,
+      "reason": null,
+      "engine": "rapidocr"
+    },
+    "technical_failures": [],
+    "vision_failures": [],
+    "latency_ms": 2809.22,
+    "ocr": [
+      {
+        "input_sha256": "71596cffe25c6393ee73482538aaae3eb3500e007ddd28ec9313c610a9029ac1",
+        "result": {
+          "words": [
+            {
+              "text": "Comprovante Pix",
+              "confidence": 0.979537284374237,
+              "box": [
+                68,
+                54,
+                375,
+                90
+              ]
+            },
+            {
+              "text": "AREADEDEMONSTRACAO·SEMVALIDADEBANCARIA",
+              "confidence": 0.9771704830621418,
+              "box": [
+                76,
+                128,
+                600,
+                151
+              ]
+            },
+            {
+              "text": "Banco: Nu Empresas",
+              "confidence": 0.99840823147032,
+              "box": [
+                64,
+                226,
+                348,
+                257
+              ]
+            },
+            {
+              "text": "Valor: R$ 2.336,22",
+              "confidence": 0.9822527236408658,
+              "box": [
+                66,
+                292,
+                319,
+                320
+              ]
+            },
+            {
+              "text": "Data:11/10/2026",
+              "confidence": 0.9973004976908366,
+              "box": [
+                66,
+                358,
+                302,
+                385
+              ]
+            },
+            {
+              "text": "Favorecido: Pessoa Ficticia Beta",
+              "confidence": 0.9821490813046694,
+              "box": [
+                64,
+                422,
+                509,
+                451
+              ]
+            },
+            {
+              "text": "Titular:PessoaExemploFicticia",
+              "confidence": 0.995768954013956,
+              "box": [
+                65,
+                951,
+                365,
+                974
+              ]
+            },
+            {
+              "text": "CPF:000.000.000-00",
+              "confidence": 0.9966692494021522,
+              "box": [
+                65,
+                985,
+                266,
+                1008
+              ]
+            },
+            {
+              "text": "Agencia: 0000 Conta: 0000000-0",
+              "confidence": 0.9627157191435496,
+              "box": [
+                62,
+                1018,
+                393,
+                1046
+              ]
+            },
+            {
+              "text": "DADOSINVENTADOS·NAOPAGAR·NAOCOMPROVATRANSFERENCIA",
+              "confidence": 0.9935535764207646,
+              "box": [
+                65,
+                1134,
+                749,
+                1157
+              ]
+            }
+          ],
+          "engine": "rapidocr"
+        }
+      }
+    ],
+    "vision": []
+  },
+  {
+    "id": "D20",
+    "input_sha256": "d7234b369c422220acd31df555f94d58a015114f01791c938edf7befe507f12e",
+    "split": "validation",
+    "degradation": {
+      "type": "crop",
+      "level": "moderate",
+      "parameters": {
+        "essential_field_hidden": true
+      }
+    },
+    "trace": {
+      "agent": "document",
+      "status": "ok",
+      "summary": "Leitura encerrada; confira os avisos antes de confirmar.",
+      "duration_ms": 5739,
+      "detail": {
+        "engine": "rapidocr+vlm",
+        "pages": [
+          {
+            "page": 1,
+            "status": "rapidocr+vlm"
+          }
+        ],
+        "fields": 2,
+        "issues": [
+          "VISION_REVIEW_REQUIRED",
+          "FIELD_CONFLICT",
+          "INCOMPLETE_EXTRACTION"
+        ]
+      }
+    },
+    "document": {
+      "kind": "pix_receipt",
+      "bank": null,
+      "quality": {
+        "quality": "partial",
+        "sharpness": 1770.2969425533877,
+        "resolution": [
+          1000,
+          415
+        ],
+        "mean_ocr_confidence": 0.988110796138084,
+        "reasons": []
+      },
+      "fields": [
+        {
+          "key": "amount",
+          "value": "2336.22",
+          "confidence": 0.9865395687520504,
+          "source": "ocr"
+        },
+        {
+          "key": "date",
+          "value": "2026-10-11",
+          "confidence": 0.976409487426281,
+          "source": "ocr"
+        }
+      ],
+      "transactions": [],
+      "issues": [
+        {
+          "code": "VISION_REVIEW_REQUIRED",
+          "severity": "warning",
+          "message": "Leitura de visão exige revisão."
+        },
+        {
+          "code": "FIELD_CONFLICT",
+          "severity": "warning",
+          "message": "Campo divergente entre leituras; revise."
+        },
+        {
+          "code": "INCOMPLETE_EXTRACTION",
+          "severity": "warning",
+          "message": "Leitura incompleta; revise os campos."
+        }
+      ],
+      "needs_review": true,
+      "abstained": false,
+      "reason": null,
+      "engine": "rapidocr+vlm"
+    },
+    "technical_failures": [],
+    "vision_failures": [],
+    "latency_ms": 5740.03,
+    "ocr": [
+      {
+        "input_sha256": "6362874a2c65cd1192bf04bf48cfb3af70e0de26e77af107de3353522e7deb0d",
+        "result": {
+          "words": [
+            {
+              "text": "ComprovantePix",
+              "confidence": 0.9976093130452293,
+              "box": [
+                67,
+                55,
+                375,
+                91
+              ]
+            },
+            {
+              "text": "AREADEDEMONSTRACAO·SEMVALIDADEBANCARIA",
+              "confidence": 0.9832709164995896,
+              "box": [
+                74,
+                129,
+                599,
+                150
+              ]
+            },
+            {
+              "text": "Banco:NuEmpresas",
+              "confidence": 0.9967246949672699,
+              "box": [
+                65,
+                227,
+                348,
+                258
+              ]
+            },
+            {
+              "text": "Valor:R$2.336,22",
+              "confidence": 0.9865395687520504,
+              "box": [
+                64,
+                293,
+                319,
+                321
+              ]
+            },
+            {
+              "text": "Data: 11/10/2026",
+              "confidence": 0.976409487426281,
+              "box": [
+                66,
+                360,
+                302,
+                384
+              ]
+            }
+          ],
+          "engine": "rapidocr"
+        }
+      }
+    ],
+    "vision": [
+      {
+        "input_sha256": "6362874a2c65cd1192bf04bf48cfb3af70e0de26e77af107de3353522e7deb0d",
+        "result": {
+          "content": "```json\n{\n  \"fields\": [\n    {\"key\": \"amount\", \"value\": \"2336.22\", \"confidence\": 0.9, \"source\": \"vlm\"},\n    {\"key\": \"date\", \"value\": \"2026-10-11\", \"confidence\": 0.9, \"source\": \"vlm\"},\n    {\"key\": \"bank\", \"value\": \"Nu Empresas\", \"confidence\": 0.9, \"source\": \"vlm\"}\n  ]\n}\n```",
+          "model": "ollama/mistral-small3.2:24b",
+          "prompt_tokens": 1274,
+          "completion_tokens": 119
+        },
+        "estimated_cost_usd": 0.0,
+        "cost_status": "estimado pela tabela de preços do litellm"
+      }
+    ]
+  },
+  {
+    "id": "D21",
+    "input_sha256": "ff86909e0509bc3db8d1559bf3c8a9c5f94e0302aedc2ec90b5c8fe1f879b915",
+    "split": "validation",
+    "degradation": {
+      "type": "none",
+      "level": "none",
+      "parameters": {}
+    },
+    "trace": {
+      "agent": "document",
+      "status": "ok",
+      "summary": "Leitura encerrada; confira os avisos antes de confirmar.",
+      "duration_ms": 2496,
+      "detail": {
+        "engine": "rapidocr",
+        "pages": [
+          {
+            "page": 1,
+            "status": "rapidocr"
+          }
+        ],
+        "fields": 4,
+        "issues": []
+      }
+    },
+    "document": {
+      "kind": "boleto",
+      "bank": "BancodoBrasil",
+      "quality": {
+        "quality": "legible",
+        "sharpness": 985.0342865217615,
+        "resolution": [
+          1000,
+          1250
+        ],
+        "mean_ocr_confidence": 0.9787575434665708,
+        "reasons": []
+      },
+      "fields": [
+        {
+          "key": "bank",
+          "value": "BancodoBrasil",
+          "confidence": 0.9930342090757269,
+          "source": "ocr"
+        },
+        {
+          "key": "amount",
+          "value": "942.70",
+          "confidence": 0.9598541378974914,
+          "source": "ocr"
+        },
+        {
+          "key": "counterparty",
+          "value": "LojaSintéticaGama",
+          "confidence": 0.9817688550267901,
+          "source": "ocr"
+        },
+        {
+          "key": "due_date",
+          "value": "2026-10-12",
+          "confidence": 0.9983435244787306,
+          "source": "ocr"
+        }
+      ],
+      "transactions": [],
+      "issues": [],
+      "needs_review": true,
+      "abstained": false,
+      "reason": null,
+      "engine": "rapidocr"
+    },
+    "technical_failures": [],
+    "vision_failures": [],
+    "latency_ms": 2496.95,
+    "ocr": [
+      {
+        "input_sha256": "c0023227bad3768612ad6255d27a988c5e4bcbc94c1f35af434769be80308edf",
+        "result": {
+          "words": [
+            {
+              "text": "Boleto",
+              "confidence": 0.9989979068438212,
+              "box": [
+                64,
+                52,
+                182,
+                90
+              ]
+            },
+            {
+              "text": "AREADEDEMONSTRACAO·SEMVALIDADEBANCARIA",
+              "confidence": 0.9476439984221208,
+              "box": [
+                76,
+                128,
+                600,
+                151
+              ]
+            },
+            {
+              "text": "Banco:BancodoBrasil",
+              "confidence": 0.9930342090757269,
+              "box": [
+                67,
+                227,
+                382,
+                254
+              ]
+            },
+            {
+              "text": "Valor: R$942,70",
+              "confidence": 0.9598541378974914,
+              "box": [
+                64,
+                291,
+                295,
+                322
+              ]
+            },
+            {
+              "text": "Favorecido:LojaSintéticaGama",
+              "confidence": 0.9817688550267901,
+              "box": [
+                65,
+                357,
+                510,
+                387
+              ]
+            },
+            {
+              "text": "Vencimento:12/10/2026",
+              "confidence": 0.9983435244787306,
+              "box": [
+                64,
+                422,
+                402,
+                451
+              ]
+            },
+            {
+              "text": "Titular:PessoaExemploFicticia",
+              "confidence": 0.9930810702258143,
+              "box": [
+                65,
+                951,
+                365,
+                974
+              ]
+            },
+            {
+              "text": "CPF:000.000.000-00",
+              "confidence": 0.9906471636560228,
+              "box": [
+                65,
+                985,
+                266,
+                1008
+              ]
+            },
+            {
+              "text": "Agencia:0000 Conta:0000000-0",
+              "confidence": 0.9717501955372947,
+              "box": [
+                62,
+                1018,
+                393,
+                1046
+              ]
+            },
+            {
+              "text": "DADOS INVENTADOS · NAO PAGAR · NAO COMPROVA TRANSFERENCIA",
+              "confidence": 0.9524543735018948,
+              "box": [
+                62,
+                1132,
+                750,
+                1159
+              ]
+            }
+          ],
+          "engine": "rapidocr"
+        }
+      }
+    ],
+    "vision": []
+  },
+  {
+    "id": "D22",
+    "input_sha256": "43666684874618ab69c973c64b391cd8da1bad54ddb5c1adfd3a62329374fbd3",
+    "split": "validation",
+    "degradation": {
+      "type": "reflection",
+      "level": "moderate",
+      "parameters": {
+        "essential_field_hidden": true
+      }
+    },
+    "trace": {
+      "agent": "document",
+      "status": "ok",
+      "summary": "Leitura encerrada; confira os avisos antes de confirmar.",
+      "duration_ms": 6148,
+      "detail": {
+        "engine": "rapidocr+vlm",
+        "pages": [
+          {
+            "page": 1,
+            "status": "rapidocr+vlm"
+          }
+        ],
+        "fields": 3,
+        "issues": [
+          "INCOMPLETE_EXTRACTION"
+        ]
+      }
+    },
+    "document": {
+      "kind": "boleto",
+      "bank": "Banco do Brasil",
+      "quality": {
+        "quality": "partial",
+        "sharpness": 861.2498570859022,
+        "resolution": [
+          1000,
+          1250
+        ],
+        "mean_ocr_confidence": 0.9792489957674056,
+        "reasons": []
+      },
+      "fields": [
+        {
+          "key": "bank",
+          "value": "Banco do Brasil",
+          "confidence": 0.9723960530190241,
+          "source": "ocr"
+        },
+        {
+          "key": "amount",
+          "value": "942.70",
+          "confidence": 0.9731849543750286,
+          "source": "ocr"
+        },
+        {
+          "key": "counterparty",
+          "value": "Loja Sintética Gama",
+          "confidence": 0.9795297576535132,
+          "source": "ocr"
+        }
+      ],
+      "transactions": [],
+      "issues": [
+        {
+          "code": "INCOMPLETE_EXTRACTION",
+          "severity": "warning",
+          "message": "Leitura incompleta; revise os campos."
+        }
+      ],
+      "needs_review": true,
+      "abstained": false,
+      "reason": null,
+      "engine": "rapidocr+vlm"
+    },
+    "technical_failures": [],
+    "vision_failures": [],
+    "latency_ms": 6148.9,
+    "ocr": [
+      {
+        "input_sha256": "345a2cf5b684fd077a8955bfbf85d9973df1899d8e011975182434a3141143ca",
+        "result": {
+          "words": [
+            {
+              "text": "Boleto",
+              "confidence": 0.9996203680833181,
+              "box": [
+                64,
+                52,
+                182,
+                90
+              ]
+            },
+            {
+              "text": "AREADE DEMONSTRACAO·SEMVALIDADEBANCARIA",
+              "confidence": 0.9607903544719403,
+              "box": [
+                76,
+                128,
+                600,
+                151
+              ]
+            },
+            {
+              "text": "Banco:Banco do Brasil",
+              "confidence": 0.9723960530190241,
+              "box": [
+                67,
+                227,
+                382,
+                254
+              ]
+            },
+            {
+              "text": "Valor: R$ 942,70",
+              "confidence": 0.9731849543750286,
+              "box": [
+                63,
+                290,
+                294,
+                323
+              ]
+            },
+            {
+              "text": "Favorecido: Loja Sintética Gama",
+              "confidence": 0.9795297576535132,
+              "box": [
+                65,
+                357,
+                510,
+                387
+              ]
+            },
+            {
+              "text": "Titular:Pessoa ExemploFicticia",
+              "confidence": 0.9818230787913005,
+              "box": [
+                65,
+                951,
+                365,
+                974
+              ]
+            },
+            {
+              "text": "CPF:000.000.000-00",
+              "confidence": 0.9966331157419417,
+              "box": [
+                65,
+                985,
+                265,
+                1008
+              ]
+            },
+            {
+              "text": "Agencia:0000 Conta:0000000-0",
+              "confidence": 0.9747869265930993,
+              "box": [
+                62,
+                1018,
+                393,
+                1046
+              ]
+            },
+            {
+              "text": "DADOS INVENTADOS·NAO PAGAR·NAO COMPROVA TRANSFERENCIA",
+              "confidence": 0.9744763531774845,
+              "box": [
+                62,
+                1132,
+                750,
+                1159
+              ]
+            }
+          ],
+          "engine": "rapidocr"
+        }
+      }
+    ],
+    "vision": [
+      {
+        "input_sha256": "345a2cf5b684fd077a8955bfbf85d9973df1899d8e011975182434a3141143ca",
+        "result": {
+          "content": "```json\n{\n  \"fields\": [\n    {\n      \"key\": \"amount\",\n      \"value\": \"942.70\",\n      \"confidence\": 0.9,\n      \"source\": \"vlm\"\n    },\n    {\n      \"key\": \"counterparty\",\n      \"value\": \"Loja Sintética Gama\",\n      \"confidence\": 0.9,\n      \"source\": \"vlm\"\n    },\n    {\n      \"key\": \"bank\",\n      \"value\": \"Banco do Brasil\",\n      \"confidence\": 0.9,\n      \"source\": \"vlm\"\n    }\n  ]\n}\n```",
+          "model": "ollama/mistral-small3.2:24b",
+          "prompt_tokens": 1734,
+          "completion_tokens": 135
+        },
+        "estimated_cost_usd": 0.0,
+        "cost_status": "estimado pela tabela de preços do litellm"
+      }
+    ]
+  },
+  {
+    "id": "D23",
+    "input_sha256": "67c3a4fe86aaef4105b28d990920ed63f374173fc256b69a7294bfd882bec16c",
+    "split": "validation",
+    "degradation": {
+      "type": "none",
+      "level": "none",
+      "parameters": {}
+    },
+    "trace": {
+      "agent": "document",
+      "status": "ok",
+      "summary": "Leitura encerrada; confira os avisos antes de confirmar.",
+      "duration_ms": 3240,
+      "detail": {
+        "engine": "rapidocr",
+        "pages": [
+          {
+            "page": 1,
+            "status": "rapidocr"
+          }
+        ],
+        "fields": 3,
+        "issues": []
+      }
+    },
+    "document": {
+      "kind": "card_invoice",
+      "bank": "Banco Horizonte Ficticio",
+      "quality": {
+        "quality": "legible",
+        "sharpness": 1477.5550379605365,
+        "resolution": [
+          1000,
+          1250
+        ],
+        "mean_ocr_confidence": 0.9821431007108732,
+        "reasons": []
+      },
+      "fields": [
+        {
+          "key": "bank",
+          "value": "Banco Horizonte Ficticio",
+          "confidence": 0.9981388661169237,
+          "source": "ocr"
+        },
+        {
+          "key": "due_date",
+          "value": "2026-10-28",
+          "confidence": 0.9787920821796764,
+          "source": "ocr"
+        },
+        {
+          "key": "total",
+          "value": "6371.82",
+          "confidence": 0.9988692402839661,
+          "source": "ocr"
+        }
+      ],
+      "transactions": [
+        {
+          "date": "2026-10-13",
+          "description": "Mercado Exemplo",
+          "amount": 2122.69,
+          "installment": null,
+          "confidence": 0.9452193602919579
+        },
+        {
+          "date": "2026-10-14",
+          "description": "Papelaria Ficticia",
+          "amount": 2123.94,
+          "installment": null,
+          "confidence": 0.9452193602919579
+        },
+        {
+          "date": "2026-10-15",
+          "description": "Cinema Sintético",
+          "amount": 2125.19,
+          "installment": null,
+          "confidence": 0.9452193602919579
+        }
+      ],
+      "issues": [],
+      "needs_review": true,
+      "abstained": false,
+      "reason": null,
+      "engine": "rapidocr"
+    },
+    "technical_failures": [],
+    "vision_failures": [],
+    "latency_ms": 3240.43,
+    "ocr": [
+      {
+        "input_sha256": "a84ccd0dad80486d504ecc4558b1e2282697e5d86759bef94e3477fe46a066d7",
+        "result": {
+          "words": [
+            {
+              "text": "Fatura de cartao",
+              "confidence": 0.9946666918694973,
+              "box": [
+                64,
+                53,
+                364,
+                88
+              ]
+            },
+            {
+              "text": "AREA DE DEMONSTRACAO·SEMVALIDADEBANCARIA",
+              "confidence": 0.9452193602919579,
+              "box": [
+                76,
+                128,
+                600,
+                151
+              ]
+            },
+            {
+              "text": "Banco: Banco Horizonte Ficticio",
+              "confidence": 0.9981388661169237,
+              "box": [
+                64,
+                224,
+                500,
+                256
+              ]
+            },
+            {
+              "text": "Vencimento: 28/10/2026",
+              "confidence": 0.9787920821796764,
+              "box": [
+                65,
+                291,
+                400,
+                321
+              ]
+            },
+            {
+              "text": "Lancamento: 13/10/2026 | Mercado Exemplo | 2.122,69",
+              "confidence": 0.9731159373825672,
+              "box": [
+                61,
+                353,
+                676,
+                384
+              ]
+            },
+            {
+              "text": "Lancamento: 14/10/2026| Papelaria Ficticia|2.123,94",
+              "confidence": 0.9793863658811531,
+              "box": [
+                65,
+                421,
+                665,
+                447
+              ]
+            },
+            {
+              "text": "Lancamento: 15/10/2026| Cinema Sintético|2.125,19",
+              "confidence": 0.9788546696001169,
+              "box": [
+                65,
+                486,
+                667,
+                512
+              ]
+            },
+            {
+              "text": "Total: R$ 6.371,82",
+              "confidence": 0.9988692402839661,
+              "box": [
+                61,
+                551,
+                319,
+                581
+              ]
+            },
+            {
+              "text": "Titular:Pessoa ExemploFicticia",
+              "confidence": 0.9818230787913005,
+              "box": [
+                65,
+                951,
+                365,
+                974
+              ]
+            },
+            {
+              "text": "CPF:000.000.000-00",
+              "confidence": 0.9967437750763364,
+              "box": [
+                65,
+                985,
+                266,
+                1008
+              ]
+            },
+            {
+              "text": "Agencia:0000 Conta:0000000-0",
+              "confidence": 0.9855655751058033,
+              "box": [
+                64,
+                1020,
+                393,
+                1046
+              ]
+            },
+            {
+              "text": "DADOSINVENTADOS·NAO PAGAR·NAO COMPROVATRANSFERENCIA",
+              "confidence": 0.974541565951179,
+              "box": [
+                65,
+                1134,
+                748,
+                1157
+              ]
+            }
+          ],
+          "engine": "rapidocr"
+        }
+      }
+    ],
+    "vision": []
+  },
+  {
+    "id": "D24",
+    "input_sha256": "aaabc5089293dceb2e31159792aec3469076ab4fa04364b0bb25546a55c561a8",
+    "split": "validation",
+    "degradation": {
+      "type": "crop",
+      "level": "moderate",
+      "parameters": {
+        "essential_field_hidden": true
+      }
+    },
+    "trace": {
+      "agent": "document",
+      "status": "ok",
+      "summary": "Leitura encerrada; confira os avisos antes de confirmar.",
+      "duration_ms": 11391,
+      "detail": {
+        "engine": "rapidocr+vlm",
+        "pages": [
+          {
+            "page": 1,
+            "status": "rapidocr+vlm"
+          }
+        ],
+        "fields": 2,
+        "issues": [
+          "INVALID_VISION_OUTPUT",
+          "INCOMPLETE_EXTRACTION"
+        ]
+      }
+    },
+    "document": {
+      "kind": "card_invoice",
+      "bank": "BancoHorizonteFicticio",
+      "quality": {
+        "quality": "partial",
+        "sharpness": 2615.512616393007,
+        "resolution": [
+          1000,
+          545
+        ],
+        "mean_ocr_confidence": 0.9827074721848522,
+        "reasons": []
+      },
+      "fields": [
+        {
+          "key": "bank",
+          "value": "BancoHorizonteFicticio",
+          "confidence": 0.9934410665716443,
+          "source": "ocr"
+        },
+        {
+          "key": "due_date",
+          "value": "2026-10-28",
+          "confidence": 0.9917164757138207,
+          "source": "ocr"
+        }
+      ],
+      "transactions": [
+        {
+          "date": "2026-10-13",
+          "description": "MercadoExemplo",
+          "amount": 2122.69,
+          "installment": null,
+          "confidence": 0.9694152946273485
+        },
+        {
+          "date": "2026-10-14",
+          "description": "PapelariaFicticia",
+          "amount": 2123.94,
+          "installment": null,
+          "confidence": 0.9694152946273485
+        },
+        {
+          "date": "2026-10-15",
+          "description": "CinemaSintético",
+          "amount": 2125.19,
+          "installment": null,
+          "confidence": 0.9694152946273485
+        }
+      ],
+      "issues": [
+        {
+          "code": "INVALID_VISION_OUTPUT",
+          "severity": "warning",
+          "message": "Contribuição de visão descartada."
+        },
+        {
+          "code": "INCOMPLETE_EXTRACTION",
+          "severity": "warning",
+          "message": "Leitura incompleta; revise os campos."
+        }
+      ],
+      "needs_review": true,
+      "abstained": false,
+      "reason": null,
+      "engine": "rapidocr+vlm"
+    },
+    "technical_failures": [],
+    "vision_failures": [
+      "INVALID_VISION_OUTPUT"
+    ],
+    "latency_ms": 11391.21,
+    "ocr": [
+      {
+        "input_sha256": "c5da27bfe14065e428e5833989e96da4f20476aeb4d2c2aa74553c8e25dfad43",
+        "result": {
+          "words": [
+            {
+              "text": "Faturadecartao",
+              "confidence": 0.9895353487559727,
+              "box": [
+                68,
+                57,
+                362,
+                86
+              ]
+            },
+            {
+              "text": "AREADEDEMONSTRACAO·SEMVALIDADEBANCARIA",
+              "confidence": 0.9743425516705764,
+              "box": [
+                75,
+                129,
+                600,
+                150
+              ]
+            },
+            {
+              "text": "Banco:BancoHorizonteFicticio",
+              "confidence": 0.9934410665716443,
+              "box": [
+                66,
+                228,
+                499,
+                253
+              ]
+            },
+            {
+              "text": "Vencimento:28/10/2026",
+              "confidence": 0.9917164757138207,
+              "box": [
+                65,
+                290,
+                400,
+                321
+              ]
+            },
+            {
+              "text": "Lancamento:13/10/2026|MercadoExemplo|2.122,69",
+              "confidence": 0.9870072960853576,
+              "box": [
+                63,
+                355,
+                676,
+                382
+              ]
+            },
+            {
+              "text": "Lancamento:14/10/2026|PapelariaFicticia|2.123,94",
+              "confidence": 0.9694152946273485,
+              "box": [
+                64,
+                421,
+                666,
+                446
+              ]
+            },
+            {
+              "text": "Lancamento:15/10/2026|CinemaSintético|2.125,19",
+              "confidence": 0.9734942718692448,
+              "box": [
+                64,
+                486,
+                667,
+                511
+              ]
+            }
+          ],
+          "engine": "rapidocr"
+        }
+      }
+    ],
+    "vision": [
+      {
+        "input_sha256": "c5da27bfe14065e428e5833989e96da4f20476aeb4d2c2aa74553c8e25dfad43",
+        "result": {
+          "content": "```json\n{\n  \"fields\": [\n    {\"key\": \"bank\", \"value\": \"Banco Horizonte Fictício\", \"confidence\": 1.0, \"source\": \"vlm\"},\n    {\"key\": \"due_date\", \"value\": \"2026-10-28\", \"confidence\": 1.0, \"source\": \"vlm\"},\n    {\"key\": \"date\", \"value\": \"2026-10-13\", \"confidence\": 1.0, \"source\": \"vlm\"},\n    {\"key\": \"counterparty\", \"value\": \"Mercado Exemplo\", \"confidence\": 1.0, \"source\": \"vlm\"},\n    {\"key\": \"amount\", \"value\": \"2122.69\", \"confidence\": 1.0, \"source\": \"vlm\"},\n    {\"key\": \"date\", \"value\": \"2026-10-14\", \"confidence\": 1.0, \"source\": \"vlm\"},\n    {\"key\": \"counterparty\", \"value\": \"Papelaria Fictícia\", \"confidence\": 1.0, \"source\": \"vlm\"},\n    {\"key\": \"amount\", \"value\": \"2123.94\", \"confidence\": 1.0, \"source\": \"vlm\"},\n    {\"key\": \"date\", \"value\": \"2026-10-15\", \"confidence\": 1.0, \"source\": \"vlm\"},\n    {\"key\": \"counterparty\", \"value\": \"Cinema Sintético\", \"confidence\": 1.0, \"source\": \"vlm\"},\n    {\"key\": \"amount\", \"value\": \"2125.19\", \"confidence\": 1.0, \"source\": \"vlm\"}\n  ]\n}\n```",
+          "model": "ollama/mistral-small3.2:24b",
+          "prompt_tokens": 1422,
+          "completion_tokens": 408
+        },
+        "estimated_cost_usd": 0.0,
+        "cost_status": "estimado pela tabela de preços do litellm"
+      }
+    ]
+  },
+  {
+    "id": "D25",
+    "input_sha256": "5373f981eb239f9721dea80d157362d72adaecc1708c6825b3b43bf039686035",
+    "split": "validation",
+    "degradation": {
+      "type": "none",
+      "level": "none",
+      "parameters": {}
+    },
+    "trace": {
+      "agent": "document",
+      "status": "ok",
+      "summary": "Leitura encerrada; confira os avisos antes de confirmar.",
+      "duration_ms": 2651,
+      "detail": {
+        "engine": "rapidocr",
+        "pages": [
+          {
+            "page": 1,
+            "status": "rapidocr"
+          }
+        ],
+        "fields": 4,
+        "issues": []
+      }
+    },
+    "document": {
+      "kind": "pix_receipt",
+      "bank": "Nubank",
+      "quality": {
+        "quality": "legible",
+        "sharpness": 1038.817900223524,
+        "resolution": [
+          1000,
+          1250
+        ],
+        "mean_ocr_confidence": 0.9871943287770504,
+        "reasons": []
+      },
+      "fields": [
+        {
+          "key": "bank",
+          "value": "Nubank",
+          "confidence": 0.9990743398666382,
+          "source": "ocr"
+        },
+        {
+          "key": "amount",
+          "value": "1195.46",
+          "confidence": 0.9952916502952576,
+          "source": "ocr"
+        },
+        {
+          "key": "date",
+          "value": "2026-10-14",
+          "confidence": 0.998761777083079,
+          "source": "ocr"
+        },
+        {
+          "key": "counterparty",
+          "value": "Pessoa Exemplo Alfa",
+          "confidence": 0.9826129813989003,
+          "source": "ocr"
+        }
+      ],
+      "transactions": [],
+      "issues": [],
+      "needs_review": true,
+      "abstained": false,
+      "reason": null,
+      "engine": "rapidocr"
+    },
+    "technical_failures": [],
+    "vision_failures": [],
+    "latency_ms": 2651.7,
+    "ocr": [
+      {
+        "input_sha256": "eda03e53d3adc54e760a3763184616647bbf6aa26688e5d59782adabae1ccc2b",
+        "result": {
+          "words": [
+            {
+              "text": "Comprovante Pix",
+              "confidence": 0.979537284374237,
+              "box": [
+                68,
+                54,
+                375,
+                90
+              ]
+            },
+            {
+              "text": "AREADEDEMONSTRACAO·SEMVALIDADEBANCARIA",
+              "confidence": 0.9813798148381082,
+              "box": [
+                76,
+                128,
+                600,
+                151
+              ]
+            },
+            {
+              "text": "Banco:Nubank",
+              "confidence": 0.9990743398666382,
+              "box": [
+                67,
+                227,
+                272,
+                254
+              ]
+            },
+            {
+              "text": "Valor: R$ 1.195,46",
+              "confidence": 0.9952916502952576,
+              "box": [
+                65,
+                291,
+                320,
+                322
+              ]
+            },
+            {
+              "text": "Data:14/10/2026",
+              "confidence": 0.998761777083079,
+              "box": [
+                66,
+                358,
+                303,
+                385
+              ]
+            },
+            {
+              "text": "Favorecido:Pessoa Exemplo Alfa",
+              "confidence": 0.9826129813989003,
+              "box": [
+                63,
+                421,
+                517,
+                452
+              ]
+            },
+            {
+              "text": "Titular:PessoaExemploFicticia",
+              "confidence": 0.995782036205818,
+              "box": [
+                65,
+                951,
+                365,
+                974
+              ]
+            },
+            {
+              "text": "CPF:000.000.000-00",
+              "confidence": 0.9966692494021522,
+              "box": [
+                65,
+                985,
+                266,
+                1008
+              ]
+            },
+            {
+              "text": "Agencia: 0000 Conta: 0000000-0",
+              "confidence": 0.9627157191435496,
+              "box": [
+                62,
+                1018,
+                393,
+                1046
+              ]
+            },
+            {
+              "text": "DADOSINVENTADOS·NAO PAGAR·NAO COMPROVA TRANSFERENCIA",
+              "confidence": 0.9801184351627643,
+              "box": [
+                62,
+                1132,
+                750,
+                1159
+              ]
+            }
+          ],
+          "engine": "rapidocr"
+        }
+      }
+    ],
+    "vision": []
+  },
+  {
+    "id": "D26",
+    "input_sha256": "25e9edd4b098c04d7ba72617eec6706848714eaab89b2a6db1e7d1eec4ab8cfe",
+    "split": "validation",
+    "degradation": {
+      "type": "reflection",
+      "level": "moderate",
+      "parameters": {
+        "essential_field_hidden": true
+      }
+    },
+    "trace": {
+      "agent": "document",
+      "status": "ok",
+      "summary": "Leitura encerrada; confira os avisos antes de confirmar.",
+      "duration_ms": 7165,
+      "detail": {
+        "engine": "rapidocr+vlm",
+        "pages": [
+          {
+            "page": 1,
+            "status": "rapidocr+vlm"
+          }
+        ],
+        "fields": 4,
+        "issues": [
+          "VISION_REVIEW_REQUIRED",
+          "INCOMPLETE_EXTRACTION"
+        ]
+      }
+    },
+    "document": {
+      "kind": "pix_receipt",
+      "bank": "Nubank",
+      "quality": {
+        "quality": "partial",
+        "sharpness": 894.0176233877368,
+        "resolution": [
+          1000,
+          1250
+        ],
+        "mean_ocr_confidence": 0.9901811732181002,
+        "reasons": []
+      },
+      "fields": [
+        {
+          "key": "bank",
+          "value": "Nubank",
+          "confidence": 0.9983223814230698,
+          "source": "ocr"
+        },
+        {
+          "key": "amount",
+          "value": "1195.46",
+          "confidence": 0.9949316382408142,
+          "source": "ocr"
+        },
+        {
+          "key": "date",
+          "value": "2026-10-14",
+          "confidence": 0.9986898064613342,
+          "source": "ocr"
+        },
+        {
+          "key": "counterparty",
+          "value": "Pessoa Exemplo Fictícia",
+          "confidence": 0.5,
+          "source": "vlm"
+        }
+      ],
+      "transactions": [],
+      "issues": [
+        {
+          "code": "VISION_REVIEW_REQUIRED",
+          "severity": "warning",
+          "message": "Leitura de visão exige revisão."
+        },
+        {
+          "code": "INCOMPLETE_EXTRACTION",
+          "severity": "warning",
+          "message": "Leitura incompleta; revise os campos."
+        }
+      ],
+      "needs_review": true,
+      "abstained": false,
+      "reason": null,
+      "engine": "rapidocr+vlm"
+    },
+    "technical_failures": [],
+    "vision_failures": [],
+    "latency_ms": 7165.61,
+    "ocr": [
+      {
+        "input_sha256": "ba92f6eb0b9c404c5de2566744bb61ce488f78fbb5496368cd00a7c24b5fb3da",
+        "result": {
+          "words": [
+            {
+              "text": "Comprovante Pix",
+              "confidence": 0.9775825262069702,
+              "box": [
+                68,
+                54,
+                375,
+                90
+              ]
+            },
+            {
+              "text": "AREADEDEMONSTRACAO·SEMVALIDADEBANCARIA",
+              "confidence": 0.9813798148381082,
+              "box": [
+                76,
+                128,
+                600,
+                151
+              ]
+            },
+            {
+              "text": "Banco: Nubank",
+              "confidence": 0.9983223814230698,
+              "box": [
+                66,
+                225,
+                273,
+                255
+              ]
+            },
+            {
+              "text": "Valor: R$ 1.195,46",
+              "confidence": 0.9949316382408142,
+              "box": [
+                65,
+                291,
+                320,
+                322
+              ]
+            },
+            {
+              "text": "Data:14/10/2026",
+              "confidence": 0.9986898064613342,
+              "box": [
+                66,
+                358,
+                303,
+                385
+              ]
+            },
+            {
+              "text": "Titular:PessoaExemploFicticia",
+              "confidence": 0.995782036205818,
+              "box": [
+                65,
+                951,
+                365,
+                974
+              ]
+            },
+            {
+              "text": "CPF:000.000.000-00",
+              "confidence": 0.9965613947974311,
+              "box": [
+                65,
+                985,
+                265,
+                1008
+              ]
+            },
+            {
+              "text": "Agencia:0000 Conta:0000000-0",
+              "confidence": 0.9882625256265912,
+              "box": [
+                64,
+                1020,
+                393,
+                1046
+              ]
+            },
+            {
+              "text": "DADOSINVENTADOS·NAO PAGAR·NAO COMPROVA TRANSFERENCIA",
+              "confidence": 0.9801184351627643,
+              "box": [
+                62,
+                1132,
+                750,
+                1159
+              ]
+            }
+          ],
+          "engine": "rapidocr"
+        }
+      }
+    ],
+    "vision": [
+      {
+        "input_sha256": "ba92f6eb0b9c404c5de2566744bb61ce488f78fbb5496368cd00a7c24b5fb3da",
+        "result": {
+          "content": "```json\n{\n  \"fields\": [\n    {\n      \"key\": \"amount\",\n      \"value\": \"1195.46\",\n      \"confidence\": 0.9,\n      \"source\": \"vlm\"\n    },\n    {\n      \"key\": \"date\",\n      \"value\": \"2026-10-14\",\n      \"confidence\": 0.9,\n      \"source\": \"vlm\"\n    },\n    {\n      \"key\": \"bank\",\n      \"value\": \"Nubank\",\n      \"confidence\": 0.9,\n      \"source\": \"vlm\"\n    },\n    {\n      \"key\": \"counterparty\",\n      \"value\": \"Pessoa Exemplo Fictícia\",\n      \"confidence\": 0.9,\n      \"source\": \"vlm\"\n    }\n  ]\n}\n```",
+          "model": "ollama/mistral-small3.2:24b",
+          "prompt_tokens": 1734,
+          "completion_tokens": 182
+        },
+        "estimated_cost_usd": 0.0,
+        "cost_status": "estimado pela tabela de preços do litellm"
+      }
+    ]
+  },
+  {
+    "id": "D27",
+    "input_sha256": "cd6bb4e26eadaab34a1c756614cc043285c5b018fe7b591ccb9990b9c7fb0664",
+    "split": "calibration",
+    "degradation": {
+      "type": "none",
+      "level": "none",
+      "parameters": {}
+    },
+    "trace": {
+      "agent": "document",
+      "status": "ok",
+      "summary": "Leitura encerrada; confira os avisos antes de confirmar.",
+      "duration_ms": 2901,
+      "detail": {
+        "engine": "rapidocr",
+        "pages": [
+          {
+            "page": 1,
+            "status": "rapidocr"
+          }
+        ],
+        "fields": 4,
+        "issues": []
+      }
+    },
+    "document": {
+      "kind": "boleto",
+      "bank": "Nu Empresas",
+      "quality": {
+        "quality": "legible",
+        "sharpness": 1029.9927081727558,
+        "resolution": [
+          1000,
+          1250
+        ],
+        "mean_ocr_confidence": 0.9836983186250506,
+        "reasons": []
+      },
+      "fields": [
+        {
+          "key": "bank",
+          "value": "Nu Empresas",
+          "confidence": 0.9802107004558339,
+          "source": "ocr"
+        },
+        {
+          "key": "amount",
+          "value": "1523.26",
+          "confidence": 0.9831319153308868,
+          "source": "ocr"
+        },
+        {
+          "key": "counterparty",
+          "value": "PessoaFicticiaBeta",
+          "confidence": 0.9936516552135862,
+          "source": "ocr"
+        },
+        {
+          "key": "due_date",
+          "value": "2026-10-15",
+          "confidence": 0.998641156014942,
+          "source": "ocr"
+        }
+      ],
+      "transactions": [],
+      "issues": [],
+      "needs_review": true,
+      "abstained": false,
+      "reason": null,
+      "engine": "rapidocr"
+    },
+    "technical_failures": [],
+    "vision_failures": [],
+    "latency_ms": 2901.82,
+    "ocr": [
+      {
+        "input_sha256": "0800837cf6c49db42a1b07604d84b17fd877cb5361cd0e3b183bb5429751c557",
+        "result": {
+          "words": [
+            {
+              "text": "Boleto",
+              "confidence": 0.9989749491214752,
+              "box": [
+                64,
+                52,
+                183,
+                90
+              ]
+            },
+            {
+              "text": "AREADEDEMONSTRACAO·SEMVALIDADEBANCARIA",
+              "confidence": 0.9552332978499564,
+              "box": [
+                76,
+                128,
+                600,
+                151
+              ]
+            },
+            {
+              "text": "Banco:Nu Empresas",
+              "confidence": 0.9802107004558339,
+              "box": [
+                64,
+                225,
+                348,
+                257
+              ]
+            },
+            {
+              "text": "Valor:R$1.523,26",
+              "confidence": 0.9831319153308868,
+              "box": [
+                65,
+                292,
+                320,
+                320
+              ]
+            },
+            {
+              "text": "Favorecido:PessoaFicticiaBeta",
+              "confidence": 0.9936516552135862,
+              "box": [
+                65,
+                357,
+                508,
+                386
+              ]
+            },
+            {
+              "text": "Vencimento:15/10/2026",
+              "confidence": 0.998641156014942,
+              "box": [
+                64,
+                422,
+                401,
+                451
+              ]
+            },
+            {
+              "text": "Titular:PessoaExemploFicticia",
+              "confidence": 0.9930962118609198,
+              "box": [
+                65,
+                951,
+                365,
+                974
+              ]
+            },
+            {
+              "text": "CPF:000.000.000-00",
+              "confidence": 0.9904869695504507,
+              "box": [
+                65,
+                985,
+                266,
+                1008
+              ]
+            },
+            {
+              "text": "Agencia:0000 Conta:0000000-0",
+              "confidence": 0.9845743434769767,
+              "box": [
+                62,
+                1018,
+                393,
+                1046
+              ]
+            },
+            {
+              "text": "DADOSINVENTADOS·NAO PAGAR·NAO COMPROVA TRANSFERENCIA",
+              "confidence": 0.9589819873754795,
+              "box": [
+                65,
+                1134,
+                749,
+                1157
+              ]
+            }
+          ],
+          "engine": "rapidocr"
+        }
+      }
+    ],
+    "vision": []
+  },
+  {
+    "id": "D28",
+    "input_sha256": "0a9546d6e8af77aaa35e9466be99117cb93d72a16ee570f81fab1d58c5454066",
+    "split": "calibration",
+    "degradation": {
+      "type": "blur",
+      "level": "severe",
+      "parameters": {
+        "radius": 14.0,
+        "brightness": 1.0
+      }
+    },
+    "trace": {
+      "agent": "document",
+      "status": "abstained",
+      "summary": "Leitura encerrada; confira os avisos antes de confirmar.",
+      "duration_ms": 32,
+      "detail": {
+        "engine": "quality_gate",
+        "pages": [
+          {
+            "page": 1,
+            "status": "illegible"
+          }
+        ],
+        "fields": 0,
+        "issues": [
+          "INCOMPLETE_EXTRACTION"
+        ]
+      }
+    },
+    "document": {
+      "kind": "other",
+      "bank": null,
+      "quality": {
+        "quality": "illegible",
+        "sharpness": 0.297275641025641,
+        "resolution": [
+          1000,
+          1250
+        ],
+        "mean_ocr_confidence": null,
+        "reasons": [
+          "imagem com baixa nitidez"
+        ]
+      },
+      "fields": [],
+      "transactions": [],
+      "issues": [
+        {
+          "code": "INCOMPLETE_EXTRACTION",
+          "severity": "warning",
+          "message": "Leitura incompleta; revise os campos."
+        }
+      ],
+      "needs_review": true,
+      "abstained": true,
+      "reason": "Documento ilegível. Envie uma nova foto.",
+      "engine": "quality_gate"
+    },
+    "technical_failures": [],
+    "vision_failures": [],
+    "latency_ms": 32.49,
+    "ocr": [],
+    "vision": []
+  },
+  {
+    "id": "D29",
+    "input_sha256": "5cfa8c29efd6d130845284f4663f6436610b8613e3592291e4e7456c64dbf73c",
+    "split": "calibration",
+    "degradation": {
+      "type": "none",
+      "level": "none",
+      "parameters": {}
+    },
+    "trace": {
+      "agent": "document",
+      "status": "ok",
+      "summary": "Leitura encerrada; confira os avisos antes de confirmar.",
+      "duration_ms": 3812,
+      "detail": {
+        "engine": "rapidocr",
+        "pages": [
+          {
+            "page": 1,
+            "status": "rapidocr"
+          }
+        ],
+        "fields": 3,
+        "issues": []
+      }
+    },
+    "document": {
+      "kind": "card_invoice",
+      "bank": "Banco do Brasil",
+      "quality": {
+        "quality": "legible",
+        "sharpness": 1473.7713375468886,
+        "resolution": [
+          1000,
+          1250
+        ],
+        "mean_ocr_confidence": 0.9811875565950466,
+        "reasons": []
+      },
+      "fields": [
+        {
+          "key": "bank",
+          "value": "Banco do Brasil",
+          "confidence": 0.9783056811852888,
+          "source": "ocr"
+        },
+        {
+          "key": "due_date",
+          "value": "2026-10-31",
+          "confidence": 0.9741137407042764,
+          "source": "ocr"
+        },
+        {
+          "key": "total",
+          "value": "7027.65",
+          "confidence": 0.9751547972361246,
+          "source": "ocr"
+        }
+      ],
+      "transactions": [
+        {
+          "date": "2026-10-16",
+          "description": "Mercado Exemplo",
+          "amount": 2341.3,
+          "installment": null,
+          "confidence": 0.9620717030305129
+        },
+        {
+          "date": "2026-10-17",
+          "description": "Papelaria Ficticia",
+          "amount": 2342.55,
+          "installment": null,
+          "confidence": 0.9620717030305129
+        },
+        {
+          "date": "2026-10-18",
+          "description": "Cinema Sintético",
+          "amount": 2343.8,
+          "installment": null,
+          "confidence": 0.9620717030305129
+        }
+      ],
+      "issues": [],
+      "needs_review": true,
+      "abstained": false,
+      "reason": null,
+      "engine": "rapidocr"
+    },
+    "technical_failures": [],
+    "vision_failures": [],
+    "latency_ms": 3813.07,
+    "ocr": [
+      {
+        "input_sha256": "eb0d3eec73a8c79096d26376b51f7c8a5d35e06dffe5bf3eff35fcbeaefdbdbb",
+        "result": {
+          "words": [
+            {
+              "text": "Fatura de cartao",
+              "confidence": 0.9768193513154984,
+              "box": [
+                66,
+                54,
+                364,
+                87
+              ]
+            },
+            {
+              "text": "AREADE DEMONSTRACAO·SEMVALIDADEBANCARIA",
+              "confidence": 0.9620717030305129,
+              "box": [
+                76,
+                128,
+                600,
+                151
+              ]
+            },
+            {
+              "text": "Banco: Banco do Brasil",
+              "confidence": 0.9783056811852888,
+              "box": [
+                64,
+                224,
+                383,
+                258
+              ]
+            },
+            {
+              "text": "Vencimento: 31/10/2026",
+              "confidence": 0.9741137407042764,
+              "box": [
+                65,
+                290,
+                399,
+                320
+              ]
+            },
+            {
+              "text": "Lancamento: 16/10/2026 | Mercado Exemplo | 2.341,30",
+              "confidence": 0.9805374659743964,
+              "box": [
+                61,
+                353,
+                677,
+                384
+              ]
+            },
+            {
+              "text": "Lancamento: 17/10/2026|Papelaria Ficticia|2.342,55",
+              "confidence": 0.9867019188404084,
+              "box": [
+                65,
+                421,
+                665,
+                447
+              ]
+            },
+            {
+              "text": "Lancamento: 18/10/2026|Cinema Sintético|2.343,80",
+              "confidence": 0.9863424946864446,
+              "box": [
+                65,
+                486,
+                668,
+                512
+              ]
+            },
+            {
+              "text": "Total: R$ 7.027,65",
+              "confidence": 0.9751547972361246,
+              "box": [
+                62,
+                552,
+                320,
+                582
+              ]
+            },
+            {
+              "text": "Titular:PessoaExemploFicticia",
+              "confidence": 0.9958119371841694,
+              "box": [
+                65,
+                951,
+                365,
+                974
+              ]
+            },
+            {
+              "text": "CPF:000.000.000-00",
+              "confidence": 0.9966688321696388,
+              "box": [
+                65,
+                985,
+                266,
+                1008
+              ]
+            },
+            {
+              "text": "Agencia:0000 Conta:0000000-0",
+              "confidence": 0.9882625256265912,
+              "box": [
+                64,
+                1020,
+                393,
+                1046
+              ]
+            },
+            {
+              "text": "DADOS INVENTADOS·NAO PAGAR·NAO COMPROVA TRANSFERENCIA",
+              "confidence": 0.9734602311872086,
+              "box": [
+                62,
+                1132,
+                749,
+                1159
+              ]
+            }
+          ],
+          "engine": "rapidocr"
+        }
+      }
+    ],
+    "vision": []
+  },
+  {
+    "id": "D30",
+    "input_sha256": "9f397f165561581bd0cd427d5b1bfcb63939cc5da38c4d00c8b0da6804c0c86c",
+    "split": "calibration",
+    "degradation": {
+      "type": "blur",
+      "level": "severe",
+      "parameters": {
+        "radius": 12.0,
+        "brightness": 0.35
+      }
+    },
+    "trace": {
+      "agent": "document",
+      "status": "abstained",
+      "summary": "Leitura encerrada; confira os avisos antes de confirmar.",
+      "duration_ms": 31,
+      "detail": {
+        "engine": "quality_gate",
+        "pages": [
+          {
+            "page": 1,
+            "status": "illegible"
+          }
+        ],
+        "fields": 0,
+        "issues": [
+          "INCOMPLETE_EXTRACTION"
+        ]
+      }
+    },
+    "document": {
+      "kind": "other",
+      "bank": null,
+      "quality": {
+        "quality": "illegible",
+        "sharpness": 0.2744977133754689,
+        "resolution": [
+          1000,
+          1250
+        ],
+        "mean_ocr_confidence": null,
+        "reasons": [
+          "imagem com baixa nitidez",
+          "imagem com pouco contraste"
+        ]
+      },
+      "fields": [],
+      "transactions": [],
+      "issues": [
+        {
+          "code": "INCOMPLETE_EXTRACTION",
+          "severity": "warning",
+          "message": "Leitura incompleta; revise os campos."
+        }
+      ],
+      "needs_review": true,
+      "abstained": true,
+      "reason": "Documento ilegível. Envie uma nova foto.",
+      "engine": "quality_gate"
+    },
+    "technical_failures": [],
+    "vision_failures": [],
+    "latency_ms": 31.46,
+    "ocr": [],
+    "vision": []
+  },
+  {
+    "id": "D31",
+    "input_sha256": "b16fd1b39ac6694363f4a27f2ba45e9ba3ae6cfb07dac4b5d270cf219ff66f60",
+    "split": "calibration",
+    "degradation": {
+      "type": "none",
+      "level": "none",
+      "parameters": {}
+    },
+    "trace": {
+      "agent": "document",
+      "status": "ok",
+      "summary": "Leitura encerrada; confira os avisos antes de confirmar.",
+      "duration_ms": 2487,
+      "detail": {
+        "engine": "rapidocr",
+        "pages": [
+          {
+            "page": 1,
+            "status": "rapidocr"
+          }
+        ],
+        "fields": 4,
+        "issues": []
+      }
+    },
+    "document": {
+      "kind": "pix_receipt",
+      "bank": "Banco Horizonte Ficticio",
+      "quality": {
+        "quality": "legible",
+        "sharpness": 1006.9050055238682,
+        "resolution": [
+          1000,
+          1250
+        ],
+        "mean_ocr_confidence": 0.9797512562405404,
+        "reasons": []
+      },
+      "fields": [
+        {
+          "key": "bank",
+          "value": "Banco Horizonte Ficticio",
+          "confidence": 0.9878821795986544,
+          "source": "ocr"
+        },
+        {
+          "key": "amount",
+          "value": "2156.62",
+          "confidence": 0.9956422381930881,
+          "source": "ocr"
+        },
+        {
+          "key": "date",
+          "value": "2026-10-17",
+          "confidence": 0.9978087306022644,
+          "source": "ocr"
+        },
+        {
+          "key": "counterparty",
+          "value": "Oficina Exemplo Delta",
+          "confidence": 0.982577945246841,
+          "source": "ocr"
+        }
+      ],
+      "transactions": [],
+      "issues": [],
+      "needs_review": true,
+      "abstained": false,
+      "reason": null,
+      "engine": "rapidocr"
+    },
+    "technical_failures": [],
+    "vision_failures": [],
+    "latency_ms": 2487.65,
+    "ocr": [
+      {
+        "input_sha256": "912bf12a914cd8797c94da16545ab495d5c11b52a0d14d956137aabd27883b39",
+        "result": {
+          "words": [
+            {
+              "text": "Comprovante Pix",
+              "confidence": 0.9742195685704549,
+              "box": [
+                68,
+                54,
+                375,
+                90
+              ]
+            },
+            {
+              "text": "AREA DE DEMONSTRACAO·SEMVALIDADEBANCARIA",
+              "confidence": 0.9462485104799271,
+              "box": [
+                76,
+                128,
+                600,
+                151
+              ]
+            },
+            {
+              "text": "Banco: Banco Horizonte Ficticio",
+              "confidence": 0.9878821795986544,
+              "box": [
+                66,
+                226,
+                500,
+                255
+              ]
+            },
+            {
+              "text": "Valor: R$ 2.156,62",
+              "confidence": 0.9956422381930881,
+              "box": [
+                66,
+                292,
+                319,
+                320
+              ]
+            },
+            {
+              "text": "Data:17/10/2026",
+              "confidence": 0.9978087306022644,
+              "box": [
+                66,
+                358,
+                302,
+                385
+              ]
+            },
+            {
+              "text": "Favorecido: Oficina Exemplo Delta",
+              "confidence": 0.982577945246841,
+              "box": [
+                63,
+                421,
+                538,
+                452
+              ]
+            },
+            {
+              "text": "Titular:Pessoa ExemploFicticia",
+              "confidence": 0.9818230787913005,
+              "box": [
+                65,
+                951,
+                365,
+                974
+              ]
+            },
+            {
+              "text": "CPF:000.000.000-00",
+              "confidence": 0.9967437750763364,
+              "box": [
+                65,
+                985,
+                266,
+                1008
+              ]
+            },
+            {
+              "text": "Agencia: 0000 Conta:0000000-0",
+              "confidence": 0.9603787187872261,
+              "box": [
+                62,
+                1018,
+                393,
+                1046
+              ]
+            },
+            {
+              "text": "DADOSINVENTADOS·NAO PAGAR·NAO COMPROVATRANSFERENCIA",
+              "confidence": 0.9741878170593112,
+              "box": [
+                65,
+                1134,
+                749,
+                1157
+              ]
+            }
+          ],
+          "engine": "rapidocr"
+        }
+      }
+    ],
+    "vision": []
+  },
+  {
+    "id": "D32",
+    "input_sha256": "6641d940def657230357b1c42353b2c67621f22c640cafbc7e043f261ceace10",
+    "split": "calibration",
+    "degradation": {
+      "type": "blur",
+      "level": "severe",
+      "parameters": {
+        "radius": 13.0,
+        "brightness": 1.0
+      }
+    },
+    "trace": {
+      "agent": "document",
+      "status": "abstained",
+      "summary": "Leitura encerrada; confira os avisos antes de confirmar.",
+      "duration_ms": 58,
+      "detail": {
+        "engine": "quality_gate",
+        "pages": [
+          {
+            "page": 1,
+            "status": "illegible"
+          }
+        ],
+        "fields": 0,
+        "issues": [
+          "INCOMPLETE_EXTRACTION"
+        ]
+      }
+    },
+    "document": {
+      "kind": "other",
+      "bank": null,
+      "quality": {
+        "quality": "illegible",
+        "sharpness": 0.31189943990545194,
+        "resolution": [
+          1000,
+          1250
+        ],
+        "mean_ocr_confidence": null,
+        "reasons": [
+          "imagem com baixa nitidez"
+        ]
+      },
+      "fields": [],
+      "transactions": [],
+      "issues": [
+        {
+          "code": "INCOMPLETE_EXTRACTION",
+          "severity": "warning",
+          "message": "Leitura incompleta; revise os campos."
+        }
+      ],
+      "needs_review": true,
+      "abstained": true,
+      "reason": "Documento ilegível. Envie uma nova foto.",
+      "engine": "quality_gate"
+    },
+    "technical_failures": [],
+    "vision_failures": [],
+    "latency_ms": 59.23,
+    "ocr": [],
+    "vision": []
+  },
+  {
+    "id": "D33",
+    "input_sha256": "3a737c88c7adc6729ae715bb0425c284b773676fe9153dda2e7db46c853bcef9",
+    "split": "validation",
+    "degradation": {
+      "type": "none",
+      "level": "none",
+      "parameters": {}
+    },
+    "trace": {
+      "agent": "document",
+      "status": "ok",
+      "summary": "Leitura encerrada; confira os avisos antes de confirmar.",
+      "duration_ms": 3201,
+      "detail": {
+        "engine": "rapidocr",
+        "pages": [
+          {
+            "page": 1,
+            "status": "rapidocr"
+          }
+        ],
+        "fields": 4,
+        "issues": []
+      }
+    },
+    "document": {
+      "kind": "boleto",
+      "bank": "Nubank",
+      "quality": {
+        "quality": "legible",
+        "sharpness": 1024.1605245747905,
+        "resolution": [
+          1000,
+          1250
+        ],
+        "mean_ocr_confidence": 0.9790843091055216,
+        "reasons": []
+      },
+      "fields": [
+        {
+          "key": "bank",
+          "value": "Nubank",
+          "confidence": 0.9944604138533274,
+          "source": "ocr"
+        },
+        {
+          "key": "amount",
+          "value": "816.37",
+          "confidence": 0.9680445939302444,
+          "source": "ocr"
+        },
+        {
+          "key": "counterparty",
+          "value": "PessoaExemploAlfa",
+          "confidence": 0.9943466037511826,
+          "source": "ocr"
+        },
+        {
+          "key": "due_date",
+          "value": "2026-10-18",
+          "confidence": 0.9833545230683827,
+          "source": "ocr"
+        }
+      ],
+      "transactions": [],
+      "issues": [],
+      "needs_review": true,
+      "abstained": false,
+      "reason": null,
+      "engine": "rapidocr"
+    },
+    "technical_failures": [],
+    "vision_failures": [],
+    "latency_ms": 3201.53,
+    "ocr": [
+      {
+        "input_sha256": "c14d2e9c834488b421af7946328cad3d874c361ebe0b692c02691bb26baac653",
+        "result": {
+          "words": [
+            {
+              "text": "Boleto",
+              "confidence": 0.9989749491214752,
+              "box": [
+                64,
+                52,
+                183,
+                90
+              ]
+            },
+            {
+              "text": "AREA DE DEMONSTRACAO·SEMVALIDADE BANCARIA",
+              "confidence": 0.9231204564978437,
+              "box": [
+                76,
+                128,
+                600,
+                151
+              ]
+            },
+            {
+              "text": "Banco:Nubank",
+              "confidence": 0.9944604138533274,
+              "box": [
+                66,
+                227,
+                272,
+                254
+              ]
+            },
+            {
+              "text": "Valor: R$ 816,37",
+              "confidence": 0.9680445939302444,
+              "box": [
+                62,
+                290,
+                294,
+                321
+              ]
+            },
+            {
+              "text": "Favorecido:PessoaExemploAlfa",
+              "confidence": 0.9943466037511826,
+              "box": [
+                63,
+                356,
+                517,
+                387
+              ]
+            },
+            {
+              "text": "Vencimento:18/10/2026",
+              "confidence": 0.9833545230683827,
+              "box": [
+                64,
+                422,
+                401,
+                451
+              ]
+            },
+            {
+              "text": "Titular:PessoaExemploFicticia",
+              "confidence": 0.9930810702258143,
+              "box": [
+                65,
+                951,
+                365,
+                974
+              ]
+            },
+            {
+              "text": "CPF:000.000.000-00",
+              "confidence": 0.9904869695504507,
+              "box": [
+                65,
+                985,
+                266,
+                1008
+              ]
+            },
+            {
+              "text": "Agencia:0000 Conta:0000000-0",
+              "confidence": 0.9845743434769767,
+              "box": [
+                62,
+                1018,
+                393,
+                1046
+              ]
+            },
+            {
+              "text": "DADOS INVENTADOS · NAO PAGAR · NAO COMPROVA TRANSFERENCIA",
+              "confidence": 0.960399167579517,
+              "box": [
+                62,
+                1132,
+                750,
+                1159
+              ]
+            }
+          ],
+          "engine": "rapidocr"
+        }
+      }
+    ],
+    "vision": []
+  },
+  {
+    "id": "D34",
+    "input_sha256": "23074076ba39bc87cfc2e522e2c4591b4484d4362b6798250d88516bd6ee99b1",
+    "split": "validation",
+    "degradation": {
+      "type": "blur",
+      "level": "severe",
+      "parameters": {
+        "radius": 14.0,
+        "brightness": 0.35
+      }
+    },
+    "trace": {
+      "agent": "document",
+      "status": "abstained",
+      "summary": "Leitura encerrada; confira os avisos antes de confirmar.",
+      "duration_ms": 50,
+      "detail": {
+        "engine": "quality_gate",
+        "pages": [
+          {
+            "page": 1,
+            "status": "illegible"
+          }
+        ],
+        "fields": 0,
+        "issues": [
+          "INCOMPLETE_EXTRACTION"
+        ]
+      }
+    },
+    "document": {
+      "kind": "other",
+      "bank": null,
+      "quality": {
+        "quality": "illegible",
+        "sharpness": 0.1977785699604337,
+        "resolution": [
+          1000,
+          1250
+        ],
+        "mean_ocr_confidence": null,
+        "reasons": [
+          "imagem com baixa nitidez",
+          "imagem com pouco contraste"
+        ]
+      },
+      "fields": [],
+      "transactions": [],
+      "issues": [
+        {
+          "code": "INCOMPLETE_EXTRACTION",
+          "severity": "warning",
+          "message": "Leitura incompleta; revise os campos."
+        }
+      ],
+      "needs_review": true,
+      "abstained": true,
+      "reason": "Documento ilegível. Envie uma nova foto.",
+      "engine": "quality_gate"
+    },
+    "technical_failures": [],
+    "vision_failures": [],
+    "latency_ms": 52.23,
+    "ocr": [],
+    "vision": []
+  },
+  {
+    "id": "D35",
+    "input_sha256": "5456c573927beff0820dbe75e63d063c62bbf2fbbf8d0f10446f5d9328d94f94",
+    "split": "validation",
+    "degradation": {
+      "type": "none",
+      "level": "none",
+      "parameters": {}
+    },
+    "trace": {
+      "agent": "document",
+      "status": "ok",
+      "summary": "Leitura encerrada; confira os avisos antes de confirmar.",
+      "duration_ms": 3588,
+      "detail": {
+        "engine": "rapidocr",
+        "pages": [
+          {
+            "page": 1,
+            "status": "rapidocr"
+          }
+        ],
+        "fields": 3,
+        "issues": []
+      }
+    },
+    "document": {
+      "kind": "card_invoice",
+      "bank": "Nu Empresas",
+      "quality": {
+        "quality": "legible",
+        "sharpness": 1491.677131506603,
+        "resolution": [
+          1000,
+          1250
+        ],
+        "mean_ocr_confidence": 0.9845038481985108,
+        "reasons": []
+      },
+      "fields": [
+        {
+          "key": "bank",
+          "value": "Nu Empresas",
+          "confidence": 0.9832897020710839,
+          "source": "ocr"
+        },
+        {
+          "key": "due_date",
+          "value": "2026-11-03",
+          "confidence": 0.9887829206206582,
+          "source": "ocr"
+        },
+        {
+          "key": "total",
+          "value": "2123.13",
+          "confidence": 0.9842565986845229,
+          "source": "ocr"
+        }
+      ],
+      "transactions": [
+        {
+          "date": "2026-10-19",
+          "description": "Mercado Exemplo",
+          "amount": 706.46,
+          "installment": null,
+          "confidence": 0.974247619192651
+        },
+        {
+          "date": "2026-10-20",
+          "description": "Papelaria Ficticia",
+          "amount": 707.71,
+          "installment": null,
+          "confidence": 0.974247619192651
+        },
+        {
+          "date": "2026-10-21",
+          "description": "Cinema Sintético",
+          "amount": 708.96,
+          "installment": null,
+          "confidence": 0.974247619192651
+        }
+      ],
+      "issues": [],
+      "needs_review": true,
+      "abstained": false,
+      "reason": null,
+      "engine": "rapidocr"
+    },
+    "technical_failures": [],
+    "vision_failures": [],
+    "latency_ms": 3588.26,
+    "ocr": [
+      {
+        "input_sha256": "efd10676b9f71f1db53a73ff708a2aa213af211b00a65107d8e2d1f51404b09a",
+        "result": {
+          "words": [
+            {
+              "text": "Fatura de cartao",
+              "confidence": 0.9768193513154984,
+              "box": [
+                66,
+                54,
+                364,
+                87
+              ]
+            },
+            {
+              "text": "AREADEDEMONSTRACAO·SEMVALIDADEBANCARIA",
+              "confidence": 0.9849660898509779,
+              "box": [
+                77,
+                130,
+                599,
+                150
+              ]
+            },
+            {
+              "text": "Banco: Nu Empresas",
+              "confidence": 0.9832897020710839,
+              "box": [
+                64,
+                226,
+                349,
+                258
+              ]
+            },
+            {
+              "text": "Vencimento: 03/11/2026",
+              "confidence": 0.9887829206206582,
+              "box": [
+                65,
+                290,
+                399,
+                320
+              ]
+            },
+            {
+              "text": "Lancamento:19/10/2026| Mercado Exemplo|706,46",
+              "confidence": 0.9766345593664382,
+              "box": [
+                62,
+                355,
+                655,
+                383
+              ]
+            },
+            {
+              "text": "Lancamento: 20/10/2026|Papelaria Ficticia|707,71",
+              "confidence": 0.9847474060952663,
+              "box": [
+                65,
+                421,
+                643,
+                447
+              ]
+            },
+            {
+              "text": "Lancamento: 21/10/2026| Cinema Sintético|708,96",
+              "confidence": 0.974247619192651,
+              "box": [
+                65,
+                486,
+                647,
+                512
+              ]
+            },
+            {
+              "text": "Total: R$ 2.123,13",
+              "confidence": 0.9842565986845229,
+              "box": [
+                62,
+                552,
+                320,
+                582
+              ]
+            },
+            {
+              "text": "Titular:PessoaExemploFicticia",
+              "confidence": 0.9957140478594549,
+              "box": [
+                65,
+                951,
+                364,
+                974
+              ]
+            },
+            {
+              "text": "CPF:000.000.000-00",
+              "confidence": 0.9966688321696388,
+              "box": [
+                65,
+                985,
+                266,
+                1008
+              ]
+            },
+            {
+              "text": "Agencia:0000 Conta:0000000-0",
+              "confidence": 0.9882625256265912,
+              "box": [
+                64,
+                1020,
+                393,
+                1046
+              ]
+            },
+            {
+              "text": "DADOSINVENTADOS·NAO PAGAR·NAO COMPROVA TRANSFERENCIA",
+              "confidence": 0.9796565255293479,
+              "box": [
+                62,
+                1132,
+                750,
+                1159
+              ]
+            }
+          ],
+          "engine": "rapidocr"
+        }
+      }
+    ],
+    "vision": []
+  },
+  {
+    "id": "D36",
+    "input_sha256": "34b35468f25195e4e52b02a6d5b07b969c3b26defcd42e16f86d011106c34c1f",
+    "split": "validation",
+    "degradation": {
+      "type": "blur",
+      "level": "severe",
+      "parameters": {
+        "radius": 12.0,
+        "brightness": 1.0
+      }
+    },
+    "trace": {
+      "agent": "document",
+      "status": "abstained",
+      "summary": "Leitura encerrada; confira os avisos antes de confirmar.",
+      "duration_ms": 36,
+      "detail": {
+        "engine": "quality_gate",
+        "pages": [
+          {
+            "page": 1,
+            "status": "illegible"
+          }
+        ],
+        "fields": 0,
+        "issues": [
+          "INCOMPLETE_EXTRACTION"
+        ]
+      }
+    },
+    "document": {
+      "kind": "other",
+      "bank": null,
+      "quality": {
+        "quality": "illegible",
+        "sharpness": 0.4788551461898155,
+        "resolution": [
+          1000,
+          1250
+        ],
+        "mean_ocr_confidence": null,
+        "reasons": [
+          "imagem com baixa nitidez"
+        ]
+      },
+      "fields": [],
+      "transactions": [],
+      "issues": [
+        {
+          "code": "INCOMPLETE_EXTRACTION",
+          "severity": "warning",
+          "message": "Leitura incompleta; revise os campos."
+        }
+      ],
+      "needs_review": true,
+      "abstained": true,
+      "reason": "Documento ilegível. Envie uma nova foto.",
+      "engine": "quality_gate"
+    },
+    "technical_failures": [],
+    "vision_failures": [],
+    "latency_ms": 36.69,
+    "ocr": [],
+    "vision": []
+  },
+  {
+    "id": "D37",
+    "input_sha256": "b9a8756d1b710030f2538b69b05098b03a39a254e2ca667911858a92f4a47210",
+    "split": "validation",
+    "degradation": {
+      "type": "none",
+      "level": "none",
+      "parameters": {}
+    },
+    "trace": {
+      "agent": "document",
+      "status": "ok",
+      "summary": "Leitura encerrada; confira os avisos antes de confirmar.",
+      "duration_ms": 2692,
+      "detail": {
+        "engine": "rapidocr",
+        "pages": [
+          {
+            "page": 1,
+            "status": "rapidocr"
+          }
+        ],
+        "fields": 4,
+        "issues": []
+      }
+    },
+    "document": {
+      "kind": "pix_receipt",
+      "bank": "Banco doBrasil",
+      "quality": {
+        "quality": "legible",
+        "sharpness": 995.7701845999692,
+        "resolution": [
+          1000,
+          1250
+        ],
+        "mean_ocr_confidence": 0.98253892937827,
+        "reasons": []
+      },
+      "fields": [
+        {
+          "key": "bank",
+          "value": "Banco doBrasil",
+          "confidence": 0.9890715152025222,
+          "source": "ocr"
+        },
+        {
+          "key": "amount",
+          "value": "1292.73",
+          "confidence": 0.9888034959634145,
+          "source": "ocr"
+        },
+        {
+          "key": "date",
+          "value": "2026-10-20",
+          "confidence": 0.9980135281880697,
+          "source": "ocr"
+        },
+        {
+          "key": "counterparty",
+          "value": "Loja Sintética Gama",
+          "confidence": 0.9795297576535132,
+          "source": "ocr"
+        }
+      ],
+      "transactions": [],
+      "issues": [],
+      "needs_review": true,
+      "abstained": false,
+      "reason": null,
+      "engine": "rapidocr"
+    },
+    "technical_failures": [],
+    "vision_failures": [],
+    "latency_ms": 2692.94,
+    "ocr": [
+      {
+        "input_sha256": "6bfafae9fdeaeab0e82fb90b6c1a0d0c6fe9b53026824c8f0cc4813d67568b43",
+        "result": {
+          "words": [
+            {
+              "text": "Comprovante Pix",
+              "confidence": 0.979537284374237,
+              "box": [
+                68,
+                54,
+                375,
+                90
+              ]
+            },
+            {
+              "text": "AREADE DEMONSTRACAO·SEMVALIDADEBANCARIA",
+              "confidence": 0.9607903544719403,
+              "box": [
+                76,
+                128,
+                600,
+                151
+              ]
+            },
+            {
+              "text": "Banco:Banco doBrasil",
+              "confidence": 0.9890715152025222,
+              "box": [
+                67,
+                227,
+                380,
+                254
+              ]
+            },
+            {
+              "text": "Valor: R$ 1.292,73",
+              "confidence": 0.9888034959634145,
+              "box": [
+                66,
+                292,
+                319,
+                320
+              ]
+            },
+            {
+              "text": "Data:20/10/2026",
+              "confidence": 0.9980135281880697,
+              "box": [
+                66,
+                358,
+                302,
+                385
+              ]
+            },
+            {
+              "text": "Favorecido: Loja Sintética Gama",
+              "confidence": 0.9795297576535132,
+              "box": [
+                65,
+                422,
+                510,
+                452
+              ]
+            },
+            {
+              "text": "Titular:PessoaExemploFicticia",
+              "confidence": 0.995782036205818,
+              "box": [
+                65,
+                951,
+                365,
+                974
+              ]
+            },
+            {
+              "text": "CPF:000.000.000-00",
+              "confidence": 0.9966692494021522,
+              "box": [
+                65,
+                985,
+                266,
+                1008
+              ]
+            },
+            {
+              "text": "Agencia: 0000 Conta: 0000000-0",
+              "confidence": 0.9627157191435496,
+              "box": [
+                62,
+                1018,
+                393,
+                1046
+              ]
+            },
+            {
+              "text": "DADOS INVENTADOS·NAO PAGAR·NAO COMPROVA TRANSFERENCIA",
+              "confidence": 0.9744763531774845,
+              "box": [
+                62,
+                1132,
+                750,
+                1159
+              ]
+            }
+          ],
+          "engine": "rapidocr"
+        }
+      }
+    ],
+    "vision": []
+  },
+  {
+    "id": "D38",
+    "input_sha256": "17a256c76179394b18a5e68f69ea273fc9ed80359959927dea694a120e0c2a07",
+    "split": "validation",
+    "degradation": {
+      "type": "blur",
+      "level": "severe",
+      "parameters": {
+        "radius": 13.0,
+        "brightness": 0.35
+      }
+    },
+    "trace": {
+      "agent": "document",
+      "status": "abstained",
+      "summary": "Leitura encerrada; confira os avisos antes de confirmar.",
+      "duration_ms": 50,
+      "detail": {
+        "engine": "quality_gate",
+        "pages": [
+          {
+            "page": 1,
+            "status": "illegible"
+          }
+        ],
+        "fields": 0,
+        "issues": [
+          "INCOMPLETE_EXTRACTION"
+        ]
+      }
+    },
+    "document": {
+      "kind": "other",
+      "bank": null,
+      "quality": {
+        "quality": "illegible",
+        "sharpness": 0.20038634962232157,
+        "resolution": [
+          1000,
+          1250
+        ],
+        "mean_ocr_confidence": null,
+        "reasons": [
+          "imagem com baixa nitidez",
+          "imagem com pouco contraste"
+        ]
+      },
+      "fields": [],
+      "transactions": [],
+      "issues": [
+        {
+          "code": "INCOMPLETE_EXTRACTION",
+          "severity": "warning",
+          "message": "Leitura incompleta; revise os campos."
+        }
+      ],
+      "needs_review": true,
+      "abstained": true,
+      "reason": "Documento ilegível. Envie uma nova foto.",
+      "engine": "quality_gate"
+    },
+    "technical_failures": [],
+    "vision_failures": [],
+    "latency_ms": 50.68,
+    "ocr": [],
+    "vision": []
+  },
+  {
+    "id": "D39",
+    "input_sha256": "cbccd598dd132f76449224e4988fedaeeaba8d89eeb0db5d3ce3698b4f6c595d",
+    "split": "validation",
+    "degradation": {
+      "type": "none",
+      "level": "none",
+      "parameters": {}
+    },
+    "trace": {
+      "agent": "document",
+      "status": "ok",
+      "summary": "Leitura encerrada; confira os avisos antes de confirmar.",
+      "duration_ms": 3632,
+      "detail": {
+        "engine": "rapidocr",
+        "pages": [
+          {
+            "page": 1,
+            "status": "rapidocr"
+          }
+        ],
+        "fields": 4,
+        "issues": []
+      }
+    },
+    "document": {
+      "kind": "boleto",
+      "bank": "BancoHorizonteFicticio",
+      "quality": {
+        "quality": "legible",
+        "sharpness": 990.0036129952213,
+        "resolution": [
+          1000,
+          1250
+        ],
+        "mean_ocr_confidence": 0.9863883578094509,
+        "reasons": []
+      },
+      "fields": [
+        {
+          "key": "bank",
+          "value": "BancoHorizonteFicticio",
+          "confidence": 0.9935485784496579,
+          "source": "ocr"
+        },
+        {
+          "key": "amount",
+          "value": "727.70",
+          "confidence": 0.9675697088241577,
+          "source": "ocr"
+        },
+        {
+          "key": "counterparty",
+          "value": "OficinaExemploDelta",
+          "confidence": 0.9947406629721324,
+          "source": "ocr"
+        },
+        {
+          "key": "due_date",
+          "value": "2026-10-21",
+          "confidence": 0.9978615244229635,
+          "source": "ocr"
+        }
+      ],
+      "transactions": [],
+      "issues": [],
+      "needs_review": true,
+      "abstained": false,
+      "reason": null,
+      "engine": "rapidocr"
+    },
+    "technical_failures": [],
+    "vision_failures": [],
+    "latency_ms": 3632.63,
+    "ocr": [
+      {
+        "input_sha256": "65ebf1ef489cb8ee85298dd14e05ed3a9622d75883cbd886c2c2630fee712925",
+        "result": {
+          "words": [
+            {
+              "text": "Boleto",
+              "confidence": 0.9988393286863962,
+              "box": [
+                64,
+                52,
+                183,
+                90
+              ]
+            },
+            {
+              "text": "AREADEDEMONSTRACAO·SEMVALIDADEBANCARIA",
+              "confidence": 0.9702143935780776,
+              "box": [
+                76,
+                128,
+                600,
+                151
+              ]
+            },
+            {
+              "text": "Banco:BancoHorizonteFicticio",
+              "confidence": 0.9935485784496579,
+              "box": [
+                66,
+                226,
+                501,
+                255
+              ]
+            },
+            {
+              "text": "Valor:R$727,70",
+              "confidence": 0.9675697088241577,
+              "box": [
+                65,
+                292,
+                294,
+                320
+              ]
+            },
+            {
+              "text": "Favorecido:OficinaExemploDelta",
+              "confidence": 0.9947406629721324,
+              "box": [
+                63,
+                356,
+                538,
+                387
+              ]
+            },
+            {
+              "text": "Vencimento:21/10/2026",
+              "confidence": 0.9978615244229635,
+              "box": [
+                64,
+                422,
+                401,
+                451
+              ]
+            },
+            {
+              "text": "Titular:PessoaExemploFicticia",
+              "confidence": 0.9928110714616447,
+              "box": [
+                65,
+                951,
+                365,
+                974
+              ]
+            },
+            {
+              "text": "CPF:000.000.000-00",
+              "confidence": 0.990801645649804,
+              "box": [
+                65,
+                985,
+                266,
+                1008
+              ]
+            },
+            {
+              "text": "Agencia:0000 Conta:0000000-0",
+              "confidence": 0.9827336988278798,
+              "box": [
+                62,
+                1018,
+                393,
+                1046
+              ]
+            },
+            {
+              "text": "DADOSINVENTADOS·NAOPAGAR·NAOCOMPROVATRANSFERENCIA",
+              "confidence": 0.9747629652217943,
+              "box": [
+                65,
+                1134,
+                749,
+                1157
+              ]
+            }
+          ],
+          "engine": "rapidocr"
+        }
+      }
+    ],
+    "vision": []
+  },
+  {
+    "id": "D40",
+    "input_sha256": "2d046e25a9cf6e5d790918f080d0ff25d1604fb69312ada378272bf653bf9e57",
+    "split": "validation",
+    "degradation": {
+      "type": "blur",
+      "level": "severe",
+      "parameters": {
+        "radius": 14.0,
+        "brightness": 1.0
+      }
+    },
+    "trace": {
+      "agent": "document",
+      "status": "abstained",
+      "summary": "Leitura encerrada; confira os avisos antes de confirmar.",
+      "duration_ms": 30,
+      "detail": {
+        "engine": "quality_gate",
+        "pages": [
+          {
+            "page": 1,
+            "status": "illegible"
+          }
+        ],
+        "fields": 0,
+        "issues": [
+          "INCOMPLETE_EXTRACTION"
+        ]
+      }
+    },
+    "document": {
+      "kind": "other",
+      "bank": null,
+      "quality": {
+        "quality": "illegible",
+        "sharpness": 0.319843212065156,
+        "resolution": [
+          1000,
+          1250
+        ],
+        "mean_ocr_confidence": null,
+        "reasons": [
+          "imagem com baixa nitidez"
+        ]
+      },
+      "fields": [],
+      "transactions": [],
+      "issues": [
+        {
+          "code": "INCOMPLETE_EXTRACTION",
+          "severity": "warning",
+          "message": "Leitura incompleta; revise os campos."
+        }
+      ],
+      "needs_review": true,
+      "abstained": true,
+      "reason": "Documento ilegível. Envie uma nova foto.",
+      "engine": "quality_gate"
+    },
+    "technical_failures": [],
+    "vision_failures": [],
+    "latency_ms": 30.28,
+    "ocr": [],
+    "vision": []
+  }
+]
