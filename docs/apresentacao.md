@@ -129,10 +129,13 @@ entram.
 3. **Foto ilegível.** Repetir com `document_images/D32.png` (Pix muito desfocado): o app não mostra
    campos, explica o motivo e pede nova foto; nada é criado.
 4. **Pergunta no chat.** Em **Ajustes**, ligar o **Modo multiagente**. No **Assistente**,
-   perguntar "Quanto gastei com Pessoa Exemplo Alfa?": a resposta traz o valor do lançamento
-   confirmado e diz que ele veio de foto ou PDF revisado pelo usuário, com a trilha dos agentes.
-5. **Dívidas.** Importar `fatura_nubank_aberta_pessoal.ofx`, escolher no seletor a fatura aberta e
-   perguntar "Quanto falta pagar das parcelas?": a resposta mostra os cards dos cálculos.
+   perguntar "Quanto gastei na Pessoa Exemplo Alfa?": a resposta traz R$ 546,40, o lançamento
+   e a frase "Lido de foto ou PDF, confirmado por você", com a trilha dos agentes. Escrever "na"
+   antes do nome: com "com" o chat devolve os totais gerais.
+5. **Dívidas.** Importar `fatura_nubank_aberta_pessoal.ofx` e perguntar, com o período em
+   "Todo o período", "Quais parcelas ainda tenho a pagar?": a resposta mostra R$ 1.351,24 a
+   pagar em 3 parcelamentos, até 2027-03. Com a fatura aberta no seletor, o chat pergunta se
+   o usuário quer o retrato das parcelas ou os gastos do período.
 6. **Banco novo.** Em **Ajustes → Bancos suportados**, abrir o tutorial do PicPay, marcado como
    **Experimental**.
 7. (Opcional) Em **Ajustes → Leitura de documentos**, escolher o modelo de visão remoto e
