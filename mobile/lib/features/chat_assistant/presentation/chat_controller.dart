@@ -17,6 +17,40 @@ const String importGuideText =
     'uma fatura PDF ou um CSV na aba Extratos (ou fotografe o documento) e '
     'depois repita a pergunta aqui.';
 
+final RegExp _ownDataPattern = RegExp(
+  r'\b(gastei|paguei|recebi|comprei|saldo|faturas?|parcelas?|'
+  r'parcelamentos?|extratos?|lancamentos?|meus gastos|minhas? contas?|'
+  r'meu cartao|minhas? dividas?)\b',
+);
+
+const Map<String, String> _accents = {
+  'á': 'a',
+  'à': 'a',
+  'â': 'a',
+  'ã': 'a',
+  'é': 'e',
+  'ê': 'e',
+  'í': 'i',
+  'ó': 'o',
+  'ô': 'o',
+  'õ': 'o',
+  'ú': 'u',
+  'ç': 'c',
+};
+
+/// Pergunta sobre os lançamentos do próprio usuário, e não de educação
+/// financeira geral. Só essas precisam de dados importados: "como montar uma
+/// reserva de emergência?" é respondida pelo RAG mesmo com a biblioteca vazia.
+bool asksAboutOwnData(String question) {
+  final lower = question.toLowerCase();
+  final plain = StringBuffer();
+  for (final rune in lower.runes) {
+    final char = String.fromCharCode(rune);
+    plain.write(_accents[char] ?? char);
+  }
+  return _ownDataPattern.hasMatch(plain.toString());
+}
+
 /// Título provisório: a primeira pergunta, encurtada, enquanto o LLM não nomeia.
 String placeholderTitle(String question) {
   final clean = question.replaceAll(RegExp(r'\s+'), ' ').trim();
@@ -145,7 +179,7 @@ class ChatController extends ChangeNotifier {
     _failedQuestion = null;
     _messages.add(ChatMessage(isUser: true, text: question));
     _ensureConversation(question);
-    if (hasImportedData?.call() == false) {
+    if (hasImportedData?.call() == false && asksAboutOwnData(question)) {
       _messages.add(
         ChatMessage(isUser: false, text: importGuideText, isImportGuide: true),
       );

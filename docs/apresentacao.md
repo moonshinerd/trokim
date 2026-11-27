@@ -136,10 +136,13 @@ entram.
    "Todo o período", "Quais parcelas ainda tenho a pagar?": a resposta mostra R$ 1.351,24 a
    pagar em 3 parcelamentos, até 2027-03. Com a fatura aberta no seletor, o chat pergunta se
    o usuário quer o retrato das parcelas ou os gastos do período.
-6. **Banco novo.** Em **Ajustes → Bancos suportados**, abrir o tutorial do PicPay, marcado como
-   **Experimental**.
+6. **Banco novo.** Em **Extratos → Importar extrato**, a tela **Bancos suportados** mostra o
+   PicPay marcado como **Experimental**; **Ver como exportar** abre o tutorial.
 7. (Opcional) Em **Ajustes → Leitura de documentos**, escolher o modelo de visão remoto e
    mostrar o consentimento exigido antes do envio.
+
+O roteiro foi executado de ponta a ponta na homologação de 27/11, com os prints de cada passo
+([Planejamento, seção 7.5](planejamento.md#75-homologacao-da-entrega-5-100)).
 
 ---
 

@@ -686,15 +686,22 @@ void main() {
 
     expect(find.text('Parcelas em aberto'), findsOneWidget);
     expect(find.text('Fatura aberta'), findsWidgets);
-    expect(find.text('Gastos de dez/2026'), findsOneWidget);
+    // A fatura aberta vai até 03/12, mas só tem lançamentos até 14/11.
+    expect(find.text('Gastos de nov/2026'), findsOneWidget);
+    expect(find.text('Gastos de dez/2026'), findsNothing);
 
     await tester.tap(find.text('Parcelas em aberto'));
     await tester.pumpAndSettle();
     expect(bodies.single['message'], 'Quanto falta das parcelas?');
 
-    await tester.tap(find.text('Gastos de dez/2026'));
+    await tester.tap(find.text('Gastos de nov/2026'));
     await tester.pumpAndSettle();
-    expect(bodies.last['message'], 'Quanto gastei em dezembro de 2026?');
+    expect(bodies.last['message'], 'Quanto gastei em novembro de 2026?');
+
+    await tester.tap(find.byKey(const ValueKey('chat-period-filter')));
+    await tester.pumpAndSettle();
+    expect(find.text('nov/2026'), findsWidgets);
+    expect(find.text('dez/2026'), findsNothing);
   });
 
   testWidgets('estado vazio orienta a importação e não pergunta', (
@@ -708,7 +715,8 @@ void main() {
     }, api);
 
     expect(find.byKey(const ValueKey('chat-scope-filter')), findsNothing);
-    await sendQuestion(tester);
+    await tester.enterText(find.byType(TextField), 'Quanto gastei este mês?');
+    await tester.tap(find.byTooltip('Enviar'));
     await tester.pumpAndSettle();
 
     expect(requests, 0);

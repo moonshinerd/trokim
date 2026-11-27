@@ -236,12 +236,45 @@ void main() {
     var imported = false;
     final controller = controllerFor((_) async => response());
     controller.hasImportedData = () => imported;
-    await controller.send('Reserva?');
+    await controller.send('Quanto gastei?');
     expect(controller.messages.last.isImportGuide, isTrue);
     imported = true;
-    await controller.send('Reserva de novo?');
+    await controller.send('Quanto gastei de novo?');
     expect(controller.messages.last.text, 'Resposta oficial');
     expect(controller.messages.last.isImportGuide, isFalse);
+  });
+
+  test('sem dados, pergunta geral ainda vai ao RAG', () async {
+    var requests = 0;
+    final controller = controllerFor((_) async {
+      requests++;
+      return response();
+    });
+    controller.hasImportedData = () => false;
+    await controller.send('Como montar uma reserva de emergência?');
+    expect(requests, 1);
+    expect(controller.messages.last.text, 'Resposta oficial');
+    expect(controller.messages.last.isImportGuide, isFalse);
+  });
+
+  test('reconhece pergunta sobre os próprios dados', () {
+    for (final q in [
+      'Quanto gastei este mês?',
+      'Qual o total da FATURA aberta?',
+      'Quanto falta das parcelas?',
+      'Quais são minhas dívidas?',
+      'Qual o saldo da minha conta?',
+    ]) {
+      expect(asksAboutOwnData(q), isTrue, reason: q);
+    }
+    for (final q in [
+      'Como montar uma reserva de emergência?',
+      'Escreva um poema sobre futebol',
+      'Como organizar o orçamento?',
+      'Quanto devo guardar por mês?',
+    ]) {
+      expect(asksAboutOwnData(q), isFalse, reason: q);
+    }
   });
 
   test('identifica mensagem de abstenção', () async {

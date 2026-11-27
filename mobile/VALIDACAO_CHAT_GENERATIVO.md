@@ -58,20 +58,58 @@ corpus e confirme a configuração local do provedor. Use apenas dados sintétic
 
 | Cenário | Procedimento | Resultado esperado | Situação |
 |---|---|---|---|
-| Fundamentação | Perguntar como montar uma reserva de emergência | Resposta gerada, cartões e trechos; request em `/generate` com modo `grounded` | Pendente |
-| Auditoria e fontes | Ativar Auditoria, expandir cartão e abrir fonte | Metadados preservados e documento oficial aberto no navegador | Pendente |
-| Abstenção | Pedir um poema sobre futebol | Aviso pedagógico, sem cartões, com perguntas rápidas | Pendente |
-| Backend indisponível | Parar a API e enviar pergunta | Erro amigável e ação de nova tentativa | Pendente |
+| Fundamentação | Perguntar como montar uma reserva de emergência | Resposta gerada, cartões e trechos; request em `/generate` com modo `grounded` | Aprovado em 27/11 (print 21): fontes da CVM e do BCB |
+| Auditoria e fontes | Ativar Auditoria, expandir cartão e abrir fonte | Metadados preservados e documento oficial aberto no navegador | Parcial em 27/11 (print 22): auditoria e comparativo de transparência aparecem; abrir a fonte no navegador do aparelho não foi testado |
+| Abstenção | Pedir um poema sobre futebol | Aviso pedagógico, sem cartões, com perguntas rápidas | Aprovado em 27/11 (print 23) |
+| Backend indisponível | Parar a API e enviar pergunta | Erro amigável e ação de nova tentativa | Aprovado em 27/11 (print 24) |
 | Modelo indisponível | Manter API ativa e parar Ollama ou configurar modelo inexistente | Erro amigável, sem abstenção nem fallback extrativo | Pendente |
 | Timeout | Configurar prazo curto da geração e enviar pergunta que precise do modelo | Aviso de demora; interface volta a permitir interação | Pendente |
-| Nova tentativa | Restaurar serviço/prazo e tentar novamente | Resposta sem duplicar o balão da pergunta | Pendente |
-| Responsividade | Conferir resposta longa e cartões em tela estreita e ampla | Rolagem utilizável, sem cortes ou overflow, inclusive durante carregamento | Pendente |
-| Privacidade | Conferir destinos de rede e configuração durante a demonstração | Pergunta processada pela API e modelo locais; navegação externa somente ao abrir fonte | Pendente |
+| Nova tentativa | Restaurar serviço/prazo e tentar novamente | Resposta sem duplicar o balão da pergunta | Aprovado em 27/11 (print 25) |
+| Responsividade | Conferir resposta longa e cartões em tela estreita e ampla | Rolagem utilizável, sem cortes ou overflow, inclusive durante carregamento | Aprovado em tela estreita (412 px) em 27/11; tela ampla não conferida |
+| Privacidade | Conferir destinos de rede e configuração durante a demonstração | Pergunta processada pela API e modelo locais; navegação externa somente ao abrir fonte | Aprovado em 27/11: o chat só fala com a API local e o Ollama; a abertura da API deixou de buscar a tabela de preços do LiteLLM no GitHub |
+
+Modelo indisponível e timeout continuam pendentes no app; os testes de widget cobrem os
+dois estados.
+
+Os cenários acima foram executados em 27/11/2026 no Chrome emulando um Pixel 7 (Flutter Web,
+API local, `ollama/qwen2.5:1.5b`), pela fase `chat_generativo` de
+`homologacao/roteiro_web.py`. Prints em `docs/assets/homologacao/semana-5/`.
 
 Após cada cenário, acrescente resultado real e evidência correspondente. Se a
 pergunta proposta não produzir o estado esperado, registre o desvio; não substitua
 resultados observados por expectativas. Disponibilize o registro atualizado para
 a consolidação da issue #26.
+
+## Roteiro da Semana 5 (issue #100)
+
+Executado em 27/11/2026 no Chrome emulando um Pixel 7. Resultados, defeitos corrigidos e
+pendências estão no [Planejamento, seção 7.5](../docs/planejamento.md); o resumo:
+
+| Etapa | Procedimento | Situação |
+|---|---|---|
+| Foto legível | `D02.png` pelo OCR local, corrigir o favorecido e confirmar | Aprovado |
+| Foto ilegível | `D32.png` | Aprovado: abstenção, nada criado |
+| PDF de fatura | `D05.pdf` | Aprovado: a data vazia bloqueia a confirmação |
+| Extrato | Importar `fatura_nubank_aberta_pessoal.ofx` como conta pessoal, fatura aberta | Aprovado |
+| Chat com os dados | Estabelecimento, parcelas, seletor de fatura aberta, pergunta sugerida do mês | Aprovado, com uma resposta retida pelo validador (card do cálculo mantido) |
+| Banco novo | Tutorial do PicPay (Experimental) | Aprovado |
+| Visão remota | Consentimento em Ajustes e leitura de `D12.jpg` | Aprovado o consentimento; total e data vazios na leitura |
+| Sem internet | Rede externa bloqueada no processo da API | Aprovado: OCR local funciona |
+| Aparelho físico, câmera, modo avião no aparelho, PicPay e Mercado Pago reais | — | Pendente |
+
+Para repetir:
+
+```bash
+mobile/homologacao/preparar_web.sh            # compila o app web e serve na porta 8091
+uv run --project api --with playwright python mobile/homologacao/roteiro_web.py /tmp/prints
+# com a etapa de visão remota (chave só na variável de ambiente):
+OPENROUTER_API_KEY=... uv run --project api --with playwright \
+  python mobile/homologacao/roteiro_web.py /tmp/prints --visao
+```
+
+O roteiro precisa do Ollama com `qwen2.5:1.5b` em `127.0.0.1:11434` e do Chrome instalado. A
+compilação web usa `homologacao/main_web.dart`, que troca o armazenamento criptografado do
+aparelho pela biblioteca em memória (o `path_provider` não existe na web).
 
 ## Correção da instalação de dependências no CI
 

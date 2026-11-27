@@ -6,6 +6,7 @@ import '../../../core/theme/app_theme.dart';
 import '../../../core/format.dart';
 import '../../../core/widgets/app_motion.dart';
 import '../../../core/widgets/trokim_logo.dart';
+import '../../finance/domain/library_models.dart';
 import '../../finance/presentation/finance_controller.dart';
 import '../../import_guide/presentation/import_flow_screen.dart';
 import '../../transactions/presentation/transactions_screen.dart';
@@ -118,7 +119,7 @@ class _ChatScreenState extends State<ChatScreen> {
     for (final statement in finance.statements.statements) {
       if (statement.isCard) hasCard = true;
       final start = statement.periodStart;
-      final end = statement.periodEnd;
+      final end = _lastDataDay(statement);
       if (start == null) continue;
       var year = start.year;
       var month = start.month;
@@ -142,6 +143,12 @@ class _ChatScreenState extends State<ChatScreen> {
     ];
   }
 
+  /// Último dia com lançamentos do arquivo. Numa fatura aberta, o período vai
+  /// até o fechamento (por exemplo, 03/12), mas os lançamentos só até a data
+  /// da exportação: oferecer dezembro levaria a uma pergunta sem dados.
+  static DateTime? _lastDataDay(StatementInfo statement) =>
+      statement.coveredUntil ?? statement.periodEnd;
+
   List<(String, String)> _suggestions(FinanceController finance) {
     final out = <(String, String)>[];
     if (finance.installments.activeCount > 0) {
@@ -151,13 +158,13 @@ class _ChatScreenState extends State<ChatScreen> {
     if (statements.any((s) => s.isCard && s.status.isIncomplete)) {
       out.add(('Fatura aberta', 'Qual o total da fatura aberta?'));
     }
-    final latest = statements.where((s) => s.periodEnd != null).fold<DateTime?>(
-      null,
-      (max, s) {
-        final end = s.periodEnd!;
-        return max == null || end.isAfter(max) ? end : max;
-      },
-    );
+    final latest = statements
+        .map(_lastDataDay)
+        .whereType<DateTime>()
+        .fold<DateTime?>(
+          null,
+          (max, end) => max == null || end.isAfter(max) ? end : max,
+        );
     if (latest != null) {
       final name = _monthNames[latest.month - 1];
       out.add((
