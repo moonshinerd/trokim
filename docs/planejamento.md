@@ -12,7 +12,7 @@ O desenvolvimento do **Trokim** segue a metodologia **Challenge Based Learning (
 | **Semana 2** | Base de conhecimento e recuperação | **Base de conhecimento + protótipo de recuperação:** Base curada com 20 documentos-fonte; chunking semântico; embeddings FastEmbed 384d; banco SQLite-Vec; chat Flutter e benchmark (98,78% Recall@3) | <span class="badge-must">Concluído</span> | 02/11 a 06/11 |
 | **Semana 3** | **Comparação LLM x RAG** | **Assistente baseado em evidências + relatório comparativo:** Avaliação empírica estruturada (LLM pura vs. LLM + RAG ingênuo vs. LLM + RAG estruturado do Trokim), métricas de alucinação e síntese generativa | <span class="badge-must">Concluído</span> | **09/11 a 13/11** |
 | **Semana 4** | Sistema multiagentes | Primeiro protótipo multiagente (Research, Analysis, Validation e Communication Agent) | <span class="badge-must">Concluída</span> | 16/11 a 20/11 |
-| **Semana 5** | Multimodalidade | Assistente multimodal (leitura de faturas PDF, extratos e comprovantes em imagem) | <span class="badge-should">Sprint Ativa</span> | 23/11 a 27/11 |
+| **Semana 5** | Multimodalidade | Assistente multimodal (leitura de faturas PDF, extratos e comprovantes em imagem) | <span class="badge-must">Concluída</span> (homologação em aparelho pendente) | 23/11 a 27/11 |
 | **Semana 6** | Integração completa | Aplicação funcional ponta a ponta (Flutter + FastAPI + RAG + Banco Vetorial + Multiagente) | Previsto | 30/11 a 04/12 |
 | **Semana 7** | Testes e refinamento | Apresentação final e entrega consolidada do projeto e repositório | Previsto | 07/12 a 11/12 |
 
@@ -236,7 +236,7 @@ comprimido e preparado por `make build` ([ADR 0020](adr/0020-categorizacao-por-c
 
 ---
 
-## 7. Semana 5 — Multimodalidade (Sprint Ativa)
+## 7. Semana 5 — Multimodalidade (Concluída)
 
 O entregável oficial da **Semana 5 (23/11 a 27/11)** é o *agente multimodal*: o Trokim passa a ler **foto ou PDF escaneado** de fatura, comprovante de Pix e boleto, extrai os campos, valida por código e **mostra ao usuário para revisão antes de virar lançamento**. A equipe deixa **tudo pronto na quarta-feira, 25/11/2026** e **entrega até a segunda-feira, 30/11, às 8h00**, na pasta da equipe no Teams (canal "Segundo Desafio"). O texto da entrega pede, no mínimo, **duas modalidades** (aqui, texto no chat e imagem ou PDF no agente de documento), a documentação de **modalidades suportadas, limitações conhecidas e casos de falha com mitigação**, e uma **demonstração** de um fluxo com duas modalidades que mostre como a informação vira resposta. As tarefas estão na milestone **"Semana 5 — Multimodalidade (Agente Multimodal)"**, com o épico [#86](https://github.com/moonshinerd/trokim/issues/86) e o contrato do documento extraído.
 
@@ -357,6 +357,32 @@ entradas. A configuração de backup continua recebendo o cliente e os seletores
 fornecidos pela tela de Ajustes.
 
 Na #96, a consulta local do estabelecimento cita os documentos confirmados. A #94 fornece as consultas determinísticas; a #95 integra conta, período, parcelas e dívidas ao chat, com filtros e contexto agregado.
+
+### 7.4 Fechamento da semana (27/11)
+
+As issues da Fase 2 que faltavam entraram num único PR (`feature/entrega-5-semana-5`): a #95
+(chat com contas, parcelas e dívidas, trazida do PR #119), a #97 (chat com contexto e
+documento ligados ao endpoint real no app), a #98 (benchmark), a #99 (esta varredura) e a #117
+(origem manual e conciliação com o extrato).
+
+| Frente | O que entrou | Onde |
+|---|---|---|
+| Documento por foto ou PDF | Escolha do motor por requisição (`GET /v1/documents/engines`, `engine`, `allow_remote`), visão com CPF, CNPJ, agência e conta tarjados, instrução explícita para a VLM | [ADR 0021](adr/0021-visao-e-ocr-modulares.md), [Agente de documento](agentes/document-agent.md) |
+| Confirmação | Origem `manual` para o que o usuário digitou; extrato importado depois concilia o comprovante do mesmo Pix | [ADR 0026](adr/0026-confirmacao-e-consulta-de-documentos.md) |
+| Chat com os dados | Validador de números sem falso positivo para ano do rótulo, numeração de lista e subtração | [Histórico de resultados, 11.5](pesquisa/resultados.md#115-defeito-achado-pelo-benchmark-falsos-positivos-do-validador) |
+| App | Seletor de conta e período, cards de cálculo, perguntas sugeridas, estado vazio, documento no endpoint real e consentimento para visão remota | [Guia de Uso](guia-de-uso.md), [Protótipo](prototipo.md) |
+| Benchmark | OCR x VLM local x VLM remota nos 40 documentos e 20 cenários do chat | [Histórico de resultados, seção 11](pesquisa/resultados.md#11-semana-5-motores-de-leitura-e-chat-com-os-dados-do-usuario), [Gabarito do chat](pesquisa/gabarito-chat-dados.md) |
+
+**Hipóteses:** (1) acerto por campo de 90% **não** atingido no critério exato (82,5% e 77,2%;
+todos os erros são espaço ou acento em nomes, os números acertam 100%); (2) abstenção em 100%
+dos ilegíveis **sustentada**; (3) a VLM **não** melhorou a leitura neste corpus, porque o agente
+só a consulta quando falta campo; (4) o chat calcula 32 de 32 valores certos e entrega 27 de 32
+com o Qwen de 1,5 B, sem número inventado na resposta final.
+
+**Pendências assumidas:** a homologação em aparelho Android real ([#100](https://github.com/moonshinerd/trokim/issues/100))
+não foi feita (o app foi testado como Flutter Web); revisão humana cega dos resultados; repetição
+das execuções; a VLM como corretora de nomes (hoje só complementa campo ausente) e as faturas em
+que a VLM repete a chave `amount`; datas no formato brasileiro ainda retidas pelo validador.
 
 ### Atualização de implementação da #95 — 25/11/2026
 
