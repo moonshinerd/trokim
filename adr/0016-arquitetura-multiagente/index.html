@@ -852,6 +852,33 @@
   
   
     <li class="md-nav__item">
+      <a href="../../pesquisa/gabarito-chat-dados/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Gabarito do Chat com os Dados (Semana 5)
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../../referencias/" class="md-nav__link">
         
   
@@ -2265,6 +2292,17 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#extensao-contexto-financeiro-no-chat-95" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Extensão: contexto financeiro no chat (#95)
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     
   
@@ -2425,6 +2463,33 @@
     
   
   0022 – Perfis de Banco e Níveis de Suporte
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../0023-contexto-do-usuario-no-chat/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  0023 – Contexto do Usuário no Chat
 
     
   </span>
@@ -2644,6 +2709,17 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#extensao-contexto-financeiro-no-chat-95" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Extensão: contexto financeiro no chat (#95)
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     
   
@@ -2712,7 +2788,7 @@ Semana 4 é o primeiro sistema multiagente.</p>
 </tr>
 </tbody>
 </table>
-<p>O <a href="../../agentes/orquestrador/">orquestrador</a> segue as regras: (1) Research; se houver motivo de
+<p>No fluxo educativo, o <a href="../../agentes/orquestrador/">orquestrador</a> segue as regras: (1) Research; se houver motivo de
 abstenção, encerra sem chamar o LLM; (2) Analysis só se a pergunta pede números; (3)
 Communication escreve o rascunho; (4) Validation confere, com <strong>uma</strong> revisão do Communication
 em caso de bloqueio e, persistindo o bloqueio, <strong>rejeição segura</strong> sem inventar conteúdo; (5) cada
@@ -2723,13 +2799,13 @@ em <code>api/app/services/agents/base.py</code>. O contrato completo está no é
 <a href="../../agentes/">Agentes</a>. O endpoint é <code>POST /v1/agents/ask</code>; <code>/v1/chat/ask</code> e
 <code>/v1/chat/generate</code> continuam existindo.</p>
 <h2 id="como-foi-implementado">Como foi implementado<a class="headerlink" href="#como-foi-implementado" title="Permanent link">&para;</a></h2>
-<p>O contrato do épico foi implementado sem mudanças de campos. O que a implementação acrescentou:</p>
+<p>O contrato inicial do épico foi implementado; a extensão da #95 acrescenta contexto financeiro tipado. O que a implementação acrescentou:</p>
 <ul>
 <li><strong>Communication extrativo.</strong> O rascunho do modelo só é aceito se for composto de frases
   copiadas literalmente das evidências, cada uma com a citação <code>[n]</code> correta, e das linhas
   exatas dos cálculos do Analysis. Fora disso, o agente troca o texto por um rascunho seguro
   montado com os próprios trechos e cálculos; se o texto do modelo trouxer número sem suporte,
-  registra o bloqueio <code>DRAFT_NOT_GROUNDED</code>. O prompt é <code>api/app/prompts/prompt_agente_comunicacao_v1.txt</code>.</li>
+  registra o bloqueio <code>DRAFT_NOT_GROUNDED</code>. O prompt é <code>api/app/prompts/prompt_agente_comunicacao_v2.txt</code>.</li>
 <li><strong>Códigos do Validation:</strong> <code>NUMBER_NOT_SUPPORTED</code>, <code>CITATION_INVALID</code>, <code>OUT_OF_SCOPE_ADVICE</code>,
   <code>ABSTENTION_MISMATCH</code>, <code>CALCULATION_MISSING</code> e <code>DRAFT_NOT_GROUNDED</code> (repassado do
   Communication). Todos são regras determinísticas, sem LLM.</li>
@@ -2801,6 +2877,13 @@ O contrato público do épico #86 fica em <code>domain/documents.py</code> e dev
 com a #89. O agente usa diretamente as portas <code>OcrProvider</code> e <code>VisionProvider</code> da #87
 (ADR 0021), com seus resultados tipados e suas fábricas configuráveis.
 A leitura, os limites e as pendências estão no <a href="../../agentes/document-agent/">Agente de documento</a>.</p>
+<h2 id="extensao-contexto-financeiro-no-chat-95">Extensão: contexto financeiro no chat (#95)<a class="headerlink" href="#extensao-contexto-financeiro-no-chat-95" title="Permanent link">&para;</a></h2>
+<p>Analysis passa a rotear consultas à camada da #94 com filtros de conta, dono e período,
+registrando os cálculos na trilha. Consultas factuais pessoais pulam Research, sem depender de
+fontes educativas; perguntas que também pedem orientação mantêm a pesquisa institucional.
+Ambiguidade ou dado ausente gera esclarecimento sem modelo. O prompt v2 recebe somente
+agregados e limitações, com auditoria numérica independente e preservação das linhas exatas dos
+cálculos. A <a href="../0023-contexto-do-usuario-no-chat/">ADR 0023</a> define o limite de privacidade.</p>
 
 
 

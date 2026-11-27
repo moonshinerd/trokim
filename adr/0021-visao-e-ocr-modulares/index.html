@@ -852,6 +852,33 @@
   
   
     <li class="md-nav__item">
+      <a href="../../pesquisa/gabarito-chat-dados/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Gabarito do Chat com os Dados (Semana 5)
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../../referencias/" class="md-nav__link">
         
   
@@ -2346,6 +2373,17 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#ajustes-da-semana-5-97-e-98-27112026" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Ajustes da Semana 5 (#97 e #98, 27/11/2026)
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#consequencias" class="md-nav__link">
     <span class="md-ellipsis">
       <span class="md-typeset">
@@ -2392,6 +2430,33 @@
     
   
   0022 – Perfis de Banco e Níveis de Suporte
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../0023-contexto-do-usuario-no-chat/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  0023 – Contexto do Usuário no Chat
 
     
   </span>
@@ -2557,6 +2622,17 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#ajustes-da-semana-5-97-e-98-27112026" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Ajustes da Semana 5 (#97 e #98, 27/11/2026)
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#consequencias" class="md-nav__link">
     <span class="md-ellipsis">
       <span class="md-typeset">
@@ -2641,9 +2717,25 @@ nuvem contraria a premissa local-first do projeto.</p>
    Linhas podem ser excluídas e bloqueios só são liberados quando os campos obrigatórios correspondentes
    são alterados para valores válidos; campos opcionais não bloqueiam. Bloqueios sem campo editável
    continuam impedindo confirmar. Imagens ilegíveis orientam nova tentativa com dicas de enquadramento. Nenhum
-   lançamento é criado sem confirmação humana ativa. A etapa inicial utiliza repositório de teste
-   (mock) e a integração com o endpoint real pertence à issue #97.</li>
+   lançamento é criado sem confirmação humana ativa. Na Semana 4 a etapa usava um repositório
+   simulado; desde a #97 o app lê e confirma pelo endpoint real (<code>/v1/documents/extract</code> e
+   <code>/v1/documents/confirm</code>), com o motor e o consentimento remoto escolhidos em Ajustes.</li>
 </ol>
+<h2 id="ajustes-da-semana-5-97-e-98-27112026">Ajustes da Semana 5 (#97 e #98, 27/11/2026)<a class="headerlink" href="#ajustes-da-semana-5-97-e-98-27112026" title="Permanent link">&para;</a></h2>
+<ul>
+<li><strong>Escolha do motor por requisição.</strong> <code>GET /v1/documents/engines</code> informa o OCR local e, se o
+  servidor tiver um modelo de visão configurado, o modelo e se ele é remoto. O
+  <code>POST /v1/documents/extract</code> aceita <code>engine</code> (<code>ocr</code>, padrão, ou <code>vision</code>) e <code>allow_remote</code>
+  (<code>true</code> só com o consentimento salvo no app). Sem modelo de visão, <code>engine=vision</code> responde
+  <code>503 VISION_UNAVAILABLE</code>; com modelo remoto e sem <code>allow_remote=true</code>, <code>403
+  REMOTE_CONSENT_REQUIRED</code>. O consentimento passa a ser do usuário, por requisição; o
+  <code>VISION_ALLOW_REMOTE</code> só vale para os usos internos sem <code>engine</code> (testes e benchmark).</li>
+<li><strong>Proteção dos pixels.</strong> A visão é sempre complemento do OCR e só recebe a imagem depois do
+  <code>OcrMaskingSanitizer</code> (<code>app/services/vision_sanitizer.py</code>), que tarja CPF, CNPJ, agência e conta
+  usando as caixas que o OCR já leu na mesma página (inclusive o número ao lado de um rótulo
+  sozinho, como "Agência:" e "1234"). Valor e data continuam visíveis. Sem caixas do OCR, o
+  sanitizador devolve <code>None</code> e a visão fica bloqueada (<code>VISION_PRIVACY_BLOCKED</code>).</li>
+</ul>
 <h2 id="consequencias">Consequências<a class="headerlink" href="#consequencias" title="Permanent link">&para;</a></h2>
 <ul>
 <li>O agente de documento (<a href="https://github.com/moonshinerd/trokim/issues/88">#88</a>) depende só das
@@ -2653,6 +2745,8 @@ nuvem contraria a premissa local-first do projeto.</p>
   opcional e a imagem Docker é grande.</li>
 <li>A confiança do OCR alimenta o porteiro de qualidade da imagem, que decide abster-se quando a
   foto não permite concluir.</li>
+<li>A tarja depende do OCR: um número sensível que o OCR não leu não é tarjado. Por isso o envio
+  remoto exige consentimento explícito e o benchmark usa só documentos sintéticos.</li>
 <li>A tela de revisão do app desacopla o motor de extração da confirmação do usuário; trocas de motor
   ou modelos não alteram o fluxo de conferência nem criam lançamentos de forma silenciosa.</li>
 </ul>

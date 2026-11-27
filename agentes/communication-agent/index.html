@@ -852,6 +852,33 @@
   
   
     <li class="md-nav__item">
+      <a href="../../pesquisa/gabarito-chat-dados/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Gabarito do Chat com os Dados (Semana 5)
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../../referencias/" class="md-nav__link">
         
   
@@ -1516,6 +1543,17 @@
     <span class="md-ellipsis">
       <span class="md-typeset">
         Proteção do rascunho
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#contexto-pessoal-agregado" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Contexto pessoal agregado
       </span>
     </span>
   </a>
@@ -2444,6 +2482,33 @@
   
   
     <li class="md-nav__item">
+      <a href="../../adr/0023-contexto-do-usuario-no-chat/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  0023 – Contexto do Usuário no Chat
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../../adr/0024-persistencia-local-e-backup-criptografado/" class="md-nav__link">
         
   
@@ -2590,6 +2655,17 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#contexto-pessoal-agregado" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Contexto pessoal agregado
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#validacao-manual-com-qwen-25-15b" class="md-nav__link">
     <span class="md-ellipsis">
       <span class="md-typeset">
@@ -2672,7 +2748,7 @@
 </div>
 <p>O Communication Agent redige a resposta em pt-BR a partir do contexto do orquestrador. É o único agente que usa <code>LLMProvider</code>; evidências, cálculos, recuperação e validação permanecem fora do modelo, conforme a <a href="../../adr/0009-sintese-generativa-local/">ADR 0009</a> e o contrato do <a href="https://github.com/moonshinerd/trokim/issues/50">épico #50</a>.</p>
 <h2 id="regras-do-prompt">Regras do prompt<a class="headerlink" href="#regras-do-prompt" title="Permanent link">&para;</a></h2>
-<p>O prompt versionado está em <code>api/app/prompts/prompt_agente_comunicacao_v1.txt</code>. Ele instrui o modelo a:</p>
+<p>O prompt versionado está em <code>api/app/prompts/prompt_agente_comunicacao_v2.txt</code>. Ele instrui o modelo a:</p>
 <ul>
 <li>responder em português do Brasil e usar apenas as evidências numeradas e os cálculos recebidos;</li>
 <li>citar afirmações de fonte com a referência numérica correspondente;</li>
@@ -2684,8 +2760,19 @@
 <p>Quando <code>ctx.issues</code> contém um <code>BLOCKER</code>, o prompt inclui código e mensagem para a revisão. O agente registra <code>ctx.draft_answer</code>, <code>ctx.model</code> e incrementa <code>ctx.attempt</code>. Se o provedor falha, retorna <code>StepStatus.FAILED</code> com uma mensagem segura, sem expor detalhes internos da exceção.</p>
 <h2 id="protecao-do-rascunho">Proteção do rascunho<a class="headerlink" href="#protecao-do-rascunho" title="Permanent link">&para;</a></h2>
 <p>Após a geração, uma checagem determinística aceita somente frases completas copiadas das evidências com a citação correta e os resultados de cálculo exatamente como fornecidos. Citações inválidas, paráfrases, afirmações adicionais, valores divergentes, respostas incompletas ou premissas pendentes fazem o agente substituir o rascunho por uma montagem segura com as evidências citadas, os cálculos e as perguntas sobre dados faltantes. Se a saída bruta trouxer números sem suporte, o agente adiciona <code>DRAFT_NOT_GROUNDED</code>; a Validation Agent preserva o bloqueio e o orquestrador retém a resposta ou solicita a revisão prevista. O passo registra <code>draft_guard</code> como <code>accepted</code> ou <code>safe_fallback</code>.</p>
-<p>O prompt, a checagem e o fallback compartilham a mesma formatação tipada de cálculos e frases de evidência, normalizando espaços e quebras de linha. O suporte numérico não utiliza uma lista fixa de constantes: compara representações literais do contexto, incluindo sinal, precisão e unidade. Alterar <code>123.45 BRL</code> para <code>-123.45 BRL</code> ou <code>123.45%</code> gera bloqueio. Premissas são reproduzidas como condições ou limitações, com um pedido de esclarecimento; não são todas rotuladas como dados ausentes.</p>
+<p>O prompt, a checagem e o fallback compartilham a mesma formatação tipada de cálculos e frases de evidência, normalizando espaços e quebras de linha. O suporte numérico não utiliza uma lista fixa de constantes: compara representações literais do contexto, incluindo sinal, precisão e unidade. Alterar <code>123.45 BRL</code> para <code>-123.45 BRL</code> ou <code>123.45%</code> gera bloqueio. Premissas são reproduzidas como condições ou limitações. No fluxo educativo, há um pedido de esclarecimento; no fluxo pessoal, limitações não geram uma pergunta genérica quando já há cálculos.</p>
 <p>Esse filtro é conservador: uma paráfrase correta também pode ser substituída. Ele não substitui a revisão independente do Validation Agent. A integração dos agentes e do endpoint está no PR #72; a validação independente pertence à issue <a href="https://github.com/moonshinerd/trokim/issues/54">#54</a>.</p>
+<h2 id="contexto-pessoal-agregado">Contexto pessoal agregado<a class="headerlink" href="#contexto-pessoal-agregado" title="Permanent link">&para;</a></h2>
+<p>Na #95, a comunicação recebe somente totais, categorias, estabelecimentos e rótulos seguros de
+conta, além das limitações das consultas. A pergunta original é substituída no prompt por uma
+descrição da intenção: ids, descrições cruas e dados escritos pelo usuário não são repassados.
+Não há lista de transações no prompt nem nos <code>context_chunks</code>. Veja a
+<a href="../../adr/0023-contexto-do-usuario-no-chat/">ADR 0023</a>.</p>
+<p>O rascunho pessoal só é aceito se reproduzir a montagem segura, incluindo as limitações; caso
+contrário ela é usada como fallback. <code>check_financial_numbers</code> também audita os números do texto
+original do modelo: um valor sem cálculo correspondente gera <code>NUMBER_NOT_SUPPORTED</code>, mesmo que
+esteja na pergunta. O bloqueio é preservado na validação e pode ser corrigido na revisão seguinte.
+Dados ausentes ou ambíguos são respondidos em código, sem chamar o modelo.</p>
 <h2 id="validacao-manual-com-qwen-25-15b">Validação manual com Qwen 2.5 1.5B<a class="headerlink" href="#validacao-manual-com-qwen-25-15b" title="Permanent link">&para;</a></h2>
 <p>Em 16/11/2026, o agente foi executado localmente com <code>qwen2.5:1.5b</code>, temperatura <code>0.1</code> e limite de 384 tokens em cinco perguntas do gabarito da Semana 3. As saídas brutas extrapolaram as evidências ou não seguiram o formato estrito; o filtro rejeitou as cinco e produziu respostas baseadas somente nos dados de entrada. As perguntas, evidências, saídas brutas e respostas protegidas estão no <a href="../../assets/communication-agent-qwen-validation.json">registro da execução</a>.</p>
 <table>

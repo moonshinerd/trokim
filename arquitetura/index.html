@@ -852,6 +852,33 @@
   
   
     <li class="md-nav__item">
+      <a href="../pesquisa/gabarito-chat-dados/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Gabarito do Chat com os Dados (Semana 5)
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../referencias/" class="md-nav__link">
         
   
@@ -2400,6 +2427,33 @@
   
   
     <li class="md-nav__item">
+      <a href="../adr/0023-contexto-do-usuario-no-chat/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  0023 – Contexto do Usuário no Chat
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../adr/0024-persistencia-local-e-backup-criptografado/" class="md-nav__link">
         
   
@@ -2630,7 +2684,9 @@
 <h2 id="entrada-de-documentos">Entrada de documentos<a class="headerlink" href="#entrada-de-documentos" title="Permanent link">&para;</a></h2>
 <p>O endpoint de extração recebe o arquivo em memória e devolve os passos de leitura e validação. A revisão humana precede a confirmação e a gravação no SQLite. A consulta do estabelecimento usa o serviço de cálculo local e cita o lançamento confirmado. Consulte o <a href="../agentes/document-agent/">contrato HTTP</a>.</p>
 <p>A confirmação prepara o lote, valida o documento completo e só então altera a biblioteca.
-A procedência <code>origin=documento</code> é independente de <code>source_kind=conta|cartao</code>.
+A procedência <code>origin</code> (<code>importacao</code>, <code>documento</code> ou <code>manual</code>, quando o usuário digitou sem
+leitura bem-sucedida) é independente de <code>source_kind=conta|cartao</code>. Um extrato importado depois
+concilia o lançamento do documento com o mesmo Pix ou compra, que vira duplicata.
 O <code>AgentQueryService</code> trata a consulta local com <code>CalculationService</code> e <code>ValidationAgent</code>,
 enquanto o <code>Orchestrator</code> coordena as perguntas educacionais. A
 <a href="../adr/0026-confirmacao-e-consulta-de-documentos/">ADR 0026</a> registra essas fronteiras.</p>

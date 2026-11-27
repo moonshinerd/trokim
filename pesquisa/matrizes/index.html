@@ -926,6 +926,33 @@
   
   
     <li class="md-nav__item">
+      <a href="../gabarito-chat-dados/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Gabarito do Chat com os Dados (Semana 5)
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../../referencias/" class="md-nav__link">
         
   
@@ -2389,6 +2416,33 @@
   
   
     <li class="md-nav__item">
+      <a href="../../adr/0023-contexto-do-usuario-no-chat/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  0023 – Contexto do Usuário no Chat
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../../adr/0024-persistencia-local-e-backup-criptografado/" class="md-nav__link">
         
   
@@ -2599,6 +2653,34 @@
 <td>GQ02, GQ09</td>
 </tr>
 <tr>
+<td><strong>Transcrição incorreta ou campo invisível inferido em imagem</strong></td>
+<td>Alta</td>
+<td>Alta</td>
+<td>Comparador da #98 com campos exatos, campos não recuperáveis retornados, linhas e degradações separados; porteiro de qualidade, abstenção e revisão humana antes de importar. Acerto em números não equivale a documento integral correto.</td>
+<td>GQ02, GQ05, RF27, RF28, ADR 0021</td>
+</tr>
+<tr>
+<td><strong>VLM remoto sem consentimento ou exposição de imagem</strong></td>
+<td>Alta</td>
+<td>Baixa</td>
+<td>Leitura padrão só com OCR local; visão remota só com <code>allow_remote=true</code> enviado pelo app depois do consentimento do usuário (<code>403 REMOTE_CONSENT_REQUIRED</code> sem ele) e com CPF, CNPJ, agência e conta tarjados pelas caixas do OCR; benchmark remoto somente com os documentos sintéticos congelados e chave no ambiente. Leituras brutas do benchmark não autorizam retenção de documentos reais.</td>
+<td>GQ03, RNF12, ADR 0021</td>
+</tr>
+<tr>
+<td><strong>Falha técnica confundida com recusa segura</strong></td>
+<td>Alta</td>
+<td>Média</td>
+<td>Guardar trilha, falhas técnicas e latência por documento; indisponibilidade do túnel/modelo não conta como acerto nem abstenção correta.</td>
+<td>GQ05, GQ10, RNF08</td>
+</tr>
+<tr>
+<td><strong>Escopo incorreto na resposta sobre contas e dívidas</strong></td>
+<td>Alta</td>
+<td>Média</td>
+<td>Cenários isolados com filtros de conta, dono e período; gabarito do <code>CalculationService</code>, respostas brutas e bloqueios do Validation. Cálculo correto não garante reprodução correta pela LLM.</td>
+<td>GQ04, GQ05, RF30, ADR 0023</td>
+</tr>
+<tr>
 <td><strong>Sobrecarga de escopo com Open Finance</strong></td>
 <td>Alta</td>
 <td>Alta</td>
@@ -2621,7 +2703,7 @@
 <li><strong>Taxa de Importação Correta:</strong>
    <code>Taxa = lançamentos com data, descrição e valor idênticos ao gabarito ÷ total de lançamentos no gabarito sintético</code></li>
 <li><strong>Precisão Numérica Determinística:</strong>
-   <code>Acurácia numérica = 100%</code> (garantida por testes unitários com pytest)</li>
+   Cálculos são determinísticos e confrontados com gabaritos nos testes. A reprodução dos valores na resposta da LLM é outra métrica: <code>valores esperados reproduzidos ÷ valores esperados</code>, acompanhada de números sem suporte e respostas retidas; não se presume acurácia de 100% do chat.</li>
 <li><strong>Fundamentação do RAG:</strong>
    <code>Taxa de fundamentação = respostas sustentadas por fonte oficial identificada ÷ total de respostas avaliadas</code></li>
 <li><strong>Taxa de Abstenção Correta:</strong>

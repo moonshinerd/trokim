@@ -18,7 +18,7 @@
         <link rel="prev" href="../gabarito-multiagente/">
       
       
-        <link rel="next" href="../../referencias/">
+        <link rel="next" href="../gabarito-chat-dados/">
       
       
         
@@ -853,6 +853,33 @@
 
       </a>
       
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../gabarito-chat-dados/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Gabarito do Chat com os Dados (Semana 5)
+
+    
+  </span>
+  
+  
+
+      </a>
     </li>
   
 
@@ -2328,6 +2355,33 @@
   
   
     <li class="md-nav__item">
+      <a href="../../adr/0023-contexto-do-usuario-no-chat/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  0023 – Contexto do Usuário no Chat
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../../adr/0024-persistencia-local-e-backup-criptografado/" class="md-nav__link">
         
   
@@ -2462,7 +2516,7 @@
 <h1 id="gabarito-multimodal-sintetico">Gabarito multimodal sintético<a class="headerlink" href="#gabarito-multimodal-sintetico" title="Permanent link">&para;</a></h1>
 <p>O dataset da <a href="https://github.com/moonshinerd/trokim/issues/90">#90</a> fornece documentos com
 resposta conhecida para calibrar o <a href="../../agentes/document-agent/">agente de documento</a> da</p>
-<h1 id="88-e-preparar-o-comparador-de-motores-da-98-rastreabilidade-rf14-rf27-rf28">88 e preparar o comparador de motores da #98. Rastreabilidade: RF14, RF27, RF28;<a class="headerlink" href="#88-e-preparar-o-comparador-de-motores-da-98-rastreabilidade-rf14-rf27-rf28" title="Permanent link">&para;</a></h1>
+<h1 id="88-e-avaliar-os-motores-no-comparador-da-98-rastreabilidade-rf14-rf27-rf28">88 e avaliar os motores no comparador da #98. Rastreabilidade: RF14, RF27, RF28;<a class="headerlink" href="#88-e-avaliar-os-motores-no-comparador-da-98-rastreabilidade-rf14-rf27-rf28" title="Permanent link">&para;</a></h1>
 <p>GQ02, GQ03, GQ05; <a href="../../adr/0008-material-comparativo-versionado/">ADR 0008</a>.</p>
 <h2 id="composicao-e-construcao">Composição e construção<a class="headerlink" href="#composicao-e-construcao" title="Permanent link">&para;</a></h2>
 <p><code>research/synthetic_data/generate_document_images.py</code> usa Pillow, ReportLab, semente <strong>90</strong>
@@ -2588,8 +2642,9 @@ Os arquivos ficam em <code>research/synthetic_data/document_images/</code>.</p>
 fotografias, câmeras, bancos ou documentos reais. Ruído e bordas podem ter Laplaciano alto sem
 conter texto, e as métricas não comprovam corte ou reflexo. A exigência de todos os ilegíveis terem
 baixa nitidez restringe a abrangência desses exemplos. Não há certificação de OCR em produção.
-A comparação de três motores, a meta de 90% e os cenários de chat pertencem à #98, usando estes
-insumos congelados. O <a href="../gabarito-multiagente/">gabarito multiagente</a> continua independente.</p>
+A comparação de motores da #98 usa estes insumos congelados e confronta a meta de 90%.
+O <a href="../gabarito-multiagente/">gabarito multiagente</a> histórico continua independente do novo
+conjunto de chat com os dados do usuário.</p>
 <p>Na revisão, o avaliador foi separado do runner em <code>document_evaluation.py</code>: funções puras
 conferem cobertura e IDs únicos antes de contar resultados. Títulos OCR sem espaços são
 reconhecidos pelo marcador conhecido; valores, favorecidos e descrições não são corrigidos

@@ -796,6 +796,17 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#consultar-os-dados-importados-por-dono-e-periodo" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Consultar os dados importados por dono e período
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#titulo-de-uma-conversa" class="md-nav__link">
     <span class="md-ellipsis">
       <span class="md-typeset">
@@ -1043,6 +1054,17 @@
     <span class="md-ellipsis">
       <span class="md-typeset">
         8.10. Fotografar ou escolher documento
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#811-conversar-com-o-contexto-das-contas" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        8.11. Conversar com o contexto das contas
       </span>
     </span>
   </a>
@@ -1314,6 +1336,33 @@
     
   
   Gabarito Multimodal (Semana 5)
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../pesquisa/gabarito-chat-dados/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Gabarito do Chat com os Dados (Semana 5)
 
     
   </span>
@@ -2796,6 +2845,33 @@
   
   
     <li class="md-nav__item">
+      <a href="../adr/0023-contexto-do-usuario-no-chat/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  0023 – Contexto do Usuário no Chat
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../adr/0024-persistencia-local-e-backup-criptografado/" class="md-nav__link">
         
   
@@ -3071,6 +3147,17 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#consultar-os-dados-importados-por-dono-e-periodo" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Consultar os dados importados por dono e período
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#titulo-de-uma-conversa" class="md-nav__link">
     <span class="md-ellipsis">
       <span class="md-typeset">
@@ -3324,6 +3411,17 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#811-conversar-com-o-contexto-das-contas" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        8.11. Conversar com o contexto das contas
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -3387,7 +3485,7 @@
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Prepara a aplicação: dependências (uv) e índice CNPJ descomprimido</span>
 </span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>make<span class="w"> </span>build
 </span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
-</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c1"># Executa a bateria de testes automatizados (418 da API e 161 de pesquisa)</span>
+</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c1"># Executa a bateria de testes automatizados (826 da API e 271 de pesquisa)</span>
 </span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>make<span class="w"> </span><span class="nb">test</span>
 </span><span id="__span-0-6"><a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>
 </span><span id="__span-0-7"><a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="c1"># Lint (ruff) e build estrito da documentação</span>
@@ -3465,13 +3563,16 @@ Para o celular acessar, publique a porta na rede local editando <code>ports</cod
 <tr>
 <td><code>VISION_ALLOW_REMOTE</code></td>
 <td><code>false</code></td>
-<td>Consentimento para enviar a imagem para fora do aparelho</td>
+<td>Consentimento global, só para uso sem o app (benchmark, scripts)</td>
 </tr>
 </tbody>
 </table>
-<p>Um modelo remoto, como o do OpenRouter, é <strong>recusado</strong> enquanto <code>VISION_ALLOW_REMOTE</code> não for
-<code>true</code>: a imagem de um documento financeiro sairia do aparelho. O consentimento é seu, e só
-material sintético vai à nuvem nos testes do projeto.</p>
+<p>A leitura padrão é só o OCR local. Um modelo remoto, como o do OpenRouter, recebe a imagem de um
+documento financeiro, então só é usado quando o app pede o motor <code>vision</code> <strong>com</strong>
+<code>allow_remote=true</code>, que ele envia apenas depois de você ligar o consentimento em <strong>Ajustes →
+Leitura de documentos</strong>. Sem isso a API responde <code>403 REMOTE_CONSENT_REQUIRED</code>. Antes do envio, CPF,
+CNPJ, agência e conta são tarjados nas posições lidas pelo OCR. Só material sintético vai à nuvem
+nos testes do projeto.</p>
 <h3 id="referencia-rapida-da-api">Referência rápida da API<a class="headerlink" href="#referencia-rapida-da-api" title="Permanent link">&para;</a></h3>
 <p>Todos os caminhos começam em <code>/v1</code>. O contrato completo e interativo fica no Swagger (<code>/docs</code>).</p>
 <table>
@@ -3496,7 +3597,12 @@ material sintético vai à nuvem nos testes do projeto.</p>
 <tr>
 <td>Multiagente</td>
 <td><code>POST /agents/ask</code></td>
-<td>Pergunta pelo sistema de quatro agentes, com a trilha</td>
+<td>Pergunta pelo sistema de quatro agentes, com a trilha (filtros <code>account_id</code>, <code>owner</code>, <code>period</code>, <code>document_uid</code>)</td>
+</tr>
+<tr>
+<td>Documentos</td>
+<td><code>GET /documents/engines</code>, <code>POST /documents/extract</code>, <code>POST /documents/confirm</code></td>
+<td>Motores de leitura disponíveis, leitura de foto/PDF (campos <code>engine</code> e <code>allow_remote</code>) e confirmação dos campos revisados (com <code>origin</code>)</td>
 </tr>
 <tr>
 <td>Lançamentos</td>
@@ -3671,16 +3777,30 @@ corrompido". No app, em <strong>Ajustes &gt; Backup</strong>, informe a senha e 
 </span><span id="__span-7-2"><a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">"Content-Type: application/json"</span><span class="w"> </span><span class="se">\</span>
 </span><span id="__span-7-3"><a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">'{"message": "Como montar uma reserva de emergencia e quanto tempo leva com meus gastos?"}'</span>
 </span></code></pre></div>
+<h4 id="consultar-os-dados-importados-por-dono-e-periodo">Consultar os dados importados por dono e período<a class="headerlink" href="#consultar-os-dados-importados-por-dono-e-periodo" title="Permanent link">&para;</a></h4>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>curl<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span>http://127.0.0.1:8000/v1/agents/ask<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-8-2"><a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="w">  </span>-H<span class="w"> </span><span class="s1">'Content-Type: application/json'</span><span class="w"> </span><span class="se">\</span>
+</span><span id="__span-8-3"><a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">'{"message":"Quanto gastei?","owner":"empresa","period":"2026-10"}'</span>
+</span></code></pre></div>
+<p>Também é possível enviar <code>account_id</code> obtido em <code>GET /v1/accounts</code>. Sem filtros, pergunte por
+exemplo “Quanto falta pagar das minhas parcelas?” ou “Qual minha fatura fechada pessoal do
+Nubank?”. Banco ou ano ambíguo gera pedido de esclarecimento; ausência de dados informa o arquivo
+que falta importar. Conflito entre texto e filtros também pede esclarecimento, sem escolher um
+recorte silenciosamente. Veja os <a href="../agentes/orquestrador/#filtros-do-endpoint">formatos e limites dos filtros</a>.
+O chat considera somente os dados importados e avisa sobre períodos incompletos, datas estimadas
+de parcelas e limitações para identificar pagamentos. No aplicativo, a seleção desse contexto é
+feita pelo seletor de conta e período do próprio chat (veja
+<a href="#811-conversar-com-o-contexto-das-contas">Conversar com o contexto das contas</a>).</p>
 <h4 id="titulo-de-uma-conversa">Título de uma conversa:<a class="headerlink" href="#titulo-de-uma-conversa" title="Permanent link">&para;</a></h4>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>curl<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span>http://127.0.0.1:8000/v1/chat/title<span class="w"> </span><span class="se">\</span>
-</span><span id="__span-8-2"><a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">"Content-Type: application/json"</span><span class="w"> </span><span class="se">\</span>
-</span><span id="__span-8-3"><a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">'{"message": "Como montar uma reserva de emergencia?"}'</span>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>curl<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span>http://127.0.0.1:8000/v1/chat/title<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-9-2"><a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">"Content-Type: application/json"</span><span class="w"> </span><span class="se">\</span>
+</span><span id="__span-9-3"><a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">'{"message": "Como montar uma reserva de emergencia?"}'</span>
 </span></code></pre></div>
 <p>Se o modelo estiver indisponível, <code>/v1/chat/generate</code> devolve <code>503</code> com uma mensagem clara e <code>/v1/chat/title</code> devolve as primeiras palavras da pergunta (<code>source = "fallback"</code>). No app, o interruptor <strong>Respostas com IA</strong> (em Ajustes) alterna entre <code>/v1/chat/generate</code> e a busca extrativa <code>/v1/chat/ask</code>.</p>
 <h3 id="benchmark-comparativo-e-graficos">Benchmark comparativo e gráficos<a class="headerlink" href="#benchmark-comparativo-e-graficos" title="Permanent link">&para;</a></h3>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>make<span class="w"> </span>comparison-validate<span class="w">                                   </span><span class="c1"># valida gabarito, prompts e fontes (sem chamar o modelo)</span>
-</span><span id="__span-9-2"><a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>make<span class="w"> </span>comparison-run<span class="w"> </span><span class="nv">RUN</span><span class="o">=</span><span class="m">2026</span>-11-20-qwen2.5-1.5b<span class="w"> </span><span class="nv">MODEL</span><span class="o">=</span>ollama/qwen2.5:1.5b<span class="w">   </span><span class="c1"># execução completa e registrada</span>
-</span><span id="__span-9-3"><a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>make<span class="w"> </span>report-charts<span class="w">                                         </span><span class="c1"># regenera os gráficos do MkDocs</span>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-10-1"><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>make<span class="w"> </span>comparison-validate<span class="w">                                   </span><span class="c1"># valida gabarito, prompts e fontes (sem chamar o modelo)</span>
+</span><span id="__span-10-2"><a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>make<span class="w"> </span>comparison-run<span class="w"> </span><span class="nv">RUN</span><span class="o">=</span><span class="m">2026</span>-11-20-qwen2.5-1.5b<span class="w"> </span><span class="nv">MODEL</span><span class="o">=</span>ollama/qwen2.5:1.5b<span class="w">   </span><span class="c1"># execução completa e registrada</span>
+</span><span id="__span-10-3"><a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>make<span class="w"> </span>report-charts<span class="w">                                         </span><span class="c1"># regenera os gráficos do MkDocs</span>
 </span></code></pre></div>
 <p>O <code>comparison-run</code> roda as quatro abordagens (LLM pura, RAG ingênuo, Trokim estruturado e
 multiagente) nos 30 casos e os 20 cenários multiagente, e grava sozinho o <code>run.json</code> e os
@@ -3691,14 +3811,14 @@ antes (por exemplo, <code>LLM_API_KEY</code> para <code>openrouter/...</code>) e
 <hr />
 <h2 id="31-aplicativo-mobile-no-emulador">3.1. Aplicativo Mobile no Emulador<a class="headerlink" href="#31-aplicativo-mobile-no-emulador" title="Permanent link">&para;</a></h2>
 <p>Para rodar o app Android (Flutter) com o backend local:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-10-1"><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="c1"># Terminal 1: backend (a partir da raiz do repositório)</span>
-</span><span id="__span-10-2"><a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a><span class="nv">DEBUG</span><span class="o">=</span><span class="nb">false</span><span class="w"> </span><span class="nv">ENVIRONMENT</span><span class="o">=</span>development<span class="w"> </span>make<span class="w"> </span>api-run
-</span><span id="__span-10-3"><a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>
-</span><span id="__span-10-4"><a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="c1"># Terminal 2: app (requer Flutter estável, JDK 17 e Android SDK 36)</span>
-</span><span id="__span-10-5"><a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a><span class="nb">cd</span><span class="w"> </span>mobile
-</span><span id="__span-10-6"><a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a>flutter<span class="w"> </span>pub<span class="w"> </span>get
-</span><span id="__span-10-7"><a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a>flutter<span class="w"> </span><span class="nb">test</span><span class="w">          </span><span class="c1"># testes unitários e de widget</span>
-</span><span id="__span-10-8"><a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a>flutter<span class="w"> </span>run<span class="w">           </span><span class="c1"># emulador Android; a API fica em http://10.0.2.2:8000/v1</span>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-11-1"><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="c1"># Terminal 1: backend (a partir da raiz do repositório)</span>
+</span><span id="__span-11-2"><a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a><span class="nv">DEBUG</span><span class="o">=</span><span class="nb">false</span><span class="w"> </span><span class="nv">ENVIRONMENT</span><span class="o">=</span>development<span class="w"> </span>make<span class="w"> </span>api-run
+</span><span id="__span-11-3"><a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>
+</span><span id="__span-11-4"><a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a><span class="c1"># Terminal 2: app (requer Flutter estável, JDK 17 e Android SDK 36)</span>
+</span><span id="__span-11-5"><a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a><span class="nb">cd</span><span class="w"> </span>mobile
+</span><span id="__span-11-6"><a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a>flutter<span class="w"> </span>pub<span class="w"> </span>get
+</span><span id="__span-11-7"><a id="__codelineno-11-7" name="__codelineno-11-7" href="#__codelineno-11-7"></a>flutter<span class="w"> </span><span class="nb">test</span><span class="w">          </span><span class="c1"># testes unitários e de widget</span>
+</span><span id="__span-11-8"><a id="__codelineno-11-8" name="__codelineno-11-8" href="#__codelineno-11-8"></a>flutter<span class="w"> </span>run<span class="w">           </span><span class="c1"># emulador Android; a API fica em http://10.0.2.2:8000/v1</span>
 </span></code></pre></div>
 <p>No app, a aba <strong>Ajustes</strong> permite escolher o tema (por padrão segue o claro/escuro do aparelho), reduzir animações, desligar a abertura animada e <strong>testar a conexão</strong> com a API. Para apontar para outro endereço, use <code>--dart-define=API_BASE_URL=http://&lt;ip&gt;:8000/v1</code>.</p>
 <h3 id="modo-multiagente-experimental">Modo multiagente experimental<a class="headerlink" href="#modo-multiagente-experimental" title="Permanent link">&para;</a></h3>
@@ -3710,7 +3830,11 @@ selecionado em <strong>Respostas com IA</strong>.</p>
 a linha do tempo de Pesquisa, Análise, Comunicação e Validação, com estado,
 resumo e duração. O painel também lista os cálculos (em reais, no formato brasileiro), as fontes consultadas e os avisos da validação; os
 cartões de evidência aparecem junto à resposta. Abstenções e respostas retidas
-explicam em linguagem simples por que não foram fornecidas orientações.</p>
+explicam em linguagem simples por que não foram fornecidas orientações. Com o modo
+ligado, o chat também oferece os seletores de conta e período, os cartões de cálculo
+com link para os lançamentos de origem e as perguntas sugeridas a partir dos dados
+importados — veja
+<a href="#811-conversar-com-o-contexto-das-contas">Conversar com o contexto das contas</a>.</p>
 <p>Para conferir o fluxo, use dados sintéticos, ligue o modo, envie uma pergunta
 com evidência no corpus e abra a trilha:</p>
 <p><img alt="Trilha multiagente aberta no app Android com resposta fundamentada em dados sintéticos" src="../assets/app/modo-multiagente-trilha.png" /></p>
@@ -3723,32 +3847,32 @@ reserva de emergência.</em></p>
 <hr />
 <h2 id="5-testes-e-avaliacao-do-motor-rag-benchmark">5. Testes e Avaliação do Motor RAG (Benchmark)<a class="headerlink" href="#5-testes-e-avaliacao-do-motor-rag-benchmark" title="Permanent link">&para;</a></h2>
 <p>Para rodar a suíte de avaliação empírica contra o gabarito oficial de 61 consultas:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-11-1"><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="c1"># Executa a bateria completa de testes de research e benchmark</span>
-</span><span id="__span-11-2"><a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>make<span class="w"> </span><span class="nb">test</span>
-</span><span id="__span-11-3"><a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>
-</span><span id="__span-11-4"><a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a><span class="c1"># Ou execute diretamente a avaliação com métricas detalhadas:</span>
-</span><span id="__span-11-5"><a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a><span class="nb">cd</span><span class="w"> </span>research/rag_benchmark
-</span><span id="__span-11-6"><a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a>uv<span class="w"> </span>run<span class="w"> </span>python<span class="w"> </span>eval_rag.py
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-12-1"><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="c1"># Executa a bateria completa de testes de research e benchmark</span>
+</span><span id="__span-12-2"><a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>make<span class="w"> </span><span class="nb">test</span>
+</span><span id="__span-12-3"><a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a>
+</span><span id="__span-12-4"><a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a><span class="c1"># Ou execute diretamente a avaliação com métricas detalhadas:</span>
+</span><span id="__span-12-5"><a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a><span class="nb">cd</span><span class="w"> </span>research/rag_benchmark
+</span><span id="__span-12-6"><a id="__codelineno-12-6" name="__codelineno-12-6" href="#__codelineno-12-6"></a>uv<span class="w"> </span>run<span class="w"> </span>python<span class="w"> </span>eval_rag.py
 </span></code></pre></div>
 <p>O script reporta <strong>Recall@3</strong>, precisão de recuperação fundamentada e taxa de abstenção.</p>
 <hr />
 <h2 id="6-geracao-de-dados-sinteticos-lgpd">6. Geração de Dados Sintéticos (LGPD)<a class="headerlink" href="#6-geracao-de-dados-sinteticos-lgpd" title="Permanent link">&para;</a></h2>
 <p>Para gerar novos extratos bancários <code>.ofx</code> e faturas <code>.pdf</code> sintéticas e reproduzíveis:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-12-1"><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>make<span class="w"> </span>synthetic-data
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-13-1"><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>make<span class="w"> </span>synthetic-data
 </span></code></pre></div>
 <p>Os arquivos serão criados em <code>research/synthetic_data/</code>, garantindo 100% de privacidade sem dados financeiros reais.</p>
 <hr />
 <h2 id="7-documentacao-viva-com-zensical">7. Documentação Viva com Zensical<a class="headerlink" href="#7-documentacao-viva-com-zensical" title="Permanent link">&para;</a></h2>
 <p>Para compilar e servir localmente o site de documentação:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-13-1"><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>make<span class="w"> </span>docs-serve
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-14-1"><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a>make<span class="w"> </span>docs-serve
 </span></code></pre></div>
 <p>Acesse no navegador: <code>http://127.0.0.1:8000</code> (ou porta alternativa exibida no terminal).</p>
 <hr />
 <h2 id="8-execucao-do-aplicativo-mobile-flutter">8. Execução do Aplicativo Mobile (Flutter)<a class="headerlink" href="#8-execucao-do-aplicativo-mobile-flutter" title="Permanent link">&para;</a></h2>
 <p>Com um emulador Android ou dispositivo físico conectado:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-14-1"><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a><span class="nb">cd</span><span class="w"> </span>mobile
-</span><span id="__span-14-2"><a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a>flutter<span class="w"> </span>pub<span class="w"> </span>get
-</span><span id="__span-14-3"><a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a>flutter<span class="w"> </span>run
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-15-1"><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a><span class="nb">cd</span><span class="w"> </span>mobile
+</span><span id="__span-15-2"><a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a>flutter<span class="w"> </span>pub<span class="w"> </span>get
+</span><span id="__span-15-3"><a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a>flutter<span class="w"> </span>run
 </span></code></pre></div>
 <h3 id="81-importar-extratos-e-ver-o-resumo">8.1. Importar extratos e ver o resumo<a class="headerlink" href="#81-importar-extratos-e-ver-o-resumo" title="Permanent link">&para;</a></h3>
 <p>Com a API no ar (<code>make api-run</code>), abra a aba <strong>Extratos</strong>, toque em <strong>Importar extrato</strong> e escolha
@@ -3772,7 +3896,9 @@ calculou.</p>
 </table>
 <p>Para usar a API em outro endereço (por exemplo, um aparelho físico na mesma rede), edite o
 <strong>endereço da API</strong> em <strong>Ajustes</strong> e toque em <strong>Salvar endereço</strong>; <strong>Testar conexão</strong> confere se
-ela responde. Os lançamentos ficam gravados no SQLite local e voltam quando a API reinicia (veja <a href="#backup-e-persistencia">Backup</a>).</p>
+ela responde. A biblioteca fica cifrada no aparelho e a API a mantém só em memória enquanto o app
+está aberto, então os dados voltam mesmo que a API seja reiniciada ou recriada (veja
+<a href="#backup-e-persistencia">Backup e persistência</a>).</p>
 <h3 id="82-importar-por-banco-e-bancos-suportados-rf29">8.2. Importar por banco e bancos suportados (RF29)<a class="headerlink" href="#82-importar-por-banco-e-bancos-suportados-rf29" title="Permanent link">&para;</a></h3>
 <p>No aplicativo, o caminho é <strong>Extratos → Importar extrato</strong>, que abre a tela <strong>Bancos suportados</strong>. A tela apresenta as instituições financeiras cadastradas com seus respectivos selos de suporte (<strong>Validado</strong> ou <strong>Experimental</strong>), os formatos aceitos (OFX, PDF) e o botão <strong>Ver como exportar</strong> para abrir o tutorial guiado.</p>
 <p>O fluxo é flexível e respeita o tempo do usuário:
@@ -4077,9 +4203,9 @@ estão em <a href="../arquitetura/categorias/">Categorias</a>.</p>
 <p>O índice CNPJ → categoria vem no repositório, comprimido (14 MB), e é consultado só na sua
 máquina. <code>make build</code> o descomprime em <code>api/data/cnpj/</code>; a API também faz isso sozinha no
 primeiro uso. Para atualizar com o mês mais recente da Receita Federal:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-15-1"><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a>make<span class="w"> </span>cnpj-atualizar<span class="w">               </span><span class="c1"># mostra o aviso e pede para digitar SIM</span>
-</span><span id="__span-15-2"><a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a>make<span class="w"> </span>cnpj-atualizar<span class="w"> </span><span class="nv">CONFIRMAR</span><span class="o">=</span>sim<span class="w"> </span><span class="c1"># sem perguntar (CI, scripts)</span>
-</span><span id="__span-15-3"><a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a>make<span class="w"> </span>cnpj-atualizar<span class="w"> </span><span class="nv">MANTER_DOWNLOAD</span><span class="o">=</span><span class="m">1</span><span class="w"> </span><span class="nv">MES</span><span class="o">=</span><span class="m">2026</span>-11<span class="w"> </span><span class="nv">CNPJ_BASE</span><span class="o">=</span>/outro/disco
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-16-1"><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a>make<span class="w"> </span>cnpj-atualizar<span class="w">               </span><span class="c1"># mostra o aviso e pede para digitar SIM</span>
+</span><span id="__span-16-2"><a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a>make<span class="w"> </span>cnpj-atualizar<span class="w"> </span><span class="nv">CONFIRMAR</span><span class="o">=</span>sim<span class="w"> </span><span class="c1"># sem perguntar (CI, scripts)</span>
+</span><span id="__span-16-3"><a id="__codelineno-16-3" name="__codelineno-16-3" href="#__codelineno-16-3"></a>make<span class="w"> </span>cnpj-atualizar<span class="w"> </span><span class="nv">MANTER_DOWNLOAD</span><span class="o">=</span><span class="m">1</span><span class="w"> </span><span class="nv">MES</span><span class="o">=</span><span class="m">2026</span>-11<span class="w"> </span><span class="nv">CNPJ_BASE</span><span class="o">=</span>/outro/disco
 </span></code></pre></div>
 <p>Antes de começar, ele mostra quanto vai baixar (cerca de 5 GB), o espaço livre no disco, o tempo
 esperado (de 1 a 3 horas de download e cerca de 40 minutos de geração), a memória (até 1,5 GB) e
@@ -4113,36 +4239,94 @@ API local.</p>
 <p>Na tela <strong>Extratos</strong> ou no primeiro passo de <strong>Importar extrato</strong>, toque em <strong>Fotografar
 ou escolher documento</strong>. Fotografe, selecione uma imagem ou escolha um PDF. A câmera é
 aberta somente após essa ação; a seleção usa os seletores do sistema. Confira a pré-
-visualização e toque em <strong>Ler documento</strong>. A revisão apresenta valor, data, favorecido,
-banco e vencimento, com seus níveis de confiança. Edite os campos destacados e remova
-linhas de fatura se necessário. Um bloqueio exige a correção explícita do campo; valores
-positivos e datas válidas são verificados no formulário. Campos opcionais podem ficar
-vazios. Bloqueios gerais ou sem campo editável mantêm a confirmação desabilitada.
-<strong>Confirmar</strong> exige ação explícita e apenas devolve os campos revisados nesta simulação:
-nenhum lançamento é salvo. <strong>Descartar</strong> abandona a leitura. Se o documento estiver
-ilegível, siga as dicas de enquadramento e toque em <strong>Tirar outra foto</strong>. Nesta fase, o
-repositório falso devolve dados sintéticos, sem OCR nem envio do arquivo. O app não
-adiciona a imagem à biblioteca; fotos capturadas podem permanecer no cache temporário do
-sistema. A integração ao endpoint e a criação dos lançamentos pertencem à issue #97.</p>
-<p><img alt="Captura do emulador Android com a revisão de um comprovante sintético, campos editáveis e confiança baixa" src="../assets/app/revisao-documento-sintetico.png" /></p>
+visualização e toque em <strong>Ler documento</strong>. O app envia o arquivo à sua API em
+<code>POST /v1/documents/extract</code>, junto com o motor escolhido nos Ajustes (<code>engine</code>) e, só
+com consentimento salvo, <code>allow_remote=true</code>.</p>
+<p>A revisão apresenta valor, data, favorecido, banco e vencimento, com seus níveis de
+confiança, e a <strong>trilha da leitura</strong>: qual motor foi usado (por exemplo, "lido por OCR
+local") e os passos registrados pela API (<code>document.engine</code> e <code>steps</code>). Edite os campos
+destacados e remova linhas de fatura se necessário. Um bloqueio exige a correção
+explícita do campo; valores positivos e datas válidas são verificados no formulário.
+Campos opcionais podem ficar vazios. Bloqueios gerais ou sem campo editável mantêm a
+confirmação desabilitada.</p>
+<p><strong>Confirmar</strong> exige ação explícita e grava os lançamentos na biblioteca por
+<code>POST /v1/documents/confirm</code>: o app envia <code>origin: "documento"</code> quando você revisou o
+que foi lido e <code>origin: "manual"</code> quando digitou os campos depois de uma abstenção.
+<strong>Descartar</strong> abandona a leitura sem criar nada. Se a API se abstiver por documento
+ilegível, o app pede uma nova captura (<strong>Tirar outra foto</strong>) e nenhum lançamento é
+criado. Erros de arquivo (muito grande, formato não aceito), documento inválido, motor
+indisponível e falha de rede aparecem com mensagem clara e a ação <strong>Tentar novamente</strong>,
+que repete o envio do mesmo arquivo.</p>
+<!-- captura: revisão de documento lido pela API, com trilha do motor e campos editáveis -->
+
+<p>O <strong>motor de leitura</strong> é escolhido em Ajustes. O <strong>OCR local</strong> (RapidOCR, na API) é o
+padrão e mantém a imagem no seu ambiente. O <strong>modelo de visão</strong> só aparece como opção
+quando a API o oferece (<code>GET /v1/documents/engines</code>); se o provedor for remoto, o app
+exige um <strong>consentimento explícito</strong> — texto claro de que a imagem sai do aparelho —
+antes de habilitá-lo. Sem consentimento salvo, o app nunca envia <code>allow_remote=true</code> e a
+API responde <code>403 REMOTE_CONSENT_REQUIRED</code> se o remoto for pedido mesmo assim.</p>
+<p>O app não adiciona a imagem à biblioteca; fotos capturadas podem permanecer no cache
+temporário do sistema. O documento confirmado vira lançamento comum: entra nos totais do
+Resumo e pode ser consultado no chat (veja a seção
+<a href="#documentos-por-foto-ou-pdf">Documentos por foto ou PDF</a>).</p>
+<h3 id="811-conversar-com-o-contexto-das-contas">8.11. Conversar com o contexto das contas<a class="headerlink" href="#811-conversar-com-o-contexto-das-contas" title="Permanent link">&para;</a></h3>
+<p>Na aba <strong>Assistente</strong>, com o <a href="#modo-multiagente-experimental">Modo multiagente</a> ativado,
+o chat do Trokim responde sobre <strong>os seus dados</strong>, não só sobre
+educação financeira. Acima da conversa, dois seletores definem o recorte da pergunta:</p>
+<ul>
+<li><strong>Conta e dono:</strong> <strong>Tudo</strong>, <strong>Pessoal</strong>, <strong>Empresas</strong> ou uma conta específica (a lista
+  vem de <code>GET /v1/accounts</code>, com o nome do banco e o dono de cada conta).</li>
+<li><strong>Período:</strong> o mês (por exemplo, "outubro de 2026"), a <strong>fatura aberta</strong> ou a
+  <strong>fatura fechada</strong> de um cartão.</li>
+</ul>
+<p>O recorte escolhido viaja na pergunta como <code>account_id</code>, <code>owner</code> e <code>period</code> de
+<code>POST /v1/agents/ask</code>. A resposta mostra:</p>
+<ul>
+<li><strong>Cartões de cálculo</strong> com os números exatos devolvidos em <code>calculations</code> (em reais,
+  no formato brasileiro), cada um com link para os <strong>lançamentos de origem</strong> usados
+  na conta.</li>
+<li><strong>Perguntas sugeridas</strong> a partir do que já foi importado, como "quanto falta das
+  parcelas?" ou "quanto vence nos próximos 30 dias?".</li>
+<li>A trilha <strong>Como cheguei a essa resposta</strong>, agora também com os cálculos que
+  sustentam cada número.</li>
+</ul>
+<p>Sem nenhum dado importado, o chat não manda a pergunta: ele explica o que importar e
+oferece o atalho direto para o fluxo de importação (<strong>Importar extrato</strong> ou
+<strong>Fotografar documento</strong>).</p>
+<!-- captura: chat com os seletores de conta e período e um cartão de cálculo -->
+<!-- captura: estado vazio do chat com o atalho para importação -->
+
 <h2 id="conferir-um-arquivo-real-de-banco">Conferir um arquivo real de banco<a class="headerlink" href="#conferir-um-arquivo-real-de-banco" title="Permanent link">&para;</a></h2>
 <p>Para um banco experimental virar <strong>Validado</strong>, alguém precisa testar com um arquivo <strong>real</strong> da própria conta:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-16-1"><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a>make<span class="w"> </span>validar-banco<span class="w"> </span><span class="nv">ARQUIVO</span><span class="o">=</span>/caminho/do/arquivo.pdf<span class="w">   </span><span class="c1"># ou .ofx, .csv</span>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-17-1"><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a>make<span class="w"> </span>validar-banco<span class="w"> </span><span class="nv">ARQUIVO</span><span class="o">=</span>/caminho/do/arquivo.pdf<span class="w">   </span><span class="c1"># ou .ofx, .csv</span>
 </span></code></pre></div>
 <p>O comando roda no seu computador e imprime só números agregados (banco reconhecido, quantidade, período, somas, naturezas e se o total do arquivo fecha). Não imprime descrições, nomes nem número de conta (só os 4 últimos dígitos). Compare as somas com o app do banco; se fecharem, abra uma issue com <strong>esses números</strong>, nunca com o arquivo.</p>
 <h2 id="documentos-por-foto-ou-pdf">Documentos por foto ou PDF<a class="headerlink" href="#documentos-por-foto-ou-pdf" title="Permanent link">&para;</a></h2>
-<p>Com a API local em execução, envie um comprovante sintético. A extração mostra os campos para revisão.</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-17-1"><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a>curl<span class="w"> </span>-F<span class="w"> </span><span class="s1">'file=@comprovante.png'</span><span class="w"> </span>http://localhost:8000/v1/documents/extract
+<p>Com a API local em execução, envie um comprovante sintético. A extração mostra os campos
+para revisão, junto com o motor usado (<code>document.engine</code>), os passos da leitura (<code>steps</code>),
+os problemas de validação e <code>can_confirm</code>. O campo <code>engine</code> aceita <code>ocr</code> (padrão, local)
+ou <code>vision</code>; <code>allow_remote</code> só vale <code>"true"</code> quando o usuário consentiu com o provedor
+remoto — sem ele, um motor remoto responde <code>403 REMOTE_CONSENT_REQUIRED</code>.
+<code>GET /v1/documents/engines</code> informa quais motores estão disponíveis.</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-18-1"><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a>curl<span class="w"> </span>-F<span class="w"> </span><span class="s1">'file=@comprovante.png'</span><span class="w"> </span>-F<span class="w"> </span><span class="s1">'engine=ocr'</span><span class="w"> </span>-F<span class="w"> </span><span class="s1">'allow_remote=false'</span><span class="w"> </span><span class="se">\</span>
+</span><span id="__span-18-2"><a id="__codelineno-18-2" name="__codelineno-18-2" href="#__codelineno-18-2"></a><span class="w">  </span>http://localhost:8000/v1/documents/extract
 </span></code></pre></div>
-<p>Após revisar os campos, confirme o lançamento. Informe <code>account_id</code> para escolher uma conta cadastrada.
+<p>Após revisar os campos, confirme o lançamento. O corpo aceita <code>origin</code>: <code>"documento"</code>
+(padrão, quando a pessoa revisou o que foi lido) ou <code>"manual"</code> (quando digitou tudo após
+uma abstenção ou sem leitura). Informe <code>account_id</code> para escolher uma conta cadastrada.
 Quando omitido, faturas vão para a conta de cartão <code>documentos:cartao</code>; os demais
 documentos vão para <code>documentos:sem_conta</code>. Sem conta explícita, a conciliação procura
 duplicatas em toda a biblioteca. Qualquer bloqueio retorna <code>422</code> sem aplicar parte do lote,
 inclusive no reenvio de um documento já confirmado.</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-18-1"><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a>curl<span class="w"> </span>-H<span class="w"> </span><span class="s1">'Content-Type: application/json'</span><span class="w"> </span>http://localhost:8000/v1/documents/confirm<span class="w"> </span><span class="se">\</span>
-</span><span id="__span-18-2"><a id="__codelineno-18-2" name="__codelineno-18-2" href="#__codelineno-18-2"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">'{"kind":"pix_receipt","date":"2026-11-20","description":"Padaria Sintética","amount":"12.50"}'</span>
-</span><span id="__span-18-3"><a id="__codelineno-18-3" name="__codelineno-18-3" href="#__codelineno-18-3"></a>curl<span class="w"> </span>-H<span class="w"> </span><span class="s1">'Content-Type: application/json'</span><span class="w"> </span>http://localhost:8000/v1/agents/ask<span class="w"> </span><span class="se">\</span>
-</span><span id="__span-18-4"><a id="__codelineno-18-4" name="__codelineno-18-4" href="#__codelineno-18-4"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">'{"message":"Quanto gastei na Padaria Sintética?"}'</span>
+<p>Nos erros de documento, <code>detail</code> é um objeto <code>{code, message}</code>: <code>413</code> (<code>FILE_LIMIT</code>,
+<code>PIXEL_LIMIT</code>, <code>PAGE_LIMIT</code>), <code>415</code> (<code>UNSUPPORTED_TYPE</code>), <code>422</code> (validação), <code>503</code>
+(<code>OCR_UNAVAILABLE</code>, <code>OCR_TIMEOUT</code>, <code>PDF_RENDERER_UNAVAILABLE</code>, <code>VISION_UNAVAILABLE</code>) e
+<code>403</code> (<code>REMOTE_CONSENT_REQUIRED</code>). O app traduz cada um em mensagem clara com a opção de
+tentar de novo.</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-19-1"><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a>curl<span class="w"> </span>-H<span class="w"> </span><span class="s1">'Content-Type: application/json'</span><span class="w"> </span>http://localhost:8000/v1/documents/confirm<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-19-2"><a id="__codelineno-19-2" name="__codelineno-19-2" href="#__codelineno-19-2"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">'{"kind":"pix_receipt","date":"2026-11-20","description":"Padaria Sintética","amount":"12.50","origin":"manual"}'</span>
+</span><span id="__span-19-3"><a id="__codelineno-19-3" name="__codelineno-19-3" href="#__codelineno-19-3"></a>curl<span class="w"> </span>-H<span class="w"> </span><span class="s1">'Content-Type: application/json'</span><span class="w"> </span>http://localhost:8000/v1/agents/ask<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-19-4"><a id="__codelineno-19-4" name="__codelineno-19-4" href="#__codelineno-19-4"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">'{"message":"Quanto gastei na Padaria Sintética?"}'</span>
 </span></code></pre></div>
 <p>A consulta por nome exato soma só as despesas dos documentos confirmados daquele estabelecimento (o total, a citação e a origem falam dos mesmos lançamentos) e identifica na trilha esses documentos. Perguntas que não casam com um estabelecimento de documento, como “quanto gastei em janeiro?”, seguem para o assistente normal.</p>
 <p>Para perguntar “quanto gastei nessa loja?”, envie também <code>document_uid</code> com o <code>uid</code> retornado pela confirmação.</p>

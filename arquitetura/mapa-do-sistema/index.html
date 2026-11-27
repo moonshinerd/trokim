@@ -852,6 +852,33 @@
   
   
     <li class="md-nav__item">
+      <a href="../../pesquisa/gabarito-chat-dados/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Gabarito do Chat com os Dados (Semana 5)
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../../referencias/" class="md-nav__link">
         
   
@@ -2444,6 +2471,33 @@
   
   
     <li class="md-nav__item">
+      <a href="../../adr/0023-contexto-do-usuario-no-chat/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  0023 – Contexto do Usuário no Chat
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../../adr/0024-persistencia-local-e-backup-criptografado/" class="md-nav__link">
         
   
@@ -2702,6 +2756,7 @@
             Orchestrator["Orquestrador Determinístico"]
             ResearchAgent["Research Agent&lt;br/&gt;(evidências &amp; escopo)"]
             AnalysisAgent["Analysis Agent&lt;br/&gt;(cálculos determinísticos)"]
+            FinancialQueries["Consultas financeiras tipadas&lt;br/&gt;(intenção, seleção e execução)"]
             CommAgent["Communication Agent&lt;br/&gt;(redação em pt-BR)"]
             ValidAgent["Validation Agent&lt;br/&gt;(auditoria defensiva)"]
         end
@@ -2732,12 +2787,16 @@
         AgentTrace -. "habilitado em Ajustes" .-&gt; AgentAsk
         AgentAsk --&gt; Orchestrator
 
-        Orchestrator --&gt; ResearchAgent
+        Orchestrator --&gt;|orientação educativa| ResearchAgent
         Orchestrator --&gt; AnalysisAgent
         Orchestrator --&gt; CommAgent
         Orchestrator --&gt; ValidAgent
 
         ResearchAgent --&gt; RAGService
+        AnalysisAgent --&gt; FinancialQueries
+        Library --&gt;|snapshot local| FinancialQueries
+        FinancialQueries --&gt;|somente agregados e limitações| CommAgent
+        FinancialQueries --&gt; CalcService
         AnalysisAgent --&gt; CalcService
         CommAgent --&gt; LiteLLM
         CommAgent --&gt; OllamaClient
@@ -2767,6 +2826,10 @@
 
     StateManagement --&gt;|HTTP / JSON Local| APIEntry</code></pre>
 <hr />
+<p>Consultas pessoais aos arquivos importados pulam Research; perguntas de orientação mantêm a
+pesquisa institucional. A seleção de conta, dono e período é compartilhada com o fluxo local de
+documentos. Apenas resultados agregados chegam ao modelo, conforme a
+<a href="../../adr/0023-contexto-do-usuario-no-chat/">ADR 0023</a>.</p>
 <h2 id="2-fluxo-de-importacao-de-extratos-e-resumo">2. Fluxo de Importação de Extratos e Resumo<a class="headerlink" href="#2-fluxo-de-importacao-de-extratos-e-resumo" title="Permanent link">&para;</a></h2>
 <p>Pagamento de fatura, resgates e transferências próprias ficam fora dos totais e o estorno abate a despesa (<a href="../../adr/0017-perfis-de-banco-e-natureza-do-lancamento/">ADR 0017</a>). Contas, situação do período, transferências entre contas próprias, parcelamentos e regras de categoria seguem a <a href="../../adr/0018-contas-periodos-transferencias-e-visoes/">ADR 0018</a>. A biblioteca do usuário vive <strong>no aparelho</strong>, em arquivo cifrado (AES-256-GCM, chave no Keystore); o app a devolve à API ao abrir e a API a mantém só em memória (<a href="../../adr/0025-armazenamento-no-aparelho-e-api-sem-estado/">ADR 0025</a>). O SQLite local da API, atrás de uma porta de repositório, segue como opção sem o app, e o backup criptografado <code>.trokim</code> leva os dados a outro aparelho (<a href="../../adr/0024-persistencia-local-e-backup-criptografado/">ADR 0024</a>). O app só exibe o que o backend calculou. A categoria de cada gasto segue a ordem descrita em <a href="../categorias/">Categorias</a>: regras por palavra, dicionário de redes e atividade econômica (CNAE) pelo CNPJ do recebedor, com o índice local da <a href="../../adr/0020-categorizacao-por-cnae/">ADR 0020</a>. Os bancos SQLite (aplicação e base vetorial) usam SQLAlchemy e migrações numeradas do Alembic, aplicadas ao abrir cada banco (<a href="../../adr/0019-orm-e-migracoes-numeradas/">ADR 0019</a>).</p>
 <pre class="mermaid"><code>sequenceDiagram
@@ -2965,8 +3028,9 @@
     P --&gt; R["Campos para revisão"]
     O --&gt; R</code></pre>
 <p>O <a href="../../agentes/document-agent/">agente de documento</a> devolve campos e trilha sanitizada.
-Visão opcional exige proteção dos pixels e política de confiança; permanece bloqueada
-sem essas garantias. A extração chama a validação financeira (#89) em memória. A confirmação (#96) revalida os campos revisados, verifica duplicatas e grava a biblioteca no SQLite.</p>
+A visão é opcional e escolhida pelo app por requisição (<code>engine=vision</code>); só recebe a imagem
+depois da tarja de CPF, CNPJ, agência e conta feita a partir das caixas do OCR, e um modelo
+remoto exige o consentimento do usuário (<a href="../../adr/0021-visao-e-ocr-modulares/">ADR 0021</a>). A extração chama a validação financeira (#89) em memória. A confirmação (#96) revalida os campos revisados, verifica duplicatas e grava a biblioteca no SQLite.</p>
 <p>A confirmação revalida também o total contra os pagamentos de fatura já conciliados e
 mantém o lote indivisível. <code>origin</code> registra a procedência sem substituir o tipo financeiro.
 O chat encaminha consultas de documentos ao <code>AgentQueryService</code> (cálculo e validação);

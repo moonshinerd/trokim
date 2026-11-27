@@ -852,6 +852,33 @@
   
   
     <li class="md-nav__item">
+      <a href="../pesquisa/gabarito-chat-dados/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Gabarito do Chat com os Dados (Semana 5)
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../referencias/" class="md-nav__link">
         
   
@@ -1009,6 +1036,23 @@
       </span>
     </span>
   </a>
+  
+    <nav class="md-nav" aria-label="Rastreabilidade do agente de documento (#88)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#integracao-da-rf30-ao-chat-25112026" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Integração da RF30 ao chat (25/11/2026)
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
   
 </li>
         
@@ -2430,6 +2474,33 @@
   
   
     <li class="md-nav__item">
+      <a href="../adr/0023-contexto-do-usuario-no-chat/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  0023 – Contexto do Usuário no Chat
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../adr/0024-persistencia-local-e-backup-criptografado/" class="md-nav__link">
         
   
@@ -2617,6 +2688,23 @@
     </span>
   </a>
   
+    <nav class="md-nav" aria-label="Rastreabilidade do agente de documento (#88)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#integracao-da-rf30-ao-chat-25112026" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Integração da RF30 ao chat (25/11/2026)
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
         
       </ul>
@@ -2751,6 +2839,13 @@
 <td style="text-align: center;">25/11/2026</td>
 <td style="text-align: center;">Semana 5 (<em>Consultas determinísticas</em>)</td>
 <td>Inclusão de <strong>RF30</strong> (consultas determinísticas sobre os dados do usuário: por conta, dono, período, fatura aberta e fechada, parcelas, dívidas, ranking, comparação e transferências próprias), com vinculação da <a href="../adr/0004-calculos-deterministicos/">ADR 0004</a> e da <a href="../adr/0018-contas-periodos-transferencias-e-visoes/">ADR 0018</a>.</td>
+<td style="text-align: center;">Equipe Trokim</td>
+</tr>
+<tr>
+<td style="text-align: center;"><strong>v1.13.0</strong></td>
+<td style="text-align: center;">27/11/2026</td>
+<td style="text-align: center;">Semana 5 (<em>Chat contextual e documentos reais</em>)</td>
+<td><strong>RF21</strong> ganha os seletores de conta/dono e período no chat, os cartões de cálculo com link para os lançamentos de origem e as perguntas sugeridas pelos dados importados; <strong>RF27</strong> e <strong>RF28</strong> passam a implementados de ponta a ponta: o app chama <code>extract</code>/<code>confirm</code> reais, mostra a trilha do motor, trata os erros de documento com nova tentativa e envia <code>origin</code>; <strong>RF30</strong> ganha a interface de contexto e o estado vazio que leva à importação; <strong>RNF12</strong> ganha a escolha de motor em Ajustes e o consentimento explícito salvo para provedor remoto (<code>allow_remote</code>).</td>
 <td style="text-align: center;">Equipe Trokim</td>
 </tr>
 </tbody>
@@ -2964,7 +3059,7 @@
 <tr>
 <td style="text-align: center;"><strong>RF21</strong></td>
 <td>Trilha dos agentes no app</td>
-<td>O app deve mostrar, por resposta, "como cheguei a essa resposta": os passos dos agentes, os cálculos, as evidências e, em abstenção ou rejeição, o motivo em linguagem simples. O modo multiagente é opcional em Ajustes.</td>
+<td>O app deve mostrar, por resposta, "como cheguei a essa resposta": os passos dos agentes, os cálculos, as evidências e, em abstenção ou rejeição, o motivo em linguagem simples. O modo multiagente é opcional em Ajustes. No chat, o contexto (conta, dono e período) é escolhido por seletores e viaja em <code>agents/ask</code>, e os cálculos aparecem como cartões com link para os lançamentos de origem.</td>
 <td style="text-align: center;"><span class="badge-should">Should have</span></td>
 <td style="text-align: center;"><a href="../pesquisa/guiding-questions/">GQ01</a>, <a href="../pesquisa/guiding-questions/">GQ10</a></td>
 <td style="text-align: center;"><a href="../adr/0016-arquitetura-multiagente/">ADR 0016</a></td>
@@ -3022,7 +3117,7 @@
 <td style="text-align: center;"><span class="badge-must">Must have</span></td>
 <td style="text-align: center;"><a href="../pesquisa/guiding-questions/">GQ01</a>, <a href="../pesquisa/guiding-questions/">GQ02</a>, <a href="../pesquisa/guiding-questions/">GQ03</a></td>
 <td style="text-align: center;"><a href="../adr/0021-visao-e-ocr-modulares/">ADR 0021</a></td>
-<td style="text-align: center;">Backend HTTP implementado (#96); mobile com mock até a #97</td>
+<td style="text-align: center;"><span class="badge-must">Implementado</span> (backend #96; app lê pela API na #97)</td>
 </tr>
 <tr>
 <td style="text-align: center;"><strong>RF28</strong></td>
@@ -3031,7 +3126,7 @@
 <td style="text-align: center;"><span class="badge-must">Must have</span></td>
 <td style="text-align: center;"><a href="../pesquisa/guiding-questions/">GQ01</a>, <a href="../pesquisa/guiding-questions/">GQ02</a>, <a href="../pesquisa/guiding-questions/">GQ03</a></td>
 <td style="text-align: center;"><a href="../adr/0021-visao-e-ocr-modulares/">ADR 0021</a></td>
-<td style="text-align: center;">Backend HTTP implementado (#96); mobile com mock até a #97</td>
+<td style="text-align: center;"><span class="badge-must">Implementado</span> (backend #96; confirmação com <code>origin</code> no app na #97)</td>
 </tr>
 <tr>
 <td style="text-align: center;"><strong>RF29</strong></td>
@@ -3049,7 +3144,7 @@
 <td style="text-align: center;"><span class="badge-must">Must have</span></td>
 <td style="text-align: center;"><a href="../pesquisa/guiding-questions/">GQ07</a>, <a href="../pesquisa/guiding-questions/">GQ09</a>, <a href="../pesquisa/guiding-questions/">GQ13</a></td>
 <td style="text-align: center;"><a href="../adr/0004-calculos-deterministicos/">ADR 0004</a>, <a href="../adr/0018-contas-periodos-transferencias-e-visoes/">ADR 0018</a></td>
-<td style="text-align: center;">Camada de cálculo implementada (#94; prioridade P0); a ligação ao chat é a #95. O vencimento da fatura é guardado quando o PDF o informa (Itaú e PicPay).</td>
+<td style="text-align: center;">Camada de cálculo (#94) e integração ao chat (#95) implementadas: filtros opcionais, esclarecimento, contexto agregado e auditoria dos números. O vencimento da fatura é guardado quando o PDF o informa (Itaú e PicPay). Na #97, o app ganhou os seletores de conta/dono e período, os cartões de cálculo com link para a origem e o estado vazio que leva à importação.</td>
 </tr>
 <tr>
 <td style="text-align: center;"><strong>RF31</strong></td>
@@ -3192,7 +3287,7 @@
 <td style="text-align: center;"><span class="badge-must">Must have</span></td>
 <td style="text-align: center;"><a href="../pesquisa/guiding-questions/">GQ02</a>, <a href="../pesquisa/guiding-questions/">GQ03</a></td>
 <td style="text-align: center;"><a href="../adr/0021-visao-e-ocr-modulares/">ADR 0021</a></td>
-<td style="text-align: center;"><span class="badge-must">Implementado</span></td>
+<td style="text-align: center;"><span class="badge-must">Implementado</span> (portas na API e, na #97, escolha do motor e consentimento salvo no app)</td>
 </tr>
 </tbody>
 </table>
@@ -3345,8 +3440,8 @@
 <td style="text-align: center;"><strong>RF21</strong></td>
 <td style="text-align: center;">GQ01, GQ10</td>
 <td style="text-align: center;"><a href="../adr/0016-arquitetura-multiagente/">ADR 0016</a></td>
-<td><code>mobile/lib/features/agents/</code>, <code>mobile/lib/features/chat_assistant/</code>, <code>mobile/lib/core/settings/</code></td>
-<td><code>mobile/test/multi_agent_models_test.dart</code>, <code>mobile/test/agents_chat_test.dart</code>, <code>mobile/test/chat_screen_test.dart</code></td>
+<td><code>mobile/lib/features/agents/</code>, <code>mobile/lib/features/chat_assistant/</code>, <code>mobile/lib/core/settings/</code>, <code>mobile/lib/core/network/api_client.dart</code> (filtros <code>account_id</code>/<code>owner</code>/<code>period</code>)</td>
+<td><code>mobile/test/multi_agent_models_test.dart</code>, <code>mobile/test/agents_chat_test.dart</code>, <code>mobile/test/chat_screen_test.dart</code>, <code>mobile/test/chat_controller_test.dart</code></td>
 </tr>
 <tr>
 <td style="text-align: center;"><strong>RF22</strong></td>
@@ -3387,15 +3482,15 @@
 <td style="text-align: center;"><strong>RF27</strong></td>
 <td style="text-align: center;">GQ01, GQ02, GQ03</td>
 <td style="text-align: center;"><a href="../adr/0021-visao-e-ocr-modulares/">ADR 0021</a></td>
-<td><code>mobile/lib/features/documents/</code>, <code>mobile/lib/features/transactions/</code></td>
-<td><code>mobile/test/document_import_screen_test.dart</code></td>
+<td><code>mobile/lib/features/documents/</code>, <code>mobile/lib/features/transactions/</code>, <code>api/app/routers/v1/documents.py</code>, <code>api/app/services/document_reading.py</code></td>
+<td><code>mobile/test/document_import_screen_test.dart</code>, <code>mobile/test/api_documents_contract_test.dart</code>, <code>api/tests/documents/</code></td>
 </tr>
 <tr>
 <td style="text-align: center;"><strong>RF28</strong></td>
 <td style="text-align: center;">GQ01, GQ02, GQ03</td>
 <td style="text-align: center;"><a href="../adr/0021-visao-e-ocr-modulares/">ADR 0021</a></td>
-<td><code>mobile/lib/features/documents/</code></td>
-<td><code>mobile/test/document_import_screen_test.dart</code></td>
+<td><code>mobile/lib/features/documents/</code>, <code>api/app/services/document_validation.py</code>, <code>api/app/services/document_confirmation.py</code></td>
+<td><code>mobile/test/document_import_screen_test.dart</code>, <code>mobile/test/document_review_test.dart</code>, <code>mobile/test/api_documents_contract_test.dart</code>, <code>api/tests/documents/test_confirmation.py</code></td>
 </tr>
 <tr>
 <td style="text-align: center;"><strong>RF29</strong></td>
@@ -3408,8 +3503,8 @@
 <td style="text-align: center;"><strong>RF30</strong></td>
 <td style="text-align: center;">GQ07, GQ09, GQ13</td>
 <td style="text-align: center;"><a href="../adr/0004-calculos-deterministicos/">ADR 0004</a>, <a href="../adr/0018-contas-periodos-transferencias-e-visoes/">0018</a></td>
-<td><code>api/app/services/financial_query_service.py</code>, <code>api/app/services/calculation_service.py</code>, <code>api/app/services/installment_service.py</code></td>
-<td><code>api/tests/test_financial_queries.py</code></td>
+<td><code>api/app/services/financial_query_service.py</code>, <code>api/app/services/financial_chat_service.py</code>, <code>api/app/services/agents/analysis.py</code>, <code>api/app/services/agents/validation.py</code>, <code>mobile/lib/features/chat_assistant/</code> (seletores de contexto, cartões de cálculo e estado vazio)</td>
+<td><code>api/tests/test_financial_queries.py</code>, <code>api/tests/test_agents_api.py</code>, <code>api/tests/test_financial_number_validation.py</code>, <code>api/tests/test_financial_quality.py</code>, <code>mobile/test/agents_chat_test.dart</code>, <code>mobile/test/chat_controller_test.dart</code></td>
 </tr>
 <tr>
 <td style="text-align: center;"><strong>RF31</strong></td>
@@ -3492,8 +3587,8 @@
 <td style="text-align: center;"><strong>RNF12</strong></td>
 <td style="text-align: center;">GQ02, GQ03</td>
 <td style="text-align: center;"><a href="../adr/0021-visao-e-ocr-modulares/">ADR 0021</a></td>
-<td><code>api/app/models/vision_provider.py</code>, <code>api/app/clients/vision_factory.py</code>, <code>api/app/clients/rapidocr_provider.py</code>, <code>api/app/clients/litellm_vision_provider.py</code></td>
-<td><code>api/tests/test_vision_ports.py</code></td>
+<td><code>api/app/models/vision_provider.py</code>, <code>api/app/clients/vision_factory.py</code>, <code>api/app/clients/rapidocr_provider.py</code>, <code>api/app/clients/litellm_vision_provider.py</code>, <code>api/app/routers/v1/documents.py</code> (<code>/documents/engines</code>), <code>mobile/lib/features/settings/</code>, <code>mobile/lib/features/documents/</code> (escolha do motor e consentimento remoto salvo)</td>
+<td><code>api/tests/test_vision_ports.py</code>, <code>mobile/test/api_documents_contract_test.dart</code>, <code>mobile/test/settings_screen_test.dart</code></td>
 </tr>
 </tbody>
 </table>
@@ -3515,7 +3610,7 @@
 <tr>
 <td>RF28 — revisão humana e abstenção</td>
 <td>GQ02, GQ05</td>
-<td><code>needs_review=True</code>, abstenção e leitura parcial; confirmação via API testada em <code>api/tests/test_documents_api.py</code>; integração do app na #97</td>
+<td><code>needs_review=True</code>, abstenção e leitura parcial; confirmação via API testada em <code>api/tests/test_documents_api.py</code>; integração do app concluída na #97 (revisão, <code>origin</code>, trilha do motor e nova tentativa)</td>
 </tr>
 </tbody>
 </table>
@@ -3526,7 +3621,14 @@ A política de revisão não autoriza confirmar documentos antes da validação 
 <p>Na #96, <code>api/tests/documents/</code> cobre conciliação sem conta, reenvio com campos inválidos,
 fatura já conciliada, aplicação integral do lote, categorias aprendidas em Pix, caixa versus
 competência, procedência após restauração SQLite e validação da consulta com citação.
-A consulta local não substitui os filtros por conta, dono e período das #94 e #95.</p>
+A consulta local preserva a origem documental; os filtros por conta, dono e período são aplicados pela integração da #95 e ganharam interface no app na #97.</p>
+<h3 id="integracao-da-rf30-ao-chat-25112026">Integração da RF30 ao chat (25/11/2026)<a class="headerlink" href="#integracao-da-rf30-ao-chat-25112026" title="Permanent link">&para;</a></h3>
+<p>A #95 liga os cálculos ao endpoint multiagente, com filtros opcionais, distinção entre dado ausente
+e período sem gasto, esclarecimento e números pessoais restritos aos cálculos. Rastreia RF18,
+RF19 e RF20; GQ05, GQ07 e GQ09; <a href="../adr/0023-contexto-do-usuario-no-chat/">ADR 0023</a>.
+Na #97 (27/11/2026), a interface mobile ganhou os seletores de contexto (conta/dono e período),
+os cartões de cálculo com link para os lançamentos de origem, as perguntas sugeridas pelos dados
+importados e o estado vazio que direciona à importação; a avaliação ampliada da #98 está no <a href="../pesquisa/resultados/#11-semana-5-motores-de-leitura-e-chat-com-os-dados-do-usuario">Histórico de resultados, seção 11</a>.</p>
 
 
 

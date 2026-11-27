@@ -852,6 +852,33 @@
   
   
     <li class="md-nav__item">
+      <a href="../../pesquisa/gabarito-chat-dados/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Gabarito do Chat com os Dados (Semana 5)
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../../referencias/" class="md-nav__link">
         
   
@@ -1447,10 +1474,10 @@
       <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
         
           <li class="md-nav__item">
-  <a href="#intencoes-suportadas-e-formulas" class="md-nav__link">
+  <a href="#roteamento-do-chat-e-calculos" class="md-nav__link">
     <span class="md-ellipsis">
       <span class="md-typeset">
-        Intenções Suportadas e Fórmulas
+        Roteamento do chat e cálculos
       </span>
     </span>
   </a>
@@ -1458,10 +1485,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#principio-de-abstencao-numerica" class="md-nav__link">
+  <a href="#dados-ausentes-e-cobertura" class="md-nav__link">
     <span class="md-ellipsis">
       <span class="md-typeset">
-        Princípio de Abstenção Numérica
+        Dados ausentes e cobertura
       </span>
     </span>
   </a>
@@ -1528,6 +1555,17 @@
     <span class="md-ellipsis">
       <span class="md-typeset">
         Documentos confirmados
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#integracao-e-testes-da-95" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Integração e testes da #95
       </span>
     </span>
   </a>
@@ -2455,6 +2493,33 @@
   
   
     <li class="md-nav__item">
+      <a href="../../adr/0023-contexto-do-usuario-no-chat/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  0023 – Contexto do Usuário no Chat
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../../adr/0024-persistencia-local-e-backup-criptografado/" class="md-nav__link">
         
   
@@ -2579,10 +2644,10 @@
       <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
         
           <li class="md-nav__item">
-  <a href="#intencoes-suportadas-e-formulas" class="md-nav__link">
+  <a href="#roteamento-do-chat-e-calculos" class="md-nav__link">
     <span class="md-ellipsis">
       <span class="md-typeset">
-        Intenções Suportadas e Fórmulas
+        Roteamento do chat e cálculos
       </span>
     </span>
   </a>
@@ -2590,10 +2655,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#principio-de-abstencao-numerica" class="md-nav__link">
+  <a href="#dados-ausentes-e-cobertura" class="md-nav__link">
     <span class="md-ellipsis">
       <span class="md-typeset">
-        Princípio de Abstenção Numérica
+        Dados ausentes e cobertura
       </span>
     </span>
   </a>
@@ -2666,6 +2731,17 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#integracao-e-testes-da-95" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Integração e testes da #95
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     
   
@@ -2692,56 +2768,68 @@
 <p class="admonition-title">Status: Implementado</p>
 <p>Implementado na issue <a href="https://github.com/moonshinerd/trokim/issues/53">#53</a>. O motor determinístico de cálculo financeiro elimina alucinações aritméticas e assegura conformidade estrita com a ADR 0004.</p>
 </div>
-<p>O <strong>Analysis Agent</strong> (<code>api/app/services/agents/analysis.py</code>) computa grandezas numéricas no fluxo educacional, usando <code>CalculationService</code>, sem modelos generativos (LLMs). A consulta local de um estabelecimento confirmado usa o mesmo serviço de cálculo em <code>AgentQueryService</code>, com validação independente antes da resposta.</p>
-<h2 id="intencoes-suportadas-e-formulas">Intenções Suportadas e Fórmulas<a class="headerlink" href="#intencoes-suportadas-e-formulas" title="Permanent link">&para;</a></h2>
+<p>O <strong>Analysis Agent</strong> (<code>api/app/services/agents/analysis.py</code>) computa grandezas numéricas nos fluxos educacional e pessoal, usando <code>CalculationService</code> e as consultas da RF30, sem modelos generativos (LLMs). A consulta local de um estabelecimento confirmado usa o mesmo serviço de cálculo em <code>AgentQueryService</code>, com validação independente antes da resposta.</p>
+<h2 id="roteamento-do-chat-e-calculos">Roteamento do chat e cálculos<a class="headerlink" href="#roteamento-do-chat-e-calculos" title="Permanent link">&para;</a></h2>
+<p>O chat usa <code>financial_chat_intent.py</code> para identificar intenções por regras com limites de
+palavras, <code>financial_chat_resolution.py</code> para resolver os filtros e <code>financial_chat_service.py</code>
+para executar a consulta por um mapa explícito de intenções tipadas. Consultas específicas têm prioridade sobre o
+resumo: comparação, compromissos, parcelas, transferências, fatura, estabelecimentos e categorias.
+“Cada conta” e “por conta” produzem a visão por conta. A simulação de meta mantém o fluxo anterior.</p>
 <table>
 <thead>
 <tr>
 <th>Intenção</th>
-<th>Palavras-chave</th>
-<th>O que calcula</th>
-<th>Função no <code>CalculationService</code></th>
-<th style="text-align: center;">Unidade</th>
+<th>Consulta determinística</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td><strong>Resumo</strong></td>
-<td><code>saldo</code>, <code>receita</code>, <code>despesa</code>, <code>gastei</code>, <code>resumo</code>, <code>balanco</code>, <code>total</code>, <code>poupança</code></td>
-<td>Receitas totais, despesas totais, saldo líquido e taxa de poupança</td>
-<td><code>calculate_summary</code></td>
-<td style="text-align: center;"><code>BRL</code>, <code>%</code></td>
+<td>Resumo por conta, dono e período</td>
+<td><code>FinancialQueryService.totals</code></td>
 </tr>
 <tr>
-<td><strong>Categorias</strong></td>
-<td><code>categoria</code>, <code>alimentacao</code>, <code>moradia</code>, <code>transporte</code>, <code>saude</code>, <code>lazer</code>, <code>educacao</code>, <code>servicos</code></td>
-<td>Total por categoria e participação percentual sobre as despesas totais</td>
-<td><code>category_shares</code></td>
-<td style="text-align: center;"><code>BRL</code>, <code>%</code></td>
+<td>Cada conta</td>
+<td><code>FinancialQueryService.by_account</code></td>
 </tr>
 <tr>
-<td><strong>Meta</strong></td>
-<td><code>meta</code>, <code>juntar</code>, <code>meses</code>, <code>tempo</code>, <code>objetivo</code>, <code>poupando</code></td>
-<td>Prazo em meses para alcançar um objetivo: $\lceil \text{meta} / \text{aporte} \rceil$</td>
-<td><code>months_to_goal</code></td>
-<td style="text-align: center;"><code>meses</code></td>
+<td>Fatura aberta, fechada ou próxima</td>
+<td><code>statement_total</code>, <code>next_statement</code></td>
 </tr>
 <tr>
-<td><strong>Cenários</strong></td>
-<td><code>cenario</code>, <code>comparar</code>, <code>simulacao</code></td>
-<td>Margem operacional e delta de poupança entre propostas</td>
-<td><code>compare_budget_scenarios</code></td>
-<td style="text-align: center;"><code>BRL</code></td>
+<td>Parcelas e dívidas</td>
+<td><code>open_installments</code>, <code>commitments</code></td>
+</tr>
+<tr>
+<td>Categorias e estabelecimentos</td>
+<td><code>top_categories</code>, <code>top_merchants</code></td>
+</tr>
+<tr>
+<td>Comparação entre dois períodos</td>
+<td><code>compare_periods</code></td>
+</tr>
+<tr>
+<td>Transferências próprias</td>
+<td><code>own_transfers_effect</code></td>
+</tr>
+<tr>
+<td>Meta com objetivo e aporte</td>
+<td><code>CalculationService.months_to_goal</code></td>
 </tr>
 </tbody>
 </table>
-<h2 id="principio-de-abstencao-numerica">Princípio de Abstenção Numérica<a class="headerlink" href="#principio-de-abstencao-numerica" title="Permanent link">&para;</a></h2>
-<p>Se a consulta exigir dados dos extratos e não houver lançamentos carregados na sessão da API, o agente:</p>
-<ol>
-<li>Registra a premissa explicativa em <code>ctx.assumptions</code>: <em>"Nenhum lançamento foi importado para calcular o resumo financeiro."</em></li>
-<li>Emite o passo com status <code>skipped</code> sem chutar ou estimar grandezas.</li>
-<li>Garante que o Communication Agent receba a premissa e solicite a importação do extrato (OFX/PDF) ao usuário.</li>
-</ol>
+<p>Filtros explícitos desambiguam conta e dono. Se contradizem o texto, o agente pede esclarecimento,
+sem escolher silenciosamente um recorte. O período aceita mês, intervalo e referência de fatura;
+expressões não suportadas pedem um mês e ano ou intervalo completo. A data relativa de referência
+usa <code>America/Sao_Paulo</code> e pode ser injetada nos testes.</p>
+<h2 id="dados-ausentes-e-cobertura">Dados ausentes e cobertura<a class="headerlink" href="#dados-ausentes-e-cobertura" title="Permanent link">&para;</a></h2>
+<p>Sem dados para o recorte, o agente retorna <code>abstained</code> com a informação que falta, sem número
+financeiro e sem chamar o LLM. Uma conta ou ano ambíguo devolve pergunta e opções seguras.
+Um período sem lançamentos só admite zero quando há um arquivo importado cobrindo suas datas.
+Quando há lançamentos, o resultado descreve apenas o que foi importado e avisa que a cobertura
+pode ser incompleta. Saldo significa receitas menos despesas dos lançamentos, não saldo bancário.</p>
+<p>A trilha de Analysis registra intenção e os <code>CalculationResult</code> completos, com sua origem.
+O contexto bruto da biblioteca fica na API; somente os agregados chegam à comunicação
+(<a href="../../adr/0023-contexto-do-usuario-no-chat/">ADR 0023</a>).</p>
 <h2 id="extracao-de-metas-em-linguagem-natural">Extração de Metas em Linguagem Natural<a class="headerlink" href="#extracao-de-metas-em-linguagem-natural" title="Permanent link">&para;</a></h2>
 <p>O agente extrai valores monetários diretamente da pergunta do usuário:</p>
 <ul>
@@ -2813,7 +2901,7 @@ ficam fora dos totais, <a href="../../adr/0018-contas-periodos-transferencias-e-
 <td>Total da última fatura fechada do cartão</td>
 </tr>
 <tr>
-<td>“Como será a próxima fatura?”</td>
+<td>“Qual será a minha próxima fatura?”</td>
 <td><code>next_statement</code></td>
 <td>Parcelas já contratadas do próximo ciclo (estimativa)</td>
 </tr>
@@ -2823,13 +2911,13 @@ ficam fora dos totais, <a href="../../adr/0018-contas-periodos-transferencias-e-
 <td>Quanto falta, valor mensal e quando termina</td>
 </tr>
 <tr>
-<td>“O que eu devo?”</td>
+<td>“Quanto devo?”</td>
 <td><code>commitments</code></td>
 <td>Parcelas futuras, fatura fechada a pagar e estimativa dos próximos 30 dias</td>
 </tr>
 <tr>
 <td>“Onde mais gastei em setembro?”</td>
-<td><code>top_merchants</code>, <code>top_categories</code></td>
+<td><code>top_merchants</code></td>
 <td>Ranking do período</td>
 </tr>
 <tr>
@@ -2883,7 +2971,7 @@ quantas. A palavra “conta” sozinha (“conta de luz”) não restringe a con
 corrente”, “conta do/da” e “extrato” restringem.</p>
 <p>Reimportar o PDF de uma fatura já importada grava o vencimento que faltava. As chaves por conta
 (<code>account_&lt;hash&gt;_*</code>) usam um hash curto do id da conta: estáveis e sem expor o número da conta.</p>
-<p>Ligar essas funções ao chat é a issue <a href="https://github.com/moonshinerd/trokim/issues/95">#95</a>.</p>
+<p>Essas consultas estão integradas ao chat pela issue <a href="https://github.com/moonshinerd/trokim/issues/95">#95</a>.</p>
 <h2 id="testes-automatizados">Testes Automatizados<a class="headerlink" href="#testes-automatizados" title="Permanent link">&para;</a></h2>
 <p>O comportamento do Analysis Agent e as rotinas matemáticas são cobertos em:</p>
 <ul>
@@ -2906,6 +2994,21 @@ lançamentos ao LLM. Em “nessa loja” sem documento identificado, pede esclar
 por nome que não casam com nenhum estabelecimento de documento (por exemplo, “quanto gastei em
 janeiro?”) seguem para o orquestrador.
 Veja os <a href="../document-agent/#consulta-do-lancamento-confirmado">exemplos completos</a>.</p>
+<h2 id="integracao-e-testes-da-95">Integração e testes da #95<a class="headerlink" href="#integracao-e-testes-da-95" title="Permanent link">&para;</a></h2>
+<p><code>POST /v1/agents/ask</code> aceita <code>account_id</code>, <code>owner</code> e <code>period</code>, todos opcionais.
+Os exemplos completos estão no <a href="../orquestrador/#filtros-do-endpoint">orquestrador</a>.
+<code>api/tests/test_agents_api.py</code> cobre valores esperados sintéticos, trilha, filtros, ambiguidades,
+dados ausentes, privacidade do prompt, números inventados e os endpoints antigos.
+Os testes puros de cálculo permanecem em <code>api/tests/test_financial_queries.py</code>.
+<code>api/tests/test_financial_quality.py</code> cobre os limites da resolução e do suporte numérico,
+incluindo moedas, sinais, metadados, lojas desconhecidas e colisões de nomes com intenções.
+Um estabelecimento só é reconhecido no complemento da consulta de gasto; seu nome não pode
+mudar a intenção de uma pergunta de saldo. Quando parte do alvo não é reconhecida, o sistema
+pede esclarecimento, sem devolver um total parcial como se fosse a resposta completa.</p>
+<p>Na classificação, parcelas e categorias não são ocultadas por palavras genéricas como “devo”
+ou “fatura”. Uma categoria solicitada por referência de fatura, sem intervalo de datas, pede
+esclarecimento. O total da fatura e o valor ainda a pagar têm intenções distintas. A detecção
+canônica de dono pede esclarecimento se a pergunta mistura contas pessoais e da empresa.</p>
 
 
 

@@ -850,6 +850,33 @@
   
   
     <li class="md-nav__item">
+      <a href="../../pesquisa/gabarito-chat-dados/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Gabarito do Chat com os Dados (Semana 5)
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../../referencias/" class="md-nav__link">
         
   
@@ -2316,6 +2343,33 @@
   
   
     <li class="md-nav__item">
+      <a href="../0023-contexto-do-usuario-no-chat/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  0023 – Contexto do Usuário no Chat
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../0024-persistencia-local-e-backup-criptografado/" class="md-nav__link">
         
   
@@ -2473,6 +2527,17 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#ajustes-da-semana-5-117-27112026" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Ajustes da Semana 5 (#117, 27/11/2026)
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     
   
@@ -2576,6 +2641,17 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#ajustes-da-semana-5-117-27112026" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Ajustes da Semana 5 (#117, 27/11/2026)
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     
   
@@ -2649,9 +2725,22 @@ no escopo das #94 e #95.</p>
 <li>Queda do cliente durante o envio responde 400, sem erro 500.</li>
 <li><strong>Abstenção e confirmação manual:</strong> a abstenção do <code>/extract</code> não cria nada, mas o <code>/confirm</code>
   aceita os campos que o usuário revisou ou digitou, mesmo sem leitura bem-sucedida. A validação
-  determinística vale do mesmo jeito. Limitação conhecida: o lançamento digitado à mão fica com
-  <code>origin=documento</code> e o chat o descreve como "lido de foto ou PDF, confirmado por você". Exigir
-  uma leitura prévia ou distinguir a origem manual fica para uma issue própria.</li>
+  determinística vale do mesmo jeito.</li>
+</ul>
+<h2 id="ajustes-da-semana-5-117-27112026">Ajustes da Semana 5 (<a href="https://github.com/moonshinerd/trokim/issues/117">#117</a>, 27/11/2026)<a class="headerlink" href="#ajustes-da-semana-5-117-27112026" title="Permanent link">&para;</a></h2>
+<ul>
+<li><strong>Origem manual.</strong> O <code>/confirm</code> recebe <code>origin</code>: <code>documento</code> (padrão, o usuário revisou o que
+  foi lido) ou <code>manual</code> (digitou sem leitura bem-sucedida, por exemplo depois de uma abstenção).
+  <code>Transaction.origin</code> ganha o valor <code>manual</code>, e o chat descreve esse lançamento como "digitado
+  por você na tela de documento, sem leitura de foto ou PDF". Exigir uma extração prévia foi
+  descartado: a API é sem estado (<a href="../0025-armazenamento-no-aparelho-e-api-sem-estado/">ADR 0025</a>)
+  e não guarda a leitura entre <code>/extract</code> e <code>/confirm</code>.</li>
+<li><strong>Extrato depois do comprovante.</strong> A conciliação deixava de valer quando o comprovante era
+  confirmado antes do extrato do mesmo Pix: os dois entravam nos totais. Agora a importação do
+  OFX procura, entre os lançamentos de documento (lidos ou digitados) ainda ativos, um com o
+  mesmo tipo, data, valor e favorecido (<code>payee_matches</code>, a mesma regra da validação de
+  duplicatas) e o marca como duplicata: o extrato do banco prevalece. Documento lançado numa
+  conta real só concilia com o extrato dessa conta. O upload informa <code>documents_reconciled</code>.</li>
 </ul>
 
 

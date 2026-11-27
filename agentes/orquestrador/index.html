@@ -852,6 +852,33 @@
   
   
     <li class="md-nav__item">
+      <a href="../../pesquisa/gabarito-chat-dados/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Gabarito do Chat com os Dados (Semana 5)
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../../referencias/" class="md-nav__link">
         
   
@@ -1415,6 +1442,17 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#filtros-do-endpoint" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Filtros do endpoint
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#mensagens-fixas-do-sistema" class="md-nav__link">
     <span class="md-ellipsis">
       <span class="md-typeset">
@@ -1455,6 +1493,23 @@
       </span>
     </span>
   </a>
+  
+    <nav class="md-nav" aria-label="Limitações">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#organizacao-da-politica-financeira" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Organização da política financeira
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
   
 </li>
         
@@ -2433,6 +2488,33 @@
   
   
     <li class="md-nav__item">
+      <a href="../../adr/0023-contexto-do-usuario-no-chat/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  0023 – Contexto do Usuário no Chat
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../../adr/0024-persistencia-local-e-backup-criptografado/" class="md-nav__link">
         
   
@@ -2579,6 +2661,17 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#filtros-do-endpoint" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Filtros do endpoint
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#mensagens-fixas-do-sistema" class="md-nav__link">
     <span class="md-ellipsis">
       <span class="md-typeset">
@@ -2620,6 +2713,23 @@
     </span>
   </a>
   
+    <nav class="md-nav" aria-label="Limitações">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#organizacao-da-politica-financeira" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Organização da política financeira
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
         
       </ul>
@@ -2648,14 +2758,23 @@
 <p class="admonition-title">Status: Implementado</p>
 <p>Implementado na issue <a href="https://github.com/moonshinerd/trokim/issues/51">#51</a>. O contrato de mensagens é estrito e a orquestração segue um fluxo linear defensivo com revisão única em caso de bloqueio.</p>
 </div>
-<p>Coordena os quatro agentes especializados do fluxo educacional e constrói a trilha de auditoria (<code>steps</code>). O código está estruturado em:</p>
+<p>Coordena os quatro agentes especializados dos fluxos educacional e pessoal e constrói a trilha de auditoria (<code>steps</code>). O código está estruturado em:</p>
 <ul>
-<li><code>api/app/domain/agents.py</code>: contrato puro de domínio (Pydantic v2), sem dependências de frameworks externos ou rede.</li>
+<li><code>api/app/domain/agents.py</code>: contratos tipados, incluindo <code>FinancialIntent</code> e <code>FinancialContext</code>, sem acesso à infraestrutura. O contexto financeiro exige intenção e data de referência e fica excluído da serialização do contexto geral.</li>
 <li><code>api/app/services/agents/base.py</code>: protocolo assíncrono <code>Agent</code>.</li>
 <li><code>api/app/services/agents/orchestrator.py</code>: classe <code>Orchestrator</code> e função de roteamento <code>needs_analysis</code>.</li>
 </ul>
 <h2 id="regras-de-execucao">Regras de Execução<a class="headerlink" href="#regras-de-execucao" title="Permanent link">&para;</a></h2>
-<p>Essas regras descrevem o fluxo educacional. Antes dele, <code>AgentQueryService</code> resolve as
+<p>Consultas pessoais identificadas pelas regras da RF30 marcam Research como <code>skipped</code>: os
+arquivos importados são a fonte factual. Quando a pergunta também pede orientação, Research
+continua obrigatório, com a política institucional de escopo e abstenção. O RAG só é inicializado
+quando utilizado. Analysis recebe uma cópia dos lançamentos, contas e faturas para manter a
+consulta consistente durante as chamadas assíncronas. Quando a biblioteca é fornecida, ela é
+a fonte única dos lançamentos; o parâmetro antigo <code>transactions</code> atende chamadas sem biblioteca. Chamadas internas ao contrato anterior,
+com apenas uma lista de lançamentos, preservam o fluxo educativo; a RF30 é ativada ao fornecer
+a biblioteca, como faz o endpoint da API. Dados ausentes ou ambiguidades produzem
+esclarecimento validado, com Communication <code>skipped</code> e sem LLM.</p>
+<p>As regras numeradas abaixo descrevem o fluxo educacional. Antes dele, <code>AgentQueryService</code> resolve as
 consultas locais de estabelecimentos identificados em documentos confirmados. Esse fluxo
 tem cálculo determinístico e validação independente, sem pesquisa institucional nem LLM;
 veja a <a href="../../adr/0026-confirmacao-e-consulta-de-documentos/">ADR 0026</a>.</p>
@@ -2667,16 +2786,56 @@ veja a <a href="../../adr/0026-confirmacao-e-consulta-de-documentos/">ADR 0026</
 <li><strong>Trilha de Auditoria e Resiliência:</strong> Cada etapa registra um <code>AgentStep</code> com status, duração em milissegundos e sumário. Qualquer falha inesperada em um agente é capturada de forma defensiva, convertida em <code>failed</code> na trilha e resulta em <code>rejected</code> seguro para o usuário final.</li>
 </ol>
 <h2 id="regras-de-deteccao-numerica-needs_analysis">Regras de Detecção Numérica (<code>needs_analysis</code>)<a class="headerlink" href="#regras-de-deteccao-numerica-needs_analysis" title="Permanent link">&para;</a></h2>
-<p>A função <code>needs_analysis(question)</code> normaliza acentuações e avalia a presença de palavras-chave orçamentárias:</p>
+<p>Para o fluxo educativo, a função <code>needs_analysis(question)</code> normaliza acentuações e avalia a presença de palavras-chave orçamentárias:</p>
 <ul>
 <li>Saldo, receitas, despesas, gastei, gasto, gastos.</li>
 <li>Categoria, categorias, poupança, poupar, meta, metas, meses.</li>
 <li>Cenário, cenários, projeção, projeções, quanto, orçamento, guardar, economizar.</li>
 </ul>
 <p>Perguntas conceituais puras (ex.: <em>"O que é o FGC?"</em> ou <em>"Explique a regra 50/30/20"</em>) pulam a etapa de análise com status <code>skipped</code>.</p>
+<h2 id="filtros-do-endpoint">Filtros do endpoint<a class="headerlink" href="#filtros-do-endpoint" title="Permanent link">&para;</a></h2>
+<p><code>POST /v1/agents/ask</code> mantém <code>message</code> (obrigatório, de 1 a 1000 caracteres) e <code>document_uid</code>
+(opcional), acrescentando os seguintes campos opcionais no mesmo objeto JSON:</p>
+<table>
+<thead>
+<tr>
+<th>Campo</th>
+<th>Formato</th>
+<th>Regra</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>account_id</code></td>
+<td>string do <code>GET /v1/accounts</code></td>
+<td>Conta precisa existir; o id não vai ao modelo</td>
+</tr>
+<tr>
+<td><code>owner</code></td>
+<td><code>pessoal</code>, <code>empresa</code>, <code>todas</code></td>
+<td>Recorte por dono; conflito com o texto pede esclarecimento</td>
+</tr>
+<tr>
+<td><code>period</code></td>
+<td><code>AAAA-MM</code>, expressão de mês/intervalo ou <code>fatura_aberta</code>, <code>fatura_fechada</code>, <code>proxima_fatura</code></td>
+<td>Período inválido ou contraditório pede esclarecimento</td>
+</tr>
+</tbody>
+</table>
+<p>Sem filtro, conta e período são resolvidos pelo texto da #94. Não há memória conversacional para
+resolver referências como “essa conta” em mensagens posteriores: envie os filtros novamente.
+A seleção visual dos filtros no app pertence à #97. Para comparar, informe os dois períodos no
+texto e deixe <code>period</code> ausente. Parcelas e dívidas representam a posição dos arquivos; não aceitam
+um mês histórico como se fosse um retrato completo da dívida naquela data.</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>curl<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span>http://127.0.0.1:8000/v1/agents/ask<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="w">  </span>-H<span class="w"> </span><span class="s1">'Content-Type: application/json'</span><span class="w"> </span><span class="se">\</span>
+</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">'{"message":"Quanto gastei?","owner":"empresa","period":"2026-10"}'</span>
+</span></code></pre></div>
+<p>A consulta de documento confirmado da #96 preserva o fluxo local e aplica os filtros de conta,
+dono e datas quando enviados. Referência de fatura no filtro de documento pede mês ou intervalo.</p>
 <h2 id="mensagens-fixas-do-sistema">Mensagens Fixas do Sistema<a class="headerlink" href="#mensagens-fixas-do-sistema" title="Permanent link">&para;</a></h2>
 <ul>
-<li><strong>Abstenção (<code>ABSTAINED</code>):</strong><blockquote>
+<li><strong>Abstenção educativa (<code>ABSTAINED</code>):</strong><blockquote>
 <p><em>"O Trokim não possui evidências suficientes nas diretrizes oficiais (Banco Central do Brasil, CVM, CFPB ou ANPD) para responder a essa consulta com segurança. Para sua proteção financeira, recomendamos consultar canais oficiais regulamentados."</em></p>
 </blockquote>
 </li>
@@ -2686,36 +2845,36 @@ veja a <a href="../../adr/0026-confirmacao-e-consulta-de-documentos/">ADR 0026</
 </li>
 </ul>
 <h2 id="exemplo-de-trilha-de-auditoria-agentstep">Exemplo de Trilha de Auditoria (<code>AgentStep</code>)<a class="headerlink" href="#exemplo-de-trilha-de-auditoria-agentstep" title="Permanent link">&para;</a></h2>
-<div class="language-json highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="p">[</span>
-</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="w">  </span><span class="p">{</span>
-</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="w">    </span><span class="nt">"agent"</span><span class="p">:</span><span class="w"> </span><span class="s2">"research"</span><span class="p">,</span>
-</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="w">    </span><span class="nt">"status"</span><span class="p">:</span><span class="w"> </span><span class="s2">"ok"</span><span class="p">,</span>
-</span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="w">    </span><span class="nt">"summary"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Recuperação concluída"</span><span class="p">,</span>
-</span><span id="__span-0-6"><a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="w">    </span><span class="nt">"duration_ms"</span><span class="p">:</span><span class="w"> </span><span class="mi">12</span><span class="p">,</span>
-</span><span id="__span-0-7"><a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="w">    </span><span class="nt">"detail"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nt">"count"</span><span class="p">:</span><span class="w"> </span><span class="mi">2</span><span class="w"> </span><span class="p">}</span>
-</span><span id="__span-0-8"><a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="w">  </span><span class="p">},</span>
-</span><span id="__span-0-9"><a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="w">  </span><span class="p">{</span>
-</span><span id="__span-0-10"><a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="w">    </span><span class="nt">"agent"</span><span class="p">:</span><span class="w"> </span><span class="s2">"analysis"</span><span class="p">,</span>
-</span><span id="__span-0-11"><a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a><span class="w">    </span><span class="nt">"status"</span><span class="p">:</span><span class="w"> </span><span class="s2">"ok"</span><span class="p">,</span>
-</span><span id="__span-0-12"><a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a><span class="w">    </span><span class="nt">"summary"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Cálculo determinístico finalizado"</span><span class="p">,</span>
-</span><span id="__span-0-13"><a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a><span class="w">    </span><span class="nt">"duration_ms"</span><span class="p">:</span><span class="w"> </span><span class="mi">8</span><span class="p">,</span>
-</span><span id="__span-0-14"><a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a><span class="w">    </span><span class="nt">"detail"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nt">"calculations_count"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="p">}</span>
-</span><span id="__span-0-15"><a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a><span class="w">  </span><span class="p">},</span>
-</span><span id="__span-0-16"><a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a><span class="w">  </span><span class="p">{</span>
-</span><span id="__span-0-17"><a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a><span class="w">    </span><span class="nt">"agent"</span><span class="p">:</span><span class="w"> </span><span class="s2">"communication"</span><span class="p">,</span>
-</span><span id="__span-0-18"><a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a><span class="w">    </span><span class="nt">"status"</span><span class="p">:</span><span class="w"> </span><span class="s2">"ok"</span><span class="p">,</span>
-</span><span id="__span-0-19"><a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a><span class="w">    </span><span class="nt">"summary"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Rascunho elaborado em pt-BR"</span><span class="p">,</span>
-</span><span id="__span-0-20"><a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a><span class="w">    </span><span class="nt">"duration_ms"</span><span class="p">:</span><span class="w"> </span><span class="mi">420</span><span class="p">,</span>
-</span><span id="__span-0-21"><a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a><span class="w">    </span><span class="nt">"detail"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nt">"attempt"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="nt">"model"</span><span class="p">:</span><span class="w"> </span><span class="s2">"ollama/qwen2.5:1.5b"</span><span class="w"> </span><span class="p">}</span>
-</span><span id="__span-0-22"><a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a><span class="w">  </span><span class="p">},</span>
-</span><span id="__span-0-23"><a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a><span class="w">  </span><span class="p">{</span>
-</span><span id="__span-0-24"><a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a><span class="w">    </span><span class="nt">"agent"</span><span class="p">:</span><span class="w"> </span><span class="s2">"validation"</span><span class="p">,</span>
-</span><span id="__span-0-25"><a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a><span class="w">    </span><span class="nt">"status"</span><span class="p">:</span><span class="w"> </span><span class="s2">"ok"</span><span class="p">,</span>
-</span><span id="__span-0-26"><a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a><span class="w">    </span><span class="nt">"summary"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Validação concluída sem bloqueios"</span><span class="p">,</span>
-</span><span id="__span-0-27"><a id="__codelineno-0-27" name="__codelineno-0-27" href="#__codelineno-0-27"></a><span class="w">    </span><span class="nt">"duration_ms"</span><span class="p">:</span><span class="w"> </span><span class="mi">14</span><span class="p">,</span>
-</span><span id="__span-0-28"><a id="__codelineno-0-28" name="__codelineno-0-28" href="#__codelineno-0-28"></a><span class="w">    </span><span class="nt">"detail"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nt">"issues_count"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="p">}</span>
-</span><span id="__span-0-29"><a id="__codelineno-0-29" name="__codelineno-0-29" href="#__codelineno-0-29"></a><span class="w">  </span><span class="p">}</span>
-</span><span id="__span-0-30"><a id="__codelineno-0-30" name="__codelineno-0-30" href="#__codelineno-0-30"></a><span class="p">]</span>
+<div class="language-json highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="p">[</span>
+</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="w">  </span><span class="p">{</span>
+</span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="w">    </span><span class="nt">"agent"</span><span class="p">:</span><span class="w"> </span><span class="s2">"research"</span><span class="p">,</span>
+</span><span id="__span-1-4"><a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="w">    </span><span class="nt">"status"</span><span class="p">:</span><span class="w"> </span><span class="s2">"ok"</span><span class="p">,</span>
+</span><span id="__span-1-5"><a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="w">    </span><span class="nt">"summary"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Recuperação concluída"</span><span class="p">,</span>
+</span><span id="__span-1-6"><a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="w">    </span><span class="nt">"duration_ms"</span><span class="p">:</span><span class="w"> </span><span class="mi">12</span><span class="p">,</span>
+</span><span id="__span-1-7"><a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="w">    </span><span class="nt">"detail"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nt">"count"</span><span class="p">:</span><span class="w"> </span><span class="mi">2</span><span class="w"> </span><span class="p">}</span>
+</span><span id="__span-1-8"><a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="w">  </span><span class="p">},</span>
+</span><span id="__span-1-9"><a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="w">  </span><span class="p">{</span>
+</span><span id="__span-1-10"><a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="w">    </span><span class="nt">"agent"</span><span class="p">:</span><span class="w"> </span><span class="s2">"analysis"</span><span class="p">,</span>
+</span><span id="__span-1-11"><a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="w">    </span><span class="nt">"status"</span><span class="p">:</span><span class="w"> </span><span class="s2">"ok"</span><span class="p">,</span>
+</span><span id="__span-1-12"><a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a><span class="w">    </span><span class="nt">"summary"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Cálculo determinístico finalizado"</span><span class="p">,</span>
+</span><span id="__span-1-13"><a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a><span class="w">    </span><span class="nt">"duration_ms"</span><span class="p">:</span><span class="w"> </span><span class="mi">8</span><span class="p">,</span>
+</span><span id="__span-1-14"><a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a><span class="w">    </span><span class="nt">"detail"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nt">"calculations_count"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="p">}</span>
+</span><span id="__span-1-15"><a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a><span class="w">  </span><span class="p">},</span>
+</span><span id="__span-1-16"><a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a><span class="w">  </span><span class="p">{</span>
+</span><span id="__span-1-17"><a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a><span class="w">    </span><span class="nt">"agent"</span><span class="p">:</span><span class="w"> </span><span class="s2">"communication"</span><span class="p">,</span>
+</span><span id="__span-1-18"><a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a><span class="w">    </span><span class="nt">"status"</span><span class="p">:</span><span class="w"> </span><span class="s2">"ok"</span><span class="p">,</span>
+</span><span id="__span-1-19"><a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a><span class="w">    </span><span class="nt">"summary"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Rascunho elaborado em pt-BR"</span><span class="p">,</span>
+</span><span id="__span-1-20"><a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a><span class="w">    </span><span class="nt">"duration_ms"</span><span class="p">:</span><span class="w"> </span><span class="mi">420</span><span class="p">,</span>
+</span><span id="__span-1-21"><a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a><span class="w">    </span><span class="nt">"detail"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nt">"attempt"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="nt">"model"</span><span class="p">:</span><span class="w"> </span><span class="s2">"ollama/qwen2.5:1.5b"</span><span class="w"> </span><span class="p">}</span>
+</span><span id="__span-1-22"><a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a><span class="w">  </span><span class="p">},</span>
+</span><span id="__span-1-23"><a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a><span class="w">  </span><span class="p">{</span>
+</span><span id="__span-1-24"><a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a><span class="w">    </span><span class="nt">"agent"</span><span class="p">:</span><span class="w"> </span><span class="s2">"validation"</span><span class="p">,</span>
+</span><span id="__span-1-25"><a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a><span class="w">    </span><span class="nt">"status"</span><span class="p">:</span><span class="w"> </span><span class="s2">"ok"</span><span class="p">,</span>
+</span><span id="__span-1-26"><a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a><span class="w">    </span><span class="nt">"summary"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Validação concluída sem bloqueios"</span><span class="p">,</span>
+</span><span id="__span-1-27"><a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a><span class="w">    </span><span class="nt">"duration_ms"</span><span class="p">:</span><span class="w"> </span><span class="mi">14</span><span class="p">,</span>
+</span><span id="__span-1-28"><a id="__codelineno-1-28" name="__codelineno-1-28" href="#__codelineno-1-28"></a><span class="w">    </span><span class="nt">"detail"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nt">"issues_count"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="p">}</span>
+</span><span id="__span-1-29"><a id="__codelineno-1-29" name="__codelineno-1-29" href="#__codelineno-1-29"></a><span class="w">  </span><span class="p">}</span>
+</span><span id="__span-1-30"><a id="__codelineno-1-30" name="__codelineno-1-30" href="#__codelineno-1-30"></a><span class="p">]</span>
 </span></code></pre></div>
 <h2 id="testes-automatizados">Testes Automatizados<a class="headerlink" href="#testes-automatizados" title="Permanent link">&para;</a></h2>
 <p>O comportamento do orquestrador é coberto sem dependência de modelo de IA nem rede externa em <code>api/tests/test_orchestrator.py</code>:</p>
@@ -2730,8 +2889,20 @@ veja a <a href="../../adr/0026-confirmacao-e-consulta-de-documentos/">ADR 0026</
 </ul>
 <h2 id="limitacoes">Limitações<a class="headerlink" href="#limitacoes" title="Permanent link">&para;</a></h2>
 <ul>
-<li>O orquestrador atual segue um grafo linear determinístico com no máximo 1 ciclo de revisão. Não há suporte a branching complexo ou chamadas paralelas, o que é intencional para manter rastreabilidade estrita e latência previsível.</li>
+<li>
+<p>O roteamento é por regras em pt-BR. Expressões não reconhecidas podem exigir reformular a
+  pergunta. Próxima fatura e término das parcelas preservam as estimativas da camada da #94.</p>
+</li>
+<li>
+<p>O orquestrador atual segue um grafo linear determinístico com no máximo 1 ciclo de revisão. Não há suporte a branching complexo ou chamadas paralelas, o que é intencional para manter rastreabilidade estrita e latência previsível.</p>
+</li>
 </ul>
+<h3 id="organizacao-da-politica-financeira">Organização da política financeira<a class="headerlink" href="#organizacao-da-politica-financeira" title="Permanent link">&para;</a></h3>
+<p>A classificação não depende do estado da biblioteca. A resolução produz uma <code>ChatSelection</code>
+compartilhada com a consulta de documentos; a execução valida os períodos permitidos para cada
+intenção antes de chamar seu executor. As respostas com contexto completo são montadas em um
+único lugar, preservando os retornos de abstenção sem contexto. Uma alteração na biblioteca
+durante a pesquisa não muda os números da consulta já iniciada.</p>
 
 
 

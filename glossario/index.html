@@ -852,6 +852,33 @@
   
   
     <li class="md-nav__item">
+      <a href="../pesquisa/gabarito-chat-dados/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Gabarito do Chat com os Dados (Semana 5)
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../referencias/" class="md-nav__link">
         
   
@@ -1707,6 +1734,17 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#conceitos-de-documentos-e-multimodalidade-semana-5" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Conceitos de Documentos e Multimodalidade (Semana 5)
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     
   
@@ -2397,6 +2435,33 @@
   
   
     <li class="md-nav__item">
+      <a href="../adr/0023-contexto-do-usuario-no-chat/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  0023 – Contexto do Usuário no Chat
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../adr/0024-persistencia-local-e-backup-criptografado/" class="md-nav__link">
         
   
@@ -2553,6 +2618,17 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#conceitos-de-documentos-e-multimodalidade-semana-5" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Conceitos de Documentos e Multimodalidade (Semana 5)
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     
   
@@ -2616,6 +2692,20 @@
 <li><strong>Índice CNPJ:</strong> Arquivo local, gerado dos dados abertos da Receita Federal, que liga a raiz do CNPJ (8 dígitos) à categoria da atividade da empresa. Vai no repositório comprimido (14 MB) e é descomprimido localmente por <code>make build</code> ou pela API no primeiro uso; <code>make cnpj-atualizar</code> o refaz com um mês novo.</li>
 <li><strong>Dicionário de redes:</strong> Nomes fantasia de empresas com muitos estabelecimentos ativos, com a categoria da atividade. Reconhece redes regionais pelo nome, mesmo sem CNPJ no extrato.</li>
 <li><strong>Conjunto de validação (holdout):</strong> Casos rotulados escritos sem olhar as regras e sem ajuste depois da medição, para estimar o acerto da categorização em textos novos.</li>
+</ul>
+<hr />
+<h2 id="conceitos-de-documentos-e-multimodalidade-semana-5">Conceitos de Documentos e Multimodalidade (Semana 5)<a class="headerlink" href="#conceitos-de-documentos-e-multimodalidade-semana-5" title="Permanent link">&para;</a></h2>
+<ul>
+<li><strong>Modalidade:</strong> Tipo de entrada que o Trokim entende. Na Entrega 5 são duas: texto no chat e imagem ou PDF (foto de fatura, comprovante de Pix ou boleto) no agente de documento (<a href="../adr/0021-visao-e-ocr-modulares/">ADR 0021</a>).</li>
+<li><strong>OCR (reconhecimento óptico de caracteres):</strong> Leitura do texto de uma imagem. No Trokim roda no próprio computador (RapidOCR) e é o motor padrão; devolve o texto e a caixa de cada trecho.</li>
+<li><strong>VLM (modelo de visão e linguagem):</strong> Modelo que recebe a imagem e responde em texto. É opcional, só completa campos que o OCR não achou e pode ser local (Ollama) ou remoto (OpenRouter).</li>
+<li><strong>Motor de leitura:</strong> O que lê o documento numa requisição: <code>ocr</code> (padrão) ou <code>vision</code> (OCR mais VLM). O app consulta os disponíveis em <code>GET /v1/documents/engines</code>.</li>
+<li><strong>Consentimento remoto:</strong> Autorização que o usuário liga em Ajustes para a imagem sair do aparelho rumo a uma VLM remota; o app a envia em cada requisição (<code>allow_remote=true</code>). Sem ela a API responde <code>403 REMOTE_CONSENT_REQUIRED</code>.</li>
+<li><strong>Tarja:</strong> Retângulo preto pintado sobre CPF, CNPJ, agência e conta, nas posições que o OCR leu, antes de a imagem ir para a VLM. Sem as posições do OCR, a visão não é chamada.</li>
+<li><strong>Revisão humana do documento:</strong> Tela em que o usuário confere e corrige os campos lidos antes de confirmar. Nada lido de imagem vira lançamento sem essa confirmação (<a href="../adr/0026-confirmacao-e-consulta-de-documentos/">ADR 0026</a>).</li>
+<li><strong>Origem do lançamento:</strong> De onde veio o lançamento: <code>import</code> (extrato OFX ou PDF), <code>document</code> (lido de foto ou PDF e confirmado) ou <code>manual</code> (digitado pelo usuário na tela de documento).</li>
+<li><strong>Conciliação com o extrato:</strong> Ao importar um extrato, o comprovante já confirmado do mesmo Pix (mesmo tipo, data, valor e favorecido) é marcado como duplicado, para o gasto não contar duas vezes.</li>
+<li><strong>Abstenção de leitura:</strong> Documento ilegível devolvido sem campos, com o pedido de nova foto, em vez de um palpite.</li>
 </ul>
 
 

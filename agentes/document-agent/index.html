@@ -852,6 +852,33 @@
   
   
     <li class="md-nav__item">
+      <a href="../../pesquisa/gabarito-chat-dados/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Gabarito do Chat com os Dados (Semana 5)
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../../referencias/" class="md-nav__link">
         
   
@@ -2422,6 +2449,33 @@
   
   
     <li class="md-nav__item">
+      <a href="../../adr/0023-contexto-do-usuario-no-chat/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  0023 – Contexto do Usuário no Chat
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../../adr/0024-persistencia-local-e-backup-criptografado/" class="md-nav__link">
         
   
@@ -2631,6 +2685,12 @@
 <h2 id="contrato-http">Contrato HTTP<a class="headerlink" href="#contrato-http" title="Permanent link">&para;</a></h2>
 <p>Envie JPEG, PNG ou PDF (até 20 MiB) como <code>file</code> multipart para
 <code>POST /v1/documents/extract</code>. O campo opcional <code>account_id</code> restringe a conciliação.
+O campo <code>engine</code> escolhe o motor: <code>ocr</code> (padrão, só o OCR local) ou <code>vision</code> (OCR mais o modelo de
+visão configurado, que recebe a imagem com CPF, CNPJ, agência e conta tarjados). Com modelo de visão
+remoto, envie também <code>allow_remote=true</code>, e só depois do consentimento do usuário.
+<code>GET /v1/documents/engines</code> informa o que o servidor tem: <code>{"ocr": "rapidocr", "vision": null}</code> ou
+<code>{"ocr": "rapidocr", "vision": {"model": "...", "remote": false}}</code>
+(<a href="../../adr/0021-visao-e-ocr-modulares/">ADR 0021</a>).
 O objeto <code>document</code> contém <code>kind</code>, qualidade, campos, linhas, motor e indicação de abstenção.
 O envelope inclui <code>validation_issues</code>, <code>can_confirm</code>, <code>steps</code> e <code>total_ms</code>.
 Por exemplo, um Pix legível retorna um campo como
@@ -2645,14 +2705,17 @@ Somente a confirmação altera a biblioteca persistida. Sem <code>account_id</co
 A confirmação valida o documento inteiro contra a biblioteca antes de inserir o lote;
 sem conta escolhida, a busca de duplicatas alcança todas as contas. O reenvio exato
 retorna <code>repetido</code>, mas datas, vencimento e total continuam sujeitos à validação.
-<code>origin="documento"</code> registra a procedência, enquanto <code>source_kind</code> continua indicando
+O campo <code>origin</code> do <code>/confirm</code> vale <code>documento</code> (padrão: o usuário revisou o que foi lido) ou
+<code>manual</code> (digitou sem leitura bem-sucedida) e vira a procedência do lançamento, enquanto <code>source_kind</code> continua indicando
 <code>conta</code> ou <code>cartao</code>, preservando as visões de caixa e competência. As regras de categoria
 aprendidas também valem para o estabelecimento revisado de um Pix. Consulte os <a href="../../guia-de-uso/#documentos-por-foto-ou-pdf">exemplos HTTP</a>.</p>
 <p>Compras idênticas no mesmo dia dentro de um documento são válidas: cada ocorrência recebe seu
 próprio identificador, e o reenvio do mesmo documento continua retornando <code>repetido</code> linha a
 linha. Uma fatura de cartão só pode ser lançada em conta de cartão (<code>ACCOUNT_KIND_MISMATCH</code>,
-<code>422</code>). A abstenção do <code>/extract</code> não cria nada, mas o <code>/confirm</code> aceita campos revisados ou
-digitados à mão mesmo assim (limitação registrada na <a href="../../adr/0026-confirmacao-e-consulta-de-documentos/">ADR 0026</a>).
+<code>422</code>). A abstenção do <code>/extract</code> não cria nada; o <code>/confirm</code> aceita os campos digitados à mão
+depois dela, com <code>origin="manual"</code>, e o chat descreve esse lançamento como digitado, não como lido.
+Se o extrato do mesmo Pix ou compra for importado depois, o lançamento do documento vira duplicata
+e o do banco prevalece (<a href="../../adr/0026-confirmacao-e-consulta-de-documentos/">ADR 0026</a>).
 No <code>steps</code> da extração, o passo <code>validation</code> fica <code>failed</code> quando há bloqueio.</p>
 <table>
 <thead>
@@ -2675,12 +2738,16 @@ No <code>steps</code> da extração, o passo <code>validation</code> fica <code>
 <td>Envio interrompido (o cliente desconectou durante o upload)</td>
 </tr>
 <tr>
+<td>403</td>
+<td><code>REMOTE_CONSENT_REQUIRED</code>: visão remota sem <code>allow_remote=true</code></td>
+</tr>
+<tr>
 <td>422</td>
 <td>Documento inválido ou confirmação bloqueada</td>
 </tr>
 <tr>
 <td>503</td>
-<td>Motor indisponível ou tempo de leitura excedido</td>
+<td>Motor indisponível (<code>OCR_UNAVAILABLE</code>, <code>VISION_UNAVAILABLE</code>...) ou tempo de leitura excedido</td>
 </tr>
 </tbody>
 </table>

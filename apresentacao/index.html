@@ -637,10 +637,21 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#5-rastreabilidade-das-entregas" class="md-nav__link">
+  <a href="#5-agente-multimodal-semana-5" class="md-nav__link">
     <span class="md-ellipsis">
       <span class="md-typeset">
-        5. Rastreabilidade das Entregas
+        5. Agente multimodal (Semana 5)
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#6-rastreabilidade-das-entregas" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        6. Rastreabilidade das Entregas
       </span>
     </span>
   </a>
@@ -937,6 +948,33 @@
     
   
   Gabarito Multimodal (Semana 5)
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../pesquisa/gabarito-chat-dados/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Gabarito do Chat com os Dados (Semana 5)
 
     
   </span>
@@ -2419,6 +2457,33 @@
   
   
     <li class="md-nav__item">
+      <a href="../adr/0023-contexto-do-usuario-no-chat/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  0023 – Contexto do Usuário no Chat
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../adr/0024-persistencia-local-e-backup-criptografado/" class="md-nav__link">
         
   
@@ -2587,10 +2652,21 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#5-rastreabilidade-das-entregas" class="md-nav__link">
+  <a href="#5-agente-multimodal-semana-5" class="md-nav__link">
     <span class="md-ellipsis">
       <span class="md-typeset">
-        5. Rastreabilidade das Entregas
+        5. Agente multimodal (Semana 5)
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#6-rastreabilidade-das-entregas" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        6. Rastreabilidade das Entregas
       </span>
     </span>
   </a>
@@ -2619,7 +2695,7 @@
 
 
 <h1 id="apresentacao-executiva-e-demonstracao-interativa">Apresentação Executiva e Demonstração Interativa<a class="headerlink" href="#apresentacao-executiva-e-demonstracao-interativa" title="Permanent link">&para;</a></h1>
-<p>Este documento reúne a visão consolidada das <strong>Entregas 1 a 4</strong> do projeto <strong>Trokim</strong>, no âmbito do <strong>Challenge 2 (TIC-IA 2026 — Big Idea: Qualidade de Vida)</strong>.</p>
+<p>Este documento reúne a visão consolidada das <strong>Entregas 1 a 5</strong> do projeto <strong>Trokim</strong>, no âmbito do <strong>Challenge 2 (TIC-IA 2026 — Big Idea: Qualidade de Vida)</strong>.</p>
 <hr />
 <h2 id="1-painel-executivo-de-resultados">1. Painel Executivo de Resultados<a class="headerlink" href="#1-painel-executivo-de-resultados" title="Permanent link">&para;</a></h2>
 <table>
@@ -2671,7 +2747,7 @@
 <tr>
 <td><strong>Testes Automatizados</strong></td>
 <td style="text-align: center;">Passando</td>
-<td style="text-align: center;"><strong>418 (API), 161 (pesquisa) e 238 (app) verdes</strong></td>
+<td style="text-align: center;"><strong>826 (API), 271 (pesquisa) e 316 (app) verdes</strong></td>
 <td>CI no GitHub Actions (jobs api, research, docs e mobile)</td>
 </tr>
 </tbody>
@@ -2853,11 +2929,80 @@ loja, num índice local de 22 milhões de CNPJs: nos extratos reais de um integr
 só no computador dele, a parte categorizada foi de 56% para 67%
 (<a href="../adr/0020-categorizacao-por-cnae/">ADR 0020</a>).</p>
 <hr />
-<h2 id="5-rastreabilidade-das-entregas">5. Rastreabilidade das Entregas<a class="headerlink" href="#5-rastreabilidade-das-entregas" title="Permanent link">&para;</a></h2>
+<h2 id="5-agente-multimodal-semana-5">5. Agente multimodal (Semana 5)<a class="headerlink" href="#5-agente-multimodal-semana-5" title="Permanent link">&para;</a></h2>
+<p>O Trokim passou a ler <strong>duas modalidades</strong>: texto no chat e <strong>imagem ou PDF</strong> (foto de fatura,
+comprovante de Pix ou boleto) no agente de documento
+(<a href="../agentes/document-agent/">Agente de documento</a>, <a href="../adr/0021-visao-e-ocr-modulares/">ADR 0021</a>).
+A leitura padrão é o OCR local; a visão (VLM) é opcional, só completa campo que faltou e, se for
+remota, só é usada com o consentimento ligado pelo usuário em Ajustes (enviado em cada
+requisição; sem ele a API recusa) e recebe a imagem com CPF, CNPJ, agência e conta tarjados. Nada lido vira lançamento sem a revisão do usuário
+(<a href="../adr/0026-confirmacao-e-consulta-de-documentos/">ADR 0026</a>).</p>
+<p><strong>Modalidades suportadas:</strong> texto no chat; foto (PNG, JPEG, WebP) e PDF de fatura de cartão,
+comprovante de Pix e boleto, até o limite de tamanho do endpoint.</p>
+<p><strong>Limitações conhecidas e mitigação</strong> (<a href="../pesquisa/resultados/#11-semana-5-motores-de-leitura-e-chat-com-os-dados-do-usuario">Histórico de resultados, seção 11</a>):</p>
+<table>
+<thead>
+<tr>
+<th>Caso de falha</th>
+<th>O que acontece</th>
+<th>Mitigação</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Foto ilegível, cortada ou escura</td>
+<td>Abstenção: nenhum campo, pedido de nova foto (7 de 7 ilegíveis)</td>
+<td>Orientação de captura e reenvio</td>
+</tr>
+<tr>
+<td>Nome com espaço colado ou sem acento (<code>NuEmpresas</code>)</td>
+<td>Campo marcado para revisão</td>
+<td>O usuário corrige na tela de revisão; valores e datas acertaram 61 de 61</td>
+</tr>
+<tr>
+<td>Campo ausente no OCR</td>
+<td>VLM opcional tenta completar; se a resposta sair fora do formato, é descartada</td>
+<td>O OCR segue valendo; o campo fica vazio para o usuário preencher</td>
+</tr>
+<tr>
+<td>Imagem enviada para modelo remoto</td>
+<td>Bloqueada sem consentimento (<code>403</code>)</td>
+<td>Consentimento em Ajustes, conferido pela API a cada requisição, e tarja de documentos e contas</td>
+</tr>
+<tr>
+<td>Mesmo Pix por comprovante e depois pelo extrato</td>
+<td>O comprovante é conciliado e não conta duas vezes</td>
+<td>Conciliação por tipo, data, valor e favorecido</td>
+</tr>
+<tr>
+<td>Modelo do chat cita número sem cálculo</td>
+<td>A resposta é retida, nunca entregue com número errado</td>
+<td>Validador de números; 27 de 32 valores entregues com o Qwen de 1,5 B</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Roteiro da demonstração (duas modalidades):</strong></p>
+<ol>
+<li>No app, em <strong>Extratos</strong>, tocar em <strong>Fotografar ou escolher documento</strong> e escolher a foto sintética de um comprovante de Pix
+   (<code>research/synthetic_data/document_images/</code>), com o motor <strong>OCR local</strong>, e tocar em <strong>Ler documento</strong>.</li>
+<li>Conferir os campos na revisão (data, valor, favorecido, banco), corrigir o nome se o OCR
+   colou espaços e <strong>Confirmar</strong>.</li>
+<li>Em <strong>Ajustes</strong>, ligar o <strong>Modo multiagente</strong>. No <strong>Assistente</strong>, perguntar "Quanto gastei na <favorecido do comprovante>?": a resposta traz o
+   valor calculado e diz que o lançamento veio de foto ou PDF revisado pelo usuário.</li>
+<li>Perguntar "Quanto gastei em novembro de 2026?" com a conta e o período escolhidos no seletor:
+   a resposta mostra o card do cálculo daquela conta.</li>
+<li>Importar o extrato do mesmo mês com o mesmo Pix: a API devolve <code>documents_reconciled: 1</code> e o
+   total de gastos não muda.</li>
+<li>(Opcional) Repetir o passo 1 com o motor de visão remota para mostrar o
+   consentimento exigido em Ajustes.</li>
+</ol>
+<hr />
+<h2 id="6-rastreabilidade-das-entregas">6. Rastreabilidade das Entregas<a class="headerlink" href="#6-rastreabilidade-das-entregas" title="Permanent link">&para;</a></h2>
 <pre class="mermaid"><code>flowchart LR
     E1["Entrega 1: Concepção&lt;br/&gt;• EQ + 10 GQs&lt;br/&gt;• C4 Model + MoSCoW&lt;br/&gt;• ADRs 0001 a 0005"] --&gt; E2["Entrega 2: RAG &amp; Benchmark&lt;br/&gt;• 20 Docs Oficiais&lt;br/&gt;• SQLite-Vec + FastEmbed&lt;br/&gt;• Benchmark 98.78%&lt;br/&gt;• Chat Flutter Android"]
     E2 --&gt; E3["Entrega 3: Comparação LLM&lt;br/&gt;• Relatório Comparativo&lt;br/&gt;• LLM Pura vs RAG Estruturado&lt;br/&gt;• Métricas de Alucinação"]
-    E3 --&gt; E4["Entrega 4: Multiagentes&lt;br/&gt;• Research, Analysis,&lt;br/&gt;Communication e Validation&lt;br/&gt;• Benchmark multiagente&lt;br/&gt;• Categorização por CNAE"]</code></pre>
+    E3 --&gt; E4["Entrega 4: Multiagentes&lt;br/&gt;• Research, Analysis,&lt;br/&gt;Communication e Validation&lt;br/&gt;• Benchmark multiagente&lt;br/&gt;• Categorização por CNAE"]
+    E4 --&gt; E5["Entrega 5: Multimodal&lt;br/&gt;• Foto e PDF de documentos&lt;br/&gt;• OCR local e VLM opcional&lt;br/&gt;• Chat com contas e dívidas&lt;br/&gt;• Benchmark de motores"]</code></pre>
 <ul>
 <li><a href="../atas/ata01/">Acessar a Ata 01 (Semana 1)</a></li>
 <li><a href="../atas/ata02/">Acessar a Ata 02 (Semana 2)</a></li>

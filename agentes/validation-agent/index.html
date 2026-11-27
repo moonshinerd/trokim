@@ -852,6 +852,33 @@
   
   
     <li class="md-nav__item">
+      <a href="../../pesquisa/gabarito-chat-dados/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Gabarito do Chat com os Dados (Semana 5)
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../../referencias/" class="md-nav__link">
         
   
@@ -1474,6 +1501,17 @@
       <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
         
           <li class="md-nav__item">
+  <a href="#consultas-pessoais-da-rf30" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Consultas pessoais da RF30
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#1-tabela-de-regras-e-severidades-rascunhos-de-resposta-semana-4" class="md-nav__link">
     <span class="md-ellipsis">
       <span class="md-typeset">
@@ -1667,6 +1705,17 @@
     <span class="md-ellipsis">
       <span class="md-typeset">
         6.4. Prevenção do Padrão de Milhar em Inglês (<code>R$ 6,000</code>)
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#testes-da-politica-de-numeros-pessoais" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Testes da política de números pessoais
       </span>
     </span>
   </a>
@@ -2572,6 +2621,33 @@
   
   
     <li class="md-nav__item">
+      <a href="../../adr/0023-contexto-do-usuario-no-chat/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  0023 – Contexto do Usuário no Chat
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../../adr/0024-persistencia-local-e-backup-criptografado/" class="md-nav__link">
         
   
@@ -2694,6 +2770,17 @@
         Índice
       </label>
       <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+        
+          <li class="md-nav__item">
+  <a href="#consultas-pessoais-da-rf30" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Consultas pessoais da RF30
+      </span>
+    </span>
+  </a>
+  
+</li>
         
           <li class="md-nav__item">
   <a href="#1-tabela-de-regras-e-severidades-rascunhos-de-resposta-semana-4" class="md-nav__link">
@@ -2895,6 +2982,17 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#testes-da-politica-de-numeros-pessoais" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Testes da política de números pessoais
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -2933,6 +3031,20 @@
 </ol>
 <p>Se qualquer inconformidade de severidade <code>BLOCKER</code> for detectada, o agente anota as falhas em <code>issues</code> e bloqueia a confirmação automática. Inconformidades de severidade <code>WARNING</code> não bloqueiam o fluxo, servindo como alertas destacados para revisão humana.</p>
 <hr />
+<h2 id="consultas-pessoais-da-rf30">Consultas pessoais da RF30<a class="headerlink" href="#consultas-pessoais-da-rf30" title="Permanent link">&para;</a></h2>
+<p>Desde a #95, consultas pessoais usam <code>check_financial_numbers</code>, em
+<code>api/app/services/financial_number_validation.py</code>. A normalização decimal compartilhada está em
+<code>number_format.py</code>, sem dependência entre os agentes de comunicação e validação. A pergunta e os documentos do RAG
+não autorizam valores financeiros do usuário: cada número precisa corresponder a um cálculo,
+com sinal e unidade compatíveis. Datas e números nos rótulos ou limitações só são aceitos como
+metadados literais; não autorizam um novo valor monetário. O validador usa a posição do metadado
+no texto, sem apagar substrings que poderiam alterar o número auditado. Sinais negativos com
+espaços ou Unicode, moedas diferentes, unidades contraditórias e números malformados são
+verificados. Datas não autorizam valores em dinheiro. Isso vale tanto para a saída original
+do modelo quanto para a resposta segura montada pelo sistema.</p>
+<p>Sem cálculo, só é aceita a mensagem determinística de esclarecimento ou de dado ausente.
+Uma resposta substantiva sem cálculo gera <code>CALCULATION_MISSING</code>. O fluxo educativo mantém as
+regras anteriores, inclusive o caso C30 e os testes históricos abaixo.</p>
 <h2 id="1-tabela-de-regras-e-severidades-rascunhos-de-resposta-semana-4">1. Tabela de Regras e Severidades — Rascunhos de Resposta (Semana 4)<a class="headerlink" href="#1-tabela-de-regras-e-severidades-rascunhos-de-resposta-semana-4" title="Permanent link">&para;</a></h2>
 <p>Todas as regras são implementadas como <strong>funções puras, isoladas e testáveis</strong>, retornando códigos padronizados e mensagens diagnósticas claras em pt-BR:</p>
 <table>
@@ -3134,6 +3246,11 @@
 - Caso um comprovante de pagamento de fatura ou fatura paga seja importado pelo fluxo multimodal e já coincida com um par confirmado de transferência (<code>ConfirmedTransfer(kind="pagamento_fatura")</code>) ou transação de natureza <code>CARD_PAYMENT</code>, o validador emite <code>ALREADY_RECONCILED</code>, impedindo que o mesmo valor seja contabilizado duplamente na visão de caixa ou competência.</p>
 <h3 id="64-prevencao-do-padrao-de-milhar-em-ingles-r-6000">6.4. Prevenção do Padrão de Milhar em Inglês (<code>R$ 6,000</code>)<a class="headerlink" href="#64-prevencao-do-padrao-de-milhar-em-ingles-r-6000" title="Permanent link">&para;</a></h3>
 <p>Durante as medições do benchmark da Semana 4, observou-se que modelos generativos por vezes transcrevem milhares com vírgula no padrão anglo-saxão (<code>R$ 6,000</code> em vez de <code>R$ 6.000,00</code>), o que na convenção brasileira poderia ser interpretado de forma desastrosa como R$ 6,00. A regra <code>AMOUNT_FORMAT</code> utiliza expressão regular dedicada para detectar a presença de vírgula como separador de milhar, bloqueando o documento antes que ele atinja o saldo do usuário.</p>
+<h3 id="testes-da-politica-de-numeros-pessoais">Testes da política de números pessoais<a class="headerlink" href="#testes-da-politica-de-numeros-pessoais" title="Permanent link">&para;</a></h3>
+<p><code>api/tests/test_financial_number_validation.py</code> verifica resultados legítimos e bloqueios da RF30.
+<code>api/tests/test_financial_quality.py</code> inclui regressões para metadados, sinais negativos,
+unidades divergentes e reconhecimento de alvos. Os testes históricos desta página permanecem
+separados e não representam uma nova execução dos benchmarks com modelos.</p>
 
 
 
