@@ -13,6 +13,12 @@ class TransactionType(StrEnum):
 class TransactionOrigin(StrEnum):
     IMPORT = "importacao"
     DOCUMENT = "documento"
+    # Digitado pelo usuário na tela de documento, sem leitura bem-sucedida (#117).
+    MANUAL = "manual"
+
+
+# Lançamentos que o próprio usuário confirmou na tela de documento (lidos ou digitados).
+CONFIRMED_ORIGINS = frozenset({TransactionOrigin.DOCUMENT, TransactionOrigin.MANUAL})
 
 
 class TransactionCategory(StrEnum):

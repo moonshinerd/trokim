@@ -19,7 +19,7 @@ from app.domain.documents import (
     FieldSource,
     QualityReport,
 )
-from app.models.vision_provider import OcrProvider, VisionProvider, VisionResult
+from app.models.vision_provider import OcrProvider, OcrWord, VisionProvider, VisionResult
 from app.services.document_fields import (
     EXPECTED,
     TEXT_CONFIDENCE,
@@ -92,9 +92,12 @@ class DocumentAgent:
         vision: VisionProvider | None = None,
         sanitizer: VisionSanitizer | None = None,
         timeout: float = 30,
+        allow_remote: bool | None = None,
     ) -> None:
         self.ocr, self.vision, self.sanitizer = ocr, vision, sanitizer
         self.timeout = timeout
+        # Consentimento para visão remota: por requisição (app) ou, sem ela, a configuração.
+        self.allow_remote = settings.VISION_ALLOW_REMOTE if allow_remote is None else allow_remote
 
     async def run(self, ctx: DocumentContext) -> AgentStep:
         started = time.perf_counter()
@@ -256,7 +259,7 @@ class DocumentAgent:
                 and result.text.kind != DocumentKind.OTHER
                 and (expected - fields.values.keys() or fields.conflicts)
             ):
-                if await self._complement(image_bytes(image), fields, result.issues):
+                if await self._complement(image_bytes(image), fields, result.issues, reading.words):
                     result.engines.add("vlm")
             return result
         except DocumentReadError as error:
@@ -331,11 +334,12 @@ class DocumentAgent:
         image: bytes,
         fields: FieldCollection,
         issues: list[ValidationIssue],
+        words: list[OcrWord] | None = None,
     ) -> bool:
         vision = self.vision
         if vision is None:
             return False
-        if vision.is_remote and not settings.VISION_ALLOW_REMOTE:
+        if vision.is_remote and not self.allow_remote:
             issues.append(warning("VISION_REMOTE_BLOCKED", "Visão remota exige consentimento."))
             return False
         if self.sanitizer is None:
@@ -343,7 +347,7 @@ class DocumentAgent:
             return False
         called = False
         try:
-            safe_image = self.sanitizer.sanitize(image)
+            safe_image = self.sanitizer.sanitize(image, words)
             if safe_image is None:
                 issues.append(warning("VISION_PRIVACY_BLOCKED", "Visão bloqueada por privacidade."))
                 return False

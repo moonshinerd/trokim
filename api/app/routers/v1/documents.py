@@ -1,5 +1,6 @@
 """Documentos por foto ou PDF: extrair, revisar e confirmar (#96). Sem regra de negócio aqui."""
 
+from collections.abc import Callable
 from typing import Annotated
 
 from fastapi import APIRouter, Depends, HTTPException, Request
@@ -15,7 +16,13 @@ from app.domain.documents import (
 )
 from app.services.agents.document_pipeline import DocumentFailure, DocumentPipeline
 from app.services.document_confirmation import ConfirmationBlocked, confirm_document
-from app.services.document_factory import get_document_agent
+from app.services.document_factory import (
+    ReadingEngine,
+    RemoteConsentRequiredError,
+    VisionUnavailableError,
+    describe_engines,
+    get_document_agent,
+)
 from app.services.document_reading import MAX_FILE_BYTES
 from app.services.library_service import LIBRARY
 
@@ -44,14 +51,30 @@ _FAILURES = {
 
 
 def get_document_pipeline() -> DocumentPipeline:
-    return DocumentPipeline(get_document_agent())
+    """Leitura padrão: só o OCR local, nada sai do aparelho."""
+    return DocumentPipeline(get_document_agent(engine="ocr"))
+
+
+def get_vision_pipeline_factory() -> Callable[[bool], DocumentPipeline]:
+    """Leitura com visão, montada por requisição com o consentimento enviado pelo app."""
+    return lambda allow_remote: DocumentPipeline(
+        get_document_agent(engine="vision", allow_remote=allow_remote)
+    )
+
+
+class _Upload:
+    def __init__(
+        self, content: bytes, account_id: str | None, engine: ReadingEngine, allow_remote: bool
+    ) -> None:
+        self.content, self.account_id = content, account_id
+        self.engine, self.allow_remote = engine, allow_remote
 
 
 def _media_type(content: bytes) -> str | None:
     return next((kind for magic, kind in _MAGIC if content.startswith(magic)), None)
 
 
-async def _read_upload(request: Request) -> tuple[bytes, str | None]:
+async def _read_upload(request: Request) -> _Upload:
     # Inclui espaço limitado para os cabeçalhos multipart e a conta opcional.
     limit = MAX_FILE_BYTES + 65536
 
@@ -65,7 +88,7 @@ async def _read_upload(request: Request) -> tuple[bytes, str | None]:
                 )
             yield chunk
 
-    parser = MultiPartParser(request.headers, bounded_stream(), max_files=1, max_fields=1)
+    parser = MultiPartParser(request.headers, bounded_stream(), max_files=1, max_fields=3)
     parser.spool_max_size = limit
     try:
         form = await parser.parse()
@@ -77,17 +100,38 @@ async def _read_upload(request: Request) -> tuple[bytes, str | None]:
     try:
         upload = form.get("file")
         account = form.get("account_id")
+        engine = form.get("engine") or "ocr"
+        allow_remote = form.get("allow_remote") or "false"
         if not isinstance(upload, UploadFile) or (
             account is not None and not isinstance(account, str)
         ):
             raise HTTPException(422, detail="Informe o arquivo e, opcionalmente, a conta.")
+        if engine not in ("ocr", "vision") or allow_remote not in ("true", "false"):
+            raise HTTPException(
+                422, detail="Use engine 'ocr' ou 'vision' e allow_remote 'true' ou 'false'."
+            )
         if upload.size is None or upload.size > MAX_FILE_BYTES:
             raise HTTPException(
                 413, detail={"code": "FILE_LIMIT", "message": _FAILURES["FILE_LIMIT"][1]}
             )
-        return await upload.read(), account
+        return _Upload(await upload.read(), account, engine, allow_remote == "true")
     finally:
         await form.close()
+
+
+_FAILURES_VISION = (
+    "A leitura com modelo de visão não está configurada neste servidor.",
+    "O modelo de visão configurado é remoto: a imagem sairia do aparelho. "
+    "Autorize o envio nos Ajustes para usá-lo.",
+)
+
+
+@router.get(
+    "/engines",
+    summary="Motores de leitura disponíveis (OCR local e, se configurado, modelo de visão)",
+)
+def engines() -> dict[str, object]:
+    return describe_engines()
 
 
 @router.post(
@@ -104,6 +148,8 @@ async def _read_upload(request: Request) -> tuple[bytes, str | None]:
                         "properties": {
                             "file": {"type": "string", "format": "binary"},
                             "account_id": {"type": "string"},
+                            "engine": {"type": "string", "enum": ["ocr", "vision"]},
+                            "allow_remote": {"type": "string", "enum": ["true", "false"]},
                         },
                     }
                 }
@@ -111,13 +157,30 @@ async def _read_upload(request: Request) -> tuple[bytes, str | None]:
         }
     },
     summary="Lê um comprovante, boleto ou fatura (foto ou PDF) e valida o resultado",
-    responses={413: {}, 415: {}, 422: {}, 503: {}},
+    responses={403: {}, 413: {}, 415: {}, 422: {}, 503: {}},
 )
 async def extract_document(
     connection: Request,
     pipeline: Annotated[DocumentPipeline, Depends(get_document_pipeline)],
+    vision_pipeline: Annotated[
+        Callable[[bool], DocumentPipeline], Depends(get_vision_pipeline_factory)
+    ],
 ) -> DocumentExtractResponse:
-    content, account_id = await _read_upload(connection)
+    upload = await _read_upload(connection)
+    content, account_id = upload.content, upload.account_id
+    if upload.engine == "vision":
+        try:
+            pipeline = vision_pipeline(upload.allow_remote)
+        except VisionUnavailableError:
+            raise HTTPException(
+                status_code=503,
+                detail={"code": "VISION_UNAVAILABLE", "message": _FAILURES_VISION[0]},
+            ) from None
+        except RemoteConsentRequiredError:
+            raise HTTPException(
+                status_code=403,
+                detail={"code": "REMOTE_CONSENT_REQUIRED", "message": _FAILURES_VISION[1]},
+            ) from None
     media_type = _media_type(content)
     if media_type is None:
         raise HTTPException(

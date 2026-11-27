@@ -16,7 +16,13 @@ from app.domain.agents import (
     MultiAgentStatus,
     StepStatus,
 )
-from app.domain.models import EvidenceChunk, Transaction, TransactionOrigin, TransactionType
+from app.domain.models import (
+    CONFIRMED_ORIGINS,
+    EvidenceChunk,
+    Transaction,
+    TransactionOrigin,
+    TransactionType,
+)
 from app.services.agents.orchestrator import REJECTION_MESSAGE, Orchestrator
 from app.services.calculation_service import CalculationService
 from app.services.financial_chat_resolution import resolve_chat_selection
@@ -25,6 +31,18 @@ from app.services.library_service import Library
 from app.services.statement_profiles import normalize_text
 
 DOCUMENT_ORIGIN = "Lido de foto ou PDF, confirmado por você."
+MANUAL_ORIGIN = "Digitado por você na tela de documento, sem leitura de foto ou PDF."
+MIXED_ORIGIN = "Parte lida de foto ou PDF e parte digitada por você; tudo confirmado por você."
+
+
+def origin_text(transactions: Sequence[Transaction]) -> str:
+    """Como o chat descreve a procedência: lido de documento, digitado à mão ou os dois (#117)."""
+    origins = {tx.origin for tx in transactions}
+    if origins == {TransactionOrigin.MANUAL}:
+        return MANUAL_ORIGIN
+    if TransactionOrigin.MANUAL in origins:
+        return MIXED_ORIGIN
+    return DOCUMENT_ORIGIN
 
 
 def _select_transactions(
@@ -38,7 +56,7 @@ def _select_transactions(
             (
                 tx
                 for tx in transactions
-                if tx.uid == document_uid and tx.origin == TransactionOrigin.DOCUMENT
+                if tx.uid == document_uid and tx.origin in CONFIRMED_ORIGINS
             ),
             None,
         )
@@ -52,7 +70,7 @@ def _select_transactions(
         tx
         for tx in transactions
         if normalized
-        and tx.origin == TransactionOrigin.DOCUMENT
+        and tx.origin in CONFIRMED_ORIGINS
         and tx.type == TransactionType.DEBIT
         and tx.counts_in_totals
         and normalize_text(tx.merchant or tx.description) == normalized
@@ -124,7 +142,7 @@ class AgentQueryService:
                         )
                     ],
                 )
-        documents = [tx.uid for tx in selected if tx.origin == TransactionOrigin.DOCUMENT]
+        documents = [tx.uid for tx in selected if tx.origin in CONFIRMED_ORIGINS]
         if not documents:
             return MultiAgentResponse(
                 query=question,
@@ -150,12 +168,13 @@ class AgentQueryService:
             source="CalculationService.calculate_summary",
         )
         references = ", ".join(documents)
+        origin = origin_text(selected)
         evidence = EvidenceChunk(
             id="confirmed_documents",
             source_name="Biblioteca local",
             document_title="Lançamentos confirmados",
             section="Origem dos dados",
-            content=f"Lançamento(s): {references}. {DOCUMENT_ORIGIN}",
+            content=f"Lançamento(s): {references}. {origin}",
         )
         ctx = AgentContext(
             question=question,
@@ -163,13 +182,13 @@ class AgentQueryService:
             calculations=[calculation],
             evidences=[evidence],
             draft_answer=f"Gasto no estabelecimento: R$ {formatted}. "
-            + f"Lançamento(s): {references}. {DOCUMENT_ORIGIN} [1]",
+            + f"Lançamento(s): {references}. {origin} [1]",
         )
         steps = [
             AgentStep(
                 agent=AgentName.ANALYSIS,
                 status=StepStatus.OK,
-                summary=DOCUMENT_ORIGIN,
+                summary=origin,
                 duration_ms=max(1, int((time.perf_counter() - started) * 1000)),
                 detail={
                     "document_uids": documents,

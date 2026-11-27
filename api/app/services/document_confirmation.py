@@ -11,6 +11,7 @@ from app.domain.documents import (
     ReviewedLine,
 )
 from app.domain.models import (
+    CONFIRMED_ORIGINS,
     Account,
     AccountKind,
     Transaction,
@@ -58,6 +59,7 @@ def _transaction(
             else TransactionNature.OTHER
         )
     source_kind = AccountKind.CARD if req.kind == DocumentKind.CARD_INVOICE else account.kind
+    manual = req.origin == "manual"
     return Transaction(
         id=f"doc:{line.date.isoformat()}:{line.amount:.2f}:{line.description.casefold()}"
         + (f":{occurrence}" if occurrence else ""),
@@ -71,9 +73,13 @@ def _transaction(
         counterparty_kind=guess_counterparty_kind(line.description) if is_pix else None,
         category=req.category
         or CategorizationService.categorize(line.description, tx_type=req.type, nature=nature),
-        source_file="documento lido por foto ou PDF",
+        source_file=(
+            "lançamento digitado na tela de documento"
+            if manual
+            else "documento lido por foto ou PDF"
+        ),
         source_kind=source_kind.value if source_kind else None,
-        origin=TransactionOrigin.DOCUMENT,
+        origin=TransactionOrigin.MANUAL if manual else TransactionOrigin.DOCUMENT,
         institution=req.bank or account.institution,
     )
 
@@ -118,7 +124,7 @@ def confirm_document(library: Library, req: DocumentConfirmRequest) -> DocumentC
         known = {
             _identity(tx): tx
             for tx in library.transactions
-            if tx.origin == TransactionOrigin.DOCUMENT and not tx.is_duplicate
+            if tx.origin in CONFIRMED_ORIGINS and not tx.is_duplicate
         }
         repeated = {known[key].uid for key in identities if key in known}
         # Só o reenvio exato sai da conciliação; os campos e o total continuam sendo validados.

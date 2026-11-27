@@ -192,6 +192,16 @@ class AnalysisAgent:
                         f"{from_documents} lançamento(s) vieram de documentos que você enviou "
                         "por foto ou PDF e confirmou depois de revisar."
                     )
+                typed = sum(
+                    1
+                    for t in ctx.transactions
+                    if t.origin == TransactionOrigin.MANUAL and not t.is_duplicate
+                )
+                if typed:
+                    ctx.assumptions.append(
+                        f"{typed} lançamento(s) foram digitados por você na tela de documento, "
+                        "sem leitura de foto ou PDF."
+                    )
 
                 if has_summary_intent:
                     intents.append("resumo")
