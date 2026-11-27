@@ -29,6 +29,7 @@ Este repositório registra formalmente todas as decisões de arquitetura e tecno
 | [**0019**](0019-orm-e-migracoes-numeradas.md) | ORM (SQLAlchemy) e Migrações Numeradas (Alembic) nos Bancos SQLite | <span class="badge-must">Aceita</span> | 18/11/2026 | RF12, RNF01, RNF05, RNF07, GQ03, GQ06 |
 | [**0020**](0020-categorizacao-por-cnae.md) | Categorização por Atividade Econômica (CNAE) com Dados Abertos do CNPJ | <span class="badge-must">Aceita</span> | 18/11/2026 | RF09, RNF01, GQ03, GQ07, GQ11 |
 | [**0021**](0021-visao-e-ocr-modulares.md) | Leitura de Imagem Modular: Portas de OCR e de Visão e Revisão Humana de Documentos | <span class="badge-must">Aceita</span> | 23/11/2026 | RF27, RF28, RNF01, RNF10, RNF12, GQ01, GQ02, GQ03 |
+| [**0022**](0022-registro-de-perfis-e-niveis-de-suporte.md) | Registro de Perfis de Banco, Níveis de Suporte e Tutoriais Guiados | <span class="badge-must">Aceita</span> | 23/11/2026 | RF29, RF15; GQ01, GQ03 |
 | [**0023**](0023-contexto-do-usuario-no-chat.md) | Contexto do usuário no chat | <span class="badge-must">Aceita</span> | 25/11/2026 | RF18, RF19, RF20, RF30; GQ05, GQ07, GQ09 |
 | [**0024**](0024-persistencia-local-e-backup-criptografado.md) | Persistência Local da Biblioteca e Backup Criptografado | <span class="badge-must">Aceita</span> | 23/11/2026 | RF31, RF32, RNF01, RNF05, GQ03, GQ06 |
 | [**0025**](0025-armazenamento-no-aparelho-e-api-sem-estado.md) | Armazenamento no Aparelho e API sem Estado | <span class="badge-must">Aceita</span> | 23/11/2026 | RF31, RF32, RNF01, RNF05, GQ03, GQ06 |
@@ -50,6 +51,8 @@ Este repositório registra formalmente todas as decisões de arquitetura e tecno
 - [0019 — ORM e migrações numeradas](0019-orm-e-migracoes-numeradas.md)
 - [0020 — Categorização por CNAE com dados abertos do CNPJ](0020-categorizacao-por-cnae.md)
 - [0021 — Leitura de imagem modular (OCR e visão) e revisão humana de documentos](0021-visao-e-ocr-modulares.md)
+- [0022 — Registro de perfis de banco, níveis de suporte e tutoriais guiados](0022-registro-de-perfis-e-niveis-de-suporte.md)
+- [0023 — Contexto do usuário no chat](0023-contexto-do-usuario-no-chat.md)
 - [0024 — Persistência local da biblioteca e backup criptografado](0024-persistencia-local-e-backup-criptografado.md)
 - [0025 — Armazenamento no aparelho e API sem estado](0025-armazenamento-no-aparelho-e-api-sem-estado.md)
 - [0026 — Confirmação integral e consulta local de documentos](0026-confirmacao-e-consulta-de-documentos.md)
