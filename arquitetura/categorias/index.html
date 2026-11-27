@@ -1297,6 +1297,23 @@
     </span>
   </a>
   
+    <nav class="md-nav" aria-label="Ordem de decisão">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#protecoes-contra-falso-positivo" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Proteções contra falso positivo
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
         
           <li class="md-nav__item">
@@ -2571,6 +2588,23 @@
     </span>
   </a>
   
+    <nav class="md-nav" aria-label="Ordem de decisão">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#protecoes-contra-falso-positivo" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Proteções contra falso positivo
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
         
           <li class="md-nav__item">
@@ -2727,6 +2761,21 @@ são gasto nem renda (<a href="../../adr/0017-perfis-de-banco-e-natureza-do-lanc
    BB em PDF).</li>
 <li>Entrada sem regra vira <strong>Renda</strong>; o resto fica em <strong>Outros</strong>.</li>
 </ol>
+<h3 id="protecoes-contra-falso-positivo">Proteções contra falso positivo<a class="headerlink" href="#protecoes-contra-falso-positivo" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong>Termos extras</strong> (redes nacionais e palavras do ramo) entram só na regra geral de cada
+  categoria. A regra de delivery, que vem antes de todas, fica só com os aplicativos: senão
+  <code>DROGARIA EXTRA</code> ou <code>POSTO ... FOOD</code> viravam alimentação.</li>
+<li><strong>Pix para pessoa</strong> (<code>pix_enviado</code> com contraparte <code>pessoa</code>) usa só as regras básicas, sem os
+  termos extras e sem o dicionário de redes. Nomes de redes também são sobrenomes (<code>BRETAS</code>,
+  <code>MARISA</code>, <code>VENANCIO</code>), e o texto desse Pix é o nome de quem recebeu.</li>
+<li><strong>Nome colado</strong> só vale em palavra de 10 letras ou mais, e palavras de banco como
+  <code>INTERNETBANKING</code> ficam de fora.</li>
+<li>Locadora <strong>Unidas</strong> só casa com <code>UNIDAS LOCADORA</code> e variações: <code>DROGARIA UNIDAS</code> é saúde.</li>
+<li><strong>Boleto pago a emissor de cartão</strong> (<code>ITAUCARD</code>, <code>BRADESCARD</code>, <code>NU PAGAMENTOS</code>, "cartão"...)
+  é pagamento de fatura, e não gasto: as compras já vêm na fatura daquele cartão.</li>
+</ul>
+<p>Os casos ficam em <code>api/tests/test_revisao_categorizacao.py</code>.</p>
 <h2 id="bancos-alem-de-nubank-e-bb">Bancos além de Nubank e BB<a class="headerlink" href="#bancos-alem-de-nubank-e-bb" title="Permanent link">&para;</a></h2>
 <p>Inter, C6, Itaú, PicPay e Mercado Pago (todos <strong>experimentais</strong>, <a href="../../adr/0022-registro-de-perfis-e-niveis-de-suporte/">ADR 0022</a>)
 usam a mesma classificação por texto em <code>bank_profiles.py</code>, na ordem: pagamento de fatura, <strong>movimento entre
@@ -2765,8 +2814,10 @@ as próprias contas</strong>, estorno, resgate, aplicação, juros e IOF, tarifa
 </table>
 <p>Na primeira medição, o holdout deu <strong>82,9%</strong>. Dos 19 erros, 17 eram de rótulo (o conjunto usava
 uma categoria "compras" que o Trokim não tem) e um mudou a convenção do IPTU, que passou de moradia
-para impostos. Corrigidos os rótulos, ficou em <strong>99,1%</strong> (110/111). O erro que sobra (Zaffari)
-fica no conjunto. Com o dicionário de redes, o conjunto de variações está em 98,8% (256/259). Os dois conjuntos usam só marcas públicas e nomes inventados.</p>
+para impostos. Corrigidos os rótulos, ficou em <strong>99,1%</strong> (110/111); o erro que sobrava (Zaffari)
+saiu com os termos de redes regionais. Na medição de 27/11/2026, o holdout está em <strong>100%</strong>
+(111/111) e o conjunto de variações em <strong>99,6%</strong> (258/259; fica de fora <code>DIA BRASIL SOCIEDADE</code>).
+Os dois conjuntos usam só marcas públicas e nomes inventados.</p>
 <h3 id="extratos-reais-do-desenvolvedor">Extratos reais do desenvolvedor<a class="headerlink" href="#extratos-reais-do-desenvolvedor" title="Permanent link">&para;</a></h3>
 <p>Medição feita só na máquina do desenvolvedor, sem copiar arquivos para o repositório e sem
 imprimir nomes ou documentos. O resultado depende do perfil de cada pessoa: quem paga mais por Pix

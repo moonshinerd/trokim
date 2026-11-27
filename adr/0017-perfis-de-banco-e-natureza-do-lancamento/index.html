@@ -2603,7 +2603,8 @@ leitura, <code>1.250,00</code> virava <code>125,00</code> e compra sem sinal vir
 <li><strong>Natureza do lançamento</strong> (<code>TransactionNature</code>): compra, Pix enviado/recebido, pagamento de
    fatura, resgate e aplicação de investimento, transferência própria, estorno, tarifa, juros e
    outro. <strong>Pagamento de fatura, resgate, aplicação e transferência própria não entram nos
-   totais</strong> (<code>NATURES_EXCLUDED_FROM_TOTALS</code>), o que evita contar duas vezes. <strong>Estorno abate a
+   totais</strong> (<code>NATURES_EXCLUDED_FROM_TOTALS</code>), o que evita contar duas vezes. Boleto pago a
+   emissor de cartão (<code>ITAUCARD</code>, <code>NU PAGAMENTOS</code>...) também é pagamento de fatura. <strong>Estorno abate a
    despesa</strong> em vez de virar receita. A conta continua determinística
    (<a href="../0004-calculos-deterministicos/">ADR 0004</a>).</li>
 <li><strong>Estabelecimento e privacidade.</strong> O texto do lançamento é reescrito: o app e a API só
