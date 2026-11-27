@@ -1,6 +1,6 @@
 # Document Agent
 
-!!! info "Status: Em Desenvolvimento (Semana 5 — Multimodalidade)"
+!!! info "Status: Implementado (Semana 5 — Multimodalidade)"
     Épico [#86](https://github.com/moonshinerd/trokim/issues/86), Issues [#88](https://github.com/moonshinerd/trokim/issues/88) e [#89](https://github.com/moonshinerd/trokim/issues/89). O agente multimodal realiza a extração e estruturação de documentos financeiros a partir de imagens e PDFs escaneados (faturas, boletos e comprovantes de Pix), com validação determinística de campos e conciliação com a biblioteca.
 
 O **DocumentAgent** é responsável pela ingestão e extração multimodal do Trokim. Ele processa arquivos visuais (fotos de comprovantes ou faturas em PDF), identifica o tipo documental, extrai campos estruturados (datas, valores, favorecidos, linhas de itens) e submete o resultado à validação do [Validation Agent](validation-agent.md#6-validacao-de-documentos-multimodais-e-conciliacao-semana-5).
