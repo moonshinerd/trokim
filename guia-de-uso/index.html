@@ -4286,16 +4286,33 @@ educação financeira. Acima da conversa, dois seletores definem o recorte da pe
   no formato brasileiro), cada um com link para os <strong>lançamentos de origem</strong> usados
   na conta.</li>
 <li><strong>Perguntas sugeridas</strong> a partir do que já foi importado, como "quanto falta das
-  parcelas?" ou "quanto vence nos próximos 30 dias?".</li>
+  parcelas?", "qual o total da fatura aberta?" ou os gastos do último mês com lançamentos.
+  Numa fatura aberta, esse mês é o da data de exportação, não o do fechamento: uma fatura
+  que fecha em 03/12, exportada em 14/11, sugere novembro.</li>
 <li>A trilha <strong>Como cheguei a essa resposta</strong>, agora também com os cálculos que
   sustentam cada número.</li>
 </ul>
-<p>Sem nenhum dado importado, o chat não manda a pergunta: ele explica o que importar e
-oferece o atalho direto para o fluxo de importação (<strong>Importar extrato</strong> ou
-<strong>Fotografar documento</strong>).</p>
-<!-- captura: chat com os seletores de conta e período e um cartão de cálculo -->
-<!-- captura: estado vazio do chat com o atalho para importação -->
-
+<p>Sem nenhum dado importado, uma pergunta sobre os <strong>próprios lançamentos</strong> ("quanto
+gastei?", "qual o total da fatura?", "quanto falta das parcelas?") não é enviada: o chat
+explica o que importar e oferece o atalho para o fluxo de importação. Pergunta de
+educação financeira ("como montar uma reserva de emergência?") segue para o RAG mesmo com
+a biblioteca vazia.</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: center;">Seletores e sugestões</th>
+<th style="text-align: center;">Cartão de cálculo</th>
+<th style="text-align: center;">Parcelas a pagar</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: center;"><img alt="Chat com os seletores de conta e período" src="../assets/homologacao/semana-5/11-chat-seletores.webp" width="220" /></td>
+<td style="text-align: center;"><img alt="Resposta com o lançamento lido da foto" src="../assets/homologacao/semana-5/12-chat-documento.webp" width="220" /></td>
+<td style="text-align: center;"><img alt="Parcelas a pagar calculadas por código" src="../assets/homologacao/semana-5/13-chat-parcelas.webp" width="220" /></td>
+</tr>
+</tbody>
+</table>
 <h2 id="conferir-um-arquivo-real-de-banco">Conferir um arquivo real de banco<a class="headerlink" href="#conferir-um-arquivo-real-de-banco" title="Permanent link">&para;</a></h2>
 <p>Para um banco experimental virar <strong>Validado</strong>, alguém precisa testar com um arquivo <strong>real</strong> da própria conta:</p>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-17-1"><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a>make<span class="w"> </span>validar-banco<span class="w"> </span><span class="nv">ARQUIVO</span><span class="o">=</span>/caminho/do/arquivo.pdf<span class="w">   </span><span class="c1"># ou .ofx, .csv</span>

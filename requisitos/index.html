@@ -2848,6 +2848,13 @@
 <td><strong>RF21</strong> ganha os seletores de conta/dono e período no chat, os cartões de cálculo com link para os lançamentos de origem e as perguntas sugeridas pelos dados importados; <strong>RF27</strong> e <strong>RF28</strong> passam a implementados de ponta a ponta: o app chama <code>extract</code>/<code>confirm</code> reais, mostra a trilha do motor, trata os erros de documento com nova tentativa e envia <code>origin</code>; <strong>RF30</strong> ganha a interface de contexto e o estado vazio que leva à importação; <strong>RNF12</strong> ganha a escolha de motor em Ajustes e o consentimento explícito salvo para provedor remoto (<code>allow_remote</code>).</td>
 <td style="text-align: center;">Equipe Trokim</td>
 </tr>
+<tr>
+<td style="text-align: center;"><strong>v1.13.1</strong></td>
+<td style="text-align: center;">27/11/2026</td>
+<td style="text-align: center;">Semana 5 (<em>Homologação</em>)</td>
+<td>Correções da homologação da #100: no <strong>RF21</strong>, sem dados importados só a pergunta sobre os próprios lançamentos leva à importação (a de educação financeira segue para o RAG) e a sugestão do mês usa o último dia com lançamento; no <strong>RNF01</strong>, a API deixa de abrir conexão externa ao iniciar.</td>
+<td style="text-align: center;">Equipe Trokim</td>
+</tr>
 </tbody>
 </table>
 <hr />
@@ -3144,7 +3151,7 @@
 <td style="text-align: center;"><span class="badge-must">Must have</span></td>
 <td style="text-align: center;"><a href="../pesquisa/guiding-questions/">GQ07</a>, <a href="../pesquisa/guiding-questions/">GQ09</a>, <a href="../pesquisa/guiding-questions/">GQ13</a></td>
 <td style="text-align: center;"><a href="../adr/0004-calculos-deterministicos/">ADR 0004</a>, <a href="../adr/0018-contas-periodos-transferencias-e-visoes/">ADR 0018</a></td>
-<td style="text-align: center;">Camada de cálculo (#94) e integração ao chat (#95) implementadas: filtros opcionais, esclarecimento, contexto agregado e auditoria dos números. O vencimento da fatura é guardado quando o PDF o informa (Itaú e PicPay). Na #97, o app ganhou os seletores de conta/dono e período, os cartões de cálculo com link para a origem e o estado vazio que leva à importação.</td>
+<td style="text-align: center;">Camada de cálculo (#94) e integração ao chat (#95) implementadas: filtros opcionais, esclarecimento, contexto agregado e auditoria dos números. O vencimento da fatura é guardado quando o PDF o informa (Itaú e PicPay). Na #97, o app ganhou os seletores de conta/dono e período, os cartões de cálculo com link para a origem e o estado vazio que leva à importação (só nas perguntas sobre os próprios lançamentos, desde a homologação da #100).</td>
 </tr>
 <tr>
 <td style="text-align: center;"><strong>RF31</strong></td>
@@ -3531,8 +3538,8 @@
 <td style="text-align: center;"><strong>RNF01</strong></td>
 <td style="text-align: center;">GQ03, GQ06</td>
 <td style="text-align: center;"><a href="../adr/0002-fastapi-sqlite-local/">ADR 0002</a>, <a href="../adr/0005-importacao-local-ofx-pdf/">0005</a>, <a href="../adr/0019-orm-e-migracoes-numeradas/">0019</a></td>
-<td><code>api/app/db/database.py</code>, <code>api/migrations/</code></td>
-<td><code>api/tests/test_health.py</code>, <code>api/tests/test_migrations.py</code></td>
+<td><code>api/app/db/database.py</code>, <code>api/migrations/</code>, <code>api/app/__init__.py</code></td>
+<td><code>api/tests/test_health.py</code>, <code>api/tests/test_migrations.py</code>, <code>api/tests/test_sem_rede_na_abertura.py</code></td>
 </tr>
 <tr>
 <td style="text-align: center;"><strong>RNF02</strong></td>

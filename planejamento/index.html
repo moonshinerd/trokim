@@ -869,6 +869,17 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#75-homologacao-da-entrega-5-100" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        7.5 Homologação da Entrega 5 (#100)
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#atualizacao-de-implementacao-da-95-25112026" class="md-nav__link">
     <span class="md-ellipsis">
       <span class="md-typeset">
@@ -3058,6 +3069,17 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#75-homologacao-da-entrega-5-100" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        7.5 Homologação da Entrega 5 (#100)
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#atualizacao-de-implementacao-da-95-25112026" class="md-nav__link">
     <span class="md-ellipsis">
       <span class="md-typeset">
@@ -3141,7 +3163,7 @@
 <td style="text-align: center;"><strong>Semana 5</strong></td>
 <td>Multimodalidade</td>
 <td>Assistente multimodal (leitura de faturas PDF, extratos e comprovantes em imagem)</td>
-<td style="text-align: center;"><span class="badge-must">Concluída</span> (homologação em aparelho pendente)</td>
+<td style="text-align: center;"><span class="badge-must">Concluída</span> (homologada no Chrome emulando Android; aparelho físico pendente)</td>
 <td style="text-align: center;">23/11 a 27/11</td>
 </tr>
 <tr>
@@ -3918,16 +3940,171 @@ todos os erros são espaço ou acento em nomes, os números acertam 100%); (2) a
 dos ilegíveis <strong>sustentada</strong>; (3) a VLM <strong>não</strong> melhorou a leitura neste corpus, porque o agente
 só a consulta quando falta campo; (4) o chat calcula 32 de 32 valores certos e entrega 27 de 32
 com o Qwen de 1,5 B, sem número inventado na resposta final.</p>
-<p><strong>Pendências assumidas:</strong> a homologação em aparelho Android real (<a href="https://github.com/moonshinerd/trokim/issues/100">#100</a>)
-não foi feita (o app foi testado como Flutter Web); revisão humana cega dos resultados; repetição
+<p><strong>Pendências assumidas:</strong> a homologação em aparelho Android <strong>físico</strong> (a <a href="https://github.com/moonshinerd/trokim/issues/100">#100</a>
+foi feita no Chrome emulando um Pixel 7, seção 7.5); revisão humana cega dos resultados; repetição
 das execuções; a VLM como corretora de nomes (hoje só complementa campo ausente) e as faturas em
 que a VLM repete a chave <code>amount</code>; datas no formato brasileiro ainda retidas pelo validador.</p>
+<h3 id="75-homologacao-da-entrega-5-100">7.5 Homologação da Entrega 5 (#100)<a class="headerlink" href="#75-homologacao-da-entrega-5-100" title="Permanent link">&para;</a></h3>
+<p><strong>Data:</strong> 27/11/2026. <strong>Ambiente:</strong> o app compilado como Flutter Web e aberto no Chrome emulando
+um Pixel 7 (412 × 915 px, toque, agente de usuário do Android 14, <code>pt-BR</code>), com a API local na
+porta 8010, banco SQLite temporário, OCR local (RapidOCR), <code>ollama/qwen2.5:1.5b</code> no chat e,
+na etapa de visão, <code>openrouter/google/gemini-2.5-flash-lite</code> como modelo remoto. Só arquivos de
+<code>research/synthetic_data/</code>.</p>
+<p><strong>O que difere de um aparelho de verdade.</strong> O navegador não tem câmera (a foto entra por
+<strong>Escolher imagem</strong>) nem o armazenamento criptografado do aparelho: a compilação web usa a
+biblioteca em memória (<code>mobile/homologacao/main_web.dart</code>), porque o <code>path_provider</code> não tem
+implementação web. Isso não muda as telas nem as chamadas à API. A equipe aceitou a emulação
+como homologação desta entrega; instalar o APK num aparelho físico fica como pendência.</p>
+<p><strong>Como repetir:</strong> <code>mobile/homologacao/preparar_web.sh</code> compila e serve o app; depois,
+<code>uv run --project api --with playwright python mobile/homologacao/roteiro_web.py &lt;pasta&gt;</code>
+toca cada botão e salva um print por passo (<code>--visao</code> inclui a etapa remota, com a chave em
+<code>OPENROUTER_API_KEY</code>). O roteiro rodou inteiro duas vezes, sem falha.</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: center;">#</th>
+<th>Passo</th>
+<th>Resultado</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: center;">1</td>
+<td>Foto legível <code>D02.png</code> (Pix) com OCR local</td>
+<td>Banco, valor (546,40), data e favorecido lidos com confiança alta, em 5,9 a 12,9 s. O nome sai colado (<code>PessoaExemploAlfa</code>) e é corrigido na revisão antes de <strong>Confirmar</strong></td>
+</tr>
+<tr>
+<td style="text-align: center;">2</td>
+<td>Foto ilegível <code>D32.png</code></td>
+<td>Nenhum campo, pedido de nova foto, nada criado; o porteiro de qualidade decide em 89 ms</td>
+</tr>
+<tr>
+<td style="text-align: center;">3</td>
+<td>PDF de fatura <code>D05.pdf</code></td>
+<td>Banco, vencimento, total e três linhas em 8,3 s; a data de emissão vazia bloqueia <strong>Confirmar</strong> até ser preenchida</td>
+</tr>
+<tr>
+<td style="text-align: center;">4</td>
+<td>Importar <code>fatura_nubank_aberta_pessoal.ofx</code></td>
+<td>O app pergunta o dono (pessoal ou Empresas) e se a fatura ainda está aberta; entra como conta pessoal</td>
+</tr>
+<tr>
+<td style="text-align: center;">5</td>
+<td>Chat: "Quanto gastei na Pessoa Exemplo Alfa?"</td>
+<td>R$ 546,40, o lançamento e "Lido de foto ou PDF, confirmado por você"</td>
+</tr>
+<tr>
+<td style="text-align: center;">6</td>
+<td>Chat: "Quais parcelas ainda tenho a pagar?"</td>
+<td>R$ 1.351,24 em 3 parcelamentos, R$ 426,41 por mês, até 2027-03</td>
+</tr>
+<tr>
+<td style="text-align: center;">7</td>
+<td>Chat com <strong>Fatura aberta</strong> no seletor: "Quanto gastei?"</td>
+<td>O card mostra R$ 527,65 (calculado por código), mas o texto do Qwen de 1,5 B foi retido pelo validador nas duas execuções</td>
+</tr>
+<tr>
+<td style="text-align: center;">8</td>
+<td>Tutorial do PicPay</td>
+<td>Marcado como <strong>Experimental</strong>, com fatura do cartão e extrato da conta</td>
+</tr>
+<tr>
+<td style="text-align: center;">9</td>
+<td>Chat geral sem dados importados: reserva de emergência, auditoria e um poema (fora do escopo)</td>
+<td>Resposta fundamentada com fontes da CVM e do BCB; abstenção no poema, com perguntas rápidas</td>
+</tr>
+<tr>
+<td style="text-align: center;">10</td>
+<td>API desligada e religada</td>
+<td>Erro amigável com <strong>Tentar novamente</strong>; a nova tentativa responde sem duplicar a pergunta</td>
+</tr>
+<tr>
+<td style="text-align: center;">11</td>
+<td>Visão remota em Ajustes</td>
+<td>O app pede consentimento antes de qualquer envio; com ele salvo, a fatura <code>D12.jpg</code> foi lida em 7,4 a 8,3 s</td>
+</tr>
+<tr>
+<td style="text-align: center;">12</td>
+<td>Sem internet (rede externa bloqueada no processo da API)</td>
+<td>O OCR local leu <code>D02.png</code> como no passo 1</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Defeitos achados e corrigidos neste PR:</strong></p>
+<ul>
+<li><strong>Chat geral bloqueado sem dados.</strong> Com a biblioteca vazia, o chat respondia "importe um
+  extrato" a qualquer pergunta, até a "como montar uma reserva de emergência?", e o RAG da
+  Semana 3 ficava fora do alcance de quem acabou de instalar o app. Agora só pergunta sobre os
+  próprios lançamentos leva à importação (<code>asksAboutOwnData</code>, em <code>chat_controller.dart</code>).</li>
+<li><strong>Sugestão de um mês sem dados.</strong> A fatura aberta vai até o fechamento (03/12), mas só tem
+  lançamentos até a exportação (14/11). O chat sugeria "Gastos de dez/2026", que respondia
+  "não há dados". A sugestão e o seletor de período passam a usar o último dia com lançamento
+  (<code>covered_until</code>).</li>
+<li><strong>Selo "OFX" em documento.</strong> O lançamento confirmado de uma foto aparecia em Extratos com o
+  selo <strong>OFX</strong>; agora mostra <strong>Documento</strong> (ou <strong>Manual</strong>, quando digitado).</li>
+<li><strong>Rede na abertura da API.</strong> Ao ser importado, o LiteLLM baixava do GitHub a tabela de preços
+  dos modelos e, sem internet, tentava três vezes antes de desistir. A API passa a usar a cópia
+  local (<code>api/app/__init__.py</code>), e um teste garante que importar a API não abre conexão externa.</li>
+<li><strong>Roteiro da demonstração.</strong> O tutorial do PicPay fica em <strong>Extratos → Importar extrato</strong>, não
+  em Ajustes; corrigido em <a href="../apresentacao/">Apresentação</a>.</li>
+</ul>
+<p><strong>Bugs conhecidos (não quebram a demonstração; ficam como limitação):</strong></p>
+<ul>
+<li>Com <strong>Fatura aberta</strong> no seletor, o texto da resposta a "Quanto gastei?" foi retido pelo
+  validador; o número aparece no card de cálculo. A pergunta sugerida para esse recorte ("Qual
+  o total da fatura aberta?") e o roteiro da demonstração não passam por esse caso.</li>
+<li>Na fatura <code>D12.jpg</code> com a visão remota, total e data ficaram vazios e a contribuição da visão
+  foi descartada (a falha de formato já registrada no benchmark, seção 11 do Histórico de
+  resultados); a revisão bloqueia <strong>Confirmar</strong> até o usuário preencher.</li>
+<li>A trilha da foto ilegível diz "confira os avisos antes de confirmar", embora não haja o que
+  confirmar.</li>
+<li>O card de fonte "Biblioteca local" mostra "Relevância 0%", número que só faz sentido para
+  trechos do RAG.</li>
+</ul>
+<p><strong>Pendências:</strong> APK num aparelho Android físico, com câmera de verdade; modo avião no aparelho
+(aqui o bloqueio foi no processo da API); arquivos reais do PicPay e do Mercado Pago, que só o
+dono da conta pode testar no próprio aparelho; ensaio da apresentação pela equipe.</p>
+<p><strong>Repositório:</strong> nenhuma chave nos arquivos versionados e só dados sintéticos; os prints usam
+apenas <code>research/synthetic_data/</code>.</p>
+<p><strong>Entrega:</strong> tag <code>entrega-5</code>, no commit de merge deste PR na <code>main</code>.</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: center;">Revisão do OCR</th>
+<th style="text-align: center;">Foto ilegível</th>
+<th style="text-align: center;">PDF de fatura</th>
+<th style="text-align: center;">Extratos</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: center;"><img alt="Revisão do OCR" src="../assets/homologacao/semana-5/03-revisao-ocr.webp" width="180" /></td>
+<td style="text-align: center;"><img alt="Foto ilegível" src="../assets/homologacao/semana-5/06-ilegivel.webp" width="180" /></td>
+<td style="text-align: center;"><img alt="PDF de fatura" src="../assets/homologacao/semana-5/07-pdf-fatura.webp" width="180" /></td>
+<td style="text-align: center;"><img alt="Extratos" src="../assets/homologacao/semana-5/09b-extratos-lista.webp" width="180" /></td>
+</tr>
+<tr>
+<td style="text-align: center;"><strong>Chat com o documento</strong></td>
+<td style="text-align: center;"><strong>Parcelas</strong></td>
+<td style="text-align: center;"><strong>Banco experimental</strong></td>
+<td style="text-align: center;"><strong>Consentimento</strong></td>
+</tr>
+<tr>
+<td style="text-align: center;"><img alt="Chat com o documento" src="../assets/homologacao/semana-5/12-chat-documento.webp" width="180" /></td>
+<td style="text-align: center;"><img alt="Parcelas" src="../assets/homologacao/semana-5/13-chat-parcelas.webp" width="180" /></td>
+<td style="text-align: center;"><img alt="Tutorial do PicPay" src="../assets/homologacao/semana-5/15-tutorial-picpay.webp" width="180" /></td>
+<td style="text-align: center;"><img alt="Consentimento" src="../assets/homologacao/semana-5/27-dialogo-consentimento.webp" width="180" /></td>
+</tr>
+</tbody>
+</table>
+<p>Os 26 prints estão em <code>docs/assets/homologacao/semana-5/</code>.</p>
 <h3 id="atualizacao-de-implementacao-da-95-25112026">Atualização de implementação da #95 — 25/11/2026<a class="headerlink" href="#atualizacao-de-implementacao-da-95-25112026" title="Permanent link">&para;</a></h3>
 <p>Integração implementada sobre a #94 e a #96: roteamento determinístico, filtros do endpoint,
 esclarecimentos sem modelo, validação de números pessoais e prompt agregado. A
 <a href="../adr/0023-contexto-do-usuario-no-chat/">ADR 0023</a> registra o limite de privacidade.
 As dependências na tabela acima descrevem a ordem planejada; a #94 já foi integrada.
-A integração visual (#97), o benchmark ampliado (#98) e a homologação (#100) seguem separados.</p>
+A integração visual (#97), o benchmark ampliado (#98) e a homologação (#100) seguiram separados
+(a homologação está na seção 7.5).</p>
 
 
 
