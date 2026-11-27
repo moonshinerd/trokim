@@ -1,0 +1,956 @@
+{
+  "commit": "f280d9c952ecfc7e565abf77d95f4e7569b84c1b",
+  "dirty": true,
+  "python": "3.12.13",
+  "platform": "Linux-7.0.0-44-generic-x86_64-with-glibc2.43",
+  "packages": {
+    "pillow": "13.0.0",
+    "numpy": "2.5.4",
+    "pypdfium2": "5.15.2",
+    "rapidocr-onnxruntime": "1.4.4",
+    "onnxruntime": "1.31.1",
+    "litellm": "1.108.0"
+  },
+  "manifest_sha256": "9cb0b412e3072025da629de37f183a5aeabf57261101a4371dab3d80cc030b89",
+  "source_sha256": {
+    "api/../research/rag_benchmark/compare_document_engines.py": "944bc41346bef491ea1d584a010cc91424cf149a63fbece9b446a9d5e19d04fd",
+    "research/rag_benchmark/document_dataset.py": "74c7fd6716e6d53f5952b42e0d0bbd6a828ee25ed94dbd20f0a961b28bd4b043",
+    "research/rag_benchmark/document_evaluation.py": "a780ec627444bc04d4b647dc766ddf331f7c595cfc7e2d94f4d1a1d2d357a870",
+    "api/app/services/document_adapter.py": "70f10dd6b63b29bd9b366da5185688908cc79e94cd267212baa143f37edce021",
+    "api/app/services/document_confirmation.py": "01825250177fb8bdb79169910856a9d58a2999bf0328a2e28246777cc3e24fdb",
+    "api/app/services/document_factory.py": "b1246233c7780dd3f80a6208aec9a6c3fcf6e9929a88acb9d75ea21d78763e88",
+    "api/app/services/document_fields.py": "edddc33ac0db99d418c1bb40f480a061734431d8ae0482382f7efb00a99e7648",
+    "api/app/services/document_ocr.py": "75ee3e298246d3e35f9563301d8d21b5b8a664ad1bac87a8bfc4bfb17324c7de",
+    "api/app/services/document_reading.py": "0453debcd8c25e53c213751ff2c1d34e8d8960bb619c92f9c43cc368b5cc4a8c",
+    "api/app/services/document_validation.py": "6e2cf5f7aa3e52d22184423646b1df2ba8516356c0b48ad511477e05ab926379",
+    "api/app/services/agents/document.py": "7b76198408f7272e36601b020ef274aef3da0eb7810ef729310c9409ba5ceb9e",
+    "api/app/services/image_quality.py": "02f237d0aa09ebb8c7d53db183bbaa58673069e344c15e6cd74dd24d4dcbdfc4",
+    "api/app/clients/rapidocr_provider.py": "a03d7e0325bf7296a1df6d230d6f4245192bcb1ec396babc850a36939ef7c90e",
+    "api/app/clients/litellm_vision_provider.py": "6c92b7ddca8bcabdbb4df5b0aa6da6f92e8622ef13e5a69c0b913c609d5913dc",
+    "api/app/models/vision_provider.py": "7003038d06d079b1f2873650eabbd9916b74f403dbe58d3cc65f45fbdc8741dc",
+    "api/app/domain/documents.py": "5044fb1bb2edf2b7d06cfb6a6bf9aa3da9a105fa7f2eb58f08abac75814b19c9"
+  },
+  "created_at": "2026-11-27T04:01:28.661800+00:00",
+  "engine": "ocr",
+  "model": null,
+  "api_base": null,
+  "timeout_seconds": 600.0,
+  "status": "completed",
+  "synthetic_only": true,
+  "sanitizer": "identidade exclusivamente para os insumos sintéticos validados por manifesto",
+  "threshold_policy": "constantes do app congeladas; nenhum ajuste nos dois conjuntos",
+  "limitations": [
+    "Sem revisão humana cega; documentos sintéticos.",
+    "Inventados: chaves sem suporte recuperável; valores errados em contador separado.",
+    "Custo estimado pela tabela do litellm quando há preço do modelo; senão nulo.",
+    "Falhas técnicas não contam como acerto nem abstenção correta."
+  ],
+  "completed_documents": 40,
+  "summary": {
+    "calibration": {
+      "documents": 20,
+      "completed_documents": 20,
+      "correct_fields": 47,
+      "recoverable_fields": 57,
+      "wrong_fields": 10,
+      "missing_fields": 0,
+      "invented_fields": 0,
+      "correct_documents": 4,
+      "technical_failures": 0,
+      "illegible_documents": 3,
+      "safe_abstentions": 3,
+      "false_accepts": 0,
+      "per_field": {
+        "amount": {
+          "correct": 10,
+          "expected": 10,
+          "accuracy": 1.0
+        },
+        "date": {
+          "correct": 5,
+          "expected": 5,
+          "accuracy": 1.0
+        },
+        "counterparty": {
+          "correct": 5,
+          "expected": 9,
+          "accuracy": 0.5555555555555556
+        },
+        "total": {
+          "correct": 5,
+          "expected": 5,
+          "accuracy": 1.0
+        },
+        "due_date": {
+          "correct": 11,
+          "expected": 11,
+          "accuracy": 1.0
+        },
+        "bank": {
+          "correct": 11,
+          "expected": 17,
+          "accuracy": 0.6470588235294118
+        }
+      },
+      "field_accuracy": 0.8245614035087719,
+      "document_accuracy": 0.2,
+      "safe_abstention_rate": 1.0,
+      "latency_ms": {
+        "mean": 4675.231,
+        "p95": 9260.66
+      },
+      "usage": {
+        "calls": 0,
+        "prompt_tokens": 0,
+        "completion_tokens": 0,
+        "estimated_cost_usd": 0.0,
+        "cost_status": "sem chamadas de visão"
+      },
+      "by_degradation": {
+        "blur:mild": {
+          "documents": 1,
+          "completed_documents": 1,
+          "correct_fields": 3,
+          "recoverable_fields": 4,
+          "wrong_fields": 1,
+          "missing_fields": 0,
+          "invented_fields": 0,
+          "correct_documents": 0,
+          "technical_failures": 0,
+          "illegible_documents": 0,
+          "safe_abstentions": 0,
+          "false_accepts": 0,
+          "per_field": {
+            "amount": {
+              "correct": 1,
+              "expected": 1,
+              "accuracy": 1.0
+            },
+            "date": {
+              "correct": 1,
+              "expected": 1,
+              "accuracy": 1.0
+            },
+            "counterparty": {
+              "correct": 0,
+              "expected": 1,
+              "accuracy": 0.0
+            },
+            "total": {
+              "correct": 0,
+              "expected": 0,
+              "accuracy": null
+            },
+            "due_date": {
+              "correct": 0,
+              "expected": 0,
+              "accuracy": null
+            },
+            "bank": {
+              "correct": 1,
+              "expected": 1,
+              "accuracy": 1.0
+            }
+          },
+          "field_accuracy": 0.75,
+          "document_accuracy": 0.0,
+          "safe_abstention_rate": null,
+          "latency_ms": {
+            "mean": 4898.22,
+            "p95": 4898.22
+          },
+          "usage": {
+            "calls": 0,
+            "prompt_tokens": 0,
+            "completion_tokens": 0,
+            "estimated_cost_usd": 0.0,
+            "cost_status": "sem chamadas de visão"
+          }
+        },
+        "blur:severe": {
+          "documents": 3,
+          "completed_documents": 3,
+          "correct_fields": 0,
+          "recoverable_fields": 0,
+          "wrong_fields": 0,
+          "missing_fields": 0,
+          "invented_fields": 0,
+          "correct_documents": 3,
+          "technical_failures": 0,
+          "illegible_documents": 3,
+          "safe_abstentions": 3,
+          "false_accepts": 0,
+          "per_field": {
+            "amount": {
+              "correct": 0,
+              "expected": 0,
+              "accuracy": null
+            },
+            "date": {
+              "correct": 0,
+              "expected": 0,
+              "accuracy": null
+            },
+            "counterparty": {
+              "correct": 0,
+              "expected": 0,
+              "accuracy": null
+            },
+            "total": {
+              "correct": 0,
+              "expected": 0,
+              "accuracy": null
+            },
+            "due_date": {
+              "correct": 0,
+              "expected": 0,
+              "accuracy": null
+            },
+            "bank": {
+              "correct": 0,
+              "expected": 0,
+              "accuracy": null
+            }
+          },
+          "field_accuracy": null,
+          "document_accuracy": 1.0,
+          "safe_abstention_rate": 1.0,
+          "latency_ms": {
+            "mean": 50.14333333333333,
+            "p95": 51.18
+          },
+          "usage": {
+            "calls": 0,
+            "prompt_tokens": 0,
+            "completion_tokens": 0,
+            "estimated_cost_usd": 0.0,
+            "cost_status": "sem chamadas de visão"
+          }
+        },
+        "crop:moderate": {
+          "documents": 2,
+          "completed_documents": 2,
+          "correct_fields": 3,
+          "recoverable_fields": 5,
+          "wrong_fields": 2,
+          "missing_fields": 0,
+          "invented_fields": 0,
+          "correct_documents": 0,
+          "technical_failures": 0,
+          "illegible_documents": 0,
+          "safe_abstentions": 0,
+          "false_accepts": 0,
+          "per_field": {
+            "amount": {
+              "correct": 1,
+              "expected": 1,
+              "accuracy": 1.0
+            },
+            "date": {
+              "correct": 0,
+              "expected": 0,
+              "accuracy": null
+            },
+            "counterparty": {
+              "correct": 1,
+              "expected": 1,
+              "accuracy": 1.0
+            },
+            "total": {
+              "correct": 0,
+              "expected": 0,
+              "accuracy": null
+            },
+            "due_date": {
+              "correct": 1,
+              "expected": 1,
+              "accuracy": 1.0
+            },
+            "bank": {
+              "correct": 0,
+              "expected": 2,
+              "accuracy": 0.0
+            }
+          },
+          "field_accuracy": 0.6,
+          "document_accuracy": 0.0,
+          "safe_abstention_rate": null,
+          "latency_ms": {
+            "mean": 4817.535,
+            "p95": 4907.77
+          },
+          "usage": {
+            "calls": 0,
+            "prompt_tokens": 0,
+            "completion_tokens": 0,
+            "estimated_cost_usd": 0.0,
+            "cost_status": "sem chamadas de visão"
+          }
+        },
+        "low_light:mild": {
+          "documents": 1,
+          "completed_documents": 1,
+          "correct_fields": 3,
+          "recoverable_fields": 4,
+          "wrong_fields": 1,
+          "missing_fields": 0,
+          "invented_fields": 0,
+          "correct_documents": 0,
+          "technical_failures": 0,
+          "illegible_documents": 0,
+          "safe_abstentions": 0,
+          "false_accepts": 0,
+          "per_field": {
+            "amount": {
+              "correct": 1,
+              "expected": 1,
+              "accuracy": 1.0
+            },
+            "date": {
+              "correct": 0,
+              "expected": 0,
+              "accuracy": null
+            },
+            "counterparty": {
+              "correct": 0,
+              "expected": 1,
+              "accuracy": 0.0
+            },
+            "total": {
+              "correct": 0,
+              "expected": 0,
+              "accuracy": null
+            },
+            "due_date": {
+              "correct": 1,
+              "expected": 1,
+              "accuracy": 1.0
+            },
+            "bank": {
+              "correct": 1,
+              "expected": 1,
+              "accuracy": 1.0
+            }
+          },
+          "field_accuracy": 0.75,
+          "document_accuracy": 0.0,
+          "safe_abstention_rate": null,
+          "latency_ms": {
+            "mean": 5990.6,
+            "p95": 5990.6
+          },
+          "usage": {
+            "calls": 0,
+            "prompt_tokens": 0,
+            "completion_tokens": 0,
+            "estimated_cost_usd": 0.0,
+            "cost_status": "sem chamadas de visão"
+          }
+        },
+        "none:none": {
+          "documents": 10,
+          "completed_documents": 10,
+          "correct_fields": 31,
+          "recoverable_fields": 36,
+          "wrong_fields": 5,
+          "missing_fields": 0,
+          "invented_fields": 0,
+          "correct_documents": 1,
+          "technical_failures": 0,
+          "illegible_documents": 0,
+          "safe_abstentions": 0,
+          "false_accepts": 0,
+          "per_field": {
+            "amount": {
+              "correct": 6,
+              "expected": 6,
+              "accuracy": 1.0
+            },
+            "date": {
+              "correct": 3,
+              "expected": 3,
+              "accuracy": 1.0
+            },
+            "counterparty": {
+              "correct": 4,
+              "expected": 6,
+              "accuracy": 0.6666666666666666
+            },
+            "total": {
+              "correct": 4,
+              "expected": 4,
+              "accuracy": 1.0
+            },
+            "due_date": {
+              "correct": 7,
+              "expected": 7,
+              "accuracy": 1.0
+            },
+            "bank": {
+              "correct": 7,
+              "expected": 10,
+              "accuracy": 0.7
+            }
+          },
+          "field_accuracy": 0.8611111111111112,
+          "document_accuracy": 0.1,
+          "safe_abstention_rate": null,
+          "latency_ms": {
+            "mean": 5356.39,
+            "p95": 9260.66
+          },
+          "usage": {
+            "calls": 0,
+            "prompt_tokens": 0,
+            "completion_tokens": 0,
+            "estimated_cost_usd": 0.0,
+            "cost_status": "sem chamadas de visão"
+          }
+        },
+        "reflection:moderate": {
+          "documents": 2,
+          "completed_documents": 2,
+          "correct_fields": 4,
+          "recoverable_fields": 5,
+          "wrong_fields": 1,
+          "missing_fields": 0,
+          "invented_fields": 0,
+          "correct_documents": 0,
+          "technical_failures": 0,
+          "illegible_documents": 0,
+          "safe_abstentions": 0,
+          "false_accepts": 0,
+          "per_field": {
+            "amount": {
+              "correct": 1,
+              "expected": 1,
+              "accuracy": 1.0
+            },
+            "date": {
+              "correct": 1,
+              "expected": 1,
+              "accuracy": 1.0
+            },
+            "counterparty": {
+              "correct": 0,
+              "expected": 0,
+              "accuracy": null
+            },
+            "total": {
+              "correct": 0,
+              "expected": 0,
+              "accuracy": null
+            },
+            "due_date": {
+              "correct": 1,
+              "expected": 1,
+              "accuracy": 1.0
+            },
+            "bank": {
+              "correct": 1,
+              "expected": 2,
+              "accuracy": 0.5
+            }
+          },
+          "field_accuracy": 0.8,
+          "document_accuracy": 0.0,
+          "safe_abstention_rate": null,
+          "latency_ms": {
+            "mean": 4493.155,
+            "p95": 5045.87
+          },
+          "usage": {
+            "calls": 0,
+            "prompt_tokens": 0,
+            "completion_tokens": 0,
+            "estimated_cost_usd": 0.0,
+            "cost_status": "sem chamadas de visão"
+          }
+        },
+        "rotation:mild": {
+          "documents": 1,
+          "completed_documents": 1,
+          "correct_fields": 3,
+          "recoverable_fields": 3,
+          "wrong_fields": 0,
+          "missing_fields": 0,
+          "invented_fields": 0,
+          "correct_documents": 0,
+          "technical_failures": 0,
+          "illegible_documents": 0,
+          "safe_abstentions": 0,
+          "false_accepts": 0,
+          "per_field": {
+            "amount": {
+              "correct": 0,
+              "expected": 0,
+              "accuracy": null
+            },
+            "date": {
+              "correct": 0,
+              "expected": 0,
+              "accuracy": null
+            },
+            "counterparty": {
+              "correct": 0,
+              "expected": 0,
+              "accuracy": null
+            },
+            "total": {
+              "correct": 1,
+              "expected": 1,
+              "accuracy": 1.0
+            },
+            "due_date": {
+              "correct": 1,
+              "expected": 1,
+              "accuracy": 1.0
+            },
+            "bank": {
+              "correct": 1,
+              "expected": 1,
+              "accuracy": 1.0
+            }
+          },
+          "field_accuracy": 1.0,
+          "document_accuracy": 0.0,
+          "safe_abstention_rate": null,
+          "latency_ms": {
+            "mean": 10280.09,
+            "p95": 10280.09
+          },
+          "usage": {
+            "calls": 0,
+            "prompt_tokens": 0,
+            "completion_tokens": 0,
+            "estimated_cost_usd": 0.0,
+            "cost_status": "sem chamadas de visão"
+          }
+        }
+      }
+    },
+    "validation": {
+      "documents": 20,
+      "completed_documents": 20,
+      "correct_fields": 44,
+      "recoverable_fields": 57,
+      "wrong_fields": 13,
+      "missing_fields": 0,
+      "invented_fields": 0,
+      "correct_documents": 8,
+      "technical_failures": 0,
+      "illegible_documents": 4,
+      "safe_abstentions": 4,
+      "false_accepts": 0,
+      "per_field": {
+        "amount": {
+          "correct": 13,
+          "expected": 13,
+          "accuracy": 1.0
+        },
+        "date": {
+          "correct": 7,
+          "expected": 7,
+          "accuracy": 1.0
+        },
+        "counterparty": {
+          "correct": 6,
+          "expected": 11,
+          "accuracy": 0.5454545454545454
+        },
+        "total": {
+          "correct": 2,
+          "expected": 2,
+          "accuracy": 1.0
+        },
+        "due_date": {
+          "correct": 8,
+          "expected": 8,
+          "accuracy": 1.0
+        },
+        "bank": {
+          "correct": 8,
+          "expected": 16,
+          "accuracy": 0.5
+        }
+      },
+      "field_accuracy": 0.7719298245614035,
+      "document_accuracy": 0.4,
+      "safe_abstention_rate": 1.0,
+      "latency_ms": {
+        "mean": 3385.9255,
+        "p95": 6727.68
+      },
+      "usage": {
+        "calls": 0,
+        "prompt_tokens": 0,
+        "completion_tokens": 0,
+        "estimated_cost_usd": 0.0,
+        "cost_status": "sem chamadas de visão"
+      },
+      "by_degradation": {
+        "blur:severe": {
+          "documents": 4,
+          "completed_documents": 4,
+          "correct_fields": 0,
+          "recoverable_fields": 0,
+          "wrong_fields": 0,
+          "missing_fields": 0,
+          "invented_fields": 0,
+          "correct_documents": 4,
+          "technical_failures": 0,
+          "illegible_documents": 4,
+          "safe_abstentions": 4,
+          "false_accepts": 0,
+          "per_field": {
+            "amount": {
+              "correct": 0,
+              "expected": 0,
+              "accuracy": null
+            },
+            "date": {
+              "correct": 0,
+              "expected": 0,
+              "accuracy": null
+            },
+            "counterparty": {
+              "correct": 0,
+              "expected": 0,
+              "accuracy": null
+            },
+            "total": {
+              "correct": 0,
+              "expected": 0,
+              "accuracy": null
+            },
+            "due_date": {
+              "correct": 0,
+              "expected": 0,
+              "accuracy": null
+            },
+            "bank": {
+              "correct": 0,
+              "expected": 0,
+              "accuracy": null
+            }
+          },
+          "field_accuracy": null,
+          "document_accuracy": 1.0,
+          "safe_abstention_rate": 1.0,
+          "latency_ms": {
+            "mean": 35.765,
+            "p95": 42.32
+          },
+          "usage": {
+            "calls": 0,
+            "prompt_tokens": 0,
+            "completion_tokens": 0,
+            "estimated_cost_usd": 0.0,
+            "cost_status": "sem chamadas de visão"
+          }
+        },
+        "crop:moderate": {
+          "documents": 2,
+          "completed_documents": 2,
+          "correct_fields": 3,
+          "recoverable_fields": 5,
+          "wrong_fields": 2,
+          "missing_fields": 0,
+          "invented_fields": 0,
+          "correct_documents": 0,
+          "technical_failures": 0,
+          "illegible_documents": 0,
+          "safe_abstentions": 0,
+          "false_accepts": 0,
+          "per_field": {
+            "amount": {
+              "correct": 1,
+              "expected": 1,
+              "accuracy": 1.0
+            },
+            "date": {
+              "correct": 1,
+              "expected": 1,
+              "accuracy": 1.0
+            },
+            "counterparty": {
+              "correct": 0,
+              "expected": 0,
+              "accuracy": null
+            },
+            "total": {
+              "correct": 0,
+              "expected": 0,
+              "accuracy": null
+            },
+            "due_date": {
+              "correct": 1,
+              "expected": 1,
+              "accuracy": 1.0
+            },
+            "bank": {
+              "correct": 0,
+              "expected": 2,
+              "accuracy": 0.0
+            }
+          },
+          "field_accuracy": 0.6,
+          "document_accuracy": 0.0,
+          "safe_abstention_rate": null,
+          "latency_ms": {
+            "mean": 3739.09,
+            "p95": 4165.71
+          },
+          "usage": {
+            "calls": 0,
+            "prompt_tokens": 0,
+            "completion_tokens": 0,
+            "estimated_cost_usd": 0.0,
+            "cost_status": "sem chamadas de visão"
+          }
+        },
+        "jpeg:mild": {
+          "documents": 1,
+          "completed_documents": 1,
+          "correct_fields": 4,
+          "recoverable_fields": 4,
+          "wrong_fields": 0,
+          "missing_fields": 0,
+          "invented_fields": 0,
+          "correct_documents": 1,
+          "technical_failures": 0,
+          "illegible_documents": 0,
+          "safe_abstentions": 0,
+          "false_accepts": 0,
+          "per_field": {
+            "amount": {
+              "correct": 1,
+              "expected": 1,
+              "accuracy": 1.0
+            },
+            "date": {
+              "correct": 0,
+              "expected": 0,
+              "accuracy": null
+            },
+            "counterparty": {
+              "correct": 1,
+              "expected": 1,
+              "accuracy": 1.0
+            },
+            "total": {
+              "correct": 0,
+              "expected": 0,
+              "accuracy": null
+            },
+            "due_date": {
+              "correct": 1,
+              "expected": 1,
+              "accuracy": 1.0
+            },
+            "bank": {
+              "correct": 1,
+              "expected": 1,
+              "accuracy": 1.0
+            }
+          },
+          "field_accuracy": 1.0,
+          "document_accuracy": 1.0,
+          "safe_abstention_rate": null,
+          "latency_ms": {
+            "mean": 4970.9,
+            "p95": 4970.9
+          },
+          "usage": {
+            "calls": 0,
+            "prompt_tokens": 0,
+            "completion_tokens": 0,
+            "estimated_cost_usd": 0.0,
+            "cost_status": "sem chamadas de visão"
+          }
+        },
+        "none:none": {
+          "documents": 10,
+          "completed_documents": 10,
+          "correct_fields": 28,
+          "recoverable_fields": 38,
+          "wrong_fields": 10,
+          "missing_fields": 0,
+          "invented_fields": 0,
+          "correct_documents": 1,
+          "technical_failures": 0,
+          "illegible_documents": 0,
+          "safe_abstentions": 0,
+          "false_accepts": 0,
+          "per_field": {
+            "amount": {
+              "correct": 8,
+              "expected": 8,
+              "accuracy": 1.0
+            },
+            "date": {
+              "correct": 4,
+              "expected": 4,
+              "accuracy": 1.0
+            },
+            "counterparty": {
+              "correct": 3,
+              "expected": 8,
+              "accuracy": 0.375
+            },
+            "total": {
+              "correct": 2,
+              "expected": 2,
+              "accuracy": 1.0
+            },
+            "due_date": {
+              "correct": 6,
+              "expected": 6,
+              "accuracy": 1.0
+            },
+            "bank": {
+              "correct": 5,
+              "expected": 10,
+              "accuracy": 0.5
+            }
+          },
+          "field_accuracy": 0.7368421052631579,
+          "document_accuracy": 0.1,
+          "safe_abstention_rate": null,
+          "latency_ms": {
+            "mean": 4248.054,
+            "p95": 6766.08
+          },
+          "usage": {
+            "calls": 0,
+            "prompt_tokens": 0,
+            "completion_tokens": 0,
+            "estimated_cost_usd": 0.0,
+            "cost_status": "sem chamadas de visão"
+          }
+        },
+        "perspective:mild": {
+          "documents": 1,
+          "completed_documents": 1,
+          "correct_fields": 3,
+          "recoverable_fields": 4,
+          "wrong_fields": 1,
+          "missing_fields": 0,
+          "invented_fields": 0,
+          "correct_documents": 0,
+          "technical_failures": 0,
+          "illegible_documents": 0,
+          "safe_abstentions": 0,
+          "false_accepts": 0,
+          "per_field": {
+            "amount": {
+              "correct": 1,
+              "expected": 1,
+              "accuracy": 1.0
+            },
+            "date": {
+              "correct": 1,
+              "expected": 1,
+              "accuracy": 1.0
+            },
+            "counterparty": {
+              "correct": 1,
+              "expected": 1,
+              "accuracy": 1.0
+            },
+            "total": {
+              "correct": 0,
+              "expected": 0,
+              "accuracy": null
+            },
+            "due_date": {
+              "correct": 0,
+              "expected": 0,
+              "accuracy": null
+            },
+            "bank": {
+              "correct": 0,
+              "expected": 1,
+              "accuracy": 0.0
+            }
+          },
+          "field_accuracy": 0.75,
+          "document_accuracy": 0.0,
+          "safe_abstention_rate": null,
+          "latency_ms": {
+            "mean": 6727.68,
+            "p95": 6727.68
+          },
+          "usage": {
+            "calls": 0,
+            "prompt_tokens": 0,
+            "completion_tokens": 0,
+            "estimated_cost_usd": 0.0,
+            "cost_status": "sem chamadas de visão"
+          }
+        },
+        "reflection:moderate": {
+          "documents": 2,
+          "completed_documents": 2,
+          "correct_fields": 6,
+          "recoverable_fields": 6,
+          "wrong_fields": 0,
+          "missing_fields": 0,
+          "invented_fields": 0,
+          "correct_documents": 2,
+          "technical_failures": 0,
+          "illegible_documents": 0,
+          "safe_abstentions": 0,
+          "false_accepts": 0,
+          "per_field": {
+            "amount": {
+              "correct": 2,
+              "expected": 2,
+              "accuracy": 1.0
+            },
+            "date": {
+              "correct": 1,
+              "expected": 1,
+              "accuracy": 1.0
+            },
+            "counterparty": {
+              "correct": 1,
+              "expected": 1,
+              "accuracy": 1.0
+            },
+            "total": {
+              "correct": 0,
+              "expected": 0,
+              "accuracy": null
+            },
+            "due_date": {
+              "correct": 0,
+              "expected": 0,
+              "accuracy": null
+            },
+            "bank": {
+              "correct": 2,
+              "expected": 2,
+              "accuracy": 1.0
+            }
+          },
+          "field_accuracy": 1.0,
+          "document_accuracy": 1.0,
+          "safe_abstention_rate": null,
+          "latency_ms": {
+            "mean": 2959.075,
+            "p95": 3113.9
+          },
+          "usage": {
+            "calls": 0,
+            "prompt_tokens": 0,
+            "completion_tokens": 0,
+            "estimated_cost_usd": 0.0,
+            "cost_status": "sem chamadas de visão"
+          }
+        }
+      }
+    }
+  },
+  "finished_at": "2026-11-27T04:04:12.402167+00:00"
+}

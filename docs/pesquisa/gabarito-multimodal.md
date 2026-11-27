@@ -2,7 +2,7 @@
 
 O dataset da [#90](https://github.com/moonshinerd/trokim/issues/90) fornece documentos com
 resposta conhecida para calibrar o [agente de documento](../agentes/document-agent.md) da
-#88 e preparar o comparador de motores da #98. Rastreabilidade: RF14, RF27, RF28;
+#88 e avaliar os motores no comparador da #98. Rastreabilidade: RF14, RF27, RF28;
 GQ02, GQ03, GQ05; [ADR 0008](../adr/0008-material-comparativo-versionado.md).
 
 ## Composição e construção
@@ -124,8 +124,9 @@ O corpus tem margens, contrastes e layouts controlados; não representa a divers
 fotografias, câmeras, bancos ou documentos reais. Ruído e bordas podem ter Laplaciano alto sem
 conter texto, e as métricas não comprovam corte ou reflexo. A exigência de todos os ilegíveis terem
 baixa nitidez restringe a abrangência desses exemplos. Não há certificação de OCR em produção.
-A comparação de três motores, a meta de 90% e os cenários de chat pertencem à #98, usando estes
-insumos congelados. O [gabarito multiagente](gabarito-multiagente.md) continua independente.
+A comparação de motores da #98 usa estes insumos congelados e confronta a meta de 90%.
+O [gabarito multiagente](gabarito-multiagente.md) histórico continua independente do novo
+conjunto de chat com os dados do usuário.
 
 Na revisão, o avaliador foi separado do runner em `document_evaluation.py`: funções puras
 conferem cobertura e IDs únicos antes de contar resultados. Títulos OCR sem espaços são
