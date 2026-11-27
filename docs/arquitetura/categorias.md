@@ -37,6 +37,22 @@ são gasto nem renda ([ADR 0017](../adr/0017-perfis-de-banco-e-natureza-do-lanca
    BB em PDF).
 6. Entrada sem regra vira **Renda**; o resto fica em **Outros**.
 
+### Proteções contra falso positivo
+
+- **Termos extras** (redes nacionais e palavras do ramo) entram só na regra geral de cada
+  categoria. A regra de delivery, que vem antes de todas, fica só com os aplicativos: senão
+  `DROGARIA EXTRA` ou `POSTO ... FOOD` viravam alimentação.
+- **Pix para pessoa** (`pix_enviado` com contraparte `pessoa`) usa só as regras básicas, sem os
+  termos extras e sem o dicionário de redes. Nomes de redes também são sobrenomes (`BRETAS`,
+  `MARISA`, `VENANCIO`), e o texto desse Pix é o nome de quem recebeu.
+- **Nome colado** só vale em palavra de 10 letras ou mais, e palavras de banco como
+  `INTERNETBANKING` ficam de fora.
+- Locadora **Unidas** só casa com `UNIDAS LOCADORA` e variações: `DROGARIA UNIDAS` é saúde.
+- **Boleto pago a emissor de cartão** (`ITAUCARD`, `BRADESCARD`, `NU PAGAMENTOS`, "cartão"...)
+  é pagamento de fatura, e não gasto: as compras já vêm na fatura daquele cartão.
+
+Os casos ficam em `api/tests/test_revisao_categorizacao.py`.
+
 ## Bancos além de Nubank e BB
 
 Inter, C6, Itaú, PicPay e Mercado Pago (todos **experimentais**, [ADR 0022](../adr/0022-registro-de-perfis-e-niveis-de-suporte.md))
@@ -58,8 +74,10 @@ as próprias contas**, estorno, resgate, aplicação, juros e IOF, tarifa, Pix o
 
 Na primeira medição, o holdout deu **82,9%**. Dos 19 erros, 17 eram de rótulo (o conjunto usava
 uma categoria "compras" que o Trokim não tem) e um mudou a convenção do IPTU, que passou de moradia
-para impostos. Corrigidos os rótulos, ficou em **99,1%** (110/111). O erro que sobra (Zaffari)
-fica no conjunto. Com o dicionário de redes, o conjunto de variações está em 98,8% (256/259). Os dois conjuntos usam só marcas públicas e nomes inventados.
+para impostos. Corrigidos os rótulos, ficou em **99,1%** (110/111); o erro que sobrava (Zaffari)
+saiu com os termos de redes regionais. Na medição de 27/11/2026, o holdout está em **100%**
+(111/111) e o conjunto de variações em **99,6%** (258/259; fica de fora `DIA BRASIL SOCIEDADE`).
+Os dois conjuntos usam só marcas públicas e nomes inventados.
 
 ### Extratos reais do desenvolvedor
 

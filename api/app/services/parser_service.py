@@ -83,6 +83,7 @@ class ParserService:
                         cnpj=parsed.counterparty_doc
                         if doc_is_company(parsed.counterparty_doc)
                         else None,
+                        counterparty_kind=parsed.counterparty_kind,
                     )
                     extra = {
                         "nature": parsed.nature,

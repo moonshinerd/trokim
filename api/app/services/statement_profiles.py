@@ -26,12 +26,20 @@ _PREFIXOS_LOJA = re.compile(
     r"^(?:EBW\s*\*\s*|MP\s*\*\s*|PAG\s*\*\s*|PG\s*\*\s*|IFD\s*\*\s*|Mp\s+)", re.IGNORECASE
 )
 _NUMERO_LOJA = re.compile(r"\s+\d{1,6}$")
+# Beneficiário de boleto que é emissor de cartão: o boleto paga uma fatura, não é gasto.
+_EMISSOR_CARTAO = re.compile(
+    r"\b(?:itaucard|bradescard|credicard|hipercard|ourocard|nu pagamentos|nubank"
+    r"|cartao|cartoes|card)\b"
+)
 # Documentos dentro do nome: MEI costuma vir como "NOME 12345678909" ou "12.345.678 NOME".
+# O CNPJ vem antes do CPF e as pontas não podem encostar em dígito: senão o CPF come os 11
+# primeiros dígitos de um CNPJ sem pontuação e sobram 3 no nome.
 _DOC_NO_NOME = re.compile(
-    r"\d{3}\.?\d{3}\.?\d{3}-?\d{2}"  # CPF, com ou sem pontuação
-    r"|\d{2}\.?\d{3}\.?\d{3}/?\d{4}-?\d{2}"  # CNPJ completo
-    r"|\b\d{2}\.\d{3}\.\d{3}\b"  # raiz do CNPJ (MEI)
-    r"|\b\d{11}\b|\b\d{14}\b"
+    r"(?<!\d)(?:"
+    r"\d{2}\.?\d{3}\.?\d{3}/?\d{4}-?\d{2}"  # CNPJ completo, com ou sem pontuação
+    r"|\d{3}\.?\d{3}\.?\d{3}-?\d{2}"  # CPF, com ou sem pontuação
+    r"|\d{2}\.\d{3}\.\d{3}"  # raiz do CNPJ (MEI)
+    r")(?!\d)"
 )
 
 
@@ -294,6 +302,9 @@ class NubankProfile:
         if head.startswith("pagamento de boleto"):
             # Boleto pago: o beneficiário vem depois do " - " (empresa, conta de consumo, imposto).
             payee = _clean_merchant(" - ".join(parts[1:])) if len(parts) > 1 else ""
+            if _EMISSOR_CARTAO.search(normalize_text(payee)):
+                # Fatura de cartão de outro banco paga por boleto: as compras já vêm na fatura.
+                return ParsedMemo(f"Boleto - {payee}", TransactionNature.CARD_PAYMENT)
             return ParsedMemo(
                 f"Boleto - {payee}" if payee else "Pagamento de boleto",
                 TransactionNature.PURCHASE,
