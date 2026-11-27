@@ -49,6 +49,16 @@ def name_matches(a: str | None, b: str | None) -> bool:
     return len(ta) >= 2 and len(tb) >= 2 and (ta <= tb or tb <= ta)
 
 
+def payee_matches(a: str | None, b: str | None) -> bool:
+    """Mesmo favorecido em dois lançamentos: ``name_matches`` ou um nome contido no outro."""
+    if not a or not b:
+        return False
+    na, nb = normalize_text(a), normalize_text(b)
+    return (
+        na == nb or name_matches(a, b) or (len(na) >= 4 and na in nb) or (len(nb) >= 4 and nb in na)
+    )
+
+
 def matches_identity(tx: Transaction, identities: list[Identity]) -> bool:
     if tx.nature not in {TransactionNature.PIX_OUT, TransactionNature.PIX_IN}:
         return False

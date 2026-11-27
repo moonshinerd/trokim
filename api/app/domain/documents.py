@@ -104,6 +104,9 @@ class DocumentConfirmRequest(BaseModel):
     type: TransactionType = TransactionType.DEBIT
     bank: str | None = Field(default=None, max_length=60)
     category: TransactionCategory | None = None
+    # "documento": o usuário revisou o que foi lido. "manual": digitou sem leitura bem-sucedida
+    # (por exemplo, depois de uma abstenção). Só muda a origem registrada e o texto do chat.
+    origin: Literal["documento", "manual"] = "documento"
 
 
 class DocumentConfirmResponse(BaseModel):

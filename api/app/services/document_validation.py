@@ -22,8 +22,7 @@ from app.domain.models import TransactionNature
 from app.services.agents.validation import ValidationIssueCode
 from app.services.document_adapter import from_agent_document
 from app.services.library_service import Library
-from app.services.statement_profiles import normalize_text
-from app.services.transfer_service import name_matches
+from app.services.transfer_service import payee_matches
 
 # Janela de conciliação de pagamento de fatura conforme ADR 0018 (_PAYMENT_WINDOW_DAYS = 3)
 PAYMENT_WINDOW_DAYS = 3
@@ -581,8 +580,6 @@ def check_possible_duplicates(
         if cand_amount is None or cand_date is None or not cand_payee:
             continue
 
-        cand_payee_norm = normalize_text(cand_payee)
-
         for tx in library.transactions:
             # 1. Conta (se informada no documento)
             if cand_acc and tx.account_id != cand_acc:
@@ -599,16 +596,7 @@ def check_possible_duplicates(
 
             # 4. Favorecido / estabelecimento
             tx_merchant = tx.merchant or tx.description
-            tx_payee_norm = normalize_text(tx_merchant)
-
-            is_match = (
-                cand_payee_norm == tx_payee_norm
-                or name_matches(cand_payee, tx_merchant)
-                or (len(cand_payee_norm) >= 4 and cand_payee_norm in tx_payee_norm)
-                or (len(tx_payee_norm) >= 4 and tx_payee_norm in cand_payee_norm)
-            )
-
-            if is_match:
+            if payee_matches(cand_payee, tx_merchant):
                 issues.append(
                     ValidationIssue(
                         code=ValidationIssueCode.POSSIBLE_DUPLICATE,

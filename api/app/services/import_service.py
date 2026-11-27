@@ -1,11 +1,13 @@
 """Importação de arquivos OFX: conta, período, atualização de um mesmo período e transferências."""
 
 from app.domain.models import (
+    CONFIRMED_ORIGINS,
     Account,
     AccountKind,
     AccountOwner,
     Statement,
     StatementStatus,
+    Transaction,
 )
 from app.services.bank_registry import bank_label
 from app.services.categorization_service import CategoryRuleService
@@ -17,7 +19,7 @@ from app.services.statement_service import (
     signature,
     statement_id,
 )
-from app.services.transfer_service import TransferService
+from app.services.transfer_service import TransferService, payee_matches
 
 
 def bank_code(raw: str | None) -> str | None:
@@ -40,6 +42,44 @@ def account_label(account: Account) -> str:
     if account.acct_id.startswith("ourocard-"):
         return f"{base} · {kind} final {account.acct_id.split('-', 1)[1]}"
     return f"{base} · {kind}"
+
+
+# Contas criadas pela confirmação de documento sem conta informada ("documentos:...").
+_DOCUMENT_ACCOUNT_PREFIX = "documentos:"
+
+
+def reconcile_confirmed(library: Library, imported: list[Transaction]) -> int:
+    """Comprovante confirmado antes do extrato: o extrato do banco vale (#117).
+
+    Um lançamento de documento (lido ou digitado) com o mesmo tipo, data, valor e favorecido
+    de um lançamento novo do extrato vira duplicata, para não entrar duas vezes nos totais.
+    Se o documento foi lançado numa conta real, só concilia com o extrato dessa conta.
+    Devolve quantos lançamentos de documento foram conciliados.
+    """
+    confirmed = [
+        tx for tx in library.transactions if tx.origin in CONFIRMED_ORIGINS and not tx.is_duplicate
+    ]
+    reconciled = 0
+    for tx in imported:
+        if tx.is_duplicate or tx.origin in CONFIRMED_ORIGINS:
+            continue
+        for doc in confirmed:
+            if (
+                doc.is_duplicate
+                or doc.type != tx.type
+                or doc.date != tx.date
+                or round(doc.amount, 2) != round(tx.amount, 2)
+            ):
+                continue
+            if not doc.account_id.startswith(_DOCUMENT_ACCOUNT_PREFIX) and (
+                doc.account_id != tx.account_id
+            ):
+                continue
+            if payee_matches(doc.merchant or doc.description, tx.merchant or tx.description):
+                doc.is_duplicate = True
+                reconciled += 1
+                break
+    return reconciled
 
 
 class ImportService:
@@ -100,6 +140,7 @@ class ImportService:
             ParserService.deduplicate(txs, known=library.transactions)
         for tx in txs:
             tx.statement_id = sid
+        documents_reconciled = reconcile_confirmed(library, txs)
         library.transactions.extend(txs)
 
         account = library.accounts.get(acct_key)
@@ -160,6 +201,7 @@ class ImportService:
             "statement": statement,
             "reconciled": parsed.reconciled,
             "auto_transfers": auto_transfers,
+            "documents_reconciled": documents_reconciled,
             "suggestion_count": len(TransferService.suggestions(library)),
         }
 
