@@ -159,6 +159,9 @@ class ImportedFile {
 
   String get kind {
     final lower = name.toLowerCase();
+    // Nomes que a API dá aos lançamentos confirmados na tela de documento.
+    if (lower == 'documento lido por foto ou pdf') return 'Documento';
+    if (lower == 'lançamento digitado na tela de documento') return 'Manual';
     if (lower.endsWith('.pdf')) return 'PDF';
     if (lower.endsWith('.csv')) return 'CSV';
     return 'OFX';

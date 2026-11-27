@@ -71,6 +71,14 @@ void main() {
       expect(files[1].kind, 'PDF');
     });
 
+    test('documento confirmado não aparece como OFX', () {
+      ImportedFile file(String name) =>
+          ImportedFile(name: name, imported: 1, duplicates: 0);
+      expect(file('documento lido por foto ou PDF').kind, 'Documento');
+      expect(file('lançamento digitado na tela de documento').kind, 'Manual');
+      expect(file('extrato.ofx').kind, 'OFX');
+    });
+
     test('lançamento sem arquivo de origem não some da lista', () {
       final files = ImportedFile.fromTransactions([
         {'is_duplicate': false},
